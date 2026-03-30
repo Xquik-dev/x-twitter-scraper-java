@@ -3,8 +3,8 @@
 package com.x_twitter_scraper.api.models
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.jsonMapper
+import com.x_twitter_scraper.api.models.x.users.UserProfile
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -16,12 +16,41 @@ internal class PaginatedUsersTest {
             PaginatedUsers.builder()
                 .hasNextPage(true)
                 .nextCursor("next_cursor")
-                .addUser(JsonValue.from(mapOf<String, Any>()))
+                .addUser(
+                    UserProfile.builder()
+                        .id("id")
+                        .name("name")
+                        .username("username")
+                        .createdAt("createdAt")
+                        .description("description")
+                        .followers(0L)
+                        .following(0L)
+                        .location("location")
+                        .profilePicture("profilePicture")
+                        .statusesCount(0L)
+                        .verified(true)
+                        .build()
+                )
                 .build()
 
         assertThat(paginatedUsers.hasNextPage()).isEqualTo(true)
         assertThat(paginatedUsers.nextCursor()).isEqualTo("next_cursor")
-        assertThat(paginatedUsers.users()).containsExactly(JsonValue.from(mapOf<String, Any>()))
+        assertThat(paginatedUsers.users())
+            .containsExactly(
+                UserProfile.builder()
+                    .id("id")
+                    .name("name")
+                    .username("username")
+                    .createdAt("createdAt")
+                    .description("description")
+                    .followers(0L)
+                    .following(0L)
+                    .location("location")
+                    .profilePicture("profilePicture")
+                    .statusesCount(0L)
+                    .verified(true)
+                    .build()
+            )
     }
 
     @Test
@@ -31,7 +60,21 @@ internal class PaginatedUsersTest {
             PaginatedUsers.builder()
                 .hasNextPage(true)
                 .nextCursor("next_cursor")
-                .addUser(JsonValue.from(mapOf<String, Any>()))
+                .addUser(
+                    UserProfile.builder()
+                        .id("id")
+                        .name("name")
+                        .username("username")
+                        .createdAt("createdAt")
+                        .description("description")
+                        .followers(0L)
+                        .following(0L)
+                        .location("location")
+                        .profilePicture("profilePicture")
+                        .statusesCount(0L)
+                        .verified(true)
+                        .build()
+                )
                 .build()
 
         val roundtrippedPaginatedUsers =
