@@ -15,7 +15,7 @@ internal class IntegrationListDeliveriesResponseTest {
         val integrationListDeliveriesResponse =
             IntegrationListDeliveriesResponse.builder()
                 .addDelivery(
-                    IntegrationListDeliveriesResponse.Delivery.builder()
+                    IntegrationDelivery.builder()
                         .id("id")
                         .attempts(0L)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -32,7 +32,7 @@ internal class IntegrationListDeliveriesResponseTest {
 
         assertThat(integrationListDeliveriesResponse.deliveries())
             .containsExactly(
-                IntegrationListDeliveriesResponse.Delivery.builder()
+                IntegrationDelivery.builder()
                     .id("id")
                     .attempts(0L)
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -53,7 +53,7 @@ internal class IntegrationListDeliveriesResponseTest {
         val integrationListDeliveriesResponse =
             IntegrationListDeliveriesResponse.builder()
                 .addDelivery(
-                    IntegrationListDeliveriesResponse.Delivery.builder()
+                    IntegrationDelivery.builder()
                         .id("id")
                         .attempts(0L)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))

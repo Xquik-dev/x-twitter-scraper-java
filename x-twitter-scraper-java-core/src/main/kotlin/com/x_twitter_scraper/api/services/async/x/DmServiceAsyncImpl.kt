@@ -18,8 +18,8 @@ import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepareAsync
 import com.x_twitter_scraper.api.models.x.dm.DmRetrieveHistoryParams
 import com.x_twitter_scraper.api.models.x.dm.DmRetrieveHistoryResponse
-import com.x_twitter_scraper.api.models.x.dm.DmUpdateParams
-import com.x_twitter_scraper.api.models.x.dm.DmUpdateResponse
+import com.x_twitter_scraper.api.models.x.dm.DmSendParams
+import com.x_twitter_scraper.api.models.x.dm.DmSendResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -36,19 +36,19 @@ class DmServiceAsyncImpl internal constructor(private val clientOptions: ClientO
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): DmServiceAsync =
         DmServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun update(
-        params: DmUpdateParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<DmUpdateResponse> =
-        // post /x/dm/{userId}
-        withRawResponse().update(params, requestOptions).thenApply { it.parse() }
-
     override fun retrieveHistory(
         params: DmRetrieveHistoryParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<DmRetrieveHistoryResponse> =
         // get /x/dm/{userId}/history
         withRawResponse().retrieveHistory(params, requestOptions).thenApply { it.parse() }
+
+    override fun send(
+        params: DmSendParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<DmSendResponse> =
+        // post /x/dm/{userId}
+        withRawResponse().send(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         DmServiceAsync.WithRawResponse {
@@ -62,40 +62,6 @@ class DmServiceAsyncImpl internal constructor(private val clientOptions: ClientO
             DmServiceAsyncImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
-
-        private val updateHandler: Handler<DmUpdateResponse> =
-            jsonHandler<DmUpdateResponse>(clientOptions.jsonMapper)
-
-        override fun update(
-            params: DmUpdateParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<DmUpdateResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("userId", params.userId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("x", "dm", params._pathParam(0))
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { updateHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
-        }
 
         private val retrieveHistoryHandler: Handler<DmRetrieveHistoryResponse> =
             jsonHandler<DmRetrieveHistoryResponse>(clientOptions.jsonMapper)
@@ -121,6 +87,40 @@ class DmServiceAsyncImpl internal constructor(private val clientOptions: ClientO
                     errorHandler.handle(response).parseable {
                         response
                             .use { retrieveHistoryHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val sendHandler: Handler<DmSendResponse> =
+            jsonHandler<DmSendResponse>(clientOptions.jsonMapper)
+
+        override fun send(
+            params: DmSendParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<DmSendResponse>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("userId", params.userId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "dm", params._pathParam(0))
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { sendHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

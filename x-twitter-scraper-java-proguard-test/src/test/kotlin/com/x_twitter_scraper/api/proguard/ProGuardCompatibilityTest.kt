@@ -5,8 +5,8 @@ package com.x_twitter_scraper.api.proguard
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
 import com.x_twitter_scraper.api.core.jsonMapper
-import com.x_twitter_scraper.api.models.account.AccountRetrieveResponse
-import java.time.OffsetDateTime
+import com.x_twitter_scraper.api.models.EventType
+import com.x_twitter_scraper.api.models.x.tweets.SearchTweet
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.jvm.javaMethod
 import org.assertj.core.api.Assertions.assertThat
@@ -75,28 +75,49 @@ internal class ProGuardCompatibilityTest {
     }
 
     @Test
-    fun accountRetrieveResponseRoundtrip() {
+    fun searchTweetRoundtrip() {
         val jsonMapper = jsonMapper()
-        val accountRetrieveResponse =
-            AccountRetrieveResponse.builder()
-                .monitorsAllowed(0L)
-                .monitorsUsed(0L)
-                .plan(AccountRetrieveResponse.Plan.ACTIVE)
-                .currentPeriod(
-                    AccountRetrieveResponse.CurrentPeriod.builder()
-                        .end(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .start(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .usagePercent(0.0)
+        val searchTweet =
+            SearchTweet.builder()
+                .id("id")
+                .text("text")
+                .author(
+                    SearchTweet.Author.builder()
+                        .id("id")
+                        .name("name")
+                        .username("username")
+                        .verified(true)
                         .build()
                 )
+                .bookmarkCount(0L)
+                .createdAt("createdAt")
+                .likeCount(0L)
+                .quoteCount(0L)
+                .replyCount(0L)
+                .retweetCount(0L)
+                .viewCount(0L)
                 .build()
 
-        val roundtrippedAccountRetrieveResponse =
+        val roundtrippedSearchTweet =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(accountRetrieveResponse),
-                jacksonTypeRef<AccountRetrieveResponse>(),
+                jsonMapper.writeValueAsString(searchTweet),
+                jacksonTypeRef<SearchTweet>(),
             )
 
-        assertThat(roundtrippedAccountRetrieveResponse).isEqualTo(accountRetrieveResponse)
+        assertThat(roundtrippedSearchTweet).isEqualTo(searchTweet)
+    }
+
+    @Test
+    fun eventTypeRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val eventType = EventType.TWEET_NEW
+
+        val roundtrippedEventType =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(eventType),
+                jacksonTypeRef<EventType>(),
+            )
+
+        assertThat(roundtrippedEventType).isEqualTo(eventType)
     }
 }

@@ -5,8 +5,8 @@ package com.x_twitter_scraper.api.services.async.x
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
-import com.x_twitter_scraper.api.models.x.followers.FollowerRetrieveCheckParams
-import com.x_twitter_scraper.api.models.x.followers.FollowerRetrieveCheckResponse
+import com.x_twitter_scraper.api.models.x.followers.FollowerCheckParams
+import com.x_twitter_scraper.api.models.x.followers.FollowerCheckResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -26,16 +26,14 @@ interface FollowerServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): FollowerServiceAsync
 
     /** Check follow relationship */
-    fun retrieveCheck(
-        params: FollowerRetrieveCheckParams
-    ): CompletableFuture<FollowerRetrieveCheckResponse> =
-        retrieveCheck(params, RequestOptions.none())
+    fun check(params: FollowerCheckParams): CompletableFuture<FollowerCheckResponse> =
+        check(params, RequestOptions.none())
 
-    /** @see retrieveCheck */
-    fun retrieveCheck(
-        params: FollowerRetrieveCheckParams,
+    /** @see check */
+    fun check(
+        params: FollowerCheckParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<FollowerRetrieveCheckResponse>
+    ): CompletableFuture<FollowerCheckResponse>
 
     /**
      * A view of [FollowerServiceAsync] that provides access to raw HTTP responses for each method.
@@ -53,17 +51,17 @@ interface FollowerServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get /x/followers/check`, but is otherwise the same as
-         * [FollowerServiceAsync.retrieveCheck].
+         * [FollowerServiceAsync.check].
          */
-        fun retrieveCheck(
-            params: FollowerRetrieveCheckParams
-        ): CompletableFuture<HttpResponseFor<FollowerRetrieveCheckResponse>> =
-            retrieveCheck(params, RequestOptions.none())
+        fun check(
+            params: FollowerCheckParams
+        ): CompletableFuture<HttpResponseFor<FollowerCheckResponse>> =
+            check(params, RequestOptions.none())
 
-        /** @see retrieveCheck */
-        fun retrieveCheck(
-            params: FollowerRetrieveCheckParams,
+        /** @see check */
+        fun check(
+            params: FollowerCheckParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<FollowerRetrieveCheckResponse>>
+        ): CompletableFuture<HttpResponseFor<FollowerCheckResponse>>
     }
 }

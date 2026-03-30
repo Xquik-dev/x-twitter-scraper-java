@@ -26,7 +26,7 @@ import com.x_twitter_scraper.api.models.x.accounts.AccountListResponse
 import com.x_twitter_scraper.api.models.x.accounts.AccountReauthParams
 import com.x_twitter_scraper.api.models.x.accounts.AccountReauthResponse
 import com.x_twitter_scraper.api.models.x.accounts.AccountRetrieveParams
-import com.x_twitter_scraper.api.models.x.accounts.AccountRetrieveResponse
+import com.x_twitter_scraper.api.models.x.accounts.XAccountDetail
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -54,7 +54,7 @@ class AccountServiceAsyncImpl internal constructor(private val clientOptions: Cl
     override fun retrieve(
         params: AccountRetrieveParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<AccountRetrieveResponse> =
+    ): CompletableFuture<XAccountDetail> =
         // get /x/accounts/{id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
@@ -123,13 +123,13 @@ class AccountServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 }
         }
 
-        private val retrieveHandler: Handler<AccountRetrieveResponse> =
-            jsonHandler<AccountRetrieveResponse>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<XAccountDetail> =
+            jsonHandler<XAccountDetail>(clientOptions.jsonMapper)
 
         override fun retrieve(
             params: AccountRetrieveParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<AccountRetrieveResponse>> {
+        ): CompletableFuture<HttpResponseFor<XAccountDetail>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())

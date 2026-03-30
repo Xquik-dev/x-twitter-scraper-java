@@ -16,8 +16,8 @@ import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.json
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepareAsync
+import com.x_twitter_scraper.api.models.integrations.Integration
 import com.x_twitter_scraper.api.models.integrations.IntegrationCreateParams
-import com.x_twitter_scraper.api.models.integrations.IntegrationCreateResponse
 import com.x_twitter_scraper.api.models.integrations.IntegrationDeleteParams
 import com.x_twitter_scraper.api.models.integrations.IntegrationDeleteResponse
 import com.x_twitter_scraper.api.models.integrations.IntegrationListDeliveriesParams
@@ -25,11 +25,9 @@ import com.x_twitter_scraper.api.models.integrations.IntegrationListDeliveriesRe
 import com.x_twitter_scraper.api.models.integrations.IntegrationListParams
 import com.x_twitter_scraper.api.models.integrations.IntegrationListResponse
 import com.x_twitter_scraper.api.models.integrations.IntegrationRetrieveParams
-import com.x_twitter_scraper.api.models.integrations.IntegrationRetrieveResponse
 import com.x_twitter_scraper.api.models.integrations.IntegrationSendTestParams
 import com.x_twitter_scraper.api.models.integrations.IntegrationSendTestResponse
 import com.x_twitter_scraper.api.models.integrations.IntegrationUpdateParams
-import com.x_twitter_scraper.api.models.integrations.IntegrationUpdateResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -50,21 +48,21 @@ class IntegrationServiceAsyncImpl internal constructor(private val clientOptions
     override fun create(
         params: IntegrationCreateParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<IntegrationCreateResponse> =
+    ): CompletableFuture<Integration> =
         // post /integrations
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieve(
         params: IntegrationRetrieveParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<IntegrationRetrieveResponse> =
+    ): CompletableFuture<Integration> =
         // get /integrations/{id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
     override fun update(
         params: IntegrationUpdateParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<IntegrationUpdateResponse> =
+    ): CompletableFuture<Integration> =
         // patch /integrations/{id}
         withRawResponse().update(params, requestOptions).thenApply { it.parse() }
 
@@ -109,13 +107,13 @@ class IntegrationServiceAsyncImpl internal constructor(private val clientOptions
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val createHandler: Handler<IntegrationCreateResponse> =
-            jsonHandler<IntegrationCreateResponse>(clientOptions.jsonMapper)
+        private val createHandler: Handler<Integration> =
+            jsonHandler<Integration>(clientOptions.jsonMapper)
 
         override fun create(
             params: IntegrationCreateParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<IntegrationCreateResponse>> {
+        ): CompletableFuture<HttpResponseFor<Integration>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -140,13 +138,13 @@ class IntegrationServiceAsyncImpl internal constructor(private val clientOptions
                 }
         }
 
-        private val retrieveHandler: Handler<IntegrationRetrieveResponse> =
-            jsonHandler<IntegrationRetrieveResponse>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<Integration> =
+            jsonHandler<Integration>(clientOptions.jsonMapper)
 
         override fun retrieve(
             params: IntegrationRetrieveParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<IntegrationRetrieveResponse>> {
+        ): CompletableFuture<HttpResponseFor<Integration>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -173,13 +171,13 @@ class IntegrationServiceAsyncImpl internal constructor(private val clientOptions
                 }
         }
 
-        private val updateHandler: Handler<IntegrationUpdateResponse> =
-            jsonHandler<IntegrationUpdateResponse>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<Integration> =
+            jsonHandler<Integration>(clientOptions.jsonMapper)
 
         override fun update(
             params: IntegrationUpdateParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<IntegrationUpdateResponse>> {
+        ): CompletableFuture<HttpResponseFor<Integration>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())

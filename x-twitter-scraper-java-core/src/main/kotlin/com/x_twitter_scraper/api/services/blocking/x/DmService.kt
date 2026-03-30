@@ -8,8 +8,8 @@ import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.models.x.dm.DmRetrieveHistoryParams
 import com.x_twitter_scraper.api.models.x.dm.DmRetrieveHistoryResponse
-import com.x_twitter_scraper.api.models.x.dm.DmUpdateParams
-import com.x_twitter_scraper.api.models.x.dm.DmUpdateResponse
+import com.x_twitter_scraper.api.models.x.dm.DmSendParams
+import com.x_twitter_scraper.api.models.x.dm.DmSendResponse
 import java.util.function.Consumer
 
 interface DmService {
@@ -25,26 +25,6 @@ interface DmService {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): DmService
-
-    /** Send direct message */
-    fun update(userId: String, params: DmUpdateParams): DmUpdateResponse =
-        update(userId, params, RequestOptions.none())
-
-    /** @see update */
-    fun update(
-        userId: String,
-        params: DmUpdateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): DmUpdateResponse = update(params.toBuilder().userId(userId).build(), requestOptions)
-
-    /** @see update */
-    fun update(params: DmUpdateParams): DmUpdateResponse = update(params, RequestOptions.none())
-
-    /** @see update */
-    fun update(
-        params: DmUpdateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): DmUpdateResponse
 
     /** Get DM conversation history */
     fun retrieveHistory(userId: String): DmRetrieveHistoryResponse =
@@ -78,6 +58,26 @@ interface DmService {
     fun retrieveHistory(userId: String, requestOptions: RequestOptions): DmRetrieveHistoryResponse =
         retrieveHistory(userId, DmRetrieveHistoryParams.none(), requestOptions)
 
+    /** Send direct message */
+    fun send(userId: String, params: DmSendParams): DmSendResponse =
+        send(userId, params, RequestOptions.none())
+
+    /** @see send */
+    fun send(
+        userId: String,
+        params: DmSendParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): DmSendResponse = send(params.toBuilder().userId(userId).build(), requestOptions)
+
+    /** @see send */
+    fun send(params: DmSendParams): DmSendResponse = send(params, RequestOptions.none())
+
+    /** @see send */
+    fun send(
+        params: DmSendParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): DmSendResponse
+
     /** A view of [DmService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
@@ -87,35 +87,6 @@ interface DmService {
          * The original service is not modified.
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): DmService.WithRawResponse
-
-        /**
-         * Returns a raw HTTP response for `post /x/dm/{userId}`, but is otherwise the same as
-         * [DmService.update].
-         */
-        @MustBeClosed
-        fun update(userId: String, params: DmUpdateParams): HttpResponseFor<DmUpdateResponse> =
-            update(userId, params, RequestOptions.none())
-
-        /** @see update */
-        @MustBeClosed
-        fun update(
-            userId: String,
-            params: DmUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<DmUpdateResponse> =
-            update(params.toBuilder().userId(userId).build(), requestOptions)
-
-        /** @see update */
-        @MustBeClosed
-        fun update(params: DmUpdateParams): HttpResponseFor<DmUpdateResponse> =
-            update(params, RequestOptions.none())
-
-        /** @see update */
-        @MustBeClosed
-        fun update(
-            params: DmUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<DmUpdateResponse>
 
         /**
          * Returns a raw HTTP response for `get /x/dm/{userId}/history`, but is otherwise the same
@@ -163,5 +134,34 @@ interface DmService {
             requestOptions: RequestOptions,
         ): HttpResponseFor<DmRetrieveHistoryResponse> =
             retrieveHistory(userId, DmRetrieveHistoryParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `post /x/dm/{userId}`, but is otherwise the same as
+         * [DmService.send].
+         */
+        @MustBeClosed
+        fun send(userId: String, params: DmSendParams): HttpResponseFor<DmSendResponse> =
+            send(userId, params, RequestOptions.none())
+
+        /** @see send */
+        @MustBeClosed
+        fun send(
+            userId: String,
+            params: DmSendParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<DmSendResponse> =
+            send(params.toBuilder().userId(userId).build(), requestOptions)
+
+        /** @see send */
+        @MustBeClosed
+        fun send(params: DmSendParams): HttpResponseFor<DmSendResponse> =
+            send(params, RequestOptions.none())
+
+        /** @see send */
+        @MustBeClosed
+        fun send(
+            params: DmSendParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<DmSendResponse>
     }
 }

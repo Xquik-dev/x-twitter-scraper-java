@@ -28,10 +28,10 @@ internal class UserServiceAsyncTest {
                 .build()
         val userServiceAsync = client.x().users()
 
-        val userFuture = userServiceAsync.retrieve("username")
+        val userProfileFuture = userServiceAsync.retrieve("username")
 
-        val user = userFuture.get()
-        user.validate()
+        val userProfile = userProfileFuture.get()
+        userProfile.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -78,13 +78,13 @@ internal class UserServiceAsyncTest {
                 .build()
         val userServiceAsync = client.x().users()
 
-        val responseFuture =
+        val paginatedUsersFuture =
             userServiceAsync.retrieveFollowersYouKnow(
                 UserRetrieveFollowersYouKnowParams.builder().id("id").cursor("cursor").build()
             )
 
-        val response = responseFuture.get()
-        response.validate()
+        val paginatedUsers = paginatedUsersFuture.get()
+        paginatedUsers.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -115,13 +115,13 @@ internal class UserServiceAsyncTest {
                 .build()
         val userServiceAsync = client.x().users()
 
-        val responseFuture =
+        val paginatedTweetsFuture =
             userServiceAsync.retrieveLikes(
                 UserRetrieveLikesParams.builder().id("id").cursor("cursor").build()
             )
 
-        val response = responseFuture.get()
-        response.validate()
+        val paginatedTweets = paginatedTweetsFuture.get()
+        paginatedTweets.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -134,13 +134,13 @@ internal class UserServiceAsyncTest {
                 .build()
         val userServiceAsync = client.x().users()
 
-        val responseFuture =
+        val paginatedTweetsFuture =
             userServiceAsync.retrieveMedia(
                 UserRetrieveMediaParams.builder().id("id").cursor("cursor").build()
             )
 
-        val response = responseFuture.get()
-        response.validate()
+        val paginatedTweets = paginatedTweetsFuture.get()
+        paginatedTweets.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -194,7 +194,7 @@ internal class UserServiceAsyncTest {
                 .build()
         val userServiceAsync = client.x().users()
 
-        val responseFuture =
+        val paginatedTweetsFuture =
             userServiceAsync.retrieveTweets(
                 UserRetrieveTweetsParams.builder()
                     .id("id")
@@ -204,8 +204,8 @@ internal class UserServiceAsyncTest {
                     .build()
             )
 
-        val response = responseFuture.get()
-        response.validate()
+        val paginatedTweets = paginatedTweetsFuture.get()
+        paginatedTweets.validate()
     }
 
     @Disabled("Mock server tests are disabled")

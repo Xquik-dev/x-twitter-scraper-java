@@ -104,7 +104,6 @@ interface XTwitterScraperClient {
     /** Trending topics by region */
     fun trends(): TrendService
 
-    /** Telegram bot service endpoints */
     fun bot(): BotService
 
     fun support(): SupportService
@@ -184,7 +183,6 @@ interface XTwitterScraperClient {
         /** Trending topics by region */
         fun trends(): TrendService.WithRawResponse
 
-        /** Telegram bot service endpoints */
         fun bot(): BotService.WithRawResponse
 
         fun support(): SupportService.WithRawResponse

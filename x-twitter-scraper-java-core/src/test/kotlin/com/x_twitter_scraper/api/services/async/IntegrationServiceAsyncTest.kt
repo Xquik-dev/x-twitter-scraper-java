@@ -4,6 +4,7 @@ package com.x_twitter_scraper.api.services.async
 
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClientAsync
 import com.x_twitter_scraper.api.core.JsonValue
+import com.x_twitter_scraper.api.models.EventType
 import com.x_twitter_scraper.api.models.integrations.IntegrationCreateParams
 import com.x_twitter_scraper.api.models.integrations.IntegrationListDeliveriesParams
 import com.x_twitter_scraper.api.models.integrations.IntegrationUpdateParams
@@ -26,7 +27,7 @@ internal class IntegrationServiceAsyncTest {
             integrationServiceAsync.create(
                 IntegrationCreateParams.builder()
                     .config(IntegrationCreateParams.Config.builder().chatId("chatId").build())
-                    .addEventType(IntegrationCreateParams.EventType.TWEET_NEW)
+                    .addEventType(EventType.TWEET_NEW)
                     .name("name")
                     .type(IntegrationCreateParams.Type.TELEGRAM)
                     .build()
@@ -66,7 +67,7 @@ internal class IntegrationServiceAsyncTest {
             integrationServiceAsync.update(
                 IntegrationUpdateParams.builder()
                     .id("id")
-                    .addEventType(IntegrationUpdateParams.EventType.TWEET_NEW)
+                    .addEventType(EventType.TWEET_NEW)
                     .filters(
                         IntegrationUpdateParams.Filters.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))

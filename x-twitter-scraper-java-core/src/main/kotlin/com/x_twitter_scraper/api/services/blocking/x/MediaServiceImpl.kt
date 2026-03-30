@@ -16,10 +16,10 @@ import com.x_twitter_scraper.api.core.http.json
 import com.x_twitter_scraper.api.core.http.multipartFormData
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepare
-import com.x_twitter_scraper.api.models.x.media.MediaCreateParams
-import com.x_twitter_scraper.api.models.x.media.MediaCreateResponse
 import com.x_twitter_scraper.api.models.x.media.MediaDownloadParams
 import com.x_twitter_scraper.api.models.x.media.MediaDownloadResponse
+import com.x_twitter_scraper.api.models.x.media.MediaUploadParams
+import com.x_twitter_scraper.api.models.x.media.MediaUploadResponse
 import java.util.function.Consumer
 
 /** Media upload & download */
@@ -35,19 +35,19 @@ class MediaServiceImpl internal constructor(private val clientOptions: ClientOpt
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): MediaService =
         MediaServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun create(
-        params: MediaCreateParams,
-        requestOptions: RequestOptions,
-    ): MediaCreateResponse =
-        // post /x/media
-        withRawResponse().create(params, requestOptions).parse()
-
     override fun download(
         params: MediaDownloadParams,
         requestOptions: RequestOptions,
     ): MediaDownloadResponse =
         // post /x/media/download
         withRawResponse().download(params, requestOptions).parse()
+
+    override fun upload(
+        params: MediaUploadParams,
+        requestOptions: RequestOptions,
+    ): MediaUploadResponse =
+        // post /x/media
+        withRawResponse().upload(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         MediaService.WithRawResponse {
@@ -61,34 +61,6 @@ class MediaServiceImpl internal constructor(private val clientOptions: ClientOpt
             MediaServiceImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
-
-        private val createHandler: Handler<MediaCreateResponse> =
-            jsonHandler<MediaCreateResponse>(clientOptions.jsonMapper)
-
-        override fun create(
-            params: MediaCreateParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<MediaCreateResponse> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("x", "media")
-                    .body(multipartFormData(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { createHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
-        }
 
         private val downloadHandler: Handler<MediaDownloadResponse> =
             jsonHandler<MediaDownloadResponse>(clientOptions.jsonMapper)
@@ -110,6 +82,34 @@ class MediaServiceImpl internal constructor(private val clientOptions: ClientOpt
             return errorHandler.handle(response).parseable {
                 response
                     .use { downloadHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val uploadHandler: Handler<MediaUploadResponse> =
+            jsonHandler<MediaUploadResponse>(clientOptions.jsonMapper)
+
+        override fun upload(
+            params: MediaUploadParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<MediaUploadResponse> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "media")
+                    .body(multipartFormData(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { uploadHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()

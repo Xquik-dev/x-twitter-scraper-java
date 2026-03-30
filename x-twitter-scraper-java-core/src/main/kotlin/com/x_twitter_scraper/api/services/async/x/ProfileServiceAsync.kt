@@ -5,12 +5,12 @@ package com.x_twitter_scraper.api.services.async.x
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
-import com.x_twitter_scraper.api.models.x.profile.ProfilePatchAllParams
-import com.x_twitter_scraper.api.models.x.profile.ProfilePatchAllResponse
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateAvatarParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateAvatarResponse
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateBannerParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateBannerResponse
+import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateParams
+import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -30,14 +30,14 @@ interface ProfileServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProfileServiceAsync
 
     /** Update X profile */
-    fun patchAll(params: ProfilePatchAllParams): CompletableFuture<ProfilePatchAllResponse> =
-        patchAll(params, RequestOptions.none())
+    fun update(params: ProfileUpdateParams): CompletableFuture<ProfileUpdateResponse> =
+        update(params, RequestOptions.none())
 
-    /** @see patchAll */
-    fun patchAll(
-        params: ProfilePatchAllParams,
+    /** @see update */
+    fun update(
+        params: ProfileUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<ProfilePatchAllResponse>
+    ): CompletableFuture<ProfileUpdateResponse>
 
     /** Update profile avatar */
     fun updateAvatar(
@@ -77,18 +77,18 @@ interface ProfileServiceAsync {
 
         /**
          * Returns a raw HTTP response for `patch /x/profile`, but is otherwise the same as
-         * [ProfileServiceAsync.patchAll].
+         * [ProfileServiceAsync.update].
          */
-        fun patchAll(
-            params: ProfilePatchAllParams
-        ): CompletableFuture<HttpResponseFor<ProfilePatchAllResponse>> =
-            patchAll(params, RequestOptions.none())
+        fun update(
+            params: ProfileUpdateParams
+        ): CompletableFuture<HttpResponseFor<ProfileUpdateResponse>> =
+            update(params, RequestOptions.none())
 
-        /** @see patchAll */
-        fun patchAll(
-            params: ProfilePatchAllParams,
+        /** @see update */
+        fun update(
+            params: ProfileUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<ProfilePatchAllResponse>>
+        ): CompletableFuture<HttpResponseFor<ProfileUpdateResponse>>
 
         /**
          * Returns a raw HTTP response for `patch /x/profile/avatar`, but is otherwise the same as

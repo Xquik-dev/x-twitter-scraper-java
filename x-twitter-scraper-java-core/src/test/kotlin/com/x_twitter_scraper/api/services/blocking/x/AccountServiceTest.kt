@@ -44,9 +44,9 @@ internal class AccountServiceTest {
                 .build()
         val accountService = client.x().accounts()
 
-        val account = accountService.retrieve("id")
+        val xAccountDetail = accountService.retrieve("id")
 
-        account.validate()
+        xAccountDetail.validate()
     }
 
     @Disabled("Mock server tests are disabled")

@@ -21,10 +21,10 @@ internal class StyleServiceAsyncTest {
                 .build()
         val styleServiceAsync = client.styles()
 
-        val styleFuture = styleServiceAsync.retrieve("username")
+        val styleProfileFuture = styleServiceAsync.retrieve("username")
 
-        val style = styleFuture.get()
-        style.validate()
+        val styleProfile = styleProfileFuture.get()
+        styleProfile.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -37,7 +37,7 @@ internal class StyleServiceAsyncTest {
                 .build()
         val styleServiceAsync = client.styles()
 
-        val styleFuture =
+        val styleProfileFuture =
             styleServiceAsync.update(
                 StyleUpdateParams.builder()
                     .username("username")
@@ -46,8 +46,8 @@ internal class StyleServiceAsyncTest {
                     .build()
             )
 
-        val style = styleFuture.get()
-        style.validate()
+        val styleProfile = styleProfileFuture.get()
+        styleProfile.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -91,11 +91,11 @@ internal class StyleServiceAsyncTest {
                 .build()
         val styleServiceAsync = client.styles()
 
-        val responseFuture =
+        val styleProfileFuture =
             styleServiceAsync.analyze(StyleAnalyzeParams.builder().username("username").build())
 
-        val response = responseFuture.get()
-        response.validate()
+        val styleProfile = styleProfileFuture.get()
+        styleProfile.validate()
     }
 
     @Disabled("Mock server tests are disabled")

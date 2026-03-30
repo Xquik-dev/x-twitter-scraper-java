@@ -5,6 +5,7 @@ package com.x_twitter_scraper.api.services.async
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
+import com.x_twitter_scraper.api.models.webhooks.Webhook
 import com.x_twitter_scraper.api.models.webhooks.WebhookCreateParams
 import com.x_twitter_scraper.api.models.webhooks.WebhookCreateResponse
 import com.x_twitter_scraper.api.models.webhooks.WebhookDeactivateParams
@@ -16,7 +17,6 @@ import com.x_twitter_scraper.api.models.webhooks.WebhookListResponse
 import com.x_twitter_scraper.api.models.webhooks.WebhookTestParams
 import com.x_twitter_scraper.api.models.webhooks.WebhookTestResponse
 import com.x_twitter_scraper.api.models.webhooks.WebhookUpdateParams
-import com.x_twitter_scraper.api.models.webhooks.WebhookUpdateResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -46,38 +46,33 @@ interface WebhookServiceAsync {
     ): CompletableFuture<WebhookCreateResponse>
 
     /** Update webhook */
-    fun update(id: String): CompletableFuture<WebhookUpdateResponse> =
-        update(id, WebhookUpdateParams.none())
+    fun update(id: String): CompletableFuture<Webhook> = update(id, WebhookUpdateParams.none())
 
     /** @see update */
     fun update(
         id: String,
         params: WebhookUpdateParams = WebhookUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<WebhookUpdateResponse> =
-        update(params.toBuilder().id(id).build(), requestOptions)
+    ): CompletableFuture<Webhook> = update(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see update */
     fun update(
         id: String,
         params: WebhookUpdateParams = WebhookUpdateParams.none(),
-    ): CompletableFuture<WebhookUpdateResponse> = update(id, params, RequestOptions.none())
+    ): CompletableFuture<Webhook> = update(id, params, RequestOptions.none())
 
     /** @see update */
     fun update(
         params: WebhookUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<WebhookUpdateResponse>
+    ): CompletableFuture<Webhook>
 
     /** @see update */
-    fun update(params: WebhookUpdateParams): CompletableFuture<WebhookUpdateResponse> =
+    fun update(params: WebhookUpdateParams): CompletableFuture<Webhook> =
         update(params, RequestOptions.none())
 
     /** @see update */
-    fun update(
-        id: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<WebhookUpdateResponse> =
+    fun update(id: String, requestOptions: RequestOptions): CompletableFuture<Webhook> =
         update(id, WebhookUpdateParams.none(), requestOptions)
 
     /** List webhooks */
@@ -236,7 +231,7 @@ interface WebhookServiceAsync {
          * Returns a raw HTTP response for `patch /webhooks/{id}`, but is otherwise the same as
          * [WebhookServiceAsync.update].
          */
-        fun update(id: String): CompletableFuture<HttpResponseFor<WebhookUpdateResponse>> =
+        fun update(id: String): CompletableFuture<HttpResponseFor<Webhook>> =
             update(id, WebhookUpdateParams.none())
 
         /** @see update */
@@ -244,33 +239,30 @@ interface WebhookServiceAsync {
             id: String,
             params: WebhookUpdateParams = WebhookUpdateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<WebhookUpdateResponse>> =
+        ): CompletableFuture<HttpResponseFor<Webhook>> =
             update(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see update */
         fun update(
             id: String,
             params: WebhookUpdateParams = WebhookUpdateParams.none(),
-        ): CompletableFuture<HttpResponseFor<WebhookUpdateResponse>> =
-            update(id, params, RequestOptions.none())
+        ): CompletableFuture<HttpResponseFor<Webhook>> = update(id, params, RequestOptions.none())
 
         /** @see update */
         fun update(
             params: WebhookUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<WebhookUpdateResponse>>
+        ): CompletableFuture<HttpResponseFor<Webhook>>
 
         /** @see update */
-        fun update(
-            params: WebhookUpdateParams
-        ): CompletableFuture<HttpResponseFor<WebhookUpdateResponse>> =
+        fun update(params: WebhookUpdateParams): CompletableFuture<HttpResponseFor<Webhook>> =
             update(params, RequestOptions.none())
 
         /** @see update */
         fun update(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<WebhookUpdateResponse>> =
+        ): CompletableFuture<HttpResponseFor<Webhook>> =
             update(id, WebhookUpdateParams.none(), requestOptions)
 
         /**

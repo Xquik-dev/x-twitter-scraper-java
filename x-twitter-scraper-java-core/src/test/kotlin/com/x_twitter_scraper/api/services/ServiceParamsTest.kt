@@ -13,7 +13,7 @@ import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo
 import com.github.tomakehurst.wiremock.junit5.WireMockTest
 import com.x_twitter_scraper.api.client.XTwitterScraperClient
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
-import com.x_twitter_scraper.api.models.account.AccountRetrieveParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -37,12 +37,18 @@ internal class ServiceParamsTest {
 
     @Disabled("Mock server tests are disabled")
     @Test
-    fun retrieve() {
-        val accountService = client.account()
+    fun search() {
+        val tweetService = client.x().tweets()
         stubFor(get(anyUrl()).willReturn(ok("{}")))
 
-        accountService.retrieve(
-            AccountRetrieveParams.builder()
+        tweetService.search(
+            TweetSearchParams.builder()
+                .q("q")
+                .cursor("cursor")
+                .limit(200L)
+                .queryType(TweetSearchParams.QueryType.LATEST)
+                .sinceTime("sinceTime")
+                .untilTime("untilTime")
                 .putAdditionalHeader("Secret-Header", "42")
                 .putAdditionalQueryParam("secret_query_param", "42")
                 .build()

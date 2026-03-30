@@ -16,12 +16,12 @@ import com.x_twitter_scraper.api.core.http.json
 import com.x_twitter_scraper.api.core.http.multipartFormData
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepareAsync
-import com.x_twitter_scraper.api.models.x.profile.ProfilePatchAllParams
-import com.x_twitter_scraper.api.models.x.profile.ProfilePatchAllResponse
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateAvatarParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateAvatarResponse
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateBannerParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateBannerResponse
+import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateParams
+import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -38,12 +38,12 @@ class ProfileServiceAsyncImpl internal constructor(private val clientOptions: Cl
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProfileServiceAsync =
         ProfileServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun patchAll(
-        params: ProfilePatchAllParams,
+    override fun update(
+        params: ProfileUpdateParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<ProfilePatchAllResponse> =
+    ): CompletableFuture<ProfileUpdateResponse> =
         // patch /x/profile
-        withRawResponse().patchAll(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().update(params, requestOptions).thenApply { it.parse() }
 
     override fun updateAvatar(
         params: ProfileUpdateAvatarParams,
@@ -72,13 +72,13 @@ class ProfileServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val patchAllHandler: Handler<ProfilePatchAllResponse> =
-            jsonHandler<ProfilePatchAllResponse>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<ProfileUpdateResponse> =
+            jsonHandler<ProfileUpdateResponse>(clientOptions.jsonMapper)
 
-        override fun patchAll(
-            params: ProfilePatchAllParams,
+        override fun update(
+            params: ProfileUpdateParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<ProfilePatchAllResponse>> {
+        ): CompletableFuture<HttpResponseFor<ProfileUpdateResponse>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.PATCH)
@@ -93,7 +93,7 @@ class ProfileServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 .thenApply { response ->
                     errorHandler.handle(response).parseable {
                         response
-                            .use { patchAllHandler.handle(it) }
+                            .use { updateHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

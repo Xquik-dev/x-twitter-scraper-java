@@ -3,6 +3,7 @@
 package com.x_twitter_scraper.api.services.async
 
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClientAsync
+import com.x_twitter_scraper.api.models.EventType
 import com.x_twitter_scraper.api.models.monitors.MonitorCreateParams
 import com.x_twitter_scraper.api.models.monitors.MonitorUpdateParams
 import org.junit.jupiter.api.Disabled
@@ -23,7 +24,7 @@ internal class MonitorServiceAsyncTest {
         val monitorFuture =
             monitorServiceAsync.create(
                 MonitorCreateParams.builder()
-                    .addEventType(MonitorCreateParams.EventType.TWEET_NEW)
+                    .addEventType(EventType.TWEET_NEW)
                     .username("username")
                     .build()
             )
@@ -62,7 +63,7 @@ internal class MonitorServiceAsyncTest {
             monitorServiceAsync.update(
                 MonitorUpdateParams.builder()
                     .id("id")
-                    .addEventType(MonitorUpdateParams.EventType.TWEET_NEW)
+                    .addEventType(EventType.TWEET_NEW)
                     .isActive(true)
                     .build()
             )

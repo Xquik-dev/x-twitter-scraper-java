@@ -3,6 +3,7 @@
 package com.x_twitter_scraper.api.services.blocking
 
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
+import com.x_twitter_scraper.api.models.EventType
 import com.x_twitter_scraper.api.models.webhooks.WebhookCreateParams
 import com.x_twitter_scraper.api.models.webhooks.WebhookUpdateParams
 import org.junit.jupiter.api.Disabled
@@ -23,7 +24,7 @@ internal class WebhookServiceTest {
         val webhook =
             webhookService.create(
                 WebhookCreateParams.builder()
-                    .addEventType(WebhookCreateParams.EventType.TWEET_NEW)
+                    .addEventType(EventType.TWEET_NEW)
                     .url("https://example.com")
                     .build()
             )
@@ -45,7 +46,7 @@ internal class WebhookServiceTest {
             webhookService.update(
                 WebhookUpdateParams.builder()
                     .id("id")
-                    .addEventType(WebhookUpdateParams.EventType.TWEET_NEW)
+                    .addEventType(EventType.TWEET_NEW)
                     .isActive(true)
                     .url("https://example.com")
                     .build()
