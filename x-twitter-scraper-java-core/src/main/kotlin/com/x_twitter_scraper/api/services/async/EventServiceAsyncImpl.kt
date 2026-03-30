@@ -16,10 +16,10 @@ import com.x_twitter_scraper.api.core.http.HttpResponse.Handler
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepareAsync
+import com.x_twitter_scraper.api.models.events.EventDetail
 import com.x_twitter_scraper.api.models.events.EventListParams
 import com.x_twitter_scraper.api.models.events.EventListResponse
 import com.x_twitter_scraper.api.models.events.EventRetrieveParams
-import com.x_twitter_scraper.api.models.events.EventRetrieveResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -40,7 +40,7 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
     override fun retrieve(
         params: EventRetrieveParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<EventRetrieveResponse> =
+    ): CompletableFuture<EventDetail> =
         // get /events/{id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
@@ -64,13 +64,13 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val retrieveHandler: Handler<EventRetrieveResponse> =
-            jsonHandler<EventRetrieveResponse>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<EventDetail> =
+            jsonHandler<EventDetail>(clientOptions.jsonMapper)
 
         override fun retrieve(
             params: EventRetrieveParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<EventRetrieveResponse>> {
+        ): CompletableFuture<HttpResponseFor<EventDetail>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())

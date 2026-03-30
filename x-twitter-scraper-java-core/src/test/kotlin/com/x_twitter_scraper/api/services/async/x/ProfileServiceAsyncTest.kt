@@ -3,9 +3,9 @@
 package com.x_twitter_scraper.api.services.async.x
 
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClientAsync
-import com.x_twitter_scraper.api.models.x.profile.ProfilePatchAllParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateAvatarParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateBannerParams
+import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -13,7 +13,7 @@ internal class ProfileServiceAsyncTest {
 
     @Disabled("Mock server tests are disabled")
     @Test
-    fun patchAll() {
+    fun update() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
                 .apiKey("My API Key")
@@ -21,9 +21,9 @@ internal class ProfileServiceAsyncTest {
                 .build()
         val profileServiceAsync = client.x().profile()
 
-        val responseFuture =
-            profileServiceAsync.patchAll(
-                ProfilePatchAllParams.builder()
+        val profileFuture =
+            profileServiceAsync.update(
+                ProfileUpdateParams.builder()
                     .account("account")
                     .description("description")
                     .location("location")
@@ -32,8 +32,8 @@ internal class ProfileServiceAsyncTest {
                     .build()
             )
 
-        val response = responseFuture.get()
-        response.validate()
+        val profile = profileFuture.get()
+        profile.validate()
     }
 
     @Disabled("Mock server tests are disabled")

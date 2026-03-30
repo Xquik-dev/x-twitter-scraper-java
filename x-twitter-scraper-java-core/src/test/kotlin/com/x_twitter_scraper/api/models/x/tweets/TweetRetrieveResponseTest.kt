@@ -14,7 +14,7 @@ internal class TweetRetrieveResponseTest {
         val tweetRetrieveResponse =
             TweetRetrieveResponse.builder()
                 .tweet(
-                    TweetRetrieveResponse.Tweet.builder()
+                    TweetDetail.builder()
                         .id("id")
                         .bookmarkCount(0L)
                         .likeCount(0L)
@@ -27,7 +27,7 @@ internal class TweetRetrieveResponseTest {
                         .build()
                 )
                 .author(
-                    TweetRetrieveResponse.Author.builder()
+                    TweetAuthor.builder()
                         .id("id")
                         .followers(0L)
                         .username("username")
@@ -39,7 +39,7 @@ internal class TweetRetrieveResponseTest {
 
         assertThat(tweetRetrieveResponse.tweet())
             .isEqualTo(
-                TweetRetrieveResponse.Tweet.builder()
+                TweetDetail.builder()
                     .id("id")
                     .bookmarkCount(0L)
                     .likeCount(0L)
@@ -53,7 +53,7 @@ internal class TweetRetrieveResponseTest {
             )
         assertThat(tweetRetrieveResponse.author())
             .contains(
-                TweetRetrieveResponse.Author.builder()
+                TweetAuthor.builder()
                     .id("id")
                     .followers(0L)
                     .username("username")
@@ -69,7 +69,7 @@ internal class TweetRetrieveResponseTest {
         val tweetRetrieveResponse =
             TweetRetrieveResponse.builder()
                 .tweet(
-                    TweetRetrieveResponse.Tweet.builder()
+                    TweetDetail.builder()
                         .id("id")
                         .bookmarkCount(0L)
                         .likeCount(0L)
@@ -82,7 +82,7 @@ internal class TweetRetrieveResponseTest {
                         .build()
                 )
                 .author(
-                    TweetRetrieveResponse.Author.builder()
+                    TweetAuthor.builder()
                         .id("id")
                         .followers(0L)
                         .username("username")

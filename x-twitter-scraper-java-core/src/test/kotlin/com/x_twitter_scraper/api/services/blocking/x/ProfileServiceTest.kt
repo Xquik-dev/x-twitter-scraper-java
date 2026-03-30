@@ -3,9 +3,9 @@
 package com.x_twitter_scraper.api.services.blocking.x
 
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
-import com.x_twitter_scraper.api.models.x.profile.ProfilePatchAllParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateAvatarParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateBannerParams
+import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -13,7 +13,7 @@ internal class ProfileServiceTest {
 
     @Disabled("Mock server tests are disabled")
     @Test
-    fun patchAll() {
+    fun update() {
         val client =
             XTwitterScraperOkHttpClient.builder()
                 .apiKey("My API Key")
@@ -21,9 +21,9 @@ internal class ProfileServiceTest {
                 .build()
         val profileService = client.x().profile()
 
-        val response =
-            profileService.patchAll(
-                ProfilePatchAllParams.builder()
+        val profile =
+            profileService.update(
+                ProfileUpdateParams.builder()
                     .account("account")
                     .description("description")
                     .location("location")
@@ -32,7 +32,7 @@ internal class ProfileServiceTest {
                     .build()
             )
 
-        response.validate()
+        profile.validate()
     }
 
     @Disabled("Mock server tests are disabled")

@@ -22,6 +22,7 @@ configure<PublishingExtension> {
                 developers {
                     developer {
                         name.set("X Twitter Scraper")
+                        email.set("support@xquik.com")
                     }
                 }
 

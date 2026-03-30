@@ -14,8 +14,8 @@ import com.x_twitter_scraper.api.core.http.HttpResponse.Handler
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepare
-import com.x_twitter_scraper.api.models.x.followers.FollowerRetrieveCheckParams
-import com.x_twitter_scraper.api.models.x.followers.FollowerRetrieveCheckResponse
+import com.x_twitter_scraper.api.models.x.followers.FollowerCheckParams
+import com.x_twitter_scraper.api.models.x.followers.FollowerCheckResponse
 import java.util.function.Consumer
 
 /** X data lookups (subscription required) */
@@ -31,12 +31,12 @@ class FollowerServiceImpl internal constructor(private val clientOptions: Client
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): FollowerService =
         FollowerServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun retrieveCheck(
-        params: FollowerRetrieveCheckParams,
+    override fun check(
+        params: FollowerCheckParams,
         requestOptions: RequestOptions,
-    ): FollowerRetrieveCheckResponse =
+    ): FollowerCheckResponse =
         // get /x/followers/check
-        withRawResponse().retrieveCheck(params, requestOptions).parse()
+        withRawResponse().check(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         FollowerService.WithRawResponse {
@@ -51,13 +51,13 @@ class FollowerServiceImpl internal constructor(private val clientOptions: Client
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val retrieveCheckHandler: Handler<FollowerRetrieveCheckResponse> =
-            jsonHandler<FollowerRetrieveCheckResponse>(clientOptions.jsonMapper)
+        private val checkHandler: Handler<FollowerCheckResponse> =
+            jsonHandler<FollowerCheckResponse>(clientOptions.jsonMapper)
 
-        override fun retrieveCheck(
-            params: FollowerRetrieveCheckParams,
+        override fun check(
+            params: FollowerCheckParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<FollowerRetrieveCheckResponse> {
+        ): HttpResponseFor<FollowerCheckResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -69,7 +69,7 @@ class FollowerServiceImpl internal constructor(private val clientOptions: Client
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
                 response
-                    .use { retrieveCheckHandler.handle(it) }
+                    .use { checkHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()

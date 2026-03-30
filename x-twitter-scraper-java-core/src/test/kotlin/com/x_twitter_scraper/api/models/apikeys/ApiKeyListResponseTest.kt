@@ -15,7 +15,7 @@ internal class ApiKeyListResponseTest {
         val apiKeyListResponse =
             ApiKeyListResponse.builder()
                 .addKey(
-                    ApiKeyListResponse.Key.builder()
+                    ApiKey.builder()
                         .id("id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .isActive(true)
@@ -28,7 +28,7 @@ internal class ApiKeyListResponseTest {
 
         assertThat(apiKeyListResponse.keys())
             .containsExactly(
-                ApiKeyListResponse.Key.builder()
+                ApiKey.builder()
                     .id("id")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .isActive(true)
@@ -45,7 +45,7 @@ internal class ApiKeyListResponseTest {
         val apiKeyListResponse =
             ApiKeyListResponse.builder()
                 .addKey(
-                    ApiKeyListResponse.Key.builder()
+                    ApiKey.builder()
                         .id("id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .isActive(true)

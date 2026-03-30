@@ -4,6 +4,7 @@ package com.x_twitter_scraper.api.models.x
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.core.jsonMapper
+import com.x_twitter_scraper.api.models.x.tweets.TweetAuthor
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -35,7 +36,7 @@ internal class XGetArticleResponseTest {
                         .build()
                 )
                 .author(
-                    XGetArticleResponse.Author.builder()
+                    TweetAuthor.builder()
                         .id("id")
                         .followers(0L)
                         .username("username")
@@ -69,7 +70,7 @@ internal class XGetArticleResponseTest {
             )
         assertThat(xGetArticleResponse.author())
             .contains(
-                XGetArticleResponse.Author.builder()
+                TweetAuthor.builder()
                     .id("id")
                     .followers(0L)
                     .username("username")
@@ -106,7 +107,7 @@ internal class XGetArticleResponseTest {
                         .build()
                 )
                 .author(
-                    XGetArticleResponse.Author.builder()
+                    TweetAuthor.builder()
                         .id("id")
                         .followers(0L)
                         .username("username")

@@ -7,7 +7,6 @@ import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponse
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.models.styles.StyleAnalyzeParams
-import com.x_twitter_scraper.api.models.styles.StyleAnalyzeResponse
 import com.x_twitter_scraper.api.models.styles.StyleCompareParams
 import com.x_twitter_scraper.api.models.styles.StyleCompareResponse
 import com.x_twitter_scraper.api.models.styles.StyleDeleteParams
@@ -15,10 +14,9 @@ import com.x_twitter_scraper.api.models.styles.StyleGetPerformanceParams
 import com.x_twitter_scraper.api.models.styles.StyleGetPerformanceResponse
 import com.x_twitter_scraper.api.models.styles.StyleListParams
 import com.x_twitter_scraper.api.models.styles.StyleListResponse
+import com.x_twitter_scraper.api.models.styles.StyleProfile
 import com.x_twitter_scraper.api.models.styles.StyleRetrieveParams
-import com.x_twitter_scraper.api.models.styles.StyleRetrieveResponse
 import com.x_twitter_scraper.api.models.styles.StyleUpdateParams
-import com.x_twitter_scraper.api.models.styles.StyleUpdateResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -38,7 +36,7 @@ interface StyleServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): StyleServiceAsync
 
     /** Get cached style profile */
-    fun retrieve(username: String): CompletableFuture<StyleRetrieveResponse> =
+    fun retrieve(username: String): CompletableFuture<StyleProfile> =
         retrieve(username, StyleRetrieveParams.none())
 
     /** @see retrieve */
@@ -46,55 +44,53 @@ interface StyleServiceAsync {
         username: String,
         params: StyleRetrieveParams = StyleRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<StyleRetrieveResponse> =
+    ): CompletableFuture<StyleProfile> =
         retrieve(params.toBuilder().username(username).build(), requestOptions)
 
     /** @see retrieve */
     fun retrieve(
         username: String,
         params: StyleRetrieveParams = StyleRetrieveParams.none(),
-    ): CompletableFuture<StyleRetrieveResponse> = retrieve(username, params, RequestOptions.none())
+    ): CompletableFuture<StyleProfile> = retrieve(username, params, RequestOptions.none())
 
     /** @see retrieve */
     fun retrieve(
         params: StyleRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<StyleRetrieveResponse>
+    ): CompletableFuture<StyleProfile>
 
     /** @see retrieve */
-    fun retrieve(params: StyleRetrieveParams): CompletableFuture<StyleRetrieveResponse> =
+    fun retrieve(params: StyleRetrieveParams): CompletableFuture<StyleProfile> =
         retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
     fun retrieve(
         username: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<StyleRetrieveResponse> =
+    ): CompletableFuture<StyleProfile> =
         retrieve(username, StyleRetrieveParams.none(), requestOptions)
 
     /** Save style profile with custom tweets */
-    fun update(
-        username: String,
-        params: StyleUpdateParams,
-    ): CompletableFuture<StyleUpdateResponse> = update(username, params, RequestOptions.none())
+    fun update(username: String, params: StyleUpdateParams): CompletableFuture<StyleProfile> =
+        update(username, params, RequestOptions.none())
 
     /** @see update */
     fun update(
         username: String,
         params: StyleUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<StyleUpdateResponse> =
+    ): CompletableFuture<StyleProfile> =
         update(params.toBuilder().username(username).build(), requestOptions)
 
     /** @see update */
-    fun update(params: StyleUpdateParams): CompletableFuture<StyleUpdateResponse> =
+    fun update(params: StyleUpdateParams): CompletableFuture<StyleProfile> =
         update(params, RequestOptions.none())
 
     /** @see update */
     fun update(
         params: StyleUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<StyleUpdateResponse>
+    ): CompletableFuture<StyleProfile>
 
     /** List cached style profiles */
     fun list(): CompletableFuture<StyleListResponse> = list(StyleListParams.none())
@@ -147,14 +143,14 @@ interface StyleServiceAsync {
         delete(username, StyleDeleteParams.none(), requestOptions)
 
     /** Analyze writing style from recent tweets */
-    fun analyze(params: StyleAnalyzeParams): CompletableFuture<StyleAnalyzeResponse> =
+    fun analyze(params: StyleAnalyzeParams): CompletableFuture<StyleProfile> =
         analyze(params, RequestOptions.none())
 
     /** @see analyze */
     fun analyze(
         params: StyleAnalyzeParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<StyleAnalyzeResponse>
+    ): CompletableFuture<StyleProfile>
 
     /** Compare two style profiles */
     fun compare(params: StyleCompareParams): CompletableFuture<StyleCompareResponse> =
@@ -220,7 +216,7 @@ interface StyleServiceAsync {
          * Returns a raw HTTP response for `get /styles/{username}`, but is otherwise the same as
          * [StyleServiceAsync.retrieve].
          */
-        fun retrieve(username: String): CompletableFuture<HttpResponseFor<StyleRetrieveResponse>> =
+        fun retrieve(username: String): CompletableFuture<HttpResponseFor<StyleProfile>> =
             retrieve(username, StyleRetrieveParams.none())
 
         /** @see retrieve */
@@ -228,33 +224,33 @@ interface StyleServiceAsync {
             username: String,
             params: StyleRetrieveParams = StyleRetrieveParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<StyleRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<StyleProfile>> =
             retrieve(params.toBuilder().username(username).build(), requestOptions)
 
         /** @see retrieve */
         fun retrieve(
             username: String,
             params: StyleRetrieveParams = StyleRetrieveParams.none(),
-        ): CompletableFuture<HttpResponseFor<StyleRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<StyleProfile>> =
             retrieve(username, params, RequestOptions.none())
 
         /** @see retrieve */
         fun retrieve(
             params: StyleRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<StyleRetrieveResponse>>
+        ): CompletableFuture<HttpResponseFor<StyleProfile>>
 
         /** @see retrieve */
         fun retrieve(
             params: StyleRetrieveParams
-        ): CompletableFuture<HttpResponseFor<StyleRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<StyleProfile>> =
             retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
         fun retrieve(
             username: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<StyleRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<StyleProfile>> =
             retrieve(username, StyleRetrieveParams.none(), requestOptions)
 
         /**
@@ -264,7 +260,7 @@ interface StyleServiceAsync {
         fun update(
             username: String,
             params: StyleUpdateParams,
-        ): CompletableFuture<HttpResponseFor<StyleUpdateResponse>> =
+        ): CompletableFuture<HttpResponseFor<StyleProfile>> =
             update(username, params, RequestOptions.none())
 
         /** @see update */
@@ -272,20 +268,18 @@ interface StyleServiceAsync {
             username: String,
             params: StyleUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<StyleUpdateResponse>> =
+        ): CompletableFuture<HttpResponseFor<StyleProfile>> =
             update(params.toBuilder().username(username).build(), requestOptions)
 
         /** @see update */
-        fun update(
-            params: StyleUpdateParams
-        ): CompletableFuture<HttpResponseFor<StyleUpdateResponse>> =
+        fun update(params: StyleUpdateParams): CompletableFuture<HttpResponseFor<StyleProfile>> =
             update(params, RequestOptions.none())
 
         /** @see update */
         fun update(
             params: StyleUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<StyleUpdateResponse>>
+        ): CompletableFuture<HttpResponseFor<StyleProfile>>
 
         /**
          * Returns a raw HTTP response for `get /styles`, but is otherwise the same as
@@ -354,16 +348,14 @@ interface StyleServiceAsync {
          * Returns a raw HTTP response for `post /styles`, but is otherwise the same as
          * [StyleServiceAsync.analyze].
          */
-        fun analyze(
-            params: StyleAnalyzeParams
-        ): CompletableFuture<HttpResponseFor<StyleAnalyzeResponse>> =
+        fun analyze(params: StyleAnalyzeParams): CompletableFuture<HttpResponseFor<StyleProfile>> =
             analyze(params, RequestOptions.none())
 
         /** @see analyze */
         fun analyze(
             params: StyleAnalyzeParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<StyleAnalyzeResponse>>
+        ): CompletableFuture<HttpResponseFor<StyleProfile>>
 
         /**
          * Returns a raw HTTP response for `get /styles/compare`, but is otherwise the same as

@@ -14,8 +14,8 @@ import com.x_twitter_scraper.api.core.http.HttpResponse.Handler
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepare
+import com.x_twitter_scraper.api.models.PaginatedTweets
 import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkListParams
-import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkListResponse
 import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkRetrieveFoldersParams
 import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkRetrieveFoldersResponse
 import java.util.function.Consumer
@@ -33,10 +33,7 @@ class BookmarkServiceImpl internal constructor(private val clientOptions: Client
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BookmarkService =
         BookmarkServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun list(
-        params: BookmarkListParams,
-        requestOptions: RequestOptions,
-    ): BookmarkListResponse =
+    override fun list(params: BookmarkListParams, requestOptions: RequestOptions): PaginatedTweets =
         // get /x/bookmarks
         withRawResponse().list(params, requestOptions).parse()
 
@@ -60,13 +57,13 @@ class BookmarkServiceImpl internal constructor(private val clientOptions: Client
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val listHandler: Handler<BookmarkListResponse> =
-            jsonHandler<BookmarkListResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<PaginatedTweets> =
+            jsonHandler<PaginatedTweets>(clientOptions.jsonMapper)
 
         override fun list(
             params: BookmarkListParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<BookmarkListResponse> {
+        ): HttpResponseFor<PaginatedTweets> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)

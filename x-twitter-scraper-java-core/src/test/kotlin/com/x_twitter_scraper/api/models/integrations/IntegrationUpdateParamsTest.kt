@@ -3,6 +3,7 @@
 package com.x_twitter_scraper.api.models.integrations
 
 import com.x_twitter_scraper.api.core.JsonValue
+import com.x_twitter_scraper.api.models.EventType
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -13,7 +14,7 @@ internal class IntegrationUpdateParamsTest {
     fun create() {
         IntegrationUpdateParams.builder()
             .id("id")
-            .addEventType(IntegrationUpdateParams.EventType.TWEET_NEW)
+            .addEventType(EventType.TWEET_NEW)
             .filters(
                 IntegrationUpdateParams.Filters.builder()
                     .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -45,7 +46,7 @@ internal class IntegrationUpdateParamsTest {
         val params =
             IntegrationUpdateParams.builder()
                 .id("id")
-                .addEventType(IntegrationUpdateParams.EventType.TWEET_NEW)
+                .addEventType(EventType.TWEET_NEW)
                 .filters(
                     IntegrationUpdateParams.Filters.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -64,8 +65,7 @@ internal class IntegrationUpdateParamsTest {
 
         val body = params._body()
 
-        assertThat(body.eventTypes().getOrNull())
-            .containsExactly(IntegrationUpdateParams.EventType.TWEET_NEW)
+        assertThat(body.eventTypes().getOrNull()).containsExactly(EventType.TWEET_NEW)
         assertThat(body.filters())
             .contains(
                 IntegrationUpdateParams.Filters.builder()

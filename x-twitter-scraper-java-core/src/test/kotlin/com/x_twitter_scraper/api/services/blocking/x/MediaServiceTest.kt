@@ -3,34 +3,12 @@
 package com.x_twitter_scraper.api.services.blocking.x
 
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
-import com.x_twitter_scraper.api.models.x.media.MediaCreateParams
 import com.x_twitter_scraper.api.models.x.media.MediaDownloadParams
+import com.x_twitter_scraper.api.models.x.media.MediaUploadParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class MediaServiceTest {
-
-    @Disabled("Mock server tests are disabled")
-    @Test
-    fun create() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
-        val mediaService = client.x().media()
-
-        val media =
-            mediaService.create(
-                MediaCreateParams.builder()
-                    .account("account")
-                    .file("Example data".byteInputStream())
-                    .isLongVideo(true)
-                    .build()
-            )
-
-        media.validate()
-    }
 
     @Disabled("Mock server tests are disabled")
     @Test
@@ -45,6 +23,28 @@ internal class MediaServiceTest {
         val response =
             mediaService.download(
                 MediaDownloadParams.builder().addTweetId("string").tweetInput("tweetInput").build()
+            )
+
+        response.validate()
+    }
+
+    @Disabled("Mock server tests are disabled")
+    @Test
+    fun upload() {
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
+        val mediaService = client.x().media()
+
+        val response =
+            mediaService.upload(
+                MediaUploadParams.builder()
+                    .account("account")
+                    .file("Example data".byteInputStream())
+                    .isLongVideo(true)
+                    .build()
             )
 
         response.validate()

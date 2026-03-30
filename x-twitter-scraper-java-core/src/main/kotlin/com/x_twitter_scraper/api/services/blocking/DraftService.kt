@@ -8,12 +8,11 @@ import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponse
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.models.drafts.DraftCreateParams
-import com.x_twitter_scraper.api.models.drafts.DraftCreateResponse
 import com.x_twitter_scraper.api.models.drafts.DraftDeleteParams
+import com.x_twitter_scraper.api.models.drafts.DraftDetail
 import com.x_twitter_scraper.api.models.drafts.DraftListParams
 import com.x_twitter_scraper.api.models.drafts.DraftListResponse
 import com.x_twitter_scraper.api.models.drafts.DraftRetrieveParams
-import com.x_twitter_scraper.api.models.drafts.DraftRetrieveResponse
 import java.util.function.Consumer
 
 /** Tweet composition, drafts, writing styles & radar */
@@ -32,43 +31,41 @@ interface DraftService {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): DraftService
 
     /** Save a tweet draft */
-    fun create(params: DraftCreateParams): DraftCreateResponse =
-        create(params, RequestOptions.none())
+    fun create(params: DraftCreateParams): DraftDetail = create(params, RequestOptions.none())
 
     /** @see create */
     fun create(
         params: DraftCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): DraftCreateResponse
+    ): DraftDetail
 
     /** Get draft by ID */
-    fun retrieve(id: String): DraftRetrieveResponse = retrieve(id, DraftRetrieveParams.none())
+    fun retrieve(id: String): DraftDetail = retrieve(id, DraftRetrieveParams.none())
 
     /** @see retrieve */
     fun retrieve(
         id: String,
         params: DraftRetrieveParams = DraftRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): DraftRetrieveResponse = retrieve(params.toBuilder().id(id).build(), requestOptions)
+    ): DraftDetail = retrieve(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieve */
     fun retrieve(
         id: String,
         params: DraftRetrieveParams = DraftRetrieveParams.none(),
-    ): DraftRetrieveResponse = retrieve(id, params, RequestOptions.none())
+    ): DraftDetail = retrieve(id, params, RequestOptions.none())
 
     /** @see retrieve */
     fun retrieve(
         params: DraftRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): DraftRetrieveResponse
+    ): DraftDetail
 
     /** @see retrieve */
-    fun retrieve(params: DraftRetrieveParams): DraftRetrieveResponse =
-        retrieve(params, RequestOptions.none())
+    fun retrieve(params: DraftRetrieveParams): DraftDetail = retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
-    fun retrieve(id: String, requestOptions: RequestOptions): DraftRetrieveResponse =
+    fun retrieve(id: String, requestOptions: RequestOptions): DraftDetail =
         retrieve(id, DraftRetrieveParams.none(), requestOptions)
 
     /** List saved drafts */
@@ -127,7 +124,7 @@ interface DraftService {
          * [DraftService.create].
          */
         @MustBeClosed
-        fun create(params: DraftCreateParams): HttpResponseFor<DraftCreateResponse> =
+        fun create(params: DraftCreateParams): HttpResponseFor<DraftDetail> =
             create(params, RequestOptions.none())
 
         /** @see create */
@@ -135,14 +132,14 @@ interface DraftService {
         fun create(
             params: DraftCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<DraftCreateResponse>
+        ): HttpResponseFor<DraftDetail>
 
         /**
          * Returns a raw HTTP response for `get /drafts/{id}`, but is otherwise the same as
          * [DraftService.retrieve].
          */
         @MustBeClosed
-        fun retrieve(id: String): HttpResponseFor<DraftRetrieveResponse> =
+        fun retrieve(id: String): HttpResponseFor<DraftDetail> =
             retrieve(id, DraftRetrieveParams.none())
 
         /** @see retrieve */
@@ -151,7 +148,7 @@ interface DraftService {
             id: String,
             params: DraftRetrieveParams = DraftRetrieveParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<DraftRetrieveResponse> =
+        ): HttpResponseFor<DraftDetail> =
             retrieve(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieve */
@@ -159,26 +156,23 @@ interface DraftService {
         fun retrieve(
             id: String,
             params: DraftRetrieveParams = DraftRetrieveParams.none(),
-        ): HttpResponseFor<DraftRetrieveResponse> = retrieve(id, params, RequestOptions.none())
+        ): HttpResponseFor<DraftDetail> = retrieve(id, params, RequestOptions.none())
 
         /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             params: DraftRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<DraftRetrieveResponse>
+        ): HttpResponseFor<DraftDetail>
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(params: DraftRetrieveParams): HttpResponseFor<DraftRetrieveResponse> =
+        fun retrieve(params: DraftRetrieveParams): HttpResponseFor<DraftDetail> =
             retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            id: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<DraftRetrieveResponse> =
+        fun retrieve(id: String, requestOptions: RequestOptions): HttpResponseFor<DraftDetail> =
             retrieve(id, DraftRetrieveParams.none(), requestOptions)
 
         /**

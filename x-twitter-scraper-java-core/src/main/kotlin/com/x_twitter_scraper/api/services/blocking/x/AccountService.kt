@@ -15,7 +15,7 @@ import com.x_twitter_scraper.api.models.x.accounts.AccountListResponse
 import com.x_twitter_scraper.api.models.x.accounts.AccountReauthParams
 import com.x_twitter_scraper.api.models.x.accounts.AccountReauthResponse
 import com.x_twitter_scraper.api.models.x.accounts.AccountRetrieveParams
-import com.x_twitter_scraper.api.models.x.accounts.AccountRetrieveResponse
+import com.x_twitter_scraper.api.models.x.accounts.XAccountDetail
 import java.util.function.Consumer
 
 /** Connected X account management */
@@ -44,33 +44,33 @@ interface AccountService {
     ): AccountCreateResponse
 
     /** Get X account details */
-    fun retrieve(id: String): AccountRetrieveResponse = retrieve(id, AccountRetrieveParams.none())
+    fun retrieve(id: String): XAccountDetail = retrieve(id, AccountRetrieveParams.none())
 
     /** @see retrieve */
     fun retrieve(
         id: String,
         params: AccountRetrieveParams = AccountRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): AccountRetrieveResponse = retrieve(params.toBuilder().id(id).build(), requestOptions)
+    ): XAccountDetail = retrieve(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieve */
     fun retrieve(
         id: String,
         params: AccountRetrieveParams = AccountRetrieveParams.none(),
-    ): AccountRetrieveResponse = retrieve(id, params, RequestOptions.none())
+    ): XAccountDetail = retrieve(id, params, RequestOptions.none())
 
     /** @see retrieve */
     fun retrieve(
         params: AccountRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): AccountRetrieveResponse
+    ): XAccountDetail
 
     /** @see retrieve */
-    fun retrieve(params: AccountRetrieveParams): AccountRetrieveResponse =
+    fun retrieve(params: AccountRetrieveParams): XAccountDetail =
         retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
-    fun retrieve(id: String, requestOptions: RequestOptions): AccountRetrieveResponse =
+    fun retrieve(id: String, requestOptions: RequestOptions): XAccountDetail =
         retrieve(id, AccountRetrieveParams.none(), requestOptions)
 
     /** List connected X accounts */
@@ -171,7 +171,7 @@ interface AccountService {
          * [AccountService.retrieve].
          */
         @MustBeClosed
-        fun retrieve(id: String): HttpResponseFor<AccountRetrieveResponse> =
+        fun retrieve(id: String): HttpResponseFor<XAccountDetail> =
             retrieve(id, AccountRetrieveParams.none())
 
         /** @see retrieve */
@@ -180,7 +180,7 @@ interface AccountService {
             id: String,
             params: AccountRetrieveParams = AccountRetrieveParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<AccountRetrieveResponse> =
+        ): HttpResponseFor<XAccountDetail> =
             retrieve(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieve */
@@ -188,26 +188,23 @@ interface AccountService {
         fun retrieve(
             id: String,
             params: AccountRetrieveParams = AccountRetrieveParams.none(),
-        ): HttpResponseFor<AccountRetrieveResponse> = retrieve(id, params, RequestOptions.none())
+        ): HttpResponseFor<XAccountDetail> = retrieve(id, params, RequestOptions.none())
 
         /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             params: AccountRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<AccountRetrieveResponse>
+        ): HttpResponseFor<XAccountDetail>
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(params: AccountRetrieveParams): HttpResponseFor<AccountRetrieveResponse> =
+        fun retrieve(params: AccountRetrieveParams): HttpResponseFor<XAccountDetail> =
             retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            id: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<AccountRetrieveResponse> =
+        fun retrieve(id: String, requestOptions: RequestOptions): HttpResponseFor<XAccountDetail> =
             retrieve(id, AccountRetrieveParams.none(), requestOptions)
 
         /**

@@ -16,10 +16,10 @@ import com.x_twitter_scraper.api.core.http.HttpResponse.Handler
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepare
+import com.x_twitter_scraper.api.models.PaginatedTweets
 import com.x_twitter_scraper.api.models.x.XGetArticleParams
 import com.x_twitter_scraper.api.models.x.XGetArticleResponse
 import com.x_twitter_scraper.api.models.x.XGetHomeTimelineParams
-import com.x_twitter_scraper.api.models.x.XGetHomeTimelineResponse
 import com.x_twitter_scraper.api.models.x.XGetNotificationsParams
 import com.x_twitter_scraper.api.models.x.XGetNotificationsResponse
 import com.x_twitter_scraper.api.models.x.XGetTrendsParams
@@ -115,7 +115,7 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
     override fun getHomeTimeline(
         params: XGetHomeTimelineParams,
         requestOptions: RequestOptions,
-    ): XGetHomeTimelineResponse =
+    ): PaginatedTweets =
         // get /x/timeline
         withRawResponse().getHomeTimeline(params, requestOptions).parse()
 
@@ -241,13 +241,13 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
             }
         }
 
-        private val getHomeTimelineHandler: Handler<XGetHomeTimelineResponse> =
-            jsonHandler<XGetHomeTimelineResponse>(clientOptions.jsonMapper)
+        private val getHomeTimelineHandler: Handler<PaginatedTweets> =
+            jsonHandler<PaginatedTweets>(clientOptions.jsonMapper)
 
         override fun getHomeTimeline(
             params: XGetHomeTimelineParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<XGetHomeTimelineResponse> {
+        ): HttpResponseFor<PaginatedTweets> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)

@@ -15,7 +15,7 @@ internal class DraftListResponseTest {
         val draftListResponse =
             DraftListResponse.builder()
                 .addDraft(
-                    DraftListResponse.Draft.builder()
+                    Draft.builder()
                         .id("id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .text("text")
@@ -29,7 +29,7 @@ internal class DraftListResponseTest {
 
         assertThat(draftListResponse.drafts())
             .containsExactly(
-                DraftListResponse.Draft.builder()
+                Draft.builder()
                     .id("id")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .text("text")
@@ -47,7 +47,7 @@ internal class DraftListResponseTest {
         val draftListResponse =
             DraftListResponse.builder()
                 .addDraft(
-                    DraftListResponse.Draft.builder()
+                    Draft.builder()
                         .id("id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .text("text")
