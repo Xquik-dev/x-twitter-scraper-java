@@ -3,7 +3,6 @@
 package com.x_twitter_scraper.api.models.x.communities
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.jsonMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -14,11 +13,59 @@ internal class CommunityRetrieveInfoResponseTest {
     fun create() {
         val communityRetrieveInfoResponse =
             CommunityRetrieveInfoResponse.builder()
-                .community(JsonValue.from(mapOf<String, Any>()))
+                .community(
+                    CommunityRetrieveInfoResponse.Community.builder()
+                        .id("id")
+                        .bannerUrl("banner_url")
+                        .createdAt("created_at")
+                        .description("description")
+                        .joinPolicy("join_policy")
+                        .memberCount(0L)
+                        .moderatorCount(0L)
+                        .name("name")
+                        .primaryTopic(
+                            CommunityRetrieveInfoResponse.Community.PrimaryTopic.builder()
+                                .id("id")
+                                .name("name")
+                                .build()
+                        )
+                        .addRule(
+                            CommunityRetrieveInfoResponse.Community.Rule.builder()
+                                .id("id")
+                                .description("description")
+                                .name("name")
+                                .build()
+                        )
+                        .build()
+                )
                 .build()
 
-        assertThat(communityRetrieveInfoResponse._community())
-            .isEqualTo(JsonValue.from(mapOf<String, Any>()))
+        assertThat(communityRetrieveInfoResponse.community())
+            .isEqualTo(
+                CommunityRetrieveInfoResponse.Community.builder()
+                    .id("id")
+                    .bannerUrl("banner_url")
+                    .createdAt("created_at")
+                    .description("description")
+                    .joinPolicy("join_policy")
+                    .memberCount(0L)
+                    .moderatorCount(0L)
+                    .name("name")
+                    .primaryTopic(
+                        CommunityRetrieveInfoResponse.Community.PrimaryTopic.builder()
+                            .id("id")
+                            .name("name")
+                            .build()
+                    )
+                    .addRule(
+                        CommunityRetrieveInfoResponse.Community.Rule.builder()
+                            .id("id")
+                            .description("description")
+                            .name("name")
+                            .build()
+                    )
+                    .build()
+            )
     }
 
     @Test
@@ -26,7 +73,31 @@ internal class CommunityRetrieveInfoResponseTest {
         val jsonMapper = jsonMapper()
         val communityRetrieveInfoResponse =
             CommunityRetrieveInfoResponse.builder()
-                .community(JsonValue.from(mapOf<String, Any>()))
+                .community(
+                    CommunityRetrieveInfoResponse.Community.builder()
+                        .id("id")
+                        .bannerUrl("banner_url")
+                        .createdAt("created_at")
+                        .description("description")
+                        .joinPolicy("join_policy")
+                        .memberCount(0L)
+                        .moderatorCount(0L)
+                        .name("name")
+                        .primaryTopic(
+                            CommunityRetrieveInfoResponse.Community.PrimaryTopic.builder()
+                                .id("id")
+                                .name("name")
+                                .build()
+                        )
+                        .addRule(
+                            CommunityRetrieveInfoResponse.Community.Rule.builder()
+                                .id("id")
+                                .description("description")
+                                .name("name")
+                                .build()
+                        )
+                        .build()
+                )
                 .build()
 
         val roundtrippedCommunityRetrieveInfoResponse =
