@@ -60,9 +60,9 @@ configure<MavenPublishBaseExtension> {
         }
 
         scm {
-            connection.set("scm:git:git://github.com/stainless-sdks/x-twitter-scraper-java.git")
-            developerConnection.set("scm:git:git://github.com/stainless-sdks/x-twitter-scraper-java.git")
-            url.set("https://github.com/stainless-sdks/x-twitter-scraper-java")
+            connection.set("scm:git:git://github.com/Xquik-dev/x-twitter-scraper-java.git")
+            developerConnection.set("scm:git:git://github.com/Xquik-dev/x-twitter-scraper-java.git")
+            url.set("https://github.com/Xquik-dev/x-twitter-scraper-java")
         }
     }
 }
