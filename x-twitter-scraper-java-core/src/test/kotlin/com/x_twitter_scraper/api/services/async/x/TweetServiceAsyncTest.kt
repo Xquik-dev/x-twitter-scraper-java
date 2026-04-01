@@ -104,13 +104,13 @@ internal class TweetServiceAsyncTest {
                 .build()
         val tweetServiceAsync = client.x().tweets()
 
-        val paginatedUsersFuture =
+        val responseFuture =
             tweetServiceAsync.getFavoriters(
                 TweetGetFavoritersParams.builder().id("id").cursor("cursor").build()
             )
 
-        val paginatedUsers = paginatedUsersFuture.get()
-        paginatedUsers.validate()
+        val response = responseFuture.get()
+        response.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -123,7 +123,7 @@ internal class TweetServiceAsyncTest {
                 .build()
         val tweetServiceAsync = client.x().tweets()
 
-        val paginatedTweetsFuture =
+        val responseFuture =
             tweetServiceAsync.getQuotes(
                 TweetGetQuotesParams.builder()
                     .id("id")
@@ -134,8 +134,8 @@ internal class TweetServiceAsyncTest {
                     .build()
             )
 
-        val paginatedTweets = paginatedTweetsFuture.get()
-        paginatedTweets.validate()
+        val response = responseFuture.get()
+        response.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -148,7 +148,7 @@ internal class TweetServiceAsyncTest {
                 .build()
         val tweetServiceAsync = client.x().tweets()
 
-        val paginatedTweetsFuture =
+        val responseFuture =
             tweetServiceAsync.getReplies(
                 TweetGetRepliesParams.builder()
                     .id("id")
@@ -158,8 +158,8 @@ internal class TweetServiceAsyncTest {
                     .build()
             )
 
-        val paginatedTweets = paginatedTweetsFuture.get()
-        paginatedTweets.validate()
+        val response = responseFuture.get()
+        response.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -172,13 +172,13 @@ internal class TweetServiceAsyncTest {
                 .build()
         val tweetServiceAsync = client.x().tweets()
 
-        val paginatedUsersFuture =
+        val responseFuture =
             tweetServiceAsync.getRetweeters(
                 TweetGetRetweetersParams.builder().id("id").cursor("cursor").build()
             )
 
-        val paginatedUsers = paginatedUsersFuture.get()
-        paginatedUsers.validate()
+        val response = responseFuture.get()
+        response.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -191,13 +191,13 @@ internal class TweetServiceAsyncTest {
                 .build()
         val tweetServiceAsync = client.x().tweets()
 
-        val paginatedTweetsFuture =
+        val responseFuture =
             tweetServiceAsync.getThread(
                 TweetGetThreadParams.builder().id("id").cursor("cursor").build()
             )
 
-        val paginatedTweets = paginatedTweetsFuture.get()
-        paginatedTweets.validate()
+        val response = responseFuture.get()
+        response.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -210,7 +210,7 @@ internal class TweetServiceAsyncTest {
                 .build()
         val tweetServiceAsync = client.x().tweets()
 
-        val paginatedTweetsFuture =
+        val responseFuture =
             tweetServiceAsync.search(
                 TweetSearchParams.builder()
                     .q("q")
@@ -222,7 +222,7 @@ internal class TweetServiceAsyncTest {
                     .build()
             )
 
-        val paginatedTweets = paginatedTweetsFuture.get()
-        paginatedTweets.validate()
+        val response = responseFuture.get()
+        response.validate()
     }
 }

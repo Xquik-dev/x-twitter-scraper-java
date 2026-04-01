@@ -1,69 +1,72 @@
+import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.KotlinJvm
+import com.vanniktech.maven.publish.MavenPublishBaseExtension
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
-    `maven-publish`
-    signing
+    id("com.vanniktech.maven.publish")
 }
 
-configure<PublishingExtension> {
-    publications {
-        register<MavenPublication>("maven") {
-            from(components["java"])
-
-            pom {
-                name.set("Xquik API")
-                description.set("X real-time data platform — extractions, giveaway draws, monitoring, webhooks.")
-                url.set("https://xquik.com")
-
-                licenses {
-                    license {
-                        name.set("Apache-2.0")
-                    }
-                }
-
-                developers {
-                    developer {
-                        name.set("X Twitter Scraper")
-                        email.set("support@xquik.com")
-                    }
-                }
-
-                scm {
-                    connection.set("scm:git:git://github.com/Xquik-dev/x-twitter-scraper-java.git")
-                    developerConnection.set("scm:git:git://github.com/Xquik-dev/x-twitter-scraper-java.git")
-                    url.set("https://github.com/Xquik-dev/x-twitter-scraper-java")
-                }
-
-                versionMapping {
-                    allVariants {
-                        fromResolutionResult()
-                    }
-                }
-            }
-        }
-    }
-    repositories {
-        if (project.hasProperty("publishLocal")) {
-            maven {
-                name = "LocalFileSystem"
-                url = uri("${rootProject.layout.buildDirectory.get()}/local-maven-repo")
-            }
-        }
-    }
+publishing {
+  repositories {
+      if (project.hasProperty("publishLocal")) {
+          maven {
+              name = "LocalFileSystem"
+              url = uri("${rootProject.layout.buildDirectory.get()}/local-maven-repo")
+          }
+      }
+  }
 }
 
-signing {
-    val signingKeyId = System.getenv("GPG_SIGNING_KEY_ID")?.ifBlank { null }
-    val signingKey = System.getenv("GPG_SIGNING_KEY")?.ifBlank { null }
-    val signingPassword = System.getenv("GPG_SIGNING_PASSWORD")?.ifBlank { null }
-    if (signingKey != null && signingPassword != null) {
-        useInMemoryPgpKeys(
-            signingKeyId,
-            signingKey,
-            signingPassword,
+repositories {
+    gradlePluginPortal()
+    mavenCentral()
+}
+
+extra["signingInMemoryKey"] = System.getenv("GPG_SIGNING_KEY")
+extra["signingInMemoryKeyId"] = System.getenv("GPG_SIGNING_KEY_ID")
+extra["signingInMemoryKeyPassword"] = System.getenv("GPG_SIGNING_PASSWORD")
+
+configure<MavenPublishBaseExtension> {
+    if (!project.hasProperty("publishLocal")) {
+        signAllPublications()
+        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    }
+
+    coordinates(project.group.toString(), project.name, project.version.toString())
+    configure(
+        KotlinJvm(
+            javadocJar = JavadocJar.Dokka("dokkaJavadoc"),
+            sourcesJar = true,
         )
-        sign(publishing.publications["maven"])
+    )
+
+    pom {
+        name.set("Xquik API")
+        description.set("X real-time data platform — extractions, giveaway draws, monitoring, webhooks.")
+        url.set("https://xquik.com")
+
+        licenses {
+            license {
+                name.set("Apache-2.0")
+            }
+        }
+
+        developers {
+            developer {
+                name.set("X Twitter Scraper")
+                email.set("support@xquik.com")
+            }
+        }
+
+        scm {
+            connection.set("scm:git:git://github.com/Xquik-dev/x-twitter-scraper-java.git")
+            developerConnection.set("scm:git:git://github.com/Xquik-dev/x-twitter-scraper-java.git")
+            url.set("https://github.com/Xquik-dev/x-twitter-scraper-java")
+        }
     }
 }
 
-tasks.named("publish") {
-    dependsOn(":closeAndReleaseSonatypeStagingRepository")
+tasks.withType<Zip>().configureEach {
+    isZip64 = true
 }

@@ -21,9 +21,9 @@ internal class StyleServiceTest {
                 .build()
         val styleService = client.styles()
 
-        val styleProfile = styleService.retrieve("username")
+        val style = styleService.retrieve("username")
 
-        styleProfile.validate()
+        style.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -36,7 +36,7 @@ internal class StyleServiceTest {
                 .build()
         val styleService = client.styles()
 
-        val styleProfile =
+        val style =
             styleService.update(
                 StyleUpdateParams.builder()
                     .username("username")
@@ -45,7 +45,7 @@ internal class StyleServiceTest {
                     .build()
             )
 
-        styleProfile.validate()
+        style.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -86,10 +86,10 @@ internal class StyleServiceTest {
                 .build()
         val styleService = client.styles()
 
-        val styleProfile =
+        val response =
             styleService.analyze(StyleAnalyzeParams.builder().username("username").build())
 
-        styleProfile.validate()
+        response.validate()
     }
 
     @Disabled("Mock server tests are disabled")

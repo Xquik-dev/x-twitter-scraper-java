@@ -99,12 +99,12 @@ internal class TweetServiceTest {
                 .build()
         val tweetService = client.x().tweets()
 
-        val paginatedUsers =
+        val response =
             tweetService.getFavoriters(
                 TweetGetFavoritersParams.builder().id("id").cursor("cursor").build()
             )
 
-        paginatedUsers.validate()
+        response.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -117,7 +117,7 @@ internal class TweetServiceTest {
                 .build()
         val tweetService = client.x().tweets()
 
-        val paginatedTweets =
+        val response =
             tweetService.getQuotes(
                 TweetGetQuotesParams.builder()
                     .id("id")
@@ -128,7 +128,7 @@ internal class TweetServiceTest {
                     .build()
             )
 
-        paginatedTweets.validate()
+        response.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -141,7 +141,7 @@ internal class TweetServiceTest {
                 .build()
         val tweetService = client.x().tweets()
 
-        val paginatedTweets =
+        val response =
             tweetService.getReplies(
                 TweetGetRepliesParams.builder()
                     .id("id")
@@ -151,7 +151,7 @@ internal class TweetServiceTest {
                     .build()
             )
 
-        paginatedTweets.validate()
+        response.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -164,12 +164,12 @@ internal class TweetServiceTest {
                 .build()
         val tweetService = client.x().tweets()
 
-        val paginatedUsers =
+        val response =
             tweetService.getRetweeters(
                 TweetGetRetweetersParams.builder().id("id").cursor("cursor").build()
             )
 
-        paginatedUsers.validate()
+        response.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -182,10 +182,10 @@ internal class TweetServiceTest {
                 .build()
         val tweetService = client.x().tweets()
 
-        val paginatedTweets =
+        val response =
             tweetService.getThread(TweetGetThreadParams.builder().id("id").cursor("cursor").build())
 
-        paginatedTweets.validate()
+        response.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -198,7 +198,7 @@ internal class TweetServiceTest {
                 .build()
         val tweetService = client.x().tweets()
 
-        val paginatedTweets =
+        val response =
             tweetService.search(
                 TweetSearchParams.builder()
                     .q("q")
@@ -210,6 +210,6 @@ internal class TweetServiceTest {
                     .build()
             )
 
-        paginatedTweets.validate()
+        response.validate()
     }
 }

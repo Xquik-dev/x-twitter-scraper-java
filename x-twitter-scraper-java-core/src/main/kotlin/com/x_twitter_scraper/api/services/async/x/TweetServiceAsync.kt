@@ -6,21 +6,25 @@ import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponse
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
-import com.x_twitter_scraper.api.models.PaginatedTweets
-import com.x_twitter_scraper.api.models.PaginatedUsers
 import com.x_twitter_scraper.api.models.x.tweets.TweetCreateParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetCreateResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetDeleteParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetDeleteResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetFavoritersParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetGetFavoritersResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetQuotesParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetGetQuotesResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetRepliesParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetGetRepliesResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetRetweetersParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetGetRetweetersResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetThreadParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetGetThreadResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetListParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetRetrieveParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetRetrieveResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse
 import com.x_twitter_scraper.api.services.async.x.tweets.LikeServiceAsync
 import com.x_twitter_scraper.api.services.async.x.tweets.RetweetServiceAsync
 import java.util.concurrent.CompletableFuture
@@ -124,7 +128,7 @@ interface TweetServiceAsync {
     ): CompletableFuture<TweetDeleteResponse>
 
     /** Get users who liked a tweet */
-    fun getFavoriters(id: String): CompletableFuture<PaginatedUsers> =
+    fun getFavoriters(id: String): CompletableFuture<TweetGetFavoritersResponse> =
         getFavoriters(id, TweetGetFavoritersParams.none())
 
     /** @see getFavoriters */
@@ -132,34 +136,36 @@ interface TweetServiceAsync {
         id: String,
         params: TweetGetFavoritersParams = TweetGetFavoritersParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedUsers> =
+    ): CompletableFuture<TweetGetFavoritersResponse> =
         getFavoriters(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see getFavoriters */
     fun getFavoriters(
         id: String,
         params: TweetGetFavoritersParams = TweetGetFavoritersParams.none(),
-    ): CompletableFuture<PaginatedUsers> = getFavoriters(id, params, RequestOptions.none())
+    ): CompletableFuture<TweetGetFavoritersResponse> =
+        getFavoriters(id, params, RequestOptions.none())
 
     /** @see getFavoriters */
     fun getFavoriters(
         params: TweetGetFavoritersParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedUsers>
+    ): CompletableFuture<TweetGetFavoritersResponse>
 
     /** @see getFavoriters */
-    fun getFavoriters(params: TweetGetFavoritersParams): CompletableFuture<PaginatedUsers> =
-        getFavoriters(params, RequestOptions.none())
+    fun getFavoriters(
+        params: TweetGetFavoritersParams
+    ): CompletableFuture<TweetGetFavoritersResponse> = getFavoriters(params, RequestOptions.none())
 
     /** @see getFavoriters */
     fun getFavoriters(
         id: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<PaginatedUsers> =
+    ): CompletableFuture<TweetGetFavoritersResponse> =
         getFavoriters(id, TweetGetFavoritersParams.none(), requestOptions)
 
     /** Get quote tweets of a tweet */
-    fun getQuotes(id: String): CompletableFuture<PaginatedTweets> =
+    fun getQuotes(id: String): CompletableFuture<TweetGetQuotesResponse> =
         getQuotes(id, TweetGetQuotesParams.none())
 
     /** @see getQuotes */
@@ -167,31 +173,34 @@ interface TweetServiceAsync {
         id: String,
         params: TweetGetQuotesParams = TweetGetQuotesParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedTweets> =
+    ): CompletableFuture<TweetGetQuotesResponse> =
         getQuotes(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see getQuotes */
     fun getQuotes(
         id: String,
         params: TweetGetQuotesParams = TweetGetQuotesParams.none(),
-    ): CompletableFuture<PaginatedTweets> = getQuotes(id, params, RequestOptions.none())
+    ): CompletableFuture<TweetGetQuotesResponse> = getQuotes(id, params, RequestOptions.none())
 
     /** @see getQuotes */
     fun getQuotes(
         params: TweetGetQuotesParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedTweets>
+    ): CompletableFuture<TweetGetQuotesResponse>
 
     /** @see getQuotes */
-    fun getQuotes(params: TweetGetQuotesParams): CompletableFuture<PaginatedTweets> =
+    fun getQuotes(params: TweetGetQuotesParams): CompletableFuture<TweetGetQuotesResponse> =
         getQuotes(params, RequestOptions.none())
 
     /** @see getQuotes */
-    fun getQuotes(id: String, requestOptions: RequestOptions): CompletableFuture<PaginatedTweets> =
+    fun getQuotes(
+        id: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<TweetGetQuotesResponse> =
         getQuotes(id, TweetGetQuotesParams.none(), requestOptions)
 
     /** Get replies to a tweet */
-    fun getReplies(id: String): CompletableFuture<PaginatedTweets> =
+    fun getReplies(id: String): CompletableFuture<TweetGetRepliesResponse> =
         getReplies(id, TweetGetRepliesParams.none())
 
     /** @see getReplies */
@@ -199,31 +208,34 @@ interface TweetServiceAsync {
         id: String,
         params: TweetGetRepliesParams = TweetGetRepliesParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedTweets> =
+    ): CompletableFuture<TweetGetRepliesResponse> =
         getReplies(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see getReplies */
     fun getReplies(
         id: String,
         params: TweetGetRepliesParams = TweetGetRepliesParams.none(),
-    ): CompletableFuture<PaginatedTweets> = getReplies(id, params, RequestOptions.none())
+    ): CompletableFuture<TweetGetRepliesResponse> = getReplies(id, params, RequestOptions.none())
 
     /** @see getReplies */
     fun getReplies(
         params: TweetGetRepliesParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedTweets>
+    ): CompletableFuture<TweetGetRepliesResponse>
 
     /** @see getReplies */
-    fun getReplies(params: TweetGetRepliesParams): CompletableFuture<PaginatedTweets> =
+    fun getReplies(params: TweetGetRepliesParams): CompletableFuture<TweetGetRepliesResponse> =
         getReplies(params, RequestOptions.none())
 
     /** @see getReplies */
-    fun getReplies(id: String, requestOptions: RequestOptions): CompletableFuture<PaginatedTweets> =
+    fun getReplies(
+        id: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<TweetGetRepliesResponse> =
         getReplies(id, TweetGetRepliesParams.none(), requestOptions)
 
     /** Get users who retweeted a tweet */
-    fun getRetweeters(id: String): CompletableFuture<PaginatedUsers> =
+    fun getRetweeters(id: String): CompletableFuture<TweetGetRetweetersResponse> =
         getRetweeters(id, TweetGetRetweetersParams.none())
 
     /** @see getRetweeters */
@@ -231,34 +243,36 @@ interface TweetServiceAsync {
         id: String,
         params: TweetGetRetweetersParams = TweetGetRetweetersParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedUsers> =
+    ): CompletableFuture<TweetGetRetweetersResponse> =
         getRetweeters(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see getRetweeters */
     fun getRetweeters(
         id: String,
         params: TweetGetRetweetersParams = TweetGetRetweetersParams.none(),
-    ): CompletableFuture<PaginatedUsers> = getRetweeters(id, params, RequestOptions.none())
+    ): CompletableFuture<TweetGetRetweetersResponse> =
+        getRetweeters(id, params, RequestOptions.none())
 
     /** @see getRetweeters */
     fun getRetweeters(
         params: TweetGetRetweetersParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedUsers>
+    ): CompletableFuture<TweetGetRetweetersResponse>
 
     /** @see getRetweeters */
-    fun getRetweeters(params: TweetGetRetweetersParams): CompletableFuture<PaginatedUsers> =
-        getRetweeters(params, RequestOptions.none())
+    fun getRetweeters(
+        params: TweetGetRetweetersParams
+    ): CompletableFuture<TweetGetRetweetersResponse> = getRetweeters(params, RequestOptions.none())
 
     /** @see getRetweeters */
     fun getRetweeters(
         id: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<PaginatedUsers> =
+    ): CompletableFuture<TweetGetRetweetersResponse> =
         getRetweeters(id, TweetGetRetweetersParams.none(), requestOptions)
 
     /** Get thread context for a tweet */
-    fun getThread(id: String): CompletableFuture<PaginatedTweets> =
+    fun getThread(id: String): CompletableFuture<TweetGetThreadResponse> =
         getThread(id, TweetGetThreadParams.none())
 
     /** @see getThread */
@@ -266,38 +280,41 @@ interface TweetServiceAsync {
         id: String,
         params: TweetGetThreadParams = TweetGetThreadParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedTweets> =
+    ): CompletableFuture<TweetGetThreadResponse> =
         getThread(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see getThread */
     fun getThread(
         id: String,
         params: TweetGetThreadParams = TweetGetThreadParams.none(),
-    ): CompletableFuture<PaginatedTweets> = getThread(id, params, RequestOptions.none())
+    ): CompletableFuture<TweetGetThreadResponse> = getThread(id, params, RequestOptions.none())
 
     /** @see getThread */
     fun getThread(
         params: TweetGetThreadParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedTweets>
+    ): CompletableFuture<TweetGetThreadResponse>
 
     /** @see getThread */
-    fun getThread(params: TweetGetThreadParams): CompletableFuture<PaginatedTweets> =
+    fun getThread(params: TweetGetThreadParams): CompletableFuture<TweetGetThreadResponse> =
         getThread(params, RequestOptions.none())
 
     /** @see getThread */
-    fun getThread(id: String, requestOptions: RequestOptions): CompletableFuture<PaginatedTweets> =
+    fun getThread(
+        id: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<TweetGetThreadResponse> =
         getThread(id, TweetGetThreadParams.none(), requestOptions)
 
     /** Search tweets */
-    fun search(params: TweetSearchParams): CompletableFuture<PaginatedTweets> =
+    fun search(params: TweetSearchParams): CompletableFuture<TweetSearchResponse> =
         search(params, RequestOptions.none())
 
     /** @see search */
     fun search(
         params: TweetSearchParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedTweets>
+    ): CompletableFuture<TweetSearchResponse>
 
     /** A view of [TweetServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -420,7 +437,9 @@ interface TweetServiceAsync {
          * Returns a raw HTTP response for `get /x/tweets/{id}/favoriters`, but is otherwise the
          * same as [TweetServiceAsync.getFavoriters].
          */
-        fun getFavoriters(id: String): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        fun getFavoriters(
+            id: String
+        ): CompletableFuture<HttpResponseFor<TweetGetFavoritersResponse>> =
             getFavoriters(id, TweetGetFavoritersParams.none())
 
         /** @see getFavoriters */
@@ -428,40 +447,40 @@ interface TweetServiceAsync {
             id: String,
             params: TweetGetFavoritersParams = TweetGetFavoritersParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetFavoritersResponse>> =
             getFavoriters(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see getFavoriters */
         fun getFavoriters(
             id: String,
             params: TweetGetFavoritersParams = TweetGetFavoritersParams.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetFavoritersResponse>> =
             getFavoriters(id, params, RequestOptions.none())
 
         /** @see getFavoriters */
         fun getFavoriters(
             params: TweetGetFavoritersParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>>
+        ): CompletableFuture<HttpResponseFor<TweetGetFavoritersResponse>>
 
         /** @see getFavoriters */
         fun getFavoriters(
             params: TweetGetFavoritersParams
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetFavoritersResponse>> =
             getFavoriters(params, RequestOptions.none())
 
         /** @see getFavoriters */
         fun getFavoriters(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetFavoritersResponse>> =
             getFavoriters(id, TweetGetFavoritersParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /x/tweets/{id}/quotes`, but is otherwise the same as
          * [TweetServiceAsync.getQuotes].
          */
-        fun getQuotes(id: String): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        fun getQuotes(id: String): CompletableFuture<HttpResponseFor<TweetGetQuotesResponse>> =
             getQuotes(id, TweetGetQuotesParams.none())
 
         /** @see getQuotes */
@@ -469,40 +488,40 @@ interface TweetServiceAsync {
             id: String,
             params: TweetGetQuotesParams = TweetGetQuotesParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetQuotesResponse>> =
             getQuotes(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see getQuotes */
         fun getQuotes(
             id: String,
             params: TweetGetQuotesParams = TweetGetQuotesParams.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetQuotesResponse>> =
             getQuotes(id, params, RequestOptions.none())
 
         /** @see getQuotes */
         fun getQuotes(
             params: TweetGetQuotesParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>>
+        ): CompletableFuture<HttpResponseFor<TweetGetQuotesResponse>>
 
         /** @see getQuotes */
         fun getQuotes(
             params: TweetGetQuotesParams
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetQuotesResponse>> =
             getQuotes(params, RequestOptions.none())
 
         /** @see getQuotes */
         fun getQuotes(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetQuotesResponse>> =
             getQuotes(id, TweetGetQuotesParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /x/tweets/{id}/replies`, but is otherwise the same
          * as [TweetServiceAsync.getReplies].
          */
-        fun getReplies(id: String): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        fun getReplies(id: String): CompletableFuture<HttpResponseFor<TweetGetRepliesResponse>> =
             getReplies(id, TweetGetRepliesParams.none())
 
         /** @see getReplies */
@@ -510,40 +529,42 @@ interface TweetServiceAsync {
             id: String,
             params: TweetGetRepliesParams = TweetGetRepliesParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetRepliesResponse>> =
             getReplies(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see getReplies */
         fun getReplies(
             id: String,
             params: TweetGetRepliesParams = TweetGetRepliesParams.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetRepliesResponse>> =
             getReplies(id, params, RequestOptions.none())
 
         /** @see getReplies */
         fun getReplies(
             params: TweetGetRepliesParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>>
+        ): CompletableFuture<HttpResponseFor<TweetGetRepliesResponse>>
 
         /** @see getReplies */
         fun getReplies(
             params: TweetGetRepliesParams
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetRepliesResponse>> =
             getReplies(params, RequestOptions.none())
 
         /** @see getReplies */
         fun getReplies(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetRepliesResponse>> =
             getReplies(id, TweetGetRepliesParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /x/tweets/{id}/retweeters`, but is otherwise the
          * same as [TweetServiceAsync.getRetweeters].
          */
-        fun getRetweeters(id: String): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        fun getRetweeters(
+            id: String
+        ): CompletableFuture<HttpResponseFor<TweetGetRetweetersResponse>> =
             getRetweeters(id, TweetGetRetweetersParams.none())
 
         /** @see getRetweeters */
@@ -551,40 +572,40 @@ interface TweetServiceAsync {
             id: String,
             params: TweetGetRetweetersParams = TweetGetRetweetersParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetRetweetersResponse>> =
             getRetweeters(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see getRetweeters */
         fun getRetweeters(
             id: String,
             params: TweetGetRetweetersParams = TweetGetRetweetersParams.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetRetweetersResponse>> =
             getRetweeters(id, params, RequestOptions.none())
 
         /** @see getRetweeters */
         fun getRetweeters(
             params: TweetGetRetweetersParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>>
+        ): CompletableFuture<HttpResponseFor<TweetGetRetweetersResponse>>
 
         /** @see getRetweeters */
         fun getRetweeters(
             params: TweetGetRetweetersParams
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetRetweetersResponse>> =
             getRetweeters(params, RequestOptions.none())
 
         /** @see getRetweeters */
         fun getRetweeters(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetRetweetersResponse>> =
             getRetweeters(id, TweetGetRetweetersParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /x/tweets/{id}/thread`, but is otherwise the same as
          * [TweetServiceAsync.getThread].
          */
-        fun getThread(id: String): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        fun getThread(id: String): CompletableFuture<HttpResponseFor<TweetGetThreadResponse>> =
             getThread(id, TweetGetThreadParams.none())
 
         /** @see getThread */
@@ -592,46 +613,48 @@ interface TweetServiceAsync {
             id: String,
             params: TweetGetThreadParams = TweetGetThreadParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetThreadResponse>> =
             getThread(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see getThread */
         fun getThread(
             id: String,
             params: TweetGetThreadParams = TweetGetThreadParams.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetThreadResponse>> =
             getThread(id, params, RequestOptions.none())
 
         /** @see getThread */
         fun getThread(
             params: TweetGetThreadParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>>
+        ): CompletableFuture<HttpResponseFor<TweetGetThreadResponse>>
 
         /** @see getThread */
         fun getThread(
             params: TweetGetThreadParams
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetThreadResponse>> =
             getThread(params, RequestOptions.none())
 
         /** @see getThread */
         fun getThread(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetThreadResponse>> =
             getThread(id, TweetGetThreadParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /x/tweets/search`, but is otherwise the same as
          * [TweetServiceAsync.search].
          */
-        fun search(params: TweetSearchParams): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        fun search(
+            params: TweetSearchParams
+        ): CompletableFuture<HttpResponseFor<TweetSearchResponse>> =
             search(params, RequestOptions.none())
 
         /** @see search */
         fun search(
             params: TweetSearchParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>>
+        ): CompletableFuture<HttpResponseFor<TweetSearchResponse>>
     }
 }

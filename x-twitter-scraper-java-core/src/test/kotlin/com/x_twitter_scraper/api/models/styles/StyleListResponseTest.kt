@@ -15,7 +15,7 @@ internal class StyleListResponseTest {
         val styleListResponse =
             StyleListResponse.builder()
                 .addStyle(
-                    StyleProfileSummary.builder()
+                    StyleListResponse.Style.builder()
                         .fetchedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .isOwnAccount(true)
                         .tweetCount(0L)
@@ -26,7 +26,7 @@ internal class StyleListResponseTest {
 
         assertThat(styleListResponse.styles())
             .containsExactly(
-                StyleProfileSummary.builder()
+                StyleListResponse.Style.builder()
                     .fetchedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .isOwnAccount(true)
                     .tweetCount(0L)
@@ -41,7 +41,7 @@ internal class StyleListResponseTest {
         val styleListResponse =
             StyleListResponse.builder()
                 .addStyle(
-                    StyleProfileSummary.builder()
+                    StyleListResponse.Style.builder()
                         .fetchedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .isOwnAccount(true)
                         .tweetCount(0L)

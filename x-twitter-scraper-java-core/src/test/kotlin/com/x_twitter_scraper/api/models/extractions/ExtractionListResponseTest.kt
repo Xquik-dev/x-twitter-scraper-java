@@ -15,11 +15,11 @@ internal class ExtractionListResponseTest {
         val extractionListResponse =
             ExtractionListResponse.builder()
                 .addExtraction(
-                    ExtractionJob.builder()
+                    ExtractionListResponse.Extraction.builder()
                         .id("id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .status(ExtractionJob.Status.RUNNING)
-                        .toolType(ExtractionJob.ToolType.ARTICLE_EXTRACTOR)
+                        .status(ExtractionListResponse.Extraction.Status.RUNNING)
+                        .toolType(ExtractionListResponse.Extraction.ToolType.ARTICLE_EXTRACTOR)
                         .totalResults(0L)
                         .completedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
@@ -30,11 +30,11 @@ internal class ExtractionListResponseTest {
 
         assertThat(extractionListResponse.extractions())
             .containsExactly(
-                ExtractionJob.builder()
+                ExtractionListResponse.Extraction.builder()
                     .id("id")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .status(ExtractionJob.Status.RUNNING)
-                    .toolType(ExtractionJob.ToolType.ARTICLE_EXTRACTOR)
+                    .status(ExtractionListResponse.Extraction.Status.RUNNING)
+                    .toolType(ExtractionListResponse.Extraction.ToolType.ARTICLE_EXTRACTOR)
                     .totalResults(0L)
                     .completedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
@@ -49,11 +49,11 @@ internal class ExtractionListResponseTest {
         val extractionListResponse =
             ExtractionListResponse.builder()
                 .addExtraction(
-                    ExtractionJob.builder()
+                    ExtractionListResponse.Extraction.builder()
                         .id("id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .status(ExtractionJob.Status.RUNNING)
-                        .toolType(ExtractionJob.ToolType.ARTICLE_EXTRACTOR)
+                        .status(ExtractionListResponse.Extraction.Status.RUNNING)
+                        .toolType(ExtractionListResponse.Extraction.ToolType.ARTICLE_EXTRACTOR)
                         .totalResults(0L)
                         .completedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()

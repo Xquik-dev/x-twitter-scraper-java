@@ -4,7 +4,6 @@ package com.x_twitter_scraper.api.models.monitors
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.core.jsonMapper
-import com.x_twitter_scraper.api.models.EventType
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -17,7 +16,7 @@ internal class MonitorTest {
             Monitor.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .addEventType(EventType.TWEET_NEW)
+                .addEventType(Monitor.EventType.TWEET_NEW)
                 .isActive(true)
                 .username("username")
                 .xUserId("xUserId")
@@ -25,7 +24,7 @@ internal class MonitorTest {
 
         assertThat(monitor.id()).isEqualTo("id")
         assertThat(monitor.createdAt()).isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(monitor.eventTypes()).containsExactly(EventType.TWEET_NEW)
+        assertThat(monitor.eventTypes()).containsExactly(Monitor.EventType.TWEET_NEW)
         assertThat(monitor.isActive()).isEqualTo(true)
         assertThat(monitor.username()).isEqualTo("username")
         assertThat(monitor.xUserId()).isEqualTo("xUserId")
@@ -38,7 +37,7 @@ internal class MonitorTest {
             Monitor.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .addEventType(EventType.TWEET_NEW)
+                .addEventType(Monitor.EventType.TWEET_NEW)
                 .isActive(true)
                 .username("username")
                 .xUserId("xUserId")

@@ -6,7 +6,6 @@ import com.google.errorprone.annotations.MustBeClosed
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
-import com.x_twitter_scraper.api.models.monitors.Monitor
 import com.x_twitter_scraper.api.models.monitors.MonitorCreateParams
 import com.x_twitter_scraper.api.models.monitors.MonitorCreateResponse
 import com.x_twitter_scraper.api.models.monitors.MonitorDeactivateParams
@@ -14,7 +13,9 @@ import com.x_twitter_scraper.api.models.monitors.MonitorDeactivateResponse
 import com.x_twitter_scraper.api.models.monitors.MonitorListParams
 import com.x_twitter_scraper.api.models.monitors.MonitorListResponse
 import com.x_twitter_scraper.api.models.monitors.MonitorRetrieveParams
+import com.x_twitter_scraper.api.models.monitors.MonitorRetrieveResponse
 import com.x_twitter_scraper.api.models.monitors.MonitorUpdateParams
+import com.x_twitter_scraper.api.models.monitors.MonitorUpdateResponse
 import java.util.function.Consumer
 
 /** Real-time X account monitoring */
@@ -43,59 +44,63 @@ interface MonitorService {
     ): MonitorCreateResponse
 
     /** Get monitor */
-    fun retrieve(id: String): Monitor = retrieve(id, MonitorRetrieveParams.none())
+    fun retrieve(id: String): MonitorRetrieveResponse = retrieve(id, MonitorRetrieveParams.none())
 
     /** @see retrieve */
     fun retrieve(
         id: String,
         params: MonitorRetrieveParams = MonitorRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): Monitor = retrieve(params.toBuilder().id(id).build(), requestOptions)
+    ): MonitorRetrieveResponse = retrieve(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieve */
     fun retrieve(
         id: String,
         params: MonitorRetrieveParams = MonitorRetrieveParams.none(),
-    ): Monitor = retrieve(id, params, RequestOptions.none())
+    ): MonitorRetrieveResponse = retrieve(id, params, RequestOptions.none())
 
     /** @see retrieve */
     fun retrieve(
         params: MonitorRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): Monitor
+    ): MonitorRetrieveResponse
 
     /** @see retrieve */
-    fun retrieve(params: MonitorRetrieveParams): Monitor = retrieve(params, RequestOptions.none())
+    fun retrieve(params: MonitorRetrieveParams): MonitorRetrieveResponse =
+        retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
-    fun retrieve(id: String, requestOptions: RequestOptions): Monitor =
+    fun retrieve(id: String, requestOptions: RequestOptions): MonitorRetrieveResponse =
         retrieve(id, MonitorRetrieveParams.none(), requestOptions)
 
     /** Update monitor */
-    fun update(id: String): Monitor = update(id, MonitorUpdateParams.none())
+    fun update(id: String): MonitorUpdateResponse = update(id, MonitorUpdateParams.none())
 
     /** @see update */
     fun update(
         id: String,
         params: MonitorUpdateParams = MonitorUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): Monitor = update(params.toBuilder().id(id).build(), requestOptions)
+    ): MonitorUpdateResponse = update(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see update */
-    fun update(id: String, params: MonitorUpdateParams = MonitorUpdateParams.none()): Monitor =
-        update(id, params, RequestOptions.none())
+    fun update(
+        id: String,
+        params: MonitorUpdateParams = MonitorUpdateParams.none(),
+    ): MonitorUpdateResponse = update(id, params, RequestOptions.none())
 
     /** @see update */
     fun update(
         params: MonitorUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): Monitor
+    ): MonitorUpdateResponse
 
     /** @see update */
-    fun update(params: MonitorUpdateParams): Monitor = update(params, RequestOptions.none())
+    fun update(params: MonitorUpdateParams): MonitorUpdateResponse =
+        update(params, RequestOptions.none())
 
     /** @see update */
-    fun update(id: String, requestOptions: RequestOptions): Monitor =
+    fun update(id: String, requestOptions: RequestOptions): MonitorUpdateResponse =
         update(id, MonitorUpdateParams.none(), requestOptions)
 
     /** List monitors */
@@ -176,7 +181,7 @@ interface MonitorService {
          * [MonitorService.retrieve].
          */
         @MustBeClosed
-        fun retrieve(id: String): HttpResponseFor<Monitor> =
+        fun retrieve(id: String): HttpResponseFor<MonitorRetrieveResponse> =
             retrieve(id, MonitorRetrieveParams.none())
 
         /** @see retrieve */
@@ -185,30 +190,34 @@ interface MonitorService {
             id: String,
             params: MonitorRetrieveParams = MonitorRetrieveParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Monitor> = retrieve(params.toBuilder().id(id).build(), requestOptions)
+        ): HttpResponseFor<MonitorRetrieveResponse> =
+            retrieve(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             id: String,
             params: MonitorRetrieveParams = MonitorRetrieveParams.none(),
-        ): HttpResponseFor<Monitor> = retrieve(id, params, RequestOptions.none())
+        ): HttpResponseFor<MonitorRetrieveResponse> = retrieve(id, params, RequestOptions.none())
 
         /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             params: MonitorRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Monitor>
+        ): HttpResponseFor<MonitorRetrieveResponse>
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(params: MonitorRetrieveParams): HttpResponseFor<Monitor> =
+        fun retrieve(params: MonitorRetrieveParams): HttpResponseFor<MonitorRetrieveResponse> =
             retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(id: String, requestOptions: RequestOptions): HttpResponseFor<Monitor> =
+        fun retrieve(
+            id: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<MonitorRetrieveResponse> =
             retrieve(id, MonitorRetrieveParams.none(), requestOptions)
 
         /**
@@ -216,7 +225,8 @@ interface MonitorService {
          * [MonitorService.update].
          */
         @MustBeClosed
-        fun update(id: String): HttpResponseFor<Monitor> = update(id, MonitorUpdateParams.none())
+        fun update(id: String): HttpResponseFor<MonitorUpdateResponse> =
+            update(id, MonitorUpdateParams.none())
 
         /** @see update */
         @MustBeClosed
@@ -224,30 +234,34 @@ interface MonitorService {
             id: String,
             params: MonitorUpdateParams = MonitorUpdateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Monitor> = update(params.toBuilder().id(id).build(), requestOptions)
+        ): HttpResponseFor<MonitorUpdateResponse> =
+            update(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see update */
         @MustBeClosed
         fun update(
             id: String,
             params: MonitorUpdateParams = MonitorUpdateParams.none(),
-        ): HttpResponseFor<Monitor> = update(id, params, RequestOptions.none())
+        ): HttpResponseFor<MonitorUpdateResponse> = update(id, params, RequestOptions.none())
 
         /** @see update */
         @MustBeClosed
         fun update(
             params: MonitorUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Monitor>
+        ): HttpResponseFor<MonitorUpdateResponse>
 
         /** @see update */
         @MustBeClosed
-        fun update(params: MonitorUpdateParams): HttpResponseFor<Monitor> =
+        fun update(params: MonitorUpdateParams): HttpResponseFor<MonitorUpdateResponse> =
             update(params, RequestOptions.none())
 
         /** @see update */
         @MustBeClosed
-        fun update(id: String, requestOptions: RequestOptions): HttpResponseFor<Monitor> =
+        fun update(
+            id: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<MonitorUpdateResponse> =
             update(id, MonitorUpdateParams.none(), requestOptions)
 
         /**

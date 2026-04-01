@@ -6,10 +6,10 @@ import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponse
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
-import com.x_twitter_scraper.api.models.PaginatedTweets
 import com.x_twitter_scraper.api.models.x.XGetArticleParams
 import com.x_twitter_scraper.api.models.x.XGetArticleResponse
 import com.x_twitter_scraper.api.models.x.XGetHomeTimelineParams
+import com.x_twitter_scraper.api.models.x.XGetHomeTimelineResponse
 import com.x_twitter_scraper.api.models.x.XGetNotificationsParams
 import com.x_twitter_scraper.api.models.x.XGetNotificationsResponse
 import com.x_twitter_scraper.api.models.x.XGetTrendsParams
@@ -104,22 +104,24 @@ interface XServiceAsync {
         getArticle(tweetId, XGetArticleParams.none(), requestOptions)
 
     /** Get home timeline */
-    fun getHomeTimeline(): CompletableFuture<PaginatedTweets> =
+    fun getHomeTimeline(): CompletableFuture<XGetHomeTimelineResponse> =
         getHomeTimeline(XGetHomeTimelineParams.none())
 
     /** @see getHomeTimeline */
     fun getHomeTimeline(
         params: XGetHomeTimelineParams = XGetHomeTimelineParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedTweets>
+    ): CompletableFuture<XGetHomeTimelineResponse>
 
     /** @see getHomeTimeline */
     fun getHomeTimeline(
         params: XGetHomeTimelineParams = XGetHomeTimelineParams.none()
-    ): CompletableFuture<PaginatedTweets> = getHomeTimeline(params, RequestOptions.none())
+    ): CompletableFuture<XGetHomeTimelineResponse> = getHomeTimeline(params, RequestOptions.none())
 
     /** @see getHomeTimeline */
-    fun getHomeTimeline(requestOptions: RequestOptions): CompletableFuture<PaginatedTweets> =
+    fun getHomeTimeline(
+        requestOptions: RequestOptions
+    ): CompletableFuture<XGetHomeTimelineResponse> =
         getHomeTimeline(XGetHomeTimelineParams.none(), requestOptions)
 
     /** Get notifications */
@@ -243,25 +245,25 @@ interface XServiceAsync {
          * Returns a raw HTTP response for `get /x/timeline`, but is otherwise the same as
          * [XServiceAsync.getHomeTimeline].
          */
-        fun getHomeTimeline(): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        fun getHomeTimeline(): CompletableFuture<HttpResponseFor<XGetHomeTimelineResponse>> =
             getHomeTimeline(XGetHomeTimelineParams.none())
 
         /** @see getHomeTimeline */
         fun getHomeTimeline(
             params: XGetHomeTimelineParams = XGetHomeTimelineParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>>
+        ): CompletableFuture<HttpResponseFor<XGetHomeTimelineResponse>>
 
         /** @see getHomeTimeline */
         fun getHomeTimeline(
             params: XGetHomeTimelineParams = XGetHomeTimelineParams.none()
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        ): CompletableFuture<HttpResponseFor<XGetHomeTimelineResponse>> =
             getHomeTimeline(params, RequestOptions.none())
 
         /** @see getHomeTimeline */
         fun getHomeTimeline(
             requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        ): CompletableFuture<HttpResponseFor<XGetHomeTimelineResponse>> =
             getHomeTimeline(XGetHomeTimelineParams.none(), requestOptions)
 
         /**

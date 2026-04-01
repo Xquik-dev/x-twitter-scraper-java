@@ -14,7 +14,7 @@ import com.x_twitter_scraper.api.models.x.accounts.AccountListResponse
 import com.x_twitter_scraper.api.models.x.accounts.AccountReauthParams
 import com.x_twitter_scraper.api.models.x.accounts.AccountReauthResponse
 import com.x_twitter_scraper.api.models.x.accounts.AccountRetrieveParams
-import com.x_twitter_scraper.api.models.x.accounts.XAccountDetail
+import com.x_twitter_scraper.api.models.x.accounts.AccountRetrieveResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -44,7 +44,7 @@ interface AccountServiceAsync {
     ): CompletableFuture<AccountCreateResponse>
 
     /** Get X account details */
-    fun retrieve(id: String): CompletableFuture<XAccountDetail> =
+    fun retrieve(id: String): CompletableFuture<AccountRetrieveResponse> =
         retrieve(id, AccountRetrieveParams.none())
 
     /** @see retrieve */
@@ -52,27 +52,30 @@ interface AccountServiceAsync {
         id: String,
         params: AccountRetrieveParams = AccountRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<XAccountDetail> =
+    ): CompletableFuture<AccountRetrieveResponse> =
         retrieve(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieve */
     fun retrieve(
         id: String,
         params: AccountRetrieveParams = AccountRetrieveParams.none(),
-    ): CompletableFuture<XAccountDetail> = retrieve(id, params, RequestOptions.none())
+    ): CompletableFuture<AccountRetrieveResponse> = retrieve(id, params, RequestOptions.none())
 
     /** @see retrieve */
     fun retrieve(
         params: AccountRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<XAccountDetail>
+    ): CompletableFuture<AccountRetrieveResponse>
 
     /** @see retrieve */
-    fun retrieve(params: AccountRetrieveParams): CompletableFuture<XAccountDetail> =
+    fun retrieve(params: AccountRetrieveParams): CompletableFuture<AccountRetrieveResponse> =
         retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
-    fun retrieve(id: String, requestOptions: RequestOptions): CompletableFuture<XAccountDetail> =
+    fun retrieve(
+        id: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<AccountRetrieveResponse> =
         retrieve(id, AccountRetrieveParams.none(), requestOptions)
 
     /** List connected X accounts */
@@ -183,7 +186,7 @@ interface AccountServiceAsync {
          * Returns a raw HTTP response for `get /x/accounts/{id}`, but is otherwise the same as
          * [AccountServiceAsync.retrieve].
          */
-        fun retrieve(id: String): CompletableFuture<HttpResponseFor<XAccountDetail>> =
+        fun retrieve(id: String): CompletableFuture<HttpResponseFor<AccountRetrieveResponse>> =
             retrieve(id, AccountRetrieveParams.none())
 
         /** @see retrieve */
@@ -191,33 +194,33 @@ interface AccountServiceAsync {
             id: String,
             params: AccountRetrieveParams = AccountRetrieveParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<XAccountDetail>> =
+        ): CompletableFuture<HttpResponseFor<AccountRetrieveResponse>> =
             retrieve(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieve */
         fun retrieve(
             id: String,
             params: AccountRetrieveParams = AccountRetrieveParams.none(),
-        ): CompletableFuture<HttpResponseFor<XAccountDetail>> =
+        ): CompletableFuture<HttpResponseFor<AccountRetrieveResponse>> =
             retrieve(id, params, RequestOptions.none())
 
         /** @see retrieve */
         fun retrieve(
             params: AccountRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<XAccountDetail>>
+        ): CompletableFuture<HttpResponseFor<AccountRetrieveResponse>>
 
         /** @see retrieve */
         fun retrieve(
             params: AccountRetrieveParams
-        ): CompletableFuture<HttpResponseFor<XAccountDetail>> =
+        ): CompletableFuture<HttpResponseFor<AccountRetrieveResponse>> =
             retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
         fun retrieve(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<XAccountDetail>> =
+        ): CompletableFuture<HttpResponseFor<AccountRetrieveResponse>> =
             retrieve(id, AccountRetrieveParams.none(), requestOptions)
 
         /**

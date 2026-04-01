@@ -5,7 +5,6 @@ package com.x_twitter_scraper.api.services.async
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
-import com.x_twitter_scraper.api.models.monitors.Monitor
 import com.x_twitter_scraper.api.models.monitors.MonitorCreateParams
 import com.x_twitter_scraper.api.models.monitors.MonitorCreateResponse
 import com.x_twitter_scraper.api.models.monitors.MonitorDeactivateParams
@@ -13,7 +12,9 @@ import com.x_twitter_scraper.api.models.monitors.MonitorDeactivateResponse
 import com.x_twitter_scraper.api.models.monitors.MonitorListParams
 import com.x_twitter_scraper.api.models.monitors.MonitorListResponse
 import com.x_twitter_scraper.api.models.monitors.MonitorRetrieveParams
+import com.x_twitter_scraper.api.models.monitors.MonitorRetrieveResponse
 import com.x_twitter_scraper.api.models.monitors.MonitorUpdateParams
+import com.x_twitter_scraper.api.models.monitors.MonitorUpdateResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -43,7 +44,7 @@ interface MonitorServiceAsync {
     ): CompletableFuture<MonitorCreateResponse>
 
     /** Get monitor */
-    fun retrieve(id: String): CompletableFuture<Monitor> =
+    fun retrieve(id: String): CompletableFuture<MonitorRetrieveResponse> =
         retrieve(id, MonitorRetrieveParams.none())
 
     /** @see retrieve */
@@ -51,56 +52,65 @@ interface MonitorServiceAsync {
         id: String,
         params: MonitorRetrieveParams = MonitorRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Monitor> = retrieve(params.toBuilder().id(id).build(), requestOptions)
+    ): CompletableFuture<MonitorRetrieveResponse> =
+        retrieve(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieve */
     fun retrieve(
         id: String,
         params: MonitorRetrieveParams = MonitorRetrieveParams.none(),
-    ): CompletableFuture<Monitor> = retrieve(id, params, RequestOptions.none())
+    ): CompletableFuture<MonitorRetrieveResponse> = retrieve(id, params, RequestOptions.none())
 
     /** @see retrieve */
     fun retrieve(
         params: MonitorRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Monitor>
+    ): CompletableFuture<MonitorRetrieveResponse>
 
     /** @see retrieve */
-    fun retrieve(params: MonitorRetrieveParams): CompletableFuture<Monitor> =
+    fun retrieve(params: MonitorRetrieveParams): CompletableFuture<MonitorRetrieveResponse> =
         retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
-    fun retrieve(id: String, requestOptions: RequestOptions): CompletableFuture<Monitor> =
+    fun retrieve(
+        id: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<MonitorRetrieveResponse> =
         retrieve(id, MonitorRetrieveParams.none(), requestOptions)
 
     /** Update monitor */
-    fun update(id: String): CompletableFuture<Monitor> = update(id, MonitorUpdateParams.none())
+    fun update(id: String): CompletableFuture<MonitorUpdateResponse> =
+        update(id, MonitorUpdateParams.none())
 
     /** @see update */
     fun update(
         id: String,
         params: MonitorUpdateParams = MonitorUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Monitor> = update(params.toBuilder().id(id).build(), requestOptions)
+    ): CompletableFuture<MonitorUpdateResponse> =
+        update(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see update */
     fun update(
         id: String,
         params: MonitorUpdateParams = MonitorUpdateParams.none(),
-    ): CompletableFuture<Monitor> = update(id, params, RequestOptions.none())
+    ): CompletableFuture<MonitorUpdateResponse> = update(id, params, RequestOptions.none())
 
     /** @see update */
     fun update(
         params: MonitorUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Monitor>
+    ): CompletableFuture<MonitorUpdateResponse>
 
     /** @see update */
-    fun update(params: MonitorUpdateParams): CompletableFuture<Monitor> =
+    fun update(params: MonitorUpdateParams): CompletableFuture<MonitorUpdateResponse> =
         update(params, RequestOptions.none())
 
     /** @see update */
-    fun update(id: String, requestOptions: RequestOptions): CompletableFuture<Monitor> =
+    fun update(
+        id: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<MonitorUpdateResponse> =
         update(id, MonitorUpdateParams.none(), requestOptions)
 
     /** List monitors */
@@ -189,7 +199,7 @@ interface MonitorServiceAsync {
          * Returns a raw HTTP response for `get /monitors/{id}`, but is otherwise the same as
          * [MonitorServiceAsync.retrieve].
          */
-        fun retrieve(id: String): CompletableFuture<HttpResponseFor<Monitor>> =
+        fun retrieve(id: String): CompletableFuture<HttpResponseFor<MonitorRetrieveResponse>> =
             retrieve(id, MonitorRetrieveParams.none())
 
         /** @see retrieve */
@@ -197,37 +207,40 @@ interface MonitorServiceAsync {
             id: String,
             params: MonitorRetrieveParams = MonitorRetrieveParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Monitor>> =
+        ): CompletableFuture<HttpResponseFor<MonitorRetrieveResponse>> =
             retrieve(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieve */
         fun retrieve(
             id: String,
             params: MonitorRetrieveParams = MonitorRetrieveParams.none(),
-        ): CompletableFuture<HttpResponseFor<Monitor>> = retrieve(id, params, RequestOptions.none())
+        ): CompletableFuture<HttpResponseFor<MonitorRetrieveResponse>> =
+            retrieve(id, params, RequestOptions.none())
 
         /** @see retrieve */
         fun retrieve(
             params: MonitorRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Monitor>>
+        ): CompletableFuture<HttpResponseFor<MonitorRetrieveResponse>>
 
         /** @see retrieve */
-        fun retrieve(params: MonitorRetrieveParams): CompletableFuture<HttpResponseFor<Monitor>> =
+        fun retrieve(
+            params: MonitorRetrieveParams
+        ): CompletableFuture<HttpResponseFor<MonitorRetrieveResponse>> =
             retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
         fun retrieve(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<Monitor>> =
+        ): CompletableFuture<HttpResponseFor<MonitorRetrieveResponse>> =
             retrieve(id, MonitorRetrieveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `patch /monitors/{id}`, but is otherwise the same as
          * [MonitorServiceAsync.update].
          */
-        fun update(id: String): CompletableFuture<HttpResponseFor<Monitor>> =
+        fun update(id: String): CompletableFuture<HttpResponseFor<MonitorUpdateResponse>> =
             update(id, MonitorUpdateParams.none())
 
         /** @see update */
@@ -235,30 +248,33 @@ interface MonitorServiceAsync {
             id: String,
             params: MonitorUpdateParams = MonitorUpdateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Monitor>> =
+        ): CompletableFuture<HttpResponseFor<MonitorUpdateResponse>> =
             update(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see update */
         fun update(
             id: String,
             params: MonitorUpdateParams = MonitorUpdateParams.none(),
-        ): CompletableFuture<HttpResponseFor<Monitor>> = update(id, params, RequestOptions.none())
+        ): CompletableFuture<HttpResponseFor<MonitorUpdateResponse>> =
+            update(id, params, RequestOptions.none())
 
         /** @see update */
         fun update(
             params: MonitorUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Monitor>>
+        ): CompletableFuture<HttpResponseFor<MonitorUpdateResponse>>
 
         /** @see update */
-        fun update(params: MonitorUpdateParams): CompletableFuture<HttpResponseFor<Monitor>> =
+        fun update(
+            params: MonitorUpdateParams
+        ): CompletableFuture<HttpResponseFor<MonitorUpdateResponse>> =
             update(params, RequestOptions.none())
 
         /** @see update */
         fun update(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<Monitor>> =
+        ): CompletableFuture<HttpResponseFor<MonitorUpdateResponse>> =
             update(id, MonitorUpdateParams.none(), requestOptions)
 
         /**

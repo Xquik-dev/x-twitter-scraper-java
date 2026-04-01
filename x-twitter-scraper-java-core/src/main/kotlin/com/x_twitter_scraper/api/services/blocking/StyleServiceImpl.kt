@@ -18,6 +18,7 @@ import com.x_twitter_scraper.api.core.http.json
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepare
 import com.x_twitter_scraper.api.models.styles.StyleAnalyzeParams
+import com.x_twitter_scraper.api.models.styles.StyleAnalyzeResponse
 import com.x_twitter_scraper.api.models.styles.StyleCompareParams
 import com.x_twitter_scraper.api.models.styles.StyleCompareResponse
 import com.x_twitter_scraper.api.models.styles.StyleDeleteParams
@@ -25,9 +26,10 @@ import com.x_twitter_scraper.api.models.styles.StyleGetPerformanceParams
 import com.x_twitter_scraper.api.models.styles.StyleGetPerformanceResponse
 import com.x_twitter_scraper.api.models.styles.StyleListParams
 import com.x_twitter_scraper.api.models.styles.StyleListResponse
-import com.x_twitter_scraper.api.models.styles.StyleProfile
 import com.x_twitter_scraper.api.models.styles.StyleRetrieveParams
+import com.x_twitter_scraper.api.models.styles.StyleRetrieveResponse
 import com.x_twitter_scraper.api.models.styles.StyleUpdateParams
+import com.x_twitter_scraper.api.models.styles.StyleUpdateResponse
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -47,11 +49,14 @@ class StyleServiceImpl internal constructor(private val clientOptions: ClientOpt
     override fun retrieve(
         params: StyleRetrieveParams,
         requestOptions: RequestOptions,
-    ): StyleProfile =
+    ): StyleRetrieveResponse =
         // get /styles/{username}
         withRawResponse().retrieve(params, requestOptions).parse()
 
-    override fun update(params: StyleUpdateParams, requestOptions: RequestOptions): StyleProfile =
+    override fun update(
+        params: StyleUpdateParams,
+        requestOptions: RequestOptions,
+    ): StyleUpdateResponse =
         // put /styles/{username}
         withRawResponse().update(params, requestOptions).parse()
 
@@ -64,7 +69,10 @@ class StyleServiceImpl internal constructor(private val clientOptions: ClientOpt
         withRawResponse().delete(params, requestOptions)
     }
 
-    override fun analyze(params: StyleAnalyzeParams, requestOptions: RequestOptions): StyleProfile =
+    override fun analyze(
+        params: StyleAnalyzeParams,
+        requestOptions: RequestOptions,
+    ): StyleAnalyzeResponse =
         // post /styles
         withRawResponse().analyze(params, requestOptions).parse()
 
@@ -95,13 +103,13 @@ class StyleServiceImpl internal constructor(private val clientOptions: ClientOpt
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val retrieveHandler: Handler<StyleProfile> =
-            jsonHandler<StyleProfile>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<StyleRetrieveResponse> =
+            jsonHandler<StyleRetrieveResponse>(clientOptions.jsonMapper)
 
         override fun retrieve(
             params: StyleRetrieveParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<StyleProfile> {
+        ): HttpResponseFor<StyleRetrieveResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("username", params.username().getOrNull())
@@ -125,13 +133,13 @@ class StyleServiceImpl internal constructor(private val clientOptions: ClientOpt
             }
         }
 
-        private val updateHandler: Handler<StyleProfile> =
-            jsonHandler<StyleProfile>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<StyleUpdateResponse> =
+            jsonHandler<StyleUpdateResponse>(clientOptions.jsonMapper)
 
         override fun update(
             params: StyleUpdateParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<StyleProfile> {
+        ): HttpResponseFor<StyleUpdateResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("username", params.username().getOrNull())
@@ -207,13 +215,13 @@ class StyleServiceImpl internal constructor(private val clientOptions: ClientOpt
             }
         }
 
-        private val analyzeHandler: Handler<StyleProfile> =
-            jsonHandler<StyleProfile>(clientOptions.jsonMapper)
+        private val analyzeHandler: Handler<StyleAnalyzeResponse> =
+            jsonHandler<StyleAnalyzeResponse>(clientOptions.jsonMapper)
 
         override fun analyze(
             params: StyleAnalyzeParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<StyleProfile> {
+        ): HttpResponseFor<StyleAnalyzeResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
