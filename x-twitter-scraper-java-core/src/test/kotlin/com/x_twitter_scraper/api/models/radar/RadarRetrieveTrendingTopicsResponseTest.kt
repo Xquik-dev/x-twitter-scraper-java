@@ -15,7 +15,7 @@ internal class RadarRetrieveTrendingTopicsResponseTest {
         val radarRetrieveTrendingTopicsResponse =
             RadarRetrieveTrendingTopicsResponse.builder()
                 .addItem(
-                    RadarItem.builder()
+                    RadarRetrieveTrendingTopicsResponse.Item.builder()
                         .category("category")
                         .publishedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .region("region")
@@ -32,7 +32,7 @@ internal class RadarRetrieveTrendingTopicsResponseTest {
 
         assertThat(radarRetrieveTrendingTopicsResponse.items())
             .containsExactly(
-                RadarItem.builder()
+                RadarRetrieveTrendingTopicsResponse.Item.builder()
                     .category("category")
                     .publishedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .region("region")
@@ -53,7 +53,7 @@ internal class RadarRetrieveTrendingTopicsResponseTest {
         val radarRetrieveTrendingTopicsResponse =
             RadarRetrieveTrendingTopicsResponse.builder()
                 .addItem(
-                    RadarItem.builder()
+                    RadarRetrieveTrendingTopicsResponse.Item.builder()
                         .category("category")
                         .publishedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .region("region")

@@ -45,10 +45,10 @@ internal class AccountServiceAsyncTest {
                 .build()
         val accountServiceAsync = client.x().accounts()
 
-        val xAccountDetailFuture = accountServiceAsync.retrieve("id")
+        val accountFuture = accountServiceAsync.retrieve("id")
 
-        val xAccountDetail = xAccountDetailFuture.get()
-        xAccountDetail.validate()
+        val account = accountFuture.get()
+        account.validate()
     }
 
     @Disabled("Mock server tests are disabled")

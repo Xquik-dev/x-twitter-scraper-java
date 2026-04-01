@@ -38,8 +38,8 @@ This library requires Java 8 or later.
 ```java
 import com.x_twitter_scraper.api.client.XTwitterScraperClient;
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient;
-import com.x_twitter_scraper.api.models.PaginatedTweets;
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams;
+import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse;
 
 // Configures using the `xtwitterscraper.apiKey`, `xtwitterscraper.bearerToken` and `xtwitterscraper.baseUrl` system properties
 // Or configures using the `X_TWITTER_SCRAPER_API_KEY`, `X_TWITTER_SCRAPER_BEARER_TOKEN` and `X_TWITTER_SCRAPER_BASE_URL` environment variables
@@ -49,7 +49,7 @@ TweetSearchParams params = TweetSearchParams.builder()
     .q("from:elonmusk")
     .limit(10L)
     .build();
-PaginatedTweets paginatedTweets = client.x().tweets().search(params);
+TweetSearchResponse response = client.x().tweets().search(params);
 ```
 
 ## Client configuration
@@ -124,7 +124,7 @@ The `withOptions()` method does not affect the original client or service.
 
 To send a request to the X Twitter Scraper API, build an instance of some `Params` class and pass it to the corresponding client method. When the response is received, it will be deserialized into an instance of a Java class.
 
-For example, `client.x().tweets().search(...)` should be called with an instance of `TweetSearchParams`, and it will return an instance of `PaginatedTweets`.
+For example, `client.x().tweets().search(...)` should be called with an instance of `TweetSearchParams`, and it will return an instance of `TweetSearchResponse`.
 
 ## Immutability
 
@@ -141,8 +141,8 @@ The default client is synchronous. To switch to asynchronous execution, call the
 ```java
 import com.x_twitter_scraper.api.client.XTwitterScraperClient;
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient;
-import com.x_twitter_scraper.api.models.PaginatedTweets;
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams;
+import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `xtwitterscraper.apiKey`, `xtwitterscraper.bearerToken` and `xtwitterscraper.baseUrl` system properties
@@ -153,7 +153,7 @@ TweetSearchParams params = TweetSearchParams.builder()
     .q("from:elonmusk")
     .limit(10L)
     .build();
-CompletableFuture<PaginatedTweets> paginatedTweets = client.async().x().tweets().search(params);
+CompletableFuture<TweetSearchResponse> response = client.async().x().tweets().search(params);
 ```
 
 Or create an asynchronous client from the beginning:
@@ -161,8 +161,8 @@ Or create an asynchronous client from the beginning:
 ```java
 import com.x_twitter_scraper.api.client.XTwitterScraperClientAsync;
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClientAsync;
-import com.x_twitter_scraper.api.models.PaginatedTweets;
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams;
+import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `xtwitterscraper.apiKey`, `xtwitterscraper.bearerToken` and `xtwitterscraper.baseUrl` system properties
@@ -173,7 +173,7 @@ TweetSearchParams params = TweetSearchParams.builder()
     .q("from:elonmusk")
     .limit(10L)
     .build();
-CompletableFuture<PaginatedTweets> paginatedTweets = client.x().tweets().search(params);
+CompletableFuture<TweetSearchResponse> response = client.x().tweets().search(params);
 ```
 
 The asynchronous client supports the same options as the synchronous one, except most methods return `CompletableFuture`s.
@@ -299,25 +299,25 @@ To access this data, prefix any HTTP method call on a client or service with `wi
 ```java
 import com.x_twitter_scraper.api.core.http.Headers;
 import com.x_twitter_scraper.api.core.http.HttpResponseFor;
-import com.x_twitter_scraper.api.models.PaginatedTweets;
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams;
+import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse;
 
 TweetSearchParams params = TweetSearchParams.builder()
     .q("from:elonmusk")
     .limit(10L)
     .build();
-HttpResponseFor<PaginatedTweets> paginatedTweets = client.x().tweets().withRawResponse().search(params);
+HttpResponseFor<TweetSearchResponse> response = client.x().tweets().withRawResponse().search(params);
 
-int statusCode = paginatedTweets.statusCode();
-Headers headers = paginatedTweets.headers();
+int statusCode = response.statusCode();
+Headers headers = response.headers();
 ```
 
 You can still deserialize the response into an instance of a Java class if needed:
 
 ```java
-import com.x_twitter_scraper.api.models.PaginatedTweets;
+import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse;
 
-PaginatedTweets parsedPaginatedTweets = paginatedTweets.parse();
+TweetSearchResponse parsedResponse = response.parse();
 ```
 
 ## Error handling
@@ -415,9 +415,9 @@ Requests time out after 1 minute by default.
 To set a custom timeout, configure the method call using the `timeout` method:
 
 ```java
-import com.x_twitter_scraper.api.models.PaginatedTweets;
+import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse;
 
-PaginatedTweets paginatedTweets = client.x().tweets().search(
+TweetSearchResponse response = client.x().tweets().search(
   params, RequestOptions.builder().timeout(Duration.ofSeconds(30)).build()
 );
 ```
@@ -693,17 +693,17 @@ By default, the SDK will not throw an exception in this case. It will throw [`XT
 If you would prefer to check that the response is completely well-typed upfront, then either call `validate()`:
 
 ```java
-import com.x_twitter_scraper.api.models.PaginatedTweets;
+import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse;
 
-PaginatedTweets paginatedTweets = client.x().tweets().search(params).validate();
+TweetSearchResponse response = client.x().tweets().search(params).validate();
 ```
 
 Or configure the method call to validate the response using the `responseValidation` method:
 
 ```java
-import com.x_twitter_scraper.api.models.PaginatedTweets;
+import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse;
 
-PaginatedTweets paginatedTweets = client.x().tweets().search(
+TweetSearchResponse response = client.x().tweets().search(
   params, RequestOptions.builder().responseValidation(true).build()
 );
 ```

@@ -18,11 +18,12 @@ import com.x_twitter_scraper.api.core.http.json
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepareAsync
 import com.x_twitter_scraper.api.models.drafts.DraftCreateParams
+import com.x_twitter_scraper.api.models.drafts.DraftCreateResponse
 import com.x_twitter_scraper.api.models.drafts.DraftDeleteParams
-import com.x_twitter_scraper.api.models.drafts.DraftDetail
 import com.x_twitter_scraper.api.models.drafts.DraftListParams
 import com.x_twitter_scraper.api.models.drafts.DraftListResponse
 import com.x_twitter_scraper.api.models.drafts.DraftRetrieveParams
+import com.x_twitter_scraper.api.models.drafts.DraftRetrieveResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -43,14 +44,14 @@ class DraftServiceAsyncImpl internal constructor(private val clientOptions: Clie
     override fun create(
         params: DraftCreateParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<DraftDetail> =
+    ): CompletableFuture<DraftCreateResponse> =
         // post /drafts
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieve(
         params: DraftRetrieveParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<DraftDetail> =
+    ): CompletableFuture<DraftRetrieveResponse> =
         // get /drafts/{id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
@@ -81,13 +82,13 @@ class DraftServiceAsyncImpl internal constructor(private val clientOptions: Clie
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val createHandler: Handler<DraftDetail> =
-            jsonHandler<DraftDetail>(clientOptions.jsonMapper)
+        private val createHandler: Handler<DraftCreateResponse> =
+            jsonHandler<DraftCreateResponse>(clientOptions.jsonMapper)
 
         override fun create(
             params: DraftCreateParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<DraftDetail>> {
+        ): CompletableFuture<HttpResponseFor<DraftCreateResponse>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -112,13 +113,13 @@ class DraftServiceAsyncImpl internal constructor(private val clientOptions: Clie
                 }
         }
 
-        private val retrieveHandler: Handler<DraftDetail> =
-            jsonHandler<DraftDetail>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<DraftRetrieveResponse> =
+            jsonHandler<DraftRetrieveResponse>(clientOptions.jsonMapper)
 
         override fun retrieve(
             params: DraftRetrieveParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<DraftDetail>> {
+        ): CompletableFuture<HttpResponseFor<DraftRetrieveResponse>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())

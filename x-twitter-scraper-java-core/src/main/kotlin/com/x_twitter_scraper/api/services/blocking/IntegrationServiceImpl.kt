@@ -16,8 +16,8 @@ import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.json
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepare
-import com.x_twitter_scraper.api.models.integrations.Integration
 import com.x_twitter_scraper.api.models.integrations.IntegrationCreateParams
+import com.x_twitter_scraper.api.models.integrations.IntegrationCreateResponse
 import com.x_twitter_scraper.api.models.integrations.IntegrationDeleteParams
 import com.x_twitter_scraper.api.models.integrations.IntegrationDeleteResponse
 import com.x_twitter_scraper.api.models.integrations.IntegrationListDeliveriesParams
@@ -25,9 +25,11 @@ import com.x_twitter_scraper.api.models.integrations.IntegrationListDeliveriesRe
 import com.x_twitter_scraper.api.models.integrations.IntegrationListParams
 import com.x_twitter_scraper.api.models.integrations.IntegrationListResponse
 import com.x_twitter_scraper.api.models.integrations.IntegrationRetrieveParams
+import com.x_twitter_scraper.api.models.integrations.IntegrationRetrieveResponse
 import com.x_twitter_scraper.api.models.integrations.IntegrationSendTestParams
 import com.x_twitter_scraper.api.models.integrations.IntegrationSendTestResponse
 import com.x_twitter_scraper.api.models.integrations.IntegrationUpdateParams
+import com.x_twitter_scraper.api.models.integrations.IntegrationUpdateResponse
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -47,21 +49,21 @@ class IntegrationServiceImpl internal constructor(private val clientOptions: Cli
     override fun create(
         params: IntegrationCreateParams,
         requestOptions: RequestOptions,
-    ): Integration =
+    ): IntegrationCreateResponse =
         // post /integrations
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: IntegrationRetrieveParams,
         requestOptions: RequestOptions,
-    ): Integration =
+    ): IntegrationRetrieveResponse =
         // get /integrations/{id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: IntegrationUpdateParams,
         requestOptions: RequestOptions,
-    ): Integration =
+    ): IntegrationUpdateResponse =
         // patch /integrations/{id}
         withRawResponse().update(params, requestOptions).parse()
 
@@ -106,13 +108,13 @@ class IntegrationServiceImpl internal constructor(private val clientOptions: Cli
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val createHandler: Handler<Integration> =
-            jsonHandler<Integration>(clientOptions.jsonMapper)
+        private val createHandler: Handler<IntegrationCreateResponse> =
+            jsonHandler<IntegrationCreateResponse>(clientOptions.jsonMapper)
 
         override fun create(
             params: IntegrationCreateParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<Integration> {
+        ): HttpResponseFor<IntegrationCreateResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -134,13 +136,13 @@ class IntegrationServiceImpl internal constructor(private val clientOptions: Cli
             }
         }
 
-        private val retrieveHandler: Handler<Integration> =
-            jsonHandler<Integration>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<IntegrationRetrieveResponse> =
+            jsonHandler<IntegrationRetrieveResponse>(clientOptions.jsonMapper)
 
         override fun retrieve(
             params: IntegrationRetrieveParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<Integration> {
+        ): HttpResponseFor<IntegrationRetrieveResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -164,13 +166,13 @@ class IntegrationServiceImpl internal constructor(private val clientOptions: Cli
             }
         }
 
-        private val updateHandler: Handler<Integration> =
-            jsonHandler<Integration>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<IntegrationUpdateResponse> =
+            jsonHandler<IntegrationUpdateResponse>(clientOptions.jsonMapper)
 
         override fun update(
             params: IntegrationUpdateParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<Integration> {
+        ): HttpResponseFor<IntegrationUpdateResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())

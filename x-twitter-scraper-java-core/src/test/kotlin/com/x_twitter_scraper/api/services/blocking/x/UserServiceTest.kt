@@ -28,9 +28,9 @@ internal class UserServiceTest {
                 .build()
         val userService = client.x().users()
 
-        val userProfile = userService.retrieve("username")
+        val user = userService.retrieve("username")
 
-        userProfile.validate()
+        user.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -71,12 +71,12 @@ internal class UserServiceTest {
                 .build()
         val userService = client.x().users()
 
-        val paginatedUsers =
+        val response =
             userService.retrieveFollowersYouKnow(
                 UserRetrieveFollowersYouKnowParams.builder().id("id").cursor("cursor").build()
             )
 
-        paginatedUsers.validate()
+        response.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -104,12 +104,12 @@ internal class UserServiceTest {
                 .build()
         val userService = client.x().users()
 
-        val paginatedTweets =
+        val response =
             userService.retrieveLikes(
                 UserRetrieveLikesParams.builder().id("id").cursor("cursor").build()
             )
 
-        paginatedTweets.validate()
+        response.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -122,12 +122,12 @@ internal class UserServiceTest {
                 .build()
         val userService = client.x().users()
 
-        val paginatedTweets =
+        val response =
             userService.retrieveMedia(
                 UserRetrieveMediaParams.builder().id("id").cursor("cursor").build()
             )
 
-        paginatedTweets.validate()
+        response.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -175,7 +175,7 @@ internal class UserServiceTest {
                 .build()
         val userService = client.x().users()
 
-        val paginatedTweets =
+        val response =
             userService.retrieveTweets(
                 UserRetrieveTweetsParams.builder()
                     .id("id")
@@ -185,7 +185,7 @@ internal class UserServiceTest {
                     .build()
             )
 
-        paginatedTweets.validate()
+        response.validate()
     }
 
     @Disabled("Mock server tests are disabled")

@@ -4,7 +4,6 @@ package com.x_twitter_scraper.api.models
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.core.jsonMapper
-import com.x_twitter_scraper.api.models.x.tweets.SearchTweet
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -17,11 +16,11 @@ internal class PaginatedTweetsTest {
                 .hasNextPage(true)
                 .nextCursor("next_cursor")
                 .addTweet(
-                    SearchTweet.builder()
+                    PaginatedTweets.Tweet.builder()
                         .id("id")
                         .text("text")
                         .author(
-                            SearchTweet.Author.builder()
+                            PaginatedTweets.Tweet.Author.builder()
                                 .id("id")
                                 .name("name")
                                 .username("username")
@@ -43,11 +42,11 @@ internal class PaginatedTweetsTest {
         assertThat(paginatedTweets.nextCursor()).isEqualTo("next_cursor")
         assertThat(paginatedTweets.tweets())
             .containsExactly(
-                SearchTweet.builder()
+                PaginatedTweets.Tweet.builder()
                     .id("id")
                     .text("text")
                     .author(
-                        SearchTweet.Author.builder()
+                        PaginatedTweets.Tweet.Author.builder()
                             .id("id")
                             .name("name")
                             .username("username")
@@ -73,11 +72,11 @@ internal class PaginatedTweetsTest {
                 .hasNextPage(true)
                 .nextCursor("next_cursor")
                 .addTweet(
-                    SearchTweet.builder()
+                    PaginatedTweets.Tweet.builder()
                         .id("id")
                         .text("text")
                         .author(
-                            SearchTweet.Author.builder()
+                            PaginatedTweets.Tweet.Author.builder()
                                 .id("id")
                                 .name("name")
                                 .username("username")

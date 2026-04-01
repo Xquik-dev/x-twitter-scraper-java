@@ -15,12 +15,12 @@ internal class StyleCompareResponseTest {
         val styleCompareResponse =
             StyleCompareResponse.builder()
                 .style1(
-                    StyleProfile.builder()
+                    StyleCompareResponse.Style1.builder()
                         .fetchedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .isOwnAccount(true)
                         .tweetCount(0L)
                         .addTweet(
-                            StyleProfile.Tweet.builder()
+                            StyleCompareResponse.Style1.Tweet.builder()
                                 .id("id")
                                 .text("text")
                                 .authorUsername("authorUsername")
@@ -31,12 +31,12 @@ internal class StyleCompareResponseTest {
                         .build()
                 )
                 .style2(
-                    StyleProfile.builder()
+                    StyleCompareResponse.Style2.builder()
                         .fetchedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .isOwnAccount(true)
                         .tweetCount(0L)
                         .addTweet(
-                            StyleProfile.Tweet.builder()
+                            StyleCompareResponse.Style2.Tweet.builder()
                                 .id("id")
                                 .text("text")
                                 .authorUsername("authorUsername")
@@ -50,12 +50,12 @@ internal class StyleCompareResponseTest {
 
         assertThat(styleCompareResponse.style1())
             .isEqualTo(
-                StyleProfile.builder()
+                StyleCompareResponse.Style1.builder()
                     .fetchedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .isOwnAccount(true)
                     .tweetCount(0L)
                     .addTweet(
-                        StyleProfile.Tweet.builder()
+                        StyleCompareResponse.Style1.Tweet.builder()
                             .id("id")
                             .text("text")
                             .authorUsername("authorUsername")
@@ -67,12 +67,12 @@ internal class StyleCompareResponseTest {
             )
         assertThat(styleCompareResponse.style2())
             .isEqualTo(
-                StyleProfile.builder()
+                StyleCompareResponse.Style2.builder()
                     .fetchedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .isOwnAccount(true)
                     .tweetCount(0L)
                     .addTweet(
-                        StyleProfile.Tweet.builder()
+                        StyleCompareResponse.Style2.Tweet.builder()
                             .id("id")
                             .text("text")
                             .authorUsername("authorUsername")
@@ -90,12 +90,12 @@ internal class StyleCompareResponseTest {
         val styleCompareResponse =
             StyleCompareResponse.builder()
                 .style1(
-                    StyleProfile.builder()
+                    StyleCompareResponse.Style1.builder()
                         .fetchedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .isOwnAccount(true)
                         .tweetCount(0L)
                         .addTweet(
-                            StyleProfile.Tweet.builder()
+                            StyleCompareResponse.Style1.Tweet.builder()
                                 .id("id")
                                 .text("text")
                                 .authorUsername("authorUsername")
@@ -106,12 +106,12 @@ internal class StyleCompareResponseTest {
                         .build()
                 )
                 .style2(
-                    StyleProfile.builder()
+                    StyleCompareResponse.Style2.builder()
                         .fetchedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .isOwnAccount(true)
                         .tweetCount(0L)
                         .addTweet(
-                            StyleProfile.Tweet.builder()
+                            StyleCompareResponse.Style2.Tweet.builder()
                                 .id("id")
                                 .text("text")
                                 .authorUsername("authorUsername")

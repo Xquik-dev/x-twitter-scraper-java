@@ -20,7 +20,7 @@ internal class DraftServiceTest {
                 .build()
         val draftService = client.drafts()
 
-        val draftDetail =
+        val draft =
             draftService.create(
                 DraftCreateParams.builder()
                     .text("text")
@@ -29,7 +29,7 @@ internal class DraftServiceTest {
                     .build()
             )
 
-        draftDetail.validate()
+        draft.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -42,9 +42,9 @@ internal class DraftServiceTest {
                 .build()
         val draftService = client.drafts()
 
-        val draftDetail = draftService.retrieve("id")
+        val draft = draftService.retrieve("id")
 
-        draftDetail.validate()
+        draft.validate()
     }
 
     @Disabled("Mock server tests are disabled")
