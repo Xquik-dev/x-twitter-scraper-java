@@ -4,7 +4,6 @@ package com.x_twitter_scraper.api.models.webhooks
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.core.jsonMapper
-import com.x_twitter_scraper.api.models.EventType
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -16,10 +15,10 @@ internal class WebhookListResponseTest {
         val webhookListResponse =
             WebhookListResponse.builder()
                 .addWebhook(
-                    Webhook.builder()
+                    WebhookListResponse.Webhook.builder()
                         .id("id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .addEventType(EventType.TWEET_NEW)
+                        .addEventType(WebhookListResponse.Webhook.EventType.TWEET_NEW)
                         .isActive(true)
                         .url("https://example.com")
                         .build()
@@ -28,10 +27,10 @@ internal class WebhookListResponseTest {
 
         assertThat(webhookListResponse.webhooks())
             .containsExactly(
-                Webhook.builder()
+                WebhookListResponse.Webhook.builder()
                     .id("id")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .addEventType(EventType.TWEET_NEW)
+                    .addEventType(WebhookListResponse.Webhook.EventType.TWEET_NEW)
                     .isActive(true)
                     .url("https://example.com")
                     .build()
@@ -44,10 +43,10 @@ internal class WebhookListResponseTest {
         val webhookListResponse =
             WebhookListResponse.builder()
                 .addWebhook(
-                    Webhook.builder()
+                    WebhookListResponse.Webhook.builder()
                         .id("id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .addEventType(EventType.TWEET_NEW)
+                        .addEventType(WebhookListResponse.Webhook.EventType.TWEET_NEW)
                         .isActive(true)
                         .url("https://example.com")
                         .build()

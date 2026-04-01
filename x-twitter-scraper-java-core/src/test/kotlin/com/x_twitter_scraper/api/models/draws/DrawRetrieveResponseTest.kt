@@ -15,7 +15,7 @@ internal class DrawRetrieveResponseTest {
         val drawRetrieveResponse =
             DrawRetrieveResponse.builder()
                 .draw(
-                    DrawDetail.builder()
+                    DrawRetrieveResponse.Draw.builder()
                         .id("id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .status("status")
@@ -33,7 +33,7 @@ internal class DrawRetrieveResponseTest {
                         .build()
                 )
                 .addWinner(
-                    Winner.builder()
+                    DrawRetrieveResponse.Winner.builder()
                         .authorUsername("authorUsername")
                         .isBackup(true)
                         .position(0L)
@@ -44,7 +44,7 @@ internal class DrawRetrieveResponseTest {
 
         assertThat(drawRetrieveResponse.draw())
             .isEqualTo(
-                DrawDetail.builder()
+                DrawRetrieveResponse.Draw.builder()
                     .id("id")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .status("status")
@@ -63,7 +63,7 @@ internal class DrawRetrieveResponseTest {
             )
         assertThat(drawRetrieveResponse.winners())
             .containsExactly(
-                Winner.builder()
+                DrawRetrieveResponse.Winner.builder()
                     .authorUsername("authorUsername")
                     .isBackup(true)
                     .position(0L)
@@ -78,7 +78,7 @@ internal class DrawRetrieveResponseTest {
         val drawRetrieveResponse =
             DrawRetrieveResponse.builder()
                 .draw(
-                    DrawDetail.builder()
+                    DrawRetrieveResponse.Draw.builder()
                         .id("id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .status("status")
@@ -96,7 +96,7 @@ internal class DrawRetrieveResponseTest {
                         .build()
                 )
                 .addWinner(
-                    Winner.builder()
+                    DrawRetrieveResponse.Winner.builder()
                         .authorUsername("authorUsername")
                         .isBackup(true)
                         .position(0L)

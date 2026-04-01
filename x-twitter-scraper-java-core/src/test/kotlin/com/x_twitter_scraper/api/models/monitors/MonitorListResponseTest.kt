@@ -4,7 +4,6 @@ package com.x_twitter_scraper.api.models.monitors
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.core.jsonMapper
-import com.x_twitter_scraper.api.models.EventType
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -16,10 +15,10 @@ internal class MonitorListResponseTest {
         val monitorListResponse =
             MonitorListResponse.builder()
                 .addMonitor(
-                    Monitor.builder()
+                    MonitorListResponse.Monitor.builder()
                         .id("id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .addEventType(EventType.TWEET_NEW)
+                        .addEventType(MonitorListResponse.Monitor.EventType.TWEET_NEW)
                         .isActive(true)
                         .username("username")
                         .xUserId("xUserId")
@@ -30,10 +29,10 @@ internal class MonitorListResponseTest {
 
         assertThat(monitorListResponse.monitors())
             .containsExactly(
-                Monitor.builder()
+                MonitorListResponse.Monitor.builder()
                     .id("id")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .addEventType(EventType.TWEET_NEW)
+                    .addEventType(MonitorListResponse.Monitor.EventType.TWEET_NEW)
                     .isActive(true)
                     .username("username")
                     .xUserId("xUserId")
@@ -48,10 +47,10 @@ internal class MonitorListResponseTest {
         val monitorListResponse =
             MonitorListResponse.builder()
                 .addMonitor(
-                    Monitor.builder()
+                    MonitorListResponse.Monitor.builder()
                         .id("id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .addEventType(EventType.TWEET_NEW)
+                        .addEventType(MonitorListResponse.Monitor.EventType.TWEET_NEW)
                         .isActive(true)
                         .username("username")
                         .xUserId("xUserId")

@@ -5,7 +5,6 @@ package com.x_twitter_scraper.api.models.integrations
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.jsonMapper
-import com.x_twitter_scraper.api.models.EventType
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -23,7 +22,7 @@ internal class IntegrationTest {
                         .build()
                 )
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .addEventType(EventType.TWEET_NEW)
+                .addEventType(Integration.EventType.TWEET_NEW)
                 .isActive(true)
                 .name("name")
                 .type(Integration.Type.TELEGRAM)
@@ -46,7 +45,7 @@ internal class IntegrationTest {
             )
         assertThat(integration.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(integration.eventTypes()).containsExactly(EventType.TWEET_NEW)
+        assertThat(integration.eventTypes()).containsExactly(Integration.EventType.TWEET_NEW)
         assertThat(integration.isActive()).isEqualTo(true)
         assertThat(integration.name()).isEqualTo("name")
         assertThat(integration.type()).isEqualTo(Integration.Type.TELEGRAM)
@@ -73,7 +72,7 @@ internal class IntegrationTest {
                         .build()
                 )
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .addEventType(EventType.TWEET_NEW)
+                .addEventType(Integration.EventType.TWEET_NEW)
                 .isActive(true)
                 .name("name")
                 .type(Integration.Type.TELEGRAM)
