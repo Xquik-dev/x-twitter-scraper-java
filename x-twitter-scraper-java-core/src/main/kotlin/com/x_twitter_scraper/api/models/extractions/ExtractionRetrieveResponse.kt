@@ -46,6 +46,8 @@ private constructor(
     fun hasMore(): Boolean = hasMore.getRequired("hasMore")
 
     /**
+     * Extraction job metadata — shape varies by tool type (JSON)
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -146,6 +148,7 @@ private constructor(
          */
         fun hasMore(hasMore: JsonField<Boolean>) = apply { this.hasMore = hasMore }
 
+        /** Extraction job metadata — shape varies by tool type (JSON) */
         fun job(job: Job) = job(JsonField.of(job))
 
         /**
@@ -269,6 +272,7 @@ private constructor(
             (results.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (nextCursor.asKnown().isPresent) 1 else 0)
 
+    /** Extraction job metadata — shape varies by tool type (JSON) */
     class Job
     @JsonCreator
     private constructor(
