@@ -4,7 +4,6 @@ package com.x_twitter_scraper.api.services.blocking.x
 
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
 import com.x_twitter_scraper.api.models.x.tweets.TweetCreateParams
-import com.x_twitter_scraper.api.models.x.tweets.TweetDeleteParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetFavoritersParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetQuotesParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetRepliesParams
@@ -45,21 +44,6 @@ internal class TweetServiceTest {
 
     @Disabled("Mock server tests are disabled")
     @Test
-    fun retrieve() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
-        val tweetService = client.x().tweets()
-
-        val tweet = tweetService.retrieve("tweetId")
-
-        tweet.validate()
-    }
-
-    @Disabled("Mock server tests are disabled")
-    @Test
     fun list() {
         val client =
             XTwitterScraperOkHttpClient.builder()
@@ -69,24 +53,6 @@ internal class TweetServiceTest {
         val tweetService = client.x().tweets()
 
         tweetService.list(TweetListParams.builder().ids("ids").build())
-    }
-
-    @Disabled("Mock server tests are disabled")
-    @Test
-    fun delete() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
-        val tweetService = client.x().tweets()
-
-        val tweet =
-            tweetService.delete(
-                TweetDeleteParams.builder().tweetId("tweetId").account("account").build()
-            )
-
-        tweet.validate()
     }
 
     @Disabled("Mock server tests are disabled")

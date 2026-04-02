@@ -19,8 +19,6 @@ import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepare
 import com.x_twitter_scraper.api.models.x.tweets.TweetCreateParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetCreateResponse
-import com.x_twitter_scraper.api.models.x.tweets.TweetDeleteParams
-import com.x_twitter_scraper.api.models.x.tweets.TweetDeleteResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetFavoritersParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetFavoritersResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetQuotesParams
@@ -32,8 +30,6 @@ import com.x_twitter_scraper.api.models.x.tweets.TweetGetRetweetersResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetThreadParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetThreadResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetListParams
-import com.x_twitter_scraper.api.models.x.tweets.TweetRetrieveParams
-import com.x_twitter_scraper.api.models.x.tweets.TweetRetrieveResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse
 import com.x_twitter_scraper.api.services.blocking.x.tweets.LikeService
@@ -59,10 +55,8 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): TweetService =
         TweetServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    /** X write actions (tweets, likes, follows, DMs) */
     override fun like(): LikeService = like
 
-    /** X write actions (tweets, likes, follows, DMs) */
     override fun retweet(): RetweetService = retweet
 
     override fun create(
@@ -72,24 +66,10 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
         // post /x/tweets
         withRawResponse().create(params, requestOptions).parse()
 
-    override fun retrieve(
-        params: TweetRetrieveParams,
-        requestOptions: RequestOptions,
-    ): TweetRetrieveResponse =
-        // get /x/tweets/{tweetId}
-        withRawResponse().retrieve(params, requestOptions).parse()
-
     override fun list(params: TweetListParams, requestOptions: RequestOptions) {
         // get /x/tweets
         withRawResponse().list(params, requestOptions)
     }
-
-    override fun delete(
-        params: TweetDeleteParams,
-        requestOptions: RequestOptions,
-    ): TweetDeleteResponse =
-        // delete /x/tweets/{tweetId}
-        withRawResponse().delete(params, requestOptions).parse()
 
     override fun getFavoriters(
         params: TweetGetFavoritersParams,
@@ -154,10 +134,8 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        /** X write actions (tweets, likes, follows, DMs) */
         override fun like(): LikeService.WithRawResponse = like
 
-        /** X write actions (tweets, likes, follows, DMs) */
         override fun retweet(): RetweetService.WithRawResponse = retweet
 
         private val createHandler: Handler<TweetCreateResponse> =
@@ -188,36 +166,6 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
             }
         }
 
-        private val retrieveHandler: Handler<TweetRetrieveResponse> =
-            jsonHandler<TweetRetrieveResponse>(clientOptions.jsonMapper)
-
-        override fun retrieve(
-            params: TweetRetrieveParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<TweetRetrieveResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("tweetId", params.tweetId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("x", "tweets", params._pathParam(0))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { retrieveHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
-        }
-
         private val listHandler: Handler<Void?> = emptyHandler()
 
         override fun list(params: TweetListParams, requestOptions: RequestOptions): HttpResponse {
@@ -232,37 +180,6 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
                 response.use { listHandler.handle(it) }
-            }
-        }
-
-        private val deleteHandler: Handler<TweetDeleteResponse> =
-            jsonHandler<TweetDeleteResponse>(clientOptions.jsonMapper)
-
-        override fun delete(
-            params: TweetDeleteParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<TweetDeleteResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("tweetId", params.tweetId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.DELETE)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("x", "tweets", params._pathParam(0))
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { deleteHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
             }
         }
 
