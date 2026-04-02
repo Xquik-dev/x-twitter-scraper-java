@@ -26,7 +26,7 @@ internal class RadarServiceTest {
                     .count(0L)
                     .hours(0L)
                     .region("region")
-                    .source("source")
+                    .source(RadarRetrieveTrendingTopicsParams.Source.GITHUB)
                     .build()
             )
 

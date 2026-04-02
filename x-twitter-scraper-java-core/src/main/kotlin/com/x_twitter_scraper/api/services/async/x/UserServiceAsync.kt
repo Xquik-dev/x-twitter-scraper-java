@@ -16,8 +16,6 @@ import com.x_twitter_scraper.api.models.x.users.UserRetrieveLikesResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveMediaParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveMediaResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveMentionsParams
-import com.x_twitter_scraper.api.models.x.users.UserRetrieveParams
-import com.x_twitter_scraper.api.models.x.users.UserRetrieveResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveSearchParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveTweetsParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveTweetsResponse
@@ -41,43 +39,7 @@ interface UserServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserServiceAsync
 
-    /** X write actions (tweets, likes, follows, DMs) */
     fun follow(): FollowServiceAsync
-
-    /** Look up X user */
-    fun retrieve(username: String): CompletableFuture<UserRetrieveResponse> =
-        retrieve(username, UserRetrieveParams.none())
-
-    /** @see retrieve */
-    fun retrieve(
-        username: String,
-        params: UserRetrieveParams = UserRetrieveParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<UserRetrieveResponse> =
-        retrieve(params.toBuilder().username(username).build(), requestOptions)
-
-    /** @see retrieve */
-    fun retrieve(
-        username: String,
-        params: UserRetrieveParams = UserRetrieveParams.none(),
-    ): CompletableFuture<UserRetrieveResponse> = retrieve(username, params, RequestOptions.none())
-
-    /** @see retrieve */
-    fun retrieve(
-        params: UserRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<UserRetrieveResponse>
-
-    /** @see retrieve */
-    fun retrieve(params: UserRetrieveParams): CompletableFuture<UserRetrieveResponse> =
-        retrieve(params, RequestOptions.none())
-
-    /** @see retrieve */
-    fun retrieve(
-        username: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<UserRetrieveResponse> =
-        retrieve(username, UserRetrieveParams.none(), requestOptions)
 
     /** Get multiple users by IDs */
     fun retrieveBatch(params: UserRetrieveBatchParams): CompletableFuture<Void?> =
@@ -392,49 +354,7 @@ interface UserServiceAsync {
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserServiceAsync.WithRawResponse
 
-        /** X write actions (tweets, likes, follows, DMs) */
         fun follow(): FollowServiceAsync.WithRawResponse
-
-        /**
-         * Returns a raw HTTP response for `get /x/users/{username}`, but is otherwise the same as
-         * [UserServiceAsync.retrieve].
-         */
-        fun retrieve(username: String): CompletableFuture<HttpResponseFor<UserRetrieveResponse>> =
-            retrieve(username, UserRetrieveParams.none())
-
-        /** @see retrieve */
-        fun retrieve(
-            username: String,
-            params: UserRetrieveParams = UserRetrieveParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<UserRetrieveResponse>> =
-            retrieve(params.toBuilder().username(username).build(), requestOptions)
-
-        /** @see retrieve */
-        fun retrieve(
-            username: String,
-            params: UserRetrieveParams = UserRetrieveParams.none(),
-        ): CompletableFuture<HttpResponseFor<UserRetrieveResponse>> =
-            retrieve(username, params, RequestOptions.none())
-
-        /** @see retrieve */
-        fun retrieve(
-            params: UserRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<UserRetrieveResponse>>
-
-        /** @see retrieve */
-        fun retrieve(
-            params: UserRetrieveParams
-        ): CompletableFuture<HttpResponseFor<UserRetrieveResponse>> =
-            retrieve(params, RequestOptions.none())
-
-        /** @see retrieve */
-        fun retrieve(
-            username: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<UserRetrieveResponse>> =
-            retrieve(username, UserRetrieveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /x/users/batch`, but is otherwise the same as
