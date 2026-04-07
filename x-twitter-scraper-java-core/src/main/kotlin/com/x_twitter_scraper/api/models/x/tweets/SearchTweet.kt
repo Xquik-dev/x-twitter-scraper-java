@@ -25,6 +25,7 @@ private constructor(
     private val author: JsonField<Author>,
     private val bookmarkCount: JsonField<Long>,
     private val createdAt: JsonField<String>,
+    private val isNoteTweet: JsonField<Boolean>,
     private val likeCount: JsonField<Long>,
     private val quoteCount: JsonField<Long>,
     private val replyCount: JsonField<Long>,
@@ -42,6 +43,9 @@ private constructor(
         @ExcludeMissing
         bookmarkCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("createdAt") @ExcludeMissing createdAt: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("isNoteTweet")
+        @ExcludeMissing
+        isNoteTweet: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("likeCount") @ExcludeMissing likeCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("quoteCount") @ExcludeMissing quoteCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("replyCount") @ExcludeMissing replyCount: JsonField<Long> = JsonMissing.of(),
@@ -55,6 +59,7 @@ private constructor(
         author,
         bookmarkCount,
         createdAt,
+        isNoteTweet,
         likeCount,
         quoteCount,
         replyCount,
@@ -92,6 +97,14 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun createdAt(): Optional<String> = createdAt.getOptional("createdAt")
+
+    /**
+     * Whether this is a Note Tweet (long-form post, up to 25,000 characters)
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun isNoteTweet(): Optional<Boolean> = isNoteTweet.getOptional("isNoteTweet")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -159,6 +172,15 @@ private constructor(
      * Unlike [createdAt], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("createdAt") @ExcludeMissing fun _createdAt(): JsonField<String> = createdAt
+
+    /**
+     * Returns the raw JSON value of [isNoteTweet].
+     *
+     * Unlike [isNoteTweet], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("isNoteTweet")
+    @ExcludeMissing
+    fun _isNoteTweet(): JsonField<Boolean> = isNoteTweet
 
     /**
      * Returns the raw JSON value of [likeCount].
@@ -231,6 +253,7 @@ private constructor(
         private var author: JsonField<Author> = JsonMissing.of()
         private var bookmarkCount: JsonField<Long> = JsonMissing.of()
         private var createdAt: JsonField<String> = JsonMissing.of()
+        private var isNoteTweet: JsonField<Boolean> = JsonMissing.of()
         private var likeCount: JsonField<Long> = JsonMissing.of()
         private var quoteCount: JsonField<Long> = JsonMissing.of()
         private var replyCount: JsonField<Long> = JsonMissing.of()
@@ -245,6 +268,7 @@ private constructor(
             author = searchTweet.author
             bookmarkCount = searchTweet.bookmarkCount
             createdAt = searchTweet.createdAt
+            isNoteTweet = searchTweet.isNoteTweet
             likeCount = searchTweet.likeCount
             quoteCount = searchTweet.quoteCount
             replyCount = searchTweet.replyCount
@@ -306,6 +330,18 @@ private constructor(
          * value.
          */
         fun createdAt(createdAt: JsonField<String>) = apply { this.createdAt = createdAt }
+
+        /** Whether this is a Note Tweet (long-form post, up to 25,000 characters) */
+        fun isNoteTweet(isNoteTweet: Boolean) = isNoteTweet(JsonField.of(isNoteTweet))
+
+        /**
+         * Sets [Builder.isNoteTweet] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.isNoteTweet] with a well-typed [Boolean] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun isNoteTweet(isNoteTweet: JsonField<Boolean>) = apply { this.isNoteTweet = isNoteTweet }
 
         fun likeCount(likeCount: Long) = likeCount(JsonField.of(likeCount))
 
@@ -397,6 +433,7 @@ private constructor(
                 author,
                 bookmarkCount,
                 createdAt,
+                isNoteTweet,
                 likeCount,
                 quoteCount,
                 replyCount,
@@ -418,6 +455,7 @@ private constructor(
         author().ifPresent { it.validate() }
         bookmarkCount()
         createdAt()
+        isNoteTweet()
         likeCount()
         quoteCount()
         replyCount()
@@ -446,6 +484,7 @@ private constructor(
             (author.asKnown().getOrNull()?.validity() ?: 0) +
             (if (bookmarkCount.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
+            (if (isNoteTweet.asKnown().isPresent) 1 else 0) +
             (if (likeCount.asKnown().isPresent) 1 else 0) +
             (if (quoteCount.asKnown().isPresent) 1 else 0) +
             (if (replyCount.asKnown().isPresent) 1 else 0) +
@@ -730,6 +769,7 @@ private constructor(
             author == other.author &&
             bookmarkCount == other.bookmarkCount &&
             createdAt == other.createdAt &&
+            isNoteTweet == other.isNoteTweet &&
             likeCount == other.likeCount &&
             quoteCount == other.quoteCount &&
             replyCount == other.replyCount &&
@@ -745,6 +785,7 @@ private constructor(
             author,
             bookmarkCount,
             createdAt,
+            isNoteTweet,
             likeCount,
             quoteCount,
             replyCount,
@@ -757,5 +798,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SearchTweet{id=$id, text=$text, author=$author, bookmarkCount=$bookmarkCount, createdAt=$createdAt, likeCount=$likeCount, quoteCount=$quoteCount, replyCount=$replyCount, retweetCount=$retweetCount, viewCount=$viewCount, additionalProperties=$additionalProperties}"
+        "SearchTweet{id=$id, text=$text, author=$author, bookmarkCount=$bookmarkCount, createdAt=$createdAt, isNoteTweet=$isNoteTweet, likeCount=$likeCount, quoteCount=$quoteCount, replyCount=$replyCount, retweetCount=$retweetCount, viewCount=$viewCount, additionalProperties=$additionalProperties}"
 }

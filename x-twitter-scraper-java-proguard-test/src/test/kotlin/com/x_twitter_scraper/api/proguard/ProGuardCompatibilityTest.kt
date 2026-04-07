@@ -91,6 +91,7 @@ internal class ProGuardCompatibilityTest {
                 )
                 .bookmarkCount(0L)
                 .createdAt("createdAt")
+                .isNoteTweet(true)
                 .likeCount(0L)
                 .quoteCount(0L)
                 .replyCount(0L)
