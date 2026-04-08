@@ -28,18 +28,16 @@ interface FollowServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): FollowServiceAsync
 
     /** Follow user */
-    fun create(
-        userId: String,
-        params: FollowCreateParams,
-    ): CompletableFuture<FollowCreateResponse> = create(userId, params, RequestOptions.none())
+    fun create(id: String, params: FollowCreateParams): CompletableFuture<FollowCreateResponse> =
+        create(id, params, RequestOptions.none())
 
     /** @see create */
     fun create(
-        userId: String,
+        id: String,
         params: FollowCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<FollowCreateResponse> =
-        create(params.toBuilder().userId(userId).build(), requestOptions)
+        create(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see create */
     fun create(params: FollowCreateParams): CompletableFuture<FollowCreateResponse> =
@@ -53,17 +51,17 @@ interface FollowServiceAsync {
 
     /** Unfollow user */
     fun deleteAll(
-        userId: String,
+        id: String,
         params: FollowDeleteAllParams,
-    ): CompletableFuture<FollowDeleteAllResponse> = deleteAll(userId, params, RequestOptions.none())
+    ): CompletableFuture<FollowDeleteAllResponse> = deleteAll(id, params, RequestOptions.none())
 
     /** @see deleteAll */
     fun deleteAll(
-        userId: String,
+        id: String,
         params: FollowDeleteAllParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<FollowDeleteAllResponse> =
-        deleteAll(params.toBuilder().userId(userId).build(), requestOptions)
+        deleteAll(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see deleteAll */
     fun deleteAll(params: FollowDeleteAllParams): CompletableFuture<FollowDeleteAllResponse> =
@@ -90,22 +88,22 @@ interface FollowServiceAsync {
         ): FollowServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /x/users/{userId}/follow`, but is otherwise the
-         * same as [FollowServiceAsync.create].
+         * Returns a raw HTTP response for `post /x/users/{id}/follow`, but is otherwise the same as
+         * [FollowServiceAsync.create].
          */
         fun create(
-            userId: String,
+            id: String,
             params: FollowCreateParams,
         ): CompletableFuture<HttpResponseFor<FollowCreateResponse>> =
-            create(userId, params, RequestOptions.none())
+            create(id, params, RequestOptions.none())
 
         /** @see create */
         fun create(
-            userId: String,
+            id: String,
             params: FollowCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<FollowCreateResponse>> =
-            create(params.toBuilder().userId(userId).build(), requestOptions)
+            create(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see create */
         fun create(
@@ -120,22 +118,22 @@ interface FollowServiceAsync {
         ): CompletableFuture<HttpResponseFor<FollowCreateResponse>>
 
         /**
-         * Returns a raw HTTP response for `delete /x/users/{userId}/follow`, but is otherwise the
-         * same as [FollowServiceAsync.deleteAll].
+         * Returns a raw HTTP response for `delete /x/users/{id}/follow`, but is otherwise the same
+         * as [FollowServiceAsync.deleteAll].
          */
         fun deleteAll(
-            userId: String,
+            id: String,
             params: FollowDeleteAllParams,
         ): CompletableFuture<HttpResponseFor<FollowDeleteAllResponse>> =
-            deleteAll(userId, params, RequestOptions.none())
+            deleteAll(id, params, RequestOptions.none())
 
         /** @see deleteAll */
         fun deleteAll(
-            userId: String,
+            id: String,
             params: FollowDeleteAllParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<FollowDeleteAllResponse>> =
-            deleteAll(params.toBuilder().userId(userId).build(), requestOptions)
+            deleteAll(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see deleteAll */
         fun deleteAll(

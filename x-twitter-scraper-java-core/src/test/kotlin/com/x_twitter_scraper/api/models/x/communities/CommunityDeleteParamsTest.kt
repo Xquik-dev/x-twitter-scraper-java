@@ -11,8 +11,8 @@ internal class CommunityDeleteParamsTest {
     fun create() {
         CommunityDeleteParams.builder()
             .id("id")
-            .account("account")
-            .communityName("community_name")
+            .account("@elonmusk")
+            .communityName("Tesla Fans")
             .build()
     }
 
@@ -21,8 +21,8 @@ internal class CommunityDeleteParamsTest {
         val params =
             CommunityDeleteParams.builder()
                 .id("id")
-                .account("account")
-                .communityName("community_name")
+                .account("@elonmusk")
+                .communityName("Tesla Fans")
                 .build()
 
         assertThat(params._pathParam(0)).isEqualTo("id")
@@ -35,13 +35,13 @@ internal class CommunityDeleteParamsTest {
         val params =
             CommunityDeleteParams.builder()
                 .id("id")
-                .account("account")
-                .communityName("community_name")
+                .account("@elonmusk")
+                .communityName("Tesla Fans")
                 .build()
 
         val body = params._body()
 
-        assertThat(body.account()).isEqualTo("account")
-        assertThat(body.communityName()).isEqualTo("community_name")
+        assertThat(body.account()).isEqualTo("@elonmusk")
+        assertThat(body.communityName()).isEqualTo("Tesla Fans")
     }
 }

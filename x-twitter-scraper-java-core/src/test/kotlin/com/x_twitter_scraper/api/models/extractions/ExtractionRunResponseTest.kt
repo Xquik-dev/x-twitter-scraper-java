@@ -13,15 +13,13 @@ internal class ExtractionRunResponseTest {
     fun create() {
         val extractionRunResponse =
             ExtractionRunResponse.builder()
-                .id("id")
-                .status(ExtractionRunResponse.Status.RUNNING)
-                .toolType(ExtractionRunResponse.ToolType.ARTICLE_EXTRACTOR)
+                .id("a1b2c3d4-e5f6-7890-abcd-ef1234567890")
+                .toolType(ExtractionRunResponse.ToolType.FOLLOWER_EXPLORER)
                 .build()
 
-        assertThat(extractionRunResponse.id()).isEqualTo("id")
-        assertThat(extractionRunResponse.status()).isEqualTo(ExtractionRunResponse.Status.RUNNING)
+        assertThat(extractionRunResponse.id()).isEqualTo("a1b2c3d4-e5f6-7890-abcd-ef1234567890")
         assertThat(extractionRunResponse.toolType())
-            .isEqualTo(ExtractionRunResponse.ToolType.ARTICLE_EXTRACTOR)
+            .isEqualTo(ExtractionRunResponse.ToolType.FOLLOWER_EXPLORER)
     }
 
     @Test
@@ -29,9 +27,8 @@ internal class ExtractionRunResponseTest {
         val jsonMapper = jsonMapper()
         val extractionRunResponse =
             ExtractionRunResponse.builder()
-                .id("id")
-                .status(ExtractionRunResponse.Status.RUNNING)
-                .toolType(ExtractionRunResponse.ToolType.ARTICLE_EXTRACTOR)
+                .id("a1b2c3d4-e5f6-7890-abcd-ef1234567890")
+                .toolType(ExtractionRunResponse.ToolType.FOLLOWER_EXPLORER)
                 .build()
 
         val roundtrippedExtractionRunResponse =

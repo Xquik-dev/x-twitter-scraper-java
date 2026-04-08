@@ -23,7 +23,10 @@ internal class TicketServiceAsyncTest {
 
         val ticketFuture =
             ticketServiceAsync.create(
-                TicketCreateParams.builder().body("body").subject("subject").build()
+                TicketCreateParams.builder()
+                    .body("I am unable to connect my X account. Please help.")
+                    .subject("Cannot connect X account")
+                    .build()
             )
 
         val ticket = ticketFuture.get()
@@ -40,7 +43,7 @@ internal class TicketServiceAsyncTest {
                 .build()
         val ticketServiceAsync = client.support().tickets()
 
-        val ticketFuture = ticketServiceAsync.retrieve("id")
+        val ticketFuture = ticketServiceAsync.retrieve("messages_value")
 
         val ticket = ticketFuture.get()
         ticket.validate()
@@ -58,7 +61,10 @@ internal class TicketServiceAsyncTest {
 
         val ticketFuture =
             ticketServiceAsync.update(
-                TicketUpdateParams.builder().id("id").status(TicketUpdateParams.Status.OPEN).build()
+                TicketUpdateParams.builder()
+                    .id("id")
+                    .status(TicketUpdateParams.Status.RESOLVED)
+                    .build()
             )
 
         val ticket = ticketFuture.get()
@@ -92,7 +98,9 @@ internal class TicketServiceAsyncTest {
         val ticketServiceAsync = client.support().tickets()
 
         val responseFuture =
-            ticketServiceAsync.reply(TicketReplyParams.builder().id("id").body("body").build())
+            ticketServiceAsync.reply(
+                TicketReplyParams.builder().id("id").body("Thank you for the update.").build()
+            )
 
         val response = responseFuture.get()
         response.validate()

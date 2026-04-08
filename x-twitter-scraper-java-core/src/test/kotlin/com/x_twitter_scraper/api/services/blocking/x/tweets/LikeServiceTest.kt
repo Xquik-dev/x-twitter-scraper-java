@@ -21,9 +21,7 @@ internal class LikeServiceTest {
         val likeService = client.x().tweets().like()
 
         val like =
-            likeService.create(
-                LikeCreateParams.builder().tweetId("tweetId").account("account").build()
-            )
+            likeService.create(LikeCreateParams.builder().id("id").account("@elonmusk").build())
 
         like.validate()
     }
@@ -39,9 +37,7 @@ internal class LikeServiceTest {
         val likeService = client.x().tweets().like()
 
         val like =
-            likeService.delete(
-                LikeDeleteParams.builder().tweetId("tweetId").account("account").build()
-            )
+            likeService.delete(LikeDeleteParams.builder().id("id").account("@elonmusk").build())
 
         like.validate()
     }

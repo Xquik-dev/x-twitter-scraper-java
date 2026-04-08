@@ -38,7 +38,7 @@ internal class AccountServiceAsyncTest {
 
         val responseFuture =
             accountServiceAsync.setXUsername(
-                AccountSetXUsernameParams.builder().username("username").build()
+                AccountSetXUsernameParams.builder().username("elonmusk").build()
             )
 
         val response = responseFuture.get()

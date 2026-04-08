@@ -14,13 +14,13 @@ import kotlin.jvm.optionals.getOrNull
 /** Delete a style profile */
 class StyleDeleteParams
 private constructor(
-    private val username: String?,
+    private val id: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
     private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
 
-    fun username(): Optional<String> = Optional.ofNullable(username)
+    fun id(): Optional<String> = Optional.ofNullable(id)
 
     /** Additional body properties to send with the request. */
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
@@ -44,23 +44,23 @@ private constructor(
     /** A builder for [StyleDeleteParams]. */
     class Builder internal constructor() {
 
-        private var username: String? = null
+        private var id: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(styleDeleteParams: StyleDeleteParams) = apply {
-            username = styleDeleteParams.username
+            id = styleDeleteParams.id
             additionalHeaders = styleDeleteParams.additionalHeaders.toBuilder()
             additionalQueryParams = styleDeleteParams.additionalQueryParams.toBuilder()
             additionalBodyProperties = styleDeleteParams.additionalBodyProperties.toMutableMap()
         }
 
-        fun username(username: String?) = apply { this.username = username }
+        fun id(id: String?) = apply { this.id = id }
 
-        /** Alias for calling [Builder.username] with `username.orElse(null)`. */
-        fun username(username: Optional<String>) = username(username.getOrNull())
+        /** Alias for calling [Builder.id] with `id.orElse(null)`. */
+        fun id(id: Optional<String>) = id(id.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -189,7 +189,7 @@ private constructor(
          */
         fun build(): StyleDeleteParams =
             StyleDeleteParams(
-                username,
+                id,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
                 additionalBodyProperties.toImmutable(),
@@ -201,7 +201,7 @@ private constructor(
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> username ?: ""
+            0 -> id ?: ""
             else -> ""
         }
 
@@ -215,15 +215,15 @@ private constructor(
         }
 
         return other is StyleDeleteParams &&
-            username == other.username &&
+            id == other.id &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams &&
             additionalBodyProperties == other.additionalBodyProperties
     }
 
     override fun hashCode(): Int =
-        Objects.hash(username, additionalHeaders, additionalQueryParams, additionalBodyProperties)
+        Objects.hash(id, additionalHeaders, additionalQueryParams, additionalBodyProperties)
 
     override fun toString() =
-        "StyleDeleteParams{username=$username, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "StyleDeleteParams{id=$id, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
 }

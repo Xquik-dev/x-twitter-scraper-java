@@ -12,18 +12,18 @@ internal class AccountReauthResponseTest {
     @Test
     fun create() {
         val accountReauthResponse =
-            AccountReauthResponse.builder().id("id").status("status").xUsername("xUsername").build()
+            AccountReauthResponse.builder().id("42").status("active").xUsername("elonmusk").build()
 
-        assertThat(accountReauthResponse.id()).isEqualTo("id")
-        assertThat(accountReauthResponse.status()).isEqualTo("status")
-        assertThat(accountReauthResponse.xUsername()).isEqualTo("xUsername")
+        assertThat(accountReauthResponse.id()).isEqualTo("42")
+        assertThat(accountReauthResponse.status()).isEqualTo("active")
+        assertThat(accountReauthResponse.xUsername()).isEqualTo("elonmusk")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val accountReauthResponse =
-            AccountReauthResponse.builder().id("id").status("status").xUsername("xUsername").build()
+            AccountReauthResponse.builder().id("42").status("active").xUsername("elonmusk").build()
 
         val roundtrippedAccountReauthResponse =
             jsonMapper.readValue(

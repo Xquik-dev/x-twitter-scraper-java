@@ -41,14 +41,14 @@ class RetweetServiceAsyncImpl internal constructor(private val clientOptions: Cl
         params: RetweetCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<RetweetCreateResponse> =
-        // post /x/tweets/{tweetId}/retweet
+        // post /x/tweets/{id}/retweet
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     override fun delete(
         params: RetweetDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<RetweetDeleteResponse> =
-        // delete /x/tweets/{tweetId}/retweet
+        // delete /x/tweets/{id}/retweet
         withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -73,7 +73,7 @@ class RetweetServiceAsyncImpl internal constructor(private val clientOptions: Cl
         ): CompletableFuture<HttpResponseFor<RetweetCreateResponse>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
-            checkRequired("tweetId", params.tweetId().getOrNull())
+            checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -107,7 +107,7 @@ class RetweetServiceAsyncImpl internal constructor(private val clientOptions: Cl
         ): CompletableFuture<HttpResponseFor<RetweetDeleteResponse>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
-            checkRequired("tweetId", params.tweetId().getOrNull())
+            checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)

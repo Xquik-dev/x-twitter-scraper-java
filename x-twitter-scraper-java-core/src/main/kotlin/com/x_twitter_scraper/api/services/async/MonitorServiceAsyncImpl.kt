@@ -16,6 +16,7 @@ import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.json
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepareAsync
+import com.x_twitter_scraper.api.models.monitors.Monitor
 import com.x_twitter_scraper.api.models.monitors.MonitorCreateParams
 import com.x_twitter_scraper.api.models.monitors.MonitorCreateResponse
 import com.x_twitter_scraper.api.models.monitors.MonitorDeactivateParams
@@ -23,9 +24,7 @@ import com.x_twitter_scraper.api.models.monitors.MonitorDeactivateResponse
 import com.x_twitter_scraper.api.models.monitors.MonitorListParams
 import com.x_twitter_scraper.api.models.monitors.MonitorListResponse
 import com.x_twitter_scraper.api.models.monitors.MonitorRetrieveParams
-import com.x_twitter_scraper.api.models.monitors.MonitorRetrieveResponse
 import com.x_twitter_scraper.api.models.monitors.MonitorUpdateParams
-import com.x_twitter_scraper.api.models.monitors.MonitorUpdateResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -53,14 +52,14 @@ class MonitorServiceAsyncImpl internal constructor(private val clientOptions: Cl
     override fun retrieve(
         params: MonitorRetrieveParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<MonitorRetrieveResponse> =
+    ): CompletableFuture<Monitor> =
         // get /monitors/{id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
     override fun update(
         params: MonitorUpdateParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<MonitorUpdateResponse> =
+    ): CompletableFuture<Monitor> =
         // patch /monitors/{id}
         withRawResponse().update(params, requestOptions).thenApply { it.parse() }
 
@@ -122,13 +121,13 @@ class MonitorServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 }
         }
 
-        private val retrieveHandler: Handler<MonitorRetrieveResponse> =
-            jsonHandler<MonitorRetrieveResponse>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<Monitor> =
+            jsonHandler<Monitor>(clientOptions.jsonMapper)
 
         override fun retrieve(
             params: MonitorRetrieveParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<MonitorRetrieveResponse>> {
+        ): CompletableFuture<HttpResponseFor<Monitor>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -155,13 +154,12 @@ class MonitorServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 }
         }
 
-        private val updateHandler: Handler<MonitorUpdateResponse> =
-            jsonHandler<MonitorUpdateResponse>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<Monitor> = jsonHandler<Monitor>(clientOptions.jsonMapper)
 
         override fun update(
             params: MonitorUpdateParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<MonitorUpdateResponse>> {
+        ): CompletableFuture<HttpResponseFor<Monitor>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())

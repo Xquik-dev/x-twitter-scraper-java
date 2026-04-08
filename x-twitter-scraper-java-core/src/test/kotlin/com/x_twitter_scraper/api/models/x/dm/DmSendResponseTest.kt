@@ -11,15 +11,15 @@ internal class DmSendResponseTest {
 
     @Test
     fun create() {
-        val dmSendResponse = DmSendResponse.builder().messageId("messageId").build()
+        val dmSendResponse = DmSendResponse.builder().messageId("1234567890123456789").build()
 
-        assertThat(dmSendResponse.messageId()).isEqualTo("messageId")
+        assertThat(dmSendResponse.messageId()).isEqualTo("1234567890123456789")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val dmSendResponse = DmSendResponse.builder().messageId("messageId").build()
+        val dmSendResponse = DmSendResponse.builder().messageId("1234567890123456789").build()
 
         val roundtrippedDmSendResponse =
             jsonMapper.readValue(

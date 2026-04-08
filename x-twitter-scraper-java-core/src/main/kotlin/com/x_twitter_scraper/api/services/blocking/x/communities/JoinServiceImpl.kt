@@ -16,10 +16,9 @@ import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.json
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepare
+import com.x_twitter_scraper.api.models.x.communities.CommunityActionResult
 import com.x_twitter_scraper.api.models.x.communities.join.JoinCreateParams
-import com.x_twitter_scraper.api.models.x.communities.join.JoinCreateResponse
 import com.x_twitter_scraper.api.models.x.communities.join.JoinDeleteAllParams
-import com.x_twitter_scraper.api.models.x.communities.join.JoinDeleteAllResponse
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -38,14 +37,14 @@ class JoinServiceImpl internal constructor(private val clientOptions: ClientOpti
     override fun create(
         params: JoinCreateParams,
         requestOptions: RequestOptions,
-    ): JoinCreateResponse =
+    ): CommunityActionResult =
         // post /x/communities/{id}/join
         withRawResponse().create(params, requestOptions).parse()
 
     override fun deleteAll(
         params: JoinDeleteAllParams,
         requestOptions: RequestOptions,
-    ): JoinDeleteAllResponse =
+    ): CommunityActionResult =
         // delete /x/communities/{id}/join
         withRawResponse().deleteAll(params, requestOptions).parse()
 
@@ -62,13 +61,13 @@ class JoinServiceImpl internal constructor(private val clientOptions: ClientOpti
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val createHandler: Handler<JoinCreateResponse> =
-            jsonHandler<JoinCreateResponse>(clientOptions.jsonMapper)
+        private val createHandler: Handler<CommunityActionResult> =
+            jsonHandler<CommunityActionResult>(clientOptions.jsonMapper)
 
         override fun create(
             params: JoinCreateParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<JoinCreateResponse> {
+        ): HttpResponseFor<CommunityActionResult> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -93,13 +92,13 @@ class JoinServiceImpl internal constructor(private val clientOptions: ClientOpti
             }
         }
 
-        private val deleteAllHandler: Handler<JoinDeleteAllResponse> =
-            jsonHandler<JoinDeleteAllResponse>(clientOptions.jsonMapper)
+        private val deleteAllHandler: Handler<CommunityActionResult> =
+            jsonHandler<CommunityActionResult>(clientOptions.jsonMapper)
 
         override fun deleteAll(
             params: JoinDeleteAllParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<JoinDeleteAllResponse> {
+        ): HttpResponseFor<CommunityActionResult> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())

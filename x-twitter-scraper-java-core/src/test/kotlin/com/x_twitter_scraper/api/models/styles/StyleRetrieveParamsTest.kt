@@ -9,14 +9,14 @@ internal class StyleRetrieveParamsTest {
 
     @Test
     fun create() {
-        StyleRetrieveParams.builder().username("username").build()
+        StyleRetrieveParams.builder().id("id").build()
     }
 
     @Test
     fun pathParams() {
-        val params = StyleRetrieveParams.builder().username("username").build()
+        val params = StyleRetrieveParams.builder().id("id").build()
 
-        assertThat(params._pathParam(0)).isEqualTo("username")
+        assertThat(params._pathParam(0)).isEqualTo("id")
         // out-of-bound path param
         assertThat(params._pathParam(1)).isEqualTo("")
     }

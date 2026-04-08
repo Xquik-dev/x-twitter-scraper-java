@@ -15,7 +15,7 @@ internal class RadarRetrieveTrendingTopicsParamsTest {
             .count(0L)
             .hours(0L)
             .region("region")
-            .source("source")
+            .source(RadarRetrieveTrendingTopicsParams.Source.GITHUB)
             .build()
     }
 
@@ -27,7 +27,7 @@ internal class RadarRetrieveTrendingTopicsParamsTest {
                 .count(0L)
                 .hours(0L)
                 .region("region")
-                .source("source")
+                .source(RadarRetrieveTrendingTopicsParams.Source.GITHUB)
                 .build()
 
         val queryParams = params._queryParams()
@@ -39,7 +39,7 @@ internal class RadarRetrieveTrendingTopicsParamsTest {
                     .put("count", "0")
                     .put("hours", "0")
                     .put("region", "region")
-                    .put("source", "source")
+                    .put("source", "github")
                     .build()
             )
     }

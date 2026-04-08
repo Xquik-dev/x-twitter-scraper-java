@@ -25,6 +25,7 @@ private constructor(
 
     fun id(): Optional<String> = Optional.ofNullable(id)
 
+    /** Export output format */
     fun format(): Optional<Format> = Optional.ofNullable(format)
 
     /** Export winners or all entries */
@@ -69,6 +70,7 @@ private constructor(
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
 
+        /** Export output format */
         fun format(format: Format?) = apply { this.format = format }
 
         /** Alias for calling [Builder.format] with `format.orElse(null)`. */
@@ -210,6 +212,7 @@ private constructor(
             }
             .build()
 
+    /** Export output format */
     class Format @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

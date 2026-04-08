@@ -22,7 +22,7 @@ internal class RetweetServiceAsyncTest {
 
         val retweetFuture =
             retweetServiceAsync.create(
-                RetweetCreateParams.builder().tweetId("tweetId").account("account").build()
+                RetweetCreateParams.builder().id("id").account("@elonmusk").build()
             )
 
         val retweet = retweetFuture.get()
@@ -41,7 +41,7 @@ internal class RetweetServiceAsyncTest {
 
         val retweetFuture =
             retweetServiceAsync.delete(
-                RetweetDeleteParams.builder().tweetId("tweetId").account("account").build()
+                RetweetDeleteParams.builder().id("id").account("@elonmusk").build()
             )
 
         val retweet = retweetFuture.get()

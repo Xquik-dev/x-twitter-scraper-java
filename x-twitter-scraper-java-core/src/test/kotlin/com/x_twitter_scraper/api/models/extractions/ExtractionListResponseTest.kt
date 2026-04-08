@@ -15,32 +15,32 @@ internal class ExtractionListResponseTest {
         val extractionListResponse =
             ExtractionListResponse.builder()
                 .addExtraction(
-                    ExtractionListResponse.Extraction.builder()
+                    ExtractionJob.builder()
                         .id("id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .status(ExtractionListResponse.Extraction.Status.RUNNING)
-                        .toolType(ExtractionListResponse.Extraction.ToolType.ARTICLE_EXTRACTOR)
+                        .status(ExtractionJob.Status.RUNNING)
+                        .toolType(ExtractionJob.ToolType.FOLLOWER_EXPLORER)
                         .totalResults(0L)
                         .completedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
                 )
-                .hasMore(true)
-                .nextCursor("nextCursor")
+                .hasMore(false)
+                .nextCursor("abc123")
                 .build()
 
         assertThat(extractionListResponse.extractions())
             .containsExactly(
-                ExtractionListResponse.Extraction.builder()
+                ExtractionJob.builder()
                     .id("id")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .status(ExtractionListResponse.Extraction.Status.RUNNING)
-                    .toolType(ExtractionListResponse.Extraction.ToolType.ARTICLE_EXTRACTOR)
+                    .status(ExtractionJob.Status.RUNNING)
+                    .toolType(ExtractionJob.ToolType.FOLLOWER_EXPLORER)
                     .totalResults(0L)
                     .completedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )
-        assertThat(extractionListResponse.hasMore()).isEqualTo(true)
-        assertThat(extractionListResponse.nextCursor()).contains("nextCursor")
+        assertThat(extractionListResponse.hasMore()).isEqualTo(false)
+        assertThat(extractionListResponse.nextCursor()).contains("abc123")
     }
 
     @Test
@@ -49,17 +49,17 @@ internal class ExtractionListResponseTest {
         val extractionListResponse =
             ExtractionListResponse.builder()
                 .addExtraction(
-                    ExtractionListResponse.Extraction.builder()
+                    ExtractionJob.builder()
                         .id("id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .status(ExtractionListResponse.Extraction.Status.RUNNING)
-                        .toolType(ExtractionListResponse.Extraction.ToolType.ARTICLE_EXTRACTOR)
+                        .status(ExtractionJob.Status.RUNNING)
+                        .toolType(ExtractionJob.ToolType.FOLLOWER_EXPLORER)
                         .totalResults(0L)
                         .completedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
                 )
-                .hasMore(true)
-                .nextCursor("nextCursor")
+                .hasMore(false)
+                .nextCursor("abc123")
                 .build()
 
         val roundtrippedExtractionListResponse =

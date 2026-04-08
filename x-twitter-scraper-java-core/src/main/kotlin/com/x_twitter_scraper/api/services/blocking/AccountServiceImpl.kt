@@ -140,7 +140,7 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
                     .addPathSegments("account")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
-                    .prepare(clientOptions, params, SecurityOptions.none())
+                    .prepare(clientOptions, params, SecurityOptions.builder().apiKey(true).build())
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {

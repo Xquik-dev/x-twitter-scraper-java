@@ -23,11 +23,11 @@ internal class AccountServiceAsyncTest {
         val accountFuture =
             accountServiceAsync.create(
                 AccountCreateParams.builder()
-                    .email("email")
-                    .password("password")
-                    .username("username")
-                    .proxyCountry("proxy_country")
-                    .totpSecret("totp_secret")
+                    .email("user@example.com")
+                    .password("s3cur3Pa\$\$w0rd")
+                    .username("elonmusk")
+                    .proxyCountry("US")
+                    .totpSecret("JBSWY3DPEHPK3PXP")
                     .build()
             )
 
@@ -45,10 +45,10 @@ internal class AccountServiceAsyncTest {
                 .build()
         val accountServiceAsync = client.x().accounts()
 
-        val accountFuture = accountServiceAsync.retrieve("id")
+        val xAccountDetailFuture = accountServiceAsync.retrieve("id")
 
-        val account = accountFuture.get()
-        account.validate()
+        val xAccountDetail = xAccountDetailFuture.get()
+        xAccountDetail.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -85,6 +85,22 @@ internal class AccountServiceAsyncTest {
 
     @Disabled("Mock server tests are disabled")
     @Test
+    fun bulkRetry() {
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
+        val accountServiceAsync = client.x().accounts()
+
+        val responseFuture = accountServiceAsync.bulkRetry()
+
+        val response = responseFuture.get()
+        response.validate()
+    }
+
+    @Disabled("Mock server tests are disabled")
+    @Test
     fun reauth() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
@@ -97,8 +113,8 @@ internal class AccountServiceAsyncTest {
             accountServiceAsync.reauth(
                 AccountReauthParams.builder()
                     .id("id")
-                    .password("password")
-                    .totpSecret("totp_secret")
+                    .password("password_value")
+                    .totpSecret("totp_secret_value")
                     .build()
             )
 

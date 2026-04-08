@@ -41,14 +41,14 @@ class FollowServiceAsyncImpl internal constructor(private val clientOptions: Cli
         params: FollowCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<FollowCreateResponse> =
-        // post /x/users/{userId}/follow
+        // post /x/users/{id}/follow
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     override fun deleteAll(
         params: FollowDeleteAllParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<FollowDeleteAllResponse> =
-        // delete /x/users/{userId}/follow
+        // delete /x/users/{id}/follow
         withRawResponse().deleteAll(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -73,7 +73,7 @@ class FollowServiceAsyncImpl internal constructor(private val clientOptions: Cli
         ): CompletableFuture<HttpResponseFor<FollowCreateResponse>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
-            checkRequired("userId", params.userId().getOrNull())
+            checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -107,7 +107,7 @@ class FollowServiceAsyncImpl internal constructor(private val clientOptions: Cli
         ): CompletableFuture<HttpResponseFor<FollowDeleteAllResponse>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
-            checkRequired("userId", params.userId().getOrNull())
+            checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)

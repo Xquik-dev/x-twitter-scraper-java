@@ -10,9 +10,9 @@ internal class CommunityCreateParamsTest {
     @Test
     fun create() {
         CommunityCreateParams.builder()
-            .account("account")
-            .name("name")
-            .description("description")
+            .account("@elonmusk")
+            .name("Example Name")
+            .description("A community for Tesla enthusiasts")
             .build()
     }
 
@@ -20,25 +20,26 @@ internal class CommunityCreateParamsTest {
     fun body() {
         val params =
             CommunityCreateParams.builder()
-                .account("account")
-                .name("name")
-                .description("description")
+                .account("@elonmusk")
+                .name("Example Name")
+                .description("A community for Tesla enthusiasts")
                 .build()
 
         val body = params._body()
 
-        assertThat(body.account()).isEqualTo("account")
-        assertThat(body.name()).isEqualTo("name")
-        assertThat(body.description()).contains("description")
+        assertThat(body.account()).isEqualTo("@elonmusk")
+        assertThat(body.name()).isEqualTo("Example Name")
+        assertThat(body.description()).contains("A community for Tesla enthusiasts")
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = CommunityCreateParams.builder().account("account").name("name").build()
+        val params =
+            CommunityCreateParams.builder().account("@elonmusk").name("Example Name").build()
 
         val body = params._body()
 
-        assertThat(body.account()).isEqualTo("account")
-        assertThat(body.name()).isEqualTo("name")
+        assertThat(body.account()).isEqualTo("@elonmusk")
+        assertThat(body.name()).isEqualTo("Example Name")
     }
 }

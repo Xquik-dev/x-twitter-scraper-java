@@ -9,24 +9,24 @@ internal class RetweetCreateParamsTest {
 
     @Test
     fun create() {
-        RetweetCreateParams.builder().tweetId("tweetId").account("account").build()
+        RetweetCreateParams.builder().id("id").account("@elonmusk").build()
     }
 
     @Test
     fun pathParams() {
-        val params = RetweetCreateParams.builder().tweetId("tweetId").account("account").build()
+        val params = RetweetCreateParams.builder().id("id").account("@elonmusk").build()
 
-        assertThat(params._pathParam(0)).isEqualTo("tweetId")
+        assertThat(params._pathParam(0)).isEqualTo("id")
         // out-of-bound path param
         assertThat(params._pathParam(1)).isEqualTo("")
     }
 
     @Test
     fun body() {
-        val params = RetweetCreateParams.builder().tweetId("tweetId").account("account").build()
+        val params = RetweetCreateParams.builder().id("id").account("@elonmusk").build()
 
         val body = params._body()
 
-        assertThat(body.account()).isEqualTo("account")
+        assertThat(body.account()).isEqualTo("@elonmusk")
     }
 }

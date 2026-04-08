@@ -17,6 +17,8 @@ import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.json
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepare
+import com.x_twitter_scraper.api.models.x.accounts.AccountBulkRetryParams
+import com.x_twitter_scraper.api.models.x.accounts.AccountBulkRetryResponse
 import com.x_twitter_scraper.api.models.x.accounts.AccountCreateParams
 import com.x_twitter_scraper.api.models.x.accounts.AccountCreateResponse
 import com.x_twitter_scraper.api.models.x.accounts.AccountDeleteParams
@@ -26,7 +28,7 @@ import com.x_twitter_scraper.api.models.x.accounts.AccountListResponse
 import com.x_twitter_scraper.api.models.x.accounts.AccountReauthParams
 import com.x_twitter_scraper.api.models.x.accounts.AccountReauthResponse
 import com.x_twitter_scraper.api.models.x.accounts.AccountRetrieveParams
-import com.x_twitter_scraper.api.models.x.accounts.AccountRetrieveResponse
+import com.x_twitter_scraper.api.models.x.accounts.XAccountDetail
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -53,7 +55,7 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
     override fun retrieve(
         params: AccountRetrieveParams,
         requestOptions: RequestOptions,
-    ): AccountRetrieveResponse =
+    ): XAccountDetail =
         // get /x/accounts/{id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
@@ -70,6 +72,13 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
     ): AccountDeleteResponse =
         // delete /x/accounts/{id}
         withRawResponse().delete(params, requestOptions).parse()
+
+    override fun bulkRetry(
+        params: AccountBulkRetryParams,
+        requestOptions: RequestOptions,
+    ): AccountBulkRetryResponse =
+        // post /x/accounts/bulk-retry
+        withRawResponse().bulkRetry(params, requestOptions).parse()
 
     override fun reauth(
         params: AccountReauthParams,
@@ -105,7 +114,7 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
                     .addPathSegments("x", "accounts")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
-                    .prepare(clientOptions, params, SecurityOptions.none())
+                    .prepare(clientOptions, params, SecurityOptions.builder().apiKey(true).build())
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
@@ -119,13 +128,13 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
             }
         }
 
-        private val retrieveHandler: Handler<AccountRetrieveResponse> =
-            jsonHandler<AccountRetrieveResponse>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<XAccountDetail> =
+            jsonHandler<XAccountDetail>(clientOptions.jsonMapper)
 
         override fun retrieve(
             params: AccountRetrieveParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<AccountRetrieveResponse> {
+        ): HttpResponseFor<XAccountDetail> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -135,7 +144,7 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("x", "accounts", params._pathParam(0))
                     .build()
-                    .prepare(clientOptions, params, SecurityOptions.none())
+                    .prepare(clientOptions, params, SecurityOptions.builder().apiKey(true).build())
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
@@ -162,7 +171,7 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("x", "accounts")
                     .build()
-                    .prepare(clientOptions, params, SecurityOptions.none())
+                    .prepare(clientOptions, params, SecurityOptions.builder().apiKey(true).build())
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
@@ -193,12 +202,40 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
                     .addPathSegments("x", "accounts", params._pathParam(0))
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
-                    .prepare(clientOptions, params, SecurityOptions.none())
+                    .prepare(clientOptions, params, SecurityOptions.builder().apiKey(true).build())
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
                 response
                     .use { deleteHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val bulkRetryHandler: Handler<AccountBulkRetryResponse> =
+            jsonHandler<AccountBulkRetryResponse>(clientOptions.jsonMapper)
+
+        override fun bulkRetry(
+            params: AccountBulkRetryParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<AccountBulkRetryResponse> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "accounts", "bulk-retry")
+                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .build()
+                    .prepare(clientOptions, params, SecurityOptions.builder().apiKey(true).build())
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { bulkRetryHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()
@@ -224,7 +261,7 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
                     .addPathSegments("x", "accounts", params._pathParam(0), "reauth")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
-                    .prepare(clientOptions, params, SecurityOptions.none())
+                    .prepare(clientOptions, params, SecurityOptions.builder().apiKey(true).build())
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {

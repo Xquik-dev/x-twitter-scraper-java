@@ -7,12 +7,11 @@ import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponse
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.models.drafts.DraftCreateParams
-import com.x_twitter_scraper.api.models.drafts.DraftCreateResponse
 import com.x_twitter_scraper.api.models.drafts.DraftDeleteParams
+import com.x_twitter_scraper.api.models.drafts.DraftDetail
 import com.x_twitter_scraper.api.models.drafts.DraftListParams
 import com.x_twitter_scraper.api.models.drafts.DraftListResponse
 import com.x_twitter_scraper.api.models.drafts.DraftRetrieveParams
-import com.x_twitter_scraper.api.models.drafts.DraftRetrieveResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -32,17 +31,17 @@ interface DraftServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): DraftServiceAsync
 
     /** Save a tweet draft */
-    fun create(params: DraftCreateParams): CompletableFuture<DraftCreateResponse> =
+    fun create(params: DraftCreateParams): CompletableFuture<DraftDetail> =
         create(params, RequestOptions.none())
 
     /** @see create */
     fun create(
         params: DraftCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<DraftCreateResponse>
+    ): CompletableFuture<DraftDetail>
 
     /** Get draft by ID */
-    fun retrieve(id: String): CompletableFuture<DraftRetrieveResponse> =
+    fun retrieve(id: String): CompletableFuture<DraftDetail> =
         retrieve(id, DraftRetrieveParams.none())
 
     /** @see retrieve */
@@ -50,30 +49,26 @@ interface DraftServiceAsync {
         id: String,
         params: DraftRetrieveParams = DraftRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<DraftRetrieveResponse> =
-        retrieve(params.toBuilder().id(id).build(), requestOptions)
+    ): CompletableFuture<DraftDetail> = retrieve(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieve */
     fun retrieve(
         id: String,
         params: DraftRetrieveParams = DraftRetrieveParams.none(),
-    ): CompletableFuture<DraftRetrieveResponse> = retrieve(id, params, RequestOptions.none())
+    ): CompletableFuture<DraftDetail> = retrieve(id, params, RequestOptions.none())
 
     /** @see retrieve */
     fun retrieve(
         params: DraftRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<DraftRetrieveResponse>
+    ): CompletableFuture<DraftDetail>
 
     /** @see retrieve */
-    fun retrieve(params: DraftRetrieveParams): CompletableFuture<DraftRetrieveResponse> =
+    fun retrieve(params: DraftRetrieveParams): CompletableFuture<DraftDetail> =
         retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
-    fun retrieve(
-        id: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<DraftRetrieveResponse> =
+    fun retrieve(id: String, requestOptions: RequestOptions): CompletableFuture<DraftDetail> =
         retrieve(id, DraftRetrieveParams.none(), requestOptions)
 
     /** List saved drafts */
@@ -140,22 +135,20 @@ interface DraftServiceAsync {
          * Returns a raw HTTP response for `post /drafts`, but is otherwise the same as
          * [DraftServiceAsync.create].
          */
-        fun create(
-            params: DraftCreateParams
-        ): CompletableFuture<HttpResponseFor<DraftCreateResponse>> =
+        fun create(params: DraftCreateParams): CompletableFuture<HttpResponseFor<DraftDetail>> =
             create(params, RequestOptions.none())
 
         /** @see create */
         fun create(
             params: DraftCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<DraftCreateResponse>>
+        ): CompletableFuture<HttpResponseFor<DraftDetail>>
 
         /**
          * Returns a raw HTTP response for `get /drafts/{id}`, but is otherwise the same as
          * [DraftServiceAsync.retrieve].
          */
-        fun retrieve(id: String): CompletableFuture<HttpResponseFor<DraftRetrieveResponse>> =
+        fun retrieve(id: String): CompletableFuture<HttpResponseFor<DraftDetail>> =
             retrieve(id, DraftRetrieveParams.none())
 
         /** @see retrieve */
@@ -163,33 +156,31 @@ interface DraftServiceAsync {
             id: String,
             params: DraftRetrieveParams = DraftRetrieveParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<DraftRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<DraftDetail>> =
             retrieve(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieve */
         fun retrieve(
             id: String,
             params: DraftRetrieveParams = DraftRetrieveParams.none(),
-        ): CompletableFuture<HttpResponseFor<DraftRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<DraftDetail>> =
             retrieve(id, params, RequestOptions.none())
 
         /** @see retrieve */
         fun retrieve(
             params: DraftRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<DraftRetrieveResponse>>
+        ): CompletableFuture<HttpResponseFor<DraftDetail>>
 
         /** @see retrieve */
-        fun retrieve(
-            params: DraftRetrieveParams
-        ): CompletableFuture<HttpResponseFor<DraftRetrieveResponse>> =
+        fun retrieve(params: DraftRetrieveParams): CompletableFuture<HttpResponseFor<DraftDetail>> =
             retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
         fun retrieve(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<DraftRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<DraftDetail>> =
             retrieve(id, DraftRetrieveParams.none(), requestOptions)
 
         /**

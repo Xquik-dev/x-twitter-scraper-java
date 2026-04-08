@@ -26,9 +26,9 @@ internal class CommunityServiceTest {
         val community =
             communityService.create(
                 CommunityCreateParams.builder()
-                    .account("account")
-                    .name("name")
-                    .description("description")
+                    .account("@elonmusk")
+                    .name("Example Name")
+                    .description("A community for Tesla enthusiasts")
                     .build()
             )
 
@@ -49,8 +49,8 @@ internal class CommunityServiceTest {
             communityService.delete(
                 CommunityDeleteParams.builder()
                     .id("id")
-                    .account("account")
-                    .communityName("community_name")
+                    .account("@elonmusk")
+                    .communityName("Tesla Fans")
                     .build()
             )
 
@@ -82,9 +82,12 @@ internal class CommunityServiceTest {
                 .build()
         val communityService = client.x().communities()
 
-        communityService.retrieveMembers(
-            CommunityRetrieveMembersParams.builder().id("id").cursor("cursor").build()
-        )
+        val paginatedUsers =
+            communityService.retrieveMembers(
+                CommunityRetrieveMembersParams.builder().id("id").cursor("cursor").build()
+            )
+
+        paginatedUsers.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -97,9 +100,12 @@ internal class CommunityServiceTest {
                 .build()
         val communityService = client.x().communities()
 
-        communityService.retrieveModerators(
-            CommunityRetrieveModeratorsParams.builder().id("id").cursor("cursor").build()
-        )
+        val paginatedUsers =
+            communityService.retrieveModerators(
+                CommunityRetrieveModeratorsParams.builder().id("id").cursor("cursor").build()
+            )
+
+        paginatedUsers.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -112,12 +118,15 @@ internal class CommunityServiceTest {
                 .build()
         val communityService = client.x().communities()
 
-        communityService.retrieveSearch(
-            CommunityRetrieveSearchParams.builder()
-                .q("q")
-                .cursor("cursor")
-                .queryType("queryType")
-                .build()
-        )
+        val paginatedTweets =
+            communityService.retrieveSearch(
+                CommunityRetrieveSearchParams.builder()
+                    .q("q")
+                    .cursor("cursor")
+                    .queryType("queryType")
+                    .build()
+            )
+
+        paginatedTweets.validate()
     }
 }

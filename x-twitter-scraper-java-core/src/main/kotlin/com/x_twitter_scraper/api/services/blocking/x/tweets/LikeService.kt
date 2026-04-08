@@ -28,15 +28,15 @@ interface LikeService {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): LikeService
 
     /** Like tweet */
-    fun create(tweetId: String, params: LikeCreateParams): LikeCreateResponse =
-        create(tweetId, params, RequestOptions.none())
+    fun create(id: String, params: LikeCreateParams): LikeCreateResponse =
+        create(id, params, RequestOptions.none())
 
     /** @see create */
     fun create(
-        tweetId: String,
+        id: String,
         params: LikeCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): LikeCreateResponse = create(params.toBuilder().tweetId(tweetId).build(), requestOptions)
+    ): LikeCreateResponse = create(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see create */
     fun create(params: LikeCreateParams): LikeCreateResponse = create(params, RequestOptions.none())
@@ -48,15 +48,15 @@ interface LikeService {
     ): LikeCreateResponse
 
     /** Unlike tweet */
-    fun delete(tweetId: String, params: LikeDeleteParams): LikeDeleteResponse =
-        delete(tweetId, params, RequestOptions.none())
+    fun delete(id: String, params: LikeDeleteParams): LikeDeleteResponse =
+        delete(id, params, RequestOptions.none())
 
     /** @see delete */
     fun delete(
-        tweetId: String,
+        id: String,
         params: LikeDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): LikeDeleteResponse = delete(params.toBuilder().tweetId(tweetId).build(), requestOptions)
+    ): LikeDeleteResponse = delete(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see delete */
     fun delete(params: LikeDeleteParams): LikeDeleteResponse = delete(params, RequestOptions.none())
@@ -78,21 +78,21 @@ interface LikeService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): LikeService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /x/tweets/{tweetId}/like`, but is otherwise the
-         * same as [LikeService.create].
+         * Returns a raw HTTP response for `post /x/tweets/{id}/like`, but is otherwise the same as
+         * [LikeService.create].
          */
         @MustBeClosed
-        fun create(tweetId: String, params: LikeCreateParams): HttpResponseFor<LikeCreateResponse> =
-            create(tweetId, params, RequestOptions.none())
+        fun create(id: String, params: LikeCreateParams): HttpResponseFor<LikeCreateResponse> =
+            create(id, params, RequestOptions.none())
 
         /** @see create */
         @MustBeClosed
         fun create(
-            tweetId: String,
+            id: String,
             params: LikeCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<LikeCreateResponse> =
-            create(params.toBuilder().tweetId(tweetId).build(), requestOptions)
+            create(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see create */
         @MustBeClosed
@@ -107,21 +107,21 @@ interface LikeService {
         ): HttpResponseFor<LikeCreateResponse>
 
         /**
-         * Returns a raw HTTP response for `delete /x/tweets/{tweetId}/like`, but is otherwise the
-         * same as [LikeService.delete].
+         * Returns a raw HTTP response for `delete /x/tweets/{id}/like`, but is otherwise the same
+         * as [LikeService.delete].
          */
         @MustBeClosed
-        fun delete(tweetId: String, params: LikeDeleteParams): HttpResponseFor<LikeDeleteResponse> =
-            delete(tweetId, params, RequestOptions.none())
+        fun delete(id: String, params: LikeDeleteParams): HttpResponseFor<LikeDeleteResponse> =
+            delete(id, params, RequestOptions.none())
 
         /** @see delete */
         @MustBeClosed
         fun delete(
-            tweetId: String,
+            id: String,
             params: LikeDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<LikeDeleteResponse> =
-            delete(params.toBuilder().tweetId(tweetId).build(), requestOptions)
+            delete(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see delete */
         @MustBeClosed

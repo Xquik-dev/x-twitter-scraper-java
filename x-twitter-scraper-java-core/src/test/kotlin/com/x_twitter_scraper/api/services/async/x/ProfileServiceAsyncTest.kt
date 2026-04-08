@@ -24,11 +24,11 @@ internal class ProfileServiceAsyncTest {
         val profileFuture =
             profileServiceAsync.update(
                 ProfileUpdateParams.builder()
-                    .account("account")
-                    .description("description")
-                    .location("location")
-                    .name("name")
-                    .url("url")
+                    .account("@elonmusk")
+                    .description("description_value")
+                    .location("location_value")
+                    .name("Example Name")
+                    .url("https://xquik.com/example")
                     .build()
             )
 
@@ -49,7 +49,7 @@ internal class ProfileServiceAsyncTest {
         val responseFuture =
             profileServiceAsync.updateAvatar(
                 ProfileUpdateAvatarParams.builder()
-                    .account("account")
+                    .account("@elonmusk")
                     .file("Example data".byteInputStream())
                     .build()
             )
@@ -71,7 +71,7 @@ internal class ProfileServiceAsyncTest {
         val responseFuture =
             profileServiceAsync.updateBanner(
                 ProfileUpdateBannerParams.builder()
-                    .account("account")
+                    .account("@elonmusk")
                     .file("Example data".byteInputStream())
                     .build()
             )

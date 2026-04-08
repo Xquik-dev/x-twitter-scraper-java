@@ -25,7 +25,7 @@ interface TrendService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): TrendService
 
-    /** Get trending topics */
+    /** Get regional trending topics */
     fun list(): TrendListResponse = list(TrendListParams.none())
 
     /** @see list */

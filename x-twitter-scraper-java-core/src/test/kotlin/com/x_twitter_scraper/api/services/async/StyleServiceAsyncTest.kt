@@ -21,10 +21,10 @@ internal class StyleServiceAsyncTest {
                 .build()
         val styleServiceAsync = client.styles()
 
-        val styleFuture = styleServiceAsync.retrieve("username")
+        val styleProfileFuture = styleServiceAsync.retrieve("id")
 
-        val style = styleFuture.get()
-        style.validate()
+        val styleProfile = styleProfileFuture.get()
+        styleProfile.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -37,17 +37,21 @@ internal class StyleServiceAsyncTest {
                 .build()
         val styleServiceAsync = client.styles()
 
-        val styleFuture =
+        val styleProfileFuture =
             styleServiceAsync.update(
                 StyleUpdateParams.builder()
-                    .username("username")
-                    .label("label")
-                    .addTweet(StyleUpdateParams.Tweet.builder().text("text").build())
+                    .id("id")
+                    .label("Professional Voice")
+                    .addTweet(
+                        StyleUpdateParams.Tweet.builder()
+                            .text("Excited to share our latest research findings.")
+                            .build()
+                    )
                     .build()
             )
 
-        val style = styleFuture.get()
-        style.validate()
+        val styleProfile = styleProfileFuture.get()
+        styleProfile.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -76,7 +80,7 @@ internal class StyleServiceAsyncTest {
                 .build()
         val styleServiceAsync = client.styles()
 
-        val future = styleServiceAsync.delete("username")
+        val future = styleServiceAsync.delete("id")
 
         val response = future.get()
     }
@@ -91,11 +95,11 @@ internal class StyleServiceAsyncTest {
                 .build()
         val styleServiceAsync = client.styles()
 
-        val responseFuture =
-            styleServiceAsync.analyze(StyleAnalyzeParams.builder().username("username").build())
+        val styleProfileFuture =
+            styleServiceAsync.analyze(StyleAnalyzeParams.builder().username("elonmusk").build())
 
-        val response = responseFuture.get()
-        response.validate()
+        val styleProfile = styleProfileFuture.get()
+        styleProfile.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -127,7 +131,7 @@ internal class StyleServiceAsyncTest {
                 .build()
         val styleServiceAsync = client.styles()
 
-        val responseFuture = styleServiceAsync.getPerformance("username")
+        val responseFuture = styleServiceAsync.getPerformance("id")
 
         val response = responseFuture.get()
         response.validate()

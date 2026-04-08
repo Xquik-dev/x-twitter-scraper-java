@@ -15,22 +15,22 @@ internal class StyleListResponseTest {
         val styleListResponse =
             StyleListResponse.builder()
                 .addStyle(
-                    StyleListResponse.Style.builder()
-                        .fetchedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    StyleProfileSummary.builder()
+                        .fetchedAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                         .isOwnAccount(true)
-                        .tweetCount(0L)
-                        .xUsername("xUsername")
+                        .tweetCount(50L)
+                        .xUsername("elonmusk")
                         .build()
                 )
                 .build()
 
         assertThat(styleListResponse.styles())
             .containsExactly(
-                StyleListResponse.Style.builder()
-                    .fetchedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                StyleProfileSummary.builder()
+                    .fetchedAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                     .isOwnAccount(true)
-                    .tweetCount(0L)
-                    .xUsername("xUsername")
+                    .tweetCount(50L)
+                    .xUsername("elonmusk")
                     .build()
             )
     }
@@ -41,11 +41,11 @@ internal class StyleListResponseTest {
         val styleListResponse =
             StyleListResponse.builder()
                 .addStyle(
-                    StyleListResponse.Style.builder()
-                        .fetchedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    StyleProfileSummary.builder()
+                        .fetchedAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                         .isOwnAccount(true)
-                        .tweetCount(0L)
-                        .xUsername("xUsername")
+                        .tweetCount(50L)
+                        .xUsername("elonmusk")
                         .build()
                 )
                 .build()

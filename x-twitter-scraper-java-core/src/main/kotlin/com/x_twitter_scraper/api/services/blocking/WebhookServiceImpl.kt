@@ -16,6 +16,7 @@ import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.json
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepare
+import com.x_twitter_scraper.api.models.webhooks.Webhook
 import com.x_twitter_scraper.api.models.webhooks.WebhookCreateParams
 import com.x_twitter_scraper.api.models.webhooks.WebhookCreateResponse
 import com.x_twitter_scraper.api.models.webhooks.WebhookDeactivateParams
@@ -27,7 +28,6 @@ import com.x_twitter_scraper.api.models.webhooks.WebhookListResponse
 import com.x_twitter_scraper.api.models.webhooks.WebhookTestParams
 import com.x_twitter_scraper.api.models.webhooks.WebhookTestResponse
 import com.x_twitter_scraper.api.models.webhooks.WebhookUpdateParams
-import com.x_twitter_scraper.api.models.webhooks.WebhookUpdateResponse
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -51,10 +51,7 @@ class WebhookServiceImpl internal constructor(private val clientOptions: ClientO
         // post /webhooks
         withRawResponse().create(params, requestOptions).parse()
 
-    override fun update(
-        params: WebhookUpdateParams,
-        requestOptions: RequestOptions,
-    ): WebhookUpdateResponse =
+    override fun update(params: WebhookUpdateParams, requestOptions: RequestOptions): Webhook =
         // patch /webhooks/{id}
         withRawResponse().update(params, requestOptions).parse()
 
@@ -127,13 +124,12 @@ class WebhookServiceImpl internal constructor(private val clientOptions: ClientO
             }
         }
 
-        private val updateHandler: Handler<WebhookUpdateResponse> =
-            jsonHandler<WebhookUpdateResponse>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<Webhook> = jsonHandler<Webhook>(clientOptions.jsonMapper)
 
         override fun update(
             params: WebhookUpdateParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<WebhookUpdateResponse> {
+        ): HttpResponseFor<Webhook> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())

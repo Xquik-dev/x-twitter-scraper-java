@@ -23,11 +23,11 @@ internal class AccountServiceTest {
         val account =
             accountService.create(
                 AccountCreateParams.builder()
-                    .email("email")
-                    .password("password")
-                    .username("username")
-                    .proxyCountry("proxy_country")
-                    .totpSecret("totp_secret")
+                    .email("user@example.com")
+                    .password("s3cur3Pa\$\$w0rd")
+                    .username("elonmusk")
+                    .proxyCountry("US")
+                    .totpSecret("JBSWY3DPEHPK3PXP")
                     .build()
             )
 
@@ -44,9 +44,9 @@ internal class AccountServiceTest {
                 .build()
         val accountService = client.x().accounts()
 
-        val account = accountService.retrieve("id")
+        val xAccountDetail = accountService.retrieve("id")
 
-        account.validate()
+        xAccountDetail.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -81,6 +81,21 @@ internal class AccountServiceTest {
 
     @Disabled("Mock server tests are disabled")
     @Test
+    fun bulkRetry() {
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
+        val accountService = client.x().accounts()
+
+        val response = accountService.bulkRetry()
+
+        response.validate()
+    }
+
+    @Disabled("Mock server tests are disabled")
+    @Test
     fun reauth() {
         val client =
             XTwitterScraperOkHttpClient.builder()
@@ -93,8 +108,8 @@ internal class AccountServiceTest {
             accountService.reauth(
                 AccountReauthParams.builder()
                     .id("id")
-                    .password("password")
-                    .totpSecret("totp_secret")
+                    .password("password_value")
+                    .totpSecret("totp_secret_value")
                     .build()
             )
 

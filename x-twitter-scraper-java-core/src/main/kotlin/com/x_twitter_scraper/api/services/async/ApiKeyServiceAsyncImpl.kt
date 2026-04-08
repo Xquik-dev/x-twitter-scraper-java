@@ -88,7 +88,11 @@ class ApiKeyServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .addPathSegments("api-keys")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
-                    .prepareAsync(clientOptions, params, SecurityOptions.none())
+                    .prepareAsync(
+                        clientOptions,
+                        params,
+                        SecurityOptions.builder().apiKey(true).build(),
+                    )
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
@@ -118,7 +122,11 @@ class ApiKeyServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("api-keys")
                     .build()
-                    .prepareAsync(clientOptions, params, SecurityOptions.none())
+                    .prepareAsync(
+                        clientOptions,
+                        params,
+                        SecurityOptions.builder().apiKey(true).build(),
+                    )
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
@@ -152,7 +160,11 @@ class ApiKeyServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .addPathSegments("api-keys", params._pathParam(0))
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
-                    .prepareAsync(clientOptions, params, SecurityOptions.none())
+                    .prepareAsync(
+                        clientOptions,
+                        params,
+                        SecurityOptions.builder().apiKey(true).build(),
+                    )
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }

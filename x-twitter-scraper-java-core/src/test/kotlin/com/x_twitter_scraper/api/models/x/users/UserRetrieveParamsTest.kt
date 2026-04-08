@@ -9,14 +9,14 @@ internal class UserRetrieveParamsTest {
 
     @Test
     fun create() {
-        UserRetrieveParams.builder().username("username").build()
+        UserRetrieveParams.builder().id("id").build()
     }
 
     @Test
     fun pathParams() {
-        val params = UserRetrieveParams.builder().username("username").build()
+        val params = UserRetrieveParams.builder().id("id").build()
 
-        assertThat(params._pathParam(0)).isEqualTo("username")
+        assertThat(params._pathParam(0)).isEqualTo("id")
         // out-of-bound path param
         assertThat(params._pathParam(1)).isEqualTo("")
     }

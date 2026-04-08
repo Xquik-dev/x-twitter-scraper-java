@@ -3,6 +3,7 @@
 package com.x_twitter_scraper.api.models.events
 
 import com.x_twitter_scraper.api.core.http.QueryParams
+import com.x_twitter_scraper.api.models.EventType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -12,7 +13,7 @@ internal class EventListParamsTest {
     fun create() {
         EventListParams.builder()
             .after("after")
-            .eventType(EventListParams.EventType.TWEET_NEW)
+            .eventType(EventType.TWEET_NEW)
             .limit(1L)
             .monitorId("monitorId")
             .build()
@@ -23,7 +24,7 @@ internal class EventListParamsTest {
         val params =
             EventListParams.builder()
                 .after("after")
-                .eventType(EventListParams.EventType.TWEET_NEW)
+                .eventType(EventType.TWEET_NEW)
                 .limit(1L)
                 .monitorId("monitorId")
                 .build()

@@ -25,13 +25,13 @@ import kotlin.jvm.optionals.getOrNull
 /** Save style profile with custom tweets */
 class StyleUpdateParams
 private constructor(
-    private val username: String?,
+    private val id: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    fun username(): Optional<String> = Optional.ofNullable(username)
+    fun id(): Optional<String> = Optional.ofNullable(id)
 
     /**
      * Display label for the style
@@ -90,23 +90,23 @@ private constructor(
     /** A builder for [StyleUpdateParams]. */
     class Builder internal constructor() {
 
-        private var username: String? = null
+        private var id: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(styleUpdateParams: StyleUpdateParams) = apply {
-            username = styleUpdateParams.username
+            id = styleUpdateParams.id
             body = styleUpdateParams.body.toBuilder()
             additionalHeaders = styleUpdateParams.additionalHeaders.toBuilder()
             additionalQueryParams = styleUpdateParams.additionalQueryParams.toBuilder()
         }
 
-        fun username(username: String?) = apply { this.username = username }
+        fun id(id: String?) = apply { this.id = id }
 
-        /** Alias for calling [Builder.username] with `username.orElse(null)`. */
-        fun username(username: Optional<String>) = username(username.getOrNull())
+        /** Alias for calling [Builder.id] with `id.orElse(null)`. */
+        fun id(id: Optional<String>) = id(id.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -280,7 +280,7 @@ private constructor(
          */
         fun build(): StyleUpdateParams =
             StyleUpdateParams(
-                username,
+                id,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -291,7 +291,7 @@ private constructor(
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> username ?: ""
+            0 -> id ?: ""
             else -> ""
         }
 
@@ -674,15 +674,14 @@ private constructor(
         }
 
         return other is StyleUpdateParams &&
-            username == other.username &&
+            id == other.id &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(username, body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int = Objects.hash(id, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "StyleUpdateParams{username=$username, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "StyleUpdateParams{id=$id, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

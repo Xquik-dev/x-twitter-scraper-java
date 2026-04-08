@@ -20,17 +20,17 @@ internal class DraftServiceAsyncTest {
                 .build()
         val draftServiceAsync = client.drafts()
 
-        val draftFuture =
+        val draftDetailFuture =
             draftServiceAsync.create(
                 DraftCreateParams.builder()
-                    .text("text")
+                    .text("AI is the future of productivity")
                     .goal(DraftCreateParams.Goal.ENGAGEMENT)
-                    .topic("topic")
+                    .topic("AI trends")
                     .build()
             )
 
-        val draft = draftFuture.get()
-        draft.validate()
+        val draftDetail = draftDetailFuture.get()
+        draftDetail.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -43,10 +43,10 @@ internal class DraftServiceAsyncTest {
                 .build()
         val draftServiceAsync = client.drafts()
 
-        val draftFuture = draftServiceAsync.retrieve("id")
+        val draftDetailFuture = draftServiceAsync.retrieve("id")
 
-        val draft = draftFuture.get()
-        draft.validate()
+        val draftDetail = draftDetailFuture.get()
+        draftDetail.validate()
     }
 
     @Disabled("Mock server tests are disabled")

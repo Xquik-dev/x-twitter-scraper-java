@@ -17,6 +17,7 @@ import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 
+/** Trending topic with score, category, source, and region. */
 class RadarItem
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

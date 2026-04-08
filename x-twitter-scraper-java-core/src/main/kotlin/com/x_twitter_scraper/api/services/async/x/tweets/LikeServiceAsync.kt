@@ -28,16 +28,16 @@ interface LikeServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): LikeServiceAsync
 
     /** Like tweet */
-    fun create(tweetId: String, params: LikeCreateParams): CompletableFuture<LikeCreateResponse> =
-        create(tweetId, params, RequestOptions.none())
+    fun create(id: String, params: LikeCreateParams): CompletableFuture<LikeCreateResponse> =
+        create(id, params, RequestOptions.none())
 
     /** @see create */
     fun create(
-        tweetId: String,
+        id: String,
         params: LikeCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<LikeCreateResponse> =
-        create(params.toBuilder().tweetId(tweetId).build(), requestOptions)
+        create(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see create */
     fun create(params: LikeCreateParams): CompletableFuture<LikeCreateResponse> =
@@ -50,16 +50,16 @@ interface LikeServiceAsync {
     ): CompletableFuture<LikeCreateResponse>
 
     /** Unlike tweet */
-    fun delete(tweetId: String, params: LikeDeleteParams): CompletableFuture<LikeDeleteResponse> =
-        delete(tweetId, params, RequestOptions.none())
+    fun delete(id: String, params: LikeDeleteParams): CompletableFuture<LikeDeleteResponse> =
+        delete(id, params, RequestOptions.none())
 
     /** @see delete */
     fun delete(
-        tweetId: String,
+        id: String,
         params: LikeDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<LikeDeleteResponse> =
-        delete(params.toBuilder().tweetId(tweetId).build(), requestOptions)
+        delete(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see delete */
     fun delete(params: LikeDeleteParams): CompletableFuture<LikeDeleteResponse> =
@@ -82,22 +82,22 @@ interface LikeServiceAsync {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): LikeServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `post /x/tweets/{tweetId}/like`, but is otherwise the
-         * same as [LikeServiceAsync.create].
+         * Returns a raw HTTP response for `post /x/tweets/{id}/like`, but is otherwise the same as
+         * [LikeServiceAsync.create].
          */
         fun create(
-            tweetId: String,
+            id: String,
             params: LikeCreateParams,
         ): CompletableFuture<HttpResponseFor<LikeCreateResponse>> =
-            create(tweetId, params, RequestOptions.none())
+            create(id, params, RequestOptions.none())
 
         /** @see create */
         fun create(
-            tweetId: String,
+            id: String,
             params: LikeCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<LikeCreateResponse>> =
-            create(params.toBuilder().tweetId(tweetId).build(), requestOptions)
+            create(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see create */
         fun create(
@@ -112,22 +112,22 @@ interface LikeServiceAsync {
         ): CompletableFuture<HttpResponseFor<LikeCreateResponse>>
 
         /**
-         * Returns a raw HTTP response for `delete /x/tweets/{tweetId}/like`, but is otherwise the
-         * same as [LikeServiceAsync.delete].
+         * Returns a raw HTTP response for `delete /x/tweets/{id}/like`, but is otherwise the same
+         * as [LikeServiceAsync.delete].
          */
         fun delete(
-            tweetId: String,
+            id: String,
             params: LikeDeleteParams,
         ): CompletableFuture<HttpResponseFor<LikeDeleteResponse>> =
-            delete(tweetId, params, RequestOptions.none())
+            delete(id, params, RequestOptions.none())
 
         /** @see delete */
         fun delete(
-            tweetId: String,
+            id: String,
             params: LikeDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<LikeDeleteResponse>> =
-            delete(params.toBuilder().tweetId(tweetId).build(), requestOptions)
+            delete(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see delete */
         fun delete(

@@ -5,6 +5,7 @@ package com.x_twitter_scraper.api.models.events
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.jsonMapper
+import com.x_twitter_scraper.api.models.EventType
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -21,7 +22,7 @@ internal class EventTest {
                 )
                 .monitorId("monitorId")
                 .occurredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(Event.Type.TWEET_NEW)
+                .type(EventType.TWEET_NEW)
                 .username("username")
                 .build()
 
@@ -32,7 +33,7 @@ internal class EventTest {
             )
         assertThat(event.monitorId()).isEqualTo("monitorId")
         assertThat(event.occurredAt()).isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(event.type()).isEqualTo(Event.Type.TWEET_NEW)
+        assertThat(event.type()).isEqualTo(EventType.TWEET_NEW)
         assertThat(event.username()).isEqualTo("username")
     }
 
@@ -47,7 +48,7 @@ internal class EventTest {
                 )
                 .monitorId("monitorId")
                 .occurredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .type(Event.Type.TWEET_NEW)
+                .type(EventType.TWEET_NEW)
                 .username("username")
                 .build()
 

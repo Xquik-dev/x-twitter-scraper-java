@@ -151,7 +151,11 @@ class AccountServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .addPathSegments("account")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
-                    .prepareAsync(clientOptions, params, SecurityOptions.none())
+                    .prepareAsync(
+                        clientOptions,
+                        params,
+                        SecurityOptions.builder().apiKey(true).build(),
+                    )
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }

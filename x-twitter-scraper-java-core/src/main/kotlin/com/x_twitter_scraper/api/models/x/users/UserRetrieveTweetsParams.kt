@@ -22,7 +22,7 @@ private constructor(
 
     fun id(): Optional<String> = Optional.ofNullable(id)
 
-    /** Pagination cursor from previous response */
+    /** Pagination cursor for user tweets */
     fun cursor(): Optional<String> = Optional.ofNullable(cursor)
 
     /** Include parent tweet for replies */
@@ -72,7 +72,7 @@ private constructor(
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
 
-        /** Pagination cursor from previous response */
+        /** Pagination cursor for user tweets */
         fun cursor(cursor: String?) = apply { this.cursor = cursor }
 
         /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */

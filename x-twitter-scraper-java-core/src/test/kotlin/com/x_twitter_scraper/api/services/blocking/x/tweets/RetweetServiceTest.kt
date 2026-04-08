@@ -22,7 +22,7 @@ internal class RetweetServiceTest {
 
         val retweet =
             retweetService.create(
-                RetweetCreateParams.builder().tweetId("tweetId").account("account").build()
+                RetweetCreateParams.builder().id("id").account("@elonmusk").build()
             )
 
         retweet.validate()
@@ -40,7 +40,7 @@ internal class RetweetServiceTest {
 
         val retweet =
             retweetService.delete(
-                RetweetDeleteParams.builder().tweetId("tweetId").account("account").build()
+                RetweetDeleteParams.builder().id("id").account("@elonmusk").build()
             )
 
         retweet.validate()

@@ -5,7 +5,6 @@ package com.x_twitter_scraper.api.services.blocking.x
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.checkRequired
-import com.x_twitter_scraper.api.core.handlers.emptyHandler
 import com.x_twitter_scraper.api.core.handlers.errorBodyHandler
 import com.x_twitter_scraper.api.core.handlers.errorHandler
 import com.x_twitter_scraper.api.core.handlers.jsonHandler
@@ -17,6 +16,8 @@ import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.json
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepare
+import com.x_twitter_scraper.api.models.PaginatedTweets
+import com.x_twitter_scraper.api.models.PaginatedUsers
 import com.x_twitter_scraper.api.models.x.communities.CommunityCreateParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityCreateResponse
 import com.x_twitter_scraper.api.models.x.communities.CommunityDeleteParams
@@ -79,26 +80,23 @@ class CommunityServiceImpl internal constructor(private val clientOptions: Clien
     override fun retrieveMembers(
         params: CommunityRetrieveMembersParams,
         requestOptions: RequestOptions,
-    ) {
+    ): PaginatedUsers =
         // get /x/communities/{id}/members
-        withRawResponse().retrieveMembers(params, requestOptions)
-    }
+        withRawResponse().retrieveMembers(params, requestOptions).parse()
 
     override fun retrieveModerators(
         params: CommunityRetrieveModeratorsParams,
         requestOptions: RequestOptions,
-    ) {
+    ): PaginatedUsers =
         // get /x/communities/{id}/moderators
-        withRawResponse().retrieveModerators(params, requestOptions)
-    }
+        withRawResponse().retrieveModerators(params, requestOptions).parse()
 
     override fun retrieveSearch(
         params: CommunityRetrieveSearchParams,
         requestOptions: RequestOptions,
-    ) {
+    ): PaginatedTweets =
         // get /x/communities/search
-        withRawResponse().retrieveSearch(params, requestOptions)
-    }
+        withRawResponse().retrieveSearch(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         CommunityService.WithRawResponse {
@@ -216,12 +214,13 @@ class CommunityServiceImpl internal constructor(private val clientOptions: Clien
             }
         }
 
-        private val retrieveMembersHandler: Handler<Void?> = emptyHandler()
+        private val retrieveMembersHandler: Handler<PaginatedUsers> =
+            jsonHandler<PaginatedUsers>(clientOptions.jsonMapper)
 
         override fun retrieveMembers(
             params: CommunityRetrieveMembersParams,
             requestOptions: RequestOptions,
-        ): HttpResponse {
+        ): HttpResponseFor<PaginatedUsers> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -235,16 +234,23 @@ class CommunityServiceImpl internal constructor(private val clientOptions: Clien
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
-                response.use { retrieveMembersHandler.handle(it) }
+                response
+                    .use { retrieveMembersHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
             }
         }
 
-        private val retrieveModeratorsHandler: Handler<Void?> = emptyHandler()
+        private val retrieveModeratorsHandler: Handler<PaginatedUsers> =
+            jsonHandler<PaginatedUsers>(clientOptions.jsonMapper)
 
         override fun retrieveModerators(
             params: CommunityRetrieveModeratorsParams,
             requestOptions: RequestOptions,
-        ): HttpResponse {
+        ): HttpResponseFor<PaginatedUsers> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -258,16 +264,23 @@ class CommunityServiceImpl internal constructor(private val clientOptions: Clien
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
-                response.use { retrieveModeratorsHandler.handle(it) }
+                response
+                    .use { retrieveModeratorsHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
             }
         }
 
-        private val retrieveSearchHandler: Handler<Void?> = emptyHandler()
+        private val retrieveSearchHandler: Handler<PaginatedTweets> =
+            jsonHandler<PaginatedTweets>(clientOptions.jsonMapper)
 
         override fun retrieveSearch(
             params: CommunityRetrieveSearchParams,
             requestOptions: RequestOptions,
-        ): HttpResponse {
+        ): HttpResponseFor<PaginatedTweets> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -278,7 +291,13 @@ class CommunityServiceImpl internal constructor(private val clientOptions: Clien
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
-                response.use { retrieveSearchHandler.handle(it) }
+                response
+                    .use { retrieveSearchHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
             }
         }
     }

@@ -17,6 +17,7 @@ import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 
+/** API key metadata returned when listing keys. */
 class ApiKey
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

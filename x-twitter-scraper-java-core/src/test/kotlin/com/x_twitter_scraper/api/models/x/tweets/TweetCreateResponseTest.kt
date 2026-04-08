@@ -11,15 +11,15 @@ internal class TweetCreateResponseTest {
 
     @Test
     fun create() {
-        val tweetCreateResponse = TweetCreateResponse.builder().tweetId("tweetId").build()
+        val tweetCreateResponse = TweetCreateResponse.builder().tweetId("1234567890").build()
 
-        assertThat(tweetCreateResponse.tweetId()).isEqualTo("tweetId")
+        assertThat(tweetCreateResponse.tweetId()).isEqualTo("1234567890")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val tweetCreateResponse = TweetCreateResponse.builder().tweetId("tweetId").build()
+        val tweetCreateResponse = TweetCreateResponse.builder().tweetId("1234567890").build()
 
         val roundtrippedTweetCreateResponse =
             jsonMapper.readValue(

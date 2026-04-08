@@ -5,15 +5,15 @@ package com.x_twitter_scraper.api.services.blocking
 import com.google.errorprone.annotations.MustBeClosed
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
-import com.x_twitter_scraper.api.core.http.HttpResponse
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
+import com.x_twitter_scraper.api.models.PaginatedTweets
 import com.x_twitter_scraper.api.models.x.XGetArticleParams
 import com.x_twitter_scraper.api.models.x.XGetArticleResponse
 import com.x_twitter_scraper.api.models.x.XGetHomeTimelineParams
-import com.x_twitter_scraper.api.models.x.XGetHomeTimelineResponse
 import com.x_twitter_scraper.api.models.x.XGetNotificationsParams
 import com.x_twitter_scraper.api.models.x.XGetNotificationsResponse
 import com.x_twitter_scraper.api.models.x.XGetTrendsParams
+import com.x_twitter_scraper.api.models.x.XGetTrendsResponse
 import com.x_twitter_scraper.api.services.blocking.x.AccountService
 import com.x_twitter_scraper.api.services.blocking.x.BookmarkService
 import com.x_twitter_scraper.api.services.blocking.x.CommunityService
@@ -100,21 +100,21 @@ interface XService {
         getArticle(tweetId, XGetArticleParams.none(), requestOptions)
 
     /** Get home timeline */
-    fun getHomeTimeline(): XGetHomeTimelineResponse = getHomeTimeline(XGetHomeTimelineParams.none())
+    fun getHomeTimeline(): PaginatedTweets = getHomeTimeline(XGetHomeTimelineParams.none())
 
     /** @see getHomeTimeline */
     fun getHomeTimeline(
         params: XGetHomeTimelineParams = XGetHomeTimelineParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): XGetHomeTimelineResponse
+    ): PaginatedTweets
 
     /** @see getHomeTimeline */
     fun getHomeTimeline(
         params: XGetHomeTimelineParams = XGetHomeTimelineParams.none()
-    ): XGetHomeTimelineResponse = getHomeTimeline(params, RequestOptions.none())
+    ): PaginatedTweets = getHomeTimeline(params, RequestOptions.none())
 
     /** @see getHomeTimeline */
-    fun getHomeTimeline(requestOptions: RequestOptions): XGetHomeTimelineResponse =
+    fun getHomeTimeline(requestOptions: RequestOptions): PaginatedTweets =
         getHomeTimeline(XGetHomeTimelineParams.none(), requestOptions)
 
     /** Get notifications */
@@ -137,20 +137,20 @@ interface XService {
         getNotifications(XGetNotificationsParams.none(), requestOptions)
 
     /** Get trending topics */
-    fun getTrends() = getTrends(XGetTrendsParams.none())
+    fun getTrends(): XGetTrendsResponse = getTrends(XGetTrendsParams.none())
 
     /** @see getTrends */
     fun getTrends(
         params: XGetTrendsParams = XGetTrendsParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    )
+    ): XGetTrendsResponse
 
     /** @see getTrends */
-    fun getTrends(params: XGetTrendsParams = XGetTrendsParams.none()) =
+    fun getTrends(params: XGetTrendsParams = XGetTrendsParams.none()): XGetTrendsResponse =
         getTrends(params, RequestOptions.none())
 
     /** @see getTrends */
-    fun getTrends(requestOptions: RequestOptions) =
+    fun getTrends(requestOptions: RequestOptions): XGetTrendsResponse =
         getTrends(XGetTrendsParams.none(), requestOptions)
 
     /** A view of [XService] that provides access to raw HTTP responses for each method. */
@@ -239,7 +239,7 @@ interface XService {
          * [XService.getHomeTimeline].
          */
         @MustBeClosed
-        fun getHomeTimeline(): HttpResponseFor<XGetHomeTimelineResponse> =
+        fun getHomeTimeline(): HttpResponseFor<PaginatedTweets> =
             getHomeTimeline(XGetHomeTimelineParams.none())
 
         /** @see getHomeTimeline */
@@ -247,20 +247,17 @@ interface XService {
         fun getHomeTimeline(
             params: XGetHomeTimelineParams = XGetHomeTimelineParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<XGetHomeTimelineResponse>
+        ): HttpResponseFor<PaginatedTweets>
 
         /** @see getHomeTimeline */
         @MustBeClosed
         fun getHomeTimeline(
             params: XGetHomeTimelineParams = XGetHomeTimelineParams.none()
-        ): HttpResponseFor<XGetHomeTimelineResponse> =
-            getHomeTimeline(params, RequestOptions.none())
+        ): HttpResponseFor<PaginatedTweets> = getHomeTimeline(params, RequestOptions.none())
 
         /** @see getHomeTimeline */
         @MustBeClosed
-        fun getHomeTimeline(
-            requestOptions: RequestOptions
-        ): HttpResponseFor<XGetHomeTimelineResponse> =
+        fun getHomeTimeline(requestOptions: RequestOptions): HttpResponseFor<PaginatedTweets> =
             getHomeTimeline(XGetHomeTimelineParams.none(), requestOptions)
 
         /**
@@ -296,23 +293,25 @@ interface XService {
          * Returns a raw HTTP response for `get /x/trends`, but is otherwise the same as
          * [XService.getTrends].
          */
-        @MustBeClosed fun getTrends(): HttpResponse = getTrends(XGetTrendsParams.none())
+        @MustBeClosed
+        fun getTrends(): HttpResponseFor<XGetTrendsResponse> = getTrends(XGetTrendsParams.none())
 
         /** @see getTrends */
         @MustBeClosed
         fun getTrends(
             params: XGetTrendsParams = XGetTrendsParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        ): HttpResponseFor<XGetTrendsResponse>
 
         /** @see getTrends */
         @MustBeClosed
-        fun getTrends(params: XGetTrendsParams = XGetTrendsParams.none()): HttpResponse =
-            getTrends(params, RequestOptions.none())
+        fun getTrends(
+            params: XGetTrendsParams = XGetTrendsParams.none()
+        ): HttpResponseFor<XGetTrendsResponse> = getTrends(params, RequestOptions.none())
 
         /** @see getTrends */
         @MustBeClosed
-        fun getTrends(requestOptions: RequestOptions): HttpResponse =
+        fun getTrends(requestOptions: RequestOptions): HttpResponseFor<XGetTrendsResponse> =
             getTrends(XGetTrendsParams.none(), requestOptions)
     }
 }

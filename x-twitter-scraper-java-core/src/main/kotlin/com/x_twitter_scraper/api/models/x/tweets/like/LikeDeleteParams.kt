@@ -23,16 +23,16 @@ import kotlin.jvm.optionals.getOrNull
 /** Unlike tweet */
 class LikeDeleteParams
 private constructor(
-    private val tweetId: String?,
+    private val id: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    fun tweetId(): Optional<String> = Optional.ofNullable(tweetId)
+    fun id(): Optional<String> = Optional.ofNullable(id)
 
     /**
-     * X account (@username or account ID)
+     * X account identifier (@username or account ID)
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -72,23 +72,23 @@ private constructor(
     /** A builder for [LikeDeleteParams]. */
     class Builder internal constructor() {
 
-        private var tweetId: String? = null
+        private var id: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(likeDeleteParams: LikeDeleteParams) = apply {
-            tweetId = likeDeleteParams.tweetId
+            id = likeDeleteParams.id
             body = likeDeleteParams.body.toBuilder()
             additionalHeaders = likeDeleteParams.additionalHeaders.toBuilder()
             additionalQueryParams = likeDeleteParams.additionalQueryParams.toBuilder()
         }
 
-        fun tweetId(tweetId: String?) = apply { this.tweetId = tweetId }
+        fun id(id: String?) = apply { this.id = id }
 
-        /** Alias for calling [Builder.tweetId] with `tweetId.orElse(null)`. */
-        fun tweetId(tweetId: Optional<String>) = tweetId(tweetId.getOrNull())
+        /** Alias for calling [Builder.id] with `id.orElse(null)`. */
+        fun id(id: Optional<String>) = id(id.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -99,7 +99,7 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
-        /** X account (@username or account ID) */
+        /** X account identifier (@username or account ID) */
         fun account(account: String) = apply { body.account(account) }
 
         /**
@@ -241,7 +241,7 @@ private constructor(
          */
         fun build(): LikeDeleteParams =
             LikeDeleteParams(
-                tweetId,
+                id,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -252,7 +252,7 @@ private constructor(
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> tweetId ?: ""
+            0 -> id ?: ""
             else -> ""
         }
 
@@ -260,6 +260,7 @@ private constructor(
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
+    /** Request body identifying an X account by username or ID. */
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
@@ -273,7 +274,7 @@ private constructor(
         ) : this(account, mutableMapOf())
 
         /**
-         * X account (@username or account ID)
+         * X account identifier (@username or account ID)
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
@@ -325,7 +326,7 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            /** X account (@username or account ID) */
+            /** X account identifier (@username or account ID) */
             fun account(account: String) = account(JsonField.of(account))
 
             /**
@@ -423,15 +424,14 @@ private constructor(
         }
 
         return other is LikeDeleteParams &&
-            tweetId == other.tweetId &&
+            id == other.id &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(tweetId, body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int = Objects.hash(id, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "LikeDeleteParams{tweetId=$tweetId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "LikeDeleteParams{id=$id, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

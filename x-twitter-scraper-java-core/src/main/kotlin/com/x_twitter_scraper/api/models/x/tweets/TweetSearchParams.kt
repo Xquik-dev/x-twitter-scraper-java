@@ -33,7 +33,7 @@ private constructor(
     /** Pagination cursor from previous response */
     fun cursor(): Optional<String> = Optional.ofNullable(cursor)
 
-    /** Deprecated — use cursor-based pagination instead */
+    /** Max tweets to return (server paginates internally). Omit for single page (~20). */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
     /** Sort order — Latest (chronological) or Top (engagement-ranked) */
@@ -99,7 +99,7 @@ private constructor(
         /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
         fun cursor(cursor: Optional<String>) = cursor(cursor.getOrNull())
 
-        /** Deprecated — use cursor-based pagination instead */
+        /** Max tweets to return (server paginates internally). Omit for single page (~20). */
         fun limit(limit: Long?) = apply { this.limit = limit }
 
         /**

@@ -6,8 +6,8 @@ import com.google.errorprone.annotations.MustBeClosed
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
+import com.x_twitter_scraper.api.models.PaginatedTweets
 import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkListParams
-import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkListResponse
 import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkRetrieveFoldersParams
 import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkRetrieveFoldersResponse
 import java.util.function.Consumer
@@ -28,20 +28,20 @@ interface BookmarkService {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): BookmarkService
 
     /** Get bookmarked tweets */
-    fun list(): BookmarkListResponse = list(BookmarkListParams.none())
+    fun list(): PaginatedTweets = list(BookmarkListParams.none())
 
     /** @see list */
     fun list(
         params: BookmarkListParams = BookmarkListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): BookmarkListResponse
+    ): PaginatedTweets
 
     /** @see list */
-    fun list(params: BookmarkListParams = BookmarkListParams.none()): BookmarkListResponse =
+    fun list(params: BookmarkListParams = BookmarkListParams.none()): PaginatedTweets =
         list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(requestOptions: RequestOptions): BookmarkListResponse =
+    fun list(requestOptions: RequestOptions): PaginatedTweets =
         list(BookmarkListParams.none(), requestOptions)
 
     /** Get bookmark folders */
@@ -77,25 +77,24 @@ interface BookmarkService {
          * Returns a raw HTTP response for `get /x/bookmarks`, but is otherwise the same as
          * [BookmarkService.list].
          */
-        @MustBeClosed
-        fun list(): HttpResponseFor<BookmarkListResponse> = list(BookmarkListParams.none())
+        @MustBeClosed fun list(): HttpResponseFor<PaginatedTweets> = list(BookmarkListParams.none())
 
         /** @see list */
         @MustBeClosed
         fun list(
             params: BookmarkListParams = BookmarkListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<BookmarkListResponse>
+        ): HttpResponseFor<PaginatedTweets>
 
         /** @see list */
         @MustBeClosed
         fun list(
             params: BookmarkListParams = BookmarkListParams.none()
-        ): HttpResponseFor<BookmarkListResponse> = list(params, RequestOptions.none())
+        ): HttpResponseFor<PaginatedTweets> = list(params, RequestOptions.none())
 
         /** @see list */
         @MustBeClosed
-        fun list(requestOptions: RequestOptions): HttpResponseFor<BookmarkListResponse> =
+        fun list(requestOptions: RequestOptions): HttpResponseFor<PaginatedTweets> =
             list(BookmarkListParams.none(), requestOptions)
 
         /**

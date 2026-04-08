@@ -19,12 +19,12 @@ internal class BookmarkServiceTest {
                 .build()
         val bookmarkService = client.x().bookmarks()
 
-        val bookmarks =
+        val paginatedTweets =
             bookmarkService.list(
-                BookmarkListParams.builder().cursor("cursor").folderId("folderId").build()
+                BookmarkListParams.builder().cursor("folders_value").folderId("folderId").build()
             )
 
-        bookmarks.validate()
+        paginatedTweets.validate()
     }
 
     @Disabled("Mock server tests are disabled")

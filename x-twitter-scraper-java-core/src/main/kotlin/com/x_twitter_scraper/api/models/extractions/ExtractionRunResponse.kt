@@ -21,7 +21,7 @@ class ExtractionRunResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
-    private val status: JsonField<Status>,
+    private val status: JsonValue,
     private val toolType: JsonField<ToolType>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -29,7 +29,7 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of(),
+        @JsonProperty("status") @ExcludeMissing status: JsonValue = JsonMissing.of(),
         @JsonProperty("toolType") @ExcludeMissing toolType: JsonField<ToolType> = JsonMissing.of(),
     ) : this(id, status, toolType, mutableMapOf())
 
@@ -40,12 +40,19 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("running")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
      */
-    fun status(): Status = status.getRequired("status")
+    @JsonProperty("status") @ExcludeMissing fun _status(): JsonValue = status
 
     /**
+     * Identifier for the extraction tool used to run a job.
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -57,13 +64,6 @@ private constructor(
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
-
-    /**
-     * Returns the raw JSON value of [status].
-     *
-     * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<Status> = status
 
     /**
      * Returns the raw JSON value of [toolType].
@@ -92,7 +92,6 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
-         * .status()
          * .toolType()
          * ```
          */
@@ -103,7 +102,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
-        private var status: JsonField<Status>? = null
+        private var status: JsonValue = JsonValue.from("running")
         private var toolType: JsonField<ToolType>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -125,16 +124,21 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        fun status(status: Status) = status(JsonField.of(status))
-
         /**
-         * Sets [Builder.status] to an arbitrary JSON value.
+         * Sets the field to an arbitrary JSON value.
          *
-         * You should usually call [Builder.status] with a well-typed [Status] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("running")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun status(status: JsonField<Status>) = apply { this.status = status }
+        fun status(status: JsonValue) = apply { this.status = status }
 
+        /** Identifier for the extraction tool used to run a job. */
         fun toolType(toolType: ToolType) = toolType(JsonField.of(toolType))
 
         /**
@@ -173,7 +177,6 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
-         * .status()
          * .toolType()
          * ```
          *
@@ -182,7 +185,7 @@ private constructor(
         fun build(): ExtractionRunResponse =
             ExtractionRunResponse(
                 checkRequired("id", id),
-                checkRequired("status", status),
+                status,
                 checkRequired("toolType", toolType),
                 additionalProperties.toMutableMap(),
             )
@@ -196,7 +199,11 @@ private constructor(
         }
 
         id()
-        status().validate()
+        _status().let {
+            if (it != JsonValue.from("running")) {
+                throw XTwitterScraperInvalidDataException("'status' is invalid, received $it")
+            }
+        }
         toolType().validate()
         validated = true
     }
@@ -217,130 +224,10 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
-            (status.asKnown().getOrNull()?.validity() ?: 0) +
+            status.let { if (it == JsonValue.from("running")) 1 else 0 } +
             (toolType.asKnown().getOrNull()?.validity() ?: 0)
 
-    class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val RUNNING = of("running")
-
-            @JvmStatic fun of(value: String) = Status(JsonField.of(value))
-        }
-
-        /** An enum containing [Status]'s known values. */
-        enum class Known {
-            RUNNING
-        }
-
-        /**
-         * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Status] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            RUNNING,
-            /** An enum member indicating that [Status] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                RUNNING -> Value.RUNNING
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
-         *   known member.
-         */
-        fun known(): Known =
-            when (this) {
-                RUNNING -> Known.RUNNING
-                else -> throw XTwitterScraperInvalidDataException("Unknown Status: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
-         *   the expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                XTwitterScraperInvalidDataException("Value is not a String")
-            }
-
-        private var validated: Boolean = false
-
-        fun validate(): Status = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: XTwitterScraperInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is Status && value == other.value
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
-    }
-
+    /** Identifier for the extraction tool used to run a job. */
     class ToolType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

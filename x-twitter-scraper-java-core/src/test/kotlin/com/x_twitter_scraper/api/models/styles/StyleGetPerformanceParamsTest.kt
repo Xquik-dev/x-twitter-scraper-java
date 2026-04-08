@@ -9,14 +9,14 @@ internal class StyleGetPerformanceParamsTest {
 
     @Test
     fun create() {
-        StyleGetPerformanceParams.builder().username("username").build()
+        StyleGetPerformanceParams.builder().id("id").build()
     }
 
     @Test
     fun pathParams() {
-        val params = StyleGetPerformanceParams.builder().username("username").build()
+        val params = StyleGetPerformanceParams.builder().id("id").build()
 
-        assertThat(params._pathParam(0)).isEqualTo("username")
+        assertThat(params._pathParam(0)).isEqualTo("id")
         // out-of-bound path param
         assertThat(params._pathParam(1)).isEqualTo("")
     }

@@ -10,9 +10,13 @@ internal class StyleUpdateParamsTest {
     @Test
     fun create() {
         StyleUpdateParams.builder()
-            .username("username")
-            .label("label")
-            .addTweet(StyleUpdateParams.Tweet.builder().text("text").build())
+            .id("id")
+            .label("Professional Voice")
+            .addTweet(
+                StyleUpdateParams.Tweet.builder()
+                    .text("Excited to share our latest research findings.")
+                    .build()
+            )
             .build()
     }
 
@@ -20,12 +24,16 @@ internal class StyleUpdateParamsTest {
     fun pathParams() {
         val params =
             StyleUpdateParams.builder()
-                .username("username")
-                .label("label")
-                .addTweet(StyleUpdateParams.Tweet.builder().text("text").build())
+                .id("id")
+                .label("Professional Voice")
+                .addTweet(
+                    StyleUpdateParams.Tweet.builder()
+                        .text("Excited to share our latest research findings.")
+                        .build()
+                )
                 .build()
 
-        assertThat(params._pathParam(0)).isEqualTo("username")
+        assertThat(params._pathParam(0)).isEqualTo("id")
         // out-of-bound path param
         assertThat(params._pathParam(1)).isEqualTo("")
     }
@@ -34,15 +42,23 @@ internal class StyleUpdateParamsTest {
     fun body() {
         val params =
             StyleUpdateParams.builder()
-                .username("username")
-                .label("label")
-                .addTweet(StyleUpdateParams.Tweet.builder().text("text").build())
+                .id("id")
+                .label("Professional Voice")
+                .addTweet(
+                    StyleUpdateParams.Tweet.builder()
+                        .text("Excited to share our latest research findings.")
+                        .build()
+                )
                 .build()
 
         val body = params._body()
 
-        assertThat(body.label()).isEqualTo("label")
+        assertThat(body.label()).isEqualTo("Professional Voice")
         assertThat(body.tweets())
-            .containsExactly(StyleUpdateParams.Tweet.builder().text("text").build())
+            .containsExactly(
+                StyleUpdateParams.Tweet.builder()
+                    .text("Excited to share our latest research findings.")
+                    .build()
+            )
     }
 }

@@ -18,7 +18,7 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** Pagination cursor from previous response */
+    /** Pagination cursor for timeline */
     fun cursor(): Optional<String> = Optional.ofNullable(cursor)
 
     /** Comma-separated tweet IDs to exclude from results */
@@ -56,7 +56,7 @@ private constructor(
             additionalQueryParams = xGetHomeTimelineParams.additionalQueryParams.toBuilder()
         }
 
-        /** Pagination cursor from previous response */
+        /** Pagination cursor for timeline */
         fun cursor(cursor: String?) = apply { this.cursor = cursor }
 
         /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */

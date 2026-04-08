@@ -5,8 +5,8 @@ package com.x_twitter_scraper.api.services.async
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
+import com.x_twitter_scraper.api.models.integrations.Integration
 import com.x_twitter_scraper.api.models.integrations.IntegrationCreateParams
-import com.x_twitter_scraper.api.models.integrations.IntegrationCreateResponse
 import com.x_twitter_scraper.api.models.integrations.IntegrationDeleteParams
 import com.x_twitter_scraper.api.models.integrations.IntegrationDeleteResponse
 import com.x_twitter_scraper.api.models.integrations.IntegrationListDeliveriesParams
@@ -14,11 +14,9 @@ import com.x_twitter_scraper.api.models.integrations.IntegrationListDeliveriesRe
 import com.x_twitter_scraper.api.models.integrations.IntegrationListParams
 import com.x_twitter_scraper.api.models.integrations.IntegrationListResponse
 import com.x_twitter_scraper.api.models.integrations.IntegrationRetrieveParams
-import com.x_twitter_scraper.api.models.integrations.IntegrationRetrieveResponse
 import com.x_twitter_scraper.api.models.integrations.IntegrationSendTestParams
 import com.x_twitter_scraper.api.models.integrations.IntegrationSendTestResponse
 import com.x_twitter_scraper.api.models.integrations.IntegrationUpdateParams
-import com.x_twitter_scraper.api.models.integrations.IntegrationUpdateResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -38,17 +36,17 @@ interface IntegrationServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): IntegrationServiceAsync
 
     /** Create integration */
-    fun create(params: IntegrationCreateParams): CompletableFuture<IntegrationCreateResponse> =
+    fun create(params: IntegrationCreateParams): CompletableFuture<Integration> =
         create(params, RequestOptions.none())
 
     /** @see create */
     fun create(
         params: IntegrationCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<IntegrationCreateResponse>
+    ): CompletableFuture<Integration>
 
     /** Get integration details */
-    fun retrieve(id: String): CompletableFuture<IntegrationRetrieveResponse> =
+    fun retrieve(id: String): CompletableFuture<Integration> =
         retrieve(id, IntegrationRetrieveParams.none())
 
     /** @see retrieve */
@@ -56,35 +54,30 @@ interface IntegrationServiceAsync {
         id: String,
         params: IntegrationRetrieveParams = IntegrationRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<IntegrationRetrieveResponse> =
-        retrieve(params.toBuilder().id(id).build(), requestOptions)
+    ): CompletableFuture<Integration> = retrieve(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieve */
     fun retrieve(
         id: String,
         params: IntegrationRetrieveParams = IntegrationRetrieveParams.none(),
-    ): CompletableFuture<IntegrationRetrieveResponse> = retrieve(id, params, RequestOptions.none())
+    ): CompletableFuture<Integration> = retrieve(id, params, RequestOptions.none())
 
     /** @see retrieve */
     fun retrieve(
         params: IntegrationRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<IntegrationRetrieveResponse>
+    ): CompletableFuture<Integration>
 
     /** @see retrieve */
-    fun retrieve(
-        params: IntegrationRetrieveParams
-    ): CompletableFuture<IntegrationRetrieveResponse> = retrieve(params, RequestOptions.none())
+    fun retrieve(params: IntegrationRetrieveParams): CompletableFuture<Integration> =
+        retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
-    fun retrieve(
-        id: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<IntegrationRetrieveResponse> =
+    fun retrieve(id: String, requestOptions: RequestOptions): CompletableFuture<Integration> =
         retrieve(id, IntegrationRetrieveParams.none(), requestOptions)
 
     /** Update integration */
-    fun update(id: String): CompletableFuture<IntegrationUpdateResponse> =
+    fun update(id: String): CompletableFuture<Integration> =
         update(id, IntegrationUpdateParams.none())
 
     /** @see update */
@@ -92,30 +85,26 @@ interface IntegrationServiceAsync {
         id: String,
         params: IntegrationUpdateParams = IntegrationUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<IntegrationUpdateResponse> =
-        update(params.toBuilder().id(id).build(), requestOptions)
+    ): CompletableFuture<Integration> = update(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see update */
     fun update(
         id: String,
         params: IntegrationUpdateParams = IntegrationUpdateParams.none(),
-    ): CompletableFuture<IntegrationUpdateResponse> = update(id, params, RequestOptions.none())
+    ): CompletableFuture<Integration> = update(id, params, RequestOptions.none())
 
     /** @see update */
     fun update(
         params: IntegrationUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<IntegrationUpdateResponse>
+    ): CompletableFuture<Integration>
 
     /** @see update */
-    fun update(params: IntegrationUpdateParams): CompletableFuture<IntegrationUpdateResponse> =
+    fun update(params: IntegrationUpdateParams): CompletableFuture<Integration> =
         update(params, RequestOptions.none())
 
     /** @see update */
-    fun update(
-        id: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<IntegrationUpdateResponse> =
+    fun update(id: String, requestOptions: RequestOptions): CompletableFuture<Integration> =
         update(id, IntegrationUpdateParams.none(), requestOptions)
 
     /** List integrations */
@@ -266,20 +255,19 @@ interface IntegrationServiceAsync {
          */
         fun create(
             params: IntegrationCreateParams
-        ): CompletableFuture<HttpResponseFor<IntegrationCreateResponse>> =
-            create(params, RequestOptions.none())
+        ): CompletableFuture<HttpResponseFor<Integration>> = create(params, RequestOptions.none())
 
         /** @see create */
         fun create(
             params: IntegrationCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<IntegrationCreateResponse>>
+        ): CompletableFuture<HttpResponseFor<Integration>>
 
         /**
          * Returns a raw HTTP response for `get /integrations/{id}`, but is otherwise the same as
          * [IntegrationServiceAsync.retrieve].
          */
-        fun retrieve(id: String): CompletableFuture<HttpResponseFor<IntegrationRetrieveResponse>> =
+        fun retrieve(id: String): CompletableFuture<HttpResponseFor<Integration>> =
             retrieve(id, IntegrationRetrieveParams.none())
 
         /** @see retrieve */
@@ -287,40 +275,39 @@ interface IntegrationServiceAsync {
             id: String,
             params: IntegrationRetrieveParams = IntegrationRetrieveParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<IntegrationRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<Integration>> =
             retrieve(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieve */
         fun retrieve(
             id: String,
             params: IntegrationRetrieveParams = IntegrationRetrieveParams.none(),
-        ): CompletableFuture<HttpResponseFor<IntegrationRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<Integration>> =
             retrieve(id, params, RequestOptions.none())
 
         /** @see retrieve */
         fun retrieve(
             params: IntegrationRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<IntegrationRetrieveResponse>>
+        ): CompletableFuture<HttpResponseFor<Integration>>
 
         /** @see retrieve */
         fun retrieve(
             params: IntegrationRetrieveParams
-        ): CompletableFuture<HttpResponseFor<IntegrationRetrieveResponse>> =
-            retrieve(params, RequestOptions.none())
+        ): CompletableFuture<HttpResponseFor<Integration>> = retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
         fun retrieve(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<IntegrationRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<Integration>> =
             retrieve(id, IntegrationRetrieveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `patch /integrations/{id}`, but is otherwise the same as
          * [IntegrationServiceAsync.update].
          */
-        fun update(id: String): CompletableFuture<HttpResponseFor<IntegrationUpdateResponse>> =
+        fun update(id: String): CompletableFuture<HttpResponseFor<Integration>> =
             update(id, IntegrationUpdateParams.none())
 
         /** @see update */
@@ -328,33 +315,32 @@ interface IntegrationServiceAsync {
             id: String,
             params: IntegrationUpdateParams = IntegrationUpdateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<IntegrationUpdateResponse>> =
+        ): CompletableFuture<HttpResponseFor<Integration>> =
             update(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see update */
         fun update(
             id: String,
             params: IntegrationUpdateParams = IntegrationUpdateParams.none(),
-        ): CompletableFuture<HttpResponseFor<IntegrationUpdateResponse>> =
+        ): CompletableFuture<HttpResponseFor<Integration>> =
             update(id, params, RequestOptions.none())
 
         /** @see update */
         fun update(
             params: IntegrationUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<IntegrationUpdateResponse>>
+        ): CompletableFuture<HttpResponseFor<Integration>>
 
         /** @see update */
         fun update(
             params: IntegrationUpdateParams
-        ): CompletableFuture<HttpResponseFor<IntegrationUpdateResponse>> =
-            update(params, RequestOptions.none())
+        ): CompletableFuture<HttpResponseFor<Integration>> = update(params, RequestOptions.none())
 
         /** @see update */
         fun update(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<IntegrationUpdateResponse>> =
+        ): CompletableFuture<HttpResponseFor<Integration>> =
             update(id, IntegrationUpdateParams.none(), requestOptions)
 
         /**

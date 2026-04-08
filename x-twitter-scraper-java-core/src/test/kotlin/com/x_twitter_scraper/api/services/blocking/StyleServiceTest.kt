@@ -21,9 +21,9 @@ internal class StyleServiceTest {
                 .build()
         val styleService = client.styles()
 
-        val style = styleService.retrieve("username")
+        val styleProfile = styleService.retrieve("id")
 
-        style.validate()
+        styleProfile.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -36,16 +36,20 @@ internal class StyleServiceTest {
                 .build()
         val styleService = client.styles()
 
-        val style =
+        val styleProfile =
             styleService.update(
                 StyleUpdateParams.builder()
-                    .username("username")
-                    .label("label")
-                    .addTweet(StyleUpdateParams.Tweet.builder().text("text").build())
+                    .id("id")
+                    .label("Professional Voice")
+                    .addTweet(
+                        StyleUpdateParams.Tweet.builder()
+                            .text("Excited to share our latest research findings.")
+                            .build()
+                    )
                     .build()
             )
 
-        style.validate()
+        styleProfile.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -73,7 +77,7 @@ internal class StyleServiceTest {
                 .build()
         val styleService = client.styles()
 
-        styleService.delete("username")
+        styleService.delete("id")
     }
 
     @Disabled("Mock server tests are disabled")
@@ -86,10 +90,10 @@ internal class StyleServiceTest {
                 .build()
         val styleService = client.styles()
 
-        val response =
-            styleService.analyze(StyleAnalyzeParams.builder().username("username").build())
+        val styleProfile =
+            styleService.analyze(StyleAnalyzeParams.builder().username("elonmusk").build())
 
-        response.validate()
+        styleProfile.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -120,7 +124,7 @@ internal class StyleServiceTest {
                 .build()
         val styleService = client.styles()
 
-        val response = styleService.getPerformance("username")
+        val response = styleService.getPerformance("id")
 
         response.validate()
     }

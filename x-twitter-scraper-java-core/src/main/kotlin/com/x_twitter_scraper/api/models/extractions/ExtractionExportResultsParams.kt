@@ -24,6 +24,7 @@ private constructor(
 
     fun id(): Optional<String> = Optional.ofNullable(id)
 
+    /** Export file format */
     fun format(): Optional<Format> = Optional.ofNullable(format)
 
     /** Additional headers to send with the request. */
@@ -66,6 +67,7 @@ private constructor(
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
 
+        /** Export file format */
         fun format(format: Format?) = apply { this.format = format }
 
         /** Alias for calling [Builder.format] with `format.orElse(null)`. */
@@ -199,6 +201,7 @@ private constructor(
             }
             .build()
 
+    /** Export file format */
     class Format @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

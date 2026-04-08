@@ -8,7 +8,6 @@ import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponse
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.models.styles.StyleAnalyzeParams
-import com.x_twitter_scraper.api.models.styles.StyleAnalyzeResponse
 import com.x_twitter_scraper.api.models.styles.StyleCompareParams
 import com.x_twitter_scraper.api.models.styles.StyleCompareResponse
 import com.x_twitter_scraper.api.models.styles.StyleDeleteParams
@@ -16,10 +15,9 @@ import com.x_twitter_scraper.api.models.styles.StyleGetPerformanceParams
 import com.x_twitter_scraper.api.models.styles.StyleGetPerformanceResponse
 import com.x_twitter_scraper.api.models.styles.StyleListParams
 import com.x_twitter_scraper.api.models.styles.StyleListResponse
+import com.x_twitter_scraper.api.models.styles.StyleProfile
 import com.x_twitter_scraper.api.models.styles.StyleRetrieveParams
-import com.x_twitter_scraper.api.models.styles.StyleRetrieveResponse
 import com.x_twitter_scraper.api.models.styles.StyleUpdateParams
-import com.x_twitter_scraper.api.models.styles.StyleUpdateResponse
 import java.util.function.Consumer
 
 /** Tweet composition, drafts, writing styles & radar */
@@ -38,57 +36,54 @@ interface StyleService {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): StyleService
 
     /** Get cached style profile */
-    fun retrieve(username: String): StyleRetrieveResponse =
-        retrieve(username, StyleRetrieveParams.none())
+    fun retrieve(id: String): StyleProfile = retrieve(id, StyleRetrieveParams.none())
 
     /** @see retrieve */
     fun retrieve(
-        username: String,
+        id: String,
         params: StyleRetrieveParams = StyleRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): StyleRetrieveResponse =
-        retrieve(params.toBuilder().username(username).build(), requestOptions)
+    ): StyleProfile = retrieve(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieve */
     fun retrieve(
-        username: String,
+        id: String,
         params: StyleRetrieveParams = StyleRetrieveParams.none(),
-    ): StyleRetrieveResponse = retrieve(username, params, RequestOptions.none())
+    ): StyleProfile = retrieve(id, params, RequestOptions.none())
 
     /** @see retrieve */
     fun retrieve(
         params: StyleRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): StyleRetrieveResponse
+    ): StyleProfile
 
     /** @see retrieve */
-    fun retrieve(params: StyleRetrieveParams): StyleRetrieveResponse =
+    fun retrieve(params: StyleRetrieveParams): StyleProfile =
         retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
-    fun retrieve(username: String, requestOptions: RequestOptions): StyleRetrieveResponse =
-        retrieve(username, StyleRetrieveParams.none(), requestOptions)
+    fun retrieve(id: String, requestOptions: RequestOptions): StyleProfile =
+        retrieve(id, StyleRetrieveParams.none(), requestOptions)
 
     /** Save style profile with custom tweets */
-    fun update(username: String, params: StyleUpdateParams): StyleUpdateResponse =
-        update(username, params, RequestOptions.none())
+    fun update(id: String, params: StyleUpdateParams): StyleProfile =
+        update(id, params, RequestOptions.none())
 
     /** @see update */
     fun update(
-        username: String,
+        id: String,
         params: StyleUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): StyleUpdateResponse = update(params.toBuilder().username(username).build(), requestOptions)
+    ): StyleProfile = update(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see update */
-    fun update(params: StyleUpdateParams): StyleUpdateResponse =
-        update(params, RequestOptions.none())
+    fun update(params: StyleUpdateParams): StyleProfile = update(params, RequestOptions.none())
 
     /** @see update */
     fun update(
         params: StyleUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): StyleUpdateResponse
+    ): StyleProfile
 
     /** List cached style profiles */
     fun list(): StyleListResponse = list(StyleListParams.none())
@@ -108,18 +103,18 @@ interface StyleService {
         list(StyleListParams.none(), requestOptions)
 
     /** Delete a style profile */
-    fun delete(username: String) = delete(username, StyleDeleteParams.none())
+    fun delete(id: String) = delete(id, StyleDeleteParams.none())
 
     /** @see delete */
     fun delete(
-        username: String,
+        id: String,
         params: StyleDeleteParams = StyleDeleteParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ) = delete(params.toBuilder().username(username).build(), requestOptions)
+    ) = delete(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see delete */
-    fun delete(username: String, params: StyleDeleteParams = StyleDeleteParams.none()) =
-        delete(username, params, RequestOptions.none())
+    fun delete(id: String, params: StyleDeleteParams = StyleDeleteParams.none()) =
+        delete(id, params, RequestOptions.none())
 
     /** @see delete */
     fun delete(params: StyleDeleteParams, requestOptions: RequestOptions = RequestOptions.none())
@@ -128,18 +123,17 @@ interface StyleService {
     fun delete(params: StyleDeleteParams) = delete(params, RequestOptions.none())
 
     /** @see delete */
-    fun delete(username: String, requestOptions: RequestOptions) =
-        delete(username, StyleDeleteParams.none(), requestOptions)
+    fun delete(id: String, requestOptions: RequestOptions) =
+        delete(id, StyleDeleteParams.none(), requestOptions)
 
     /** Analyze writing style from recent tweets */
-    fun analyze(params: StyleAnalyzeParams): StyleAnalyzeResponse =
-        analyze(params, RequestOptions.none())
+    fun analyze(params: StyleAnalyzeParams): StyleProfile = analyze(params, RequestOptions.none())
 
     /** @see analyze */
     fun analyze(
         params: StyleAnalyzeParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): StyleAnalyzeResponse
+    ): StyleProfile
 
     /** Compare two style profiles */
     fun compare(params: StyleCompareParams): StyleCompareResponse =
@@ -152,22 +146,22 @@ interface StyleService {
     ): StyleCompareResponse
 
     /** Get engagement metrics for style tweets */
-    fun getPerformance(username: String): StyleGetPerformanceResponse =
-        getPerformance(username, StyleGetPerformanceParams.none())
+    fun getPerformance(id: String): StyleGetPerformanceResponse =
+        getPerformance(id, StyleGetPerformanceParams.none())
 
     /** @see getPerformance */
     fun getPerformance(
-        username: String,
+        id: String,
         params: StyleGetPerformanceParams = StyleGetPerformanceParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): StyleGetPerformanceResponse =
-        getPerformance(params.toBuilder().username(username).build(), requestOptions)
+        getPerformance(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see getPerformance */
     fun getPerformance(
-        username: String,
+        id: String,
         params: StyleGetPerformanceParams = StyleGetPerformanceParams.none(),
-    ): StyleGetPerformanceResponse = getPerformance(username, params, RequestOptions.none())
+    ): StyleGetPerformanceResponse = getPerformance(id, params, RequestOptions.none())
 
     /** @see getPerformance */
     fun getPerformance(
@@ -180,11 +174,8 @@ interface StyleService {
         getPerformance(params, RequestOptions.none())
 
     /** @see getPerformance */
-    fun getPerformance(
-        username: String,
-        requestOptions: RequestOptions,
-    ): StyleGetPerformanceResponse =
-        getPerformance(username, StyleGetPerformanceParams.none(), requestOptions)
+    fun getPerformance(id: String, requestOptions: RequestOptions): StyleGetPerformanceResponse =
+        getPerformance(id, StyleGetPerformanceParams.none(), requestOptions)
 
     /** A view of [StyleService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -197,72 +188,65 @@ interface StyleService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): StyleService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /styles/{username}`, but is otherwise the same as
+         * Returns a raw HTTP response for `get /styles/{id}`, but is otherwise the same as
          * [StyleService.retrieve].
          */
         @MustBeClosed
-        fun retrieve(username: String): HttpResponseFor<StyleRetrieveResponse> =
-            retrieve(username, StyleRetrieveParams.none())
+        fun retrieve(id: String): HttpResponseFor<StyleProfile> =
+            retrieve(id, StyleRetrieveParams.none())
 
         /** @see retrieve */
         @MustBeClosed
         fun retrieve(
-            username: String,
+            id: String,
             params: StyleRetrieveParams = StyleRetrieveParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<StyleRetrieveResponse> =
-            retrieve(params.toBuilder().username(username).build(), requestOptions)
+        ): HttpResponseFor<StyleProfile> =
+            retrieve(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieve */
         @MustBeClosed
         fun retrieve(
-            username: String,
+            id: String,
             params: StyleRetrieveParams = StyleRetrieveParams.none(),
-        ): HttpResponseFor<StyleRetrieveResponse> =
-            retrieve(username, params, RequestOptions.none())
+        ): HttpResponseFor<StyleProfile> = retrieve(id, params, RequestOptions.none())
 
         /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             params: StyleRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<StyleRetrieveResponse>
+        ): HttpResponseFor<StyleProfile>
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(params: StyleRetrieveParams): HttpResponseFor<StyleRetrieveResponse> =
+        fun retrieve(params: StyleRetrieveParams): HttpResponseFor<StyleProfile> =
             retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            username: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<StyleRetrieveResponse> =
-            retrieve(username, StyleRetrieveParams.none(), requestOptions)
+        fun retrieve(id: String, requestOptions: RequestOptions): HttpResponseFor<StyleProfile> =
+            retrieve(id, StyleRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `put /styles/{username}`, but is otherwise the same as
+         * Returns a raw HTTP response for `put /styles/{id}`, but is otherwise the same as
          * [StyleService.update].
          */
         @MustBeClosed
-        fun update(
-            username: String,
-            params: StyleUpdateParams,
-        ): HttpResponseFor<StyleUpdateResponse> = update(username, params, RequestOptions.none())
+        fun update(id: String, params: StyleUpdateParams): HttpResponseFor<StyleProfile> =
+            update(id, params, RequestOptions.none())
 
         /** @see update */
         @MustBeClosed
         fun update(
-            username: String,
+            id: String,
             params: StyleUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<StyleUpdateResponse> =
-            update(params.toBuilder().username(username).build(), requestOptions)
+        ): HttpResponseFor<StyleProfile> = update(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see update */
         @MustBeClosed
-        fun update(params: StyleUpdateParams): HttpResponseFor<StyleUpdateResponse> =
+        fun update(params: StyleUpdateParams): HttpResponseFor<StyleProfile> =
             update(params, RequestOptions.none())
 
         /** @see update */
@@ -270,7 +254,7 @@ interface StyleService {
         fun update(
             params: StyleUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<StyleUpdateResponse>
+        ): HttpResponseFor<StyleProfile>
 
         /**
          * Returns a raw HTTP response for `get /styles`, but is otherwise the same as
@@ -297,26 +281,23 @@ interface StyleService {
             list(StyleListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /styles/{username}`, but is otherwise the same as
+         * Returns a raw HTTP response for `delete /styles/{id}`, but is otherwise the same as
          * [StyleService.delete].
          */
-        @MustBeClosed
-        fun delete(username: String): HttpResponse = delete(username, StyleDeleteParams.none())
+        @MustBeClosed fun delete(id: String): HttpResponse = delete(id, StyleDeleteParams.none())
 
         /** @see delete */
         @MustBeClosed
         fun delete(
-            username: String,
+            id: String,
             params: StyleDeleteParams = StyleDeleteParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse = delete(params.toBuilder().username(username).build(), requestOptions)
+        ): HttpResponse = delete(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see delete */
         @MustBeClosed
-        fun delete(
-            username: String,
-            params: StyleDeleteParams = StyleDeleteParams.none(),
-        ): HttpResponse = delete(username, params, RequestOptions.none())
+        fun delete(id: String, params: StyleDeleteParams = StyleDeleteParams.none()): HttpResponse =
+            delete(id, params, RequestOptions.none())
 
         /** @see delete */
         @MustBeClosed
@@ -331,15 +312,15 @@ interface StyleService {
 
         /** @see delete */
         @MustBeClosed
-        fun delete(username: String, requestOptions: RequestOptions): HttpResponse =
-            delete(username, StyleDeleteParams.none(), requestOptions)
+        fun delete(id: String, requestOptions: RequestOptions): HttpResponse =
+            delete(id, StyleDeleteParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `post /styles`, but is otherwise the same as
          * [StyleService.analyze].
          */
         @MustBeClosed
-        fun analyze(params: StyleAnalyzeParams): HttpResponseFor<StyleAnalyzeResponse> =
+        fun analyze(params: StyleAnalyzeParams): HttpResponseFor<StyleProfile> =
             analyze(params, RequestOptions.none())
 
         /** @see analyze */
@@ -347,7 +328,7 @@ interface StyleService {
         fun analyze(
             params: StyleAnalyzeParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<StyleAnalyzeResponse>
+        ): HttpResponseFor<StyleProfile>
 
         /**
          * Returns a raw HTTP response for `get /styles/compare`, but is otherwise the same as
@@ -365,29 +346,29 @@ interface StyleService {
         ): HttpResponseFor<StyleCompareResponse>
 
         /**
-         * Returns a raw HTTP response for `get /styles/{username}/performance`, but is otherwise
-         * the same as [StyleService.getPerformance].
+         * Returns a raw HTTP response for `get /styles/{id}/performance`, but is otherwise the same
+         * as [StyleService.getPerformance].
          */
         @MustBeClosed
-        fun getPerformance(username: String): HttpResponseFor<StyleGetPerformanceResponse> =
-            getPerformance(username, StyleGetPerformanceParams.none())
+        fun getPerformance(id: String): HttpResponseFor<StyleGetPerformanceResponse> =
+            getPerformance(id, StyleGetPerformanceParams.none())
 
         /** @see getPerformance */
         @MustBeClosed
         fun getPerformance(
-            username: String,
+            id: String,
             params: StyleGetPerformanceParams = StyleGetPerformanceParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<StyleGetPerformanceResponse> =
-            getPerformance(params.toBuilder().username(username).build(), requestOptions)
+            getPerformance(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see getPerformance */
         @MustBeClosed
         fun getPerformance(
-            username: String,
+            id: String,
             params: StyleGetPerformanceParams = StyleGetPerformanceParams.none(),
         ): HttpResponseFor<StyleGetPerformanceResponse> =
-            getPerformance(username, params, RequestOptions.none())
+            getPerformance(id, params, RequestOptions.none())
 
         /** @see getPerformance */
         @MustBeClosed
@@ -406,9 +387,9 @@ interface StyleService {
         /** @see getPerformance */
         @MustBeClosed
         fun getPerformance(
-            username: String,
+            id: String,
             requestOptions: RequestOptions,
         ): HttpResponseFor<StyleGetPerformanceResponse> =
-            getPerformance(username, StyleGetPerformanceParams.none(), requestOptions)
+            getPerformance(id, StyleGetPerformanceParams.none(), requestOptions)
     }
 }

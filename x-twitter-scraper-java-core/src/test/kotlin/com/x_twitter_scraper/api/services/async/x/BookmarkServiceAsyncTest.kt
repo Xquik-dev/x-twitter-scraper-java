@@ -19,13 +19,13 @@ internal class BookmarkServiceAsyncTest {
                 .build()
         val bookmarkServiceAsync = client.x().bookmarks()
 
-        val bookmarksFuture =
+        val paginatedTweetsFuture =
             bookmarkServiceAsync.list(
-                BookmarkListParams.builder().cursor("cursor").folderId("folderId").build()
+                BookmarkListParams.builder().cursor("folders_value").folderId("folderId").build()
             )
 
-        val bookmarks = bookmarksFuture.get()
-        bookmarks.validate()
+        val paginatedTweets = paginatedTweetsFuture.get()
+        paginatedTweets.validate()
     }
 
     @Disabled("Mock server tests are disabled")

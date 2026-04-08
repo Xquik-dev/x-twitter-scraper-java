@@ -35,7 +35,7 @@ internal class CreditServiceTest {
         val creditService = client.credits()
 
         val response =
-            creditService.topupBalance(CreditTopupBalanceParams.builder().amount(0L).build())
+            creditService.topupBalance(CreditTopupBalanceParams.builder().amount(10000L).build())
 
         response.validate()
     }

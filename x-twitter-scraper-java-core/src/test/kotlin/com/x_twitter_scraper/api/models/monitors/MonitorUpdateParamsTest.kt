@@ -2,6 +2,7 @@
 
 package com.x_twitter_scraper.api.models.monitors
 
+import com.x_twitter_scraper.api.models.EventType
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -12,7 +13,7 @@ internal class MonitorUpdateParamsTest {
     fun create() {
         MonitorUpdateParams.builder()
             .id("id")
-            .addEventType(MonitorUpdateParams.EventType.TWEET_NEW)
+            .addEventType(EventType.TWEET_NEW)
             .isActive(true)
             .build()
     }
@@ -31,14 +32,13 @@ internal class MonitorUpdateParamsTest {
         val params =
             MonitorUpdateParams.builder()
                 .id("id")
-                .addEventType(MonitorUpdateParams.EventType.TWEET_NEW)
+                .addEventType(EventType.TWEET_NEW)
                 .isActive(true)
                 .build()
 
         val body = params._body()
 
-        assertThat(body.eventTypes().getOrNull())
-            .containsExactly(MonitorUpdateParams.EventType.TWEET_NEW)
+        assertThat(body.eventTypes().getOrNull()).containsExactly(EventType.TWEET_NEW)
         assertThat(body.isActive()).contains(true)
     }
 

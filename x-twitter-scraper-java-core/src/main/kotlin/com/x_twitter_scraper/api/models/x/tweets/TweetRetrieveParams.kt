@@ -12,12 +12,12 @@ import kotlin.jvm.optionals.getOrNull
 /** Look up tweet */
 class TweetRetrieveParams
 private constructor(
-    private val tweetId: String?,
+    private val id: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    fun tweetId(): Optional<String> = Optional.ofNullable(tweetId)
+    fun id(): Optional<String> = Optional.ofNullable(id)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -38,21 +38,21 @@ private constructor(
     /** A builder for [TweetRetrieveParams]. */
     class Builder internal constructor() {
 
-        private var tweetId: String? = null
+        private var id: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(tweetRetrieveParams: TweetRetrieveParams) = apply {
-            tweetId = tweetRetrieveParams.tweetId
+            id = tweetRetrieveParams.id
             additionalHeaders = tweetRetrieveParams.additionalHeaders.toBuilder()
             additionalQueryParams = tweetRetrieveParams.additionalQueryParams.toBuilder()
         }
 
-        fun tweetId(tweetId: String?) = apply { this.tweetId = tweetId }
+        fun id(id: String?) = apply { this.id = id }
 
-        /** Alias for calling [Builder.tweetId] with `tweetId.orElse(null)`. */
-        fun tweetId(tweetId: Optional<String>) = tweetId(tweetId.getOrNull())
+        /** Alias for calling [Builder.id] with `id.orElse(null)`. */
+        fun id(id: Optional<String>) = id(id.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -158,12 +158,12 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          */
         fun build(): TweetRetrieveParams =
-            TweetRetrieveParams(tweetId, additionalHeaders.build(), additionalQueryParams.build())
+            TweetRetrieveParams(id, additionalHeaders.build(), additionalQueryParams.build())
     }
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> tweetId ?: ""
+            0 -> id ?: ""
             else -> ""
         }
 
@@ -177,13 +177,13 @@ private constructor(
         }
 
         return other is TweetRetrieveParams &&
-            tweetId == other.tweetId &&
+            id == other.id &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(tweetId, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int = Objects.hash(id, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "TweetRetrieveParams{tweetId=$tweetId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "TweetRetrieveParams{id=$id, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
