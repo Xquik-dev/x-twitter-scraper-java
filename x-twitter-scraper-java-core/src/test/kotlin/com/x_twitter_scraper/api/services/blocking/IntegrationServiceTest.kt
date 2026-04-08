@@ -31,7 +31,6 @@ internal class IntegrationServiceTest {
                     .addEventType(EventType.TWEET_NEW)
                     .addEventType(EventType.FOLLOWER_GAINED)
                     .name("My Telegram Bot")
-                    .type(IntegrationCreateParams.Type.TELEGRAM)
                     .build()
             )
 

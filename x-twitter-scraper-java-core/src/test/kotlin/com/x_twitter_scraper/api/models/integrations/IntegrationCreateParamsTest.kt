@@ -15,7 +15,6 @@ internal class IntegrationCreateParamsTest {
             .addEventType(EventType.TWEET_NEW)
             .addEventType(EventType.FOLLOWER_GAINED)
             .name("My Telegram Bot")
-            .type(IntegrationCreateParams.Type.TELEGRAM)
             .build()
     }
 
@@ -27,7 +26,6 @@ internal class IntegrationCreateParamsTest {
                 .addEventType(EventType.TWEET_NEW)
                 .addEventType(EventType.FOLLOWER_GAINED)
                 .name("My Telegram Bot")
-                .type(IntegrationCreateParams.Type.TELEGRAM)
                 .build()
 
         val body = params._body()
@@ -37,6 +35,5 @@ internal class IntegrationCreateParamsTest {
         assertThat(body.eventTypes())
             .containsExactly(EventType.TWEET_NEW, EventType.FOLLOWER_GAINED)
         assertThat(body.name()).isEqualTo("My Telegram Bot")
-        assertThat(body.type()).isEqualTo(IntegrationCreateParams.Type.TELEGRAM)
     }
 }

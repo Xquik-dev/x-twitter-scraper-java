@@ -29,7 +29,6 @@ internal class IntegrationListResponseTest {
                         .addEventType(EventType.FOLLOWER_GAINED)
                         .isActive(true)
                         .name("My Telegram Bot")
-                        .type(Integration.Type.TELEGRAM)
                         .filters(
                             Integration.Filters.builder()
                                 .putAdditionalProperty("minFollowers", JsonValue.from("bar"))
@@ -56,7 +55,6 @@ internal class IntegrationListResponseTest {
                     .addEventType(EventType.FOLLOWER_GAINED)
                     .isActive(true)
                     .name("My Telegram Bot")
-                    .type(Integration.Type.TELEGRAM)
                     .filters(
                         Integration.Filters.builder()
                             .putAdditionalProperty("minFollowers", JsonValue.from("bar"))
@@ -87,7 +85,6 @@ internal class IntegrationListResponseTest {
                         .addEventType(EventType.FOLLOWER_GAINED)
                         .isActive(true)
                         .name("My Telegram Bot")
-                        .type(Integration.Type.TELEGRAM)
                         .filters(
                             Integration.Filters.builder()
                                 .putAdditionalProperty("minFollowers", JsonValue.from("bar"))
