@@ -15,7 +15,6 @@ import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepare
 import com.x_twitter_scraper.api.models.PaginatedTweets
-import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkListPage
 import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkListParams
 import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkRetrieveFoldersParams
 import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkRetrieveFoldersResponse
@@ -34,10 +33,7 @@ class BookmarkServiceImpl internal constructor(private val clientOptions: Client
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BookmarkService =
         BookmarkServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun list(
-        params: BookmarkListParams,
-        requestOptions: RequestOptions,
-    ): BookmarkListPage =
+    override fun list(params: BookmarkListParams, requestOptions: RequestOptions): PaginatedTweets =
         // get /x/bookmarks
         withRawResponse().list(params, requestOptions).parse()
 
@@ -67,7 +63,7 @@ class BookmarkServiceImpl internal constructor(private val clientOptions: Client
         override fun list(
             params: BookmarkListParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<BookmarkListPage> {
+        ): HttpResponseFor<PaginatedTweets> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -84,13 +80,6 @@ class BookmarkServiceImpl internal constructor(private val clientOptions: Client
                         if (requestOptions.responseValidation!!) {
                             it.validate()
                         }
-                    }
-                    .let {
-                        BookmarkListPage.builder()
-                            .service(BookmarkServiceImpl(clientOptions))
-                            .params(params)
-                            .response(it)
-                            .build()
                     }
             }
         }
