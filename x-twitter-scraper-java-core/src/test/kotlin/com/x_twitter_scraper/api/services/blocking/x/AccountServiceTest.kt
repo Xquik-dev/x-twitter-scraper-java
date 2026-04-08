@@ -44,9 +44,9 @@ internal class AccountServiceTest {
                 .build()
         val accountService = client.x().accounts()
 
-        val account = accountService.retrieve("id")
+        val xAccountDetail = accountService.retrieve("id")
 
-        account.validate()
+        xAccountDetail.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -77,6 +77,21 @@ internal class AccountServiceTest {
         val account = accountService.delete("id")
 
         account.validate()
+    }
+
+    @Disabled("Mock server tests are disabled")
+    @Test
+    fun bulkRetry() {
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
+        val accountService = client.x().accounts()
+
+        val response = accountService.bulkRetry()
+
+        response.validate()
     }
 
     @Disabled("Mock server tests are disabled")

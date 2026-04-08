@@ -15,7 +15,7 @@ internal class DrawListResponseTest {
         val drawListResponse =
             DrawListResponse.builder()
                 .addDraw(
-                    DrawListResponse.Draw.builder()
+                    DrawListItem.builder()
                         .id("id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .status("status")
@@ -31,7 +31,7 @@ internal class DrawListResponseTest {
 
         assertThat(drawListResponse.draws())
             .containsExactly(
-                DrawListResponse.Draw.builder()
+                DrawListItem.builder()
                     .id("id")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .status("status")
@@ -51,7 +51,7 @@ internal class DrawListResponseTest {
         val drawListResponse =
             DrawListResponse.builder()
                 .addDraw(
-                    DrawListResponse.Draw.builder()
+                    DrawListItem.builder()
                         .id("id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .status("status")

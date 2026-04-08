@@ -15,12 +15,11 @@ import com.x_twitter_scraper.api.core.http.HttpResponse.Handler
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepare
+import com.x_twitter_scraper.api.models.PaginatedTweets
+import com.x_twitter_scraper.api.models.PaginatedUsers
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveFollowersParams
-import com.x_twitter_scraper.api.models.x.lists.ListRetrieveFollowersResponse
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveMembersParams
-import com.x_twitter_scraper.api.models.x.lists.ListRetrieveMembersResponse
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveTweetsParams
-import com.x_twitter_scraper.api.models.x.lists.ListRetrieveTweetsResponse
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -39,21 +38,21 @@ class ListServiceImpl internal constructor(private val clientOptions: ClientOpti
     override fun retrieveFollowers(
         params: ListRetrieveFollowersParams,
         requestOptions: RequestOptions,
-    ): ListRetrieveFollowersResponse =
+    ): PaginatedUsers =
         // get /x/lists/{id}/followers
         withRawResponse().retrieveFollowers(params, requestOptions).parse()
 
     override fun retrieveMembers(
         params: ListRetrieveMembersParams,
         requestOptions: RequestOptions,
-    ): ListRetrieveMembersResponse =
+    ): PaginatedUsers =
         // get /x/lists/{id}/members
         withRawResponse().retrieveMembers(params, requestOptions).parse()
 
     override fun retrieveTweets(
         params: ListRetrieveTweetsParams,
         requestOptions: RequestOptions,
-    ): ListRetrieveTweetsResponse =
+    ): PaginatedTweets =
         // get /x/lists/{id}/tweets
         withRawResponse().retrieveTweets(params, requestOptions).parse()
 
@@ -70,13 +69,13 @@ class ListServiceImpl internal constructor(private val clientOptions: ClientOpti
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val retrieveFollowersHandler: Handler<ListRetrieveFollowersResponse> =
-            jsonHandler<ListRetrieveFollowersResponse>(clientOptions.jsonMapper)
+        private val retrieveFollowersHandler: Handler<PaginatedUsers> =
+            jsonHandler<PaginatedUsers>(clientOptions.jsonMapper)
 
         override fun retrieveFollowers(
             params: ListRetrieveFollowersParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<ListRetrieveFollowersResponse> {
+        ): HttpResponseFor<PaginatedUsers> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -100,13 +99,13 @@ class ListServiceImpl internal constructor(private val clientOptions: ClientOpti
             }
         }
 
-        private val retrieveMembersHandler: Handler<ListRetrieveMembersResponse> =
-            jsonHandler<ListRetrieveMembersResponse>(clientOptions.jsonMapper)
+        private val retrieveMembersHandler: Handler<PaginatedUsers> =
+            jsonHandler<PaginatedUsers>(clientOptions.jsonMapper)
 
         override fun retrieveMembers(
             params: ListRetrieveMembersParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<ListRetrieveMembersResponse> {
+        ): HttpResponseFor<PaginatedUsers> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -130,13 +129,13 @@ class ListServiceImpl internal constructor(private val clientOptions: ClientOpti
             }
         }
 
-        private val retrieveTweetsHandler: Handler<ListRetrieveTweetsResponse> =
-            jsonHandler<ListRetrieveTweetsResponse>(clientOptions.jsonMapper)
+        private val retrieveTweetsHandler: Handler<PaginatedTweets> =
+            jsonHandler<PaginatedTweets>(clientOptions.jsonMapper)
 
         override fun retrieveTweets(
             params: ListRetrieveTweetsParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<ListRetrieveTweetsResponse> {
+        ): HttpResponseFor<PaginatedTweets> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())

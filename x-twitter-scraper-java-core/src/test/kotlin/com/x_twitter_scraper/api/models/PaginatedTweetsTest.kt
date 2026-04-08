@@ -4,6 +4,7 @@ package com.x_twitter_scraper.api.models
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.core.jsonMapper
+import com.x_twitter_scraper.api.models.x.tweets.SearchTweet
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -16,11 +17,11 @@ internal class PaginatedTweetsTest {
                 .hasNextPage(true)
                 .nextCursor("DAACCgACGRElMJcAAA")
                 .addTweet(
-                    PaginatedTweets.Tweet.builder()
+                    SearchTweet.builder()
                         .id("1234567890")
                         .text("Just launched our new feature!")
                         .author(
-                            PaginatedTweets.Tweet.Author.builder()
+                            SearchTweet.Author.builder()
                                 .id("9876543210")
                                 .name("Elon Musk")
                                 .username("elonmusk")
@@ -43,11 +44,11 @@ internal class PaginatedTweetsTest {
         assertThat(paginatedTweets.nextCursor()).isEqualTo("DAACCgACGRElMJcAAA")
         assertThat(paginatedTweets.tweets())
             .containsExactly(
-                PaginatedTweets.Tweet.builder()
+                SearchTweet.builder()
                     .id("1234567890")
                     .text("Just launched our new feature!")
                     .author(
-                        PaginatedTweets.Tweet.Author.builder()
+                        SearchTweet.Author.builder()
                             .id("9876543210")
                             .name("Elon Musk")
                             .username("elonmusk")
@@ -74,11 +75,11 @@ internal class PaginatedTweetsTest {
                 .hasNextPage(true)
                 .nextCursor("DAACCgACGRElMJcAAA")
                 .addTweet(
-                    PaginatedTweets.Tweet.builder()
+                    SearchTweet.builder()
                         .id("1234567890")
                         .text("Just launched our new feature!")
                         .author(
-                            PaginatedTweets.Tweet.Author.builder()
+                            SearchTweet.Author.builder()
                                 .id("9876543210")
                                 .name("Elon Musk")
                                 .username("elonmusk")

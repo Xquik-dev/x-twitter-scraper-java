@@ -4,6 +4,7 @@ package com.x_twitter_scraper.api.models
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.core.jsonMapper
+import com.x_twitter_scraper.api.models.x.users.UserProfile
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -16,7 +17,7 @@ internal class PaginatedUsersTest {
                 .hasNextPage(true)
                 .nextCursor("DAACCgACGRElMJcAAA")
                 .addUser(
-                    PaginatedUsers.User.builder()
+                    UserProfile.builder()
                         .id("9876543210")
                         .name("Elon Musk")
                         .username("elonmusk")
@@ -36,7 +37,7 @@ internal class PaginatedUsersTest {
         assertThat(paginatedUsers.nextCursor()).isEqualTo("DAACCgACGRElMJcAAA")
         assertThat(paginatedUsers.users())
             .containsExactly(
-                PaginatedUsers.User.builder()
+                UserProfile.builder()
                     .id("9876543210")
                     .name("Elon Musk")
                     .username("elonmusk")
@@ -60,7 +61,7 @@ internal class PaginatedUsersTest {
                 .hasNextPage(true)
                 .nextCursor("DAACCgACGRElMJcAAA")
                 .addUser(
-                    PaginatedUsers.User.builder()
+                    UserProfile.builder()
                         .id("9876543210")
                         .name("Elon Musk")
                         .username("elonmusk")

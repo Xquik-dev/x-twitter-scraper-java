@@ -16,6 +16,8 @@ import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.json
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepareAsync
+import com.x_twitter_scraper.api.models.PaginatedTweets
+import com.x_twitter_scraper.api.models.PaginatedUsers
 import com.x_twitter_scraper.api.models.x.communities.CommunityCreateParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityCreateResponse
 import com.x_twitter_scraper.api.models.x.communities.CommunityDeleteParams
@@ -23,11 +25,8 @@ import com.x_twitter_scraper.api.models.x.communities.CommunityDeleteResponse
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveInfoParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveInfoResponse
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveMembersParams
-import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveMembersResponse
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveModeratorsParams
-import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveModeratorsResponse
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveSearchParams
-import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveSearchResponse
 import com.x_twitter_scraper.api.services.async.x.communities.JoinServiceAsync
 import com.x_twitter_scraper.api.services.async.x.communities.JoinServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.communities.TweetServiceAsync
@@ -82,21 +81,21 @@ class CommunityServiceAsyncImpl internal constructor(private val clientOptions: 
     override fun retrieveMembers(
         params: CommunityRetrieveMembersParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<CommunityRetrieveMembersResponse> =
+    ): CompletableFuture<PaginatedUsers> =
         // get /x/communities/{id}/members
         withRawResponse().retrieveMembers(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveModerators(
         params: CommunityRetrieveModeratorsParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<CommunityRetrieveModeratorsResponse> =
+    ): CompletableFuture<PaginatedUsers> =
         // get /x/communities/{id}/moderators
         withRawResponse().retrieveModerators(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveSearch(
         params: CommunityRetrieveSearchParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<CommunityRetrieveSearchResponse> =
+    ): CompletableFuture<PaginatedTweets> =
         // get /x/communities/search
         withRawResponse().retrieveSearch(params, requestOptions).thenApply { it.parse() }
 
@@ -225,13 +224,13 @@ class CommunityServiceAsyncImpl internal constructor(private val clientOptions: 
                 }
         }
 
-        private val retrieveMembersHandler: Handler<CommunityRetrieveMembersResponse> =
-            jsonHandler<CommunityRetrieveMembersResponse>(clientOptions.jsonMapper)
+        private val retrieveMembersHandler: Handler<PaginatedUsers> =
+            jsonHandler<PaginatedUsers>(clientOptions.jsonMapper)
 
         override fun retrieveMembers(
             params: CommunityRetrieveMembersParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<CommunityRetrieveMembersResponse>> {
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -258,13 +257,13 @@ class CommunityServiceAsyncImpl internal constructor(private val clientOptions: 
                 }
         }
 
-        private val retrieveModeratorsHandler: Handler<CommunityRetrieveModeratorsResponse> =
-            jsonHandler<CommunityRetrieveModeratorsResponse>(clientOptions.jsonMapper)
+        private val retrieveModeratorsHandler: Handler<PaginatedUsers> =
+            jsonHandler<PaginatedUsers>(clientOptions.jsonMapper)
 
         override fun retrieveModerators(
             params: CommunityRetrieveModeratorsParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<CommunityRetrieveModeratorsResponse>> {
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -291,13 +290,13 @@ class CommunityServiceAsyncImpl internal constructor(private val clientOptions: 
                 }
         }
 
-        private val retrieveSearchHandler: Handler<CommunityRetrieveSearchResponse> =
-            jsonHandler<CommunityRetrieveSearchResponse>(clientOptions.jsonMapper)
+        private val retrieveSearchHandler: Handler<PaginatedTweets> =
+            jsonHandler<PaginatedTweets>(clientOptions.jsonMapper)
 
         override fun retrieveSearch(
             params: CommunityRetrieveSearchParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<CommunityRetrieveSearchResponse>> {
+        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)

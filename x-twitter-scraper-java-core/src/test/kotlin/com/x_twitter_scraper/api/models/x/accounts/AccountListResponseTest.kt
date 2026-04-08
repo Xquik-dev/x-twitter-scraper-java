@@ -15,7 +15,7 @@ internal class AccountListResponseTest {
         val accountListResponse =
             AccountListResponse.builder()
                 .addAccount(
-                    AccountListResponse.Account.builder()
+                    XAccount.builder()
                         .id("42")
                         .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                         .status("active")
@@ -27,7 +27,7 @@ internal class AccountListResponseTest {
 
         assertThat(accountListResponse.accounts())
             .containsExactly(
-                AccountListResponse.Account.builder()
+                XAccount.builder()
                     .id("42")
                     .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                     .status("active")
@@ -43,7 +43,7 @@ internal class AccountListResponseTest {
         val accountListResponse =
             AccountListResponse.builder()
                 .addAccount(
-                    AccountListResponse.Account.builder()
+                    XAccount.builder()
                         .id("42")
                         .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                         .status("active")

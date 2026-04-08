@@ -5,12 +5,11 @@ package com.x_twitter_scraper.api.services.async.x
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
+import com.x_twitter_scraper.api.models.PaginatedTweets
+import com.x_twitter_scraper.api.models.PaginatedUsers
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveFollowersParams
-import com.x_twitter_scraper.api.models.x.lists.ListRetrieveFollowersResponse
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveMembersParams
-import com.x_twitter_scraper.api.models.x.lists.ListRetrieveMembersResponse
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveTweetsParams
-import com.x_twitter_scraper.api.models.x.lists.ListRetrieveTweetsResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -30,7 +29,7 @@ interface ListServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): ListServiceAsync
 
     /** Get list followers */
-    fun retrieveFollowers(id: String): CompletableFuture<ListRetrieveFollowersResponse> =
+    fun retrieveFollowers(id: String): CompletableFuture<PaginatedUsers> =
         retrieveFollowers(id, ListRetrieveFollowersParams.none())
 
     /** @see retrieveFollowers */
@@ -38,37 +37,34 @@ interface ListServiceAsync {
         id: String,
         params: ListRetrieveFollowersParams = ListRetrieveFollowersParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<ListRetrieveFollowersResponse> =
+    ): CompletableFuture<PaginatedUsers> =
         retrieveFollowers(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveFollowers */
     fun retrieveFollowers(
         id: String,
         params: ListRetrieveFollowersParams = ListRetrieveFollowersParams.none(),
-    ): CompletableFuture<ListRetrieveFollowersResponse> =
-        retrieveFollowers(id, params, RequestOptions.none())
+    ): CompletableFuture<PaginatedUsers> = retrieveFollowers(id, params, RequestOptions.none())
 
     /** @see retrieveFollowers */
     fun retrieveFollowers(
         params: ListRetrieveFollowersParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<ListRetrieveFollowersResponse>
+    ): CompletableFuture<PaginatedUsers>
 
     /** @see retrieveFollowers */
-    fun retrieveFollowers(
-        params: ListRetrieveFollowersParams
-    ): CompletableFuture<ListRetrieveFollowersResponse> =
+    fun retrieveFollowers(params: ListRetrieveFollowersParams): CompletableFuture<PaginatedUsers> =
         retrieveFollowers(params, RequestOptions.none())
 
     /** @see retrieveFollowers */
     fun retrieveFollowers(
         id: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<ListRetrieveFollowersResponse> =
+    ): CompletableFuture<PaginatedUsers> =
         retrieveFollowers(id, ListRetrieveFollowersParams.none(), requestOptions)
 
     /** Get list members */
-    fun retrieveMembers(id: String): CompletableFuture<ListRetrieveMembersResponse> =
+    fun retrieveMembers(id: String): CompletableFuture<PaginatedUsers> =
         retrieveMembers(id, ListRetrieveMembersParams.none())
 
     /** @see retrieveMembers */
@@ -76,37 +72,34 @@ interface ListServiceAsync {
         id: String,
         params: ListRetrieveMembersParams = ListRetrieveMembersParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<ListRetrieveMembersResponse> =
+    ): CompletableFuture<PaginatedUsers> =
         retrieveMembers(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveMembers */
     fun retrieveMembers(
         id: String,
         params: ListRetrieveMembersParams = ListRetrieveMembersParams.none(),
-    ): CompletableFuture<ListRetrieveMembersResponse> =
-        retrieveMembers(id, params, RequestOptions.none())
+    ): CompletableFuture<PaginatedUsers> = retrieveMembers(id, params, RequestOptions.none())
 
     /** @see retrieveMembers */
     fun retrieveMembers(
         params: ListRetrieveMembersParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<ListRetrieveMembersResponse>
+    ): CompletableFuture<PaginatedUsers>
 
     /** @see retrieveMembers */
-    fun retrieveMembers(
-        params: ListRetrieveMembersParams
-    ): CompletableFuture<ListRetrieveMembersResponse> =
+    fun retrieveMembers(params: ListRetrieveMembersParams): CompletableFuture<PaginatedUsers> =
         retrieveMembers(params, RequestOptions.none())
 
     /** @see retrieveMembers */
     fun retrieveMembers(
         id: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<ListRetrieveMembersResponse> =
+    ): CompletableFuture<PaginatedUsers> =
         retrieveMembers(id, ListRetrieveMembersParams.none(), requestOptions)
 
     /** Get list tweets */
-    fun retrieveTweets(id: String): CompletableFuture<ListRetrieveTweetsResponse> =
+    fun retrieveTweets(id: String): CompletableFuture<PaginatedTweets> =
         retrieveTweets(id, ListRetrieveTweetsParams.none())
 
     /** @see retrieveTweets */
@@ -114,32 +107,30 @@ interface ListServiceAsync {
         id: String,
         params: ListRetrieveTweetsParams = ListRetrieveTweetsParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<ListRetrieveTweetsResponse> =
+    ): CompletableFuture<PaginatedTweets> =
         retrieveTweets(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveTweets */
     fun retrieveTweets(
         id: String,
         params: ListRetrieveTweetsParams = ListRetrieveTweetsParams.none(),
-    ): CompletableFuture<ListRetrieveTweetsResponse> =
-        retrieveTweets(id, params, RequestOptions.none())
+    ): CompletableFuture<PaginatedTweets> = retrieveTweets(id, params, RequestOptions.none())
 
     /** @see retrieveTweets */
     fun retrieveTweets(
         params: ListRetrieveTweetsParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<ListRetrieveTweetsResponse>
+    ): CompletableFuture<PaginatedTweets>
 
     /** @see retrieveTweets */
-    fun retrieveTweets(
-        params: ListRetrieveTweetsParams
-    ): CompletableFuture<ListRetrieveTweetsResponse> = retrieveTweets(params, RequestOptions.none())
+    fun retrieveTweets(params: ListRetrieveTweetsParams): CompletableFuture<PaginatedTweets> =
+        retrieveTweets(params, RequestOptions.none())
 
     /** @see retrieveTweets */
     fun retrieveTweets(
         id: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<ListRetrieveTweetsResponse> =
+    ): CompletableFuture<PaginatedTweets> =
         retrieveTweets(id, ListRetrieveTweetsParams.none(), requestOptions)
 
     /** A view of [ListServiceAsync] that provides access to raw HTTP responses for each method. */
@@ -156,9 +147,7 @@ interface ListServiceAsync {
          * Returns a raw HTTP response for `get /x/lists/{id}/followers`, but is otherwise the same
          * as [ListServiceAsync.retrieveFollowers].
          */
-        fun retrieveFollowers(
-            id: String
-        ): CompletableFuture<HttpResponseFor<ListRetrieveFollowersResponse>> =
+        fun retrieveFollowers(id: String): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveFollowers(id, ListRetrieveFollowersParams.none())
 
         /** @see retrieveFollowers */
@@ -166,42 +155,40 @@ interface ListServiceAsync {
             id: String,
             params: ListRetrieveFollowersParams = ListRetrieveFollowersParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<ListRetrieveFollowersResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveFollowers(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieveFollowers */
         fun retrieveFollowers(
             id: String,
             params: ListRetrieveFollowersParams = ListRetrieveFollowersParams.none(),
-        ): CompletableFuture<HttpResponseFor<ListRetrieveFollowersResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveFollowers(id, params, RequestOptions.none())
 
         /** @see retrieveFollowers */
         fun retrieveFollowers(
             params: ListRetrieveFollowersParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<ListRetrieveFollowersResponse>>
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>>
 
         /** @see retrieveFollowers */
         fun retrieveFollowers(
             params: ListRetrieveFollowersParams
-        ): CompletableFuture<HttpResponseFor<ListRetrieveFollowersResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveFollowers(params, RequestOptions.none())
 
         /** @see retrieveFollowers */
         fun retrieveFollowers(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<ListRetrieveFollowersResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveFollowers(id, ListRetrieveFollowersParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /x/lists/{id}/members`, but is otherwise the same as
          * [ListServiceAsync.retrieveMembers].
          */
-        fun retrieveMembers(
-            id: String
-        ): CompletableFuture<HttpResponseFor<ListRetrieveMembersResponse>> =
+        fun retrieveMembers(id: String): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveMembers(id, ListRetrieveMembersParams.none())
 
         /** @see retrieveMembers */
@@ -209,42 +196,40 @@ interface ListServiceAsync {
             id: String,
             params: ListRetrieveMembersParams = ListRetrieveMembersParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<ListRetrieveMembersResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveMembers(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieveMembers */
         fun retrieveMembers(
             id: String,
             params: ListRetrieveMembersParams = ListRetrieveMembersParams.none(),
-        ): CompletableFuture<HttpResponseFor<ListRetrieveMembersResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveMembers(id, params, RequestOptions.none())
 
         /** @see retrieveMembers */
         fun retrieveMembers(
             params: ListRetrieveMembersParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<ListRetrieveMembersResponse>>
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>>
 
         /** @see retrieveMembers */
         fun retrieveMembers(
             params: ListRetrieveMembersParams
-        ): CompletableFuture<HttpResponseFor<ListRetrieveMembersResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveMembers(params, RequestOptions.none())
 
         /** @see retrieveMembers */
         fun retrieveMembers(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<ListRetrieveMembersResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveMembers(id, ListRetrieveMembersParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /x/lists/{id}/tweets`, but is otherwise the same as
          * [ListServiceAsync.retrieveTweets].
          */
-        fun retrieveTweets(
-            id: String
-        ): CompletableFuture<HttpResponseFor<ListRetrieveTweetsResponse>> =
+        fun retrieveTweets(id: String): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
             retrieveTweets(id, ListRetrieveTweetsParams.none())
 
         /** @see retrieveTweets */
@@ -252,33 +237,33 @@ interface ListServiceAsync {
             id: String,
             params: ListRetrieveTweetsParams = ListRetrieveTweetsParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<ListRetrieveTweetsResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
             retrieveTweets(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieveTweets */
         fun retrieveTweets(
             id: String,
             params: ListRetrieveTweetsParams = ListRetrieveTweetsParams.none(),
-        ): CompletableFuture<HttpResponseFor<ListRetrieveTweetsResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
             retrieveTweets(id, params, RequestOptions.none())
 
         /** @see retrieveTweets */
         fun retrieveTweets(
             params: ListRetrieveTweetsParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<ListRetrieveTweetsResponse>>
+        ): CompletableFuture<HttpResponseFor<PaginatedTweets>>
 
         /** @see retrieveTweets */
         fun retrieveTweets(
             params: ListRetrieveTweetsParams
-        ): CompletableFuture<HttpResponseFor<ListRetrieveTweetsResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
             retrieveTweets(params, RequestOptions.none())
 
         /** @see retrieveTweets */
         fun retrieveTweets(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<ListRetrieveTweetsResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
             retrieveTweets(id, ListRetrieveTweetsParams.none(), requestOptions)
     }
 }

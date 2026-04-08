@@ -2,6 +2,7 @@
 
 package com.x_twitter_scraper.api.models.integrations
 
+import com.x_twitter_scraper.api.models.EventType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -11,8 +12,8 @@ internal class IntegrationCreateParamsTest {
     fun create() {
         IntegrationCreateParams.builder()
             .config(IntegrationCreateParams.Config.builder().chatId("-1001234567890").build())
-            .addEventType(IntegrationCreateParams.EventType.TWEET_NEW)
-            .addEventType(IntegrationCreateParams.EventType.FOLLOWER_GAINED)
+            .addEventType(EventType.TWEET_NEW)
+            .addEventType(EventType.FOLLOWER_GAINED)
             .name("My Telegram Bot")
             .type(IntegrationCreateParams.Type.TELEGRAM)
             .build()
@@ -23,8 +24,8 @@ internal class IntegrationCreateParamsTest {
         val params =
             IntegrationCreateParams.builder()
                 .config(IntegrationCreateParams.Config.builder().chatId("-1001234567890").build())
-                .addEventType(IntegrationCreateParams.EventType.TWEET_NEW)
-                .addEventType(IntegrationCreateParams.EventType.FOLLOWER_GAINED)
+                .addEventType(EventType.TWEET_NEW)
+                .addEventType(EventType.FOLLOWER_GAINED)
                 .name("My Telegram Bot")
                 .type(IntegrationCreateParams.Type.TELEGRAM)
                 .build()
@@ -34,10 +35,7 @@ internal class IntegrationCreateParamsTest {
         assertThat(body.config())
             .isEqualTo(IntegrationCreateParams.Config.builder().chatId("-1001234567890").build())
         assertThat(body.eventTypes())
-            .containsExactly(
-                IntegrationCreateParams.EventType.TWEET_NEW,
-                IntegrationCreateParams.EventType.FOLLOWER_GAINED,
-            )
+            .containsExactly(EventType.TWEET_NEW, EventType.FOLLOWER_GAINED)
         assertThat(body.name()).isEqualTo("My Telegram Bot")
         assertThat(body.type()).isEqualTo(IntegrationCreateParams.Type.TELEGRAM)
     }

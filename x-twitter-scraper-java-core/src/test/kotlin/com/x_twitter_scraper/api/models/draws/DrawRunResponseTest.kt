@@ -18,7 +18,7 @@ internal class DrawRunResponseTest {
                 .tweetId("1234567890")
                 .validEntries(200L)
                 .addWinner(
-                    DrawRunResponse.Winner.builder()
+                    Winner.builder()
                         .authorUsername("authorUsername")
                         .isBackup(true)
                         .position(0L)
@@ -33,7 +33,7 @@ internal class DrawRunResponseTest {
         assertThat(drawRunResponse.validEntries()).isEqualTo(200L)
         assertThat(drawRunResponse.winners())
             .containsExactly(
-                DrawRunResponse.Winner.builder()
+                Winner.builder()
                     .authorUsername("authorUsername")
                     .isBackup(true)
                     .position(0L)
@@ -52,7 +52,7 @@ internal class DrawRunResponseTest {
                 .tweetId("1234567890")
                 .validEntries(200L)
                 .addWinner(
-                    DrawRunResponse.Winner.builder()
+                    Winner.builder()
                         .authorUsername("authorUsername")
                         .isBackup(true)
                         .position(0L)

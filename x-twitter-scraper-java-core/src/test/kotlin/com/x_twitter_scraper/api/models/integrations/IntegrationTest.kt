@@ -5,6 +5,7 @@ package com.x_twitter_scraper.api.models.integrations
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.jsonMapper
+import com.x_twitter_scraper.api.models.EventType
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -22,8 +23,8 @@ internal class IntegrationTest {
                         .build()
                 )
                 .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
-                .addEventType(Integration.EventType.TWEET_NEW)
-                .addEventType(Integration.EventType.FOLLOWER_GAINED)
+                .addEventType(EventType.TWEET_NEW)
+                .addEventType(EventType.FOLLOWER_GAINED)
                 .isActive(true)
                 .name("My Telegram Bot")
                 .type(Integration.Type.TELEGRAM)
@@ -46,7 +47,7 @@ internal class IntegrationTest {
             )
         assertThat(integration.createdAt()).isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
         assertThat(integration.eventTypes())
-            .containsExactly(Integration.EventType.TWEET_NEW, Integration.EventType.FOLLOWER_GAINED)
+            .containsExactly(EventType.TWEET_NEW, EventType.FOLLOWER_GAINED)
         assertThat(integration.isActive()).isEqualTo(true)
         assertThat(integration.name()).isEqualTo("My Telegram Bot")
         assertThat(integration.type()).isEqualTo(Integration.Type.TELEGRAM)
@@ -73,8 +74,8 @@ internal class IntegrationTest {
                         .build()
                 )
                 .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
-                .addEventType(Integration.EventType.TWEET_NEW)
-                .addEventType(Integration.EventType.FOLLOWER_GAINED)
+                .addEventType(EventType.TWEET_NEW)
+                .addEventType(EventType.FOLLOWER_GAINED)
                 .isActive(true)
                 .name("My Telegram Bot")
                 .type(Integration.Type.TELEGRAM)

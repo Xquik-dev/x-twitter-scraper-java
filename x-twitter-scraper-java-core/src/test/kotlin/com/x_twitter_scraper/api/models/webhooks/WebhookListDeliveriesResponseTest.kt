@@ -15,7 +15,7 @@ internal class WebhookListDeliveriesResponseTest {
         val webhookListDeliveriesResponse =
             WebhookListDeliveriesResponse.builder()
                 .addDelivery(
-                    WebhookListDeliveriesResponse.Delivery.builder()
+                    Delivery.builder()
                         .id("id")
                         .attempts(0L)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -30,7 +30,7 @@ internal class WebhookListDeliveriesResponseTest {
 
         assertThat(webhookListDeliveriesResponse.deliveries())
             .containsExactly(
-                WebhookListDeliveriesResponse.Delivery.builder()
+                Delivery.builder()
                     .id("id")
                     .attempts(0L)
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -49,7 +49,7 @@ internal class WebhookListDeliveriesResponseTest {
         val webhookListDeliveriesResponse =
             WebhookListDeliveriesResponse.builder()
                 .addDelivery(
-                    WebhookListDeliveriesResponse.Delivery.builder()
+                    Delivery.builder()
                         .id("id")
                         .attempts(0L)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))

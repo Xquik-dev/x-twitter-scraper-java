@@ -6,10 +6,10 @@ import com.google.errorprone.annotations.MustBeClosed
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
+import com.x_twitter_scraper.api.models.PaginatedTweets
 import com.x_twitter_scraper.api.models.x.XGetArticleParams
 import com.x_twitter_scraper.api.models.x.XGetArticleResponse
 import com.x_twitter_scraper.api.models.x.XGetHomeTimelineParams
-import com.x_twitter_scraper.api.models.x.XGetHomeTimelineResponse
 import com.x_twitter_scraper.api.models.x.XGetNotificationsParams
 import com.x_twitter_scraper.api.models.x.XGetNotificationsResponse
 import com.x_twitter_scraper.api.models.x.XGetTrendsParams
@@ -100,21 +100,21 @@ interface XService {
         getArticle(tweetId, XGetArticleParams.none(), requestOptions)
 
     /** Get home timeline */
-    fun getHomeTimeline(): XGetHomeTimelineResponse = getHomeTimeline(XGetHomeTimelineParams.none())
+    fun getHomeTimeline(): PaginatedTweets = getHomeTimeline(XGetHomeTimelineParams.none())
 
     /** @see getHomeTimeline */
     fun getHomeTimeline(
         params: XGetHomeTimelineParams = XGetHomeTimelineParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): XGetHomeTimelineResponse
+    ): PaginatedTweets
 
     /** @see getHomeTimeline */
     fun getHomeTimeline(
         params: XGetHomeTimelineParams = XGetHomeTimelineParams.none()
-    ): XGetHomeTimelineResponse = getHomeTimeline(params, RequestOptions.none())
+    ): PaginatedTweets = getHomeTimeline(params, RequestOptions.none())
 
     /** @see getHomeTimeline */
-    fun getHomeTimeline(requestOptions: RequestOptions): XGetHomeTimelineResponse =
+    fun getHomeTimeline(requestOptions: RequestOptions): PaginatedTweets =
         getHomeTimeline(XGetHomeTimelineParams.none(), requestOptions)
 
     /** Get notifications */
@@ -239,7 +239,7 @@ interface XService {
          * [XService.getHomeTimeline].
          */
         @MustBeClosed
-        fun getHomeTimeline(): HttpResponseFor<XGetHomeTimelineResponse> =
+        fun getHomeTimeline(): HttpResponseFor<PaginatedTweets> =
             getHomeTimeline(XGetHomeTimelineParams.none())
 
         /** @see getHomeTimeline */
@@ -247,20 +247,17 @@ interface XService {
         fun getHomeTimeline(
             params: XGetHomeTimelineParams = XGetHomeTimelineParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<XGetHomeTimelineResponse>
+        ): HttpResponseFor<PaginatedTweets>
 
         /** @see getHomeTimeline */
         @MustBeClosed
         fun getHomeTimeline(
             params: XGetHomeTimelineParams = XGetHomeTimelineParams.none()
-        ): HttpResponseFor<XGetHomeTimelineResponse> =
-            getHomeTimeline(params, RequestOptions.none())
+        ): HttpResponseFor<PaginatedTweets> = getHomeTimeline(params, RequestOptions.none())
 
         /** @see getHomeTimeline */
         @MustBeClosed
-        fun getHomeTimeline(
-            requestOptions: RequestOptions
-        ): HttpResponseFor<XGetHomeTimelineResponse> =
+        fun getHomeTimeline(requestOptions: RequestOptions): HttpResponseFor<PaginatedTweets> =
             getHomeTimeline(XGetHomeTimelineParams.none(), requestOptions)
 
         /**
