@@ -22,13 +22,13 @@ private constructor(
 
     fun id(): Optional<String> = Optional.ofNullable(id)
 
-    /** Pagination cursor */
+    /** Pagination cursor for mentions */
     fun cursor(): Optional<String> = Optional.ofNullable(cursor)
 
-    /** Unix timestamp - filter after */
+    /** Unix timestamp - return mentions after this time */
     fun sinceTime(): Optional<String> = Optional.ofNullable(sinceTime)
 
-    /** Unix timestamp - filter before */
+    /** Unix timestamp - return mentions before this time */
     fun untilTime(): Optional<String> = Optional.ofNullable(untilTime)
 
     /** Additional headers to send with the request. */
@@ -74,19 +74,19 @@ private constructor(
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
 
-        /** Pagination cursor */
+        /** Pagination cursor for mentions */
         fun cursor(cursor: String?) = apply { this.cursor = cursor }
 
         /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
         fun cursor(cursor: Optional<String>) = cursor(cursor.getOrNull())
 
-        /** Unix timestamp - filter after */
+        /** Unix timestamp - return mentions after this time */
         fun sinceTime(sinceTime: String?) = apply { this.sinceTime = sinceTime }
 
         /** Alias for calling [Builder.sinceTime] with `sinceTime.orElse(null)`. */
         fun sinceTime(sinceTime: Optional<String>) = sinceTime(sinceTime.getOrNull())
 
-        /** Unix timestamp - filter before */
+        /** Unix timestamp - return mentions before this time */
         fun untilTime(untilTime: String?) = apply { this.untilTime = untilTime }
 
         /** Alias for calling [Builder.untilTime] with `untilTime.orElse(null)`. */

@@ -37,7 +37,7 @@ internal class AccountServiceTest {
 
         val response =
             accountService.setXUsername(
-                AccountSetXUsernameParams.builder().username("username").build()
+                AccountSetXUsernameParams.builder().username("elonmusk").build()
             )
 
         response.validate()

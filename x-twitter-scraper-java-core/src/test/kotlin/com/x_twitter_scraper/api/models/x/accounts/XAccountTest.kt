@@ -14,18 +14,18 @@ internal class XAccountTest {
     fun create() {
         val xAccount =
             XAccount.builder()
-                .id("id")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .status("status")
-                .xUserId("xUserId")
-                .xUsername("xUsername")
+                .id("42")
+                .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
+                .status("active")
+                .xUserId("9876543210")
+                .xUsername("elonmusk")
                 .build()
 
-        assertThat(xAccount.id()).isEqualTo("id")
-        assertThat(xAccount.createdAt()).isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(xAccount.status()).isEqualTo("status")
-        assertThat(xAccount.xUserId()).isEqualTo("xUserId")
-        assertThat(xAccount.xUsername()).isEqualTo("xUsername")
+        assertThat(xAccount.id()).isEqualTo("42")
+        assertThat(xAccount.createdAt()).isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
+        assertThat(xAccount.status()).isEqualTo("active")
+        assertThat(xAccount.xUserId()).isEqualTo("9876543210")
+        assertThat(xAccount.xUsername()).isEqualTo("elonmusk")
     }
 
     @Test
@@ -33,11 +33,11 @@ internal class XAccountTest {
         val jsonMapper = jsonMapper()
         val xAccount =
             XAccount.builder()
-                .id("id")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .status("status")
-                .xUserId("xUserId")
-                .xUsername("xUsername")
+                .id("42")
+                .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
+                .status("active")
+                .xUserId("9876543210")
+                .xUsername("elonmusk")
                 .build()
 
         val roundtrippedXAccount =

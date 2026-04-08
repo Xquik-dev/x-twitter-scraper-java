@@ -12,7 +12,7 @@ internal class MediaUploadParamsTest {
     @Test
     fun create() {
         MediaUploadParams.builder()
-            .account("account")
+            .account("@elonmusk")
             .file("Example data".byteInputStream())
             .isLongVideo(true)
             .build()
@@ -22,7 +22,7 @@ internal class MediaUploadParamsTest {
     fun body() {
         val params =
             MediaUploadParams.builder()
-                .account("account")
+                .account("@elonmusk")
                 .file("Example data".byteInputStream())
                 .isLongVideo(true)
                 .build()
@@ -39,7 +39,7 @@ internal class MediaUploadParamsTest {
             )
             .isEqualTo(
                 mapOf(
-                        "account" to MultipartField.of("account"),
+                        "account" to MultipartField.of("@elonmusk"),
                         "file" to MultipartField.of("Example data".byteInputStream()),
                         "is_long_video" to MultipartField.of(true),
                     )
@@ -53,7 +53,7 @@ internal class MediaUploadParamsTest {
     fun bodyWithoutOptionalFields() {
         val params =
             MediaUploadParams.builder()
-                .account("account")
+                .account("@elonmusk")
                 .file("Example data".byteInputStream())
                 .build()
 
@@ -69,7 +69,7 @@ internal class MediaUploadParamsTest {
             )
             .isEqualTo(
                 mapOf(
-                        "account" to MultipartField.of("account"),
+                        "account" to MultipartField.of("@elonmusk"),
                         "file" to MultipartField.of("Example data".byteInputStream()),
                     )
                     .mapValues { (_, field) ->

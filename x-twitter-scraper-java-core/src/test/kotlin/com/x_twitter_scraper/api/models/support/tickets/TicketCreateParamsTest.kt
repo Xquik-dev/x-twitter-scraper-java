@@ -9,16 +9,23 @@ internal class TicketCreateParamsTest {
 
     @Test
     fun create() {
-        TicketCreateParams.builder().body("body").subject("subject").build()
+        TicketCreateParams.builder()
+            .body("I am unable to connect my X account. Please help.")
+            .subject("Cannot connect X account")
+            .build()
     }
 
     @Test
     fun body() {
-        val params = TicketCreateParams.builder().body("body").subject("subject").build()
+        val params =
+            TicketCreateParams.builder()
+                .body("I am unable to connect my X account. Please help.")
+                .subject("Cannot connect X account")
+                .build()
 
         val body = params._body()
 
-        assertThat(body.body()).isEqualTo("body")
-        assertThat(body.subject()).isEqualTo("subject")
+        assertThat(body.body()).isEqualTo("I am unable to connect my X account. Please help.")
+        assertThat(body.subject()).isEqualTo("Cannot connect X account")
     }
 }

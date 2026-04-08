@@ -24,13 +24,16 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** Cursor for pagination */
+    /** Cursor for keyset pagination */
     fun after(): Optional<String> = Optional.ofNullable(after)
 
+    /** Maximum number of items to return (1-100, default 50) */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
+    /** Filter by job status */
     fun status(): Optional<Status> = Optional.ofNullable(status)
 
+    /** Filter by extraction tool type */
     fun toolType(): Optional<ToolType> = Optional.ofNullable(toolType)
 
     /** Additional headers to send with the request. */
@@ -69,12 +72,13 @@ private constructor(
             additionalQueryParams = extractionListParams.additionalQueryParams.toBuilder()
         }
 
-        /** Cursor for pagination */
+        /** Cursor for keyset pagination */
         fun after(after: String?) = apply { this.after = after }
 
         /** Alias for calling [Builder.after] with `after.orElse(null)`. */
         fun after(after: Optional<String>) = after(after.getOrNull())
 
+        /** Maximum number of items to return (1-100, default 50) */
         fun limit(limit: Long?) = apply { this.limit = limit }
 
         /**
@@ -87,11 +91,13 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
 
+        /** Filter by job status */
         fun status(status: Status?) = apply { this.status = status }
 
         /** Alias for calling [Builder.status] with `status.orElse(null)`. */
         fun status(status: Optional<Status>) = status(status.getOrNull())
 
+        /** Filter by extraction tool type */
         fun toolType(toolType: ToolType?) = apply { this.toolType = toolType }
 
         /** Alias for calling [Builder.toolType] with `toolType.orElse(null)`. */
@@ -224,6 +230,7 @@ private constructor(
             }
             .build()
 
+    /** Filter by job status */
     class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
@@ -357,6 +364,7 @@ private constructor(
         override fun toString() = value.toString()
     }
 
+    /** Filter by extraction tool type */
     class ToolType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

@@ -21,7 +21,7 @@ internal class BookmarkServiceAsyncTest {
 
         val bookmarksFuture =
             bookmarkServiceAsync.list(
-                BookmarkListParams.builder().cursor("cursor").folderId("folderId").build()
+                BookmarkListParams.builder().cursor("folders_value").folderId("folderId").build()
             )
 
         val bookmarks = bookmarksFuture.get()

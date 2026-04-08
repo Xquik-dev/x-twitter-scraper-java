@@ -202,7 +202,7 @@ import com.x_twitter_scraper.api.models.x.media.MediaUploadResponse;
 import java.nio.file.Paths;
 
 MediaUploadParams params = MediaUploadParams.builder()
-    .account("account")
+    .account("@elonmusk")
     .file(Paths.get("/path/to/file"))
     .build();
 MediaUploadResponse response = client.x().media().upload(params);
@@ -216,7 +216,7 @@ import com.x_twitter_scraper.api.models.x.media.MediaUploadResponse;
 import java.net.URL;
 
 MediaUploadParams params = MediaUploadParams.builder()
-    .account("account")
+    .account("@elonmusk")
     .file(new URL("https://example.com//path/to/file").openStream())
     .build();
 MediaUploadResponse response = client.x().media().upload(params);
@@ -229,7 +229,7 @@ import com.x_twitter_scraper.api.models.x.media.MediaUploadParams;
 import com.x_twitter_scraper.api.models.x.media.MediaUploadResponse;
 
 MediaUploadParams params = MediaUploadParams.builder()
-    .account("account")
+    .account("@elonmusk")
     .file("content".getBytes())
     .build();
 MediaUploadResponse response = client.x().media().upload(params);
@@ -245,7 +245,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 MediaUploadParams params = MediaUploadParams.builder()
-    .account("account")
+    .account("@elonmusk")
     .file(MultipartField.<InputStream>builder()
         .value(new URL("https://example.com//path/to/file").openStream())
         .filename("/path/to/file")

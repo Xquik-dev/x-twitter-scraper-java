@@ -17,6 +17,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/** Tweet returned from search results with inline author info. */
 class SearchTweet
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -99,7 +100,7 @@ private constructor(
     fun createdAt(): Optional<String> = createdAt.getOptional("createdAt")
 
     /**
-     * Whether this is a Note Tweet (long-form post, up to 25,000 characters)
+     * True for Note Tweets (long-form content, up to 25,000 characters)
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -331,7 +332,7 @@ private constructor(
          */
         fun createdAt(createdAt: JsonField<String>) = apply { this.createdAt = createdAt }
 
-        /** Whether this is a Note Tweet (long-form post, up to 25,000 characters) */
+        /** True for Note Tweets (long-form content, up to 25,000 characters) */
         fun isNoteTweet(isNoteTweet: Boolean) = isNoteTweet(JsonField.of(isNoteTweet))
 
         /**

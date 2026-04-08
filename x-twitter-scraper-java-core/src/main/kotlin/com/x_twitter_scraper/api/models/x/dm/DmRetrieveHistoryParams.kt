@@ -21,7 +21,7 @@ private constructor(
 
     fun userId(): Optional<String> = Optional.ofNullable(userId)
 
-    /** Pagination cursor from previous response */
+    /** Pagination cursor for DM history */
     fun cursor(): Optional<String> = Optional.ofNullable(cursor)
 
     /** Legacy pagination cursor (backward compat) */
@@ -66,7 +66,7 @@ private constructor(
         /** Alias for calling [Builder.userId] with `userId.orElse(null)`. */
         fun userId(userId: Optional<String>) = userId(userId.getOrNull())
 
-        /** Pagination cursor from previous response */
+        /** Pagination cursor for DM history */
         fun cursor(cursor: String?) = apply { this.cursor = cursor }
 
         /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */

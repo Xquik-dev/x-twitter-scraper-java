@@ -16,6 +16,7 @@ import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 
+/** X user profile with bio, follower counts, and verification status. */
 class UserProfile
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

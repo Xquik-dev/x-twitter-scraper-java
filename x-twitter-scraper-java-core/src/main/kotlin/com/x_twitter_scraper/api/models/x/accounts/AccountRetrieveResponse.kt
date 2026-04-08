@@ -17,6 +17,7 @@ import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 
+/** Full X account details including proxy, cookies, and update timestamp. */
 class AccountRetrieveResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

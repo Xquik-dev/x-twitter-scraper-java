@@ -25,8 +25,8 @@ internal class DrawListResponseTest {
                         .drawnAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
                 )
-                .hasMore(true)
-                .nextCursor("nextCursor")
+                .hasMore(false)
+                .nextCursor("abc123")
                 .build()
 
         assertThat(drawListResponse.draws())
@@ -41,8 +41,8 @@ internal class DrawListResponseTest {
                     .drawnAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )
-        assertThat(drawListResponse.hasMore()).isEqualTo(true)
-        assertThat(drawListResponse.nextCursor()).contains("nextCursor")
+        assertThat(drawListResponse.hasMore()).isEqualTo(false)
+        assertThat(drawListResponse.nextCursor()).contains("abc123")
     }
 
     @Test
@@ -61,8 +61,8 @@ internal class DrawListResponseTest {
                         .drawnAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
                 )
-                .hasMore(true)
-                .nextCursor("nextCursor")
+                .hasMore(false)
+                .nextCursor("abc123")
                 .build()
 
         val roundtrippedDrawListResponse =

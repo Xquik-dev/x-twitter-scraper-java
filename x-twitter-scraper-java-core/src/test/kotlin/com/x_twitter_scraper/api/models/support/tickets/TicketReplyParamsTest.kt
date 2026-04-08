@@ -9,12 +9,12 @@ internal class TicketReplyParamsTest {
 
     @Test
     fun create() {
-        TicketReplyParams.builder().id("id").body("body").build()
+        TicketReplyParams.builder().id("id").body("Thank you for the update.").build()
     }
 
     @Test
     fun pathParams() {
-        val params = TicketReplyParams.builder().id("id").body("body").build()
+        val params = TicketReplyParams.builder().id("id").body("Thank you for the update.").build()
 
         assertThat(params._pathParam(0)).isEqualTo("id")
         // out-of-bound path param
@@ -23,10 +23,10 @@ internal class TicketReplyParamsTest {
 
     @Test
     fun body() {
-        val params = TicketReplyParams.builder().id("id").body("body").build()
+        val params = TicketReplyParams.builder().id("id").body("Thank you for the update.").build()
 
         val body = params._body()
 
-        assertThat(body.body()).isEqualTo("body")
+        assertThat(body.body()).isEqualTo("Thank you for the update.")
     }
 }

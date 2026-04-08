@@ -9,15 +9,15 @@ internal class AccountSetXUsernameParamsTest {
 
     @Test
     fun create() {
-        AccountSetXUsernameParams.builder().username("username").build()
+        AccountSetXUsernameParams.builder().username("elonmusk").build()
     }
 
     @Test
     fun body() {
-        val params = AccountSetXUsernameParams.builder().username("username").build()
+        val params = AccountSetXUsernameParams.builder().username("elonmusk").build()
 
         val body = params._body()
 
-        assertThat(body.username()).isEqualTo("username")
+        assertThat(body.username()).isEqualTo("elonmusk")
     }
 }

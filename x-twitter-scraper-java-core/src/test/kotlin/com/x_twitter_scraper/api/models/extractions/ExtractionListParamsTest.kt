@@ -14,7 +14,7 @@ internal class ExtractionListParamsTest {
             .after("after")
             .limit(1L)
             .status(ExtractionListParams.Status.RUNNING)
-            .toolType(ExtractionListParams.ToolType.ARTICLE_EXTRACTOR)
+            .toolType(ExtractionListParams.ToolType.FOLLOWER_EXPLORER)
             .build()
     }
 
@@ -25,7 +25,7 @@ internal class ExtractionListParamsTest {
                 .after("after")
                 .limit(1L)
                 .status(ExtractionListParams.Status.RUNNING)
-                .toolType(ExtractionListParams.ToolType.ARTICLE_EXTRACTOR)
+                .toolType(ExtractionListParams.ToolType.FOLLOWER_EXPLORER)
                 .build()
 
         val queryParams = params._queryParams()
@@ -36,7 +36,7 @@ internal class ExtractionListParamsTest {
                     .put("after", "after")
                     .put("limit", "1")
                     .put("status", "running")
-                    .put("toolType", "article_extractor")
+                    .put("toolType", "follower_explorer")
                     .build()
             )
     }

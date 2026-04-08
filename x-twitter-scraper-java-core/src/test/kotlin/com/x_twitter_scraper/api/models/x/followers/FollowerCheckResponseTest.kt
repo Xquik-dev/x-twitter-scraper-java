@@ -13,16 +13,16 @@ internal class FollowerCheckResponseTest {
     fun create() {
         val followerCheckResponse =
             FollowerCheckResponse.builder()
-                .isFollowedBy(true)
+                .isFollowedBy(false)
                 .isFollowing(true)
-                .sourceUsername("sourceUsername")
-                .targetUsername("targetUsername")
+                .sourceUsername("elonmusk")
+                .targetUsername("jack")
                 .build()
 
-        assertThat(followerCheckResponse.isFollowedBy()).isEqualTo(true)
+        assertThat(followerCheckResponse.isFollowedBy()).isEqualTo(false)
         assertThat(followerCheckResponse.isFollowing()).isEqualTo(true)
-        assertThat(followerCheckResponse.sourceUsername()).isEqualTo("sourceUsername")
-        assertThat(followerCheckResponse.targetUsername()).isEqualTo("targetUsername")
+        assertThat(followerCheckResponse.sourceUsername()).isEqualTo("elonmusk")
+        assertThat(followerCheckResponse.targetUsername()).isEqualTo("jack")
     }
 
     @Test
@@ -30,10 +30,10 @@ internal class FollowerCheckResponseTest {
         val jsonMapper = jsonMapper()
         val followerCheckResponse =
             FollowerCheckResponse.builder()
-                .isFollowedBy(true)
+                .isFollowedBy(false)
                 .isFollowing(true)
-                .sourceUsername("sourceUsername")
-                .targetUsername("targetUsername")
+                .sourceUsername("elonmusk")
+                .targetUsername("jack")
                 .build()
 
         val roundtrippedFollowerCheckResponse =

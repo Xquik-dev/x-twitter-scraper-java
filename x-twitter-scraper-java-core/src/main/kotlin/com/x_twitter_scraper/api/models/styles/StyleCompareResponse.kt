@@ -35,12 +35,16 @@ private constructor(
     ) : this(style1, style2, mutableMapOf())
 
     /**
+     * Full style profile with sampled tweets used for tone analysis.
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun style1(): Style1 = style1.getRequired("style1")
 
     /**
+     * Full style profile with sampled tweets used for tone analysis.
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -100,6 +104,7 @@ private constructor(
             additionalProperties = styleCompareResponse.additionalProperties.toMutableMap()
         }
 
+        /** Full style profile with sampled tweets used for tone analysis. */
         fun style1(style1: Style1) = style1(JsonField.of(style1))
 
         /**
@@ -110,6 +115,7 @@ private constructor(
          */
         fun style1(style1: JsonField<Style1>) = apply { this.style1 = style1 }
 
+        /** Full style profile with sampled tweets used for tone analysis. */
         fun style2(style2: Style2) = style2(JsonField.of(style2))
 
         /**
@@ -190,6 +196,7 @@ private constructor(
         (style1.asKnown().getOrNull()?.validity() ?: 0) +
             (style2.asKnown().getOrNull()?.validity() ?: 0)
 
+    /** Full style profile with sampled tweets used for tone analysis. */
     class Style1
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
@@ -807,6 +814,7 @@ private constructor(
             "Style1{fetchedAt=$fetchedAt, isOwnAccount=$isOwnAccount, tweetCount=$tweetCount, tweets=$tweets, xUsername=$xUsername, additionalProperties=$additionalProperties}"
     }
 
+    /** Full style profile with sampled tweets used for tone analysis. */
     class Style2
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(

@@ -16,6 +16,7 @@ import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 
+/** Author of a tweet with follower count and verification status. */
 class TweetAuthor
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

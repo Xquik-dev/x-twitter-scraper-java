@@ -14,22 +14,22 @@ internal class DraftRetrieveResponseTest {
     fun create() {
         val draftRetrieveResponse =
             DraftRetrieveResponse.builder()
-                .id("id")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .text("text")
-                .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .goal("goal")
-                .topic("topic")
+                .id("42")
+                .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
+                .text("Draft tweet about AI trends")
+                .updatedAt(OffsetDateTime.parse("2025-01-16T09:30:00Z"))
+                .goal("Engagement")
+                .topic("Technology")
                 .build()
 
-        assertThat(draftRetrieveResponse.id()).isEqualTo("id")
+        assertThat(draftRetrieveResponse.id()).isEqualTo("42")
         assertThat(draftRetrieveResponse.createdAt())
-            .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(draftRetrieveResponse.text()).isEqualTo("text")
+            .isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
+        assertThat(draftRetrieveResponse.text()).isEqualTo("Draft tweet about AI trends")
         assertThat(draftRetrieveResponse.updatedAt())
-            .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(draftRetrieveResponse.goal()).contains("goal")
-        assertThat(draftRetrieveResponse.topic()).contains("topic")
+            .isEqualTo(OffsetDateTime.parse("2025-01-16T09:30:00Z"))
+        assertThat(draftRetrieveResponse.goal()).contains("Engagement")
+        assertThat(draftRetrieveResponse.topic()).contains("Technology")
     }
 
     @Test
@@ -37,12 +37,12 @@ internal class DraftRetrieveResponseTest {
         val jsonMapper = jsonMapper()
         val draftRetrieveResponse =
             DraftRetrieveResponse.builder()
-                .id("id")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .text("text")
-                .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .goal("goal")
-                .topic("topic")
+                .id("42")
+                .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
+                .text("Draft tweet about AI trends")
+                .updatedAt(OffsetDateTime.parse("2025-01-16T09:30:00Z"))
+                .goal("Engagement")
+                .topic("Technology")
                 .build()
 
         val roundtrippedDraftRetrieveResponse =

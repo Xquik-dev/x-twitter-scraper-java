@@ -24,13 +24,16 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** Cursor for pagination */
+    /** Cursor for keyset pagination */
     fun after(): Optional<String> = Optional.ofNullable(after)
 
+    /** Filter events by type */
     fun eventType(): Optional<EventType> = Optional.ofNullable(eventType)
 
+    /** Maximum number of items to return (1-100, default 50) */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
+    /** Filter events by monitor ID */
     fun monitorId(): Optional<String> = Optional.ofNullable(monitorId)
 
     /** Additional headers to send with the request. */
@@ -69,17 +72,19 @@ private constructor(
             additionalQueryParams = eventListParams.additionalQueryParams.toBuilder()
         }
 
-        /** Cursor for pagination */
+        /** Cursor for keyset pagination */
         fun after(after: String?) = apply { this.after = after }
 
         /** Alias for calling [Builder.after] with `after.orElse(null)`. */
         fun after(after: Optional<String>) = after(after.getOrNull())
 
+        /** Filter events by type */
         fun eventType(eventType: EventType?) = apply { this.eventType = eventType }
 
         /** Alias for calling [Builder.eventType] with `eventType.orElse(null)`. */
         fun eventType(eventType: Optional<EventType>) = eventType(eventType.getOrNull())
 
+        /** Maximum number of items to return (1-100, default 50) */
         fun limit(limit: Long?) = apply { this.limit = limit }
 
         /**
@@ -92,6 +97,7 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
 
+        /** Filter events by monitor ID */
         fun monitorId(monitorId: String?) = apply { this.monitorId = monitorId }
 
         /** Alias for calling [Builder.monitorId] with `monitorId.orElse(null)`. */
@@ -224,6 +230,7 @@ private constructor(
             }
             .build()
 
+    /** Filter events by type */
     class EventType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

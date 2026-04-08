@@ -10,11 +10,11 @@ internal class ProfileUpdateParamsTest {
     @Test
     fun create() {
         ProfileUpdateParams.builder()
-            .account("account")
-            .description("description")
-            .location("location")
-            .name("name")
-            .url("url")
+            .account("@elonmusk")
+            .description("description_value")
+            .location("location_value")
+            .name("Example Name")
+            .url("https://xquik.com/example")
             .build()
     }
 
@@ -22,28 +22,28 @@ internal class ProfileUpdateParamsTest {
     fun body() {
         val params =
             ProfileUpdateParams.builder()
-                .account("account")
-                .description("description")
-                .location("location")
-                .name("name")
-                .url("url")
+                .account("@elonmusk")
+                .description("description_value")
+                .location("location_value")
+                .name("Example Name")
+                .url("https://xquik.com/example")
                 .build()
 
         val body = params._body()
 
-        assertThat(body.account()).isEqualTo("account")
-        assertThat(body.description()).contains("description")
-        assertThat(body.location()).contains("location")
-        assertThat(body.name()).contains("name")
-        assertThat(body.url()).contains("url")
+        assertThat(body.account()).isEqualTo("@elonmusk")
+        assertThat(body.description()).contains("description_value")
+        assertThat(body.location()).contains("location_value")
+        assertThat(body.name()).contains("Example Name")
+        assertThat(body.url()).contains("https://xquik.com/example")
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = ProfileUpdateParams.builder().account("account").build()
+        val params = ProfileUpdateParams.builder().account("@elonmusk").build()
 
         val body = params._body()
 
-        assertThat(body.account()).isEqualTo("account")
+        assertThat(body.account()).isEqualTo("@elonmusk")
     }
 }

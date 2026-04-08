@@ -17,6 +17,7 @@ import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 
+/** Full tweet draft including update timestamp. */
 class DraftRetrieveResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

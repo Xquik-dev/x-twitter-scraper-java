@@ -10,18 +10,22 @@ internal class BookmarkListParamsTest {
 
     @Test
     fun create() {
-        BookmarkListParams.builder().cursor("cursor").folderId("folderId").build()
+        BookmarkListParams.builder().cursor("folders_value").folderId("folderId").build()
     }
 
     @Test
     fun queryParams() {
-        val params = BookmarkListParams.builder().cursor("cursor").folderId("folderId").build()
+        val params =
+            BookmarkListParams.builder().cursor("folders_value").folderId("folderId").build()
 
         val queryParams = params._queryParams()
 
         assertThat(queryParams)
             .isEqualTo(
-                QueryParams.builder().put("cursor", "cursor").put("folderId", "folderId").build()
+                QueryParams.builder()
+                    .put("cursor", "folders_value")
+                    .put("folderId", "folderId")
+                    .build()
             )
     }
 

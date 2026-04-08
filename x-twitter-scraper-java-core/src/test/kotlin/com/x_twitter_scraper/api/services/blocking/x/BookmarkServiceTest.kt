@@ -21,7 +21,7 @@ internal class BookmarkServiceTest {
 
         val bookmarks =
             bookmarkService.list(
-                BookmarkListParams.builder().cursor("cursor").folderId("folderId").build()
+                BookmarkListParams.builder().cursor("folders_value").folderId("folderId").build()
             )
 
         bookmarks.validate()

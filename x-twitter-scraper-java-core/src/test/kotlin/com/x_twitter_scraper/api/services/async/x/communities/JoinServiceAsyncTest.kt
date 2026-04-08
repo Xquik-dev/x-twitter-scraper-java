@@ -21,7 +21,9 @@ internal class JoinServiceAsyncTest {
         val joinServiceAsync = client.x().communities().join()
 
         val joinFuture =
-            joinServiceAsync.create(JoinCreateParams.builder().id("id").account("account").build())
+            joinServiceAsync.create(
+                JoinCreateParams.builder().id("id").account("@elonmusk").build()
+            )
 
         val join = joinFuture.get()
         join.validate()
@@ -39,7 +41,7 @@ internal class JoinServiceAsyncTest {
 
         val responseFuture =
             joinServiceAsync.deleteAll(
-                JoinDeleteAllParams.builder().id("id").account("account").build()
+                JoinDeleteAllParams.builder().id("id").account("@elonmusk").build()
             )
 
         val response = responseFuture.get()

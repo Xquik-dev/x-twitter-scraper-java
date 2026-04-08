@@ -23,11 +23,11 @@ internal class AccountServiceAsyncTest {
         val accountFuture =
             accountServiceAsync.create(
                 AccountCreateParams.builder()
-                    .email("email")
-                    .password("password")
-                    .username("username")
-                    .proxyCountry("proxy_country")
-                    .totpSecret("totp_secret")
+                    .email("user@example.com")
+                    .password("s3cur3Pa\$\$w0rd")
+                    .username("elonmusk")
+                    .proxyCountry("US")
+                    .totpSecret("JBSWY3DPEHPK3PXP")
                     .build()
             )
 
@@ -97,8 +97,8 @@ internal class AccountServiceAsyncTest {
             accountServiceAsync.reauth(
                 AccountReauthParams.builder()
                     .id("id")
-                    .password("password")
-                    .totpSecret("totp_secret")
+                    .password("password_value")
+                    .totpSecret("totp_secret_value")
                     .build()
             )
 

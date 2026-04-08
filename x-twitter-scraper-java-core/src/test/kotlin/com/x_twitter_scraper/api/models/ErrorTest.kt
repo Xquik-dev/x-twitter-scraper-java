@@ -11,15 +11,15 @@ internal class ErrorTest {
 
     @Test
     fun create() {
-        val error = Error.builder().error(Error.InnerError.INTERNAL_ERROR).build()
+        val error = Error.builder().error(Error.InnerError.INVALID_INPUT).build()
 
-        assertThat(error.error()).isEqualTo(Error.InnerError.INTERNAL_ERROR)
+        assertThat(error.error()).isEqualTo(Error.InnerError.INVALID_INPUT)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val error = Error.builder().error(Error.InnerError.INTERNAL_ERROR).build()
+        val error = Error.builder().error(Error.InnerError.INVALID_INPUT).build()
 
         val roundtrippedError =
             jsonMapper.readValue(jsonMapper.writeValueAsString(error), jacksonTypeRef<Error>())

@@ -14,20 +14,22 @@ internal class MonitorTest {
     fun create() {
         val monitor =
             Monitor.builder()
-                .id("id")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .id("42")
+                .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .addEventType(Monitor.EventType.TWEET_NEW)
+                .addEventType(Monitor.EventType.FOLLOWER_GAINED)
                 .isActive(true)
-                .username("username")
-                .xUserId("xUserId")
+                .username("elonmusk")
+                .xUserId("9876543210")
                 .build()
 
-        assertThat(monitor.id()).isEqualTo("id")
-        assertThat(monitor.createdAt()).isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(monitor.eventTypes()).containsExactly(Monitor.EventType.TWEET_NEW)
+        assertThat(monitor.id()).isEqualTo("42")
+        assertThat(monitor.createdAt()).isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
+        assertThat(monitor.eventTypes())
+            .containsExactly(Monitor.EventType.TWEET_NEW, Monitor.EventType.FOLLOWER_GAINED)
         assertThat(monitor.isActive()).isEqualTo(true)
-        assertThat(monitor.username()).isEqualTo("username")
-        assertThat(monitor.xUserId()).isEqualTo("xUserId")
+        assertThat(monitor.username()).isEqualTo("elonmusk")
+        assertThat(monitor.xUserId()).isEqualTo("9876543210")
     }
 
     @Test
@@ -35,12 +37,13 @@ internal class MonitorTest {
         val jsonMapper = jsonMapper()
         val monitor =
             Monitor.builder()
-                .id("id")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .id("42")
+                .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .addEventType(Monitor.EventType.TWEET_NEW)
+                .addEventType(Monitor.EventType.FOLLOWER_GAINED)
                 .isActive(true)
-                .username("username")
-                .xUserId("xUserId")
+                .username("elonmusk")
+                .xUserId("9876543210")
                 .build()
 
         val roundtrippedMonitor =

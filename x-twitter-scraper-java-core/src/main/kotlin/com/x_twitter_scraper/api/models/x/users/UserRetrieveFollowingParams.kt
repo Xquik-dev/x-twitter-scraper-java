@@ -21,10 +21,10 @@ private constructor(
 
     fun id(): Optional<String> = Optional.ofNullable(id)
 
-    /** Pagination cursor */
+    /** Pagination cursor for following list */
     fun cursor(): Optional<String> = Optional.ofNullable(cursor)
 
-    /** Items per page (20-200, default 200) */
+    /** Results per page (20-200, default 200) */
     fun pageSize(): Optional<Long> = Optional.ofNullable(pageSize)
 
     /** Additional headers to send with the request. */
@@ -68,13 +68,13 @@ private constructor(
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
 
-        /** Pagination cursor */
+        /** Pagination cursor for following list */
         fun cursor(cursor: String?) = apply { this.cursor = cursor }
 
         /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
         fun cursor(cursor: Optional<String>) = cursor(cursor.getOrNull())
 
-        /** Items per page (20-200, default 200) */
+        /** Results per page (20-200, default 200) */
         fun pageSize(pageSize: Long?) = apply { this.pageSize = pageSize }
 
         /**

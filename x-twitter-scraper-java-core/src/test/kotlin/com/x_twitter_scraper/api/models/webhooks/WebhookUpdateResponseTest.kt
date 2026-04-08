@@ -14,20 +14,24 @@ internal class WebhookUpdateResponseTest {
     fun create() {
         val webhookUpdateResponse =
             WebhookUpdateResponse.builder()
-                .id("id")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .id("42")
+                .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .addEventType(WebhookUpdateResponse.EventType.TWEET_NEW)
+                .addEventType(WebhookUpdateResponse.EventType.FOLLOWER_GAINED)
                 .isActive(true)
-                .url("https://example.com")
+                .url("https://example.com/webhooks/xquik")
                 .build()
 
-        assertThat(webhookUpdateResponse.id()).isEqualTo("id")
+        assertThat(webhookUpdateResponse.id()).isEqualTo("42")
         assertThat(webhookUpdateResponse.createdAt())
-            .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+            .isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
         assertThat(webhookUpdateResponse.eventTypes())
-            .containsExactly(WebhookUpdateResponse.EventType.TWEET_NEW)
+            .containsExactly(
+                WebhookUpdateResponse.EventType.TWEET_NEW,
+                WebhookUpdateResponse.EventType.FOLLOWER_GAINED,
+            )
         assertThat(webhookUpdateResponse.isActive()).isEqualTo(true)
-        assertThat(webhookUpdateResponse.url()).isEqualTo("https://example.com")
+        assertThat(webhookUpdateResponse.url()).isEqualTo("https://example.com/webhooks/xquik")
     }
 
     @Test
@@ -35,11 +39,12 @@ internal class WebhookUpdateResponseTest {
         val jsonMapper = jsonMapper()
         val webhookUpdateResponse =
             WebhookUpdateResponse.builder()
-                .id("id")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .id("42")
+                .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .addEventType(WebhookUpdateResponse.EventType.TWEET_NEW)
+                .addEventType(WebhookUpdateResponse.EventType.FOLLOWER_GAINED)
                 .isActive(true)
-                .url("https://example.com")
+                .url("https://example.com/webhooks/xquik")
                 .build()
 
         val roundtrippedWebhookUpdateResponse =

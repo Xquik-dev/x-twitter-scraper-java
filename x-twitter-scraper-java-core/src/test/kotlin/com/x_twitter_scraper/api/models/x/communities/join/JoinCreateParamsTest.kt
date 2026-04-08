@@ -9,12 +9,12 @@ internal class JoinCreateParamsTest {
 
     @Test
     fun create() {
-        JoinCreateParams.builder().id("id").account("account").build()
+        JoinCreateParams.builder().id("id").account("@elonmusk").build()
     }
 
     @Test
     fun pathParams() {
-        val params = JoinCreateParams.builder().id("id").account("account").build()
+        val params = JoinCreateParams.builder().id("id").account("@elonmusk").build()
 
         assertThat(params._pathParam(0)).isEqualTo("id")
         // out-of-bound path param
@@ -23,10 +23,10 @@ internal class JoinCreateParamsTest {
 
     @Test
     fun body() {
-        val params = JoinCreateParams.builder().id("id").account("account").build()
+        val params = JoinCreateParams.builder().id("id").account("@elonmusk").build()
 
         val body = params._body()
 
-        assertThat(body.account()).isEqualTo("account")
+        assertThat(body.account()).isEqualTo("@elonmusk")
     }
 }

@@ -17,6 +17,7 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
+/** Error response containing a machine-readable error code. */
 class Error
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

@@ -15,32 +15,31 @@ internal class EventDetailTest {
     fun create() {
         val eventDetail =
             EventDetail.builder()
-                .id("id")
+                .id("42")
                 .data(
                     EventDetail.Data.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .putAdditionalProperty("tweetId", JsonValue.from("bar"))
                         .build()
                 )
-                .monitorId("monitorId")
-                .occurredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .monitorId("10")
+                .occurredAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .type(EventDetail.Type.TWEET_NEW)
-                .username("username")
-                .xEventId("xEventId")
+                .username("elonmusk")
+                .xEventId("1234567890")
                 .build()
 
-        assertThat(eventDetail.id()).isEqualTo("id")
+        assertThat(eventDetail.id()).isEqualTo("42")
         assertThat(eventDetail.data())
             .isEqualTo(
                 EventDetail.Data.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .putAdditionalProperty("tweetId", JsonValue.from("bar"))
                     .build()
             )
-        assertThat(eventDetail.monitorId()).isEqualTo("monitorId")
-        assertThat(eventDetail.occurredAt())
-            .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(eventDetail.monitorId()).isEqualTo("10")
+        assertThat(eventDetail.occurredAt()).isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
         assertThat(eventDetail.type()).isEqualTo(EventDetail.Type.TWEET_NEW)
-        assertThat(eventDetail.username()).isEqualTo("username")
-        assertThat(eventDetail.xEventId()).contains("xEventId")
+        assertThat(eventDetail.username()).isEqualTo("elonmusk")
+        assertThat(eventDetail.xEventId()).contains("1234567890")
     }
 
     @Test
@@ -48,17 +47,17 @@ internal class EventDetailTest {
         val jsonMapper = jsonMapper()
         val eventDetail =
             EventDetail.builder()
-                .id("id")
+                .id("42")
                 .data(
                     EventDetail.Data.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .putAdditionalProperty("tweetId", JsonValue.from("bar"))
                         .build()
                 )
-                .monitorId("monitorId")
-                .occurredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .monitorId("10")
+                .occurredAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .type(EventDetail.Type.TWEET_NEW)
-                .username("username")
-                .xEventId("xEventId")
+                .username("elonmusk")
+                .xEventId("1234567890")
                 .build()
 
         val roundtrippedEventDetail =

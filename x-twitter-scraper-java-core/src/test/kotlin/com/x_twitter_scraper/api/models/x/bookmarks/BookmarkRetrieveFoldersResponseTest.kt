@@ -14,18 +14,24 @@ internal class BookmarkRetrieveFoldersResponseTest {
         val bookmarkRetrieveFoldersResponse =
             BookmarkRetrieveFoldersResponse.builder()
                 .addFolder(
-                    BookmarkRetrieveFoldersResponse.Folder.builder().id("id").name("name").build()
+                    BookmarkRetrieveFoldersResponse.Folder.builder()
+                        .id("1234567890")
+                        .name("Read Later")
+                        .build()
                 )
                 .hasNextPage(true)
-                .nextCursor("next_cursor")
+                .nextCursor("DAACCgACGRElMJcAAA")
                 .build()
 
         assertThat(bookmarkRetrieveFoldersResponse.folders())
             .containsExactly(
-                BookmarkRetrieveFoldersResponse.Folder.builder().id("id").name("name").build()
+                BookmarkRetrieveFoldersResponse.Folder.builder()
+                    .id("1234567890")
+                    .name("Read Later")
+                    .build()
             )
         assertThat(bookmarkRetrieveFoldersResponse.hasNextPage()).isEqualTo(true)
-        assertThat(bookmarkRetrieveFoldersResponse.nextCursor()).isEqualTo("next_cursor")
+        assertThat(bookmarkRetrieveFoldersResponse.nextCursor()).isEqualTo("DAACCgACGRElMJcAAA")
     }
 
     @Test
@@ -34,10 +40,13 @@ internal class BookmarkRetrieveFoldersResponseTest {
         val bookmarkRetrieveFoldersResponse =
             BookmarkRetrieveFoldersResponse.builder()
                 .addFolder(
-                    BookmarkRetrieveFoldersResponse.Folder.builder().id("id").name("name").build()
+                    BookmarkRetrieveFoldersResponse.Folder.builder()
+                        .id("1234567890")
+                        .name("Read Later")
+                        .build()
                 )
                 .hasNextPage(true)
-                .nextCursor("next_cursor")
+                .nextCursor("DAACCgACGRElMJcAAA")
                 .build()
 
         val roundtrippedBookmarkRetrieveFoldersResponse =

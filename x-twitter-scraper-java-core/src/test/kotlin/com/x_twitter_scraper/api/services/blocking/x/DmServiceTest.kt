@@ -46,10 +46,10 @@ internal class DmServiceTest {
             dmService.send(
                 DmSendParams.builder()
                     .userId("userId")
-                    .account("account")
-                    .text("text")
-                    .addMediaId("string")
-                    .replyToMessageId("reply_to_message_id")
+                    .account("@elonmusk")
+                    .text("Example text content")
+                    .addMediaId("1234567890123456789")
+                    .replyToMessageId("1234567890123456789")
                     .build()
             )
 

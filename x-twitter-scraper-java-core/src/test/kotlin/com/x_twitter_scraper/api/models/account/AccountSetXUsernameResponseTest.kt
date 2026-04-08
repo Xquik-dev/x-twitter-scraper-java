@@ -12,16 +12,16 @@ internal class AccountSetXUsernameResponseTest {
     @Test
     fun create() {
         val accountSetXUsernameResponse =
-            AccountSetXUsernameResponse.builder().xUsername("xUsername").build()
+            AccountSetXUsernameResponse.builder().xUsername("elonmusk").build()
 
-        assertThat(accountSetXUsernameResponse.xUsername()).isEqualTo("xUsername")
+        assertThat(accountSetXUsernameResponse.xUsername()).isEqualTo("elonmusk")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val accountSetXUsernameResponse =
-            AccountSetXUsernameResponse.builder().xUsername("xUsername").build()
+            AccountSetXUsernameResponse.builder().xUsername("elonmusk").build()
 
         val roundtrippedAccountSetXUsernameResponse =
             jsonMapper.readValue(

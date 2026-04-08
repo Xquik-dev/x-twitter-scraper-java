@@ -13,29 +13,29 @@ internal class TrendListResponseTest {
     fun create() {
         val trendListResponse =
             TrendListResponse.builder()
-                .total(0L)
+                .total(30L)
                 .addTrend(
                     TrendListResponse.Trend.builder()
-                        .name("name")
-                        .description("description")
-                        .query("query")
-                        .rank(0L)
+                        .name("#AI")
+                        .description("Artificial intelligence discussions")
+                        .query("%23AI")
+                        .rank(1L)
                         .build()
                 )
-                .woeid(0L)
+                .woeid(1L)
                 .build()
 
-        assertThat(trendListResponse.total()).isEqualTo(0L)
+        assertThat(trendListResponse.total()).isEqualTo(30L)
         assertThat(trendListResponse.trends())
             .containsExactly(
                 TrendListResponse.Trend.builder()
-                    .name("name")
-                    .description("description")
-                    .query("query")
-                    .rank(0L)
+                    .name("#AI")
+                    .description("Artificial intelligence discussions")
+                    .query("%23AI")
+                    .rank(1L)
                     .build()
             )
-        assertThat(trendListResponse.woeid()).isEqualTo(0L)
+        assertThat(trendListResponse.woeid()).isEqualTo(1L)
     }
 
     @Test
@@ -43,16 +43,16 @@ internal class TrendListResponseTest {
         val jsonMapper = jsonMapper()
         val trendListResponse =
             TrendListResponse.builder()
-                .total(0L)
+                .total(30L)
                 .addTrend(
                     TrendListResponse.Trend.builder()
-                        .name("name")
-                        .description("description")
-                        .query("query")
-                        .rank(0L)
+                        .name("#AI")
+                        .description("Artificial intelligence discussions")
+                        .query("%23AI")
+                        .rank(1L)
                         .build()
                 )
-                .woeid(0L)
+                .woeid(1L)
                 .build()
 
         val roundtrippedTrendListResponse =

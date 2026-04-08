@@ -309,6 +309,7 @@ private constructor(
             (if (validEntries.asKnown().isPresent) 1 else 0) +
             (winners.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
 
+    /** Giveaway draw winner with position and backup flag. */
     class Winner
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(

@@ -15,6 +15,7 @@ import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.util.Collections
 import java.util.Objects
 
+/** Result of a community join or leave action. */
 class JoinDeleteAllResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

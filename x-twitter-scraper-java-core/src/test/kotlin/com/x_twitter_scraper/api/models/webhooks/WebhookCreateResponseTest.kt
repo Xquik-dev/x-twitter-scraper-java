@@ -14,20 +14,24 @@ internal class WebhookCreateResponseTest {
     fun create() {
         val webhookCreateResponse =
             WebhookCreateResponse.builder()
-                .id("id")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .id("42")
+                .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .addEventType(WebhookCreateResponse.EventType.TWEET_NEW)
-                .secret("secret")
-                .url("https://example.com")
+                .addEventType(WebhookCreateResponse.EventType.FOLLOWER_GAINED)
+                .secret("whsec_abc123def456")
+                .url("https://example.com/webhook")
                 .build()
 
-        assertThat(webhookCreateResponse.id()).isEqualTo("id")
+        assertThat(webhookCreateResponse.id()).isEqualTo("42")
         assertThat(webhookCreateResponse.createdAt())
-            .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+            .isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
         assertThat(webhookCreateResponse.eventTypes())
-            .containsExactly(WebhookCreateResponse.EventType.TWEET_NEW)
-        assertThat(webhookCreateResponse.secret()).isEqualTo("secret")
-        assertThat(webhookCreateResponse.url()).isEqualTo("https://example.com")
+            .containsExactly(
+                WebhookCreateResponse.EventType.TWEET_NEW,
+                WebhookCreateResponse.EventType.FOLLOWER_GAINED,
+            )
+        assertThat(webhookCreateResponse.secret()).isEqualTo("whsec_abc123def456")
+        assertThat(webhookCreateResponse.url()).isEqualTo("https://example.com/webhook")
     }
 
     @Test
@@ -35,11 +39,12 @@ internal class WebhookCreateResponseTest {
         val jsonMapper = jsonMapper()
         val webhookCreateResponse =
             WebhookCreateResponse.builder()
-                .id("id")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .id("42")
+                .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .addEventType(WebhookCreateResponse.EventType.TWEET_NEW)
-                .secret("secret")
-                .url("https://example.com")
+                .addEventType(WebhookCreateResponse.EventType.FOLLOWER_GAINED)
+                .secret("whsec_abc123def456")
+                .url("https://example.com/webhook")
                 .build()
 
         val roundtrippedWebhookCreateResponse =

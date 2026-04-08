@@ -13,16 +13,16 @@ internal class AccountCreateResponseTest {
     fun create() {
         val accountCreateResponse =
             AccountCreateResponse.builder()
-                .id("id")
-                .status("status")
-                .xUserId("xUserId")
-                .xUsername("xUsername")
+                .id("42")
+                .status("active")
+                .xUserId("9876543210")
+                .xUsername("elonmusk")
                 .build()
 
-        assertThat(accountCreateResponse.id()).isEqualTo("id")
-        assertThat(accountCreateResponse.status()).isEqualTo("status")
-        assertThat(accountCreateResponse.xUserId()).isEqualTo("xUserId")
-        assertThat(accountCreateResponse.xUsername()).isEqualTo("xUsername")
+        assertThat(accountCreateResponse.id()).isEqualTo("42")
+        assertThat(accountCreateResponse.status()).isEqualTo("active")
+        assertThat(accountCreateResponse.xUserId()).isEqualTo("9876543210")
+        assertThat(accountCreateResponse.xUsername()).isEqualTo("elonmusk")
     }
 
     @Test
@@ -30,10 +30,10 @@ internal class AccountCreateResponseTest {
         val jsonMapper = jsonMapper()
         val accountCreateResponse =
             AccountCreateResponse.builder()
-                .id("id")
-                .status("status")
-                .xUserId("xUserId")
-                .xUsername("xUsername")
+                .id("42")
+                .status("active")
+                .xUserId("9876543210")
+                .xUsername("elonmusk")
                 .build()
 
         val roundtrippedAccountCreateResponse =

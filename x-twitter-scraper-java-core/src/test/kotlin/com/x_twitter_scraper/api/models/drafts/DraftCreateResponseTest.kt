@@ -14,22 +14,22 @@ internal class DraftCreateResponseTest {
     fun create() {
         val draftCreateResponse =
             DraftCreateResponse.builder()
-                .id("id")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .text("text")
-                .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .goal("goal")
-                .topic("topic")
+                .id("42")
+                .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
+                .text("Draft tweet about AI trends")
+                .updatedAt(OffsetDateTime.parse("2025-01-16T09:30:00Z"))
+                .goal("Engagement")
+                .topic("Technology")
                 .build()
 
-        assertThat(draftCreateResponse.id()).isEqualTo("id")
+        assertThat(draftCreateResponse.id()).isEqualTo("42")
         assertThat(draftCreateResponse.createdAt())
-            .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(draftCreateResponse.text()).isEqualTo("text")
+            .isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
+        assertThat(draftCreateResponse.text()).isEqualTo("Draft tweet about AI trends")
         assertThat(draftCreateResponse.updatedAt())
-            .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(draftCreateResponse.goal()).contains("goal")
-        assertThat(draftCreateResponse.topic()).contains("topic")
+            .isEqualTo(OffsetDateTime.parse("2025-01-16T09:30:00Z"))
+        assertThat(draftCreateResponse.goal()).contains("Engagement")
+        assertThat(draftCreateResponse.topic()).contains("Technology")
     }
 
     @Test
@@ -37,12 +37,12 @@ internal class DraftCreateResponseTest {
         val jsonMapper = jsonMapper()
         val draftCreateResponse =
             DraftCreateResponse.builder()
-                .id("id")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .text("text")
-                .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .goal("goal")
-                .topic("topic")
+                .id("42")
+                .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
+                .text("Draft tweet about AI trends")
+                .updatedAt(OffsetDateTime.parse("2025-01-16T09:30:00Z"))
+                .goal("Engagement")
+                .topic("Technology")
                 .build()
 
         val roundtrippedDraftCreateResponse =

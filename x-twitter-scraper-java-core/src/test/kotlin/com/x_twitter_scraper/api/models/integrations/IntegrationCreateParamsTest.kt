@@ -10,9 +10,10 @@ internal class IntegrationCreateParamsTest {
     @Test
     fun create() {
         IntegrationCreateParams.builder()
-            .config(IntegrationCreateParams.Config.builder().chatId("chatId").build())
+            .config(IntegrationCreateParams.Config.builder().chatId("-1001234567890").build())
             .addEventType(IntegrationCreateParams.EventType.TWEET_NEW)
-            .name("name")
+            .addEventType(IntegrationCreateParams.EventType.FOLLOWER_GAINED)
+            .name("My Telegram Bot")
             .type(IntegrationCreateParams.Type.TELEGRAM)
             .build()
     }
@@ -21,18 +22,23 @@ internal class IntegrationCreateParamsTest {
     fun body() {
         val params =
             IntegrationCreateParams.builder()
-                .config(IntegrationCreateParams.Config.builder().chatId("chatId").build())
+                .config(IntegrationCreateParams.Config.builder().chatId("-1001234567890").build())
                 .addEventType(IntegrationCreateParams.EventType.TWEET_NEW)
-                .name("name")
+                .addEventType(IntegrationCreateParams.EventType.FOLLOWER_GAINED)
+                .name("My Telegram Bot")
                 .type(IntegrationCreateParams.Type.TELEGRAM)
                 .build()
 
         val body = params._body()
 
         assertThat(body.config())
-            .isEqualTo(IntegrationCreateParams.Config.builder().chatId("chatId").build())
-        assertThat(body.eventTypes()).containsExactly(IntegrationCreateParams.EventType.TWEET_NEW)
-        assertThat(body.name()).isEqualTo("name")
+            .isEqualTo(IntegrationCreateParams.Config.builder().chatId("-1001234567890").build())
+        assertThat(body.eventTypes())
+            .containsExactly(
+                IntegrationCreateParams.EventType.TWEET_NEW,
+                IntegrationCreateParams.EventType.FOLLOWER_GAINED,
+            )
+        assertThat(body.name()).isEqualTo("My Telegram Bot")
         assertThat(body.type()).isEqualTo(IntegrationCreateParams.Type.TELEGRAM)
     }
 }

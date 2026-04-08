@@ -5,7 +5,6 @@ package com.x_twitter_scraper.api.services.async.x
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.checkRequired
-import com.x_twitter_scraper.api.core.handlers.emptyHandler
 import com.x_twitter_scraper.api.core.handlers.errorBodyHandler
 import com.x_twitter_scraper.api.core.handlers.errorHandler
 import com.x_twitter_scraper.api.core.handlers.jsonHandler
@@ -30,6 +29,7 @@ import com.x_twitter_scraper.api.models.x.tweets.TweetGetRetweetersResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetThreadParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetThreadResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetListParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetListResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse
 import com.x_twitter_scraper.api.services.async.x.tweets.LikeServiceAsync
@@ -70,9 +70,9 @@ class TweetServiceAsyncImpl internal constructor(private val clientOptions: Clie
     override fun list(
         params: TweetListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<Void?> =
+    ): CompletableFuture<TweetListResponse> =
         // get /x/tweets
-        withRawResponse().list(params, requestOptions).thenAccept {}
+        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
     override fun getFavoriters(
         params: TweetGetFavoritersParams,
@@ -172,12 +172,13 @@ class TweetServiceAsyncImpl internal constructor(private val clientOptions: Clie
                 }
         }
 
-        private val listHandler: Handler<Void?> = emptyHandler()
+        private val listHandler: Handler<TweetListResponse> =
+            jsonHandler<TweetListResponse>(clientOptions.jsonMapper)
 
         override fun list(
             params: TweetListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponse> {
+        ): CompletableFuture<HttpResponseFor<TweetListResponse>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -190,7 +191,13 @@ class TweetServiceAsyncImpl internal constructor(private val clientOptions: Clie
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
                     errorHandler.handle(response).parseable {
-                        response.use { listHandler.handle(it) }
+                        response
+                            .use { listHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
                     }
                 }
         }

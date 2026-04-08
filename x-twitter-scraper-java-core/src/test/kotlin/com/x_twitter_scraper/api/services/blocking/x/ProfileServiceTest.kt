@@ -24,11 +24,11 @@ internal class ProfileServiceTest {
         val profile =
             profileService.update(
                 ProfileUpdateParams.builder()
-                    .account("account")
-                    .description("description")
-                    .location("location")
-                    .name("name")
-                    .url("url")
+                    .account("@elonmusk")
+                    .description("description_value")
+                    .location("location_value")
+                    .name("Example Name")
+                    .url("https://xquik.com/example")
                     .build()
             )
 
@@ -48,7 +48,7 @@ internal class ProfileServiceTest {
         val response =
             profileService.updateAvatar(
                 ProfileUpdateAvatarParams.builder()
-                    .account("account")
+                    .account("@elonmusk")
                     .file("Example data".byteInputStream())
                     .build()
             )
@@ -69,7 +69,7 @@ internal class ProfileServiceTest {
         val response =
             profileService.updateBanner(
                 ProfileUpdateBannerParams.builder()
-                    .account("account")
+                    .account("@elonmusk")
                     .file("Example data".byteInputStream())
                     .build()
             )

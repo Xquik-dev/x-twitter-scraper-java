@@ -5,7 +5,6 @@ package com.x_twitter_scraper.api.services.blocking.x
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.checkRequired
-import com.x_twitter_scraper.api.core.handlers.emptyHandler
 import com.x_twitter_scraper.api.core.handlers.errorBodyHandler
 import com.x_twitter_scraper.api.core.handlers.errorHandler
 import com.x_twitter_scraper.api.core.handlers.jsonHandler
@@ -30,6 +29,7 @@ import com.x_twitter_scraper.api.models.x.tweets.TweetGetRetweetersResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetThreadParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetThreadResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetListParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetListResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse
 import com.x_twitter_scraper.api.services.blocking.x.tweets.LikeService
@@ -66,10 +66,9 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
         // post /x/tweets
         withRawResponse().create(params, requestOptions).parse()
 
-    override fun list(params: TweetListParams, requestOptions: RequestOptions) {
+    override fun list(params: TweetListParams, requestOptions: RequestOptions): TweetListResponse =
         // get /x/tweets
-        withRawResponse().list(params, requestOptions)
-    }
+        withRawResponse().list(params, requestOptions).parse()
 
     override fun getFavoriters(
         params: TweetGetFavoritersParams,
@@ -166,9 +165,13 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
             }
         }
 
-        private val listHandler: Handler<Void?> = emptyHandler()
+        private val listHandler: Handler<TweetListResponse> =
+            jsonHandler<TweetListResponse>(clientOptions.jsonMapper)
 
-        override fun list(params: TweetListParams, requestOptions: RequestOptions): HttpResponse {
+        override fun list(
+            params: TweetListParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<TweetListResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -179,7 +182,13 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
-                response.use { listHandler.handle(it) }
+                response
+                    .use { listHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
             }
         }
 

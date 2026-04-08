@@ -14,19 +14,19 @@ internal class ApiKeyCreateResponseTest {
     fun create() {
         val apiKeyCreateResponse =
             ApiKeyCreateResponse.builder()
-                .id("id")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .fullKey("fullKey")
-                .name("name")
-                .prefix("prefix")
+                .id("42")
+                .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
+                .fullKey("xq_live_abc123def456")
+                .name("My API Key")
+                .prefix("xq_live_abc1")
                 .build()
 
-        assertThat(apiKeyCreateResponse.id()).isEqualTo("id")
+        assertThat(apiKeyCreateResponse.id()).isEqualTo("42")
         assertThat(apiKeyCreateResponse.createdAt())
-            .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(apiKeyCreateResponse.fullKey()).isEqualTo("fullKey")
-        assertThat(apiKeyCreateResponse.name()).isEqualTo("name")
-        assertThat(apiKeyCreateResponse.prefix()).isEqualTo("prefix")
+            .isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
+        assertThat(apiKeyCreateResponse.fullKey()).isEqualTo("xq_live_abc123def456")
+        assertThat(apiKeyCreateResponse.name()).isEqualTo("My API Key")
+        assertThat(apiKeyCreateResponse.prefix()).isEqualTo("xq_live_abc1")
     }
 
     @Test
@@ -34,11 +34,11 @@ internal class ApiKeyCreateResponseTest {
         val jsonMapper = jsonMapper()
         val apiKeyCreateResponse =
             ApiKeyCreateResponse.builder()
-                .id("id")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .fullKey("fullKey")
-                .name("name")
-                .prefix("prefix")
+                .id("42")
+                .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
+                .fullKey("xq_live_abc123def456")
+                .name("My API Key")
+                .prefix("xq_live_abc1")
                 .build()
 
         val roundtrippedApiKeyCreateResponse =

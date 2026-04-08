@@ -13,12 +13,12 @@ internal class JoinCreateResponseTest {
     fun create() {
         val joinCreateResponse =
             JoinCreateResponse.builder()
-                .communityId("communityId")
-                .communityName("communityName")
+                .communityId("1500000000000000000")
+                .communityName("Tesla Fans")
                 .build()
 
-        assertThat(joinCreateResponse.communityId()).isEqualTo("communityId")
-        assertThat(joinCreateResponse.communityName()).isEqualTo("communityName")
+        assertThat(joinCreateResponse.communityId()).isEqualTo("1500000000000000000")
+        assertThat(joinCreateResponse.communityName()).isEqualTo("Tesla Fans")
     }
 
     @Test
@@ -26,8 +26,8 @@ internal class JoinCreateResponseTest {
         val jsonMapper = jsonMapper()
         val joinCreateResponse =
             JoinCreateResponse.builder()
-                .communityId("communityId")
-                .communityName("communityName")
+                .communityId("1500000000000000000")
+                .communityName("Tesla Fans")
                 .build()
 
         val roundtrippedJoinCreateResponse =

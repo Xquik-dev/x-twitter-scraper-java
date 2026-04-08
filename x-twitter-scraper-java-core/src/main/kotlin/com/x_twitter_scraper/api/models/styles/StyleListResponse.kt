@@ -172,6 +172,7 @@ private constructor(
     internal fun validity(): Int =
         (styles.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
 
+    /** Style profile summary with tweet count and ownership flag. */
     class Style
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(

@@ -30,6 +30,8 @@ private constructor(
 ) : Params {
 
     /**
+     * Identifier for the extraction tool used to run a job.
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -217,6 +219,7 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
+        /** Identifier for the extraction tool used to run a job. */
         fun toolType(toolType: ToolType) = apply { body.toolType(toolType) }
 
         /**
@@ -552,6 +555,8 @@ private constructor(
         )
 
         /**
+         * Identifier for the extraction tool used to run a job.
+         *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
          *   value).
@@ -769,6 +774,7 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
+            /** Identifier for the extraction tool used to run a job. */
             fun toolType(toolType: ToolType) = toolType(JsonField.of(toolType))
 
             /**
@@ -1037,6 +1043,7 @@ private constructor(
             "Body{toolType=$toolType, advancedQuery=$advancedQuery, exactPhrase=$exactPhrase, excludeWords=$excludeWords, searchQuery=$searchQuery, targetCommunityId=$targetCommunityId, targetListId=$targetListId, targetSpaceId=$targetSpaceId, targetTweetId=$targetTweetId, targetUsername=$targetUsername, additionalProperties=$additionalProperties}"
     }
 
+    /** Identifier for the extraction tool used to run a job. */
     class ToolType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

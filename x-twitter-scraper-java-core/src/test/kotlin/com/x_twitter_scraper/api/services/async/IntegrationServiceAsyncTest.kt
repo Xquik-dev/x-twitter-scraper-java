@@ -3,7 +3,6 @@
 package com.x_twitter_scraper.api.services.async
 
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClientAsync
-import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.models.integrations.IntegrationCreateParams
 import com.x_twitter_scraper.api.models.integrations.IntegrationListDeliveriesParams
 import com.x_twitter_scraper.api.models.integrations.IntegrationUpdateParams
@@ -25,9 +24,12 @@ internal class IntegrationServiceAsyncTest {
         val integrationFuture =
             integrationServiceAsync.create(
                 IntegrationCreateParams.builder()
-                    .config(IntegrationCreateParams.Config.builder().chatId("chatId").build())
+                    .config(
+                        IntegrationCreateParams.Config.builder().chatId("-1001234567890").build()
+                    )
                     .addEventType(IntegrationCreateParams.EventType.TWEET_NEW)
-                    .name("name")
+                    .addEventType(IntegrationCreateParams.EventType.FOLLOWER_GAINED)
+                    .name("My Telegram Bot")
                     .type(IntegrationCreateParams.Type.TELEGRAM)
                     .build()
             )
@@ -67,20 +69,13 @@ internal class IntegrationServiceAsyncTest {
                 IntegrationUpdateParams.builder()
                     .id("id")
                     .addEventType(IntegrationUpdateParams.EventType.TWEET_NEW)
-                    .filters(
-                        IntegrationUpdateParams.Filters.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("bar"))
-                            .build()
-                    )
+                    .addEventType(IntegrationUpdateParams.EventType.FOLLOWER_GAINED)
+                    .filters(IntegrationUpdateParams.Filters.builder().build())
                     .isActive(true)
-                    .messageTemplate(
-                        IntegrationUpdateParams.MessageTemplate.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("bar"))
-                            .build()
-                    )
-                    .name("name")
+                    .messageTemplate(IntegrationUpdateParams.MessageTemplate.builder().build())
+                    .name("My Telegram Bot")
                     .scopeAllMonitors(true)
-                    .silentPush(true)
+                    .silentPush(false)
                     .build()
             )
 

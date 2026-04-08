@@ -36,7 +36,7 @@ internal class StyleServiceTest {
         val styleService = client.styles()
 
         val response =
-            styleService.analyze(StyleAnalyzeParams.builder().username("username").build())
+            styleService.analyze(StyleAnalyzeParams.builder().username("elonmusk").build())
 
         response.validate()
     }

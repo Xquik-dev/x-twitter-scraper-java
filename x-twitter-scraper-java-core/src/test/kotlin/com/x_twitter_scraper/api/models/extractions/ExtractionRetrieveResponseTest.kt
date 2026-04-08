@@ -14,10 +14,12 @@ internal class ExtractionRetrieveResponseTest {
     fun create() {
         val extractionRetrieveResponse =
             ExtractionRetrieveResponse.builder()
-                .hasMore(true)
+                .hasMore(false)
                 .job(
                     ExtractionRetrieveResponse.Job.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .putAdditionalProperty("id", JsonValue.from("bar"))
+                        .putAdditionalProperty("toolType", JsonValue.from("bar"))
+                        .putAdditionalProperty("status", JsonValue.from("bar"))
                         .build()
                 )
                 .addResult(
@@ -25,14 +27,16 @@ internal class ExtractionRetrieveResponseTest {
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
-                .nextCursor("nextCursor")
+                .nextCursor("abc123")
                 .build()
 
-        assertThat(extractionRetrieveResponse.hasMore()).isEqualTo(true)
+        assertThat(extractionRetrieveResponse.hasMore()).isEqualTo(false)
         assertThat(extractionRetrieveResponse.job())
             .isEqualTo(
                 ExtractionRetrieveResponse.Job.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .putAdditionalProperty("id", JsonValue.from("bar"))
+                    .putAdditionalProperty("toolType", JsonValue.from("bar"))
+                    .putAdditionalProperty("status", JsonValue.from("bar"))
                     .build()
             )
         assertThat(extractionRetrieveResponse.results())
@@ -41,7 +45,7 @@ internal class ExtractionRetrieveResponseTest {
                     .putAdditionalProperty("foo", JsonValue.from("bar"))
                     .build()
             )
-        assertThat(extractionRetrieveResponse.nextCursor()).contains("nextCursor")
+        assertThat(extractionRetrieveResponse.nextCursor()).contains("abc123")
     }
 
     @Test
@@ -49,10 +53,12 @@ internal class ExtractionRetrieveResponseTest {
         val jsonMapper = jsonMapper()
         val extractionRetrieveResponse =
             ExtractionRetrieveResponse.builder()
-                .hasMore(true)
+                .hasMore(false)
                 .job(
                     ExtractionRetrieveResponse.Job.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .putAdditionalProperty("id", JsonValue.from("bar"))
+                        .putAdditionalProperty("toolType", JsonValue.from("bar"))
+                        .putAdditionalProperty("status", JsonValue.from("bar"))
                         .build()
                 )
                 .addResult(
@@ -60,7 +66,7 @@ internal class ExtractionRetrieveResponseTest {
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
-                .nextCursor("nextCursor")
+                .nextCursor("abc123")
                 .build()
 
         val roundtrippedExtractionRetrieveResponse =

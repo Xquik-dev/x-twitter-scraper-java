@@ -5,7 +5,6 @@ package com.x_twitter_scraper.api.services.blocking.x
 import com.google.errorprone.annotations.MustBeClosed
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
-import com.x_twitter_scraper.api.core.http.HttpResponse
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.models.x.tweets.TweetCreateParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetCreateResponse
@@ -20,6 +19,7 @@ import com.x_twitter_scraper.api.models.x.tweets.TweetGetRetweetersResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetThreadParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetThreadResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetListParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetListResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse
 import com.x_twitter_scraper.api.services.blocking.x.tweets.LikeService
@@ -55,10 +55,13 @@ interface TweetService {
     ): TweetCreateResponse
 
     /** Get multiple tweets by IDs */
-    fun list(params: TweetListParams) = list(params, RequestOptions.none())
+    fun list(params: TweetListParams): TweetListResponse = list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(params: TweetListParams, requestOptions: RequestOptions = RequestOptions.none())
+    fun list(
+        params: TweetListParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): TweetListResponse
 
     /** Get users who liked a tweet */
     fun getFavoriters(id: String): TweetGetFavoritersResponse =
@@ -257,14 +260,15 @@ interface TweetService {
          * [TweetService.list].
          */
         @MustBeClosed
-        fun list(params: TweetListParams): HttpResponse = list(params, RequestOptions.none())
+        fun list(params: TweetListParams): HttpResponseFor<TweetListResponse> =
+            list(params, RequestOptions.none())
 
         /** @see list */
         @MustBeClosed
         fun list(
             params: TweetListParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        ): HttpResponseFor<TweetListResponse>
 
         /**
          * Returns a raw HTTP response for `get /x/tweets/{id}/favoriters`, but is otherwise the
