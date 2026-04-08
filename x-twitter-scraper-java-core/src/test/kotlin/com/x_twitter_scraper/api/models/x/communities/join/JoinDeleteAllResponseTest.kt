@@ -13,12 +13,12 @@ internal class JoinDeleteAllResponseTest {
     fun create() {
         val joinDeleteAllResponse =
             JoinDeleteAllResponse.builder()
-                .communityId("communityId")
-                .communityName("communityName")
+                .communityId("1500000000000000000")
+                .communityName("Tesla Fans")
                 .build()
 
-        assertThat(joinDeleteAllResponse.communityId()).isEqualTo("communityId")
-        assertThat(joinDeleteAllResponse.communityName()).isEqualTo("communityName")
+        assertThat(joinDeleteAllResponse.communityId()).isEqualTo("1500000000000000000")
+        assertThat(joinDeleteAllResponse.communityName()).isEqualTo("Tesla Fans")
     }
 
     @Test
@@ -26,8 +26,8 @@ internal class JoinDeleteAllResponseTest {
         val jsonMapper = jsonMapper()
         val joinDeleteAllResponse =
             JoinDeleteAllResponse.builder()
-                .communityId("communityId")
-                .communityName("communityName")
+                .communityId("1500000000000000000")
+                .communityName("Tesla Fans")
                 .build()
 
         val roundtrippedJoinDeleteAllResponse =

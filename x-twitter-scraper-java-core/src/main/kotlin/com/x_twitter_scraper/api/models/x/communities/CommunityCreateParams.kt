@@ -28,7 +28,7 @@ private constructor(
 ) : Params {
 
     /**
-     * X account (@username or account ID)
+     * X account (@username or ID) creating the community
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -121,7 +121,7 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
-        /** X account (@username or account ID) */
+        /** X account (@username or ID) creating the community */
         fun account(account: String) = apply { body.account(account) }
 
         /**
@@ -318,7 +318,7 @@ private constructor(
         ) : this(account, name, description, mutableMapOf())
 
         /**
-         * X account (@username or account ID)
+         * X account (@username or ID) creating the community
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
@@ -408,7 +408,7 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            /** X account (@username or account ID) */
+            /** X account (@username or ID) creating the community */
             fun account(account: String) = account(JsonField.of(account))
 
             /**

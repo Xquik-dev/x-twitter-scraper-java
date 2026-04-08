@@ -13,8 +13,9 @@ internal class WebhookUpdateParamsTest {
         WebhookUpdateParams.builder()
             .id("id")
             .addEventType(WebhookUpdateParams.EventType.TWEET_NEW)
+            .addEventType(WebhookUpdateParams.EventType.FOLLOWER_GAINED)
             .isActive(true)
-            .url("https://example.com")
+            .url("https://example.com/webhook")
             .build()
     }
 
@@ -33,16 +34,20 @@ internal class WebhookUpdateParamsTest {
             WebhookUpdateParams.builder()
                 .id("id")
                 .addEventType(WebhookUpdateParams.EventType.TWEET_NEW)
+                .addEventType(WebhookUpdateParams.EventType.FOLLOWER_GAINED)
                 .isActive(true)
-                .url("https://example.com")
+                .url("https://example.com/webhook")
                 .build()
 
         val body = params._body()
 
         assertThat(body.eventTypes().getOrNull())
-            .containsExactly(WebhookUpdateParams.EventType.TWEET_NEW)
+            .containsExactly(
+                WebhookUpdateParams.EventType.TWEET_NEW,
+                WebhookUpdateParams.EventType.FOLLOWER_GAINED,
+            )
         assertThat(body.isActive()).contains(true)
-        assertThat(body.url()).contains("https://example.com")
+        assertThat(body.url()).contains("https://example.com/webhook")
     }
 
     @Test

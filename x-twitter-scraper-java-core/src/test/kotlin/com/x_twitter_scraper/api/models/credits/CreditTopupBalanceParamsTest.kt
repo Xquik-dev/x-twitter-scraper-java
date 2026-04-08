@@ -9,15 +9,15 @@ internal class CreditTopupBalanceParamsTest {
 
     @Test
     fun create() {
-        CreditTopupBalanceParams.builder().amount(0L).build()
+        CreditTopupBalanceParams.builder().amount(10000L).build()
     }
 
     @Test
     fun body() {
-        val params = CreditTopupBalanceParams.builder().amount(0L).build()
+        val params = CreditTopupBalanceParams.builder().amount(10000L).build()
 
         val body = params._body()
 
-        assertThat(body.amount()).isEqualTo(0L)
+        assertThat(body.amount()).isEqualTo(10000L)
     }
 }

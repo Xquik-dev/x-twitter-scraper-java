@@ -30,13 +30,15 @@ private constructor(
 ) : Params {
 
     /**
+     * Identifier for the extraction tool used to run a job.
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun toolType(): ToolType = body.toolType()
 
     /**
-     * Raw advanced search query appended as-is (tweet_search_extractor)
+     * Raw advanced query string appended to the estimate (tweet_search_extractor)
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -44,7 +46,7 @@ private constructor(
     fun advancedQuery(): Optional<String> = body.advancedQuery()
 
     /**
-     * Exact phrase to match (tweet_search_extractor)
+     * Exact phrase filter for search estimation
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -52,7 +54,7 @@ private constructor(
     fun exactPhrase(): Optional<String> = body.exactPhrase()
 
     /**
-     * Words to exclude from results (tweet_search_extractor)
+     * Words excluded from estimated search results
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -217,6 +219,7 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
+        /** Identifier for the extraction tool used to run a job. */
         fun toolType(toolType: ToolType) = apply { body.toolType(toolType) }
 
         /**
@@ -228,7 +231,7 @@ private constructor(
          */
         fun toolType(toolType: JsonField<ToolType>) = apply { body.toolType(toolType) }
 
-        /** Raw advanced search query appended as-is (tweet_search_extractor) */
+        /** Raw advanced query string appended to the estimate (tweet_search_extractor) */
         fun advancedQuery(advancedQuery: String) = apply { body.advancedQuery(advancedQuery) }
 
         /**
@@ -242,7 +245,7 @@ private constructor(
             body.advancedQuery(advancedQuery)
         }
 
-        /** Exact phrase to match (tweet_search_extractor) */
+        /** Exact phrase filter for search estimation */
         fun exactPhrase(exactPhrase: String) = apply { body.exactPhrase(exactPhrase) }
 
         /**
@@ -254,7 +257,7 @@ private constructor(
          */
         fun exactPhrase(exactPhrase: JsonField<String>) = apply { body.exactPhrase(exactPhrase) }
 
-        /** Words to exclude from results (tweet_search_extractor) */
+        /** Words excluded from estimated search results */
         fun excludeWords(excludeWords: String) = apply { body.excludeWords(excludeWords) }
 
         /**
@@ -552,6 +555,8 @@ private constructor(
         )
 
         /**
+         * Identifier for the extraction tool used to run a job.
+         *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
          *   value).
@@ -559,7 +564,7 @@ private constructor(
         fun toolType(): ToolType = toolType.getRequired("toolType")
 
         /**
-         * Raw advanced search query appended as-is (tweet_search_extractor)
+         * Raw advanced query string appended to the estimate (tweet_search_extractor)
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
          *   (e.g. if the server responded with an unexpected value).
@@ -567,7 +572,7 @@ private constructor(
         fun advancedQuery(): Optional<String> = advancedQuery.getOptional("advancedQuery")
 
         /**
-         * Exact phrase to match (tweet_search_extractor)
+         * Exact phrase filter for search estimation
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
          *   (e.g. if the server responded with an unexpected value).
@@ -575,7 +580,7 @@ private constructor(
         fun exactPhrase(): Optional<String> = exactPhrase.getOptional("exactPhrase")
 
         /**
-         * Words to exclude from results (tweet_search_extractor)
+         * Words excluded from estimated search results
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
          *   (e.g. if the server responded with an unexpected value).
@@ -769,6 +774,7 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
+            /** Identifier for the extraction tool used to run a job. */
             fun toolType(toolType: ToolType) = toolType(JsonField.of(toolType))
 
             /**
@@ -780,7 +786,7 @@ private constructor(
              */
             fun toolType(toolType: JsonField<ToolType>) = apply { this.toolType = toolType }
 
-            /** Raw advanced search query appended as-is (tweet_search_extractor) */
+            /** Raw advanced query string appended to the estimate (tweet_search_extractor) */
             fun advancedQuery(advancedQuery: String) = advancedQuery(JsonField.of(advancedQuery))
 
             /**
@@ -794,7 +800,7 @@ private constructor(
                 this.advancedQuery = advancedQuery
             }
 
-            /** Exact phrase to match (tweet_search_extractor) */
+            /** Exact phrase filter for search estimation */
             fun exactPhrase(exactPhrase: String) = exactPhrase(JsonField.of(exactPhrase))
 
             /**
@@ -808,7 +814,7 @@ private constructor(
                 this.exactPhrase = exactPhrase
             }
 
-            /** Words to exclude from results (tweet_search_extractor) */
+            /** Words excluded from estimated search results */
             fun excludeWords(excludeWords: String) = excludeWords(JsonField.of(excludeWords))
 
             /**
@@ -1037,6 +1043,7 @@ private constructor(
             "Body{toolType=$toolType, advancedQuery=$advancedQuery, exactPhrase=$exactPhrase, excludeWords=$excludeWords, searchQuery=$searchQuery, targetCommunityId=$targetCommunityId, targetListId=$targetListId, targetSpaceId=$targetSpaceId, targetTweetId=$targetTweetId, targetUsername=$targetUsername, additionalProperties=$additionalProperties}"
     }
 
+    /** Identifier for the extraction tool used to run a job. */
     class ToolType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

@@ -4,7 +4,6 @@ package com.x_twitter_scraper.api.services.async
 
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
-import com.x_twitter_scraper.api.core.http.HttpResponse
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.models.x.XGetArticleParams
 import com.x_twitter_scraper.api.models.x.XGetArticleResponse
@@ -13,6 +12,7 @@ import com.x_twitter_scraper.api.models.x.XGetHomeTimelineResponse
 import com.x_twitter_scraper.api.models.x.XGetNotificationsParams
 import com.x_twitter_scraper.api.models.x.XGetNotificationsResponse
 import com.x_twitter_scraper.api.models.x.XGetTrendsParams
+import com.x_twitter_scraper.api.models.x.XGetTrendsResponse
 import com.x_twitter_scraper.api.services.async.x.AccountServiceAsync
 import com.x_twitter_scraper.api.services.async.x.BookmarkServiceAsync
 import com.x_twitter_scraper.api.services.async.x.CommunityServiceAsync
@@ -147,20 +147,21 @@ interface XServiceAsync {
         getNotifications(XGetNotificationsParams.none(), requestOptions)
 
     /** Get trending topics */
-    fun getTrends(): CompletableFuture<Void?> = getTrends(XGetTrendsParams.none())
+    fun getTrends(): CompletableFuture<XGetTrendsResponse> = getTrends(XGetTrendsParams.none())
 
     /** @see getTrends */
     fun getTrends(
         params: XGetTrendsParams = XGetTrendsParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?>
+    ): CompletableFuture<XGetTrendsResponse>
 
     /** @see getTrends */
-    fun getTrends(params: XGetTrendsParams = XGetTrendsParams.none()): CompletableFuture<Void?> =
-        getTrends(params, RequestOptions.none())
+    fun getTrends(
+        params: XGetTrendsParams = XGetTrendsParams.none()
+    ): CompletableFuture<XGetTrendsResponse> = getTrends(params, RequestOptions.none())
 
     /** @see getTrends */
-    fun getTrends(requestOptions: RequestOptions): CompletableFuture<Void?> =
+    fun getTrends(requestOptions: RequestOptions): CompletableFuture<XGetTrendsResponse> =
         getTrends(XGetTrendsParams.none(), requestOptions)
 
     /** A view of [XServiceAsync] that provides access to raw HTTP responses for each method. */
@@ -295,21 +296,25 @@ interface XServiceAsync {
          * Returns a raw HTTP response for `get /x/trends`, but is otherwise the same as
          * [XServiceAsync.getTrends].
          */
-        fun getTrends(): CompletableFuture<HttpResponse> = getTrends(XGetTrendsParams.none())
+        fun getTrends(): CompletableFuture<HttpResponseFor<XGetTrendsResponse>> =
+            getTrends(XGetTrendsParams.none())
 
         /** @see getTrends */
         fun getTrends(
             params: XGetTrendsParams = XGetTrendsParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse>
+        ): CompletableFuture<HttpResponseFor<XGetTrendsResponse>>
 
         /** @see getTrends */
         fun getTrends(
             params: XGetTrendsParams = XGetTrendsParams.none()
-        ): CompletableFuture<HttpResponse> = getTrends(params, RequestOptions.none())
+        ): CompletableFuture<HttpResponseFor<XGetTrendsResponse>> =
+            getTrends(params, RequestOptions.none())
 
         /** @see getTrends */
-        fun getTrends(requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
+        fun getTrends(
+            requestOptions: RequestOptions
+        ): CompletableFuture<HttpResponseFor<XGetTrendsResponse>> =
             getTrends(XGetTrendsParams.none(), requestOptions)
     }
 }

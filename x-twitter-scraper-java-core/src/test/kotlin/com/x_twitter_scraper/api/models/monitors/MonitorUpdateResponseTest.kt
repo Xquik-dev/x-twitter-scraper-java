@@ -14,22 +14,26 @@ internal class MonitorUpdateResponseTest {
     fun create() {
         val monitorUpdateResponse =
             MonitorUpdateResponse.builder()
-                .id("id")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .id("42")
+                .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .addEventType(MonitorUpdateResponse.EventType.TWEET_NEW)
+                .addEventType(MonitorUpdateResponse.EventType.FOLLOWER_GAINED)
                 .isActive(true)
-                .username("username")
-                .xUserId("xUserId")
+                .username("elonmusk")
+                .xUserId("9876543210")
                 .build()
 
-        assertThat(monitorUpdateResponse.id()).isEqualTo("id")
+        assertThat(monitorUpdateResponse.id()).isEqualTo("42")
         assertThat(monitorUpdateResponse.createdAt())
-            .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+            .isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
         assertThat(monitorUpdateResponse.eventTypes())
-            .containsExactly(MonitorUpdateResponse.EventType.TWEET_NEW)
+            .containsExactly(
+                MonitorUpdateResponse.EventType.TWEET_NEW,
+                MonitorUpdateResponse.EventType.FOLLOWER_GAINED,
+            )
         assertThat(monitorUpdateResponse.isActive()).isEqualTo(true)
-        assertThat(monitorUpdateResponse.username()).isEqualTo("username")
-        assertThat(monitorUpdateResponse.xUserId()).isEqualTo("xUserId")
+        assertThat(monitorUpdateResponse.username()).isEqualTo("elonmusk")
+        assertThat(monitorUpdateResponse.xUserId()).isEqualTo("9876543210")
     }
 
     @Test
@@ -37,12 +41,13 @@ internal class MonitorUpdateResponseTest {
         val jsonMapper = jsonMapper()
         val monitorUpdateResponse =
             MonitorUpdateResponse.builder()
-                .id("id")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .id("42")
+                .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .addEventType(MonitorUpdateResponse.EventType.TWEET_NEW)
+                .addEventType(MonitorUpdateResponse.EventType.FOLLOWER_GAINED)
                 .isActive(true)
-                .username("username")
-                .xUserId("xUserId")
+                .username("elonmusk")
+                .xUserId("9876543210")
                 .build()
 
         val roundtrippedMonitorUpdateResponse =

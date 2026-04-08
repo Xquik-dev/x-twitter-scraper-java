@@ -11,15 +11,17 @@ internal class MediaUploadResponseTest {
 
     @Test
     fun create() {
-        val mediaUploadResponse = MediaUploadResponse.builder().mediaId("mediaId").build()
+        val mediaUploadResponse =
+            MediaUploadResponse.builder().mediaId("1234567890123456789").build()
 
-        assertThat(mediaUploadResponse.mediaId()).isEqualTo("mediaId")
+        assertThat(mediaUploadResponse.mediaId()).isEqualTo("1234567890123456789")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val mediaUploadResponse = MediaUploadResponse.builder().mediaId("mediaId").build()
+        val mediaUploadResponse =
+            MediaUploadResponse.builder().mediaId("1234567890123456789").build()
 
         val roundtrippedMediaUploadResponse =
             jsonMapper.readValue(

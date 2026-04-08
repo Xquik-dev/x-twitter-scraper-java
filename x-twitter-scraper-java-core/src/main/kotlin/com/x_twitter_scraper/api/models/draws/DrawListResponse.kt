@@ -234,6 +234,7 @@ private constructor(
             (if (hasMore.asKnown().isPresent) 1 else 0) +
             (if (nextCursor.asKnown().isPresent) 1 else 0)
 
+    /** Giveaway draw summary with entry counts and status. */
     class Draw
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(

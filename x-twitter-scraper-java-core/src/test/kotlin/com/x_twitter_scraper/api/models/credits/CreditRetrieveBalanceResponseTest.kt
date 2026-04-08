@@ -13,16 +13,16 @@ internal class CreditRetrieveBalanceResponseTest {
     fun create() {
         val creditRetrieveBalanceResponse =
             CreditRetrieveBalanceResponse.builder()
-                .autoTopupEnabled(true)
-                .balance(0L)
-                .lifetimePurchased(0L)
-                .lifetimeUsed(0L)
+                .autoTopupEnabled(false)
+                .balance(50000L)
+                .lifetimePurchased(200000L)
+                .lifetimeUsed(150000L)
                 .build()
 
-        assertThat(creditRetrieveBalanceResponse.autoTopupEnabled()).isEqualTo(true)
-        assertThat(creditRetrieveBalanceResponse.balance()).isEqualTo(0L)
-        assertThat(creditRetrieveBalanceResponse.lifetimePurchased()).isEqualTo(0L)
-        assertThat(creditRetrieveBalanceResponse.lifetimeUsed()).isEqualTo(0L)
+        assertThat(creditRetrieveBalanceResponse.autoTopupEnabled()).isEqualTo(false)
+        assertThat(creditRetrieveBalanceResponse.balance()).isEqualTo(50000L)
+        assertThat(creditRetrieveBalanceResponse.lifetimePurchased()).isEqualTo(200000L)
+        assertThat(creditRetrieveBalanceResponse.lifetimeUsed()).isEqualTo(150000L)
     }
 
     @Test
@@ -30,10 +30,10 @@ internal class CreditRetrieveBalanceResponseTest {
         val jsonMapper = jsonMapper()
         val creditRetrieveBalanceResponse =
             CreditRetrieveBalanceResponse.builder()
-                .autoTopupEnabled(true)
-                .balance(0L)
-                .lifetimePurchased(0L)
-                .lifetimeUsed(0L)
+                .autoTopupEnabled(false)
+                .balance(50000L)
+                .lifetimePurchased(200000L)
+                .lifetimeUsed(150000L)
                 .build()
 
         val roundtrippedCreditRetrieveBalanceResponse =

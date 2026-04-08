@@ -29,8 +29,8 @@ internal class EventListResponseTest {
                         .username("username")
                         .build()
                 )
-                .hasMore(true)
-                .nextCursor("nextCursor")
+                .hasMore(false)
+                .nextCursor("abc123")
                 .build()
 
         assertThat(eventListResponse.events())
@@ -48,8 +48,8 @@ internal class EventListResponseTest {
                     .username("username")
                     .build()
             )
-        assertThat(eventListResponse.hasMore()).isEqualTo(true)
-        assertThat(eventListResponse.nextCursor()).contains("nextCursor")
+        assertThat(eventListResponse.hasMore()).isEqualTo(false)
+        assertThat(eventListResponse.nextCursor()).contains("abc123")
     }
 
     @Test
@@ -71,8 +71,8 @@ internal class EventListResponseTest {
                         .username("username")
                         .build()
                 )
-                .hasMore(true)
-                .nextCursor("nextCursor")
+                .hasMore(false)
+                .nextCursor("abc123")
                 .build()
 
         val roundtrippedEventListResponse =

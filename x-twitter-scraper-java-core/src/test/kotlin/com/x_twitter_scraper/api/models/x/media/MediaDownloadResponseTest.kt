@@ -13,18 +13,18 @@ internal class MediaDownloadResponseTest {
     fun create() {
         val mediaDownloadResponse =
             MediaDownloadResponse.builder()
-                .cacheHit(true)
-                .galleryUrl("galleryUrl")
-                .totalMedia(0L)
-                .totalTweets(0L)
-                .tweetId("tweetId")
+                .cacheHit(false)
+                .galleryUrl("https://xquik.com/gallery/abc123")
+                .totalMedia(5L)
+                .totalTweets(2L)
+                .tweetId("1234567890")
                 .build()
 
-        assertThat(mediaDownloadResponse.cacheHit()).contains(true)
-        assertThat(mediaDownloadResponse.galleryUrl()).contains("galleryUrl")
-        assertThat(mediaDownloadResponse.totalMedia()).contains(0L)
-        assertThat(mediaDownloadResponse.totalTweets()).contains(0L)
-        assertThat(mediaDownloadResponse.tweetId()).contains("tweetId")
+        assertThat(mediaDownloadResponse.cacheHit()).contains(false)
+        assertThat(mediaDownloadResponse.galleryUrl()).contains("https://xquik.com/gallery/abc123")
+        assertThat(mediaDownloadResponse.totalMedia()).contains(5L)
+        assertThat(mediaDownloadResponse.totalTweets()).contains(2L)
+        assertThat(mediaDownloadResponse.tweetId()).contains("1234567890")
     }
 
     @Test
@@ -32,11 +32,11 @@ internal class MediaDownloadResponseTest {
         val jsonMapper = jsonMapper()
         val mediaDownloadResponse =
             MediaDownloadResponse.builder()
-                .cacheHit(true)
-                .galleryUrl("galleryUrl")
-                .totalMedia(0L)
-                .totalTweets(0L)
-                .tweetId("tweetId")
+                .cacheHit(false)
+                .galleryUrl("https://xquik.com/gallery/abc123")
+                .totalMedia(5L)
+                .totalTweets(2L)
+                .tweetId("1234567890")
                 .build()
 
         val roundtrippedMediaDownloadResponse =

@@ -7,6 +7,7 @@ import com.x_twitter_scraper.api.core.Enum
 import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 
+/** Type of monitor event fired when account activity occurs. */
 class EventType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
     /**

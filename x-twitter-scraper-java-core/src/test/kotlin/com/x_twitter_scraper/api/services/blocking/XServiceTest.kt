@@ -77,6 +77,8 @@ internal class XServiceTest {
                 .build()
         val xService = client.x()
 
-        xService.getTrends()
+        val response = xService.getTrends()
+
+        response.validate()
     }
 }

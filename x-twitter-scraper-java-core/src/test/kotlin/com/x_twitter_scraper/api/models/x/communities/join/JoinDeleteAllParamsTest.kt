@@ -9,12 +9,12 @@ internal class JoinDeleteAllParamsTest {
 
     @Test
     fun create() {
-        JoinDeleteAllParams.builder().id("id").account("account").build()
+        JoinDeleteAllParams.builder().id("id").account("@elonmusk").build()
     }
 
     @Test
     fun pathParams() {
-        val params = JoinDeleteAllParams.builder().id("id").account("account").build()
+        val params = JoinDeleteAllParams.builder().id("id").account("@elonmusk").build()
 
         assertThat(params._pathParam(0)).isEqualTo("id")
         // out-of-bound path param
@@ -23,10 +23,10 @@ internal class JoinDeleteAllParamsTest {
 
     @Test
     fun body() {
-        val params = JoinDeleteAllParams.builder().id("id").account("account").build()
+        val params = JoinDeleteAllParams.builder().id("id").account("@elonmusk").build()
 
         val body = params._body()
 
-        assertThat(body.account()).isEqualTo("account")
+        assertThat(body.account()).isEqualTo("@elonmusk")
     }
 }

@@ -29,13 +29,13 @@ internal class TweetServiceAsyncTest {
         val tweetFuture =
             tweetServiceAsync.create(
                 TweetCreateParams.builder()
-                    .account("account")
-                    .text("text")
-                    .attachmentUrl("attachment_url")
-                    .communityId("community_id")
-                    .isNoteTweet(true)
-                    .addMediaId("string")
-                    .replyToTweetId("reply_to_tweet_id")
+                    .account("@elonmusk")
+                    .text("Just launched our new feature!")
+                    .attachmentUrl("https://x.com/elonmusk/status/1234567890")
+                    .communityId("1500000000000000000")
+                    .isNoteTweet(false)
+                    .addMediaId("1234567890123456789")
+                    .replyToTweetId("1234567890")
                     .build()
             )
 
@@ -53,9 +53,10 @@ internal class TweetServiceAsyncTest {
                 .build()
         val tweetServiceAsync = client.x().tweets()
 
-        val future = tweetServiceAsync.list(TweetListParams.builder().ids("ids").build())
+        val tweetsFuture = tweetServiceAsync.list(TweetListParams.builder().ids("ids").build())
 
-        val response = future.get()
+        val tweets = tweetsFuture.get()
+        tweets.validate()
     }
 
     @Disabled("Mock server tests are disabled")

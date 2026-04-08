@@ -22,7 +22,11 @@ internal class MediaServiceTest {
 
         val response =
             mediaService.download(
-                MediaDownloadParams.builder().addTweetId("string").tweetInput("tweetInput").build()
+                MediaDownloadParams.builder()
+                    .addTweetId("1234567890")
+                    .addTweetId("1234567891")
+                    .tweetInput("https://x.com/elonmusk/status/1234567890")
+                    .build()
             )
 
         response.validate()
@@ -41,7 +45,7 @@ internal class MediaServiceTest {
         val response =
             mediaService.upload(
                 MediaUploadParams.builder()
-                    .account("account")
+                    .account("@elonmusk")
                     .file("Example data".byteInputStream())
                     .isLongVideo(true)
                     .build()

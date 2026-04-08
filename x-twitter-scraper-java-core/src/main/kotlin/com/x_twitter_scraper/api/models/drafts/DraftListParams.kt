@@ -21,6 +21,7 @@ private constructor(
     /** Cursor for pagination */
     fun afterCursor(): Optional<String> = Optional.ofNullable(afterCursor)
 
+    /** Maximum number of items to return (1-100, default 50) */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
     /** Additional headers to send with the request. */
@@ -61,6 +62,7 @@ private constructor(
         /** Alias for calling [Builder.afterCursor] with `afterCursor.orElse(null)`. */
         fun afterCursor(afterCursor: Optional<String>) = afterCursor(afterCursor.getOrNull())
 
+        /** Maximum number of items to return (1-100, default 50) */
         fun limit(limit: Long?) = apply { this.limit = limit }
 
         /**

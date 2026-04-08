@@ -17,6 +17,7 @@ import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 
+/** Integration delivery attempt record with status and retry count. */
 class IntegrationDelivery
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

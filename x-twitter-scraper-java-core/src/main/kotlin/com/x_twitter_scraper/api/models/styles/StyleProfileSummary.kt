@@ -16,6 +16,7 @@ import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
 
+/** Style profile summary with tweet count and ownership flag. */
 class StyleProfileSummary
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

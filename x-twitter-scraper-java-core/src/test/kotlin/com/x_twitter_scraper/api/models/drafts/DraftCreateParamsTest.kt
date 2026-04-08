@@ -10,9 +10,9 @@ internal class DraftCreateParamsTest {
     @Test
     fun create() {
         DraftCreateParams.builder()
-            .text("text")
+            .text("AI is the future of productivity")
             .goal(DraftCreateParams.Goal.ENGAGEMENT)
-            .topic("topic")
+            .topic("AI trends")
             .build()
     }
 
@@ -20,24 +20,24 @@ internal class DraftCreateParamsTest {
     fun body() {
         val params =
             DraftCreateParams.builder()
-                .text("text")
+                .text("AI is the future of productivity")
                 .goal(DraftCreateParams.Goal.ENGAGEMENT)
-                .topic("topic")
+                .topic("AI trends")
                 .build()
 
         val body = params._body()
 
-        assertThat(body.text()).isEqualTo("text")
+        assertThat(body.text()).isEqualTo("AI is the future of productivity")
         assertThat(body.goal()).contains(DraftCreateParams.Goal.ENGAGEMENT)
-        assertThat(body.topic()).contains("topic")
+        assertThat(body.topic()).contains("AI trends")
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = DraftCreateParams.builder().text("text").build()
+        val params = DraftCreateParams.builder().text("AI is the future of productivity").build()
 
         val body = params._body()
 
-        assertThat(body.text()).isEqualTo("text")
+        assertThat(body.text()).isEqualTo("AI is the future of productivity")
     }
 }

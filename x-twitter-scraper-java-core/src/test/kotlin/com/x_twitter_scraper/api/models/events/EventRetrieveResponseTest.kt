@@ -15,32 +15,32 @@ internal class EventRetrieveResponseTest {
     fun create() {
         val eventRetrieveResponse =
             EventRetrieveResponse.builder()
-                .id("id")
+                .id("42")
                 .data(
                     EventRetrieveResponse.Data.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .putAdditionalProperty("tweetId", JsonValue.from("bar"))
                         .build()
                 )
-                .monitorId("monitorId")
-                .occurredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .monitorId("10")
+                .occurredAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .type(EventRetrieveResponse.Type.TWEET_NEW)
-                .username("username")
-                .xEventId("xEventId")
+                .username("elonmusk")
+                .xEventId("1234567890")
                 .build()
 
-        assertThat(eventRetrieveResponse.id()).isEqualTo("id")
+        assertThat(eventRetrieveResponse.id()).isEqualTo("42")
         assertThat(eventRetrieveResponse.data())
             .isEqualTo(
                 EventRetrieveResponse.Data.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .putAdditionalProperty("tweetId", JsonValue.from("bar"))
                     .build()
             )
-        assertThat(eventRetrieveResponse.monitorId()).isEqualTo("monitorId")
+        assertThat(eventRetrieveResponse.monitorId()).isEqualTo("10")
         assertThat(eventRetrieveResponse.occurredAt())
-            .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+            .isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
         assertThat(eventRetrieveResponse.type()).isEqualTo(EventRetrieveResponse.Type.TWEET_NEW)
-        assertThat(eventRetrieveResponse.username()).isEqualTo("username")
-        assertThat(eventRetrieveResponse.xEventId()).contains("xEventId")
+        assertThat(eventRetrieveResponse.username()).isEqualTo("elonmusk")
+        assertThat(eventRetrieveResponse.xEventId()).contains("1234567890")
     }
 
     @Test
@@ -48,17 +48,17 @@ internal class EventRetrieveResponseTest {
         val jsonMapper = jsonMapper()
         val eventRetrieveResponse =
             EventRetrieveResponse.builder()
-                .id("id")
+                .id("42")
                 .data(
                     EventRetrieveResponse.Data.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .putAdditionalProperty("tweetId", JsonValue.from("bar"))
                         .build()
                 )
-                .monitorId("monitorId")
-                .occurredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .monitorId("10")
+                .occurredAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .type(EventRetrieveResponse.Type.TWEET_NEW)
-                .username("username")
-                .xEventId("xEventId")
+                .username("elonmusk")
+                .xEventId("1234567890")
                 .build()
 
         val roundtrippedEventRetrieveResponse =

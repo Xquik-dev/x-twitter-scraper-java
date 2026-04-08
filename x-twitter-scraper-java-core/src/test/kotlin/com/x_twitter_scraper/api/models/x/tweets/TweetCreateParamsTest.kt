@@ -11,13 +11,13 @@ internal class TweetCreateParamsTest {
     @Test
     fun create() {
         TweetCreateParams.builder()
-            .account("account")
-            .text("text")
-            .attachmentUrl("attachment_url")
-            .communityId("community_id")
-            .isNoteTweet(true)
-            .addMediaId("string")
-            .replyToTweetId("reply_to_tweet_id")
+            .account("@elonmusk")
+            .text("Just launched our new feature!")
+            .attachmentUrl("https://x.com/elonmusk/status/1234567890")
+            .communityId("1500000000000000000")
+            .isNoteTweet(false)
+            .addMediaId("1234567890123456789")
+            .replyToTweetId("1234567890")
             .build()
     }
 
@@ -25,33 +25,37 @@ internal class TweetCreateParamsTest {
     fun body() {
         val params =
             TweetCreateParams.builder()
-                .account("account")
-                .text("text")
-                .attachmentUrl("attachment_url")
-                .communityId("community_id")
-                .isNoteTweet(true)
-                .addMediaId("string")
-                .replyToTweetId("reply_to_tweet_id")
+                .account("@elonmusk")
+                .text("Just launched our new feature!")
+                .attachmentUrl("https://x.com/elonmusk/status/1234567890")
+                .communityId("1500000000000000000")
+                .isNoteTweet(false)
+                .addMediaId("1234567890123456789")
+                .replyToTweetId("1234567890")
                 .build()
 
         val body = params._body()
 
-        assertThat(body.account()).isEqualTo("account")
-        assertThat(body.text()).isEqualTo("text")
-        assertThat(body.attachmentUrl()).contains("attachment_url")
-        assertThat(body.communityId()).contains("community_id")
-        assertThat(body.isNoteTweet()).contains(true)
-        assertThat(body.mediaIds().getOrNull()).containsExactly("string")
-        assertThat(body.replyToTweetId()).contains("reply_to_tweet_id")
+        assertThat(body.account()).isEqualTo("@elonmusk")
+        assertThat(body.text()).isEqualTo("Just launched our new feature!")
+        assertThat(body.attachmentUrl()).contains("https://x.com/elonmusk/status/1234567890")
+        assertThat(body.communityId()).contains("1500000000000000000")
+        assertThat(body.isNoteTweet()).contains(false)
+        assertThat(body.mediaIds().getOrNull()).containsExactly("1234567890123456789")
+        assertThat(body.replyToTweetId()).contains("1234567890")
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = TweetCreateParams.builder().account("account").text("text").build()
+        val params =
+            TweetCreateParams.builder()
+                .account("@elonmusk")
+                .text("Just launched our new feature!")
+                .build()
 
         val body = params._body()
 
-        assertThat(body.account()).isEqualTo("account")
-        assertThat(body.text()).isEqualTo("text")
+        assertThat(body.account()).isEqualTo("@elonmusk")
+        assertThat(body.text()).isEqualTo("Just launched our new feature!")
     }
 }

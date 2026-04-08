@@ -17,6 +17,7 @@ import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 
+/** Saved tweet draft with optional topic and goal. */
 class Draft
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

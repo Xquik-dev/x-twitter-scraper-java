@@ -34,6 +34,8 @@ private constructor(
     fun id(): Optional<String> = Optional.ofNullable(id)
 
     /**
+     * Array of event types to subscribe to.
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -122,6 +124,7 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
+        /** Array of event types to subscribe to. */
         fun eventTypes(eventTypes: List<EventType>) = apply { body.eventTypes(eventTypes) }
 
         /**
@@ -327,6 +330,8 @@ private constructor(
         ) : this(eventTypes, isActive, url, mutableMapOf())
 
         /**
+         * Array of event types to subscribe to.
+         *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
          *   (e.g. if the server responded with an unexpected value).
          */
@@ -401,6 +406,7 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
+            /** Array of event types to subscribe to. */
             fun eventTypes(eventTypes: List<EventType>) = eventTypes(JsonField.of(eventTypes))
 
             /**
@@ -536,6 +542,7 @@ private constructor(
             "Body{eventTypes=$eventTypes, isActive=$isActive, url=$url, additionalProperties=$additionalProperties}"
     }
 
+    /** Type of monitor event fired when account activity occurs. */
     class EventType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

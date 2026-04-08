@@ -36,7 +36,9 @@ internal class CreditServiceAsyncTest {
         val creditServiceAsync = client.credits()
 
         val responseFuture =
-            creditServiceAsync.topupBalance(CreditTopupBalanceParams.builder().amount(0L).build())
+            creditServiceAsync.topupBalance(
+                CreditTopupBalanceParams.builder().amount(10000L).build()
+            )
 
         val response = responseFuture.get()
         response.validate()

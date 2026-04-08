@@ -16,6 +16,7 @@ import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
 
+/** Linked X account summary with username and connection status. */
 class XAccount
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

@@ -19,6 +19,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/** Paginated list of user profiles with cursor-based navigation. */
 class TweetGetFavoritersResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -242,6 +243,7 @@ private constructor(
             (if (nextCursor.asKnown().isPresent) 1 else 0) +
             (users.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
 
+    /** X user profile with bio, follower counts, and verification status. */
     class User
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(

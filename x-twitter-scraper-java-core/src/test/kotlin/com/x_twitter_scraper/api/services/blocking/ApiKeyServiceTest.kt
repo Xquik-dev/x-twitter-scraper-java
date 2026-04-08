@@ -19,7 +19,7 @@ internal class ApiKeyServiceTest {
                 .build()
         val apiKeyService = client.apiKeys()
 
-        val apiKey = apiKeyService.create(ApiKeyCreateParams.builder().name("name").build())
+        val apiKey = apiKeyService.create(ApiKeyCreateParams.builder().name("My API Key").build())
 
         apiKey.validate()
     }

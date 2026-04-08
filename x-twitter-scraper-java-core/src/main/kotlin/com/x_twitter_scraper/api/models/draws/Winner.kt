@@ -15,6 +15,7 @@ import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.util.Collections
 import java.util.Objects
 
+/** Giveaway draw winner with position and backup flag. */
 class Winner
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

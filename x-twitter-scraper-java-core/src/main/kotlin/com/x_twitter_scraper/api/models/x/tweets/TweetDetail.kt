@@ -20,6 +20,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/** Full tweet with text, engagement metrics, media, and metadata. */
 class TweetDetail
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -33,12 +34,12 @@ private constructor(
     private val viewCount: JsonField<Long>,
     private val conversationId: JsonField<String>,
     private val createdAt: JsonField<String>,
-    private val entities: JsonValue,
+    private val entities: JsonField<Entities>,
     private val isNoteTweet: JsonField<Boolean>,
     private val isQuoteStatus: JsonField<Boolean>,
     private val isReply: JsonField<Boolean>,
     private val media: JsonField<List<Media>>,
-    private val quotedTweet: JsonValue,
+    private val quotedTweet: JsonField<QuotedTweet>,
     private val source: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -61,7 +62,7 @@ private constructor(
         @ExcludeMissing
         conversationId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("createdAt") @ExcludeMissing createdAt: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("entities") @ExcludeMissing entities: JsonValue = JsonMissing.of(),
+        @JsonProperty("entities") @ExcludeMissing entities: JsonField<Entities> = JsonMissing.of(),
         @JsonProperty("isNoteTweet")
         @ExcludeMissing
         isNoteTweet: JsonField<Boolean> = JsonMissing.of(),
@@ -70,7 +71,9 @@ private constructor(
         isQuoteStatus: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("isReply") @ExcludeMissing isReply: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("media") @ExcludeMissing media: JsonField<List<Media>> = JsonMissing.of(),
-        @JsonProperty("quoted_tweet") @ExcludeMissing quotedTweet: JsonValue = JsonMissing.of(),
+        @JsonProperty("quoted_tweet")
+        @ExcludeMissing
+        quotedTweet: JsonField<QuotedTweet> = JsonMissing.of(),
         @JsonProperty("source") @ExcludeMissing source: JsonField<String> = JsonMissing.of(),
     ) : this(
         id,
@@ -158,12 +161,10 @@ private constructor(
     /**
      * Parsed entities from the tweet text (URLs, mentions, hashtags, media)
      *
-     * This arbitrary value can be deserialized into a custom type using the `convert` method:
-     * ```java
-     * MyClass myObject = tweetDetail.entities().convert(MyClass.class);
-     * ```
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
      */
-    @JsonProperty("entities") @ExcludeMissing fun _entities(): JsonValue = entities
+    fun entities(): Optional<Entities> = entities.getOptional("entities")
 
     /**
      * Whether this is a Note Tweet (long-form post, up to 25,000 characters)
@@ -200,12 +201,10 @@ private constructor(
     /**
      * The quoted tweet object, present when isQuoteStatus is true
      *
-     * This arbitrary value can be deserialized into a custom type using the `convert` method:
-     * ```java
-     * MyClass myObject = tweetDetail.quotedTweet().convert(MyClass.class);
-     * ```
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
      */
-    @JsonProperty("quoted_tweet") @ExcludeMissing fun _quotedTweet(): JsonValue = quotedTweet
+    fun quotedTweet(): Optional<QuotedTweet> = quotedTweet.getOptional("quoted_tweet")
 
     /**
      * Client application used to post this tweet
@@ -292,6 +291,13 @@ private constructor(
     @JsonProperty("createdAt") @ExcludeMissing fun _createdAt(): JsonField<String> = createdAt
 
     /**
+     * Returns the raw JSON value of [entities].
+     *
+     * Unlike [entities], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("entities") @ExcludeMissing fun _entities(): JsonField<Entities> = entities
+
+    /**
      * Returns the raw JSON value of [isNoteTweet].
      *
      * Unlike [isNoteTweet], this method doesn't throw if the JSON field has an unexpected type.
@@ -322,6 +328,15 @@ private constructor(
      * Unlike [media], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("media") @ExcludeMissing fun _media(): JsonField<List<Media>> = media
+
+    /**
+     * Returns the raw JSON value of [quotedTweet].
+     *
+     * Unlike [quotedTweet], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("quoted_tweet")
+    @ExcludeMissing
+    fun _quotedTweet(): JsonField<QuotedTweet> = quotedTweet
 
     /**
      * Returns the raw JSON value of [source].
@@ -375,12 +390,12 @@ private constructor(
         private var viewCount: JsonField<Long>? = null
         private var conversationId: JsonField<String> = JsonMissing.of()
         private var createdAt: JsonField<String> = JsonMissing.of()
-        private var entities: JsonValue = JsonMissing.of()
+        private var entities: JsonField<Entities> = JsonMissing.of()
         private var isNoteTweet: JsonField<Boolean> = JsonMissing.of()
         private var isQuoteStatus: JsonField<Boolean> = JsonMissing.of()
         private var isReply: JsonField<Boolean> = JsonMissing.of()
         private var media: JsonField<MutableList<Media>>? = null
-        private var quotedTweet: JsonValue = JsonMissing.of()
+        private var quotedTweet: JsonField<QuotedTweet> = JsonMissing.of()
         private var source: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -516,7 +531,16 @@ private constructor(
         fun createdAt(createdAt: JsonField<String>) = apply { this.createdAt = createdAt }
 
         /** Parsed entities from the tweet text (URLs, mentions, hashtags, media) */
-        fun entities(entities: JsonValue) = apply { this.entities = entities }
+        fun entities(entities: Entities) = entities(JsonField.of(entities))
+
+        /**
+         * Sets [Builder.entities] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.entities] with a well-typed [Entities] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun entities(entities: JsonField<Entities>) = apply { this.entities = entities }
 
         /** Whether this is a Note Tweet (long-form post, up to 25,000 characters) */
         fun isNoteTweet(isNoteTweet: Boolean) = isNoteTweet(JsonField.of(isNoteTweet))
@@ -582,7 +606,18 @@ private constructor(
         }
 
         /** The quoted tweet object, present when isQuoteStatus is true */
-        fun quotedTweet(quotedTweet: JsonValue) = apply { this.quotedTweet = quotedTweet }
+        fun quotedTweet(quotedTweet: QuotedTweet) = quotedTweet(JsonField.of(quotedTweet))
+
+        /**
+         * Sets [Builder.quotedTweet] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.quotedTweet] with a well-typed [QuotedTweet] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun quotedTweet(quotedTweet: JsonField<QuotedTweet>) = apply {
+            this.quotedTweet = quotedTweet
+        }
 
         /** Client application used to post this tweet */
         fun source(source: String) = source(JsonField.of(source))
@@ -673,10 +708,12 @@ private constructor(
         viewCount()
         conversationId()
         createdAt()
+        entities().ifPresent { it.validate() }
         isNoteTweet()
         isQuoteStatus()
         isReply()
         media().ifPresent { it.forEach { it.validate() } }
+        quotedTweet().ifPresent { it.validate() }
         source()
         validated = true
     }
@@ -706,11 +743,113 @@ private constructor(
             (if (viewCount.asKnown().isPresent) 1 else 0) +
             (if (conversationId.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
+            (entities.asKnown().getOrNull()?.validity() ?: 0) +
             (if (isNoteTweet.asKnown().isPresent) 1 else 0) +
             (if (isQuoteStatus.asKnown().isPresent) 1 else 0) +
             (if (isReply.asKnown().isPresent) 1 else 0) +
             (media.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (quotedTweet.asKnown().getOrNull()?.validity() ?: 0) +
             (if (source.asKnown().isPresent) 1 else 0)
+
+    /** Parsed entities from the tweet text (URLs, mentions, hashtags, media) */
+    class Entities
+    @JsonCreator
+    private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue
+        private val additionalProperties: Map<String, JsonValue>
+    ) {
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [Entities]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Entities]. */
+        class Builder internal constructor() {
+
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(entities: Entities) = apply {
+                additionalProperties = entities.additionalProperties.toMutableMap()
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Entities].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): Entities = Entities(additionalProperties.toImmutable())
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): Entities = apply {
+            if (validated) {
+                return@apply
+            }
+
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Entities && additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() = "Entities{additionalProperties=$additionalProperties}"
+    }
 
     class Media
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -1049,6 +1188,106 @@ private constructor(
 
         override fun toString() =
             "Media{mediaUrl=$mediaUrl, type=$type, url=$url, additionalProperties=$additionalProperties}"
+    }
+
+    /** The quoted tweet object, present when isQuoteStatus is true */
+    class QuotedTweet
+    @JsonCreator
+    private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue
+        private val additionalProperties: Map<String, JsonValue>
+    ) {
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [QuotedTweet]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [QuotedTweet]. */
+        class Builder internal constructor() {
+
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(quotedTweet: QuotedTweet) = apply {
+                additionalProperties = quotedTweet.additionalProperties.toMutableMap()
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [QuotedTweet].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): QuotedTweet = QuotedTweet(additionalProperties.toImmutable())
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): QuotedTweet = apply {
+            if (validated) {
+                return@apply
+            }
+
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is QuotedTweet && additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() = "QuotedTweet{additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

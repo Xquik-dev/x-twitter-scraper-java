@@ -57,6 +57,8 @@ private constructor(
     fun createdAt(): OffsetDateTime = createdAt.getRequired("createdAt")
 
     /**
+     * Array of event types to subscribe to.
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -183,6 +185,7 @@ private constructor(
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
+        /** Array of event types to subscribe to. */
         fun eventTypes(eventTypes: List<EventType>) = eventTypes(JsonField.of(eventTypes))
 
         /**
@@ -310,6 +313,7 @@ private constructor(
             (if (username.asKnown().isPresent) 1 else 0) +
             (if (xUserId.asKnown().isPresent) 1 else 0)
 
+    /** Type of monitor event fired when account activity occurs. */
     class EventType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

@@ -13,13 +13,14 @@ internal class SubscribeCreateResponseTest {
     fun create() {
         val subscribeCreateResponse =
             SubscribeCreateResponse.builder()
-                .url("https://example.com")
-                .message("message")
+                .url("https://checkout.stripe.com/c/pay/cs_test_123")
+                .message("Checkout session created")
                 .status(SubscribeCreateResponse.Status.CHECKOUT_CREATED)
                 .build()
 
-        assertThat(subscribeCreateResponse.url()).isEqualTo("https://example.com")
-        assertThat(subscribeCreateResponse.message()).contains("message")
+        assertThat(subscribeCreateResponse.url())
+            .isEqualTo("https://checkout.stripe.com/c/pay/cs_test_123")
+        assertThat(subscribeCreateResponse.message()).contains("Checkout session created")
         assertThat(subscribeCreateResponse.status())
             .contains(SubscribeCreateResponse.Status.CHECKOUT_CREATED)
     }
@@ -29,8 +30,8 @@ internal class SubscribeCreateResponseTest {
         val jsonMapper = jsonMapper()
         val subscribeCreateResponse =
             SubscribeCreateResponse.builder()
-                .url("https://example.com")
-                .message("message")
+                .url("https://checkout.stripe.com/c/pay/cs_test_123")
+                .message("Checkout session created")
                 .status(SubscribeCreateResponse.Status.CHECKOUT_CREATED)
                 .build()
 

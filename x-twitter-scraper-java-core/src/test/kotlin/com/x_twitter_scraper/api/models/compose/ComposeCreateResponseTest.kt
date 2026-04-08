@@ -14,16 +14,20 @@ internal class ComposeCreateResponseTest {
     fun create() {
         val composeCreateResponse =
             ComposeCreateResponse.builder()
-                .feedback("feedback")
-                .score(0.0)
-                .addSuggestion("string")
-                .text("text")
+                .feedback("Strong hook. Consider adding a call to action.")
+                .score(78.0)
+                .addSuggestion("Add a thread hook")
+                .addSuggestion("Include a relevant hashtag")
+                .text("AI is reshaping every industry. Here are 5 trends to watch in 2025.")
                 .build()
 
-        assertThat(composeCreateResponse.feedback()).contains("feedback")
-        assertThat(composeCreateResponse.score()).contains(0.0)
-        assertThat(composeCreateResponse.suggestions().getOrNull()).containsExactly("string")
-        assertThat(composeCreateResponse.text()).contains("text")
+        assertThat(composeCreateResponse.feedback())
+            .contains("Strong hook. Consider adding a call to action.")
+        assertThat(composeCreateResponse.score()).contains(78.0)
+        assertThat(composeCreateResponse.suggestions().getOrNull())
+            .containsExactly("Add a thread hook", "Include a relevant hashtag")
+        assertThat(composeCreateResponse.text())
+            .contains("AI is reshaping every industry. Here are 5 trends to watch in 2025.")
     }
 
     @Test
@@ -31,10 +35,11 @@ internal class ComposeCreateResponseTest {
         val jsonMapper = jsonMapper()
         val composeCreateResponse =
             ComposeCreateResponse.builder()
-                .feedback("feedback")
-                .score(0.0)
-                .addSuggestion("string")
-                .text("text")
+                .feedback("Strong hook. Consider adding a call to action.")
+                .score(78.0)
+                .addSuggestion("Add a thread hook")
+                .addSuggestion("Include a relevant hashtag")
+                .text("AI is reshaping every industry. Here are 5 trends to watch in 2025.")
                 .build()
 
         val roundtrippedComposeCreateResponse =

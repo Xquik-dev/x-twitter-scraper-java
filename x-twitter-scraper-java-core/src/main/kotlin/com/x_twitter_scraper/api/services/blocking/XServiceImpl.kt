@@ -5,7 +5,6 @@ package com.x_twitter_scraper.api.services.blocking
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.checkRequired
-import com.x_twitter_scraper.api.core.handlers.emptyHandler
 import com.x_twitter_scraper.api.core.handlers.errorBodyHandler
 import com.x_twitter_scraper.api.core.handlers.errorHandler
 import com.x_twitter_scraper.api.core.handlers.jsonHandler
@@ -23,6 +22,7 @@ import com.x_twitter_scraper.api.models.x.XGetHomeTimelineResponse
 import com.x_twitter_scraper.api.models.x.XGetNotificationsParams
 import com.x_twitter_scraper.api.models.x.XGetNotificationsResponse
 import com.x_twitter_scraper.api.models.x.XGetTrendsParams
+import com.x_twitter_scraper.api.models.x.XGetTrendsResponse
 import com.x_twitter_scraper.api.services.blocking.x.AccountService
 import com.x_twitter_scraper.api.services.blocking.x.AccountServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.BookmarkService
@@ -126,10 +126,12 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
         // get /x/notifications
         withRawResponse().getNotifications(params, requestOptions).parse()
 
-    override fun getTrends(params: XGetTrendsParams, requestOptions: RequestOptions) {
+    override fun getTrends(
+        params: XGetTrendsParams,
+        requestOptions: RequestOptions,
+    ): XGetTrendsResponse =
         // get /x/trends
-        withRawResponse().getTrends(params, requestOptions)
-    }
+        withRawResponse().getTrends(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         XService.WithRawResponse {
@@ -295,12 +297,13 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
             }
         }
 
-        private val getTrendsHandler: Handler<Void?> = emptyHandler()
+        private val getTrendsHandler: Handler<XGetTrendsResponse> =
+            jsonHandler<XGetTrendsResponse>(clientOptions.jsonMapper)
 
         override fun getTrends(
             params: XGetTrendsParams,
             requestOptions: RequestOptions,
-        ): HttpResponse {
+        ): HttpResponseFor<XGetTrendsResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -311,7 +314,13 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
-                response.use { getTrendsHandler.handle(it) }
+                response
+                    .use { getTrendsHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
             }
         }
     }

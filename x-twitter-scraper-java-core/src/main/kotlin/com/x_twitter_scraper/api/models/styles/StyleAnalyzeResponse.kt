@@ -20,6 +20,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/** Full style profile with sampled tweets used for tone analysis. */
 class StyleAnalyzeResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

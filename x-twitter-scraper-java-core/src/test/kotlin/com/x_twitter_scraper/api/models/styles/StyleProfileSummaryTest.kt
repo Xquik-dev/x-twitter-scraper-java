@@ -14,17 +14,17 @@ internal class StyleProfileSummaryTest {
     fun create() {
         val styleProfileSummary =
             StyleProfileSummary.builder()
-                .fetchedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .fetchedAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .isOwnAccount(true)
-                .tweetCount(0L)
-                .xUsername("xUsername")
+                .tweetCount(50L)
+                .xUsername("elonmusk")
                 .build()
 
         assertThat(styleProfileSummary.fetchedAt())
-            .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+            .isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
         assertThat(styleProfileSummary.isOwnAccount()).isEqualTo(true)
-        assertThat(styleProfileSummary.tweetCount()).isEqualTo(0L)
-        assertThat(styleProfileSummary.xUsername()).isEqualTo("xUsername")
+        assertThat(styleProfileSummary.tweetCount()).isEqualTo(50L)
+        assertThat(styleProfileSummary.xUsername()).isEqualTo("elonmusk")
     }
 
     @Test
@@ -32,10 +32,10 @@ internal class StyleProfileSummaryTest {
         val jsonMapper = jsonMapper()
         val styleProfileSummary =
             StyleProfileSummary.builder()
-                .fetchedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .fetchedAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .isOwnAccount(true)
-                .tweetCount(0L)
-                .xUsername("xUsername")
+                .tweetCount(50L)
+                .xUsername("elonmusk")
                 .build()
 
         val roundtrippedStyleProfileSummary =

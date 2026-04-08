@@ -9,14 +9,14 @@ internal class TicketRetrieveParamsTest {
 
     @Test
     fun create() {
-        TicketRetrieveParams.builder().id("id").build()
+        TicketRetrieveParams.builder().id("messages_value").build()
     }
 
     @Test
     fun pathParams() {
-        val params = TicketRetrieveParams.builder().id("id").build()
+        val params = TicketRetrieveParams.builder().id("messages_value").build()
 
-        assertThat(params._pathParam(0)).isEqualTo("id")
+        assertThat(params._pathParam(0)).isEqualTo("messages_value")
         // out-of-bound path param
         assertThat(params._pathParam(1)).isEqualTo("")
     }

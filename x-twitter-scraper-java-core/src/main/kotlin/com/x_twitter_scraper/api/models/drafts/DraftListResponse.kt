@@ -236,6 +236,7 @@ private constructor(
             (if (hasMore.asKnown().isPresent) 1 else 0) +
             (if (nextCursor.asKnown().isPresent) 1 else 0)
 
+    /** Saved tweet draft with optional topic and goal. */
     class Draft
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(

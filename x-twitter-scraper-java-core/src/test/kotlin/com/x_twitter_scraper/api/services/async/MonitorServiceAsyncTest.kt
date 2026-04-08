@@ -24,7 +24,8 @@ internal class MonitorServiceAsyncTest {
             monitorServiceAsync.create(
                 MonitorCreateParams.builder()
                     .addEventType(MonitorCreateParams.EventType.TWEET_NEW)
-                    .username("username")
+                    .addEventType(MonitorCreateParams.EventType.FOLLOWER_GAINED)
+                    .username("elonmusk")
                     .build()
             )
 

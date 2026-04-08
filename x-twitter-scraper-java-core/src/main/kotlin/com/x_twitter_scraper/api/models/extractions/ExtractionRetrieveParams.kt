@@ -21,9 +21,10 @@ private constructor(
 
     fun id(): Optional<String> = Optional.ofNullable(id)
 
-    /** Cursor for pagination */
+    /** Cursor for keyset pagination */
     fun after(): Optional<String> = Optional.ofNullable(after)
 
+    /** Maximum number of results to return (1-1000, default 100) */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
     /** Additional headers to send with the request. */
@@ -65,12 +66,13 @@ private constructor(
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
 
-        /** Cursor for pagination */
+        /** Cursor for keyset pagination */
         fun after(after: String?) = apply { this.after = after }
 
         /** Alias for calling [Builder.after] with `after.orElse(null)`. */
         fun after(after: Optional<String>) = after(after.getOrNull())
 
+        /** Maximum number of results to return (1-1000, default 100) */
         fun limit(limit: Long?) = apply { this.limit = limit }
 
         /**

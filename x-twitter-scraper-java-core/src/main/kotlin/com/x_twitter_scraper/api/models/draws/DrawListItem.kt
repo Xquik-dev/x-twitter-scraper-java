@@ -17,6 +17,7 @@ import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 
+/** Giveaway draw summary with entry counts and status. */
 class DrawListItem
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

@@ -5,7 +5,6 @@ package com.x_twitter_scraper.api.services.async
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.checkRequired
-import com.x_twitter_scraper.api.core.handlers.emptyHandler
 import com.x_twitter_scraper.api.core.handlers.errorBodyHandler
 import com.x_twitter_scraper.api.core.handlers.errorHandler
 import com.x_twitter_scraper.api.core.handlers.jsonHandler
@@ -23,6 +22,7 @@ import com.x_twitter_scraper.api.models.x.XGetHomeTimelineResponse
 import com.x_twitter_scraper.api.models.x.XGetNotificationsParams
 import com.x_twitter_scraper.api.models.x.XGetNotificationsResponse
 import com.x_twitter_scraper.api.models.x.XGetTrendsParams
+import com.x_twitter_scraper.api.models.x.XGetTrendsResponse
 import com.x_twitter_scraper.api.services.async.x.AccountServiceAsync
 import com.x_twitter_scraper.api.services.async.x.AccountServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.BookmarkServiceAsync
@@ -133,9 +133,9 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
     override fun getTrends(
         params: XGetTrendsParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<Void?> =
+    ): CompletableFuture<XGetTrendsResponse> =
         // get /x/trends
-        withRawResponse().getTrends(params, requestOptions).thenAccept {}
+        withRawResponse().getTrends(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         XServiceAsync.WithRawResponse {
@@ -310,12 +310,13 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
                 }
         }
 
-        private val getTrendsHandler: Handler<Void?> = emptyHandler()
+        private val getTrendsHandler: Handler<XGetTrendsResponse> =
+            jsonHandler<XGetTrendsResponse>(clientOptions.jsonMapper)
 
         override fun getTrends(
             params: XGetTrendsParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponse> {
+        ): CompletableFuture<HttpResponseFor<XGetTrendsResponse>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -328,7 +329,13 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
                     errorHandler.handle(response).parseable {
-                        response.use { getTrendsHandler.handle(it) }
+                        response
+                            .use { getTrendsHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
                     }
                 }
         }

@@ -14,20 +14,24 @@ internal class MonitorCreateResponseTest {
     fun create() {
         val monitorCreateResponse =
             MonitorCreateResponse.builder()
-                .id("id")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .id("42")
+                .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .addEventType(MonitorCreateResponse.EventType.TWEET_NEW)
-                .username("username")
-                .xUserId("xUserId")
+                .addEventType(MonitorCreateResponse.EventType.FOLLOWER_GAINED)
+                .username("elonmusk")
+                .xUserId("1234567890")
                 .build()
 
-        assertThat(monitorCreateResponse.id()).isEqualTo("id")
+        assertThat(monitorCreateResponse.id()).isEqualTo("42")
         assertThat(monitorCreateResponse.createdAt())
-            .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+            .isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
         assertThat(monitorCreateResponse.eventTypes())
-            .containsExactly(MonitorCreateResponse.EventType.TWEET_NEW)
-        assertThat(monitorCreateResponse.username()).isEqualTo("username")
-        assertThat(monitorCreateResponse.xUserId()).isEqualTo("xUserId")
+            .containsExactly(
+                MonitorCreateResponse.EventType.TWEET_NEW,
+                MonitorCreateResponse.EventType.FOLLOWER_GAINED,
+            )
+        assertThat(monitorCreateResponse.username()).isEqualTo("elonmusk")
+        assertThat(monitorCreateResponse.xUserId()).isEqualTo("1234567890")
     }
 
     @Test
@@ -35,11 +39,12 @@ internal class MonitorCreateResponseTest {
         val jsonMapper = jsonMapper()
         val monitorCreateResponse =
             MonitorCreateResponse.builder()
-                .id("id")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .id("42")
+                .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .addEventType(MonitorCreateResponse.EventType.TWEET_NEW)
-                .username("username")
-                .xUserId("xUserId")
+                .addEventType(MonitorCreateResponse.EventType.FOLLOWER_GAINED)
+                .username("elonmusk")
+                .xUserId("1234567890")
                 .build()
 
         val roundtrippedMonitorCreateResponse =

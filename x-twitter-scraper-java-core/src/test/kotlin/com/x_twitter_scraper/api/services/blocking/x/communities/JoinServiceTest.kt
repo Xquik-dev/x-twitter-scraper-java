@@ -21,7 +21,7 @@ internal class JoinServiceTest {
         val joinService = client.x().communities().join()
 
         val join =
-            joinService.create(JoinCreateParams.builder().id("id").account("account").build())
+            joinService.create(JoinCreateParams.builder().id("id").account("@elonmusk").build())
 
         join.validate()
     }
@@ -37,7 +37,9 @@ internal class JoinServiceTest {
         val joinService = client.x().communities().join()
 
         val response =
-            joinService.deleteAll(JoinDeleteAllParams.builder().id("id").account("account").build())
+            joinService.deleteAll(
+                JoinDeleteAllParams.builder().id("id").account("@elonmusk").build()
+            )
 
         response.validate()
     }

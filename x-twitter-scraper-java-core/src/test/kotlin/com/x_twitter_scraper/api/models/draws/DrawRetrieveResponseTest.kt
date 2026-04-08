@@ -16,7 +16,7 @@ internal class DrawRetrieveResponseTest {
             DrawRetrieveResponse.builder()
                 .draw(
                     DrawRetrieveResponse.Draw.builder()
-                        .id("id")
+                        .id("https://example.com/webhook")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .status("status")
                         .totalEntries(0L)
@@ -45,7 +45,7 @@ internal class DrawRetrieveResponseTest {
         assertThat(drawRetrieveResponse.draw())
             .isEqualTo(
                 DrawRetrieveResponse.Draw.builder()
-                    .id("id")
+                    .id("https://example.com/webhook")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .status("status")
                     .totalEntries(0L)
@@ -79,7 +79,7 @@ internal class DrawRetrieveResponseTest {
             DrawRetrieveResponse.builder()
                 .draw(
                     DrawRetrieveResponse.Draw.builder()
-                        .id("id")
+                        .id("https://example.com/webhook")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .status("status")
                         .totalEntries(0L)

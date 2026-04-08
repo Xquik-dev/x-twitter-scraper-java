@@ -175,6 +175,7 @@ private constructor(
     internal fun validity(): Int =
         (webhooks.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
 
+    /** Webhook endpoint registered to receive event deliveries. */
     class Webhook
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
@@ -216,6 +217,8 @@ private constructor(
         fun createdAt(): OffsetDateTime = createdAt.getRequired("createdAt")
 
         /**
+         * Array of event types to subscribe to.
+         *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
          *   value).
@@ -348,6 +351,7 @@ private constructor(
                 this.createdAt = createdAt
             }
 
+            /** Array of event types to subscribe to. */
             fun eventTypes(eventTypes: List<EventType>) = eventTypes(JsonField.of(eventTypes))
 
             /**
@@ -478,6 +482,7 @@ private constructor(
                 (if (isActive.asKnown().isPresent) 1 else 0) +
                 (if (url.asKnown().isPresent) 1 else 0)
 
+        /** Type of monitor event fired when account activity occurs. */
         class EventType @JsonCreator private constructor(private val value: JsonField<String>) :
             Enum {
 

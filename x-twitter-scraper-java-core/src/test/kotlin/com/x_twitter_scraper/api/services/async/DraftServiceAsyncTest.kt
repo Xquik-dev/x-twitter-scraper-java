@@ -23,9 +23,9 @@ internal class DraftServiceAsyncTest {
         val draftFuture =
             draftServiceAsync.create(
                 DraftCreateParams.builder()
-                    .text("text")
+                    .text("AI is the future of productivity")
                     .goal(DraftCreateParams.Goal.ENGAGEMENT)
-                    .topic("topic")
+                    .topic("AI trends")
                     .build()
             )
 

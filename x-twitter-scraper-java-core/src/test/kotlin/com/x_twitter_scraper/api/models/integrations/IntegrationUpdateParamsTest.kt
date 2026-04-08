@@ -2,7 +2,6 @@
 
 package com.x_twitter_scraper.api.models.integrations
 
-import com.x_twitter_scraper.api.core.JsonValue
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -14,20 +13,13 @@ internal class IntegrationUpdateParamsTest {
         IntegrationUpdateParams.builder()
             .id("id")
             .addEventType(IntegrationUpdateParams.EventType.TWEET_NEW)
-            .filters(
-                IntegrationUpdateParams.Filters.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                    .build()
-            )
+            .addEventType(IntegrationUpdateParams.EventType.FOLLOWER_GAINED)
+            .filters(IntegrationUpdateParams.Filters.builder().build())
             .isActive(true)
-            .messageTemplate(
-                IntegrationUpdateParams.MessageTemplate.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                    .build()
-            )
-            .name("name")
+            .messageTemplate(IntegrationUpdateParams.MessageTemplate.builder().build())
+            .name("My Telegram Bot")
             .scopeAllMonitors(true)
-            .silentPush(true)
+            .silentPush(false)
             .build()
     }
 
@@ -46,42 +38,29 @@ internal class IntegrationUpdateParamsTest {
             IntegrationUpdateParams.builder()
                 .id("id")
                 .addEventType(IntegrationUpdateParams.EventType.TWEET_NEW)
-                .filters(
-                    IntegrationUpdateParams.Filters.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                        .build()
-                )
+                .addEventType(IntegrationUpdateParams.EventType.FOLLOWER_GAINED)
+                .filters(IntegrationUpdateParams.Filters.builder().build())
                 .isActive(true)
-                .messageTemplate(
-                    IntegrationUpdateParams.MessageTemplate.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                        .build()
-                )
-                .name("name")
+                .messageTemplate(IntegrationUpdateParams.MessageTemplate.builder().build())
+                .name("My Telegram Bot")
                 .scopeAllMonitors(true)
-                .silentPush(true)
+                .silentPush(false)
                 .build()
 
         val body = params._body()
 
         assertThat(body.eventTypes().getOrNull())
-            .containsExactly(IntegrationUpdateParams.EventType.TWEET_NEW)
-        assertThat(body.filters())
-            .contains(
-                IntegrationUpdateParams.Filters.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                    .build()
+            .containsExactly(
+                IntegrationUpdateParams.EventType.TWEET_NEW,
+                IntegrationUpdateParams.EventType.FOLLOWER_GAINED,
             )
+        assertThat(body.filters()).contains(IntegrationUpdateParams.Filters.builder().build())
         assertThat(body.isActive()).contains(true)
         assertThat(body.messageTemplate())
-            .contains(
-                IntegrationUpdateParams.MessageTemplate.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                    .build()
-            )
-        assertThat(body.name()).contains("name")
+            .contains(IntegrationUpdateParams.MessageTemplate.builder().build())
+        assertThat(body.name()).contains("My Telegram Bot")
         assertThat(body.scopeAllMonitors()).contains(true)
-        assertThat(body.silentPush()).contains(true)
+        assertThat(body.silentPush()).contains(false)
     }
 
     @Test

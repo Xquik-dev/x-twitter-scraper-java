@@ -9,15 +9,15 @@ internal class StyleAnalyzeParamsTest {
 
     @Test
     fun create() {
-        StyleAnalyzeParams.builder().username("username").build()
+        StyleAnalyzeParams.builder().username("elonmusk").build()
     }
 
     @Test
     fun body() {
-        val params = StyleAnalyzeParams.builder().username("username").build()
+        val params = StyleAnalyzeParams.builder().username("elonmusk").build()
 
         val body = params._body()
 
-        assertThat(body.username()).isEqualTo("username")
+        assertThat(body.username()).isEqualTo("elonmusk")
     }
 }

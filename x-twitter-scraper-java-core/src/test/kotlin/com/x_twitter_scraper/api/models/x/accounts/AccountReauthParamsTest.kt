@@ -11,14 +11,14 @@ internal class AccountReauthParamsTest {
     fun create() {
         AccountReauthParams.builder()
             .id("id")
-            .password("password")
-            .totpSecret("totp_secret")
+            .password("password_value")
+            .totpSecret("totp_secret_value")
             .build()
     }
 
     @Test
     fun pathParams() {
-        val params = AccountReauthParams.builder().id("id").password("password").build()
+        val params = AccountReauthParams.builder().id("id").password("password_value").build()
 
         assertThat(params._pathParam(0)).isEqualTo("id")
         // out-of-bound path param
@@ -30,22 +30,22 @@ internal class AccountReauthParamsTest {
         val params =
             AccountReauthParams.builder()
                 .id("id")
-                .password("password")
-                .totpSecret("totp_secret")
+                .password("password_value")
+                .totpSecret("totp_secret_value")
                 .build()
 
         val body = params._body()
 
-        assertThat(body.password()).isEqualTo("password")
-        assertThat(body.totpSecret()).contains("totp_secret")
+        assertThat(body.password()).isEqualTo("password_value")
+        assertThat(body.totpSecret()).contains("totp_secret_value")
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = AccountReauthParams.builder().id("id").password("password").build()
+        val params = AccountReauthParams.builder().id("id").password("password_value").build()
 
         val body = params._body()
 
-        assertThat(body.password()).isEqualTo("password")
+        assertThat(body.password()).isEqualTo("password_value")
     }
 }

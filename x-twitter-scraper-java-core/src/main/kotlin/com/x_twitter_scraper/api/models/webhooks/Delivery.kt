@@ -17,6 +17,7 @@ import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 
+/** Webhook delivery attempt record with status and retry count. */
 class Delivery
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

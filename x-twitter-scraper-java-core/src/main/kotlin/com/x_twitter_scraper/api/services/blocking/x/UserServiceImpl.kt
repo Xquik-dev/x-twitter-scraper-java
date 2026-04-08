@@ -5,7 +5,6 @@ package com.x_twitter_scraper.api.services.blocking.x
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.checkRequired
-import com.x_twitter_scraper.api.core.handlers.emptyHandler
 import com.x_twitter_scraper.api.core.handlers.errorBodyHandler
 import com.x_twitter_scraper.api.core.handlers.errorHandler
 import com.x_twitter_scraper.api.core.handlers.jsonHandler
@@ -17,19 +16,25 @@ import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepare
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveBatchParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveBatchResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowersParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowersResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowersYouKnowParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowersYouKnowResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowingParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowingResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveLikesParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveLikesResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveMediaParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveMediaResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveMentionsParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveMentionsResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveSearchParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveSearchResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveTweetsParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveTweetsResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveVerifiedFollowersParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveVerifiedFollowersResponse
 import com.x_twitter_scraper.api.services.blocking.x.users.FollowService
 import com.x_twitter_scraper.api.services.blocking.x.users.FollowServiceImpl
 import java.util.function.Consumer
@@ -51,18 +56,19 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
 
     override fun follow(): FollowService = follow
 
-    override fun retrieveBatch(params: UserRetrieveBatchParams, requestOptions: RequestOptions) {
+    override fun retrieveBatch(
+        params: UserRetrieveBatchParams,
+        requestOptions: RequestOptions,
+    ): UserRetrieveBatchResponse =
         // get /x/users/batch
-        withRawResponse().retrieveBatch(params, requestOptions)
-    }
+        withRawResponse().retrieveBatch(params, requestOptions).parse()
 
     override fun retrieveFollowers(
         params: UserRetrieveFollowersParams,
         requestOptions: RequestOptions,
-    ) {
+    ): UserRetrieveFollowersResponse =
         // get /x/users/{id}/followers
-        withRawResponse().retrieveFollowers(params, requestOptions)
-    }
+        withRawResponse().retrieveFollowers(params, requestOptions).parse()
 
     override fun retrieveFollowersYouKnow(
         params: UserRetrieveFollowersYouKnowParams,
@@ -74,10 +80,9 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
     override fun retrieveFollowing(
         params: UserRetrieveFollowingParams,
         requestOptions: RequestOptions,
-    ) {
+    ): UserRetrieveFollowingResponse =
         // get /x/users/{id}/following
-        withRawResponse().retrieveFollowing(params, requestOptions)
-    }
+        withRawResponse().retrieveFollowing(params, requestOptions).parse()
 
     override fun retrieveLikes(
         params: UserRetrieveLikesParams,
@@ -96,15 +101,16 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
     override fun retrieveMentions(
         params: UserRetrieveMentionsParams,
         requestOptions: RequestOptions,
-    ) {
+    ): UserRetrieveMentionsResponse =
         // get /x/users/{id}/mentions
-        withRawResponse().retrieveMentions(params, requestOptions)
-    }
+        withRawResponse().retrieveMentions(params, requestOptions).parse()
 
-    override fun retrieveSearch(params: UserRetrieveSearchParams, requestOptions: RequestOptions) {
+    override fun retrieveSearch(
+        params: UserRetrieveSearchParams,
+        requestOptions: RequestOptions,
+    ): UserRetrieveSearchResponse =
         // get /x/users/search
-        withRawResponse().retrieveSearch(params, requestOptions)
-    }
+        withRawResponse().retrieveSearch(params, requestOptions).parse()
 
     override fun retrieveTweets(
         params: UserRetrieveTweetsParams,
@@ -116,10 +122,9 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
     override fun retrieveVerifiedFollowers(
         params: UserRetrieveVerifiedFollowersParams,
         requestOptions: RequestOptions,
-    ) {
+    ): UserRetrieveVerifiedFollowersResponse =
         // get /x/users/{id}/verified-followers
-        withRawResponse().retrieveVerifiedFollowers(params, requestOptions)
-    }
+        withRawResponse().retrieveVerifiedFollowers(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         UserService.WithRawResponse {
@@ -140,12 +145,13 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
 
         override fun follow(): FollowService.WithRawResponse = follow
 
-        private val retrieveBatchHandler: Handler<Void?> = emptyHandler()
+        private val retrieveBatchHandler: Handler<UserRetrieveBatchResponse> =
+            jsonHandler<UserRetrieveBatchResponse>(clientOptions.jsonMapper)
 
         override fun retrieveBatch(
             params: UserRetrieveBatchParams,
             requestOptions: RequestOptions,
-        ): HttpResponse {
+        ): HttpResponseFor<UserRetrieveBatchResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -156,16 +162,23 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
-                response.use { retrieveBatchHandler.handle(it) }
+                response
+                    .use { retrieveBatchHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
             }
         }
 
-        private val retrieveFollowersHandler: Handler<Void?> = emptyHandler()
+        private val retrieveFollowersHandler: Handler<UserRetrieveFollowersResponse> =
+            jsonHandler<UserRetrieveFollowersResponse>(clientOptions.jsonMapper)
 
         override fun retrieveFollowers(
             params: UserRetrieveFollowersParams,
             requestOptions: RequestOptions,
-        ): HttpResponse {
+        ): HttpResponseFor<UserRetrieveFollowersResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -179,7 +192,13 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
-                response.use { retrieveFollowersHandler.handle(it) }
+                response
+                    .use { retrieveFollowersHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
             }
         }
 
@@ -213,12 +232,13 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
             }
         }
 
-        private val retrieveFollowingHandler: Handler<Void?> = emptyHandler()
+        private val retrieveFollowingHandler: Handler<UserRetrieveFollowingResponse> =
+            jsonHandler<UserRetrieveFollowingResponse>(clientOptions.jsonMapper)
 
         override fun retrieveFollowing(
             params: UserRetrieveFollowingParams,
             requestOptions: RequestOptions,
-        ): HttpResponse {
+        ): HttpResponseFor<UserRetrieveFollowingResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -232,7 +252,13 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
-                response.use { retrieveFollowingHandler.handle(it) }
+                response
+                    .use { retrieveFollowingHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
             }
         }
 
@@ -296,12 +322,13 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
             }
         }
 
-        private val retrieveMentionsHandler: Handler<Void?> = emptyHandler()
+        private val retrieveMentionsHandler: Handler<UserRetrieveMentionsResponse> =
+            jsonHandler<UserRetrieveMentionsResponse>(clientOptions.jsonMapper)
 
         override fun retrieveMentions(
             params: UserRetrieveMentionsParams,
             requestOptions: RequestOptions,
-        ): HttpResponse {
+        ): HttpResponseFor<UserRetrieveMentionsResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -315,16 +342,23 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
-                response.use { retrieveMentionsHandler.handle(it) }
+                response
+                    .use { retrieveMentionsHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
             }
         }
 
-        private val retrieveSearchHandler: Handler<Void?> = emptyHandler()
+        private val retrieveSearchHandler: Handler<UserRetrieveSearchResponse> =
+            jsonHandler<UserRetrieveSearchResponse>(clientOptions.jsonMapper)
 
         override fun retrieveSearch(
             params: UserRetrieveSearchParams,
             requestOptions: RequestOptions,
-        ): HttpResponse {
+        ): HttpResponseFor<UserRetrieveSearchResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -335,7 +369,13 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
-                response.use { retrieveSearchHandler.handle(it) }
+                response
+                    .use { retrieveSearchHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
             }
         }
 
@@ -369,12 +409,14 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
             }
         }
 
-        private val retrieveVerifiedFollowersHandler: Handler<Void?> = emptyHandler()
+        private val retrieveVerifiedFollowersHandler:
+            Handler<UserRetrieveVerifiedFollowersResponse> =
+            jsonHandler<UserRetrieveVerifiedFollowersResponse>(clientOptions.jsonMapper)
 
         override fun retrieveVerifiedFollowers(
             params: UserRetrieveVerifiedFollowersParams,
             requestOptions: RequestOptions,
-        ): HttpResponse {
+        ): HttpResponseFor<UserRetrieveVerifiedFollowersResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -388,7 +430,13 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
-                response.use { retrieveVerifiedFollowersHandler.handle(it) }
+                response
+                    .use { retrieveVerifiedFollowersHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
             }
         }
     }
