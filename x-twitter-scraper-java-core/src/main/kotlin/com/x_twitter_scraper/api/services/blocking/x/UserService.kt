@@ -6,26 +6,20 @@ import com.google.errorprone.annotations.MustBeClosed
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
+import com.x_twitter_scraper.api.models.PaginatedTweets
+import com.x_twitter_scraper.api.models.PaginatedUsers
+import com.x_twitter_scraper.api.models.x.users.UserProfile
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveBatchParams
-import com.x_twitter_scraper.api.models.x.users.UserRetrieveBatchResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowersParams
-import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowersResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowersYouKnowParams
-import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowersYouKnowResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowingParams
-import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowingResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveLikesParams
-import com.x_twitter_scraper.api.models.x.users.UserRetrieveLikesResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveMediaParams
-import com.x_twitter_scraper.api.models.x.users.UserRetrieveMediaResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveMentionsParams
-import com.x_twitter_scraper.api.models.x.users.UserRetrieveMentionsResponse
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveSearchParams
-import com.x_twitter_scraper.api.models.x.users.UserRetrieveSearchResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveTweetsParams
-import com.x_twitter_scraper.api.models.x.users.UserRetrieveTweetsResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveVerifiedFollowersParams
-import com.x_twitter_scraper.api.models.x.users.UserRetrieveVerifiedFollowersResponse
 import com.x_twitter_scraper.api.services.blocking.x.users.FollowService
 import java.util.function.Consumer
 
@@ -44,20 +38,48 @@ interface UserService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserService
 
+    /** X write actions (tweets, likes, follows, DMs) */
     fun follow(): FollowService
 
+    /** Look up X user */
+    fun retrieve(id: String): UserProfile = retrieve(id, UserRetrieveParams.none())
+
+    /** @see retrieve */
+    fun retrieve(
+        id: String,
+        params: UserRetrieveParams = UserRetrieveParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): UserProfile = retrieve(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see retrieve */
+    fun retrieve(id: String, params: UserRetrieveParams = UserRetrieveParams.none()): UserProfile =
+        retrieve(id, params, RequestOptions.none())
+
+    /** @see retrieve */
+    fun retrieve(
+        params: UserRetrieveParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): UserProfile
+
+    /** @see retrieve */
+    fun retrieve(params: UserRetrieveParams): UserProfile = retrieve(params, RequestOptions.none())
+
+    /** @see retrieve */
+    fun retrieve(id: String, requestOptions: RequestOptions): UserProfile =
+        retrieve(id, UserRetrieveParams.none(), requestOptions)
+
     /** Get multiple users by IDs */
-    fun retrieveBatch(params: UserRetrieveBatchParams): UserRetrieveBatchResponse =
+    fun retrieveBatch(params: UserRetrieveBatchParams): PaginatedUsers =
         retrieveBatch(params, RequestOptions.none())
 
     /** @see retrieveBatch */
     fun retrieveBatch(
         params: UserRetrieveBatchParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): UserRetrieveBatchResponse
+    ): PaginatedUsers
 
     /** Get user followers */
-    fun retrieveFollowers(id: String): UserRetrieveFollowersResponse =
+    fun retrieveFollowers(id: String): PaginatedUsers =
         retrieveFollowers(id, UserRetrieveFollowersParams.none())
 
     /** @see retrieveFollowers */
@@ -65,34 +87,30 @@ interface UserService {
         id: String,
         params: UserRetrieveFollowersParams = UserRetrieveFollowersParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): UserRetrieveFollowersResponse =
-        retrieveFollowers(params.toBuilder().id(id).build(), requestOptions)
+    ): PaginatedUsers = retrieveFollowers(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveFollowers */
     fun retrieveFollowers(
         id: String,
         params: UserRetrieveFollowersParams = UserRetrieveFollowersParams.none(),
-    ): UserRetrieveFollowersResponse = retrieveFollowers(id, params, RequestOptions.none())
+    ): PaginatedUsers = retrieveFollowers(id, params, RequestOptions.none())
 
     /** @see retrieveFollowers */
     fun retrieveFollowers(
         params: UserRetrieveFollowersParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): UserRetrieveFollowersResponse
+    ): PaginatedUsers
 
     /** @see retrieveFollowers */
-    fun retrieveFollowers(params: UserRetrieveFollowersParams): UserRetrieveFollowersResponse =
+    fun retrieveFollowers(params: UserRetrieveFollowersParams): PaginatedUsers =
         retrieveFollowers(params, RequestOptions.none())
 
     /** @see retrieveFollowers */
-    fun retrieveFollowers(
-        id: String,
-        requestOptions: RequestOptions,
-    ): UserRetrieveFollowersResponse =
+    fun retrieveFollowers(id: String, requestOptions: RequestOptions): PaginatedUsers =
         retrieveFollowers(id, UserRetrieveFollowersParams.none(), requestOptions)
 
     /** Get followers you know for a user */
-    fun retrieveFollowersYouKnow(id: String): UserRetrieveFollowersYouKnowResponse =
+    fun retrieveFollowersYouKnow(id: String): PaginatedUsers =
         retrieveFollowersYouKnow(id, UserRetrieveFollowersYouKnowParams.none())
 
     /** @see retrieveFollowersYouKnow */
@@ -100,37 +118,30 @@ interface UserService {
         id: String,
         params: UserRetrieveFollowersYouKnowParams = UserRetrieveFollowersYouKnowParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): UserRetrieveFollowersYouKnowResponse =
-        retrieveFollowersYouKnow(params.toBuilder().id(id).build(), requestOptions)
+    ): PaginatedUsers = retrieveFollowersYouKnow(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveFollowersYouKnow */
     fun retrieveFollowersYouKnow(
         id: String,
         params: UserRetrieveFollowersYouKnowParams = UserRetrieveFollowersYouKnowParams.none(),
-    ): UserRetrieveFollowersYouKnowResponse =
-        retrieveFollowersYouKnow(id, params, RequestOptions.none())
+    ): PaginatedUsers = retrieveFollowersYouKnow(id, params, RequestOptions.none())
 
     /** @see retrieveFollowersYouKnow */
     fun retrieveFollowersYouKnow(
         params: UserRetrieveFollowersYouKnowParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): UserRetrieveFollowersYouKnowResponse
+    ): PaginatedUsers
 
     /** @see retrieveFollowersYouKnow */
-    fun retrieveFollowersYouKnow(
-        params: UserRetrieveFollowersYouKnowParams
-    ): UserRetrieveFollowersYouKnowResponse =
+    fun retrieveFollowersYouKnow(params: UserRetrieveFollowersYouKnowParams): PaginatedUsers =
         retrieveFollowersYouKnow(params, RequestOptions.none())
 
     /** @see retrieveFollowersYouKnow */
-    fun retrieveFollowersYouKnow(
-        id: String,
-        requestOptions: RequestOptions,
-    ): UserRetrieveFollowersYouKnowResponse =
+    fun retrieveFollowersYouKnow(id: String, requestOptions: RequestOptions): PaginatedUsers =
         retrieveFollowersYouKnow(id, UserRetrieveFollowersYouKnowParams.none(), requestOptions)
 
     /** Get users this user follows */
-    fun retrieveFollowing(id: String): UserRetrieveFollowingResponse =
+    fun retrieveFollowing(id: String): PaginatedUsers =
         retrieveFollowing(id, UserRetrieveFollowingParams.none())
 
     /** @see retrieveFollowing */
@@ -138,34 +149,30 @@ interface UserService {
         id: String,
         params: UserRetrieveFollowingParams = UserRetrieveFollowingParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): UserRetrieveFollowingResponse =
-        retrieveFollowing(params.toBuilder().id(id).build(), requestOptions)
+    ): PaginatedUsers = retrieveFollowing(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveFollowing */
     fun retrieveFollowing(
         id: String,
         params: UserRetrieveFollowingParams = UserRetrieveFollowingParams.none(),
-    ): UserRetrieveFollowingResponse = retrieveFollowing(id, params, RequestOptions.none())
+    ): PaginatedUsers = retrieveFollowing(id, params, RequestOptions.none())
 
     /** @see retrieveFollowing */
     fun retrieveFollowing(
         params: UserRetrieveFollowingParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): UserRetrieveFollowingResponse
+    ): PaginatedUsers
 
     /** @see retrieveFollowing */
-    fun retrieveFollowing(params: UserRetrieveFollowingParams): UserRetrieveFollowingResponse =
+    fun retrieveFollowing(params: UserRetrieveFollowingParams): PaginatedUsers =
         retrieveFollowing(params, RequestOptions.none())
 
     /** @see retrieveFollowing */
-    fun retrieveFollowing(
-        id: String,
-        requestOptions: RequestOptions,
-    ): UserRetrieveFollowingResponse =
+    fun retrieveFollowing(id: String, requestOptions: RequestOptions): PaginatedUsers =
         retrieveFollowing(id, UserRetrieveFollowingParams.none(), requestOptions)
 
     /** Get tweets liked by a user */
-    fun retrieveLikes(id: String): UserRetrieveLikesResponse =
+    fun retrieveLikes(id: String): PaginatedTweets =
         retrieveLikes(id, UserRetrieveLikesParams.none())
 
     /** @see retrieveLikes */
@@ -173,30 +180,30 @@ interface UserService {
         id: String,
         params: UserRetrieveLikesParams = UserRetrieveLikesParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): UserRetrieveLikesResponse = retrieveLikes(params.toBuilder().id(id).build(), requestOptions)
+    ): PaginatedTweets = retrieveLikes(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveLikes */
     fun retrieveLikes(
         id: String,
         params: UserRetrieveLikesParams = UserRetrieveLikesParams.none(),
-    ): UserRetrieveLikesResponse = retrieveLikes(id, params, RequestOptions.none())
+    ): PaginatedTweets = retrieveLikes(id, params, RequestOptions.none())
 
     /** @see retrieveLikes */
     fun retrieveLikes(
         params: UserRetrieveLikesParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): UserRetrieveLikesResponse
+    ): PaginatedTweets
 
     /** @see retrieveLikes */
-    fun retrieveLikes(params: UserRetrieveLikesParams): UserRetrieveLikesResponse =
+    fun retrieveLikes(params: UserRetrieveLikesParams): PaginatedTweets =
         retrieveLikes(params, RequestOptions.none())
 
     /** @see retrieveLikes */
-    fun retrieveLikes(id: String, requestOptions: RequestOptions): UserRetrieveLikesResponse =
+    fun retrieveLikes(id: String, requestOptions: RequestOptions): PaginatedTweets =
         retrieveLikes(id, UserRetrieveLikesParams.none(), requestOptions)
 
     /** Get media tweets by a user */
-    fun retrieveMedia(id: String): UserRetrieveMediaResponse =
+    fun retrieveMedia(id: String): PaginatedTweets =
         retrieveMedia(id, UserRetrieveMediaParams.none())
 
     /** @see retrieveMedia */
@@ -204,30 +211,30 @@ interface UserService {
         id: String,
         params: UserRetrieveMediaParams = UserRetrieveMediaParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): UserRetrieveMediaResponse = retrieveMedia(params.toBuilder().id(id).build(), requestOptions)
+    ): PaginatedTweets = retrieveMedia(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveMedia */
     fun retrieveMedia(
         id: String,
         params: UserRetrieveMediaParams = UserRetrieveMediaParams.none(),
-    ): UserRetrieveMediaResponse = retrieveMedia(id, params, RequestOptions.none())
+    ): PaginatedTweets = retrieveMedia(id, params, RequestOptions.none())
 
     /** @see retrieveMedia */
     fun retrieveMedia(
         params: UserRetrieveMediaParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): UserRetrieveMediaResponse
+    ): PaginatedTweets
 
     /** @see retrieveMedia */
-    fun retrieveMedia(params: UserRetrieveMediaParams): UserRetrieveMediaResponse =
+    fun retrieveMedia(params: UserRetrieveMediaParams): PaginatedTweets =
         retrieveMedia(params, RequestOptions.none())
 
     /** @see retrieveMedia */
-    fun retrieveMedia(id: String, requestOptions: RequestOptions): UserRetrieveMediaResponse =
+    fun retrieveMedia(id: String, requestOptions: RequestOptions): PaginatedTweets =
         retrieveMedia(id, UserRetrieveMediaParams.none(), requestOptions)
 
     /** Get tweets mentioning a user */
-    fun retrieveMentions(id: String): UserRetrieveMentionsResponse =
+    fun retrieveMentions(id: String): PaginatedTweets =
         retrieveMentions(id, UserRetrieveMentionsParams.none())
 
     /** @see retrieveMentions */
@@ -235,41 +242,40 @@ interface UserService {
         id: String,
         params: UserRetrieveMentionsParams = UserRetrieveMentionsParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): UserRetrieveMentionsResponse =
-        retrieveMentions(params.toBuilder().id(id).build(), requestOptions)
+    ): PaginatedTweets = retrieveMentions(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveMentions */
     fun retrieveMentions(
         id: String,
         params: UserRetrieveMentionsParams = UserRetrieveMentionsParams.none(),
-    ): UserRetrieveMentionsResponse = retrieveMentions(id, params, RequestOptions.none())
+    ): PaginatedTweets = retrieveMentions(id, params, RequestOptions.none())
 
     /** @see retrieveMentions */
     fun retrieveMentions(
         params: UserRetrieveMentionsParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): UserRetrieveMentionsResponse
+    ): PaginatedTweets
 
     /** @see retrieveMentions */
-    fun retrieveMentions(params: UserRetrieveMentionsParams): UserRetrieveMentionsResponse =
+    fun retrieveMentions(params: UserRetrieveMentionsParams): PaginatedTweets =
         retrieveMentions(params, RequestOptions.none())
 
     /** @see retrieveMentions */
-    fun retrieveMentions(id: String, requestOptions: RequestOptions): UserRetrieveMentionsResponse =
+    fun retrieveMentions(id: String, requestOptions: RequestOptions): PaginatedTweets =
         retrieveMentions(id, UserRetrieveMentionsParams.none(), requestOptions)
 
     /** Search users by name or username */
-    fun retrieveSearch(params: UserRetrieveSearchParams): UserRetrieveSearchResponse =
+    fun retrieveSearch(params: UserRetrieveSearchParams): PaginatedUsers =
         retrieveSearch(params, RequestOptions.none())
 
     /** @see retrieveSearch */
     fun retrieveSearch(
         params: UserRetrieveSearchParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): UserRetrieveSearchResponse
+    ): PaginatedUsers
 
     /** Get recent tweets by a user */
-    fun retrieveTweets(id: String): UserRetrieveTweetsResponse =
+    fun retrieveTweets(id: String): PaginatedTweets =
         retrieveTweets(id, UserRetrieveTweetsParams.none())
 
     /** @see retrieveTweets */
@@ -277,31 +283,30 @@ interface UserService {
         id: String,
         params: UserRetrieveTweetsParams = UserRetrieveTweetsParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): UserRetrieveTweetsResponse =
-        retrieveTweets(params.toBuilder().id(id).build(), requestOptions)
+    ): PaginatedTweets = retrieveTweets(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveTweets */
     fun retrieveTweets(
         id: String,
         params: UserRetrieveTweetsParams = UserRetrieveTweetsParams.none(),
-    ): UserRetrieveTweetsResponse = retrieveTweets(id, params, RequestOptions.none())
+    ): PaginatedTweets = retrieveTweets(id, params, RequestOptions.none())
 
     /** @see retrieveTweets */
     fun retrieveTweets(
         params: UserRetrieveTweetsParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): UserRetrieveTweetsResponse
+    ): PaginatedTweets
 
     /** @see retrieveTweets */
-    fun retrieveTweets(params: UserRetrieveTweetsParams): UserRetrieveTweetsResponse =
+    fun retrieveTweets(params: UserRetrieveTweetsParams): PaginatedTweets =
         retrieveTweets(params, RequestOptions.none())
 
     /** @see retrieveTweets */
-    fun retrieveTweets(id: String, requestOptions: RequestOptions): UserRetrieveTweetsResponse =
+    fun retrieveTweets(id: String, requestOptions: RequestOptions): PaginatedTweets =
         retrieveTweets(id, UserRetrieveTweetsParams.none(), requestOptions)
 
     /** Get verified followers */
-    fun retrieveVerifiedFollowers(id: String): UserRetrieveVerifiedFollowersResponse =
+    fun retrieveVerifiedFollowers(id: String): PaginatedUsers =
         retrieveVerifiedFollowers(id, UserRetrieveVerifiedFollowersParams.none())
 
     /** @see retrieveVerifiedFollowers */
@@ -309,33 +314,26 @@ interface UserService {
         id: String,
         params: UserRetrieveVerifiedFollowersParams = UserRetrieveVerifiedFollowersParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): UserRetrieveVerifiedFollowersResponse =
-        retrieveVerifiedFollowers(params.toBuilder().id(id).build(), requestOptions)
+    ): PaginatedUsers = retrieveVerifiedFollowers(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveVerifiedFollowers */
     fun retrieveVerifiedFollowers(
         id: String,
         params: UserRetrieveVerifiedFollowersParams = UserRetrieveVerifiedFollowersParams.none(),
-    ): UserRetrieveVerifiedFollowersResponse =
-        retrieveVerifiedFollowers(id, params, RequestOptions.none())
+    ): PaginatedUsers = retrieveVerifiedFollowers(id, params, RequestOptions.none())
 
     /** @see retrieveVerifiedFollowers */
     fun retrieveVerifiedFollowers(
         params: UserRetrieveVerifiedFollowersParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): UserRetrieveVerifiedFollowersResponse
+    ): PaginatedUsers
 
     /** @see retrieveVerifiedFollowers */
-    fun retrieveVerifiedFollowers(
-        params: UserRetrieveVerifiedFollowersParams
-    ): UserRetrieveVerifiedFollowersResponse =
+    fun retrieveVerifiedFollowers(params: UserRetrieveVerifiedFollowersParams): PaginatedUsers =
         retrieveVerifiedFollowers(params, RequestOptions.none())
 
     /** @see retrieveVerifiedFollowers */
-    fun retrieveVerifiedFollowers(
-        id: String,
-        requestOptions: RequestOptions,
-    ): UserRetrieveVerifiedFollowersResponse =
+    fun retrieveVerifiedFollowers(id: String, requestOptions: RequestOptions): PaginatedUsers =
         retrieveVerifiedFollowers(id, UserRetrieveVerifiedFollowersParams.none(), requestOptions)
 
     /** A view of [UserService] that provides access to raw HTTP responses for each method. */
@@ -348,30 +346,71 @@ interface UserService {
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserService.WithRawResponse
 
+        /** X write actions (tweets, likes, follows, DMs) */
         fun follow(): FollowService.WithRawResponse
+
+        /**
+         * Returns a raw HTTP response for `get /x/users/{id}`, but is otherwise the same as
+         * [UserService.retrieve].
+         */
+        @MustBeClosed
+        fun retrieve(id: String): HttpResponseFor<UserProfile> =
+            retrieve(id, UserRetrieveParams.none())
+
+        /** @see retrieve */
+        @MustBeClosed
+        fun retrieve(
+            id: String,
+            params: UserRetrieveParams = UserRetrieveParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<UserProfile> =
+            retrieve(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see retrieve */
+        @MustBeClosed
+        fun retrieve(
+            id: String,
+            params: UserRetrieveParams = UserRetrieveParams.none(),
+        ): HttpResponseFor<UserProfile> = retrieve(id, params, RequestOptions.none())
+
+        /** @see retrieve */
+        @MustBeClosed
+        fun retrieve(
+            params: UserRetrieveParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<UserProfile>
+
+        /** @see retrieve */
+        @MustBeClosed
+        fun retrieve(params: UserRetrieveParams): HttpResponseFor<UserProfile> =
+            retrieve(params, RequestOptions.none())
+
+        /** @see retrieve */
+        @MustBeClosed
+        fun retrieve(id: String, requestOptions: RequestOptions): HttpResponseFor<UserProfile> =
+            retrieve(id, UserRetrieveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /x/users/batch`, but is otherwise the same as
          * [UserService.retrieveBatch].
          */
         @MustBeClosed
-        fun retrieveBatch(
-            params: UserRetrieveBatchParams
-        ): HttpResponseFor<UserRetrieveBatchResponse> = retrieveBatch(params, RequestOptions.none())
+        fun retrieveBatch(params: UserRetrieveBatchParams): HttpResponseFor<PaginatedUsers> =
+            retrieveBatch(params, RequestOptions.none())
 
         /** @see retrieveBatch */
         @MustBeClosed
         fun retrieveBatch(
             params: UserRetrieveBatchParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<UserRetrieveBatchResponse>
+        ): HttpResponseFor<PaginatedUsers>
 
         /**
          * Returns a raw HTTP response for `get /x/users/{id}/followers`, but is otherwise the same
          * as [UserService.retrieveFollowers].
          */
         @MustBeClosed
-        fun retrieveFollowers(id: String): HttpResponseFor<UserRetrieveFollowersResponse> =
+        fun retrieveFollowers(id: String): HttpResponseFor<PaginatedUsers> =
             retrieveFollowers(id, UserRetrieveFollowersParams.none())
 
         /** @see retrieveFollowers */
@@ -380,7 +419,7 @@ interface UserService {
             id: String,
             params: UserRetrieveFollowersParams = UserRetrieveFollowersParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<UserRetrieveFollowersResponse> =
+        ): HttpResponseFor<PaginatedUsers> =
             retrieveFollowers(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieveFollowers */
@@ -388,29 +427,27 @@ interface UserService {
         fun retrieveFollowers(
             id: String,
             params: UserRetrieveFollowersParams = UserRetrieveFollowersParams.none(),
-        ): HttpResponseFor<UserRetrieveFollowersResponse> =
-            retrieveFollowers(id, params, RequestOptions.none())
+        ): HttpResponseFor<PaginatedUsers> = retrieveFollowers(id, params, RequestOptions.none())
 
         /** @see retrieveFollowers */
         @MustBeClosed
         fun retrieveFollowers(
             params: UserRetrieveFollowersParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<UserRetrieveFollowersResponse>
+        ): HttpResponseFor<PaginatedUsers>
 
         /** @see retrieveFollowers */
         @MustBeClosed
         fun retrieveFollowers(
             params: UserRetrieveFollowersParams
-        ): HttpResponseFor<UserRetrieveFollowersResponse> =
-            retrieveFollowers(params, RequestOptions.none())
+        ): HttpResponseFor<PaginatedUsers> = retrieveFollowers(params, RequestOptions.none())
 
         /** @see retrieveFollowers */
         @MustBeClosed
         fun retrieveFollowers(
             id: String,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<UserRetrieveFollowersResponse> =
+        ): HttpResponseFor<PaginatedUsers> =
             retrieveFollowers(id, UserRetrieveFollowersParams.none(), requestOptions)
 
         /**
@@ -418,9 +455,7 @@ interface UserService {
          * the same as [UserService.retrieveFollowersYouKnow].
          */
         @MustBeClosed
-        fun retrieveFollowersYouKnow(
-            id: String
-        ): HttpResponseFor<UserRetrieveFollowersYouKnowResponse> =
+        fun retrieveFollowersYouKnow(id: String): HttpResponseFor<PaginatedUsers> =
             retrieveFollowersYouKnow(id, UserRetrieveFollowersYouKnowParams.none())
 
         /** @see retrieveFollowersYouKnow */
@@ -429,7 +464,7 @@ interface UserService {
             id: String,
             params: UserRetrieveFollowersYouKnowParams = UserRetrieveFollowersYouKnowParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<UserRetrieveFollowersYouKnowResponse> =
+        ): HttpResponseFor<PaginatedUsers> =
             retrieveFollowersYouKnow(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieveFollowersYouKnow */
@@ -437,7 +472,7 @@ interface UserService {
         fun retrieveFollowersYouKnow(
             id: String,
             params: UserRetrieveFollowersYouKnowParams = UserRetrieveFollowersYouKnowParams.none(),
-        ): HttpResponseFor<UserRetrieveFollowersYouKnowResponse> =
+        ): HttpResponseFor<PaginatedUsers> =
             retrieveFollowersYouKnow(id, params, RequestOptions.none())
 
         /** @see retrieveFollowersYouKnow */
@@ -445,21 +480,20 @@ interface UserService {
         fun retrieveFollowersYouKnow(
             params: UserRetrieveFollowersYouKnowParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<UserRetrieveFollowersYouKnowResponse>
+        ): HttpResponseFor<PaginatedUsers>
 
         /** @see retrieveFollowersYouKnow */
         @MustBeClosed
         fun retrieveFollowersYouKnow(
             params: UserRetrieveFollowersYouKnowParams
-        ): HttpResponseFor<UserRetrieveFollowersYouKnowResponse> =
-            retrieveFollowersYouKnow(params, RequestOptions.none())
+        ): HttpResponseFor<PaginatedUsers> = retrieveFollowersYouKnow(params, RequestOptions.none())
 
         /** @see retrieveFollowersYouKnow */
         @MustBeClosed
         fun retrieveFollowersYouKnow(
             id: String,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<UserRetrieveFollowersYouKnowResponse> =
+        ): HttpResponseFor<PaginatedUsers> =
             retrieveFollowersYouKnow(id, UserRetrieveFollowersYouKnowParams.none(), requestOptions)
 
         /**
@@ -467,7 +501,7 @@ interface UserService {
          * as [UserService.retrieveFollowing].
          */
         @MustBeClosed
-        fun retrieveFollowing(id: String): HttpResponseFor<UserRetrieveFollowingResponse> =
+        fun retrieveFollowing(id: String): HttpResponseFor<PaginatedUsers> =
             retrieveFollowing(id, UserRetrieveFollowingParams.none())
 
         /** @see retrieveFollowing */
@@ -476,7 +510,7 @@ interface UserService {
             id: String,
             params: UserRetrieveFollowingParams = UserRetrieveFollowingParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<UserRetrieveFollowingResponse> =
+        ): HttpResponseFor<PaginatedUsers> =
             retrieveFollowing(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieveFollowing */
@@ -484,29 +518,27 @@ interface UserService {
         fun retrieveFollowing(
             id: String,
             params: UserRetrieveFollowingParams = UserRetrieveFollowingParams.none(),
-        ): HttpResponseFor<UserRetrieveFollowingResponse> =
-            retrieveFollowing(id, params, RequestOptions.none())
+        ): HttpResponseFor<PaginatedUsers> = retrieveFollowing(id, params, RequestOptions.none())
 
         /** @see retrieveFollowing */
         @MustBeClosed
         fun retrieveFollowing(
             params: UserRetrieveFollowingParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<UserRetrieveFollowingResponse>
+        ): HttpResponseFor<PaginatedUsers>
 
         /** @see retrieveFollowing */
         @MustBeClosed
         fun retrieveFollowing(
             params: UserRetrieveFollowingParams
-        ): HttpResponseFor<UserRetrieveFollowingResponse> =
-            retrieveFollowing(params, RequestOptions.none())
+        ): HttpResponseFor<PaginatedUsers> = retrieveFollowing(params, RequestOptions.none())
 
         /** @see retrieveFollowing */
         @MustBeClosed
         fun retrieveFollowing(
             id: String,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<UserRetrieveFollowingResponse> =
+        ): HttpResponseFor<PaginatedUsers> =
             retrieveFollowing(id, UserRetrieveFollowingParams.none(), requestOptions)
 
         /**
@@ -514,7 +546,7 @@ interface UserService {
          * [UserService.retrieveLikes].
          */
         @MustBeClosed
-        fun retrieveLikes(id: String): HttpResponseFor<UserRetrieveLikesResponse> =
+        fun retrieveLikes(id: String): HttpResponseFor<PaginatedTweets> =
             retrieveLikes(id, UserRetrieveLikesParams.none())
 
         /** @see retrieveLikes */
@@ -523,7 +555,7 @@ interface UserService {
             id: String,
             params: UserRetrieveLikesParams = UserRetrieveLikesParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<UserRetrieveLikesResponse> =
+        ): HttpResponseFor<PaginatedTweets> =
             retrieveLikes(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieveLikes */
@@ -531,28 +563,26 @@ interface UserService {
         fun retrieveLikes(
             id: String,
             params: UserRetrieveLikesParams = UserRetrieveLikesParams.none(),
-        ): HttpResponseFor<UserRetrieveLikesResponse> =
-            retrieveLikes(id, params, RequestOptions.none())
+        ): HttpResponseFor<PaginatedTweets> = retrieveLikes(id, params, RequestOptions.none())
 
         /** @see retrieveLikes */
         @MustBeClosed
         fun retrieveLikes(
             params: UserRetrieveLikesParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<UserRetrieveLikesResponse>
+        ): HttpResponseFor<PaginatedTweets>
 
         /** @see retrieveLikes */
         @MustBeClosed
-        fun retrieveLikes(
-            params: UserRetrieveLikesParams
-        ): HttpResponseFor<UserRetrieveLikesResponse> = retrieveLikes(params, RequestOptions.none())
+        fun retrieveLikes(params: UserRetrieveLikesParams): HttpResponseFor<PaginatedTweets> =
+            retrieveLikes(params, RequestOptions.none())
 
         /** @see retrieveLikes */
         @MustBeClosed
         fun retrieveLikes(
             id: String,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<UserRetrieveLikesResponse> =
+        ): HttpResponseFor<PaginatedTweets> =
             retrieveLikes(id, UserRetrieveLikesParams.none(), requestOptions)
 
         /**
@@ -560,7 +590,7 @@ interface UserService {
          * [UserService.retrieveMedia].
          */
         @MustBeClosed
-        fun retrieveMedia(id: String): HttpResponseFor<UserRetrieveMediaResponse> =
+        fun retrieveMedia(id: String): HttpResponseFor<PaginatedTweets> =
             retrieveMedia(id, UserRetrieveMediaParams.none())
 
         /** @see retrieveMedia */
@@ -569,7 +599,7 @@ interface UserService {
             id: String,
             params: UserRetrieveMediaParams = UserRetrieveMediaParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<UserRetrieveMediaResponse> =
+        ): HttpResponseFor<PaginatedTweets> =
             retrieveMedia(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieveMedia */
@@ -577,28 +607,26 @@ interface UserService {
         fun retrieveMedia(
             id: String,
             params: UserRetrieveMediaParams = UserRetrieveMediaParams.none(),
-        ): HttpResponseFor<UserRetrieveMediaResponse> =
-            retrieveMedia(id, params, RequestOptions.none())
+        ): HttpResponseFor<PaginatedTweets> = retrieveMedia(id, params, RequestOptions.none())
 
         /** @see retrieveMedia */
         @MustBeClosed
         fun retrieveMedia(
             params: UserRetrieveMediaParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<UserRetrieveMediaResponse>
+        ): HttpResponseFor<PaginatedTweets>
 
         /** @see retrieveMedia */
         @MustBeClosed
-        fun retrieveMedia(
-            params: UserRetrieveMediaParams
-        ): HttpResponseFor<UserRetrieveMediaResponse> = retrieveMedia(params, RequestOptions.none())
+        fun retrieveMedia(params: UserRetrieveMediaParams): HttpResponseFor<PaginatedTweets> =
+            retrieveMedia(params, RequestOptions.none())
 
         /** @see retrieveMedia */
         @MustBeClosed
         fun retrieveMedia(
             id: String,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<UserRetrieveMediaResponse> =
+        ): HttpResponseFor<PaginatedTweets> =
             retrieveMedia(id, UserRetrieveMediaParams.none(), requestOptions)
 
         /**
@@ -606,7 +634,7 @@ interface UserService {
          * as [UserService.retrieveMentions].
          */
         @MustBeClosed
-        fun retrieveMentions(id: String): HttpResponseFor<UserRetrieveMentionsResponse> =
+        fun retrieveMentions(id: String): HttpResponseFor<PaginatedTweets> =
             retrieveMentions(id, UserRetrieveMentionsParams.none())
 
         /** @see retrieveMentions */
@@ -615,7 +643,7 @@ interface UserService {
             id: String,
             params: UserRetrieveMentionsParams = UserRetrieveMentionsParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<UserRetrieveMentionsResponse> =
+        ): HttpResponseFor<PaginatedTweets> =
             retrieveMentions(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieveMentions */
@@ -623,21 +651,18 @@ interface UserService {
         fun retrieveMentions(
             id: String,
             params: UserRetrieveMentionsParams = UserRetrieveMentionsParams.none(),
-        ): HttpResponseFor<UserRetrieveMentionsResponse> =
-            retrieveMentions(id, params, RequestOptions.none())
+        ): HttpResponseFor<PaginatedTweets> = retrieveMentions(id, params, RequestOptions.none())
 
         /** @see retrieveMentions */
         @MustBeClosed
         fun retrieveMentions(
             params: UserRetrieveMentionsParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<UserRetrieveMentionsResponse>
+        ): HttpResponseFor<PaginatedTweets>
 
         /** @see retrieveMentions */
         @MustBeClosed
-        fun retrieveMentions(
-            params: UserRetrieveMentionsParams
-        ): HttpResponseFor<UserRetrieveMentionsResponse> =
+        fun retrieveMentions(params: UserRetrieveMentionsParams): HttpResponseFor<PaginatedTweets> =
             retrieveMentions(params, RequestOptions.none())
 
         /** @see retrieveMentions */
@@ -645,7 +670,7 @@ interface UserService {
         fun retrieveMentions(
             id: String,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<UserRetrieveMentionsResponse> =
+        ): HttpResponseFor<PaginatedTweets> =
             retrieveMentions(id, UserRetrieveMentionsParams.none(), requestOptions)
 
         /**
@@ -653,9 +678,7 @@ interface UserService {
          * [UserService.retrieveSearch].
          */
         @MustBeClosed
-        fun retrieveSearch(
-            params: UserRetrieveSearchParams
-        ): HttpResponseFor<UserRetrieveSearchResponse> =
+        fun retrieveSearch(params: UserRetrieveSearchParams): HttpResponseFor<PaginatedUsers> =
             retrieveSearch(params, RequestOptions.none())
 
         /** @see retrieveSearch */
@@ -663,14 +686,14 @@ interface UserService {
         fun retrieveSearch(
             params: UserRetrieveSearchParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<UserRetrieveSearchResponse>
+        ): HttpResponseFor<PaginatedUsers>
 
         /**
          * Returns a raw HTTP response for `get /x/users/{id}/tweets`, but is otherwise the same as
          * [UserService.retrieveTweets].
          */
         @MustBeClosed
-        fun retrieveTweets(id: String): HttpResponseFor<UserRetrieveTweetsResponse> =
+        fun retrieveTweets(id: String): HttpResponseFor<PaginatedTweets> =
             retrieveTweets(id, UserRetrieveTweetsParams.none())
 
         /** @see retrieveTweets */
@@ -679,7 +702,7 @@ interface UserService {
             id: String,
             params: UserRetrieveTweetsParams = UserRetrieveTweetsParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<UserRetrieveTweetsResponse> =
+        ): HttpResponseFor<PaginatedTweets> =
             retrieveTweets(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieveTweets */
@@ -687,21 +710,18 @@ interface UserService {
         fun retrieveTweets(
             id: String,
             params: UserRetrieveTweetsParams = UserRetrieveTweetsParams.none(),
-        ): HttpResponseFor<UserRetrieveTweetsResponse> =
-            retrieveTweets(id, params, RequestOptions.none())
+        ): HttpResponseFor<PaginatedTweets> = retrieveTweets(id, params, RequestOptions.none())
 
         /** @see retrieveTweets */
         @MustBeClosed
         fun retrieveTweets(
             params: UserRetrieveTweetsParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<UserRetrieveTweetsResponse>
+        ): HttpResponseFor<PaginatedTweets>
 
         /** @see retrieveTweets */
         @MustBeClosed
-        fun retrieveTweets(
-            params: UserRetrieveTweetsParams
-        ): HttpResponseFor<UserRetrieveTweetsResponse> =
+        fun retrieveTweets(params: UserRetrieveTweetsParams): HttpResponseFor<PaginatedTweets> =
             retrieveTweets(params, RequestOptions.none())
 
         /** @see retrieveTweets */
@@ -709,7 +729,7 @@ interface UserService {
         fun retrieveTweets(
             id: String,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<UserRetrieveTweetsResponse> =
+        ): HttpResponseFor<PaginatedTweets> =
             retrieveTweets(id, UserRetrieveTweetsParams.none(), requestOptions)
 
         /**
@@ -717,9 +737,7 @@ interface UserService {
          * the same as [UserService.retrieveVerifiedFollowers].
          */
         @MustBeClosed
-        fun retrieveVerifiedFollowers(
-            id: String
-        ): HttpResponseFor<UserRetrieveVerifiedFollowersResponse> =
+        fun retrieveVerifiedFollowers(id: String): HttpResponseFor<PaginatedUsers> =
             retrieveVerifiedFollowers(id, UserRetrieveVerifiedFollowersParams.none())
 
         /** @see retrieveVerifiedFollowers */
@@ -729,7 +747,7 @@ interface UserService {
             params: UserRetrieveVerifiedFollowersParams =
                 UserRetrieveVerifiedFollowersParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<UserRetrieveVerifiedFollowersResponse> =
+        ): HttpResponseFor<PaginatedUsers> =
             retrieveVerifiedFollowers(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieveVerifiedFollowers */
@@ -737,7 +755,7 @@ interface UserService {
         fun retrieveVerifiedFollowers(
             id: String,
             params: UserRetrieveVerifiedFollowersParams = UserRetrieveVerifiedFollowersParams.none(),
-        ): HttpResponseFor<UserRetrieveVerifiedFollowersResponse> =
+        ): HttpResponseFor<PaginatedUsers> =
             retrieveVerifiedFollowers(id, params, RequestOptions.none())
 
         /** @see retrieveVerifiedFollowers */
@@ -745,13 +763,13 @@ interface UserService {
         fun retrieveVerifiedFollowers(
             params: UserRetrieveVerifiedFollowersParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<UserRetrieveVerifiedFollowersResponse>
+        ): HttpResponseFor<PaginatedUsers>
 
         /** @see retrieveVerifiedFollowers */
         @MustBeClosed
         fun retrieveVerifiedFollowers(
             params: UserRetrieveVerifiedFollowersParams
-        ): HttpResponseFor<UserRetrieveVerifiedFollowersResponse> =
+        ): HttpResponseFor<PaginatedUsers> =
             retrieveVerifiedFollowers(params, RequestOptions.none())
 
         /** @see retrieveVerifiedFollowers */
@@ -759,7 +777,7 @@ interface UserService {
         fun retrieveVerifiedFollowers(
             id: String,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<UserRetrieveVerifiedFollowersResponse> =
+        ): HttpResponseFor<PaginatedUsers> =
             retrieveVerifiedFollowers(
                 id,
                 UserRetrieveVerifiedFollowersParams.none(),

@@ -5,6 +5,8 @@ package com.x_twitter_scraper.api.services.async.x
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
+import com.x_twitter_scraper.api.models.PaginatedTweets
+import com.x_twitter_scraper.api.models.PaginatedUsers
 import com.x_twitter_scraper.api.models.x.communities.CommunityCreateParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityCreateResponse
 import com.x_twitter_scraper.api.models.x.communities.CommunityDeleteParams
@@ -12,11 +14,8 @@ import com.x_twitter_scraper.api.models.x.communities.CommunityDeleteResponse
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveInfoParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveInfoResponse
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveMembersParams
-import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveMembersResponse
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveModeratorsParams
-import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveModeratorsResponse
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveSearchParams
-import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveSearchResponse
 import com.x_twitter_scraper.api.services.async.x.communities.JoinServiceAsync
 import com.x_twitter_scraper.api.services.async.x.communities.TweetServiceAsync
 import java.util.concurrent.CompletableFuture
@@ -115,7 +114,7 @@ interface CommunityServiceAsync {
         retrieveInfo(id, CommunityRetrieveInfoParams.none(), requestOptions)
 
     /** Get community members */
-    fun retrieveMembers(id: String): CompletableFuture<CommunityRetrieveMembersResponse> =
+    fun retrieveMembers(id: String): CompletableFuture<PaginatedUsers> =
         retrieveMembers(id, CommunityRetrieveMembersParams.none())
 
     /** @see retrieveMembers */
@@ -123,37 +122,34 @@ interface CommunityServiceAsync {
         id: String,
         params: CommunityRetrieveMembersParams = CommunityRetrieveMembersParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<CommunityRetrieveMembersResponse> =
+    ): CompletableFuture<PaginatedUsers> =
         retrieveMembers(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveMembers */
     fun retrieveMembers(
         id: String,
         params: CommunityRetrieveMembersParams = CommunityRetrieveMembersParams.none(),
-    ): CompletableFuture<CommunityRetrieveMembersResponse> =
-        retrieveMembers(id, params, RequestOptions.none())
+    ): CompletableFuture<PaginatedUsers> = retrieveMembers(id, params, RequestOptions.none())
 
     /** @see retrieveMembers */
     fun retrieveMembers(
         params: CommunityRetrieveMembersParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<CommunityRetrieveMembersResponse>
+    ): CompletableFuture<PaginatedUsers>
 
     /** @see retrieveMembers */
-    fun retrieveMembers(
-        params: CommunityRetrieveMembersParams
-    ): CompletableFuture<CommunityRetrieveMembersResponse> =
+    fun retrieveMembers(params: CommunityRetrieveMembersParams): CompletableFuture<PaginatedUsers> =
         retrieveMembers(params, RequestOptions.none())
 
     /** @see retrieveMembers */
     fun retrieveMembers(
         id: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<CommunityRetrieveMembersResponse> =
+    ): CompletableFuture<PaginatedUsers> =
         retrieveMembers(id, CommunityRetrieveMembersParams.none(), requestOptions)
 
     /** Get community moderators */
-    fun retrieveModerators(id: String): CompletableFuture<CommunityRetrieveModeratorsResponse> =
+    fun retrieveModerators(id: String): CompletableFuture<PaginatedUsers> =
         retrieveModerators(id, CommunityRetrieveModeratorsParams.none())
 
     /** @see retrieveModerators */
@@ -161,46 +157,42 @@ interface CommunityServiceAsync {
         id: String,
         params: CommunityRetrieveModeratorsParams = CommunityRetrieveModeratorsParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<CommunityRetrieveModeratorsResponse> =
+    ): CompletableFuture<PaginatedUsers> =
         retrieveModerators(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveModerators */
     fun retrieveModerators(
         id: String,
         params: CommunityRetrieveModeratorsParams = CommunityRetrieveModeratorsParams.none(),
-    ): CompletableFuture<CommunityRetrieveModeratorsResponse> =
-        retrieveModerators(id, params, RequestOptions.none())
+    ): CompletableFuture<PaginatedUsers> = retrieveModerators(id, params, RequestOptions.none())
 
     /** @see retrieveModerators */
     fun retrieveModerators(
         params: CommunityRetrieveModeratorsParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<CommunityRetrieveModeratorsResponse>
+    ): CompletableFuture<PaginatedUsers>
 
     /** @see retrieveModerators */
     fun retrieveModerators(
         params: CommunityRetrieveModeratorsParams
-    ): CompletableFuture<CommunityRetrieveModeratorsResponse> =
-        retrieveModerators(params, RequestOptions.none())
+    ): CompletableFuture<PaginatedUsers> = retrieveModerators(params, RequestOptions.none())
 
     /** @see retrieveModerators */
     fun retrieveModerators(
         id: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<CommunityRetrieveModeratorsResponse> =
+    ): CompletableFuture<PaginatedUsers> =
         retrieveModerators(id, CommunityRetrieveModeratorsParams.none(), requestOptions)
 
     /** Search tweets across communities */
-    fun retrieveSearch(
-        params: CommunityRetrieveSearchParams
-    ): CompletableFuture<CommunityRetrieveSearchResponse> =
+    fun retrieveSearch(params: CommunityRetrieveSearchParams): CompletableFuture<PaginatedTweets> =
         retrieveSearch(params, RequestOptions.none())
 
     /** @see retrieveSearch */
     fun retrieveSearch(
         params: CommunityRetrieveSearchParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<CommunityRetrieveSearchResponse>
+    ): CompletableFuture<PaginatedTweets>
 
     /**
      * A view of [CommunityServiceAsync] that provides access to raw HTTP responses for each method.
@@ -314,9 +306,7 @@ interface CommunityServiceAsync {
          * Returns a raw HTTP response for `get /x/communities/{id}/members`, but is otherwise the
          * same as [CommunityServiceAsync.retrieveMembers].
          */
-        fun retrieveMembers(
-            id: String
-        ): CompletableFuture<HttpResponseFor<CommunityRetrieveMembersResponse>> =
+        fun retrieveMembers(id: String): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveMembers(id, CommunityRetrieveMembersParams.none())
 
         /** @see retrieveMembers */
@@ -324,42 +314,40 @@ interface CommunityServiceAsync {
             id: String,
             params: CommunityRetrieveMembersParams = CommunityRetrieveMembersParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CommunityRetrieveMembersResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveMembers(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieveMembers */
         fun retrieveMembers(
             id: String,
             params: CommunityRetrieveMembersParams = CommunityRetrieveMembersParams.none(),
-        ): CompletableFuture<HttpResponseFor<CommunityRetrieveMembersResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveMembers(id, params, RequestOptions.none())
 
         /** @see retrieveMembers */
         fun retrieveMembers(
             params: CommunityRetrieveMembersParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CommunityRetrieveMembersResponse>>
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>>
 
         /** @see retrieveMembers */
         fun retrieveMembers(
             params: CommunityRetrieveMembersParams
-        ): CompletableFuture<HttpResponseFor<CommunityRetrieveMembersResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveMembers(params, RequestOptions.none())
 
         /** @see retrieveMembers */
         fun retrieveMembers(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<CommunityRetrieveMembersResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveMembers(id, CommunityRetrieveMembersParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /x/communities/{id}/moderators`, but is otherwise
          * the same as [CommunityServiceAsync.retrieveModerators].
          */
-        fun retrieveModerators(
-            id: String
-        ): CompletableFuture<HttpResponseFor<CommunityRetrieveModeratorsResponse>> =
+        fun retrieveModerators(id: String): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveModerators(id, CommunityRetrieveModeratorsParams.none())
 
         /** @see retrieveModerators */
@@ -367,33 +355,33 @@ interface CommunityServiceAsync {
             id: String,
             params: CommunityRetrieveModeratorsParams = CommunityRetrieveModeratorsParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CommunityRetrieveModeratorsResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveModerators(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieveModerators */
         fun retrieveModerators(
             id: String,
             params: CommunityRetrieveModeratorsParams = CommunityRetrieveModeratorsParams.none(),
-        ): CompletableFuture<HttpResponseFor<CommunityRetrieveModeratorsResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveModerators(id, params, RequestOptions.none())
 
         /** @see retrieveModerators */
         fun retrieveModerators(
             params: CommunityRetrieveModeratorsParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CommunityRetrieveModeratorsResponse>>
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>>
 
         /** @see retrieveModerators */
         fun retrieveModerators(
             params: CommunityRetrieveModeratorsParams
-        ): CompletableFuture<HttpResponseFor<CommunityRetrieveModeratorsResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveModerators(params, RequestOptions.none())
 
         /** @see retrieveModerators */
         fun retrieveModerators(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<CommunityRetrieveModeratorsResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveModerators(id, CommunityRetrieveModeratorsParams.none(), requestOptions)
 
         /**
@@ -402,13 +390,13 @@ interface CommunityServiceAsync {
          */
         fun retrieveSearch(
             params: CommunityRetrieveSearchParams
-        ): CompletableFuture<HttpResponseFor<CommunityRetrieveSearchResponse>> =
+        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
             retrieveSearch(params, RequestOptions.none())
 
         /** @see retrieveSearch */
         fun retrieveSearch(
             params: CommunityRetrieveSearchParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CommunityRetrieveSearchResponse>>
+        ): CompletableFuture<HttpResponseFor<PaginatedTweets>>
     }
 }

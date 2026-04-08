@@ -3,6 +3,7 @@
 package com.x_twitter_scraper.api.services.blocking
 
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
+import com.x_twitter_scraper.api.models.EventType
 import com.x_twitter_scraper.api.models.events.EventListParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -19,9 +20,9 @@ internal class EventServiceTest {
                 .build()
         val eventService = client.events()
 
-        val event = eventService.retrieve("id")
+        val eventDetail = eventService.retrieve("id")
 
-        event.validate()
+        eventDetail.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -38,7 +39,7 @@ internal class EventServiceTest {
             eventService.list(
                 EventListParams.builder()
                     .after("after")
-                    .eventType(EventListParams.EventType.TWEET_NEW)
+                    .eventType(EventType.TWEET_NEW)
                     .limit(1L)
                     .monitorId("monitorId")
                     .build()

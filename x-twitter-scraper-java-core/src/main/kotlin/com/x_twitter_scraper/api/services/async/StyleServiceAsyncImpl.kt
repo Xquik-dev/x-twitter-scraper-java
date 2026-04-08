@@ -4,6 +4,8 @@ package com.x_twitter_scraper.api.services.async
 
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
+import com.x_twitter_scraper.api.core.checkRequired
+import com.x_twitter_scraper.api.core.handlers.emptyHandler
 import com.x_twitter_scraper.api.core.handlers.errorBodyHandler
 import com.x_twitter_scraper.api.core.handlers.errorHandler
 import com.x_twitter_scraper.api.core.handlers.jsonHandler
@@ -16,13 +18,19 @@ import com.x_twitter_scraper.api.core.http.json
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepareAsync
 import com.x_twitter_scraper.api.models.styles.StyleAnalyzeParams
-import com.x_twitter_scraper.api.models.styles.StyleAnalyzeResponse
 import com.x_twitter_scraper.api.models.styles.StyleCompareParams
 import com.x_twitter_scraper.api.models.styles.StyleCompareResponse
+import com.x_twitter_scraper.api.models.styles.StyleDeleteParams
+import com.x_twitter_scraper.api.models.styles.StyleGetPerformanceParams
+import com.x_twitter_scraper.api.models.styles.StyleGetPerformanceResponse
 import com.x_twitter_scraper.api.models.styles.StyleListParams
 import com.x_twitter_scraper.api.models.styles.StyleListResponse
+import com.x_twitter_scraper.api.models.styles.StyleProfile
+import com.x_twitter_scraper.api.models.styles.StyleRetrieveParams
+import com.x_twitter_scraper.api.models.styles.StyleUpdateParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
+import kotlin.jvm.optionals.getOrNull
 
 /** Tweet composition, drafts, writing styles & radar */
 class StyleServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -37,6 +45,20 @@ class StyleServiceAsyncImpl internal constructor(private val clientOptions: Clie
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): StyleServiceAsync =
         StyleServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
+    override fun retrieve(
+        params: StyleRetrieveParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<StyleProfile> =
+        // get /styles/{id}
+        withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
+
+    override fun update(
+        params: StyleUpdateParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<StyleProfile> =
+        // put /styles/{id}
+        withRawResponse().update(params, requestOptions).thenApply { it.parse() }
+
     override fun list(
         params: StyleListParams,
         requestOptions: RequestOptions,
@@ -44,10 +66,17 @@ class StyleServiceAsyncImpl internal constructor(private val clientOptions: Clie
         // get /styles
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
+    override fun delete(
+        params: StyleDeleteParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<Void?> =
+        // delete /styles/{id}
+        withRawResponse().delete(params, requestOptions).thenAccept {}
+
     override fun analyze(
         params: StyleAnalyzeParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<StyleAnalyzeResponse> =
+    ): CompletableFuture<StyleProfile> =
         // post /styles
         withRawResponse().analyze(params, requestOptions).thenApply { it.parse() }
 
@@ -57,6 +86,13 @@ class StyleServiceAsyncImpl internal constructor(private val clientOptions: Clie
     ): CompletableFuture<StyleCompareResponse> =
         // get /styles/compare
         withRawResponse().compare(params, requestOptions).thenApply { it.parse() }
+
+    override fun getPerformance(
+        params: StyleGetPerformanceParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<StyleGetPerformanceResponse> =
+        // get /styles/{id}/performance
+        withRawResponse().getPerformance(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         StyleServiceAsync.WithRawResponse {
@@ -70,6 +106,73 @@ class StyleServiceAsyncImpl internal constructor(private val clientOptions: Clie
             StyleServiceAsyncImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        private val retrieveHandler: Handler<StyleProfile> =
+            jsonHandler<StyleProfile>(clientOptions.jsonMapper)
+
+        override fun retrieve(
+            params: StyleRetrieveParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<StyleProfile>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("styles", params._pathParam(0))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { retrieveHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val updateHandler: Handler<StyleProfile> =
+            jsonHandler<StyleProfile>(clientOptions.jsonMapper)
+
+        override fun update(
+            params: StyleUpdateParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<StyleProfile>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.PUT)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("styles", params._pathParam(0))
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { updateHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
 
         private val listHandler: Handler<StyleListResponse> =
             jsonHandler<StyleListResponse>(clientOptions.jsonMapper)
@@ -101,13 +204,40 @@ class StyleServiceAsyncImpl internal constructor(private val clientOptions: Clie
                 }
         }
 
-        private val analyzeHandler: Handler<StyleAnalyzeResponse> =
-            jsonHandler<StyleAnalyzeResponse>(clientOptions.jsonMapper)
+        private val deleteHandler: Handler<Void?> = emptyHandler()
+
+        override fun delete(
+            params: StyleDeleteParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponse> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.DELETE)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("styles", params._pathParam(0))
+                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response.use { deleteHandler.handle(it) }
+                    }
+                }
+        }
+
+        private val analyzeHandler: Handler<StyleProfile> =
+            jsonHandler<StyleProfile>(clientOptions.jsonMapper)
 
         override fun analyze(
             params: StyleAnalyzeParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<StyleAnalyzeResponse>> {
+        ): CompletableFuture<HttpResponseFor<StyleProfile>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -153,6 +283,39 @@ class StyleServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     errorHandler.handle(response).parseable {
                         response
                             .use { compareHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val getPerformanceHandler: Handler<StyleGetPerformanceResponse> =
+            jsonHandler<StyleGetPerformanceResponse>(clientOptions.jsonMapper)
+
+        override fun getPerformance(
+            params: StyleGetPerformanceParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<StyleGetPerformanceResponse>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("styles", params._pathParam(0), "performance")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { getPerformanceHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

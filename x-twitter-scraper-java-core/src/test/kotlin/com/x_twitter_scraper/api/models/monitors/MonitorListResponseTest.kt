@@ -4,6 +4,7 @@ package com.x_twitter_scraper.api.models.monitors
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.core.jsonMapper
+import com.x_twitter_scraper.api.models.EventType
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -15,11 +16,11 @@ internal class MonitorListResponseTest {
         val monitorListResponse =
             MonitorListResponse.builder()
                 .addMonitor(
-                    MonitorListResponse.Monitor.builder()
+                    Monitor.builder()
                         .id("42")
                         .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
-                        .addEventType(MonitorListResponse.Monitor.EventType.TWEET_NEW)
-                        .addEventType(MonitorListResponse.Monitor.EventType.FOLLOWER_GAINED)
+                        .addEventType(EventType.TWEET_NEW)
+                        .addEventType(EventType.FOLLOWER_GAINED)
                         .isActive(true)
                         .username("elonmusk")
                         .xUserId("9876543210")
@@ -30,11 +31,11 @@ internal class MonitorListResponseTest {
 
         assertThat(monitorListResponse.monitors())
             .containsExactly(
-                MonitorListResponse.Monitor.builder()
+                Monitor.builder()
                     .id("42")
                     .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
-                    .addEventType(MonitorListResponse.Monitor.EventType.TWEET_NEW)
-                    .addEventType(MonitorListResponse.Monitor.EventType.FOLLOWER_GAINED)
+                    .addEventType(EventType.TWEET_NEW)
+                    .addEventType(EventType.FOLLOWER_GAINED)
                     .isActive(true)
                     .username("elonmusk")
                     .xUserId("9876543210")
@@ -49,11 +50,11 @@ internal class MonitorListResponseTest {
         val monitorListResponse =
             MonitorListResponse.builder()
                 .addMonitor(
-                    MonitorListResponse.Monitor.builder()
+                    Monitor.builder()
                         .id("42")
                         .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
-                        .addEventType(MonitorListResponse.Monitor.EventType.TWEET_NEW)
-                        .addEventType(MonitorListResponse.Monitor.EventType.FOLLOWER_GAINED)
+                        .addEventType(EventType.TWEET_NEW)
+                        .addEventType(EventType.FOLLOWER_GAINED)
                         .isActive(true)
                         .username("elonmusk")
                         .xUserId("9876543210")

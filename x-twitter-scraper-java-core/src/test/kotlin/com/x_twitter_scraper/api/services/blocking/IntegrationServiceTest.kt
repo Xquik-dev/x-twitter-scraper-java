@@ -3,6 +3,7 @@
 package com.x_twitter_scraper.api.services.blocking
 
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
+import com.x_twitter_scraper.api.models.EventType
 import com.x_twitter_scraper.api.models.integrations.IntegrationCreateParams
 import com.x_twitter_scraper.api.models.integrations.IntegrationListDeliveriesParams
 import com.x_twitter_scraper.api.models.integrations.IntegrationUpdateParams
@@ -27,8 +28,8 @@ internal class IntegrationServiceTest {
                     .config(
                         IntegrationCreateParams.Config.builder().chatId("-1001234567890").build()
                     )
-                    .addEventType(IntegrationCreateParams.EventType.TWEET_NEW)
-                    .addEventType(IntegrationCreateParams.EventType.FOLLOWER_GAINED)
+                    .addEventType(EventType.TWEET_NEW)
+                    .addEventType(EventType.FOLLOWER_GAINED)
                     .name("My Telegram Bot")
                     .type(IntegrationCreateParams.Type.TELEGRAM)
                     .build()
@@ -66,8 +67,7 @@ internal class IntegrationServiceTest {
             integrationService.update(
                 IntegrationUpdateParams.builder()
                     .id("id")
-                    .addEventType(IntegrationUpdateParams.EventType.TWEET_NEW)
-                    .addEventType(IntegrationUpdateParams.EventType.FOLLOWER_GAINED)
+                    .addEventType(EventType.TWEET_NEW)
                     .filters(IntegrationUpdateParams.Filters.builder().build())
                     .isActive(true)
                     .messageTemplate(IntegrationUpdateParams.MessageTemplate.builder().build())

@@ -5,10 +5,10 @@ package com.x_twitter_scraper.api.services.async
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
+import com.x_twitter_scraper.api.models.events.EventDetail
 import com.x_twitter_scraper.api.models.events.EventListParams
 import com.x_twitter_scraper.api.models.events.EventListResponse
 import com.x_twitter_scraper.api.models.events.EventRetrieveParams
-import com.x_twitter_scraper.api.models.events.EventRetrieveResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -28,7 +28,7 @@ interface EventServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): EventServiceAsync
 
     /** Get event */
-    fun retrieve(id: String): CompletableFuture<EventRetrieveResponse> =
+    fun retrieve(id: String): CompletableFuture<EventDetail> =
         retrieve(id, EventRetrieveParams.none())
 
     /** @see retrieve */
@@ -36,30 +36,26 @@ interface EventServiceAsync {
         id: String,
         params: EventRetrieveParams = EventRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<EventRetrieveResponse> =
-        retrieve(params.toBuilder().id(id).build(), requestOptions)
+    ): CompletableFuture<EventDetail> = retrieve(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieve */
     fun retrieve(
         id: String,
         params: EventRetrieveParams = EventRetrieveParams.none(),
-    ): CompletableFuture<EventRetrieveResponse> = retrieve(id, params, RequestOptions.none())
+    ): CompletableFuture<EventDetail> = retrieve(id, params, RequestOptions.none())
 
     /** @see retrieve */
     fun retrieve(
         params: EventRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<EventRetrieveResponse>
+    ): CompletableFuture<EventDetail>
 
     /** @see retrieve */
-    fun retrieve(params: EventRetrieveParams): CompletableFuture<EventRetrieveResponse> =
+    fun retrieve(params: EventRetrieveParams): CompletableFuture<EventDetail> =
         retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
-    fun retrieve(
-        id: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<EventRetrieveResponse> =
+    fun retrieve(id: String, requestOptions: RequestOptions): CompletableFuture<EventDetail> =
         retrieve(id, EventRetrieveParams.none(), requestOptions)
 
     /** List events */
@@ -96,7 +92,7 @@ interface EventServiceAsync {
          * Returns a raw HTTP response for `get /events/{id}`, but is otherwise the same as
          * [EventServiceAsync.retrieve].
          */
-        fun retrieve(id: String): CompletableFuture<HttpResponseFor<EventRetrieveResponse>> =
+        fun retrieve(id: String): CompletableFuture<HttpResponseFor<EventDetail>> =
             retrieve(id, EventRetrieveParams.none())
 
         /** @see retrieve */
@@ -104,33 +100,31 @@ interface EventServiceAsync {
             id: String,
             params: EventRetrieveParams = EventRetrieveParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<EventRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<EventDetail>> =
             retrieve(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieve */
         fun retrieve(
             id: String,
             params: EventRetrieveParams = EventRetrieveParams.none(),
-        ): CompletableFuture<HttpResponseFor<EventRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<EventDetail>> =
             retrieve(id, params, RequestOptions.none())
 
         /** @see retrieve */
         fun retrieve(
             params: EventRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<EventRetrieveResponse>>
+        ): CompletableFuture<HttpResponseFor<EventDetail>>
 
         /** @see retrieve */
-        fun retrieve(
-            params: EventRetrieveParams
-        ): CompletableFuture<HttpResponseFor<EventRetrieveResponse>> =
+        fun retrieve(params: EventRetrieveParams): CompletableFuture<HttpResponseFor<EventDetail>> =
             retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
         fun retrieve(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<EventRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<EventDetail>> =
             retrieve(id, EventRetrieveParams.none(), requestOptions)
 
         /**

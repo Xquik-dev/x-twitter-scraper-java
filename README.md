@@ -1,11 +1,7 @@
 # X Twitter Scraper Java API Library
 
-<!-- x-release-please-start-version -->
-
 [![Maven Central](https://img.shields.io/maven-central/v/com.x_twitter_scraper.api/x-twitter-scraper-java)](https://central.sonatype.com/artifact/com.x_twitter_scraper.api/x-twitter-scraper-java/0.2.0)
 [![javadoc](https://javadoc.io/badge2/com.x_twitter_scraper.api/x-twitter-scraper-java/0.2.0/javadoc.svg)](https://javadoc.io/doc/com.x_twitter_scraper.api/x-twitter-scraper-java/0.2.0)
-
-<!-- x-release-please-end -->
 
 The X Twitter Scraper Java SDK provides convenient access to the [X Twitter Scraper REST API](https://xquik.com) from applications written in Java.
 
@@ -13,15 +9,9 @@ The X Twitter Scraper Java SDK is similar to the X Twitter Scraper Kotlin SDK bu
 
 It is generated with [Stainless](https://www.stainless.com/).
 
-<!-- x-release-please-start-version -->
-
 The REST API documentation can be found on [xquik.com](https://xquik.com). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.x_twitter_scraper.api/x-twitter-scraper-java/0.2.0).
 
-<!-- x-release-please-end -->
-
 ## Installation
-
-<!-- x-release-please-start-version -->
 
 ### Gradle
 
@@ -39,8 +29,6 @@ implementation("com.x_twitter_scraper.api:x-twitter-scraper-java:0.2.0")
 </dependency>
 ```
 
-<!-- x-release-please-end -->
-
 ## Requirements
 
 This library requires Java 8 or later.
@@ -50,8 +38,8 @@ This library requires Java 8 or later.
 ```java
 import com.x_twitter_scraper.api.client.XTwitterScraperClient;
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient;
+import com.x_twitter_scraper.api.models.PaginatedTweets;
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams;
-import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse;
 
 // Configures using the `xtwitterscraper.apiKey`, `xtwitterscraper.bearerToken` and `xtwitterscraper.baseUrl` system properties
 // Or configures using the `X_TWITTER_SCRAPER_API_KEY`, `X_TWITTER_SCRAPER_BEARER_TOKEN` and `X_TWITTER_SCRAPER_BASE_URL` environment variables
@@ -61,7 +49,7 @@ TweetSearchParams params = TweetSearchParams.builder()
     .q("from:elonmusk")
     .limit(10L)
     .build();
-TweetSearchResponse response = client.x().tweets().search(params);
+PaginatedTweets paginatedTweets = client.x().tweets().search(params);
 ```
 
 ## Client configuration
@@ -136,7 +124,7 @@ The `withOptions()` method does not affect the original client or service.
 
 To send a request to the X Twitter Scraper API, build an instance of some `Params` class and pass it to the corresponding client method. When the response is received, it will be deserialized into an instance of a Java class.
 
-For example, `client.x().tweets().search(...)` should be called with an instance of `TweetSearchParams`, and it will return an instance of `TweetSearchResponse`.
+For example, `client.x().tweets().search(...)` should be called with an instance of `TweetSearchParams`, and it will return an instance of `PaginatedTweets`.
 
 ## Immutability
 
@@ -153,8 +141,8 @@ The default client is synchronous. To switch to asynchronous execution, call the
 ```java
 import com.x_twitter_scraper.api.client.XTwitterScraperClient;
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient;
+import com.x_twitter_scraper.api.models.PaginatedTweets;
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams;
-import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `xtwitterscraper.apiKey`, `xtwitterscraper.bearerToken` and `xtwitterscraper.baseUrl` system properties
@@ -165,7 +153,7 @@ TweetSearchParams params = TweetSearchParams.builder()
     .q("from:elonmusk")
     .limit(10L)
     .build();
-CompletableFuture<TweetSearchResponse> response = client.async().x().tweets().search(params);
+CompletableFuture<PaginatedTweets> paginatedTweets = client.async().x().tweets().search(params);
 ```
 
 Or create an asynchronous client from the beginning:
@@ -173,8 +161,8 @@ Or create an asynchronous client from the beginning:
 ```java
 import com.x_twitter_scraper.api.client.XTwitterScraperClientAsync;
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClientAsync;
+import com.x_twitter_scraper.api.models.PaginatedTweets;
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams;
-import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `xtwitterscraper.apiKey`, `xtwitterscraper.bearerToken` and `xtwitterscraper.baseUrl` system properties
@@ -185,7 +173,7 @@ TweetSearchParams params = TweetSearchParams.builder()
     .q("from:elonmusk")
     .limit(10L)
     .build();
-CompletableFuture<TweetSearchResponse> response = client.x().tweets().search(params);
+CompletableFuture<PaginatedTweets> paginatedTweets = client.x().tweets().search(params);
 ```
 
 The asynchronous client supports the same options as the synchronous one, except most methods return `CompletableFuture`s.
@@ -311,25 +299,25 @@ To access this data, prefix any HTTP method call on a client or service with `wi
 ```java
 import com.x_twitter_scraper.api.core.http.Headers;
 import com.x_twitter_scraper.api.core.http.HttpResponseFor;
+import com.x_twitter_scraper.api.models.PaginatedTweets;
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams;
-import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse;
 
 TweetSearchParams params = TweetSearchParams.builder()
     .q("from:elonmusk")
     .limit(10L)
     .build();
-HttpResponseFor<TweetSearchResponse> response = client.x().tweets().withRawResponse().search(params);
+HttpResponseFor<PaginatedTweets> paginatedTweets = client.x().tweets().withRawResponse().search(params);
 
-int statusCode = response.statusCode();
-Headers headers = response.headers();
+int statusCode = paginatedTweets.statusCode();
+Headers headers = paginatedTweets.headers();
 ```
 
 You can still deserialize the response into an instance of a Java class if needed:
 
 ```java
-import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse;
+import com.x_twitter_scraper.api.models.PaginatedTweets;
 
-TweetSearchResponse parsedResponse = response.parse();
+PaginatedTweets parsedPaginatedTweets = paginatedTweets.parse();
 ```
 
 ## Error handling
@@ -356,6 +344,106 @@ The SDK throws custom unchecked exception types:
 - [`XTwitterScraperInvalidDataException`](x-twitter-scraper-java-core/src/main/kotlin/com/x_twitter_scraper/api/errors/XTwitterScraperInvalidDataException.kt): Failure to interpret successfully parsed data. For example, when accessing a property that's supposed to be required, but the API unexpectedly omitted it from the response.
 
 - [`XTwitterScraperException`](x-twitter-scraper-java-core/src/main/kotlin/com/x_twitter_scraper/api/errors/XTwitterScraperException.kt): Base class for all exceptions. Most errors will result in one of the previously mentioned ones, but completely generic errors may be thrown using the base class.
+
+## Pagination
+
+The SDK defines methods that return a paginated lists of results. It provides convenient ways to access the results either one page at a time or item-by-item across all pages.
+
+### Auto-pagination
+
+To iterate through all results across all pages, use the `autoPager()` method, which automatically fetches more pages as needed.
+
+When using the synchronous client, the method returns an [`Iterable`](https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html)
+
+```java
+import com.x_twitter_scraper.api.models.PaginatedTweets;
+import com.x_twitter_scraper.api.models.x.communities.tweets.TweetListPage;
+
+TweetListPage page = client.x().communities().tweets().list(params);
+
+// Process as an Iterable
+for (PaginatedTweets tweet : page.autoPager()) {
+    System.out.println(tweet);
+}
+
+// Process as a Stream
+page.autoPager()
+    .stream()
+    .limit(50)
+    .forEach(tweet -> System.out.println(tweet));
+```
+
+When using the asynchronous client, the method returns an [`AsyncStreamResponse`](x-twitter-scraper-java-core/src/main/kotlin/com/x_twitter_scraper/api/core/http/AsyncStreamResponse.kt):
+
+```java
+import com.x_twitter_scraper.api.core.http.AsyncStreamResponse;
+import com.x_twitter_scraper.api.models.PaginatedTweets;
+import com.x_twitter_scraper.api.models.x.communities.tweets.TweetListPageAsync;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+
+CompletableFuture<TweetListPageAsync> pageFuture = client.async().x().communities().tweets().list(params);
+
+pageFuture.thenRun(page -> page.autoPager().subscribe(tweet -> {
+    System.out.println(tweet);
+}));
+
+// If you need to handle errors or completion of the stream
+pageFuture.thenRun(page -> page.autoPager().subscribe(new AsyncStreamResponse.Handler<>() {
+    @Override
+    public void onNext(PaginatedTweets tweet) {
+        System.out.println(tweet);
+    }
+
+    @Override
+    public void onComplete(Optional<Throwable> error) {
+        if (error.isPresent()) {
+            System.out.println("Something went wrong!");
+            throw new RuntimeException(error.get());
+        } else {
+            System.out.println("No more!");
+        }
+    }
+}));
+
+// Or use futures
+pageFuture.thenRun(page -> page.autoPager()
+    .subscribe(tweet -> {
+        System.out.println(tweet);
+    })
+    .onCompleteFuture()
+    .whenComplete((unused, error) -> {
+        if (error != null) {
+            System.out.println("Something went wrong!");
+            throw new RuntimeException(error);
+        } else {
+            System.out.println("No more!");
+        }
+    }));
+```
+
+### Manual pagination
+
+To access individual page items and manually request the next page, use the `items()`,
+`hasNextPage()`, and `nextPage()` methods:
+
+```java
+import com.x_twitter_scraper.api.models.PaginatedTweets;
+import com.x_twitter_scraper.api.models.x.communities.tweets.TweetListPage;
+
+TweetListPage page = client.x().communities().tweets().list(params);
+while (true) {
+    for (PaginatedTweets tweet : page.items()) {
+        System.out.println(tweet);
+    }
+
+    if (!page.hasNextPage()) {
+        break;
+    }
+
+    page = page.nextPage();
+}
+```
 
 ## Logging
 
@@ -427,9 +515,9 @@ Requests time out after 1 minute by default.
 To set a custom timeout, configure the method call using the `timeout` method:
 
 ```java
-import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse;
+import com.x_twitter_scraper.api.models.PaginatedTweets;
 
-TweetSearchResponse response = client.x().tweets().search(
+PaginatedTweets paginatedTweets = client.x().tweets().search(
   params, RequestOptions.builder().timeout(Duration.ofSeconds(30)).build()
 );
 ```
@@ -705,17 +793,17 @@ By default, the SDK will not throw an exception in this case. It will throw [`XT
 If you would prefer to check that the response is completely well-typed upfront, then either call `validate()`:
 
 ```java
-import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse;
+import com.x_twitter_scraper.api.models.PaginatedTweets;
 
-TweetSearchResponse response = client.x().tweets().search(params).validate();
+PaginatedTweets paginatedTweets = client.x().tweets().search(params).validate();
 ```
 
 Or configure the method call to validate the response using the `responseValidation` method:
 
 ```java
-import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse;
+import com.x_twitter_scraper.api.models.PaginatedTweets;
 
-TweetSearchResponse response = client.x().tweets().search(
+PaginatedTweets paginatedTweets = client.x().tweets().search(
   params, RequestOptions.builder().responseValidation(true).build()
 );
 ```
@@ -770,4 +858,4 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/Xquik-dev/x-twitter-scraper-java/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/x-twitter-scraper-java/issues) with questions, bugs, or suggestions.

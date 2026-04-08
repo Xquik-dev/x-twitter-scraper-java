@@ -2,6 +2,7 @@
 
 package com.x_twitter_scraper.api.models.webhooks
 
+import com.x_twitter_scraper.api.models.EventType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -10,8 +11,8 @@ internal class WebhookCreateParamsTest {
     @Test
     fun create() {
         WebhookCreateParams.builder()
-            .addEventType(WebhookCreateParams.EventType.TWEET_NEW)
-            .addEventType(WebhookCreateParams.EventType.FOLLOWER_GAINED)
+            .addEventType(EventType.TWEET_NEW)
+            .addEventType(EventType.FOLLOWER_GAINED)
             .url("https://example.com/webhook")
             .build()
     }
@@ -20,18 +21,15 @@ internal class WebhookCreateParamsTest {
     fun body() {
         val params =
             WebhookCreateParams.builder()
-                .addEventType(WebhookCreateParams.EventType.TWEET_NEW)
-                .addEventType(WebhookCreateParams.EventType.FOLLOWER_GAINED)
+                .addEventType(EventType.TWEET_NEW)
+                .addEventType(EventType.FOLLOWER_GAINED)
                 .url("https://example.com/webhook")
                 .build()
 
         val body = params._body()
 
         assertThat(body.eventTypes())
-            .containsExactly(
-                WebhookCreateParams.EventType.TWEET_NEW,
-                WebhookCreateParams.EventType.FOLLOWER_GAINED,
-            )
+            .containsExactly(EventType.TWEET_NEW, EventType.FOLLOWER_GAINED)
         assertThat(body.url()).isEqualTo("https://example.com/webhook")
     }
 }

@@ -5,6 +5,7 @@ package com.x_twitter_scraper.api.models.integrations
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.jsonMapper
+import com.x_twitter_scraper.api.models.EventType
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -16,21 +17,21 @@ internal class IntegrationListResponseTest {
         val integrationListResponse =
             IntegrationListResponse.builder()
                 .addIntegration(
-                    IntegrationListResponse.Integration.builder()
+                    Integration.builder()
                         .id("42")
                         .config(
-                            IntegrationListResponse.Integration.Config.builder()
+                            Integration.Config.builder()
                                 .putAdditionalProperty("chatId", JsonValue.from("bar"))
                                 .build()
                         )
                         .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
-                        .addEventType(IntegrationListResponse.Integration.EventType.TWEET_NEW)
-                        .addEventType(IntegrationListResponse.Integration.EventType.FOLLOWER_GAINED)
+                        .addEventType(EventType.TWEET_NEW)
+                        .addEventType(EventType.FOLLOWER_GAINED)
                         .isActive(true)
                         .name("My Telegram Bot")
-                        .type(IntegrationListResponse.Integration.Type.TELEGRAM)
+                        .type(Integration.Type.TELEGRAM)
                         .filters(
-                            IntegrationListResponse.Integration.Filters.builder()
+                            Integration.Filters.builder()
                                 .putAdditionalProperty("minFollowers", JsonValue.from("bar"))
                                 .build()
                         )
@@ -43,21 +44,21 @@ internal class IntegrationListResponseTest {
 
         assertThat(integrationListResponse.integrations())
             .containsExactly(
-                IntegrationListResponse.Integration.builder()
+                Integration.builder()
                     .id("42")
                     .config(
-                        IntegrationListResponse.Integration.Config.builder()
+                        Integration.Config.builder()
                             .putAdditionalProperty("chatId", JsonValue.from("bar"))
                             .build()
                     )
                     .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
-                    .addEventType(IntegrationListResponse.Integration.EventType.TWEET_NEW)
-                    .addEventType(IntegrationListResponse.Integration.EventType.FOLLOWER_GAINED)
+                    .addEventType(EventType.TWEET_NEW)
+                    .addEventType(EventType.FOLLOWER_GAINED)
                     .isActive(true)
                     .name("My Telegram Bot")
-                    .type(IntegrationListResponse.Integration.Type.TELEGRAM)
+                    .type(Integration.Type.TELEGRAM)
                     .filters(
-                        IntegrationListResponse.Integration.Filters.builder()
+                        Integration.Filters.builder()
                             .putAdditionalProperty("minFollowers", JsonValue.from("bar"))
                             .build()
                     )
@@ -74,21 +75,21 @@ internal class IntegrationListResponseTest {
         val integrationListResponse =
             IntegrationListResponse.builder()
                 .addIntegration(
-                    IntegrationListResponse.Integration.builder()
+                    Integration.builder()
                         .id("42")
                         .config(
-                            IntegrationListResponse.Integration.Config.builder()
+                            Integration.Config.builder()
                                 .putAdditionalProperty("chatId", JsonValue.from("bar"))
                                 .build()
                         )
                         .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
-                        .addEventType(IntegrationListResponse.Integration.EventType.TWEET_NEW)
-                        .addEventType(IntegrationListResponse.Integration.EventType.FOLLOWER_GAINED)
+                        .addEventType(EventType.TWEET_NEW)
+                        .addEventType(EventType.FOLLOWER_GAINED)
                         .isActive(true)
                         .name("My Telegram Bot")
-                        .type(IntegrationListResponse.Integration.Type.TELEGRAM)
+                        .type(Integration.Type.TELEGRAM)
                         .filters(
-                            IntegrationListResponse.Integration.Filters.builder()
+                            Integration.Filters.builder()
                                 .putAdditionalProperty("minFollowers", JsonValue.from("bar"))
                                 .build()
                         )

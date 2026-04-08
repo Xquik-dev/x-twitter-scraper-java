@@ -14,8 +14,9 @@ import com.x_twitter_scraper.api.core.http.HttpResponse.Handler
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepareAsync
+import com.x_twitter_scraper.api.models.PaginatedTweets
+import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkListPageAsync
 import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkListParams
-import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkListResponse
 import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkRetrieveFoldersParams
 import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkRetrieveFoldersResponse
 import java.util.concurrent.CompletableFuture
@@ -37,7 +38,7 @@ class BookmarkServiceAsyncImpl internal constructor(private val clientOptions: C
     override fun list(
         params: BookmarkListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<BookmarkListResponse> =
+    ): CompletableFuture<BookmarkListPageAsync> =
         // get /x/bookmarks
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
@@ -61,13 +62,13 @@ class BookmarkServiceAsyncImpl internal constructor(private val clientOptions: C
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val listHandler: Handler<BookmarkListResponse> =
-            jsonHandler<BookmarkListResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<PaginatedTweets> =
+            jsonHandler<PaginatedTweets>(clientOptions.jsonMapper)
 
         override fun list(
             params: BookmarkListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<BookmarkListResponse>> {
+        ): CompletableFuture<HttpResponseFor<BookmarkListPageAsync>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -86,6 +87,14 @@ class BookmarkServiceAsyncImpl internal constructor(private val clientOptions: C
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()
                                 }
+                            }
+                            .let {
+                                BookmarkListPageAsync.builder()
+                                    .service(BookmarkServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                    .params(params)
+                                    .response(it)
+                                    .build()
                             }
                     }
                 }
