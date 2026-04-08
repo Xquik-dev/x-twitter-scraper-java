@@ -27,7 +27,6 @@ internal class IntegrationTest {
                 .addEventType(EventType.FOLLOWER_GAINED)
                 .isActive(true)
                 .name("My Telegram Bot")
-                .type(Integration.Type.TELEGRAM)
                 .filters(
                     Integration.Filters.builder()
                         .putAdditionalProperty("minFollowers", JsonValue.from("bar"))
@@ -50,7 +49,6 @@ internal class IntegrationTest {
             .containsExactly(EventType.TWEET_NEW, EventType.FOLLOWER_GAINED)
         assertThat(integration.isActive()).isEqualTo(true)
         assertThat(integration.name()).isEqualTo("My Telegram Bot")
-        assertThat(integration.type()).isEqualTo(Integration.Type.TELEGRAM)
         assertThat(integration.filters())
             .contains(
                 Integration.Filters.builder()
@@ -78,7 +76,6 @@ internal class IntegrationTest {
                 .addEventType(EventType.FOLLOWER_GAINED)
                 .isActive(true)
                 .name("My Telegram Bot")
-                .type(Integration.Type.TELEGRAM)
                 .filters(
                     Integration.Filters.builder()
                         .putAdditionalProperty("minFollowers", JsonValue.from("bar"))
