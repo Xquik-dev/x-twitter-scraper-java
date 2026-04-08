@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.0 (2026-04-08)
+
+Full Changelog: [v0.2.0...v0.3.0](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.2.0...v0.3.0)
+
+### Features
+
+* **api:** api update ([85f6788](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/85f67881300bb5cdb912fe7c59edcd0af640a14f))
+* **api:** api update ([d4be9ff](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/d4be9ff16190320b7cdaffae495057ee2ceda50c))
+* **api:** api update ([f8f5138](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/f8f51380d7cb3d07a0be410e69492edf9fba07cc))
+* **api:** api update ([be5b4f9](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/be5b4f9f89ea2e7606d57cb7f0ea809c17c4096f))
+* **api:** api update ([a4e0acd](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/a4e0acdd9e95507a2d69d05b50c5b8c114c7cd0b))
+
 ## 0.2.0 (2026-04-01)
 
 Full Changelog: [v0.1.0...v0.2.0](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.1.0...v0.2.0)
