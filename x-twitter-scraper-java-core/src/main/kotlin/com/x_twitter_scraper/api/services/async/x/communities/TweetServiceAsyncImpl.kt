@@ -16,9 +16,7 @@ import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepareAsync
 import com.x_twitter_scraper.api.models.PaginatedTweets
-import com.x_twitter_scraper.api.models.x.communities.tweets.TweetListByCommunityPageAsync
 import com.x_twitter_scraper.api.models.x.communities.tweets.TweetListByCommunityParams
-import com.x_twitter_scraper.api.models.x.communities.tweets.TweetListPageAsync
 import com.x_twitter_scraper.api.models.x.communities.tweets.TweetListParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -40,14 +38,14 @@ class TweetServiceAsyncImpl internal constructor(private val clientOptions: Clie
     override fun list(
         params: TweetListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<TweetListPageAsync> =
+    ): CompletableFuture<PaginatedTweets> =
         // get /x/communities/tweets
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
     override fun listByCommunity(
         params: TweetListByCommunityParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<TweetListByCommunityPageAsync> =
+    ): CompletableFuture<PaginatedTweets> =
         // get /x/communities/{id}/tweets
         withRawResponse().listByCommunity(params, requestOptions).thenApply { it.parse() }
 
@@ -70,7 +68,7 @@ class TweetServiceAsyncImpl internal constructor(private val clientOptions: Clie
         override fun list(
             params: TweetListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<TweetListPageAsync>> {
+        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -90,14 +88,6 @@ class TweetServiceAsyncImpl internal constructor(private val clientOptions: Clie
                                     it.validate()
                                 }
                             }
-                            .let {
-                                TweetListPageAsync.builder()
-                                    .service(TweetServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
-                                    .params(params)
-                                    .response(it)
-                                    .build()
-                            }
                     }
                 }
         }
@@ -108,7 +98,7 @@ class TweetServiceAsyncImpl internal constructor(private val clientOptions: Clie
         override fun listByCommunity(
             params: TweetListByCommunityParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<TweetListByCommunityPageAsync>> {
+        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -130,14 +120,6 @@ class TweetServiceAsyncImpl internal constructor(private val clientOptions: Clie
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()
                                 }
-                            }
-                            .let {
-                                TweetListByCommunityPageAsync.builder()
-                                    .service(TweetServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
-                                    .params(params)
-                                    .response(it)
-                                    .build()
                             }
                     }
                 }

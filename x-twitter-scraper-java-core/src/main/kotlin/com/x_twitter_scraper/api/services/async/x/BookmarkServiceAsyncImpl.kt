@@ -15,7 +15,6 @@ import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepareAsync
 import com.x_twitter_scraper.api.models.PaginatedTweets
-import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkListPageAsync
 import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkListParams
 import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkRetrieveFoldersParams
 import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkRetrieveFoldersResponse
@@ -38,7 +37,7 @@ class BookmarkServiceAsyncImpl internal constructor(private val clientOptions: C
     override fun list(
         params: BookmarkListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<BookmarkListPageAsync> =
+    ): CompletableFuture<PaginatedTweets> =
         // get /x/bookmarks
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
@@ -68,7 +67,7 @@ class BookmarkServiceAsyncImpl internal constructor(private val clientOptions: C
         override fun list(
             params: BookmarkListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<BookmarkListPageAsync>> {
+        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -87,14 +86,6 @@ class BookmarkServiceAsyncImpl internal constructor(private val clientOptions: C
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()
                                 }
-                            }
-                            .let {
-                                BookmarkListPageAsync.builder()
-                                    .service(BookmarkServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
-                                    .params(params)
-                                    .response(it)
-                                    .build()
                             }
                     }
                 }
