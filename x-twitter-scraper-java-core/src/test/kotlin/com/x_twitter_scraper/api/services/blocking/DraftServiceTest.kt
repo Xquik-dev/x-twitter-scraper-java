@@ -13,11 +13,7 @@ internal class DraftServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val draftService = client.drafts()
 
         val draftDetail =
@@ -35,11 +31,7 @@ internal class DraftServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val draftService = client.drafts()
 
         val draftDetail = draftService.retrieve("id")
@@ -50,11 +42,7 @@ internal class DraftServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val draftService = client.drafts()
 
         val drafts =
@@ -68,11 +56,7 @@ internal class DraftServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val draftService = client.drafts()
 
         draftService.delete("id")

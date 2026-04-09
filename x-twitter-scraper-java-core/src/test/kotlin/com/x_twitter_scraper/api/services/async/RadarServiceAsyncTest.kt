@@ -12,11 +12,7 @@ internal class RadarServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveTrendingTopics() {
-        val client =
-            XTwitterScraperOkHttpClientAsync.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
         val radarServiceAsync = client.radar()
 
         val responseFuture =

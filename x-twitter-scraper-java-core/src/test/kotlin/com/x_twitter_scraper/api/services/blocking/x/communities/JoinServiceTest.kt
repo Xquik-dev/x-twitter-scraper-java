@@ -13,11 +13,7 @@ internal class JoinServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val joinService = client.x().communities().join()
 
         val communityActionResult =
@@ -29,11 +25,7 @@ internal class JoinServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun deleteAll() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val joinService = client.x().communities().join()
 
         val communityActionResult =

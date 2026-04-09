@@ -12,11 +12,7 @@ internal class RadarServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveTrendingTopics() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val radarService = client.radar()
 
         val response =

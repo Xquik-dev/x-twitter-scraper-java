@@ -12,11 +12,7 @@ internal class ApiKeyServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client =
-            XTwitterScraperOkHttpClientAsync.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
         val apiKeyServiceAsync = client.apiKeys()
 
         val apiKeyFuture =
@@ -29,11 +25,7 @@ internal class ApiKeyServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client =
-            XTwitterScraperOkHttpClientAsync.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
         val apiKeyServiceAsync = client.apiKeys()
 
         val apiKeysFuture = apiKeyServiceAsync.list()
@@ -45,11 +37,7 @@ internal class ApiKeyServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun revoke() {
-        val client =
-            XTwitterScraperOkHttpClientAsync.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
         val apiKeyServiceAsync = client.apiKeys()
 
         val responseFuture = apiKeyServiceAsync.revoke("id")

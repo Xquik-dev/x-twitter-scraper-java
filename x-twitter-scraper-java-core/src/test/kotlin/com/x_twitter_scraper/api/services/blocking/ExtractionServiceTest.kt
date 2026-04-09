@@ -26,11 +26,7 @@ internal class ExtractionServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val extractionService = client.extractions()
 
         val extraction =
@@ -44,11 +40,7 @@ internal class ExtractionServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val extractionService = client.extractions()
 
         val extractions =
@@ -67,11 +59,7 @@ internal class ExtractionServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun estimateCost() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val extractionService = client.extractions()
 
         val response =
@@ -99,7 +87,6 @@ internal class ExtractionServiceTest {
             XTwitterScraperOkHttpClient.builder()
                 .baseUrl(wmRuntimeInfo.httpBaseUrl)
                 .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
                 .build()
         val extractionService = client.extractions()
         stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
@@ -118,11 +105,7 @@ internal class ExtractionServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun run() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val extractionService = client.extractions()
 
         val response =

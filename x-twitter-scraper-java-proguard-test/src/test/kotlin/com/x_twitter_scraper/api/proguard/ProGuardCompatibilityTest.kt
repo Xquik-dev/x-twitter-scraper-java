@@ -47,11 +47,7 @@ internal class ProGuardCompatibilityTest {
 
     @Test
     fun client() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
 
         assertThat(client).isNotNull()
         assertThat(client.account()).isNotNull()

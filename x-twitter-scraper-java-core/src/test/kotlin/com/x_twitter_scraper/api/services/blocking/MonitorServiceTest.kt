@@ -14,11 +14,7 @@ internal class MonitorServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val monitorService = client.monitors()
 
         val monitor =
@@ -36,11 +32,7 @@ internal class MonitorServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val monitorService = client.monitors()
 
         val monitor = monitorService.retrieve("id")
@@ -51,11 +43,7 @@ internal class MonitorServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun update() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val monitorService = client.monitors()
 
         val monitor =
@@ -73,11 +61,7 @@ internal class MonitorServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val monitorService = client.monitors()
 
         val monitors = monitorService.list()
@@ -88,11 +72,7 @@ internal class MonitorServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun deactivate() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val monitorService = client.monitors()
 
         val response = monitorService.deactivate("id")

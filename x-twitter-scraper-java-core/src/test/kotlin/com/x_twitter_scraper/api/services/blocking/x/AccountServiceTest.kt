@@ -13,11 +13,7 @@ internal class AccountServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val accountService = client.x().accounts()
 
         val account =
@@ -37,11 +33,7 @@ internal class AccountServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val accountService = client.x().accounts()
 
         val xAccountDetail = accountService.retrieve("id")
@@ -52,11 +44,7 @@ internal class AccountServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val accountService = client.x().accounts()
 
         val accounts = accountService.list()
@@ -67,11 +55,7 @@ internal class AccountServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val accountService = client.x().accounts()
 
         val account = accountService.delete("id")
@@ -82,11 +66,7 @@ internal class AccountServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun bulkRetry() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val accountService = client.x().accounts()
 
         val response = accountService.bulkRetry()
@@ -97,11 +77,7 @@ internal class AccountServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun reauth() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val accountService = client.x().accounts()
 
         val response =
