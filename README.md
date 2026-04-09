@@ -73,7 +73,6 @@ import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient;
 
 XTwitterScraperClient client = XTwitterScraperOkHttpClient.builder()
     .apiKey("My API Key")
-    .bearerToken("My Bearer Token")
     .build();
 ```
 

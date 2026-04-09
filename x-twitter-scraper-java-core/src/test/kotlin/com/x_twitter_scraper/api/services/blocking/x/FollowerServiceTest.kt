@@ -12,11 +12,7 @@ internal class FollowerServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun check() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val followerService = client.x().followers()
 
         val response =

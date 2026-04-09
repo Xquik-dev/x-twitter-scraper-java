@@ -24,11 +24,7 @@ internal class DrawServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
-        val client =
-            XTwitterScraperOkHttpClientAsync.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
         val drawServiceAsync = client.draws()
 
         val drawFuture = drawServiceAsync.retrieve("id")
@@ -40,11 +36,7 @@ internal class DrawServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client =
-            XTwitterScraperOkHttpClientAsync.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
         val drawServiceAsync = client.draws()
 
         val drawsFuture =
@@ -60,7 +52,6 @@ internal class DrawServiceAsyncTest {
             XTwitterScraperOkHttpClientAsync.builder()
                 .baseUrl(wmRuntimeInfo.httpBaseUrl)
                 .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
                 .build()
         val drawServiceAsync = client.draws()
         stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
@@ -81,11 +72,7 @@ internal class DrawServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun run() {
-        val client =
-            XTwitterScraperOkHttpClientAsync.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
         val drawServiceAsync = client.draws()
 
         val responseFuture =

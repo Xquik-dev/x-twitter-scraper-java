@@ -15,11 +15,7 @@ internal class IntegrationServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val integrationService = client.integrations()
 
         val integration =
@@ -40,11 +36,7 @@ internal class IntegrationServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val integrationService = client.integrations()
 
         val integration = integrationService.retrieve("id")
@@ -55,11 +47,7 @@ internal class IntegrationServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun update() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val integrationService = client.integrations()
 
         val integration =
@@ -82,11 +70,7 @@ internal class IntegrationServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val integrationService = client.integrations()
 
         val integrations = integrationService.list()
@@ -97,11 +81,7 @@ internal class IntegrationServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val integrationService = client.integrations()
 
         val integration = integrationService.delete("id")
@@ -112,11 +92,7 @@ internal class IntegrationServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun listDeliveries() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val integrationService = client.integrations()
 
         val response =
@@ -130,11 +106,7 @@ internal class IntegrationServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun sendTest() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val integrationService = client.integrations()
 
         val response = integrationService.sendTest("id")

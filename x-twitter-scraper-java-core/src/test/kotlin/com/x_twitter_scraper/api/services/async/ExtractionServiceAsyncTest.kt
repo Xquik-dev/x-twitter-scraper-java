@@ -26,11 +26,7 @@ internal class ExtractionServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
-        val client =
-            XTwitterScraperOkHttpClientAsync.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
         val extractionServiceAsync = client.extractions()
 
         val extractionFuture =
@@ -45,11 +41,7 @@ internal class ExtractionServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client =
-            XTwitterScraperOkHttpClientAsync.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
         val extractionServiceAsync = client.extractions()
 
         val extractionsFuture =
@@ -69,11 +61,7 @@ internal class ExtractionServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun estimateCost() {
-        val client =
-            XTwitterScraperOkHttpClientAsync.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
         val extractionServiceAsync = client.extractions()
 
         val responseFuture =
@@ -102,7 +90,6 @@ internal class ExtractionServiceAsyncTest {
             XTwitterScraperOkHttpClientAsync.builder()
                 .baseUrl(wmRuntimeInfo.httpBaseUrl)
                 .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
                 .build()
         val extractionServiceAsync = client.extractions()
         stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
@@ -122,11 +109,7 @@ internal class ExtractionServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun run() {
-        val client =
-            XTwitterScraperOkHttpClientAsync.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
         val extractionServiceAsync = client.extractions()
 
         val responseFuture =
