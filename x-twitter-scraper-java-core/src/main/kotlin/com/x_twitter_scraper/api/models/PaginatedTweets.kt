@@ -14,7 +14,6 @@ import com.x_twitter_scraper.api.core.checkKnown
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
-import com.x_twitter_scraper.api.models.x.tweets.SearchTweet
 import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
