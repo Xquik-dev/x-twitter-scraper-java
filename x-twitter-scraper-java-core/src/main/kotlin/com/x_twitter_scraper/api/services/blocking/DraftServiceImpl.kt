@@ -26,7 +26,7 @@ import com.x_twitter_scraper.api.models.drafts.DraftRetrieveParams
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-/** Tweet composition, drafts, writing styles & radar */
+/** AI tweet composition, drafts, writing styles, and radar */
 class DraftServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     DraftService {
 

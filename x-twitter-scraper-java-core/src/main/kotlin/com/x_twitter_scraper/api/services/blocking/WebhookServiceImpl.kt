@@ -31,7 +31,7 @@ import com.x_twitter_scraper.api.models.webhooks.WebhookUpdateParams
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-/** Webhook endpoint management & delivery */
+/** Webhook endpoint management and delivery */
 class WebhookServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     WebhookService {
 

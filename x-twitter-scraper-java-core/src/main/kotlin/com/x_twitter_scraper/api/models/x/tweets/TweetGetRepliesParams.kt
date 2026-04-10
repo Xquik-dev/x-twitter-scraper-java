@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get replies to a tweet */
+/** List replies to a tweet */
 class TweetGetRepliesParams
 private constructor(
     private val id: String?,

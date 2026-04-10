@@ -110,25 +110,25 @@ class XTwitterScraperClientImpl(private val clientOptions: ClientOptions) : XTwi
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): XTwitterScraperClient =
         XTwitterScraperClientImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    /** Account info & settings */
+    /** Account info and settings */
     override fun account(): AccountService = account
 
     /** API key management (session auth only) */
     override fun apiKeys(): ApiKeyService = apiKeys
 
-    /** Subscription & billing */
+    /** Subscription, billing, and credits */
     override fun subscribe(): SubscribeService = subscribe
 
-    /** Tweet composition, drafts, writing styles & radar */
+    /** AI tweet composition, drafts, writing styles, and radar */
     override fun compose(): ComposeService = compose
 
-    /** Tweet composition, drafts, writing styles & radar */
+    /** AI tweet composition, drafts, writing styles, and radar */
     override fun drafts(): DraftService = drafts
 
-    /** Tweet composition, drafts, writing styles & radar */
+    /** AI tweet composition, drafts, writing styles, and radar */
     override fun styles(): StyleService = styles
 
-    /** Tweet composition, drafts, writing styles & radar */
+    /** AI tweet composition, drafts, writing styles, and radar */
     override fun radar(): RadarService = radar
 
     /** Real-time X account monitoring */
@@ -143,23 +143,22 @@ class XTwitterScraperClientImpl(private val clientOptions: ClientOptions) : XTwi
     /** Giveaway draws from tweet replies */
     override fun draws(): DrawService = draws
 
-    /** Webhook endpoint management & delivery */
+    /** Webhook endpoint management and delivery */
     override fun webhooks(): WebhookService = webhooks
 
     /** Push notification integrations (Telegram) */
     override fun integrations(): IntegrationService = integrations
 
-    /** X data lookups (subscription required) */
     override fun x(): XService = x
 
-    /** Trending topics by region */
+    /** Trending topics and hashtags by region */
     override fun trends(): TrendService = trends
 
     override fun bot(): BotService = bot
 
     override fun support(): SupportService = support
 
-    /** Subscription & billing */
+    /** Subscription, billing, and credits */
     override fun credits(): CreditService = credits
 
     override fun close() = clientOptions.close()
@@ -246,25 +245,25 @@ class XTwitterScraperClientImpl(private val clientOptions: ClientOptions) : XTwi
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        /** Account info & settings */
+        /** Account info and settings */
         override fun account(): AccountService.WithRawResponse = account
 
         /** API key management (session auth only) */
         override fun apiKeys(): ApiKeyService.WithRawResponse = apiKeys
 
-        /** Subscription & billing */
+        /** Subscription, billing, and credits */
         override fun subscribe(): SubscribeService.WithRawResponse = subscribe
 
-        /** Tweet composition, drafts, writing styles & radar */
+        /** AI tweet composition, drafts, writing styles, and radar */
         override fun compose(): ComposeService.WithRawResponse = compose
 
-        /** Tweet composition, drafts, writing styles & radar */
+        /** AI tweet composition, drafts, writing styles, and radar */
         override fun drafts(): DraftService.WithRawResponse = drafts
 
-        /** Tweet composition, drafts, writing styles & radar */
+        /** AI tweet composition, drafts, writing styles, and radar */
         override fun styles(): StyleService.WithRawResponse = styles
 
-        /** Tweet composition, drafts, writing styles & radar */
+        /** AI tweet composition, drafts, writing styles, and radar */
         override fun radar(): RadarService.WithRawResponse = radar
 
         /** Real-time X account monitoring */
@@ -279,23 +278,22 @@ class XTwitterScraperClientImpl(private val clientOptions: ClientOptions) : XTwi
         /** Giveaway draws from tweet replies */
         override fun draws(): DrawService.WithRawResponse = draws
 
-        /** Webhook endpoint management & delivery */
+        /** Webhook endpoint management and delivery */
         override fun webhooks(): WebhookService.WithRawResponse = webhooks
 
         /** Push notification integrations (Telegram) */
         override fun integrations(): IntegrationService.WithRawResponse = integrations
 
-        /** X data lookups (subscription required) */
         override fun x(): XService.WithRawResponse = x
 
-        /** Trending topics by region */
+        /** Trending topics and hashtags by region */
         override fun trends(): TrendService.WithRawResponse = trends
 
         override fun bot(): BotService.WithRawResponse = bot
 
         override fun support(): SupportService.WithRawResponse = support
 
-        /** Subscription & billing */
+        /** Subscription, billing, and credits */
         override fun credits(): CreditService.WithRawResponse = credits
     }
 }

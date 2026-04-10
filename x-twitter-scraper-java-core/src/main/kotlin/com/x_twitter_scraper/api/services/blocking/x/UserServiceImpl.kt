@@ -34,7 +34,7 @@ import com.x_twitter_scraper.api.services.blocking.x.users.FollowServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-/** X data lookups (subscription required) */
+/** Look up, search, and explore user profiles and relationships */
 class UserServiceImpl internal constructor(private val clientOptions: ClientOptions) : UserService {
 
     private val withRawResponse: UserService.WithRawResponse by lazy {

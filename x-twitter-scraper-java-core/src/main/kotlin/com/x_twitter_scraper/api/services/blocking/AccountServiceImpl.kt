@@ -23,7 +23,7 @@ import com.x_twitter_scraper.api.models.account.AccountUpdateLocaleParams
 import com.x_twitter_scraper.api.models.account.AccountUpdateLocaleResponse
 import java.util.function.Consumer
 
-/** Account info & settings */
+/** Account info and settings */
 class AccountServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     AccountService {
 

@@ -12,7 +12,7 @@ import com.x_twitter_scraper.api.models.x.media.MediaUploadParams
 import com.x_twitter_scraper.api.models.x.media.MediaUploadResponse
 import java.util.function.Consumer
 
-/** Media upload & download */
+/** Media upload and download */
 interface MediaService {
 
     /**
@@ -27,7 +27,7 @@ interface MediaService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): MediaService
 
-    /** Download tweet media */
+    /** Download images & videos from tweets */
     fun download(): MediaDownloadResponse = download(MediaDownloadParams.none())
 
     /** @see download */

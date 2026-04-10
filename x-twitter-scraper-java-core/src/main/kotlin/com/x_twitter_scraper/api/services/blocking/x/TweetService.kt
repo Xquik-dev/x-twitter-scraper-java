@@ -55,7 +55,7 @@ interface TweetService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): TweetCreateResponse
 
-    /** Look up tweet */
+    /** Get tweet with full text, author, metrics & media */
     fun retrieve(id: String): TweetRetrieveResponse = retrieve(id, TweetRetrieveParams.none())
 
     /** @see retrieve */
@@ -115,7 +115,7 @@ interface TweetService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): TweetDeleteResponse
 
-    /** Get users who liked a tweet */
+    /** List users who liked a tweet */
     fun getFavoriters(id: String): PaginatedUsers =
         getFavoriters(id, TweetGetFavoritersParams.none())
 
@@ -146,7 +146,7 @@ interface TweetService {
     fun getFavoriters(id: String, requestOptions: RequestOptions): PaginatedUsers =
         getFavoriters(id, TweetGetFavoritersParams.none(), requestOptions)
 
-    /** Get quote tweets of a tweet */
+    /** List quote tweets of a tweet */
     fun getQuotes(id: String): PaginatedTweets = getQuotes(id, TweetGetQuotesParams.none())
 
     /** @see getQuotes */
@@ -176,7 +176,7 @@ interface TweetService {
     fun getQuotes(id: String, requestOptions: RequestOptions): PaginatedTweets =
         getQuotes(id, TweetGetQuotesParams.none(), requestOptions)
 
-    /** Get replies to a tweet */
+    /** List replies to a tweet */
     fun getReplies(id: String): PaginatedTweets = getReplies(id, TweetGetRepliesParams.none())
 
     /** @see getReplies */
@@ -206,7 +206,7 @@ interface TweetService {
     fun getReplies(id: String, requestOptions: RequestOptions): PaginatedTweets =
         getReplies(id, TweetGetRepliesParams.none(), requestOptions)
 
-    /** Get users who retweeted a tweet */
+    /** List users who retweeted a tweet */
     fun getRetweeters(id: String): PaginatedUsers =
         getRetweeters(id, TweetGetRetweetersParams.none())
 
@@ -237,7 +237,7 @@ interface TweetService {
     fun getRetweeters(id: String, requestOptions: RequestOptions): PaginatedUsers =
         getRetweeters(id, TweetGetRetweetersParams.none(), requestOptions)
 
-    /** Get thread context for a tweet */
+    /** Get full conversation thread for a tweet */
     fun getThread(id: String): PaginatedTweets = getThread(id, TweetGetThreadParams.none())
 
     /** @see getThread */
@@ -267,7 +267,7 @@ interface TweetService {
     fun getThread(id: String, requestOptions: RequestOptions): PaginatedTweets =
         getThread(id, TweetGetThreadParams.none(), requestOptions)
 
-    /** Search tweets */
+    /** Search tweets with X query operators & pagination */
     fun search(params: TweetSearchParams): PaginatedTweets = search(params, RequestOptions.none())
 
     /** @see search */

@@ -15,7 +15,7 @@ import com.x_twitter_scraper.api.models.drafts.DraftListResponse
 import com.x_twitter_scraper.api.models.drafts.DraftRetrieveParams
 import java.util.function.Consumer
 
-/** Tweet composition, drafts, writing styles & radar */
+/** AI tweet composition, drafts, writing styles, and radar */
 interface DraftService {
 
     /**

@@ -43,7 +43,7 @@ configure<MavenPublishBaseExtension> {
 
     pom {
         name.set("Xquik API")
-        description.set("Xquik is an all-in-one X (Twitter) automation API with 40+ endpoints for\nreading, writing, and monitoring X data. **Read endpoints** let you look up\ntweets, search tweets, fetch user profiles, list followers & following, browse\ntimelines, bookmarks, notifications, communities, lists, trending topics, and\ndownload media. **Write endpoints** let you post tweets, reply, like, unlike,\nretweet, unretweet, follow, unfollow, send DMs, upload media, update profiles,\nand manage communities. **Automation endpoints** power bulk data extractions (20\ntool types), giveaway draws from tweet replies, real-time account monitoring\nwith webhooks & Telegram integrations, tweet composition with AI, and writing\nstyle analysis. Authenticate with an API key or OAuth 2.1 bearer token.\nPay-per-use endpoints are also available without an account.")
+        description.set("Look up any tweet, user, or trend on X. Search tweets, check follower\nrelationships, download media, and monitor accounts in real time. 32 pay-per-use\nread endpoints work without a subscription — just pay per call. Write endpoints\n(post, like, retweet, follow, DM) and automation endpoints (bulk extractions,\ngiveaway draws, monitors, webhooks) require an API key or OAuth 2.1 bearer\ntoken.")
         url.set("https://xquik.com")
 
         licenses {

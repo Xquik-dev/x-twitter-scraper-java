@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get verified followers */
+/** List verified followers of a user */
 class UserRetrieveVerifiedFollowersParams
 private constructor(
     private val id: String?,

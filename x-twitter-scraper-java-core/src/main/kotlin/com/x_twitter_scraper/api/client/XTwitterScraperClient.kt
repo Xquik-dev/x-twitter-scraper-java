@@ -59,25 +59,25 @@ interface XTwitterScraperClient {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): XTwitterScraperClient
 
-    /** Account info & settings */
+    /** Account info and settings */
     fun account(): AccountService
 
     /** API key management (session auth only) */
     fun apiKeys(): ApiKeyService
 
-    /** Subscription & billing */
+    /** Subscription, billing, and credits */
     fun subscribe(): SubscribeService
 
-    /** Tweet composition, drafts, writing styles & radar */
+    /** AI tweet composition, drafts, writing styles, and radar */
     fun compose(): ComposeService
 
-    /** Tweet composition, drafts, writing styles & radar */
+    /** AI tweet composition, drafts, writing styles, and radar */
     fun drafts(): DraftService
 
-    /** Tweet composition, drafts, writing styles & radar */
+    /** AI tweet composition, drafts, writing styles, and radar */
     fun styles(): StyleService
 
-    /** Tweet composition, drafts, writing styles & radar */
+    /** AI tweet composition, drafts, writing styles, and radar */
     fun radar(): RadarService
 
     /** Real-time X account monitoring */
@@ -92,23 +92,22 @@ interface XTwitterScraperClient {
     /** Giveaway draws from tweet replies */
     fun draws(): DrawService
 
-    /** Webhook endpoint management & delivery */
+    /** Webhook endpoint management and delivery */
     fun webhooks(): WebhookService
 
     /** Push notification integrations (Telegram) */
     fun integrations(): IntegrationService
 
-    /** X data lookups (subscription required) */
     fun x(): XService
 
-    /** Trending topics by region */
+    /** Trending topics and hashtags by region */
     fun trends(): TrendService
 
     fun bot(): BotService
 
     fun support(): SupportService
 
-    /** Subscription & billing */
+    /** Subscription, billing, and credits */
     fun credits(): CreditService
 
     /**
@@ -138,25 +137,25 @@ interface XTwitterScraperClient {
             modifier: Consumer<ClientOptions.Builder>
         ): XTwitterScraperClient.WithRawResponse
 
-        /** Account info & settings */
+        /** Account info and settings */
         fun account(): AccountService.WithRawResponse
 
         /** API key management (session auth only) */
         fun apiKeys(): ApiKeyService.WithRawResponse
 
-        /** Subscription & billing */
+        /** Subscription, billing, and credits */
         fun subscribe(): SubscribeService.WithRawResponse
 
-        /** Tweet composition, drafts, writing styles & radar */
+        /** AI tweet composition, drafts, writing styles, and radar */
         fun compose(): ComposeService.WithRawResponse
 
-        /** Tweet composition, drafts, writing styles & radar */
+        /** AI tweet composition, drafts, writing styles, and radar */
         fun drafts(): DraftService.WithRawResponse
 
-        /** Tweet composition, drafts, writing styles & radar */
+        /** AI tweet composition, drafts, writing styles, and radar */
         fun styles(): StyleService.WithRawResponse
 
-        /** Tweet composition, drafts, writing styles & radar */
+        /** AI tweet composition, drafts, writing styles, and radar */
         fun radar(): RadarService.WithRawResponse
 
         /** Real-time X account monitoring */
@@ -171,23 +170,22 @@ interface XTwitterScraperClient {
         /** Giveaway draws from tweet replies */
         fun draws(): DrawService.WithRawResponse
 
-        /** Webhook endpoint management & delivery */
+        /** Webhook endpoint management and delivery */
         fun webhooks(): WebhookService.WithRawResponse
 
         /** Push notification integrations (Telegram) */
         fun integrations(): IntegrationService.WithRawResponse
 
-        /** X data lookups (subscription required) */
         fun x(): XService.WithRawResponse
 
-        /** Trending topics by region */
+        /** Trending topics and hashtags by region */
         fun trends(): TrendService.WithRawResponse
 
         fun bot(): BotService.WithRawResponse
 
         fun support(): SupportService.WithRawResponse
 
-        /** Subscription & billing */
+        /** Subscription, billing, and credits */
         fun credits(): CreditService.WithRawResponse
     }
 }

@@ -20,7 +20,7 @@ import com.x_twitter_scraper.api.models.webhooks.WebhookTestResponse
 import com.x_twitter_scraper.api.models.webhooks.WebhookUpdateParams
 import java.util.function.Consumer
 
-/** Webhook endpoint management & delivery */
+/** Webhook endpoint management and delivery */
 interface WebhookService {
 
     /**

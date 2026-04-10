@@ -10,7 +10,7 @@ import com.x_twitter_scraper.api.models.trends.TrendListResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
-/** Trending topics by region */
+/** Trending topics and hashtags by region */
 interface TrendServiceAsync {
 
     /**
@@ -25,7 +25,7 @@ interface TrendServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): TrendServiceAsync
 
-    /** Get regional trending topics */
+    /** Get trending hashtags & topics by region (alias) */
     fun list(): CompletableFuture<TrendListResponse> = list(TrendListParams.none())
 
     /** @see list */
