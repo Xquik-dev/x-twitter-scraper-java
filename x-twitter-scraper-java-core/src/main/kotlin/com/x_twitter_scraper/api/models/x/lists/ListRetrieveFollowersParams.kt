@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get list followers */
+/** List followers of an X List */
 class ListRetrieveFollowersParams
 private constructor(
     private val id: String?,

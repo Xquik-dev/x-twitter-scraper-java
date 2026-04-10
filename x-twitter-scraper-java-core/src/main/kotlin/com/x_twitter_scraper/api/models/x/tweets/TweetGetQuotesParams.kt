@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get quote tweets of a tweet */
+/** List quote tweets of a tweet */
 class TweetGetQuotesParams
 private constructor(
     private val id: String?,

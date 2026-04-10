@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get recent tweets by a user */
+/** List recent tweets posted by a user */
 class UserRetrieveTweetsParams
 private constructor(
     private val id: String?,

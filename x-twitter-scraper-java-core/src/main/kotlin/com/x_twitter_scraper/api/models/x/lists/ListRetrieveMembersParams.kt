@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get list members */
+/** List members of an X List */
 class ListRetrieveMembersParams
 private constructor(
     private val id: String?,

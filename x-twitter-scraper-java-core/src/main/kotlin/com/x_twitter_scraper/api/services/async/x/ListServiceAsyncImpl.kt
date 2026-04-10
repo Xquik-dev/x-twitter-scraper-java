@@ -24,7 +24,7 @@ import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-/** X data lookups (subscription required) */
+/** X List followers, members, and tweets */
 class ListServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     ListServiceAsync {
 

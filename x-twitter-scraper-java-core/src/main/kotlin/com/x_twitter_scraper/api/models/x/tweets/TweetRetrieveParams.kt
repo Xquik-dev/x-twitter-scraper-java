@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Look up tweet */
+/** Get tweet with full text, author, metrics & media */
 class TweetRetrieveParams
 private constructor(
     private val id: String?,

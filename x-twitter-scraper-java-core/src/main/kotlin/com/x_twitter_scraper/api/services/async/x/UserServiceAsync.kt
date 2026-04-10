@@ -23,7 +23,7 @@ import com.x_twitter_scraper.api.services.async.x.users.FollowServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
-/** X data lookups (subscription required) */
+/** Look up, search, and explore user profiles and relationships */
 interface UserServiceAsync {
 
     /**
@@ -41,7 +41,7 @@ interface UserServiceAsync {
     /** X write actions (tweets, likes, follows, DMs) */
     fun follow(): FollowServiceAsync
 
-    /** Look up X user */
+    /** Get user profile with follower counts & verification */
     fun retrieve(id: String): CompletableFuture<UserProfile> =
         retrieve(id, UserRetrieveParams.none())
 
@@ -72,7 +72,7 @@ interface UserServiceAsync {
     fun retrieve(id: String, requestOptions: RequestOptions): CompletableFuture<UserProfile> =
         retrieve(id, UserRetrieveParams.none(), requestOptions)
 
-    /** Get multiple users by IDs */
+    /** Look up multiple users by IDs in one call */
     fun retrieveBatch(params: UserRetrieveBatchParams): CompletableFuture<PaginatedUsers> =
         retrieveBatch(params, RequestOptions.none())
 
@@ -82,7 +82,7 @@ interface UserServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<PaginatedUsers>
 
-    /** Get user followers */
+    /** List followers of a user */
     fun retrieveFollowers(id: String): CompletableFuture<PaginatedUsers> =
         retrieveFollowers(id, UserRetrieveFollowersParams.none())
 
@@ -117,7 +117,7 @@ interface UserServiceAsync {
     ): CompletableFuture<PaginatedUsers> =
         retrieveFollowers(id, UserRetrieveFollowersParams.none(), requestOptions)
 
-    /** Get followers you know for a user */
+    /** List mutual followers between you and a user */
     fun retrieveFollowersYouKnow(id: String): CompletableFuture<PaginatedUsers> =
         retrieveFollowersYouKnow(id, UserRetrieveFollowersYouKnowParams.none())
 
@@ -154,7 +154,7 @@ interface UserServiceAsync {
     ): CompletableFuture<PaginatedUsers> =
         retrieveFollowersYouKnow(id, UserRetrieveFollowersYouKnowParams.none(), requestOptions)
 
-    /** Get users this user follows */
+    /** List accounts a user follows */
     fun retrieveFollowing(id: String): CompletableFuture<PaginatedUsers> =
         retrieveFollowing(id, UserRetrieveFollowingParams.none())
 
@@ -189,7 +189,7 @@ interface UserServiceAsync {
     ): CompletableFuture<PaginatedUsers> =
         retrieveFollowing(id, UserRetrieveFollowingParams.none(), requestOptions)
 
-    /** Get tweets liked by a user */
+    /** List tweets liked by a user */
     fun retrieveLikes(id: String): CompletableFuture<PaginatedTweets> =
         retrieveLikes(id, UserRetrieveLikesParams.none())
 
@@ -224,7 +224,7 @@ interface UserServiceAsync {
     ): CompletableFuture<PaginatedTweets> =
         retrieveLikes(id, UserRetrieveLikesParams.none(), requestOptions)
 
-    /** Get media tweets by a user */
+    /** List media tweets posted by a user */
     fun retrieveMedia(id: String): CompletableFuture<PaginatedTweets> =
         retrieveMedia(id, UserRetrieveMediaParams.none())
 
@@ -259,7 +259,7 @@ interface UserServiceAsync {
     ): CompletableFuture<PaginatedTweets> =
         retrieveMedia(id, UserRetrieveMediaParams.none(), requestOptions)
 
-    /** Get tweets mentioning a user */
+    /** List tweets mentioning a user */
     fun retrieveMentions(id: String): CompletableFuture<PaginatedTweets> =
         retrieveMentions(id, UserRetrieveMentionsParams.none())
 
@@ -304,7 +304,7 @@ interface UserServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<PaginatedUsers>
 
-    /** Get recent tweets by a user */
+    /** List recent tweets posted by a user */
     fun retrieveTweets(id: String): CompletableFuture<PaginatedTweets> =
         retrieveTweets(id, UserRetrieveTweetsParams.none())
 
@@ -339,7 +339,7 @@ interface UserServiceAsync {
     ): CompletableFuture<PaginatedTweets> =
         retrieveTweets(id, UserRetrieveTweetsParams.none(), requestOptions)
 
-    /** Get verified followers */
+    /** List verified followers of a user */
     fun retrieveVerifiedFollowers(id: String): CompletableFuture<PaginatedUsers> =
         retrieveVerifiedFollowers(id, UserRetrieveVerifiedFollowersParams.none())
 

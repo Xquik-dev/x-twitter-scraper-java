@@ -18,7 +18,7 @@ import com.x_twitter_scraper.api.models.trends.TrendListParams
 import com.x_twitter_scraper.api.models.trends.TrendListResponse
 import java.util.function.Consumer
 
-/** Trending topics by region */
+/** Trending topics and hashtags by region */
 class TrendServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     TrendService {
 

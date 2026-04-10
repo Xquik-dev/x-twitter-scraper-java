@@ -31,7 +31,7 @@ import com.x_twitter_scraper.api.models.styles.StyleUpdateParams
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-/** Tweet composition, drafts, writing styles & radar */
+/** AI tweet composition, drafts, writing styles, and radar */
 class StyleServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     StyleService {
 

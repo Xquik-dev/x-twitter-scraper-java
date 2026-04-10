@@ -8,7 +8,7 @@ import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
 import java.util.Objects
 
-/** Get multiple users by IDs */
+/** Look up multiple users by IDs in one call */
 class UserRetrieveBatchParams
 private constructor(
     private val ids: String,

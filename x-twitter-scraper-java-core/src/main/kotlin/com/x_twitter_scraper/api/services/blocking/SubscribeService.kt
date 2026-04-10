@@ -10,7 +10,7 @@ import com.x_twitter_scraper.api.models.subscribe.SubscribeCreateParams
 import com.x_twitter_scraper.api.models.subscribe.SubscribeCreateResponse
 import java.util.function.Consumer
 
-/** Subscription & billing */
+/** Subscription, billing, and credits */
 interface SubscribeService {
 
     /**

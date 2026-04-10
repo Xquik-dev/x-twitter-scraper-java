@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get community moderators */
+/** List moderators of a community */
 class CommunityRetrieveModeratorsParams
 private constructor(
     private val id: String?,

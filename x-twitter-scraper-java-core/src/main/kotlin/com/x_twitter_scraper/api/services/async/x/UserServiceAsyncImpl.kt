@@ -35,7 +35,7 @@ import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-/** X data lookups (subscription required) */
+/** Look up, search, and explore user profiles and relationships */
 class UserServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     UserServiceAsync {
 

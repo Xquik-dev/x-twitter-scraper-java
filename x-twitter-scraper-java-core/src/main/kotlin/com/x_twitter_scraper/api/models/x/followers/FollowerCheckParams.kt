@@ -8,7 +8,7 @@ import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
 import java.util.Objects
 
-/** Check follow relationship */
+/** Check if one user follows another */
 class FollowerCheckParams
 private constructor(
     private val source: String,

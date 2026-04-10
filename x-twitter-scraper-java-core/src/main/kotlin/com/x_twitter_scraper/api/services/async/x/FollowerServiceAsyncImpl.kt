@@ -19,7 +19,7 @@ import com.x_twitter_scraper.api.models.x.followers.FollowerCheckResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
-/** X data lookups (subscription required) */
+/** Look up, search, and explore user profiles and relationships */
 class FollowerServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     FollowerServiceAsync {
 
