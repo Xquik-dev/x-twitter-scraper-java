@@ -55,7 +55,7 @@ interface TweetServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<TweetCreateResponse>
 
-    /** Get tweet with full text, author, metrics & media */
+    /** Get tweet with full text, author, metrics and media */
     fun retrieve(id: String): CompletableFuture<TweetRetrieveResponse> =
         retrieve(id, TweetRetrieveParams.none())
 
@@ -288,7 +288,7 @@ interface TweetServiceAsync {
     fun getThread(id: String, requestOptions: RequestOptions): CompletableFuture<PaginatedTweets> =
         getThread(id, TweetGetThreadParams.none(), requestOptions)
 
-    /** Search tweets with X query operators & pagination */
+    /** Search tweets with X query operators and pagination */
     fun search(params: TweetSearchParams): CompletableFuture<PaginatedTweets> =
         search(params, RequestOptions.none())
 

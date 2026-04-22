@@ -75,7 +75,7 @@ interface CommunityServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CommunityDeleteResponse>
 
-    /** Get community name, description & member count */
+    /** Get community name, description and member count */
     fun retrieveInfo(id: String): CompletableFuture<CommunityRetrieveInfoResponse> =
         retrieveInfo(id, CommunityRetrieveInfoParams.none())
 
