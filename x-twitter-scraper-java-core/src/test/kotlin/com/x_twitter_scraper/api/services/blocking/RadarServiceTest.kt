@@ -18,9 +18,10 @@ internal class RadarServiceTest {
         val response =
             radarService.retrieveTrendingTopics(
                 RadarRetrieveTrendingTopicsParams.builder()
-                    .category("category")
-                    .count(0L)
-                    .hours(0L)
+                    .after("after")
+                    .category(RadarRetrieveTrendingTopicsParams.Category.GENERAL)
+                    .hours(1L)
+                    .limit(1L)
                     .region("region")
                     .source(RadarRetrieveTrendingTopicsParams.Source.GITHUB)
                     .build()

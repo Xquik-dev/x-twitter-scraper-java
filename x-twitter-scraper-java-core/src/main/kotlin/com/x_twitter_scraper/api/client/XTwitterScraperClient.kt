@@ -5,14 +5,12 @@ package com.x_twitter_scraper.api.client
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.services.blocking.AccountService
 import com.x_twitter_scraper.api.services.blocking.ApiKeyService
-import com.x_twitter_scraper.api.services.blocking.BotService
 import com.x_twitter_scraper.api.services.blocking.ComposeService
 import com.x_twitter_scraper.api.services.blocking.CreditService
 import com.x_twitter_scraper.api.services.blocking.DraftService
 import com.x_twitter_scraper.api.services.blocking.DrawService
 import com.x_twitter_scraper.api.services.blocking.EventService
 import com.x_twitter_scraper.api.services.blocking.ExtractionService
-import com.x_twitter_scraper.api.services.blocking.IntegrationService
 import com.x_twitter_scraper.api.services.blocking.MonitorService
 import com.x_twitter_scraper.api.services.blocking.RadarService
 import com.x_twitter_scraper.api.services.blocking.StyleService
@@ -95,15 +93,10 @@ interface XTwitterScraperClient {
     /** Webhook endpoint management and delivery */
     fun webhooks(): WebhookService
 
-    /** Push notification integrations (Telegram) */
-    fun integrations(): IntegrationService
-
     fun x(): XService
 
     /** Trending topics and hashtags by region */
     fun trends(): TrendService
-
-    fun bot(): BotService
 
     fun support(): SupportService
 
@@ -173,15 +166,10 @@ interface XTwitterScraperClient {
         /** Webhook endpoint management and delivery */
         fun webhooks(): WebhookService.WithRawResponse
 
-        /** Push notification integrations (Telegram) */
-        fun integrations(): IntegrationService.WithRawResponse
-
         fun x(): XService.WithRawResponse
 
         /** Trending topics and hashtags by region */
         fun trends(): TrendService.WithRawResponse
-
-        fun bot(): BotService.WithRawResponse
 
         fun support(): SupportService.WithRawResponse
 
