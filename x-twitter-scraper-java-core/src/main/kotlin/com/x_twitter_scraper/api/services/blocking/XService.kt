@@ -135,7 +135,7 @@ interface XService {
     fun getNotifications(requestOptions: RequestOptions): XGetNotificationsResponse =
         getNotifications(XGetNotificationsParams.none(), requestOptions)
 
-    /** Get trending hashtags & topics from X by region */
+    /** Get trending hashtags and topics from X by region */
     fun getTrends(): XGetTrendsResponse = getTrends(XGetTrendsParams.none())
 
     /** @see getTrends */

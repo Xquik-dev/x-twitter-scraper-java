@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get user profile with follower counts & verification */
+/** Get user profile with follower counts and verification */
 class UserRetrieveParams
 private constructor(
     private val id: String?,

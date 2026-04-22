@@ -14,7 +14,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Search tweets with X query operators & pagination */
+/** Search tweets with X query operators and pagination */
 class TweetSearchParams
 private constructor(
     private val q: String,
