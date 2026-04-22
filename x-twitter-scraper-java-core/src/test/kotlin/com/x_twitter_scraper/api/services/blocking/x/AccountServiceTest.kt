@@ -85,6 +85,8 @@ internal class AccountServiceTest {
                 AccountReauthParams.builder()
                     .id("id")
                     .password("password_value")
+                    .email("user@example.com")
+                    .proxyCountry("US")
                     .totpSecret("totp_secret_value")
                     .build()
             )

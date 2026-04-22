@@ -14,17 +14,19 @@ internal class ExtractionEstimateCostResponseTest {
         val extractionEstimateCostResponse =
             ExtractionEstimateCostResponse.builder()
                 .allowed(true)
+                .creditsAvailable("50000")
+                .creditsRequired("500")
                 .estimatedResults(500L)
-                .projectedPercent(30.0)
-                .source("api_count")
-                .usagePercent(25.0)
+                .source("replyCount")
+                .resolvedXUserId("123456")
                 .build()
 
         assertThat(extractionEstimateCostResponse.allowed()).isEqualTo(true)
+        assertThat(extractionEstimateCostResponse.creditsAvailable()).isEqualTo("50000")
+        assertThat(extractionEstimateCostResponse.creditsRequired()).isEqualTo("500")
         assertThat(extractionEstimateCostResponse.estimatedResults()).isEqualTo(500L)
-        assertThat(extractionEstimateCostResponse.projectedPercent()).isEqualTo(30.0)
-        assertThat(extractionEstimateCostResponse.source()).isEqualTo("api_count")
-        assertThat(extractionEstimateCostResponse.usagePercent()).isEqualTo(25.0)
+        assertThat(extractionEstimateCostResponse.source()).isEqualTo("replyCount")
+        assertThat(extractionEstimateCostResponse.resolvedXUserId()).contains("123456")
     }
 
     @Test
@@ -33,10 +35,11 @@ internal class ExtractionEstimateCostResponseTest {
         val extractionEstimateCostResponse =
             ExtractionEstimateCostResponse.builder()
                 .allowed(true)
+                .creditsAvailable("50000")
+                .creditsRequired("500")
                 .estimatedResults(500L)
-                .projectedPercent(30.0)
-                .source("api_count")
-                .usagePercent(25.0)
+                .source("replyCount")
+                .resolvedXUserId("123456")
                 .build()
 
         val roundtrippedExtractionEstimateCostResponse =

@@ -3,6 +3,7 @@
 package com.x_twitter_scraper.api.models.radar
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.jsonMapper
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -14,22 +15,41 @@ internal class RadarItemTest {
     fun create() {
         val radarItem =
             RadarItem.builder()
-                .category("Technology")
+                .id("4712")
+                .category(RadarItem.Category.TECH)
+                .createdAt(OffsetDateTime.parse("2025-01-15T12:01:00Z"))
+                .language("en")
+                .metadata(
+                    RadarItem.Metadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .publishedAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
-                .region("US")
+                .region("global")
                 .score(95.5)
-                .source("X")
+                .source(RadarItem.Source.TRUSTMRR)
+                .sourceId("trustmrr_acme")
                 .title("AI Revolution in 2025")
                 .description("AI is transforming every industry")
                 .imageUrl("https://example.com/images/ai.jpg")
                 .url("https://example.com/article/ai-revolution")
                 .build()
 
-        assertThat(radarItem.category()).isEqualTo("Technology")
+        assertThat(radarItem.id()).isEqualTo("4712")
+        assertThat(radarItem.category()).isEqualTo(RadarItem.Category.TECH)
+        assertThat(radarItem.createdAt()).isEqualTo(OffsetDateTime.parse("2025-01-15T12:01:00Z"))
+        assertThat(radarItem.language()).isEqualTo("en")
+        assertThat(radarItem.metadata())
+            .isEqualTo(
+                RadarItem.Metadata.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
         assertThat(radarItem.publishedAt()).isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
-        assertThat(radarItem.region()).isEqualTo("US")
+        assertThat(radarItem.region()).isEqualTo("global")
         assertThat(radarItem.score()).isEqualTo(95.5)
-        assertThat(radarItem.source()).isEqualTo("X")
+        assertThat(radarItem.source()).isEqualTo(RadarItem.Source.TRUSTMRR)
+        assertThat(radarItem.sourceId()).isEqualTo("trustmrr_acme")
         assertThat(radarItem.title()).isEqualTo("AI Revolution in 2025")
         assertThat(radarItem.description()).contains("AI is transforming every industry")
         assertThat(radarItem.imageUrl()).contains("https://example.com/images/ai.jpg")
@@ -41,11 +61,20 @@ internal class RadarItemTest {
         val jsonMapper = jsonMapper()
         val radarItem =
             RadarItem.builder()
-                .category("Technology")
+                .id("4712")
+                .category(RadarItem.Category.TECH)
+                .createdAt(OffsetDateTime.parse("2025-01-15T12:01:00Z"))
+                .language("en")
+                .metadata(
+                    RadarItem.Metadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .publishedAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
-                .region("US")
+                .region("global")
                 .score(95.5)
-                .source("X")
+                .source(RadarItem.Source.TRUSTMRR)
+                .sourceId("trustmrr_acme")
                 .title("AI Revolution in 2025")
                 .description("AI is transforming every industry")
                 .imageUrl("https://example.com/images/ai.jpg")

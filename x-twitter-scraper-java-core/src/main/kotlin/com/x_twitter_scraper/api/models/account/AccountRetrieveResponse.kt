@@ -13,7 +13,6 @@ import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
-import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -25,7 +24,7 @@ private constructor(
     private val monitorsAllowed: JsonField<Long>,
     private val monitorsUsed: JsonField<Long>,
     private val plan: JsonField<Plan>,
-    private val currentPeriod: JsonField<CurrentPeriod>,
+    private val creditInfo: JsonField<CreditInfo>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -38,10 +37,10 @@ private constructor(
         @ExcludeMissing
         monitorsUsed: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("plan") @ExcludeMissing plan: JsonField<Plan> = JsonMissing.of(),
-        @JsonProperty("currentPeriod")
+        @JsonProperty("creditInfo")
         @ExcludeMissing
-        currentPeriod: JsonField<CurrentPeriod> = JsonMissing.of(),
-    ) : this(monitorsAllowed, monitorsUsed, plan, currentPeriod, mutableMapOf())
+        creditInfo: JsonField<CreditInfo> = JsonMissing.of(),
+    ) : this(monitorsAllowed, monitorsUsed, plan, creditInfo, mutableMapOf())
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -65,7 +64,7 @@ private constructor(
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
-    fun currentPeriod(): Optional<CurrentPeriod> = currentPeriod.getOptional("currentPeriod")
+    fun creditInfo(): Optional<CreditInfo> = creditInfo.getOptional("creditInfo")
 
     /**
      * Returns the raw JSON value of [monitorsAllowed].
@@ -93,13 +92,13 @@ private constructor(
     @JsonProperty("plan") @ExcludeMissing fun _plan(): JsonField<Plan> = plan
 
     /**
-     * Returns the raw JSON value of [currentPeriod].
+     * Returns the raw JSON value of [creditInfo].
      *
-     * Unlike [currentPeriod], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [creditInfo], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("currentPeriod")
+    @JsonProperty("creditInfo")
     @ExcludeMissing
-    fun _currentPeriod(): JsonField<CurrentPeriod> = currentPeriod
+    fun _creditInfo(): JsonField<CreditInfo> = creditInfo
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -134,7 +133,7 @@ private constructor(
         private var monitorsAllowed: JsonField<Long>? = null
         private var monitorsUsed: JsonField<Long>? = null
         private var plan: JsonField<Plan>? = null
-        private var currentPeriod: JsonField<CurrentPeriod> = JsonMissing.of()
+        private var creditInfo: JsonField<CreditInfo> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -142,7 +141,7 @@ private constructor(
             monitorsAllowed = accountRetrieveResponse.monitorsAllowed
             monitorsUsed = accountRetrieveResponse.monitorsUsed
             plan = accountRetrieveResponse.plan
-            currentPeriod = accountRetrieveResponse.currentPeriod
+            creditInfo = accountRetrieveResponse.creditInfo
             additionalProperties = accountRetrieveResponse.additionalProperties.toMutableMap()
         }
 
@@ -180,18 +179,16 @@ private constructor(
          */
         fun plan(plan: JsonField<Plan>) = apply { this.plan = plan }
 
-        fun currentPeriod(currentPeriod: CurrentPeriod) = currentPeriod(JsonField.of(currentPeriod))
+        fun creditInfo(creditInfo: CreditInfo) = creditInfo(JsonField.of(creditInfo))
 
         /**
-         * Sets [Builder.currentPeriod] to an arbitrary JSON value.
+         * Sets [Builder.creditInfo] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.currentPeriod] with a well-typed [CurrentPeriod] value
+         * You should usually call [Builder.creditInfo] with a well-typed [CreditInfo] value
          * instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun currentPeriod(currentPeriod: JsonField<CurrentPeriod>) = apply {
-            this.currentPeriod = currentPeriod
-        }
+        fun creditInfo(creditInfo: JsonField<CreditInfo>) = apply { this.creditInfo = creditInfo }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -231,7 +228,7 @@ private constructor(
                 checkRequired("monitorsAllowed", monitorsAllowed),
                 checkRequired("monitorsUsed", monitorsUsed),
                 checkRequired("plan", plan),
-                currentPeriod,
+                creditInfo,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -246,7 +243,7 @@ private constructor(
         monitorsAllowed()
         monitorsUsed()
         plan().validate()
-        currentPeriod().ifPresent { it.validate() }
+        creditInfo().ifPresent { it.validate() }
         validated = true
     }
 
@@ -268,7 +265,7 @@ private constructor(
         (if (monitorsAllowed.asKnown().isPresent) 1 else 0) +
             (if (monitorsUsed.asKnown().isPresent) 1 else 0) +
             (plan.asKnown().getOrNull()?.validity() ?: 0) +
-            (currentPeriod.asKnown().getOrNull()?.validity() ?: 0)
+            (creditInfo.asKnown().getOrNull()?.validity() ?: 0)
 
     class Plan @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -397,70 +394,94 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    class CurrentPeriod
+    class CreditInfo
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
-        private val end: JsonField<OffsetDateTime>,
-        private val start: JsonField<OffsetDateTime>,
-        private val usagePercent: JsonField<Double>,
+        private val autoTopupEnabled: JsonField<Boolean>,
+        private val balance: JsonField<Long>,
+        private val lifetimePurchased: JsonField<Long>,
+        private val lifetimeUsed: JsonField<Long>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("end") @ExcludeMissing end: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("start")
+            @JsonProperty("autoTopupEnabled")
             @ExcludeMissing
-            start: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("usagePercent")
+            autoTopupEnabled: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("balance") @ExcludeMissing balance: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("lifetimePurchased")
             @ExcludeMissing
-            usagePercent: JsonField<Double> = JsonMissing.of(),
-        ) : this(end, start, usagePercent, mutableMapOf())
+            lifetimePurchased: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("lifetimeUsed")
+            @ExcludeMissing
+            lifetimeUsed: JsonField<Long> = JsonMissing.of(),
+        ) : this(autoTopupEnabled, balance, lifetimePurchased, lifetimeUsed, mutableMapOf())
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
          *   value).
          */
-        fun end(): OffsetDateTime = end.getRequired("end")
+        fun autoTopupEnabled(): Boolean = autoTopupEnabled.getRequired("autoTopupEnabled")
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
          *   value).
          */
-        fun start(): OffsetDateTime = start.getRequired("start")
+        fun balance(): Long = balance.getRequired("balance")
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
          *   value).
          */
-        fun usagePercent(): Double = usagePercent.getRequired("usagePercent")
+        fun lifetimePurchased(): Long = lifetimePurchased.getRequired("lifetimePurchased")
 
         /**
-         * Returns the raw JSON value of [end].
-         *
-         * Unlike [end], this method doesn't throw if the JSON field has an unexpected type.
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
          */
-        @JsonProperty("end") @ExcludeMissing fun _end(): JsonField<OffsetDateTime> = end
+        fun lifetimeUsed(): Long = lifetimeUsed.getRequired("lifetimeUsed")
 
         /**
-         * Returns the raw JSON value of [start].
+         * Returns the raw JSON value of [autoTopupEnabled].
          *
-         * Unlike [start], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("start") @ExcludeMissing fun _start(): JsonField<OffsetDateTime> = start
-
-        /**
-         * Returns the raw JSON value of [usagePercent].
-         *
-         * Unlike [usagePercent], this method doesn't throw if the JSON field has an unexpected
+         * Unlike [autoTopupEnabled], this method doesn't throw if the JSON field has an unexpected
          * type.
          */
-        @JsonProperty("usagePercent")
+        @JsonProperty("autoTopupEnabled")
         @ExcludeMissing
-        fun _usagePercent(): JsonField<Double> = usagePercent
+        fun _autoTopupEnabled(): JsonField<Boolean> = autoTopupEnabled
+
+        /**
+         * Returns the raw JSON value of [balance].
+         *
+         * Unlike [balance], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("balance") @ExcludeMissing fun _balance(): JsonField<Long> = balance
+
+        /**
+         * Returns the raw JSON value of [lifetimePurchased].
+         *
+         * Unlike [lifetimePurchased], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("lifetimePurchased")
+        @ExcludeMissing
+        fun _lifetimePurchased(): JsonField<Long> = lifetimePurchased
+
+        /**
+         * Returns the raw JSON value of [lifetimeUsed].
+         *
+         * Unlike [lifetimeUsed], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("lifetimeUsed")
+        @ExcludeMissing
+        fun _lifetimeUsed(): JsonField<Long> = lifetimeUsed
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -477,67 +498,87 @@ private constructor(
         companion object {
 
             /**
-             * Returns a mutable builder for constructing an instance of [CurrentPeriod].
+             * Returns a mutable builder for constructing an instance of [CreditInfo].
              *
              * The following fields are required:
              * ```java
-             * .end()
-             * .start()
-             * .usagePercent()
+             * .autoTopupEnabled()
+             * .balance()
+             * .lifetimePurchased()
+             * .lifetimeUsed()
              * ```
              */
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [CurrentPeriod]. */
+        /** A builder for [CreditInfo]. */
         class Builder internal constructor() {
 
-            private var end: JsonField<OffsetDateTime>? = null
-            private var start: JsonField<OffsetDateTime>? = null
-            private var usagePercent: JsonField<Double>? = null
+            private var autoTopupEnabled: JsonField<Boolean>? = null
+            private var balance: JsonField<Long>? = null
+            private var lifetimePurchased: JsonField<Long>? = null
+            private var lifetimeUsed: JsonField<Long>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(currentPeriod: CurrentPeriod) = apply {
-                end = currentPeriod.end
-                start = currentPeriod.start
-                usagePercent = currentPeriod.usagePercent
-                additionalProperties = currentPeriod.additionalProperties.toMutableMap()
+            internal fun from(creditInfo: CreditInfo) = apply {
+                autoTopupEnabled = creditInfo.autoTopupEnabled
+                balance = creditInfo.balance
+                lifetimePurchased = creditInfo.lifetimePurchased
+                lifetimeUsed = creditInfo.lifetimeUsed
+                additionalProperties = creditInfo.additionalProperties.toMutableMap()
             }
 
-            fun end(end: OffsetDateTime) = end(JsonField.of(end))
+            fun autoTopupEnabled(autoTopupEnabled: Boolean) =
+                autoTopupEnabled(JsonField.of(autoTopupEnabled))
 
             /**
-             * Sets [Builder.end] to an arbitrary JSON value.
+             * Sets [Builder.autoTopupEnabled] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.end] with a well-typed [OffsetDateTime] value
+             * You should usually call [Builder.autoTopupEnabled] with a well-typed [Boolean] value
              * instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun end(end: JsonField<OffsetDateTime>) = apply { this.end = end }
+            fun autoTopupEnabled(autoTopupEnabled: JsonField<Boolean>) = apply {
+                this.autoTopupEnabled = autoTopupEnabled
+            }
 
-            fun start(start: OffsetDateTime) = start(JsonField.of(start))
+            fun balance(balance: Long) = balance(JsonField.of(balance))
 
             /**
-             * Sets [Builder.start] to an arbitrary JSON value.
+             * Sets [Builder.balance] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.start] with a well-typed [OffsetDateTime] value
+             * You should usually call [Builder.balance] with a well-typed [Long] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun balance(balance: JsonField<Long>) = apply { this.balance = balance }
+
+            fun lifetimePurchased(lifetimePurchased: Long) =
+                lifetimePurchased(JsonField.of(lifetimePurchased))
+
+            /**
+             * Sets [Builder.lifetimePurchased] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.lifetimePurchased] with a well-typed [Long] value
              * instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun start(start: JsonField<OffsetDateTime>) = apply { this.start = start }
+            fun lifetimePurchased(lifetimePurchased: JsonField<Long>) = apply {
+                this.lifetimePurchased = lifetimePurchased
+            }
 
-            fun usagePercent(usagePercent: Double) = usagePercent(JsonField.of(usagePercent))
+            fun lifetimeUsed(lifetimeUsed: Long) = lifetimeUsed(JsonField.of(lifetimeUsed))
 
             /**
-             * Sets [Builder.usagePercent] to an arbitrary JSON value.
+             * Sets [Builder.lifetimeUsed] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.usagePercent] with a well-typed [Double] value
+             * You should usually call [Builder.lifetimeUsed] with a well-typed [Long] value
              * instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun usagePercent(usagePercent: JsonField<Double>) = apply {
-                this.usagePercent = usagePercent
+            fun lifetimeUsed(lifetimeUsed: JsonField<Long>) = apply {
+                this.lifetimeUsed = lifetimeUsed
             }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -560,38 +601,41 @@ private constructor(
             }
 
             /**
-             * Returns an immutable instance of [CurrentPeriod].
+             * Returns an immutable instance of [CreditInfo].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
              * ```java
-             * .end()
-             * .start()
-             * .usagePercent()
+             * .autoTopupEnabled()
+             * .balance()
+             * .lifetimePurchased()
+             * .lifetimeUsed()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
              */
-            fun build(): CurrentPeriod =
-                CurrentPeriod(
-                    checkRequired("end", end),
-                    checkRequired("start", start),
-                    checkRequired("usagePercent", usagePercent),
+            fun build(): CreditInfo =
+                CreditInfo(
+                    checkRequired("autoTopupEnabled", autoTopupEnabled),
+                    checkRequired("balance", balance),
+                    checkRequired("lifetimePurchased", lifetimePurchased),
+                    checkRequired("lifetimeUsed", lifetimeUsed),
                     additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
-        fun validate(): CurrentPeriod = apply {
+        fun validate(): CreditInfo = apply {
             if (validated) {
                 return@apply
             }
 
-            end()
-            start()
-            usagePercent()
+            autoTopupEnabled()
+            balance()
+            lifetimePurchased()
+            lifetimeUsed()
             validated = true
         }
 
@@ -611,30 +655,38 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (if (end.asKnown().isPresent) 1 else 0) +
-                (if (start.asKnown().isPresent) 1 else 0) +
-                (if (usagePercent.asKnown().isPresent) 1 else 0)
+            (if (autoTopupEnabled.asKnown().isPresent) 1 else 0) +
+                (if (balance.asKnown().isPresent) 1 else 0) +
+                (if (lifetimePurchased.asKnown().isPresent) 1 else 0) +
+                (if (lifetimeUsed.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
             }
 
-            return other is CurrentPeriod &&
-                end == other.end &&
-                start == other.start &&
-                usagePercent == other.usagePercent &&
+            return other is CreditInfo &&
+                autoTopupEnabled == other.autoTopupEnabled &&
+                balance == other.balance &&
+                lifetimePurchased == other.lifetimePurchased &&
+                lifetimeUsed == other.lifetimeUsed &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(end, start, usagePercent, additionalProperties)
+            Objects.hash(
+                autoTopupEnabled,
+                balance,
+                lifetimePurchased,
+                lifetimeUsed,
+                additionalProperties,
+            )
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "CurrentPeriod{end=$end, start=$start, usagePercent=$usagePercent, additionalProperties=$additionalProperties}"
+            "CreditInfo{autoTopupEnabled=$autoTopupEnabled, balance=$balance, lifetimePurchased=$lifetimePurchased, lifetimeUsed=$lifetimeUsed, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
@@ -646,16 +698,16 @@ private constructor(
             monitorsAllowed == other.monitorsAllowed &&
             monitorsUsed == other.monitorsUsed &&
             plan == other.plan &&
-            currentPeriod == other.currentPeriod &&
+            creditInfo == other.creditInfo &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(monitorsAllowed, monitorsUsed, plan, currentPeriod, additionalProperties)
+        Objects.hash(monitorsAllowed, monitorsUsed, plan, creditInfo, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "AccountRetrieveResponse{monitorsAllowed=$monitorsAllowed, monitorsUsed=$monitorsUsed, plan=$plan, currentPeriod=$currentPeriod, additionalProperties=$additionalProperties}"
+        "AccountRetrieveResponse{monitorsAllowed=$monitorsAllowed, monitorsUsed=$monitorsUsed, plan=$plan, creditInfo=$creditInfo, additionalProperties=$additionalProperties}"
 }

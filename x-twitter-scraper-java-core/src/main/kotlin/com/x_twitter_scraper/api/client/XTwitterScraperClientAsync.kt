@@ -5,14 +5,12 @@ package com.x_twitter_scraper.api.client
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.services.async.AccountServiceAsync
 import com.x_twitter_scraper.api.services.async.ApiKeyServiceAsync
-import com.x_twitter_scraper.api.services.async.BotServiceAsync
 import com.x_twitter_scraper.api.services.async.ComposeServiceAsync
 import com.x_twitter_scraper.api.services.async.CreditServiceAsync
 import com.x_twitter_scraper.api.services.async.DraftServiceAsync
 import com.x_twitter_scraper.api.services.async.DrawServiceAsync
 import com.x_twitter_scraper.api.services.async.EventServiceAsync
 import com.x_twitter_scraper.api.services.async.ExtractionServiceAsync
-import com.x_twitter_scraper.api.services.async.IntegrationServiceAsync
 import com.x_twitter_scraper.api.services.async.MonitorServiceAsync
 import com.x_twitter_scraper.api.services.async.RadarServiceAsync
 import com.x_twitter_scraper.api.services.async.StyleServiceAsync
@@ -95,15 +93,10 @@ interface XTwitterScraperClientAsync {
     /** Webhook endpoint management and delivery */
     fun webhooks(): WebhookServiceAsync
 
-    /** Push notification integrations (Telegram) */
-    fun integrations(): IntegrationServiceAsync
-
     fun x(): XServiceAsync
 
     /** Trending topics and hashtags by region */
     fun trends(): TrendServiceAsync
-
-    fun bot(): BotServiceAsync
 
     fun support(): SupportServiceAsync
 
@@ -174,15 +167,10 @@ interface XTwitterScraperClientAsync {
         /** Webhook endpoint management and delivery */
         fun webhooks(): WebhookServiceAsync.WithRawResponse
 
-        /** Push notification integrations (Telegram) */
-        fun integrations(): IntegrationServiceAsync.WithRawResponse
-
         fun x(): XServiceAsync.WithRawResponse
 
         /** Trending topics and hashtags by region */
         fun trends(): TrendServiceAsync.WithRawResponse
-
-        fun bot(): BotServiceAsync.WithRawResponse
 
         fun support(): SupportServiceAsync.WithRawResponse
 

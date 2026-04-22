@@ -551,21 +551,6 @@ TweetSearchParams params = TweetSearchParams.builder()
 
 These can be accessed on the built object later using the `_additionalHeaders()`, `_additionalQueryParams()`, and `_additionalBodyProperties()` methods.
 
-To set undocumented parameters on _nested_ headers, query params, or body classes, call the `putAdditionalProperty` method on the nested class:
-
-```java
-import com.x_twitter_scraper.api.core.JsonValue;
-import com.x_twitter_scraper.api.models.integrations.IntegrationCreateParams;
-
-IntegrationCreateParams params = IntegrationCreateParams.builder()
-    .config(IntegrationCreateParams.Config.builder()
-        .putAdditionalProperty("secretProperty", JsonValue.from("42"))
-        .build())
-    .build();
-```
-
-These properties can be accessed on the nested built object later using the `_additionalProperties()` method.
-
 To set a documented parameter or property to an undocumented or not yet supported _value_, pass a [`JsonValue`](x-twitter-scraper-java-core/src/main/kotlin/com/x_twitter_scraper/api/core/Values.kt) object to its setter:
 
 ```java

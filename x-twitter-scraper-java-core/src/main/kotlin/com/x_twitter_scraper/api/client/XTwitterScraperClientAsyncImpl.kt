@@ -8,8 +8,6 @@ import com.x_twitter_scraper.api.services.async.AccountServiceAsync
 import com.x_twitter_scraper.api.services.async.AccountServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.ApiKeyServiceAsync
 import com.x_twitter_scraper.api.services.async.ApiKeyServiceAsyncImpl
-import com.x_twitter_scraper.api.services.async.BotServiceAsync
-import com.x_twitter_scraper.api.services.async.BotServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.ComposeServiceAsync
 import com.x_twitter_scraper.api.services.async.ComposeServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.CreditServiceAsync
@@ -22,8 +20,6 @@ import com.x_twitter_scraper.api.services.async.EventServiceAsync
 import com.x_twitter_scraper.api.services.async.EventServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.ExtractionServiceAsync
 import com.x_twitter_scraper.api.services.async.ExtractionServiceAsyncImpl
-import com.x_twitter_scraper.api.services.async.IntegrationServiceAsync
-import com.x_twitter_scraper.api.services.async.IntegrationServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.MonitorServiceAsync
 import com.x_twitter_scraper.api.services.async.MonitorServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.RadarServiceAsync
@@ -106,17 +102,11 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
         WebhookServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
-    private val integrations: IntegrationServiceAsync by lazy {
-        IntegrationServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
-
     private val x: XServiceAsync by lazy { XServiceAsyncImpl(clientOptionsWithUserAgent) }
 
     private val trends: TrendServiceAsync by lazy {
         TrendServiceAsyncImpl(clientOptionsWithUserAgent)
     }
-
-    private val bot: BotServiceAsync by lazy { BotServiceAsyncImpl(clientOptionsWithUserAgent) }
 
     private val support: SupportServiceAsync by lazy {
         SupportServiceAsyncImpl(clientOptionsWithUserAgent)
@@ -171,15 +161,10 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
     /** Webhook endpoint management and delivery */
     override fun webhooks(): WebhookServiceAsync = webhooks
 
-    /** Push notification integrations (Telegram) */
-    override fun integrations(): IntegrationServiceAsync = integrations
-
     override fun x(): XServiceAsync = x
 
     /** Trending topics and hashtags by region */
     override fun trends(): TrendServiceAsync = trends
-
-    override fun bot(): BotServiceAsync = bot
 
     override fun support(): SupportServiceAsync = support
 
@@ -239,20 +224,12 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
             WebhookServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
-        private val integrations: IntegrationServiceAsync.WithRawResponse by lazy {
-            IntegrationServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
-
         private val x: XServiceAsync.WithRawResponse by lazy {
             XServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val trends: TrendServiceAsync.WithRawResponse by lazy {
             TrendServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
-
-        private val bot: BotServiceAsync.WithRawResponse by lazy {
-            BotServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val support: SupportServiceAsync.WithRawResponse by lazy {
@@ -306,15 +283,10 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
         /** Webhook endpoint management and delivery */
         override fun webhooks(): WebhookServiceAsync.WithRawResponse = webhooks
 
-        /** Push notification integrations (Telegram) */
-        override fun integrations(): IntegrationServiceAsync.WithRawResponse = integrations
-
         override fun x(): XServiceAsync.WithRawResponse = x
 
         /** Trending topics and hashtags by region */
         override fun trends(): TrendServiceAsync.WithRawResponse = trends
-
-        override fun bot(): BotServiceAsync.WithRawResponse = bot
 
         override fun support(): SupportServiceAsync.WithRawResponse = support
 

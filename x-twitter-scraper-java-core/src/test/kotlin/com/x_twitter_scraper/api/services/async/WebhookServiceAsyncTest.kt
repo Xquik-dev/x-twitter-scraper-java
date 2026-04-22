@@ -21,7 +21,7 @@ internal class WebhookServiceAsyncTest {
             webhookServiceAsync.create(
                 WebhookCreateParams.builder()
                     .addEventType(EventType.TWEET_NEW)
-                    .addEventType(EventType.FOLLOWER_GAINED)
+                    .addEventType(EventType.TWEET_REPLY)
                     .url("https://example.com/webhook")
                     .build()
             )

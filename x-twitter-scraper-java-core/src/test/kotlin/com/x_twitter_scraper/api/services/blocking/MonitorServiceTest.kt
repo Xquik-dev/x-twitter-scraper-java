@@ -21,7 +21,7 @@ internal class MonitorServiceTest {
             monitorService.create(
                 MonitorCreateParams.builder()
                     .addEventType(EventType.TWEET_NEW)
-                    .addEventType(EventType.FOLLOWER_GAINED)
+                    .addEventType(EventType.TWEET_REPLY)
                     .username("elonmusk")
                     .build()
             )
