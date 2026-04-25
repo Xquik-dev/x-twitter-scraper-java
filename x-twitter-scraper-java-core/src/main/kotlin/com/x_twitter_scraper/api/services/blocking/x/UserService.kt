@@ -41,7 +41,7 @@ interface UserService {
     /** X write actions (tweets, likes, follows, DMs) */
     fun follow(): FollowService
 
-    /** Get user profile with follower counts & verification */
+    /** Get user profile with follower counts and verification */
     fun retrieve(id: String): UserProfile = retrieve(id, UserRetrieveParams.none())
 
     /** @see retrieve */

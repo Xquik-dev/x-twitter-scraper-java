@@ -55,7 +55,7 @@ interface TweetService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): TweetCreateResponse
 
-    /** Get tweet with full text, author, metrics & media */
+    /** Get tweet with full text, author, metrics and media */
     fun retrieve(id: String): TweetRetrieveResponse = retrieve(id, TweetRetrieveParams.none())
 
     /** @see retrieve */
@@ -267,7 +267,7 @@ interface TweetService {
     fun getThread(id: String, requestOptions: RequestOptions): PaginatedTweets =
         getThread(id, TweetGetThreadParams.none(), requestOptions)
 
-    /** Search tweets with X query operators & pagination */
+    /** Search tweets with X query operators and pagination */
     fun search(params: TweetSearchParams): PaginatedTweets = search(params, RequestOptions.none())
 
     /** @see search */

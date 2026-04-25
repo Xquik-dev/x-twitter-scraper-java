@@ -21,7 +21,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Download images & videos from tweets */
+/** Download images and videos from tweets */
 class MediaDownloadParams
 private constructor(
     private val body: Body,

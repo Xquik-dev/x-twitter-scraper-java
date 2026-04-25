@@ -25,7 +25,7 @@ interface TrendServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): TrendServiceAsync
 
-    /** Get trending hashtags & topics by region (alias) */
+    /** Get trending hashtags and topics by region (alias) */
     fun list(): CompletableFuture<TrendListResponse> = list(TrendListParams.none())
 
     /** @see list */
