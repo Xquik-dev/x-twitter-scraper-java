@@ -298,25 +298,21 @@ To access this data, prefix any HTTP method call on a client or service with `wi
 ```java
 import com.x_twitter_scraper.api.core.http.Headers;
 import com.x_twitter_scraper.api.core.http.HttpResponseFor;
-import com.x_twitter_scraper.api.models.PaginatedTweets;
-import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams;
+import com.x_twitter_scraper.api.models.account.AccountRetrieveParams;
+import com.x_twitter_scraper.api.models.account.AccountRetrieveResponse;
 
-TweetSearchParams params = TweetSearchParams.builder()
-    .q("from:elonmusk")
-    .limit(10L)
-    .build();
-HttpResponseFor<PaginatedTweets> paginatedTweets = client.x().tweets().withRawResponse().search(params);
+HttpResponseFor<AccountRetrieveResponse> account = client.account().withRawResponse().retrieve();
 
-int statusCode = paginatedTweets.statusCode();
-Headers headers = paginatedTweets.headers();
+int statusCode = account.statusCode();
+Headers headers = account.headers();
 ```
 
 You can still deserialize the response into an instance of a Java class if needed:
 
 ```java
-import com.x_twitter_scraper.api.models.PaginatedTweets;
+import com.x_twitter_scraper.api.models.account.AccountRetrieveResponse;
 
-PaginatedTweets parsedPaginatedTweets = paginatedTweets.parse();
+AccountRetrieveResponse parsedAccount = account.parse();
 ```
 
 ## Error handling
@@ -414,11 +410,9 @@ Requests time out after 1 minute by default.
 To set a custom timeout, configure the method call using the `timeout` method:
 
 ```java
-import com.x_twitter_scraper.api.models.PaginatedTweets;
+import com.x_twitter_scraper.api.models.account.AccountRetrieveResponse;
 
-PaginatedTweets paginatedTweets = client.x().tweets().search(
-  params, RequestOptions.builder().timeout(Duration.ofSeconds(30)).build()
-);
+AccountRetrieveResponse account = client.account().retrieve(RequestOptions.builder().timeout(Duration.ofSeconds(30)).build());
 ```
 
 Or configure the default for all method calls at the client level:
