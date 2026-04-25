@@ -10,7 +10,7 @@ import com.x_twitter_scraper.api.models.trends.TrendListParams
 import com.x_twitter_scraper.api.models.trends.TrendListResponse
 import java.util.function.Consumer
 
-/** Trending topics by region */
+/** Trending topics and hashtags by region */
 interface TrendService {
 
     /**
@@ -25,7 +25,7 @@ interface TrendService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): TrendService
 
-    /** Get regional trending topics */
+    /** Get trending hashtags and topics by region (alias) */
     fun list(): TrendListResponse = list(TrendListParams.none())
 
     /** @see list */

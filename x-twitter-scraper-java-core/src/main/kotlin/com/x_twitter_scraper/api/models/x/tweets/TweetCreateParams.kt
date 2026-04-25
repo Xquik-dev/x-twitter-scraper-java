@@ -39,12 +39,6 @@ private constructor(
     fun account(): String = body.account()
 
     /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun text(): String = body.text()
-
-    /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -63,6 +57,16 @@ private constructor(
     fun isNoteTweet(): Optional<Boolean> = body.isNoteTweet()
 
     /**
+     * Array of media URLs to attach (mutually exclusive with media_ids)
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun media(): Optional<List<String>> = body.media()
+
+    /**
+     * Array of media IDs to attach (mutually exclusive with media)
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -75,18 +79,19 @@ private constructor(
     fun replyToTweetId(): Optional<String> = body.replyToTweetId()
 
     /**
+     * Tweet text (optional when media is provided)
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun text(): Optional<String> = body.text()
+
+    /**
      * Returns the raw JSON value of [account].
      *
      * Unlike [account], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _account(): JsonField<String> = body._account()
-
-    /**
-     * Returns the raw JSON value of [text].
-     *
-     * Unlike [text], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    fun _text(): JsonField<String> = body._text()
 
     /**
      * Returns the raw JSON value of [attachmentUrl].
@@ -110,6 +115,13 @@ private constructor(
     fun _isNoteTweet(): JsonField<Boolean> = body._isNoteTweet()
 
     /**
+     * Returns the raw JSON value of [media].
+     *
+     * Unlike [media], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _media(): JsonField<List<String>> = body._media()
+
+    /**
      * Returns the raw JSON value of [mediaIds].
      *
      * Unlike [mediaIds], this method doesn't throw if the JSON field has an unexpected type.
@@ -122,6 +134,13 @@ private constructor(
      * Unlike [replyToTweetId], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _replyToTweetId(): JsonField<String> = body._replyToTweetId()
+
+    /**
+     * Returns the raw JSON value of [text].
+     *
+     * Unlike [text], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _text(): JsonField<String> = body._text()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -141,7 +160,6 @@ private constructor(
          * The following fields are required:
          * ```java
          * .account()
-         * .text()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -167,10 +185,10 @@ private constructor(
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [account]
-         * - [text]
          * - [attachmentUrl]
          * - [communityId]
          * - [isNoteTweet]
+         * - [media]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -185,16 +203,6 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun account(account: JsonField<String>) = apply { body.account(account) }
-
-        fun text(text: String) = apply { body.text(text) }
-
-        /**
-         * Sets [Builder.text] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.text] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun text(text: JsonField<String>) = apply { body.text(text) }
 
         fun attachmentUrl(attachmentUrl: String) = apply { body.attachmentUrl(attachmentUrl) }
 
@@ -231,6 +239,26 @@ private constructor(
          */
         fun isNoteTweet(isNoteTweet: JsonField<Boolean>) = apply { body.isNoteTweet(isNoteTweet) }
 
+        /** Array of media URLs to attach (mutually exclusive with media_ids) */
+        fun media(media: List<String>) = apply { body.media(media) }
+
+        /**
+         * Sets [Builder.media] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.media] with a well-typed `List<String>` value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun media(media: JsonField<List<String>>) = apply { body.media(media) }
+
+        /**
+         * Adds a single [String] to [Builder.media].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addMedia(media: String) = apply { body.addMedia(media) }
+
+        /** Array of media IDs to attach (mutually exclusive with media) */
         fun mediaIds(mediaIds: List<String>) = apply { body.mediaIds(mediaIds) }
 
         /**
@@ -261,6 +289,17 @@ private constructor(
         fun replyToTweetId(replyToTweetId: JsonField<String>) = apply {
             body.replyToTweetId(replyToTweetId)
         }
+
+        /** Tweet text (optional when media is provided) */
+        fun text(text: String) = apply { body.text(text) }
+
+        /**
+         * Sets [Builder.text] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.text] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun text(text: JsonField<String>) = apply { body.text(text) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -387,7 +426,6 @@ private constructor(
          * The following fields are required:
          * ```java
          * .account()
-         * .text()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -410,19 +448,19 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val account: JsonField<String>,
-        private val text: JsonField<String>,
         private val attachmentUrl: JsonField<String>,
         private val communityId: JsonField<String>,
         private val isNoteTweet: JsonField<Boolean>,
+        private val media: JsonField<List<String>>,
         private val mediaIds: JsonField<List<String>>,
         private val replyToTweetId: JsonField<String>,
+        private val text: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
             @JsonProperty("account") @ExcludeMissing account: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("text") @ExcludeMissing text: JsonField<String> = JsonMissing.of(),
             @JsonProperty("attachment_url")
             @ExcludeMissing
             attachmentUrl: JsonField<String> = JsonMissing.of(),
@@ -432,20 +470,25 @@ private constructor(
             @JsonProperty("is_note_tweet")
             @ExcludeMissing
             isNoteTweet: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("media")
+            @ExcludeMissing
+            media: JsonField<List<String>> = JsonMissing.of(),
             @JsonProperty("media_ids")
             @ExcludeMissing
             mediaIds: JsonField<List<String>> = JsonMissing.of(),
             @JsonProperty("reply_to_tweet_id")
             @ExcludeMissing
             replyToTweetId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("text") @ExcludeMissing text: JsonField<String> = JsonMissing.of(),
         ) : this(
             account,
-            text,
             attachmentUrl,
             communityId,
             isNoteTweet,
+            media,
             mediaIds,
             replyToTweetId,
+            text,
             mutableMapOf(),
         )
 
@@ -457,13 +500,6 @@ private constructor(
          *   value).
          */
         fun account(): String = account.getRequired("account")
-
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
-         */
-        fun text(): String = text.getRequired("text")
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
@@ -484,6 +520,16 @@ private constructor(
         fun isNoteTweet(): Optional<Boolean> = isNoteTweet.getOptional("is_note_tweet")
 
         /**
+         * Array of media URLs to attach (mutually exclusive with media_ids)
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun media(): Optional<List<String>> = media.getOptional("media")
+
+        /**
+         * Array of media IDs to attach (mutually exclusive with media)
+         *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
          *   (e.g. if the server responded with an unexpected value).
          */
@@ -496,18 +542,19 @@ private constructor(
         fun replyToTweetId(): Optional<String> = replyToTweetId.getOptional("reply_to_tweet_id")
 
         /**
+         * Tweet text (optional when media is provided)
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun text(): Optional<String> = text.getOptional("text")
+
+        /**
          * Returns the raw JSON value of [account].
          *
          * Unlike [account], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("account") @ExcludeMissing fun _account(): JsonField<String> = account
-
-        /**
-         * Returns the raw JSON value of [text].
-         *
-         * Unlike [text], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("text") @ExcludeMissing fun _text(): JsonField<String> = text
 
         /**
          * Returns the raw JSON value of [attachmentUrl].
@@ -538,6 +585,13 @@ private constructor(
         fun _isNoteTweet(): JsonField<Boolean> = isNoteTweet
 
         /**
+         * Returns the raw JSON value of [media].
+         *
+         * Unlike [media], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("media") @ExcludeMissing fun _media(): JsonField<List<String>> = media
+
+        /**
          * Returns the raw JSON value of [mediaIds].
          *
          * Unlike [mediaIds], this method doesn't throw if the JSON field has an unexpected type.
@@ -555,6 +609,13 @@ private constructor(
         @JsonProperty("reply_to_tweet_id")
         @ExcludeMissing
         fun _replyToTweetId(): JsonField<String> = replyToTweetId
+
+        /**
+         * Returns the raw JSON value of [text].
+         *
+         * Unlike [text], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("text") @ExcludeMissing fun _text(): JsonField<String> = text
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -576,7 +637,6 @@ private constructor(
              * The following fields are required:
              * ```java
              * .account()
-             * .text()
              * ```
              */
             @JvmStatic fun builder() = Builder()
@@ -586,23 +646,25 @@ private constructor(
         class Builder internal constructor() {
 
             private var account: JsonField<String>? = null
-            private var text: JsonField<String>? = null
             private var attachmentUrl: JsonField<String> = JsonMissing.of()
             private var communityId: JsonField<String> = JsonMissing.of()
             private var isNoteTweet: JsonField<Boolean> = JsonMissing.of()
+            private var media: JsonField<MutableList<String>>? = null
             private var mediaIds: JsonField<MutableList<String>>? = null
             private var replyToTweetId: JsonField<String> = JsonMissing.of()
+            private var text: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 account = body.account
-                text = body.text
                 attachmentUrl = body.attachmentUrl
                 communityId = body.communityId
                 isNoteTweet = body.isNoteTweet
+                media = body.media.map { it.toMutableList() }
                 mediaIds = body.mediaIds.map { it.toMutableList() }
                 replyToTweetId = body.replyToTweetId
+                text = body.text
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -617,17 +679,6 @@ private constructor(
              * supported value.
              */
             fun account(account: JsonField<String>) = apply { this.account = account }
-
-            fun text(text: String) = text(JsonField.of(text))
-
-            /**
-             * Sets [Builder.text] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.text] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun text(text: JsonField<String>) = apply { this.text = text }
 
             fun attachmentUrl(attachmentUrl: String) = attachmentUrl(JsonField.of(attachmentUrl))
 
@@ -668,6 +719,33 @@ private constructor(
                 this.isNoteTweet = isNoteTweet
             }
 
+            /** Array of media URLs to attach (mutually exclusive with media_ids) */
+            fun media(media: List<String>) = media(JsonField.of(media))
+
+            /**
+             * Sets [Builder.media] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.media] with a well-typed `List<String>` value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun media(media: JsonField<List<String>>) = apply {
+                this.media = media.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [String] to [Builder.media].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addMedia(media: String) = apply {
+                this.media =
+                    (this.media ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("media", it).add(media)
+                    }
+            }
+
+            /** Array of media IDs to attach (mutually exclusive with media) */
             fun mediaIds(mediaIds: List<String>) = mediaIds(JsonField.of(mediaIds))
 
             /**
@@ -707,6 +785,18 @@ private constructor(
                 this.replyToTweetId = replyToTweetId
             }
 
+            /** Tweet text (optional when media is provided) */
+            fun text(text: String) = text(JsonField.of(text))
+
+            /**
+             * Sets [Builder.text] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.text] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun text(text: JsonField<String>) = apply { this.text = text }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -734,7 +824,6 @@ private constructor(
              * The following fields are required:
              * ```java
              * .account()
-             * .text()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
@@ -742,12 +831,13 @@ private constructor(
             fun build(): Body =
                 Body(
                     checkRequired("account", account),
-                    checkRequired("text", text),
                     attachmentUrl,
                     communityId,
                     isNoteTweet,
+                    (media ?: JsonMissing.of()).map { it.toImmutable() },
                     (mediaIds ?: JsonMissing.of()).map { it.toImmutable() },
                     replyToTweetId,
+                    text,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -760,12 +850,13 @@ private constructor(
             }
 
             account()
-            text()
             attachmentUrl()
             communityId()
             isNoteTweet()
+            media()
             mediaIds()
             replyToTweetId()
+            text()
             validated = true
         }
 
@@ -786,12 +877,13 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (if (account.asKnown().isPresent) 1 else 0) +
-                (if (text.asKnown().isPresent) 1 else 0) +
                 (if (attachmentUrl.asKnown().isPresent) 1 else 0) +
                 (if (communityId.asKnown().isPresent) 1 else 0) +
                 (if (isNoteTweet.asKnown().isPresent) 1 else 0) +
+                (media.asKnown().getOrNull()?.size ?: 0) +
                 (mediaIds.asKnown().getOrNull()?.size ?: 0) +
-                (if (replyToTweetId.asKnown().isPresent) 1 else 0)
+                (if (replyToTweetId.asKnown().isPresent) 1 else 0) +
+                (if (text.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -800,24 +892,26 @@ private constructor(
 
             return other is Body &&
                 account == other.account &&
-                text == other.text &&
                 attachmentUrl == other.attachmentUrl &&
                 communityId == other.communityId &&
                 isNoteTweet == other.isNoteTweet &&
+                media == other.media &&
                 mediaIds == other.mediaIds &&
                 replyToTweetId == other.replyToTweetId &&
+                text == other.text &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
             Objects.hash(
                 account,
-                text,
                 attachmentUrl,
                 communityId,
                 isNoteTweet,
+                media,
                 mediaIds,
                 replyToTweetId,
+                text,
                 additionalProperties,
             )
         }
@@ -825,7 +919,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{account=$account, text=$text, attachmentUrl=$attachmentUrl, communityId=$communityId, isNoteTweet=$isNoteTweet, mediaIds=$mediaIds, replyToTweetId=$replyToTweetId, additionalProperties=$additionalProperties}"
+            "Body{account=$account, attachmentUrl=$attachmentUrl, communityId=$communityId, isNoteTweet=$isNoteTweet, media=$media, mediaIds=$mediaIds, replyToTweetId=$replyToTweetId, text=$text, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

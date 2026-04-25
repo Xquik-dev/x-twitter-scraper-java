@@ -12,7 +12,7 @@ import com.x_twitter_scraper.api.models.credits.CreditTopupBalanceResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
-/** Subscription & billing */
+/** Subscription, billing, and credits */
 interface CreditServiceAsync {
 
     /**

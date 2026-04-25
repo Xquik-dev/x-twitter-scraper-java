@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get users who retweeted a tweet */
+/** List users who retweeted a tweet */
 class TweetGetRetweetersParams
 private constructor(
     private val id: String?,

@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get thread context for a tweet */
+/** Get full conversation thread for a tweet */
 class TweetGetThreadParams
 private constructor(
     private val id: String?,

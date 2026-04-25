@@ -38,7 +38,7 @@ interface CommunityService {
     /** X write actions (tweets, likes, follows, DMs) */
     fun join(): JoinService
 
-    /** X data lookups (subscription required) */
+    /** X Community info, members, and tweets */
     fun tweets(): TweetService
 
     /** Create community */
@@ -72,7 +72,7 @@ interface CommunityService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CommunityDeleteResponse
 
-    /** Get community details */
+    /** Get community name, description and member count */
     fun retrieveInfo(id: String): CommunityRetrieveInfoResponse =
         retrieveInfo(id, CommunityRetrieveInfoParams.none())
 
@@ -104,7 +104,7 @@ interface CommunityService {
     fun retrieveInfo(id: String, requestOptions: RequestOptions): CommunityRetrieveInfoResponse =
         retrieveInfo(id, CommunityRetrieveInfoParams.none(), requestOptions)
 
-    /** Get community members */
+    /** List members of a community */
     fun retrieveMembers(id: String): PaginatedUsers =
         retrieveMembers(id, CommunityRetrieveMembersParams.none())
 
@@ -135,7 +135,7 @@ interface CommunityService {
     fun retrieveMembers(id: String, requestOptions: RequestOptions): PaginatedUsers =
         retrieveMembers(id, CommunityRetrieveMembersParams.none(), requestOptions)
 
-    /** Get community moderators */
+    /** List moderators of a community */
     fun retrieveModerators(id: String): PaginatedUsers =
         retrieveModerators(id, CommunityRetrieveModeratorsParams.none())
 
@@ -166,7 +166,7 @@ interface CommunityService {
     fun retrieveModerators(id: String, requestOptions: RequestOptions): PaginatedUsers =
         retrieveModerators(id, CommunityRetrieveModeratorsParams.none(), requestOptions)
 
-    /** Search tweets across communities */
+    /** Search for communities by keyword */
     fun retrieveSearch(params: CommunityRetrieveSearchParams): PaginatedTweets =
         retrieveSearch(params, RequestOptions.none())
 
@@ -189,7 +189,7 @@ interface CommunityService {
         /** X write actions (tweets, likes, follows, DMs) */
         fun join(): JoinService.WithRawResponse
 
-        /** X data lookups (subscription required) */
+        /** X Community info, members, and tweets */
         fun tweets(): TweetService.WithRawResponse
 
         /**

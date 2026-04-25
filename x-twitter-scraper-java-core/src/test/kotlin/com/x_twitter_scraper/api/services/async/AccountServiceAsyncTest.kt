@@ -13,11 +13,7 @@ internal class AccountServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
-        val client =
-            XTwitterScraperOkHttpClientAsync.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
         val accountServiceAsync = client.account()
 
         val accountFuture = accountServiceAsync.retrieve()
@@ -29,11 +25,7 @@ internal class AccountServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun setXUsername() {
-        val client =
-            XTwitterScraperOkHttpClientAsync.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
         val accountServiceAsync = client.account()
 
         val responseFuture =
@@ -48,11 +40,7 @@ internal class AccountServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun updateLocale() {
-        val client =
-            XTwitterScraperOkHttpClientAsync.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
         val accountServiceAsync = client.account()
 
         val responseFuture =

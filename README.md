@@ -2,8 +2,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.x_twitter_scraper.api/x-twitter-scraper-java)](https://central.sonatype.com/artifact/com.x_twitter_scraper.api/x-twitter-scraper-java/0.3.0)
-[![javadoc](https://javadoc.io/badge2/com.x_twitter_scraper.api/x-twitter-scraper-java/0.3.0/javadoc.svg)](https://javadoc.io/doc/com.x_twitter_scraper.api/x-twitter-scraper-java/0.3.0)
+[![Maven Central](https://img.shields.io/maven-central/v/com.x_twitter_scraper.api/x-twitter-scraper-java)](https://central.sonatype.com/artifact/com.x_twitter_scraper.api/x-twitter-scraper-java/0.4.0)
+[![javadoc](https://javadoc.io/badge2/com.x_twitter_scraper.api/x-twitter-scraper-java/0.4.0/javadoc.svg)](https://javadoc.io/doc/com.x_twitter_scraper.api/x-twitter-scraper-java/0.4.0)
 
 <!-- x-release-please-end -->
 
@@ -15,7 +15,7 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [xquik.com](https://xquik.com). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.x_twitter_scraper.api/x-twitter-scraper-java/0.3.0).
+The REST API documentation can be found on [xquik.com](https://xquik.com). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.x_twitter_scraper.api/x-twitter-scraper-java/0.4.0).
 
 <!-- x-release-please-end -->
 
@@ -26,7 +26,7 @@ The REST API documentation can be found on [xquik.com](https://xquik.com). Javad
 ### Gradle
 
 ```kotlin
-implementation("com.x_twitter_scraper.api:x-twitter-scraper-java:0.3.0")
+implementation("com.x_twitter_scraper.api:x-twitter-scraper-java:0.4.0")
 ```
 
 ### Maven
@@ -35,7 +35,7 @@ implementation("com.x_twitter_scraper.api:x-twitter-scraper-java:0.3.0")
 <dependency>
   <groupId>com.x_twitter_scraper.api</groupId>
   <artifactId>x-twitter-scraper-java</artifactId>
-  <version>0.3.0</version>
+  <version>0.4.0</version>
 </dependency>
 ```
 
@@ -85,7 +85,6 @@ import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient;
 
 XTwitterScraperClient client = XTwitterScraperOkHttpClient.builder()
     .apiKey("My API Key")
-    .bearerToken("My Bearer Token")
     .build();
 ```
 
@@ -563,21 +562,6 @@ TweetSearchParams params = TweetSearchParams.builder()
 ```
 
 These can be accessed on the built object later using the `_additionalHeaders()`, `_additionalQueryParams()`, and `_additionalBodyProperties()` methods.
-
-To set undocumented parameters on _nested_ headers, query params, or body classes, call the `putAdditionalProperty` method on the nested class:
-
-```java
-import com.x_twitter_scraper.api.core.JsonValue;
-import com.x_twitter_scraper.api.models.integrations.IntegrationCreateParams;
-
-IntegrationCreateParams params = IntegrationCreateParams.builder()
-    .config(IntegrationCreateParams.Config.builder()
-        .putAdditionalProperty("secretProperty", JsonValue.from("42"))
-        .build())
-    .build();
-```
-
-These properties can be accessed on the nested built object later using the `_additionalProperties()` method.
 
 To set a documented parameter or property to an undocumented or not yet supported _value_, pass a [`JsonValue`](x-twitter-scraper-java-core/src/main/kotlin/com/x_twitter_scraper/api/core/Values.kt) object to its setter:
 

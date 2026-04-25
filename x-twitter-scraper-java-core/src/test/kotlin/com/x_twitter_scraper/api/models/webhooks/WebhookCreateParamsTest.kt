@@ -12,7 +12,7 @@ internal class WebhookCreateParamsTest {
     fun create() {
         WebhookCreateParams.builder()
             .addEventType(EventType.TWEET_NEW)
-            .addEventType(EventType.FOLLOWER_GAINED)
+            .addEventType(EventType.TWEET_REPLY)
             .url("https://example.com/webhook")
             .build()
     }
@@ -22,14 +22,13 @@ internal class WebhookCreateParamsTest {
         val params =
             WebhookCreateParams.builder()
                 .addEventType(EventType.TWEET_NEW)
-                .addEventType(EventType.FOLLOWER_GAINED)
+                .addEventType(EventType.TWEET_REPLY)
                 .url("https://example.com/webhook")
                 .build()
 
         val body = params._body()
 
-        assertThat(body.eventTypes())
-            .containsExactly(EventType.TWEET_NEW, EventType.FOLLOWER_GAINED)
+        assertThat(body.eventTypes()).containsExactly(EventType.TWEET_NEW, EventType.TWEET_REPLY)
         assertThat(body.url()).isEqualTo("https://example.com/webhook")
     }
 }

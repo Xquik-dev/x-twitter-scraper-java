@@ -16,23 +16,27 @@ import kotlin.jvm.optionals.getOrNull
 /** Get trending topics from curated sources */
 class RadarRetrieveTrendingTopicsParams
 private constructor(
-    private val category: String?,
-    private val count: Long?,
+    private val after: String?,
+    private val category: Category?,
     private val hours: Long?,
+    private val limit: Long?,
     private val region: String?,
     private val source: Source?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** Filter by category (general, tech, dev, etc.) */
-    fun category(): Optional<String> = Optional.ofNullable(category)
+    /** Cursor for pagination (from prior response nextCursor). */
+    fun after(): Optional<String> = Optional.ofNullable(after)
 
-    /** Number of items to return */
-    fun count(): Optional<Long> = Optional.ofNullable(count)
+    /** Filter by category. */
+    fun category(): Optional<Category> = Optional.ofNullable(category)
 
-    /** Lookback window in hours */
+    /** Lookback window in hours (1-168, default 24). */
     fun hours(): Optional<Long> = Optional.ofNullable(hours)
+
+    /** Number of items to return (1-100, default 50). */
+    fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
     /** Region filter (us, global, etc.) */
     fun region(): Optional<String> = Optional.ofNullable(region)
@@ -65,9 +69,10 @@ private constructor(
     /** A builder for [RadarRetrieveTrendingTopicsParams]. */
     class Builder internal constructor() {
 
-        private var category: String? = null
-        private var count: Long? = null
+        private var after: String? = null
+        private var category: Category? = null
         private var hours: Long? = null
+        private var limit: Long? = null
         private var region: String? = null
         private var source: Source? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -76,9 +81,10 @@ private constructor(
         @JvmSynthetic
         internal fun from(radarRetrieveTrendingTopicsParams: RadarRetrieveTrendingTopicsParams) =
             apply {
+                after = radarRetrieveTrendingTopicsParams.after
                 category = radarRetrieveTrendingTopicsParams.category
-                count = radarRetrieveTrendingTopicsParams.count
                 hours = radarRetrieveTrendingTopicsParams.hours
+                limit = radarRetrieveTrendingTopicsParams.limit
                 region = radarRetrieveTrendingTopicsParams.region
                 source = radarRetrieveTrendingTopicsParams.source
                 additionalHeaders = radarRetrieveTrendingTopicsParams.additionalHeaders.toBuilder()
@@ -86,26 +92,19 @@ private constructor(
                     radarRetrieveTrendingTopicsParams.additionalQueryParams.toBuilder()
             }
 
-        /** Filter by category (general, tech, dev, etc.) */
-        fun category(category: String?) = apply { this.category = category }
+        /** Cursor for pagination (from prior response nextCursor). */
+        fun after(after: String?) = apply { this.after = after }
+
+        /** Alias for calling [Builder.after] with `after.orElse(null)`. */
+        fun after(after: Optional<String>) = after(after.getOrNull())
+
+        /** Filter by category. */
+        fun category(category: Category?) = apply { this.category = category }
 
         /** Alias for calling [Builder.category] with `category.orElse(null)`. */
-        fun category(category: Optional<String>) = category(category.getOrNull())
+        fun category(category: Optional<Category>) = category(category.getOrNull())
 
-        /** Number of items to return */
-        fun count(count: Long?) = apply { this.count = count }
-
-        /**
-         * Alias for [Builder.count].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
-        fun count(count: Long) = count(count as Long?)
-
-        /** Alias for calling [Builder.count] with `count.orElse(null)`. */
-        fun count(count: Optional<Long>) = count(count.getOrNull())
-
-        /** Lookback window in hours */
+        /** Lookback window in hours (1-168, default 24). */
         fun hours(hours: Long?) = apply { this.hours = hours }
 
         /**
@@ -117,6 +116,19 @@ private constructor(
 
         /** Alias for calling [Builder.hours] with `hours.orElse(null)`. */
         fun hours(hours: Optional<Long>) = hours(hours.getOrNull())
+
+        /** Number of items to return (1-100, default 50). */
+        fun limit(limit: Long?) = apply { this.limit = limit }
+
+        /**
+         * Alias for [Builder.limit].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun limit(limit: Long) = limit(limit as Long?)
+
+        /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
+        fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
 
         /** Region filter (us, global, etc.) */
         fun region(region: String?) = apply { this.region = region }
@@ -238,9 +250,10 @@ private constructor(
          */
         fun build(): RadarRetrieveTrendingTopicsParams =
             RadarRetrieveTrendingTopicsParams(
+                after,
                 category,
-                count,
                 hours,
+                limit,
                 region,
                 source,
                 additionalHeaders.build(),
@@ -253,14 +266,179 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
-                category?.let { put("category", it) }
-                count?.let { put("count", it.toString()) }
+                after?.let { put("after", it) }
+                category?.let { put("category", it.toString()) }
                 hours?.let { put("hours", it.toString()) }
+                limit?.let { put("limit", it.toString()) }
                 region?.let { put("region", it) }
                 source?.let { put("source", it.toString()) }
                 putAll(additionalQueryParams)
             }
             .build()
+
+    /** Filter by category. */
+    class Category @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val GENERAL = of("general")
+
+            @JvmField val TECH = of("tech")
+
+            @JvmField val DEV = of("dev")
+
+            @JvmField val SCIENCE = of("science")
+
+            @JvmField val CULTURE = of("culture")
+
+            @JvmField val POLITICS = of("politics")
+
+            @JvmField val BUSINESS = of("business")
+
+            @JvmField val ENTERTAINMENT = of("entertainment")
+
+            @JvmStatic fun of(value: String) = Category(JsonField.of(value))
+        }
+
+        /** An enum containing [Category]'s known values. */
+        enum class Known {
+            GENERAL,
+            TECH,
+            DEV,
+            SCIENCE,
+            CULTURE,
+            POLITICS,
+            BUSINESS,
+            ENTERTAINMENT,
+        }
+
+        /**
+         * An enum containing [Category]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Category] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            GENERAL,
+            TECH,
+            DEV,
+            SCIENCE,
+            CULTURE,
+            POLITICS,
+            BUSINESS,
+            ENTERTAINMENT,
+            /** An enum member indicating that [Category] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                GENERAL -> Value.GENERAL
+                TECH -> Value.TECH
+                DEV -> Value.DEV
+                SCIENCE -> Value.SCIENCE
+                CULTURE -> Value.CULTURE
+                POLITICS -> Value.POLITICS
+                BUSINESS -> Value.BUSINESS
+                ENTERTAINMENT -> Value.ENTERTAINMENT
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
+         */
+        fun known(): Known =
+            when (this) {
+                GENERAL -> Known.GENERAL
+                TECH -> Known.TECH
+                DEV -> Known.DEV
+                SCIENCE -> Known.SCIENCE
+                CULTURE -> Known.CULTURE
+                POLITICS -> Known.POLITICS
+                BUSINESS -> Known.BUSINESS
+                ENTERTAINMENT -> Known.ENTERTAINMENT
+                else -> throw XTwitterScraperInvalidDataException("Unknown Category: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        fun validate(): Category = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Category && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
 
     /**
      * Source filter. One of: github, google_trends, hacker_news, polymarket, reddit, trustmrr,
@@ -429,9 +607,10 @@ private constructor(
         }
 
         return other is RadarRetrieveTrendingTopicsParams &&
+            after == other.after &&
             category == other.category &&
-            count == other.count &&
             hours == other.hours &&
+            limit == other.limit &&
             region == other.region &&
             source == other.source &&
             additionalHeaders == other.additionalHeaders &&
@@ -440,9 +619,10 @@ private constructor(
 
     override fun hashCode(): Int =
         Objects.hash(
+            after,
             category,
-            count,
             hours,
+            limit,
             region,
             source,
             additionalHeaders,
@@ -450,5 +630,5 @@ private constructor(
         )
 
     override fun toString() =
-        "RadarRetrieveTrendingTopicsParams{category=$category, count=$count, hours=$hours, region=$region, source=$source, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "RadarRetrieveTrendingTopicsParams{after=$after, category=$category, hours=$hours, limit=$limit, region=$region, source=$source, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get tweets mentioning a user */
+/** List tweets mentioning a user */
 class UserRetrieveMentionsParams
 private constructor(
     private val id: String?,

@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get followers you know for a user */
+/** List mutual followers between you and a user */
 class UserRetrieveFollowersYouKnowParams
 private constructor(
     private val id: String?,

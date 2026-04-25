@@ -12,11 +12,7 @@ internal class BookmarkServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val bookmarkService = client.x().bookmarks()
 
         val paginatedTweets =
@@ -30,11 +26,7 @@ internal class BookmarkServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveFolders() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val bookmarkService = client.x().bookmarks()
 
         val response = bookmarkService.retrieveFolders()
