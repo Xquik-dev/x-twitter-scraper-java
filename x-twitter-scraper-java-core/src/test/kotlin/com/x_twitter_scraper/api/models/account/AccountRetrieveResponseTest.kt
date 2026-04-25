@@ -24,6 +24,7 @@ internal class AccountRetrieveResponseTest {
                         .lifetimeUsed(90000L)
                         .build()
                 )
+                .xUsername("elonmusk")
                 .build()
 
         assertThat(accountRetrieveResponse.monitorsAllowed()).isEqualTo(10L)
@@ -38,6 +39,7 @@ internal class AccountRetrieveResponseTest {
                     .lifetimeUsed(90000L)
                     .build()
             )
+        assertThat(accountRetrieveResponse.xUsername()).contains("elonmusk")
     }
 
     @Test
@@ -56,6 +58,7 @@ internal class AccountRetrieveResponseTest {
                         .lifetimeUsed(90000L)
                         .build()
                 )
+                .xUsername("elonmusk")
                 .build()
 
         val roundtrippedAccountRetrieveResponse =

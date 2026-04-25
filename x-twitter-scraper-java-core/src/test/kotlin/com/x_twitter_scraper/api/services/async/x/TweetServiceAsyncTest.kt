@@ -31,7 +31,6 @@ internal class TweetServiceAsyncTest {
                     .communityId("1500000000000000000")
                     .isNoteTweet(false)
                     .addMedia("https://example.com/image.jpg")
-                    .addMediaId("1234567890123456789")
                     .replyToTweetId("1234567890")
                     .text("Just launched our new feature!")
                     .build()

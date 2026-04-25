@@ -41,7 +41,7 @@ interface UserServiceAsync {
     /** X write actions (tweets, likes, follows, DMs) */
     fun follow(): FollowServiceAsync
 
-    /** Get user profile with follower counts and verification */
+    /** Get user profile with follower counts & verification */
     fun retrieve(id: String): CompletableFuture<UserProfile> =
         retrieve(id, UserRetrieveParams.none())
 

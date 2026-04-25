@@ -27,7 +27,7 @@ interface MediaService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): MediaService
 
-    /** Download images and videos from tweets */
+    /** Download images & videos from tweets */
     fun download(): MediaDownloadResponse = download(MediaDownloadParams.none())
 
     /** @see download */

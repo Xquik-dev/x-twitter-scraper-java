@@ -57,20 +57,13 @@ private constructor(
     fun isNoteTweet(): Optional<Boolean> = body.isNoteTweet()
 
     /**
-     * Array of media URLs to attach (mutually exclusive with media_ids)
+     * Array of public image URLs to attach (max 4). Each URL must be publicly reachable - the
+     * browser composer fetches them directly.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
     fun media(): Optional<List<String>> = body.media()
-
-    /**
-     * Array of media IDs to attach (mutually exclusive with media)
-     *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun mediaIds(): Optional<List<String>> = body.mediaIds()
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -120,13 +113,6 @@ private constructor(
      * Unlike [media], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _media(): JsonField<List<String>> = body._media()
-
-    /**
-     * Returns the raw JSON value of [mediaIds].
-     *
-     * Unlike [mediaIds], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    fun _mediaIds(): JsonField<List<String>> = body._mediaIds()
 
     /**
      * Returns the raw JSON value of [replyToTweetId].
@@ -239,7 +225,10 @@ private constructor(
          */
         fun isNoteTweet(isNoteTweet: JsonField<Boolean>) = apply { body.isNoteTweet(isNoteTweet) }
 
-        /** Array of media URLs to attach (mutually exclusive with media_ids) */
+        /**
+         * Array of public image URLs to attach (max 4). Each URL must be publicly reachable - the
+         * browser composer fetches them directly.
+         */
         fun media(media: List<String>) = apply { body.media(media) }
 
         /**
@@ -257,25 +246,6 @@ private constructor(
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
         fun addMedia(media: String) = apply { body.addMedia(media) }
-
-        /** Array of media IDs to attach (mutually exclusive with media) */
-        fun mediaIds(mediaIds: List<String>) = apply { body.mediaIds(mediaIds) }
-
-        /**
-         * Sets [Builder.mediaIds] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.mediaIds] with a well-typed `List<String>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun mediaIds(mediaIds: JsonField<List<String>>) = apply { body.mediaIds(mediaIds) }
-
-        /**
-         * Adds a single [String] to [mediaIds].
-         *
-         * @throws IllegalStateException if the field was previously set to a non-list.
-         */
-        fun addMediaId(mediaId: String) = apply { body.addMediaId(mediaId) }
 
         fun replyToTweetId(replyToTweetId: String) = apply { body.replyToTweetId(replyToTweetId) }
 
@@ -452,7 +422,6 @@ private constructor(
         private val communityId: JsonField<String>,
         private val isNoteTweet: JsonField<Boolean>,
         private val media: JsonField<List<String>>,
-        private val mediaIds: JsonField<List<String>>,
         private val replyToTweetId: JsonField<String>,
         private val text: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -473,9 +442,6 @@ private constructor(
             @JsonProperty("media")
             @ExcludeMissing
             media: JsonField<List<String>> = JsonMissing.of(),
-            @JsonProperty("media_ids")
-            @ExcludeMissing
-            mediaIds: JsonField<List<String>> = JsonMissing.of(),
             @JsonProperty("reply_to_tweet_id")
             @ExcludeMissing
             replyToTweetId: JsonField<String> = JsonMissing.of(),
@@ -486,7 +452,6 @@ private constructor(
             communityId,
             isNoteTweet,
             media,
-            mediaIds,
             replyToTweetId,
             text,
             mutableMapOf(),
@@ -520,20 +485,13 @@ private constructor(
         fun isNoteTweet(): Optional<Boolean> = isNoteTweet.getOptional("is_note_tweet")
 
         /**
-         * Array of media URLs to attach (mutually exclusive with media_ids)
+         * Array of public image URLs to attach (max 4). Each URL must be publicly reachable - the
+         * browser composer fetches them directly.
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
          *   (e.g. if the server responded with an unexpected value).
          */
         fun media(): Optional<List<String>> = media.getOptional("media")
-
-        /**
-         * Array of media IDs to attach (mutually exclusive with media)
-         *
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
-        fun mediaIds(): Optional<List<String>> = mediaIds.getOptional("media_ids")
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
@@ -592,15 +550,6 @@ private constructor(
         @JsonProperty("media") @ExcludeMissing fun _media(): JsonField<List<String>> = media
 
         /**
-         * Returns the raw JSON value of [mediaIds].
-         *
-         * Unlike [mediaIds], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("media_ids")
-        @ExcludeMissing
-        fun _mediaIds(): JsonField<List<String>> = mediaIds
-
-        /**
          * Returns the raw JSON value of [replyToTweetId].
          *
          * Unlike [replyToTweetId], this method doesn't throw if the JSON field has an unexpected
@@ -650,7 +599,6 @@ private constructor(
             private var communityId: JsonField<String> = JsonMissing.of()
             private var isNoteTweet: JsonField<Boolean> = JsonMissing.of()
             private var media: JsonField<MutableList<String>>? = null
-            private var mediaIds: JsonField<MutableList<String>>? = null
             private var replyToTweetId: JsonField<String> = JsonMissing.of()
             private var text: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -662,7 +610,6 @@ private constructor(
                 communityId = body.communityId
                 isNoteTweet = body.isNoteTweet
                 media = body.media.map { it.toMutableList() }
-                mediaIds = body.mediaIds.map { it.toMutableList() }
                 replyToTweetId = body.replyToTweetId
                 text = body.text
                 additionalProperties = body.additionalProperties.toMutableMap()
@@ -719,7 +666,10 @@ private constructor(
                 this.isNoteTweet = isNoteTweet
             }
 
-            /** Array of media URLs to attach (mutually exclusive with media_ids) */
+            /**
+             * Array of public image URLs to attach (max 4). Each URL must be publicly reachable -
+             * the browser composer fetches them directly.
+             */
             fun media(media: List<String>) = media(JsonField.of(media))
 
             /**
@@ -742,32 +692,6 @@ private constructor(
                 this.media =
                     (this.media ?: JsonField.of(mutableListOf())).also {
                         checkKnown("media", it).add(media)
-                    }
-            }
-
-            /** Array of media IDs to attach (mutually exclusive with media) */
-            fun mediaIds(mediaIds: List<String>) = mediaIds(JsonField.of(mediaIds))
-
-            /**
-             * Sets [Builder.mediaIds] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.mediaIds] with a well-typed `List<String>` value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun mediaIds(mediaIds: JsonField<List<String>>) = apply {
-                this.mediaIds = mediaIds.map { it.toMutableList() }
-            }
-
-            /**
-             * Adds a single [String] to [mediaIds].
-             *
-             * @throws IllegalStateException if the field was previously set to a non-list.
-             */
-            fun addMediaId(mediaId: String) = apply {
-                mediaIds =
-                    (mediaIds ?: JsonField.of(mutableListOf())).also {
-                        checkKnown("mediaIds", it).add(mediaId)
                     }
             }
 
@@ -835,7 +759,6 @@ private constructor(
                     communityId,
                     isNoteTweet,
                     (media ?: JsonMissing.of()).map { it.toImmutable() },
-                    (mediaIds ?: JsonMissing.of()).map { it.toImmutable() },
                     replyToTweetId,
                     text,
                     additionalProperties.toMutableMap(),
@@ -854,7 +777,6 @@ private constructor(
             communityId()
             isNoteTweet()
             media()
-            mediaIds()
             replyToTweetId()
             text()
             validated = true
@@ -881,7 +803,6 @@ private constructor(
                 (if (communityId.asKnown().isPresent) 1 else 0) +
                 (if (isNoteTweet.asKnown().isPresent) 1 else 0) +
                 (media.asKnown().getOrNull()?.size ?: 0) +
-                (mediaIds.asKnown().getOrNull()?.size ?: 0) +
                 (if (replyToTweetId.asKnown().isPresent) 1 else 0) +
                 (if (text.asKnown().isPresent) 1 else 0)
 
@@ -896,7 +817,6 @@ private constructor(
                 communityId == other.communityId &&
                 isNoteTweet == other.isNoteTweet &&
                 media == other.media &&
-                mediaIds == other.mediaIds &&
                 replyToTweetId == other.replyToTweetId &&
                 text == other.text &&
                 additionalProperties == other.additionalProperties
@@ -909,7 +829,6 @@ private constructor(
                 communityId,
                 isNoteTweet,
                 media,
-                mediaIds,
                 replyToTweetId,
                 text,
                 additionalProperties,
@@ -919,7 +838,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{account=$account, attachmentUrl=$attachmentUrl, communityId=$communityId, isNoteTweet=$isNoteTweet, media=$media, mediaIds=$mediaIds, replyToTweetId=$replyToTweetId, text=$text, additionalProperties=$additionalProperties}"
+            "Body{account=$account, attachmentUrl=$attachmentUrl, communityId=$communityId, isNoteTweet=$isNoteTweet, media=$media, replyToTweetId=$replyToTweetId, text=$text, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

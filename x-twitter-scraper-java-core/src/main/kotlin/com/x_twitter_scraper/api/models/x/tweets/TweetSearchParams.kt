@@ -14,7 +14,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Search tweets with X query operators and pagination */
+/** Search tweets with X query operators & pagination */
 class TweetSearchParams
 private constructor(
     private val q: String,
@@ -36,13 +36,13 @@ private constructor(
     /** Max tweets to return (server paginates internally). Omit for single page (~20). */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
-    /** Sort order — Latest (chronological) or Top (engagement-ranked) */
+    /** Sort order - Latest (chronological) or Top (engagement-ranked) */
     fun queryType(): Optional<QueryType> = Optional.ofNullable(queryType)
 
-    /** ISO 8601 timestamp — only return tweets after this time */
+    /** ISO 8601 timestamp - only return tweets after this time */
     fun sinceTime(): Optional<String> = Optional.ofNullable(sinceTime)
 
-    /** ISO 8601 timestamp — only return tweets before this time */
+    /** ISO 8601 timestamp - only return tweets before this time */
     fun untilTime(): Optional<String> = Optional.ofNullable(untilTime)
 
     /** Additional headers to send with the request. */
@@ -112,19 +112,19 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
 
-        /** Sort order — Latest (chronological) or Top (engagement-ranked) */
+        /** Sort order - Latest (chronological) or Top (engagement-ranked) */
         fun queryType(queryType: QueryType?) = apply { this.queryType = queryType }
 
         /** Alias for calling [Builder.queryType] with `queryType.orElse(null)`. */
         fun queryType(queryType: Optional<QueryType>) = queryType(queryType.getOrNull())
 
-        /** ISO 8601 timestamp — only return tweets after this time */
+        /** ISO 8601 timestamp - only return tweets after this time */
         fun sinceTime(sinceTime: String?) = apply { this.sinceTime = sinceTime }
 
         /** Alias for calling [Builder.sinceTime] with `sinceTime.orElse(null)`. */
         fun sinceTime(sinceTime: Optional<String>) = sinceTime(sinceTime.getOrNull())
 
-        /** ISO 8601 timestamp — only return tweets before this time */
+        /** ISO 8601 timestamp - only return tweets before this time */
         fun untilTime(untilTime: String?) = apply { this.untilTime = untilTime }
 
         /** Alias for calling [Builder.untilTime] with `untilTime.orElse(null)`. */
@@ -268,7 +268,7 @@ private constructor(
             }
             .build()
 
-    /** Sort order — Latest (chronological) or Top (engagement-ranked) */
+    /** Sort order - Latest (chronological) or Top (engagement-ranked) */
     class QueryType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

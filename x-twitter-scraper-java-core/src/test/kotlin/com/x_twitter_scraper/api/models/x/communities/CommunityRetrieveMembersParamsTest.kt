@@ -10,7 +10,7 @@ internal class CommunityRetrieveMembersParamsTest {
 
     @Test
     fun create() {
-        CommunityRetrieveMembersParams.builder().id("id").cursor("cursor").build()
+        CommunityRetrieveMembersParams.builder().id("id").cursor("cursor").pageSize(0L).build()
     }
 
     @Test
@@ -24,11 +24,13 @@ internal class CommunityRetrieveMembersParamsTest {
 
     @Test
     fun queryParams() {
-        val params = CommunityRetrieveMembersParams.builder().id("id").cursor("cursor").build()
+        val params =
+            CommunityRetrieveMembersParams.builder().id("id").cursor("cursor").pageSize(0L).build()
 
         val queryParams = params._queryParams()
 
-        assertThat(queryParams).isEqualTo(QueryParams.builder().put("cursor", "cursor").build())
+        assertThat(queryParams)
+            .isEqualTo(QueryParams.builder().put("cursor", "cursor").put("pageSize", "0").build())
     }
 
     @Test

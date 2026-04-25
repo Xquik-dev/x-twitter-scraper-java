@@ -27,7 +27,7 @@ interface MediaServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): MediaServiceAsync
 
-    /** Download images and videos from tweets */
+    /** Download images & videos from tweets */
     fun download(): CompletableFuture<MediaDownloadResponse> = download(MediaDownloadParams.none())
 
     /** @see download */
