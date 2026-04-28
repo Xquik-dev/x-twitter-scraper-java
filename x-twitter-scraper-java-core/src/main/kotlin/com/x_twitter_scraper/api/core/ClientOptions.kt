@@ -393,6 +393,14 @@ private constructor(
             (System.getProperty("xtwitterscraper.bearerToken")
                     ?: System.getenv("X_TWITTER_SCRAPER_BEARER_TOKEN"))
                 ?.let { bearerToken(it) }
+            System.getenv("X_TWITTER_SCRAPER_CUSTOM_HEADERS")?.let { customHeadersEnv ->
+                for (line in customHeadersEnv.split("\n")) {
+                    val colon = line.indexOf(':')
+                    if (colon >= 0) {
+                        putHeader(line.substring(0, colon).trim(), line.substring(colon + 1).trim())
+                    }
+                }
+            }
         }
 
         /**
