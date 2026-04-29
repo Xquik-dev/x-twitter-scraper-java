@@ -1,11 +1,8 @@
 # X Twitter Scraper Java API Library
 
-<!-- x-release-please-start-version -->
-
-[![Maven Central](https://img.shields.io/maven-central/v/com.x_twitter_scraper.api/x-twitter-scraper-java)](https://central.sonatype.com/artifact/com.x_twitter_scraper.api/x-twitter-scraper-java/0.3.0)
-[![javadoc](https://javadoc.io/badge2/com.x_twitter_scraper.api/x-twitter-scraper-java/0.3.0/javadoc.svg)](https://javadoc.io/doc/com.x_twitter_scraper.api/x-twitter-scraper-java/0.3.0)
-
-<!-- x-release-please-end -->
+> Maven Central publication is pending. Build from source until the
+> `com.x_twitter_scraper.api:x-twitter-scraper-java` artifact resolves in Maven
+> Central.
 
 The X Twitter Scraper Java SDK provides convenient access to the [X Twitter Scraper REST API](https://xquik.com) from applications written in Java.
 
@@ -13,33 +10,31 @@ The X Twitter Scraper Java SDK is similar to the X Twitter Scraper Kotlin SDK bu
 
 It is generated with [Stainless](https://www.stainless.com/).
 
-<!-- x-release-please-start-version -->
-
-The REST API documentation can be found on [xquik.com](https://xquik.com). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.x_twitter_scraper.api/x-twitter-scraper-java/0.3.0).
-
-<!-- x-release-please-end -->
+The REST API documentation can be found on [xquik.com](https://xquik.com). Generated Javadocs can be built locally from source.
 
 ## Installation
 
-<!-- x-release-please-start-version -->
+Maven Central publication is pending. Until registry metadata is live, use a source build instead of Gradle or Maven dependency coordinates.
 
-### Gradle
+### Source Build
 
-```kotlin
-implementation("com.x_twitter_scraper.api:x-twitter-scraper-java:0.3.0")
+```bash
+git clone https://github.com/Xquik-dev/x-twitter-scraper-java.git
+cd x-twitter-scraper-java
+./gradlew build
 ```
 
-### Maven
+### Local Maven Testing
 
-```xml
-<dependency>
-  <groupId>com.x_twitter_scraper.api</groupId>
-  <artifactId>x-twitter-scraper-java</artifactId>
-  <version>0.3.0</version>
-</dependency>
+```bash
+./gradlew publishToMavenLocal -PpublishLocal
 ```
 
-<!-- x-release-please-end -->
+Before restoring Maven Central badges or dependency snippets, verify:
+
+```bash
+curl -f https://repo1.maven.org/maven2/com/x_twitter_scraper/api/x-twitter-scraper-java/maven-metadata.xml
+```
 
 ## Requirements
 
