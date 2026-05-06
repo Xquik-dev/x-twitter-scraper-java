@@ -1,6 +1,6 @@
 # X Twitter Scraper Java API Library
 
-<!-- x-release-please-start-version -->
+[![Ask DeepWiki](https://deepwiki.com/badge.svg?url=https%3A%2F%2Fgithub.com%2FXquik-dev%2Fx-twitter-scraper-java)](https://deepwiki.com/Xquik-dev/x-twitter-scraper-java)
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.x_twitter_scraper.api/x-twitter-scraper-java)](https://central.sonatype.com/artifact/com.x_twitter_scraper.api/x-twitter-scraper-java/0.4.0)
 [![javadoc](https://javadoc.io/badge2/com.x_twitter_scraper.api/x-twitter-scraper-java/0.4.0/javadoc.svg)](https://javadoc.io/doc/com.x_twitter_scraper.api/x-twitter-scraper-java/0.4.0)
@@ -21,8 +21,6 @@ The REST API documentation can be found on [xquik.com](https://xquik.com). Javad
 
 ## Installation
 
-<!-- x-release-please-start-version -->
-
 ### Gradle
 
 ```kotlin
@@ -38,8 +36,6 @@ implementation("com.x_twitter_scraper.api:x-twitter-scraper-java:0.4.0")
   <version>0.4.0</version>
 </dependency>
 ```
-
-<!-- x-release-please-end -->
 
 ## Requirements
 

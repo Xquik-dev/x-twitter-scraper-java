@@ -34,7 +34,9 @@ jobs:
           cache: gradle
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-cleanup: never
 
       - name: Run lints
         run: ./scripts/lint
@@ -61,7 +63,9 @@ jobs:
           cache: gradle
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-cleanup: never
 
       - name: Build SDK
         run: ./scripts/build
@@ -103,7 +107,9 @@ jobs:
           cache: gradle
 
       - name: Set up Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-cleanup: never
 
       - name: Run tests
         run: ./scripts/test
