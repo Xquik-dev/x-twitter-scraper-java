@@ -5,14 +5,12 @@ package com.x_twitter_scraper.api.client
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.services.async.AccountServiceAsync
 import com.x_twitter_scraper.api.services.async.ApiKeyServiceAsync
-import com.x_twitter_scraper.api.services.async.BotServiceAsync
 import com.x_twitter_scraper.api.services.async.ComposeServiceAsync
 import com.x_twitter_scraper.api.services.async.CreditServiceAsync
 import com.x_twitter_scraper.api.services.async.DraftServiceAsync
 import com.x_twitter_scraper.api.services.async.DrawServiceAsync
 import com.x_twitter_scraper.api.services.async.EventServiceAsync
 import com.x_twitter_scraper.api.services.async.ExtractionServiceAsync
-import com.x_twitter_scraper.api.services.async.IntegrationServiceAsync
 import com.x_twitter_scraper.api.services.async.MonitorServiceAsync
 import com.x_twitter_scraper.api.services.async.RadarServiceAsync
 import com.x_twitter_scraper.api.services.async.StyleServiceAsync
@@ -59,25 +57,25 @@ interface XTwitterScraperClientAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): XTwitterScraperClientAsync
 
-    /** Account info & settings */
+    /** Account info and settings */
     fun account(): AccountServiceAsync
 
     /** API key management (session auth only) */
     fun apiKeys(): ApiKeyServiceAsync
 
-    /** Subscription & billing */
+    /** Subscription, billing, and credits */
     fun subscribe(): SubscribeServiceAsync
 
-    /** Tweet composition, drafts, writing styles & radar */
+    /** AI tweet composition, drafts, writing styles, and radar */
     fun compose(): ComposeServiceAsync
 
-    /** Tweet composition, drafts, writing styles & radar */
+    /** AI tweet composition, drafts, writing styles, and radar */
     fun drafts(): DraftServiceAsync
 
-    /** Tweet composition, drafts, writing styles & radar */
+    /** AI tweet composition, drafts, writing styles, and radar */
     fun styles(): StyleServiceAsync
 
-    /** Tweet composition, drafts, writing styles & radar */
+    /** AI tweet composition, drafts, writing styles, and radar */
     fun radar(): RadarServiceAsync
 
     /** Real-time X account monitoring */
@@ -92,23 +90,17 @@ interface XTwitterScraperClientAsync {
     /** Giveaway draws from tweet replies */
     fun draws(): DrawServiceAsync
 
-    /** Webhook endpoint management & delivery */
+    /** Webhook endpoint management and delivery */
     fun webhooks(): WebhookServiceAsync
 
-    /** Push notification integrations (Telegram) */
-    fun integrations(): IntegrationServiceAsync
-
-    /** X data lookups (subscription required) */
     fun x(): XServiceAsync
 
-    /** Trending topics by region */
+    /** Trending topics and hashtags by region */
     fun trends(): TrendServiceAsync
-
-    fun bot(): BotServiceAsync
 
     fun support(): SupportServiceAsync
 
-    /** Subscription & billing */
+    /** Subscription, billing, and credits */
     fun credits(): CreditServiceAsync
 
     /**
@@ -139,25 +131,25 @@ interface XTwitterScraperClientAsync {
             modifier: Consumer<ClientOptions.Builder>
         ): XTwitterScraperClientAsync.WithRawResponse
 
-        /** Account info & settings */
+        /** Account info and settings */
         fun account(): AccountServiceAsync.WithRawResponse
 
         /** API key management (session auth only) */
         fun apiKeys(): ApiKeyServiceAsync.WithRawResponse
 
-        /** Subscription & billing */
+        /** Subscription, billing, and credits */
         fun subscribe(): SubscribeServiceAsync.WithRawResponse
 
-        /** Tweet composition, drafts, writing styles & radar */
+        /** AI tweet composition, drafts, writing styles, and radar */
         fun compose(): ComposeServiceAsync.WithRawResponse
 
-        /** Tweet composition, drafts, writing styles & radar */
+        /** AI tweet composition, drafts, writing styles, and radar */
         fun drafts(): DraftServiceAsync.WithRawResponse
 
-        /** Tweet composition, drafts, writing styles & radar */
+        /** AI tweet composition, drafts, writing styles, and radar */
         fun styles(): StyleServiceAsync.WithRawResponse
 
-        /** Tweet composition, drafts, writing styles & radar */
+        /** AI tweet composition, drafts, writing styles, and radar */
         fun radar(): RadarServiceAsync.WithRawResponse
 
         /** Real-time X account monitoring */
@@ -172,23 +164,17 @@ interface XTwitterScraperClientAsync {
         /** Giveaway draws from tweet replies */
         fun draws(): DrawServiceAsync.WithRawResponse
 
-        /** Webhook endpoint management & delivery */
+        /** Webhook endpoint management and delivery */
         fun webhooks(): WebhookServiceAsync.WithRawResponse
 
-        /** Push notification integrations (Telegram) */
-        fun integrations(): IntegrationServiceAsync.WithRawResponse
-
-        /** X data lookups (subscription required) */
         fun x(): XServiceAsync.WithRawResponse
 
-        /** Trending topics by region */
+        /** Trending topics and hashtags by region */
         fun trends(): TrendServiceAsync.WithRawResponse
-
-        fun bot(): BotServiceAsync.WithRawResponse
 
         fun support(): SupportServiceAsync.WithRawResponse
 
-        /** Subscription & billing */
+        /** Subscription, billing, and credits */
         fun credits(): CreditServiceAsync.WithRawResponse
     }
 }

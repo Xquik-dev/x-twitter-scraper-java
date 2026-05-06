@@ -31,7 +31,6 @@ internal class ServiceParamsTest {
             XTwitterScraperOkHttpClient.builder()
                 .baseUrl(wmRuntimeInfo.httpBaseUrl)
                 .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
                 .build()
     }
 

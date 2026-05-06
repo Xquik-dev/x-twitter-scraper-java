@@ -184,6 +184,8 @@ private constructor(
 
             @JvmField val INVALID_USERNAME = of("invalid_username")
 
+            @JvmField val INSUFFICIENT_CREDITS = of("insufficient_credits")
+
             @JvmField val MISSING_PARAMS = of("missing_params")
 
             @JvmField val MISSING_QUERY = of("missing_query")
@@ -192,19 +194,17 @@ private constructor(
 
             @JvmField val MONITOR_LIMIT_REACHED = of("monitor_limit_reached")
 
+            @JvmField val NO_CREDITS = of("no_credits")
+
             @JvmField val NO_SUBSCRIPTION = of("no_subscription")
 
             @JvmField val NOT_FOUND = of("not_found")
-
-            @JvmField val STREAM_REGISTRATION_FAILED = of("stream_registration_failed")
 
             @JvmField val SUBSCRIPTION_INACTIVE = of("subscription_inactive")
 
             @JvmField val TWEET_NOT_FOUND = of("tweet_not_found")
 
             @JvmField val UNAUTHENTICATED = of("unauthenticated")
-
-            @JvmField val USAGE_LIMIT_REACHED = of("usage_limit_reached")
 
             @JvmField val USER_NOT_FOUND = of("user_not_found")
 
@@ -230,17 +230,17 @@ private constructor(
             INVALID_TWEET_ID,
             INVALID_TWEET_URL,
             INVALID_USERNAME,
+            INSUFFICIENT_CREDITS,
             MISSING_PARAMS,
             MISSING_QUERY,
             MONITOR_ALREADY_EXISTS,
             MONITOR_LIMIT_REACHED,
+            NO_CREDITS,
             NO_SUBSCRIPTION,
             NOT_FOUND,
-            STREAM_REGISTRATION_FAILED,
             SUBSCRIPTION_INACTIVE,
             TWEET_NOT_FOUND,
             UNAUTHENTICATED,
-            USAGE_LIMIT_REACHED,
             USER_NOT_FOUND,
             WEBHOOK_INACTIVE,
             X_API_RATE_LIMITED,
@@ -267,17 +267,17 @@ private constructor(
             INVALID_TWEET_ID,
             INVALID_TWEET_URL,
             INVALID_USERNAME,
+            INSUFFICIENT_CREDITS,
             MISSING_PARAMS,
             MISSING_QUERY,
             MONITOR_ALREADY_EXISTS,
             MONITOR_LIMIT_REACHED,
+            NO_CREDITS,
             NO_SUBSCRIPTION,
             NOT_FOUND,
-            STREAM_REGISTRATION_FAILED,
             SUBSCRIPTION_INACTIVE,
             TWEET_NOT_FOUND,
             UNAUTHENTICATED,
-            USAGE_LIMIT_REACHED,
             USER_NOT_FOUND,
             WEBHOOK_INACTIVE,
             X_API_RATE_LIMITED,
@@ -307,17 +307,17 @@ private constructor(
                 INVALID_TWEET_ID -> Value.INVALID_TWEET_ID
                 INVALID_TWEET_URL -> Value.INVALID_TWEET_URL
                 INVALID_USERNAME -> Value.INVALID_USERNAME
+                INSUFFICIENT_CREDITS -> Value.INSUFFICIENT_CREDITS
                 MISSING_PARAMS -> Value.MISSING_PARAMS
                 MISSING_QUERY -> Value.MISSING_QUERY
                 MONITOR_ALREADY_EXISTS -> Value.MONITOR_ALREADY_EXISTS
                 MONITOR_LIMIT_REACHED -> Value.MONITOR_LIMIT_REACHED
+                NO_CREDITS -> Value.NO_CREDITS
                 NO_SUBSCRIPTION -> Value.NO_SUBSCRIPTION
                 NOT_FOUND -> Value.NOT_FOUND
-                STREAM_REGISTRATION_FAILED -> Value.STREAM_REGISTRATION_FAILED
                 SUBSCRIPTION_INACTIVE -> Value.SUBSCRIPTION_INACTIVE
                 TWEET_NOT_FOUND -> Value.TWEET_NOT_FOUND
                 UNAUTHENTICATED -> Value.UNAUTHENTICATED
-                USAGE_LIMIT_REACHED -> Value.USAGE_LIMIT_REACHED
                 USER_NOT_FOUND -> Value.USER_NOT_FOUND
                 WEBHOOK_INACTIVE -> Value.WEBHOOK_INACTIVE
                 X_API_RATE_LIMITED -> Value.X_API_RATE_LIMITED
@@ -346,17 +346,17 @@ private constructor(
                 INVALID_TWEET_ID -> Known.INVALID_TWEET_ID
                 INVALID_TWEET_URL -> Known.INVALID_TWEET_URL
                 INVALID_USERNAME -> Known.INVALID_USERNAME
+                INSUFFICIENT_CREDITS -> Known.INSUFFICIENT_CREDITS
                 MISSING_PARAMS -> Known.MISSING_PARAMS
                 MISSING_QUERY -> Known.MISSING_QUERY
                 MONITOR_ALREADY_EXISTS -> Known.MONITOR_ALREADY_EXISTS
                 MONITOR_LIMIT_REACHED -> Known.MONITOR_LIMIT_REACHED
+                NO_CREDITS -> Known.NO_CREDITS
                 NO_SUBSCRIPTION -> Known.NO_SUBSCRIPTION
                 NOT_FOUND -> Known.NOT_FOUND
-                STREAM_REGISTRATION_FAILED -> Known.STREAM_REGISTRATION_FAILED
                 SUBSCRIPTION_INACTIVE -> Known.SUBSCRIPTION_INACTIVE
                 TWEET_NOT_FOUND -> Known.TWEET_NOT_FOUND
                 UNAUTHENTICATED -> Known.UNAUTHENTICATED
-                USAGE_LIMIT_REACHED -> Known.USAGE_LIMIT_REACHED
                 USER_NOT_FOUND -> Known.USER_NOT_FOUND
                 WEBHOOK_INACTIVE -> Known.WEBHOOK_INACTIVE
                 X_API_RATE_LIMITED -> Known.X_API_RATE_LIMITED

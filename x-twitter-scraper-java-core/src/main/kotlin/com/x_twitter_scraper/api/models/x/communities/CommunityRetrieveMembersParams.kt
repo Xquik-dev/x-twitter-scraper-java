@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get community members */
+/** List members of a community */
 class CommunityRetrieveMembersParams
 private constructor(
     private val id: String?,

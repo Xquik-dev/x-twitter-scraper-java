@@ -13,7 +13,7 @@ import com.x_twitter_scraper.api.models.x.lists.ListRetrieveTweetsParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
-/** X data lookups (subscription required) */
+/** X List followers, members, and tweets */
 interface ListServiceAsync {
 
     /**
@@ -28,7 +28,7 @@ interface ListServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): ListServiceAsync
 
-    /** Get list followers */
+    /** List followers of an X List */
     fun retrieveFollowers(id: String): CompletableFuture<PaginatedUsers> =
         retrieveFollowers(id, ListRetrieveFollowersParams.none())
 
@@ -63,7 +63,7 @@ interface ListServiceAsync {
     ): CompletableFuture<PaginatedUsers> =
         retrieveFollowers(id, ListRetrieveFollowersParams.none(), requestOptions)
 
-    /** Get list members */
+    /** List members of an X List */
     fun retrieveMembers(id: String): CompletableFuture<PaginatedUsers> =
         retrieveMembers(id, ListRetrieveMembersParams.none())
 
@@ -98,7 +98,7 @@ interface ListServiceAsync {
     ): CompletableFuture<PaginatedUsers> =
         retrieveMembers(id, ListRetrieveMembersParams.none(), requestOptions)
 
-    /** Get list tweets */
+    /** List tweets from an X List */
     fun retrieveTweets(id: String): CompletableFuture<PaginatedTweets> =
         retrieveTweets(id, ListRetrieveTweetsParams.none())
 

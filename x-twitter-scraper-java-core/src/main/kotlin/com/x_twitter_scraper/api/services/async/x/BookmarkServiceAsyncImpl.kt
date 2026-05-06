@@ -21,7 +21,7 @@ import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkRetrieveFoldersRespo
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
-/** X data lookups (subscription required) */
+/** Look up, search, and analyze individual tweets */
 class BookmarkServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     BookmarkServiceAsync {
 

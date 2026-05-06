@@ -11,7 +11,7 @@ import com.x_twitter_scraper.api.models.x.communities.tweets.TweetListByCommunit
 import com.x_twitter_scraper.api.models.x.communities.tweets.TweetListParams
 import java.util.function.Consumer
 
-/** X data lookups (subscription required) */
+/** X Community info, members, and tweets */
 interface TweetService {
 
     /**
@@ -26,7 +26,7 @@ interface TweetService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): TweetService
 
-    /** Search tweets across all communities */
+    /** List tweets across all communities */
     fun list(params: TweetListParams): PaginatedTweets = list(params, RequestOptions.none())
 
     /** @see list */
@@ -35,7 +35,7 @@ interface TweetService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): PaginatedTweets
 
-    /** Get community tweets */
+    /** List tweets posted in a community */
     fun listByCommunity(id: String): PaginatedTweets =
         listByCommunity(id, TweetListByCommunityParams.none())
 

@@ -21,7 +21,7 @@ import com.x_twitter_scraper.api.models.x.communities.tweets.TweetListParams
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-/** X data lookups (subscription required) */
+/** X Community info, members, and tweets */
 class TweetServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     TweetService {
 

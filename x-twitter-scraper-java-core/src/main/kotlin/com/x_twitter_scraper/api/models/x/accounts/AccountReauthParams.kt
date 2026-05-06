@@ -40,6 +40,22 @@ private constructor(
     fun password(): String = body.password()
 
     /**
+     * Email for the X account (updates stored email)
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun email(): Optional<String> = body.email()
+
+    /**
+     * Two-letter country code for login proxy region
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun proxyCountry(): Optional<String> = body.proxyCountry()
+
+    /**
      * TOTP secret for 2FA re-authentication
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -53,6 +69,20 @@ private constructor(
      * Unlike [password], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _password(): JsonField<String> = body._password()
+
+    /**
+     * Returns the raw JSON value of [email].
+     *
+     * Unlike [email], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _email(): JsonField<String> = body._email()
+
+    /**
+     * Returns the raw JSON value of [proxyCountry].
+     *
+     * Unlike [proxyCountry], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _proxyCountry(): JsonField<String> = body._proxyCountry()
 
     /**
      * Returns the raw JSON value of [totpSecret].
@@ -111,6 +141,8 @@ private constructor(
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [password]
+         * - [email]
+         * - [proxyCountry]
          * - [totpSecret]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -125,6 +157,31 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun password(password: JsonField<String>) = apply { body.password(password) }
+
+        /** Email for the X account (updates stored email) */
+        fun email(email: String) = apply { body.email(email) }
+
+        /**
+         * Sets [Builder.email] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.email] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun email(email: JsonField<String>) = apply { body.email(email) }
+
+        /** Two-letter country code for login proxy region */
+        fun proxyCountry(proxyCountry: String) = apply { body.proxyCountry(proxyCountry) }
+
+        /**
+         * Sets [Builder.proxyCountry] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.proxyCountry] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun proxyCountry(proxyCountry: JsonField<String>) = apply {
+            body.proxyCountry(proxyCountry)
+        }
 
         /** TOTP secret for 2FA re-authentication */
         fun totpSecret(totpSecret: String) = apply { body.totpSecret(totpSecret) }
@@ -292,6 +349,8 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val password: JsonField<String>,
+        private val email: JsonField<String>,
+        private val proxyCountry: JsonField<String>,
         private val totpSecret: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -301,10 +360,14 @@ private constructor(
             @JsonProperty("password")
             @ExcludeMissing
             password: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("email") @ExcludeMissing email: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("proxy_country")
+            @ExcludeMissing
+            proxyCountry: JsonField<String> = JsonMissing.of(),
             @JsonProperty("totp_secret")
             @ExcludeMissing
             totpSecret: JsonField<String> = JsonMissing.of(),
-        ) : this(password, totpSecret, mutableMapOf())
+        ) : this(password, email, proxyCountry, totpSecret, mutableMapOf())
 
         /**
          * Updated account password
@@ -314,6 +377,22 @@ private constructor(
          *   value).
          */
         fun password(): String = password.getRequired("password")
+
+        /**
+         * Email for the X account (updates stored email)
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun email(): Optional<String> = email.getOptional("email")
+
+        /**
+         * Two-letter country code for login proxy region
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun proxyCountry(): Optional<String> = proxyCountry.getOptional("proxy_country")
 
         /**
          * TOTP secret for 2FA re-authentication
@@ -329,6 +408,23 @@ private constructor(
          * Unlike [password], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("password") @ExcludeMissing fun _password(): JsonField<String> = password
+
+        /**
+         * Returns the raw JSON value of [email].
+         *
+         * Unlike [email], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("email") @ExcludeMissing fun _email(): JsonField<String> = email
+
+        /**
+         * Returns the raw JSON value of [proxyCountry].
+         *
+         * Unlike [proxyCountry], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("proxy_country")
+        @ExcludeMissing
+        fun _proxyCountry(): JsonField<String> = proxyCountry
 
         /**
          * Returns the raw JSON value of [totpSecret].
@@ -368,12 +464,16 @@ private constructor(
         class Builder internal constructor() {
 
             private var password: JsonField<String>? = null
+            private var email: JsonField<String> = JsonMissing.of()
+            private var proxyCountry: JsonField<String> = JsonMissing.of()
             private var totpSecret: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 password = body.password
+                email = body.email
+                proxyCountry = body.proxyCountry
                 totpSecret = body.totpSecret
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
@@ -389,6 +489,32 @@ private constructor(
              * supported value.
              */
             fun password(password: JsonField<String>) = apply { this.password = password }
+
+            /** Email for the X account (updates stored email) */
+            fun email(email: String) = email(JsonField.of(email))
+
+            /**
+             * Sets [Builder.email] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.email] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun email(email: JsonField<String>) = apply { this.email = email }
+
+            /** Two-letter country code for login proxy region */
+            fun proxyCountry(proxyCountry: String) = proxyCountry(JsonField.of(proxyCountry))
+
+            /**
+             * Sets [Builder.proxyCountry] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.proxyCountry] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun proxyCountry(proxyCountry: JsonField<String>) = apply {
+                this.proxyCountry = proxyCountry
+            }
 
             /** TOTP secret for 2FA re-authentication */
             fun totpSecret(totpSecret: String) = totpSecret(JsonField.of(totpSecret))
@@ -436,6 +562,8 @@ private constructor(
             fun build(): Body =
                 Body(
                     checkRequired("password", password),
+                    email,
+                    proxyCountry,
                     totpSecret,
                     additionalProperties.toMutableMap(),
                 )
@@ -449,6 +577,8 @@ private constructor(
             }
 
             password()
+            email()
+            proxyCountry()
             totpSecret()
             validated = true
         }
@@ -470,6 +600,8 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (if (password.asKnown().isPresent) 1 else 0) +
+                (if (email.asKnown().isPresent) 1 else 0) +
+                (if (proxyCountry.asKnown().isPresent) 1 else 0) +
                 (if (totpSecret.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
@@ -479,18 +611,20 @@ private constructor(
 
             return other is Body &&
                 password == other.password &&
+                email == other.email &&
+                proxyCountry == other.proxyCountry &&
                 totpSecret == other.totpSecret &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(password, totpSecret, additionalProperties)
+            Objects.hash(password, email, proxyCountry, totpSecret, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{password=$password, totpSecret=$totpSecret, additionalProperties=$additionalProperties}"
+            "Body{password=$password, email=$email, proxyCountry=$proxyCountry, totpSecret=$totpSecret, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

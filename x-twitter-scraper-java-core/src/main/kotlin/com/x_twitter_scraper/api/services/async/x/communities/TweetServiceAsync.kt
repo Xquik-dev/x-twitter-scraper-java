@@ -11,7 +11,7 @@ import com.x_twitter_scraper.api.models.x.communities.tweets.TweetListParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
-/** X data lookups (subscription required) */
+/** X Community info, members, and tweets */
 interface TweetServiceAsync {
 
     /**
@@ -26,7 +26,7 @@ interface TweetServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): TweetServiceAsync
 
-    /** Search tweets across all communities */
+    /** List tweets across all communities */
     fun list(params: TweetListParams): CompletableFuture<PaginatedTweets> =
         list(params, RequestOptions.none())
 
@@ -36,7 +36,7 @@ interface TweetServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<PaginatedTweets>
 
-    /** Get community tweets */
+    /** List tweets posted in a community */
     fun listByCommunity(id: String): CompletableFuture<PaginatedTweets> =
         listByCommunity(id, TweetListByCommunityParams.none())
 

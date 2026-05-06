@@ -12,7 +12,7 @@ import com.x_twitter_scraper.api.models.x.media.MediaUploadResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
-/** Media upload & download */
+/** Media upload and download */
 interface MediaServiceAsync {
 
     /**
@@ -27,7 +27,7 @@ interface MediaServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): MediaServiceAsync
 
-    /** Download tweet media */
+    /** Download images and videos from tweets */
     fun download(): CompletableFuture<MediaDownloadResponse> = download(MediaDownloadParams.none())
 
     /** @see download */

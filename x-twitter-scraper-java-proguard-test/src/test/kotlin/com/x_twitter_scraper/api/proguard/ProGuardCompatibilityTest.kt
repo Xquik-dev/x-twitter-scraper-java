@@ -6,7 +6,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
 import com.x_twitter_scraper.api.core.jsonMapper
 import com.x_twitter_scraper.api.models.EventType
-import com.x_twitter_scraper.api.models.x.tweets.SearchTweet
+import com.x_twitter_scraper.api.models.x.tweets.TweetAuthor
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.jvm.javaMethod
 import org.assertj.core.api.Assertions.assertThat
@@ -47,11 +47,7 @@ internal class ProGuardCompatibilityTest {
 
     @Test
     fun client() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
 
         assertThat(client).isNotNull()
         assertThat(client.account()).isNotNull()
@@ -66,46 +62,31 @@ internal class ProGuardCompatibilityTest {
         assertThat(client.extractions()).isNotNull()
         assertThat(client.draws()).isNotNull()
         assertThat(client.webhooks()).isNotNull()
-        assertThat(client.integrations()).isNotNull()
         assertThat(client.x()).isNotNull()
         assertThat(client.trends()).isNotNull()
-        assertThat(client.bot()).isNotNull()
         assertThat(client.support()).isNotNull()
         assertThat(client.credits()).isNotNull()
     }
 
     @Test
-    fun searchTweetRoundtrip() {
+    fun tweetAuthorRoundtrip() {
         val jsonMapper = jsonMapper()
-        val searchTweet =
-            SearchTweet.builder()
-                .id("1234567890")
-                .text("Just launched our new feature!")
-                .author(
-                    SearchTweet.Author.builder()
-                        .id("9876543210")
-                        .name("Elon Musk")
-                        .username("elonmusk")
-                        .verified(true)
-                        .build()
-                )
-                .bookmarkCount(2L)
-                .createdAt("2025-01-15T12:00:00Z")
-                .isNoteTweet(false)
-                .likeCount(42L)
-                .quoteCount(1L)
-                .replyCount(3L)
-                .retweetCount(5L)
-                .viewCount(1500L)
+        val tweetAuthor =
+            TweetAuthor.builder()
+                .id("9876543210")
+                .followers(150000000L)
+                .username("elonmusk")
+                .verified(true)
+                .profilePicture("https://pbs.twimg.com/profile_images/example.jpg")
                 .build()
 
-        val roundtrippedSearchTweet =
+        val roundtrippedTweetAuthor =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(searchTweet),
-                jacksonTypeRef<SearchTweet>(),
+                jsonMapper.writeValueAsString(tweetAuthor),
+                jacksonTypeRef<TweetAuthor>(),
             )
 
-        assertThat(roundtrippedSearchTweet).isEqualTo(searchTweet)
+        assertThat(roundtrippedTweetAuthor).isEqualTo(tweetAuthor)
     }
 
     @Test

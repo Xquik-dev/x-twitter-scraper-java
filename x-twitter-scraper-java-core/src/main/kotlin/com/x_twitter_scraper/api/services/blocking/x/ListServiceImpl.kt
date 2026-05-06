@@ -23,7 +23,7 @@ import com.x_twitter_scraper.api.models.x.lists.ListRetrieveTweetsParams
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-/** X data lookups (subscription required) */
+/** X List followers, members, and tweets */
 class ListServiceImpl internal constructor(private val clientOptions: ClientOptions) : ListService {
 
     private val withRawResponse: ListService.WithRawResponse by lazy {

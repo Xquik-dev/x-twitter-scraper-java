@@ -12,11 +12,7 @@ internal class CreditServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveBalance() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val creditService = client.credits()
 
         val response = creditService.retrieveBalance()
@@ -27,11 +23,7 @@ internal class CreditServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun topupBalance() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val creditService = client.credits()
 
         val response =

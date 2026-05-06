@@ -10,7 +10,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Search tweets across communities */
+/** Search for communities by keyword */
 class CommunityRetrieveSearchParams
 private constructor(
     private val q: String,

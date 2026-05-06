@@ -14,32 +14,45 @@ import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 
 class ExtractionEstimateCostResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val allowed: JsonField<Boolean>,
+    private val creditsAvailable: JsonField<String>,
+    private val creditsRequired: JsonField<String>,
     private val estimatedResults: JsonField<Long>,
-    private val projectedPercent: JsonField<Double>,
     private val source: JsonField<String>,
-    private val usagePercent: JsonField<Double>,
+    private val resolvedXUserId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("allowed") @ExcludeMissing allowed: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("creditsAvailable")
+        @ExcludeMissing
+        creditsAvailable: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("creditsRequired")
+        @ExcludeMissing
+        creditsRequired: JsonField<String> = JsonMissing.of(),
         @JsonProperty("estimatedResults")
         @ExcludeMissing
         estimatedResults: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("projectedPercent")
-        @ExcludeMissing
-        projectedPercent: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("source") @ExcludeMissing source: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("usagePercent")
+        @JsonProperty("resolvedXUserId")
         @ExcludeMissing
-        usagePercent: JsonField<Double> = JsonMissing.of(),
-    ) : this(allowed, estimatedResults, projectedPercent, source, usagePercent, mutableMapOf())
+        resolvedXUserId: JsonField<String> = JsonMissing.of(),
+    ) : this(
+        allowed,
+        creditsAvailable,
+        creditsRequired,
+        estimatedResults,
+        source,
+        resolvedXUserId,
+        mutableMapOf(),
+    )
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -51,13 +64,19 @@ private constructor(
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun estimatedResults(): Long = estimatedResults.getRequired("estimatedResults")
+    fun creditsAvailable(): String = creditsAvailable.getRequired("creditsAvailable")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun projectedPercent(): Double = projectedPercent.getRequired("projectedPercent")
+    fun creditsRequired(): String = creditsRequired.getRequired("creditsRequired")
+
+    /**
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun estimatedResults(): Long = estimatedResults.getRequired("estimatedResults")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -66,10 +85,10 @@ private constructor(
     fun source(): String = source.getRequired("source")
 
     /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
      */
-    fun usagePercent(): Double = usagePercent.getRequired("usagePercent")
+    fun resolvedXUserId(): Optional<String> = resolvedXUserId.getOptional("resolvedXUserId")
 
     /**
      * Returns the raw JSON value of [allowed].
@@ -77,6 +96,25 @@ private constructor(
      * Unlike [allowed], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("allowed") @ExcludeMissing fun _allowed(): JsonField<Boolean> = allowed
+
+    /**
+     * Returns the raw JSON value of [creditsAvailable].
+     *
+     * Unlike [creditsAvailable], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("creditsAvailable")
+    @ExcludeMissing
+    fun _creditsAvailable(): JsonField<String> = creditsAvailable
+
+    /**
+     * Returns the raw JSON value of [creditsRequired].
+     *
+     * Unlike [creditsRequired], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("creditsRequired")
+    @ExcludeMissing
+    fun _creditsRequired(): JsonField<String> = creditsRequired
 
     /**
      * Returns the raw JSON value of [estimatedResults].
@@ -89,16 +127,6 @@ private constructor(
     fun _estimatedResults(): JsonField<Long> = estimatedResults
 
     /**
-     * Returns the raw JSON value of [projectedPercent].
-     *
-     * Unlike [projectedPercent], this method doesn't throw if the JSON field has an unexpected
-     * type.
-     */
-    @JsonProperty("projectedPercent")
-    @ExcludeMissing
-    fun _projectedPercent(): JsonField<Double> = projectedPercent
-
-    /**
      * Returns the raw JSON value of [source].
      *
      * Unlike [source], this method doesn't throw if the JSON field has an unexpected type.
@@ -106,13 +134,13 @@ private constructor(
     @JsonProperty("source") @ExcludeMissing fun _source(): JsonField<String> = source
 
     /**
-     * Returns the raw JSON value of [usagePercent].
+     * Returns the raw JSON value of [resolvedXUserId].
      *
-     * Unlike [usagePercent], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [resolvedXUserId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("usagePercent")
+    @JsonProperty("resolvedXUserId")
     @ExcludeMissing
-    fun _usagePercent(): JsonField<Double> = usagePercent
+    fun _resolvedXUserId(): JsonField<String> = resolvedXUserId
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -135,10 +163,10 @@ private constructor(
          * The following fields are required:
          * ```java
          * .allowed()
+         * .creditsAvailable()
+         * .creditsRequired()
          * .estimatedResults()
-         * .projectedPercent()
          * .source()
-         * .usagePercent()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -148,19 +176,21 @@ private constructor(
     class Builder internal constructor() {
 
         private var allowed: JsonField<Boolean>? = null
+        private var creditsAvailable: JsonField<String>? = null
+        private var creditsRequired: JsonField<String>? = null
         private var estimatedResults: JsonField<Long>? = null
-        private var projectedPercent: JsonField<Double>? = null
         private var source: JsonField<String>? = null
-        private var usagePercent: JsonField<Double>? = null
+        private var resolvedXUserId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(extractionEstimateCostResponse: ExtractionEstimateCostResponse) = apply {
             allowed = extractionEstimateCostResponse.allowed
+            creditsAvailable = extractionEstimateCostResponse.creditsAvailable
+            creditsRequired = extractionEstimateCostResponse.creditsRequired
             estimatedResults = extractionEstimateCostResponse.estimatedResults
-            projectedPercent = extractionEstimateCostResponse.projectedPercent
             source = extractionEstimateCostResponse.source
-            usagePercent = extractionEstimateCostResponse.usagePercent
+            resolvedXUserId = extractionEstimateCostResponse.resolvedXUserId
             additionalProperties =
                 extractionEstimateCostResponse.additionalProperties.toMutableMap()
         }
@@ -174,6 +204,34 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun allowed(allowed: JsonField<Boolean>) = apply { this.allowed = allowed }
+
+        fun creditsAvailable(creditsAvailable: String) =
+            creditsAvailable(JsonField.of(creditsAvailable))
+
+        /**
+         * Sets [Builder.creditsAvailable] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.creditsAvailable] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun creditsAvailable(creditsAvailable: JsonField<String>) = apply {
+            this.creditsAvailable = creditsAvailable
+        }
+
+        fun creditsRequired(creditsRequired: String) =
+            creditsRequired(JsonField.of(creditsRequired))
+
+        /**
+         * Sets [Builder.creditsRequired] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.creditsRequired] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun creditsRequired(creditsRequired: JsonField<String>) = apply {
+            this.creditsRequired = creditsRequired
+        }
 
         fun estimatedResults(estimatedResults: Long) =
             estimatedResults(JsonField.of(estimatedResults))
@@ -189,20 +247,6 @@ private constructor(
             this.estimatedResults = estimatedResults
         }
 
-        fun projectedPercent(projectedPercent: Double) =
-            projectedPercent(JsonField.of(projectedPercent))
-
-        /**
-         * Sets [Builder.projectedPercent] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.projectedPercent] with a well-typed [Double] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun projectedPercent(projectedPercent: JsonField<Double>) = apply {
-            this.projectedPercent = projectedPercent
-        }
-
         fun source(source: String) = source(JsonField.of(source))
 
         /**
@@ -213,17 +257,18 @@ private constructor(
          */
         fun source(source: JsonField<String>) = apply { this.source = source }
 
-        fun usagePercent(usagePercent: Double) = usagePercent(JsonField.of(usagePercent))
+        fun resolvedXUserId(resolvedXUserId: String) =
+            resolvedXUserId(JsonField.of(resolvedXUserId))
 
         /**
-         * Sets [Builder.usagePercent] to an arbitrary JSON value.
+         * Sets [Builder.resolvedXUserId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.usagePercent] with a well-typed [Double] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.resolvedXUserId] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun usagePercent(usagePercent: JsonField<Double>) = apply {
-            this.usagePercent = usagePercent
+        fun resolvedXUserId(resolvedXUserId: JsonField<String>) = apply {
+            this.resolvedXUserId = resolvedXUserId
         }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -253,10 +298,10 @@ private constructor(
          * The following fields are required:
          * ```java
          * .allowed()
+         * .creditsAvailable()
+         * .creditsRequired()
          * .estimatedResults()
-         * .projectedPercent()
          * .source()
-         * .usagePercent()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -264,10 +309,11 @@ private constructor(
         fun build(): ExtractionEstimateCostResponse =
             ExtractionEstimateCostResponse(
                 checkRequired("allowed", allowed),
+                checkRequired("creditsAvailable", creditsAvailable),
+                checkRequired("creditsRequired", creditsRequired),
                 checkRequired("estimatedResults", estimatedResults),
-                checkRequired("projectedPercent", projectedPercent),
                 checkRequired("source", source),
-                checkRequired("usagePercent", usagePercent),
+                resolvedXUserId,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -280,10 +326,11 @@ private constructor(
         }
 
         allowed()
+        creditsAvailable()
+        creditsRequired()
         estimatedResults()
-        projectedPercent()
         source()
-        usagePercent()
+        resolvedXUserId()
         validated = true
     }
 
@@ -303,10 +350,11 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (allowed.asKnown().isPresent) 1 else 0) +
+            (if (creditsAvailable.asKnown().isPresent) 1 else 0) +
+            (if (creditsRequired.asKnown().isPresent) 1 else 0) +
             (if (estimatedResults.asKnown().isPresent) 1 else 0) +
-            (if (projectedPercent.asKnown().isPresent) 1 else 0) +
             (if (source.asKnown().isPresent) 1 else 0) +
-            (if (usagePercent.asKnown().isPresent) 1 else 0)
+            (if (resolvedXUserId.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -315,20 +363,22 @@ private constructor(
 
         return other is ExtractionEstimateCostResponse &&
             allowed == other.allowed &&
+            creditsAvailable == other.creditsAvailable &&
+            creditsRequired == other.creditsRequired &&
             estimatedResults == other.estimatedResults &&
-            projectedPercent == other.projectedPercent &&
             source == other.source &&
-            usagePercent == other.usagePercent &&
+            resolvedXUserId == other.resolvedXUserId &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
         Objects.hash(
             allowed,
+            creditsAvailable,
+            creditsRequired,
             estimatedResults,
-            projectedPercent,
             source,
-            usagePercent,
+            resolvedXUserId,
             additionalProperties,
         )
     }
@@ -336,5 +386,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ExtractionEstimateCostResponse{allowed=$allowed, estimatedResults=$estimatedResults, projectedPercent=$projectedPercent, source=$source, usagePercent=$usagePercent, additionalProperties=$additionalProperties}"
+        "ExtractionEstimateCostResponse{allowed=$allowed, creditsAvailable=$creditsAvailable, creditsRequired=$creditsRequired, estimatedResults=$estimatedResults, source=$source, resolvedXUserId=$resolvedXUserId, additionalProperties=$additionalProperties}"
 }

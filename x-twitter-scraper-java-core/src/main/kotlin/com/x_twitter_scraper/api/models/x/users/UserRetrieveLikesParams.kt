@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get tweets liked by a user */
+/** List tweets liked by a user */
 class UserRetrieveLikesParams
 private constructor(
     private val id: String?,

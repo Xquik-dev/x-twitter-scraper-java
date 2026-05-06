@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get media tweets by a user */
+/** List media tweets posted by a user */
 class UserRetrieveMediaParams
 private constructor(
     private val id: String?,

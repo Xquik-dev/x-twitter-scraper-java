@@ -32,7 +32,7 @@ import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-/** Webhook endpoint management & delivery */
+/** Webhook endpoint management and delivery */
 class WebhookServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     WebhookServiceAsync {
 

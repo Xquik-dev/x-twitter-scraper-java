@@ -20,7 +20,7 @@ import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkRetrieveFoldersParam
 import com.x_twitter_scraper.api.models.x.bookmarks.BookmarkRetrieveFoldersResponse
 import java.util.function.Consumer
 
-/** X data lookups (subscription required) */
+/** Look up, search, and analyze individual tweets */
 class BookmarkServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     BookmarkService {
 

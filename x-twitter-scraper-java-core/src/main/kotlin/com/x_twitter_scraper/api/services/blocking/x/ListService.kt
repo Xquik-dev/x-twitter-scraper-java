@@ -13,7 +13,7 @@ import com.x_twitter_scraper.api.models.x.lists.ListRetrieveMembersParams
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveTweetsParams
 import java.util.function.Consumer
 
-/** X data lookups (subscription required) */
+/** X List followers, members, and tweets */
 interface ListService {
 
     /**
@@ -28,7 +28,7 @@ interface ListService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): ListService
 
-    /** Get list followers */
+    /** List followers of an X List */
     fun retrieveFollowers(id: String): PaginatedUsers =
         retrieveFollowers(id, ListRetrieveFollowersParams.none())
 
@@ -59,7 +59,7 @@ interface ListService {
     fun retrieveFollowers(id: String, requestOptions: RequestOptions): PaginatedUsers =
         retrieveFollowers(id, ListRetrieveFollowersParams.none(), requestOptions)
 
-    /** Get list members */
+    /** List members of an X List */
     fun retrieveMembers(id: String): PaginatedUsers =
         retrieveMembers(id, ListRetrieveMembersParams.none())
 
@@ -90,7 +90,7 @@ interface ListService {
     fun retrieveMembers(id: String, requestOptions: RequestOptions): PaginatedUsers =
         retrieveMembers(id, ListRetrieveMembersParams.none(), requestOptions)
 
-    /** Get list tweets */
+    /** List tweets from an X List */
     fun retrieveTweets(id: String): PaginatedTweets =
         retrieveTweets(id, ListRetrieveTweetsParams.none())
 

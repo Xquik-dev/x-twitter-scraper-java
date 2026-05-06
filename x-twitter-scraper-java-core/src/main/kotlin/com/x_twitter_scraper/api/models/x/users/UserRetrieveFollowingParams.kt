@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get users this user follows */
+/** List accounts a user follows */
 class UserRetrieveFollowingParams
 private constructor(
     private val id: String?,

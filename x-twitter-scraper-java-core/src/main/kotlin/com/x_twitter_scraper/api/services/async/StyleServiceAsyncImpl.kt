@@ -32,7 +32,7 @@ import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-/** Tweet composition, drafts, writing styles & radar */
+/** AI tweet composition, drafts, writing styles, and radar */
 class StyleServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     StyleServiceAsync {
 

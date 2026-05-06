@@ -12,11 +12,7 @@ internal class TrendServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val trendService = client.trends()
 
         val trends = trendService.list(TrendListParams.builder().count(1L).woeid(0L).build())

@@ -5,6 +5,7 @@ package com.x_twitter_scraper.api.services.async
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClientAsync
 import com.x_twitter_scraper.api.models.x.XGetHomeTimelineParams
 import com.x_twitter_scraper.api.models.x.XGetNotificationsParams
+import com.x_twitter_scraper.api.models.x.XGetTrendsParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -13,11 +14,7 @@ internal class XServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun getArticle() {
-        val client =
-            XTwitterScraperOkHttpClientAsync.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
         val xServiceAsync = client.x()
 
         val responseFuture = xServiceAsync.getArticle("tweetId")
@@ -29,11 +26,7 @@ internal class XServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun getHomeTimeline() {
-        val client =
-            XTwitterScraperOkHttpClientAsync.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
         val xServiceAsync = client.x()
 
         val paginatedTweetsFuture =
@@ -51,11 +44,7 @@ internal class XServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun getNotifications() {
-        val client =
-            XTwitterScraperOkHttpClientAsync.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
         val xServiceAsync = client.x()
 
         val responseFuture =
@@ -73,14 +62,11 @@ internal class XServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun getTrends() {
-        val client =
-            XTwitterScraperOkHttpClientAsync.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
         val xServiceAsync = client.x()
 
-        val responseFuture = xServiceAsync.getTrends()
+        val responseFuture =
+            xServiceAsync.getTrends(XGetTrendsParams.builder().count(1L).woeid(0L).build())
 
         val response = responseFuture.get()
         response.validate()

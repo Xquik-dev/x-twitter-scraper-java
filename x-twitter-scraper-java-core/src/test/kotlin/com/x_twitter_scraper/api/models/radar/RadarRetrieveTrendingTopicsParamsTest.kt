@@ -11,9 +11,10 @@ internal class RadarRetrieveTrendingTopicsParamsTest {
     @Test
     fun create() {
         RadarRetrieveTrendingTopicsParams.builder()
-            .category("category")
-            .count(0L)
-            .hours(0L)
+            .after("after")
+            .category(RadarRetrieveTrendingTopicsParams.Category.GENERAL)
+            .hours(1L)
+            .limit(1L)
             .region("region")
             .source(RadarRetrieveTrendingTopicsParams.Source.GITHUB)
             .build()
@@ -23,9 +24,10 @@ internal class RadarRetrieveTrendingTopicsParamsTest {
     fun queryParams() {
         val params =
             RadarRetrieveTrendingTopicsParams.builder()
-                .category("category")
-                .count(0L)
-                .hours(0L)
+                .after("after")
+                .category(RadarRetrieveTrendingTopicsParams.Category.GENERAL)
+                .hours(1L)
+                .limit(1L)
                 .region("region")
                 .source(RadarRetrieveTrendingTopicsParams.Source.GITHUB)
                 .build()
@@ -35,9 +37,10 @@ internal class RadarRetrieveTrendingTopicsParamsTest {
         assertThat(queryParams)
             .isEqualTo(
                 QueryParams.builder()
-                    .put("category", "category")
-                    .put("count", "0")
-                    .put("hours", "0")
+                    .put("after", "after")
+                    .put("category", "general")
+                    .put("hours", "1")
+                    .put("limit", "1")
                     .put("region", "region")
                     .put("source", "github")
                     .build()

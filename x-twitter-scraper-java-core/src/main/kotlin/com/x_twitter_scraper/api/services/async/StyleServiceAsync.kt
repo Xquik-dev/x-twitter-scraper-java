@@ -20,7 +20,7 @@ import com.x_twitter_scraper.api.models.styles.StyleUpdateParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
-/** Tweet composition, drafts, writing styles & radar */
+/** AI tweet composition, drafts, writing styles, and radar */
 interface StyleServiceAsync {
 
     /**

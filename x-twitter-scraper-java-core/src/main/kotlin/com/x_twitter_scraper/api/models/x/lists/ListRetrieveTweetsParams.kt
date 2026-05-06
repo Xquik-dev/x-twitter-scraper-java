@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get list tweets */
+/** List tweets from an X List */
 class ListRetrieveTweetsParams
 private constructor(
     private val id: String?,

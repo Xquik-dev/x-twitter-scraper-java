@@ -12,19 +12,16 @@ internal class RadarServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveTrendingTopics() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val radarService = client.radar()
 
         val response =
             radarService.retrieveTrendingTopics(
                 RadarRetrieveTrendingTopicsParams.builder()
-                    .category("category")
-                    .count(0L)
-                    .hours(0L)
+                    .after("after")
+                    .category(RadarRetrieveTrendingTopicsParams.Category.GENERAL)
+                    .hours(1L)
+                    .limit(1L)
                     .region("region")
                     .source(RadarRetrieveTrendingTopicsParams.Source.GITHUB)
                     .build()

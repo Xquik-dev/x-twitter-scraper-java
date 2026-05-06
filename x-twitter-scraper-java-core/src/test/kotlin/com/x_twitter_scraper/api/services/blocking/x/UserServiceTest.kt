@@ -21,11 +21,7 @@ internal class UserServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val userService = client.x().users()
 
         val userProfile = userService.retrieve("id")
@@ -36,11 +32,7 @@ internal class UserServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveBatch() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val userService = client.x().users()
 
         val paginatedUsers =
@@ -52,11 +44,7 @@ internal class UserServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveFollowers() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val userService = client.x().users()
 
         val paginatedUsers =
@@ -70,11 +58,7 @@ internal class UserServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveFollowersYouKnow() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val userService = client.x().users()
 
         val paginatedUsers =
@@ -88,11 +72,7 @@ internal class UserServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveFollowing() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val userService = client.x().users()
 
         val paginatedUsers =
@@ -106,11 +86,7 @@ internal class UserServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveLikes() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val userService = client.x().users()
 
         val paginatedTweets =
@@ -124,11 +100,7 @@ internal class UserServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveMedia() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val userService = client.x().users()
 
         val paginatedTweets =
@@ -142,11 +114,7 @@ internal class UserServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveMentions() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val userService = client.x().users()
 
         val paginatedTweets =
@@ -165,11 +133,7 @@ internal class UserServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveSearch() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val userService = client.x().users()
 
         val paginatedUsers =
@@ -183,11 +147,7 @@ internal class UserServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveTweets() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val userService = client.x().users()
 
         val paginatedTweets =
@@ -206,11 +166,7 @@ internal class UserServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveVerifiedFollowers() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val userService = client.x().users()
 
         val paginatedUsers =

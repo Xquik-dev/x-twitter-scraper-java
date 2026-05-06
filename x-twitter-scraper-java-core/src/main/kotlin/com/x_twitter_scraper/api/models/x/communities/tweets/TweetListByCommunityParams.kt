@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get community tweets */
+/** List tweets posted in a community */
 class TweetListByCommunityParams
 private constructor(
     private val id: String?,

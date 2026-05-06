@@ -20,7 +20,7 @@ import com.x_twitter_scraper.api.models.subscribe.SubscribeCreateResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
-/** Subscription & billing */
+/** Subscription, billing, and credits */
 class SubscribeServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     SubscribeServiceAsync {
 

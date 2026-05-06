@@ -29,10 +29,6 @@ class EventType @JsonCreator private constructor(private val value: JsonField<St
 
         @JvmField val TWEET_QUOTE = of("tweet.quote")
 
-        @JvmField val FOLLOWER_GAINED = of("follower.gained")
-
-        @JvmField val FOLLOWER_LOST = of("follower.lost")
-
         @JvmStatic fun of(value: String) = EventType(JsonField.of(value))
     }
 
@@ -42,8 +38,6 @@ class EventType @JsonCreator private constructor(private val value: JsonField<St
         TWEET_REPLY,
         TWEET_RETWEET,
         TWEET_QUOTE,
-        FOLLOWER_GAINED,
-        FOLLOWER_LOST,
     }
 
     /**
@@ -60,8 +54,6 @@ class EventType @JsonCreator private constructor(private val value: JsonField<St
         TWEET_REPLY,
         TWEET_RETWEET,
         TWEET_QUOTE,
-        FOLLOWER_GAINED,
-        FOLLOWER_LOST,
         /** An enum member indicating that [EventType] was instantiated with an unknown value. */
         _UNKNOWN,
     }
@@ -79,8 +71,6 @@ class EventType @JsonCreator private constructor(private val value: JsonField<St
             TWEET_REPLY -> Value.TWEET_REPLY
             TWEET_RETWEET -> Value.TWEET_RETWEET
             TWEET_QUOTE -> Value.TWEET_QUOTE
-            FOLLOWER_GAINED -> Value.FOLLOWER_GAINED
-            FOLLOWER_LOST -> Value.FOLLOWER_LOST
             else -> Value._UNKNOWN
         }
 
@@ -99,8 +89,6 @@ class EventType @JsonCreator private constructor(private val value: JsonField<St
             TWEET_REPLY -> Known.TWEET_REPLY
             TWEET_RETWEET -> Known.TWEET_RETWEET
             TWEET_QUOTE -> Known.TWEET_QUOTE
-            FOLLOWER_GAINED -> Known.FOLLOWER_GAINED
-            FOLLOWER_LOST -> Known.FOLLOWER_LOST
             else -> throw XTwitterScraperInvalidDataException("Unknown EventType: $value")
         }
 

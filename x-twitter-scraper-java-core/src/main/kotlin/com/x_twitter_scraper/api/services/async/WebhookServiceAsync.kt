@@ -20,7 +20,7 @@ import com.x_twitter_scraper.api.models.webhooks.WebhookUpdateParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
-/** Webhook endpoint management & delivery */
+/** Webhook endpoint management and delivery */
 interface WebhookServiceAsync {
 
     /**

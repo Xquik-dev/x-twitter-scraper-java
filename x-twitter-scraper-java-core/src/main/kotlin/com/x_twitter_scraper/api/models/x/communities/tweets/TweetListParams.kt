@@ -10,7 +10,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Search tweets across all communities */
+/** List tweets across all communities */
 class TweetListParams
 private constructor(
     private val q: String,

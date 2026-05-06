@@ -54,7 +54,7 @@ class CommunityServiceAsyncImpl internal constructor(private val clientOptions: 
     /** X write actions (tweets, likes, follows, DMs) */
     override fun join(): JoinServiceAsync = join
 
-    /** X data lookups (subscription required) */
+    /** X Community info, members, and tweets */
     override fun tweets(): TweetServiceAsync = tweets
 
     override fun create(
@@ -123,7 +123,7 @@ class CommunityServiceAsyncImpl internal constructor(private val clientOptions: 
         /** X write actions (tweets, likes, follows, DMs) */
         override fun join(): JoinServiceAsync.WithRawResponse = join
 
-        /** X data lookups (subscription required) */
+        /** X Community info, members, and tweets */
         override fun tweets(): TweetServiceAsync.WithRawResponse = tweets
 
         private val createHandler: Handler<CommunityCreateResponse> =

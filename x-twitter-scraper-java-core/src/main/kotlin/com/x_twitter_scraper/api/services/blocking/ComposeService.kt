@@ -10,7 +10,7 @@ import com.x_twitter_scraper.api.models.compose.ComposeCreateParams
 import com.x_twitter_scraper.api.models.compose.ComposeCreateResponse
 import java.util.function.Consumer
 
-/** Tweet composition, drafts, writing styles & radar */
+/** AI tweet composition, drafts, writing styles, and radar */
 interface ComposeService {
 
     /**

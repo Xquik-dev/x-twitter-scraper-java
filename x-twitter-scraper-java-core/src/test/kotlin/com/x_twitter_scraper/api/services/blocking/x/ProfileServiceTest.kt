@@ -14,11 +14,7 @@ internal class ProfileServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun update() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val profileService = client.x().profile()
 
         val profile =
@@ -38,11 +34,7 @@ internal class ProfileServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun updateAvatar() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val profileService = client.x().profile()
 
         val response =
@@ -59,11 +51,7 @@ internal class ProfileServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun updateBanner() {
-        val client =
-            XTwitterScraperOkHttpClient.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
         val profileService = client.x().profile()
 
         val response =

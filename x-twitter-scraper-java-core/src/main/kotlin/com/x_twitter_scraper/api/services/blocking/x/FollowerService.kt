@@ -10,7 +10,7 @@ import com.x_twitter_scraper.api.models.x.followers.FollowerCheckParams
 import com.x_twitter_scraper.api.models.x.followers.FollowerCheckResponse
 import java.util.function.Consumer
 
-/** X data lookups (subscription required) */
+/** Look up, search, and explore user profiles and relationships */
 interface FollowerService {
 
     /**
@@ -25,7 +25,7 @@ interface FollowerService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): FollowerService
 
-    /** Check follow relationship */
+    /** Check if one user follows another */
     fun check(params: FollowerCheckParams): FollowerCheckResponse =
         check(params, RequestOptions.none())
 

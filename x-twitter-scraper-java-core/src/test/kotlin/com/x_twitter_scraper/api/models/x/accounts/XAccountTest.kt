@@ -16,6 +16,7 @@ internal class XAccountTest {
             XAccount.builder()
                 .id("42")
                 .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
+                .health(XAccount.Health.HEALTHY)
                 .status("active")
                 .xUserId("9876543210")
                 .xUsername("elonmusk")
@@ -23,6 +24,7 @@ internal class XAccountTest {
 
         assertThat(xAccount.id()).isEqualTo("42")
         assertThat(xAccount.createdAt()).isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
+        assertThat(xAccount.health()).isEqualTo(XAccount.Health.HEALTHY)
         assertThat(xAccount.status()).isEqualTo("active")
         assertThat(xAccount.xUserId()).isEqualTo("9876543210")
         assertThat(xAccount.xUsername()).isEqualTo("elonmusk")
@@ -35,6 +37,7 @@ internal class XAccountTest {
             XAccount.builder()
                 .id("42")
                 .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
+                .health(XAccount.Health.HEALTHY)
                 .status("active")
                 .xUserId("9876543210")
                 .xUsername("elonmusk")

@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get community details */
+/** Get community name, description and member count */
 class CommunityRetrieveInfoParams
 private constructor(
     private val id: String?,

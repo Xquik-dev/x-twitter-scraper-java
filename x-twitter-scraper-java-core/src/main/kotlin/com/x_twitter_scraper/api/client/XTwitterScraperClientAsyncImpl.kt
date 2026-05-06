@@ -8,8 +8,6 @@ import com.x_twitter_scraper.api.services.async.AccountServiceAsync
 import com.x_twitter_scraper.api.services.async.AccountServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.ApiKeyServiceAsync
 import com.x_twitter_scraper.api.services.async.ApiKeyServiceAsyncImpl
-import com.x_twitter_scraper.api.services.async.BotServiceAsync
-import com.x_twitter_scraper.api.services.async.BotServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.ComposeServiceAsync
 import com.x_twitter_scraper.api.services.async.ComposeServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.CreditServiceAsync
@@ -22,8 +20,6 @@ import com.x_twitter_scraper.api.services.async.EventServiceAsync
 import com.x_twitter_scraper.api.services.async.EventServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.ExtractionServiceAsync
 import com.x_twitter_scraper.api.services.async.ExtractionServiceAsyncImpl
-import com.x_twitter_scraper.api.services.async.IntegrationServiceAsync
-import com.x_twitter_scraper.api.services.async.IntegrationServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.MonitorServiceAsync
 import com.x_twitter_scraper.api.services.async.MonitorServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.RadarServiceAsync
@@ -106,17 +102,11 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
         WebhookServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
-    private val integrations: IntegrationServiceAsync by lazy {
-        IntegrationServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
-
     private val x: XServiceAsync by lazy { XServiceAsyncImpl(clientOptionsWithUserAgent) }
 
     private val trends: TrendServiceAsync by lazy {
         TrendServiceAsyncImpl(clientOptionsWithUserAgent)
     }
-
-    private val bot: BotServiceAsync by lazy { BotServiceAsyncImpl(clientOptionsWithUserAgent) }
 
     private val support: SupportServiceAsync by lazy {
         SupportServiceAsyncImpl(clientOptionsWithUserAgent)
@@ -135,25 +125,25 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
     ): XTwitterScraperClientAsync =
         XTwitterScraperClientAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    /** Account info & settings */
+    /** Account info and settings */
     override fun account(): AccountServiceAsync = account
 
     /** API key management (session auth only) */
     override fun apiKeys(): ApiKeyServiceAsync = apiKeys
 
-    /** Subscription & billing */
+    /** Subscription, billing, and credits */
     override fun subscribe(): SubscribeServiceAsync = subscribe
 
-    /** Tweet composition, drafts, writing styles & radar */
+    /** AI tweet composition, drafts, writing styles, and radar */
     override fun compose(): ComposeServiceAsync = compose
 
-    /** Tweet composition, drafts, writing styles & radar */
+    /** AI tweet composition, drafts, writing styles, and radar */
     override fun drafts(): DraftServiceAsync = drafts
 
-    /** Tweet composition, drafts, writing styles & radar */
+    /** AI tweet composition, drafts, writing styles, and radar */
     override fun styles(): StyleServiceAsync = styles
 
-    /** Tweet composition, drafts, writing styles & radar */
+    /** AI tweet composition, drafts, writing styles, and radar */
     override fun radar(): RadarServiceAsync = radar
 
     /** Real-time X account monitoring */
@@ -168,23 +158,17 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
     /** Giveaway draws from tweet replies */
     override fun draws(): DrawServiceAsync = draws
 
-    /** Webhook endpoint management & delivery */
+    /** Webhook endpoint management and delivery */
     override fun webhooks(): WebhookServiceAsync = webhooks
 
-    /** Push notification integrations (Telegram) */
-    override fun integrations(): IntegrationServiceAsync = integrations
-
-    /** X data lookups (subscription required) */
     override fun x(): XServiceAsync = x
 
-    /** Trending topics by region */
+    /** Trending topics and hashtags by region */
     override fun trends(): TrendServiceAsync = trends
-
-    override fun bot(): BotServiceAsync = bot
 
     override fun support(): SupportServiceAsync = support
 
-    /** Subscription & billing */
+    /** Subscription, billing, and credits */
     override fun credits(): CreditServiceAsync = credits
 
     override fun close() = clientOptions.close()
@@ -240,20 +224,12 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
             WebhookServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
-        private val integrations: IntegrationServiceAsync.WithRawResponse by lazy {
-            IntegrationServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
-
         private val x: XServiceAsync.WithRawResponse by lazy {
             XServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val trends: TrendServiceAsync.WithRawResponse by lazy {
             TrendServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
-
-        private val bot: BotServiceAsync.WithRawResponse by lazy {
-            BotServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val support: SupportServiceAsync.WithRawResponse by lazy {
@@ -271,25 +247,25 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        /** Account info & settings */
+        /** Account info and settings */
         override fun account(): AccountServiceAsync.WithRawResponse = account
 
         /** API key management (session auth only) */
         override fun apiKeys(): ApiKeyServiceAsync.WithRawResponse = apiKeys
 
-        /** Subscription & billing */
+        /** Subscription, billing, and credits */
         override fun subscribe(): SubscribeServiceAsync.WithRawResponse = subscribe
 
-        /** Tweet composition, drafts, writing styles & radar */
+        /** AI tweet composition, drafts, writing styles, and radar */
         override fun compose(): ComposeServiceAsync.WithRawResponse = compose
 
-        /** Tweet composition, drafts, writing styles & radar */
+        /** AI tweet composition, drafts, writing styles, and radar */
         override fun drafts(): DraftServiceAsync.WithRawResponse = drafts
 
-        /** Tweet composition, drafts, writing styles & radar */
+        /** AI tweet composition, drafts, writing styles, and radar */
         override fun styles(): StyleServiceAsync.WithRawResponse = styles
 
-        /** Tweet composition, drafts, writing styles & radar */
+        /** AI tweet composition, drafts, writing styles, and radar */
         override fun radar(): RadarServiceAsync.WithRawResponse = radar
 
         /** Real-time X account monitoring */
@@ -304,23 +280,17 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
         /** Giveaway draws from tweet replies */
         override fun draws(): DrawServiceAsync.WithRawResponse = draws
 
-        /** Webhook endpoint management & delivery */
+        /** Webhook endpoint management and delivery */
         override fun webhooks(): WebhookServiceAsync.WithRawResponse = webhooks
 
-        /** Push notification integrations (Telegram) */
-        override fun integrations(): IntegrationServiceAsync.WithRawResponse = integrations
-
-        /** X data lookups (subscription required) */
         override fun x(): XServiceAsync.WithRawResponse = x
 
-        /** Trending topics by region */
+        /** Trending topics and hashtags by region */
         override fun trends(): TrendServiceAsync.WithRawResponse = trends
-
-        override fun bot(): BotServiceAsync.WithRawResponse = bot
 
         override fun support(): SupportServiceAsync.WithRawResponse = support
 
-        /** Subscription & billing */
+        /** Subscription, billing, and credits */
         override fun credits(): CreditServiceAsync.WithRawResponse = credits
     }
 }

@@ -9,7 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get regional trending topics */
+/** Get trending hashtags and topics by region (alias) */
 class TrendListParams
 private constructor(
     private val count: Long?,

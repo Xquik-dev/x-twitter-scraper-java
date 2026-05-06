@@ -13,11 +13,7 @@ internal class JoinServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client =
-            XTwitterScraperOkHttpClientAsync.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
         val joinServiceAsync = client.x().communities().join()
 
         val communityActionResultFuture =
@@ -32,11 +28,7 @@ internal class JoinServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun deleteAll() {
-        val client =
-            XTwitterScraperOkHttpClientAsync.builder()
-                .apiKey("My API Key")
-                .bearerToken("My Bearer Token")
-                .build()
+        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
         val joinServiceAsync = client.x().communities().join()
 
         val communityActionResultFuture =
