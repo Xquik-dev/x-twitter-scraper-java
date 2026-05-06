@@ -1,5 +1,7 @@
 # X Twitter Scraper Java API Library
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg?url=https%3A%2F%2Fgithub.com%2FXquik-dev%2Fx-twitter-scraper-java)](https://deepwiki.com/Xquik-dev/x-twitter-scraper-java)
+
 > Maven Central publication is pending. Build from source until the
 > `com.x_twitter_scraper.api:x-twitter-scraper-java` artifact resolves in Maven
 > Central.
