@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper
 import com.x_twitter_scraper.api.client.XTwitterScraperClientAsync
 import com.x_twitter_scraper.api.client.XTwitterScraperClientAsyncImpl
 import com.x_twitter_scraper.api.core.ClientOptions
+import com.x_twitter_scraper.api.core.LogLevel
 import com.x_twitter_scraper.api.core.Sleeper
 import com.x_twitter_scraper.api.core.Timeout
 import com.x_twitter_scraper.api.core.http.Headers
@@ -278,6 +279,15 @@ class XTwitterScraperOkHttpClientAsync private constructor() {
          * Defaults to 2.
          */
         fun maxRetries(maxRetries: Int) = apply { clientOptions.maxRetries(maxRetries) }
+
+        /**
+         * The level at which to log request and response information.
+         *
+         * [fromEnv] will set the level from environment variables. See [LogLevel.fromEnv].
+         *
+         * Defaults to [LogLevel.fromEnv].
+         */
+        fun logLevel(logLevel: LogLevel) = apply { clientOptions.logLevel(logLevel) }
 
         fun apiKey(apiKey: String?) = apply { clientOptions.apiKey(apiKey) }
 

@@ -342,8 +342,6 @@ The SDK throws custom unchecked exception types:
 
 ## Logging
 
-The SDK uses the standard [OkHttp logging interceptor](https://github.com/square/okhttp/tree/master/okhttp-logging-interceptor).
-
 Enable logging by setting the `X_TWITTER_SCRAPER_LOG` environment variable to `info`:
 
 ```sh
@@ -354,6 +352,19 @@ Or to `debug` for more verbose logging:
 
 ```sh
 export X_TWITTER_SCRAPER_LOG=debug
+```
+
+Or configure the client manually using the `logLevel` method:
+
+```java
+import com.x_twitter_scraper.api.client.XTwitterScraperClient;
+import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient;
+import com.x_twitter_scraper.api.core.LogLevel;
+
+XTwitterScraperClient client = XTwitterScraperOkHttpClient.builder()
+    .fromEnv()
+    .logLevel(LogLevel.INFO)
+    .build();
 ```
 
 ## ProGuard and R8
