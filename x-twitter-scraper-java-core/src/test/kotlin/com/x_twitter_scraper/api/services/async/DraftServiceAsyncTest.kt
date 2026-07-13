@@ -13,7 +13,11 @@ internal class DraftServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val draftServiceAsync = client.drafts()
 
         val draftDetailFuture =
@@ -32,7 +36,11 @@ internal class DraftServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val draftServiceAsync = client.drafts()
 
         val draftDetailFuture = draftServiceAsync.retrieve("id")
@@ -44,7 +52,11 @@ internal class DraftServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val draftServiceAsync = client.drafts()
 
         val draftsFuture =
@@ -59,7 +71,11 @@ internal class DraftServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val draftServiceAsync = client.drafts()
 
         val future = draftServiceAsync.delete("id")

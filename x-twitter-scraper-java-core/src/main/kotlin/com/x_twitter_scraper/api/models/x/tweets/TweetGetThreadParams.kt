@@ -14,6 +14,7 @@ class TweetGetThreadParams
 private constructor(
     private val id: String?,
     private val cursor: String?,
+    private val pageSize: Long?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -22,6 +23,14 @@ private constructor(
 
     /** Pagination cursor for thread tweets */
     fun cursor(): Optional<String> = Optional.ofNullable(cursor)
+
+    /**
+     * Maximum items requested from this page (1-100, default 20). The response can contain fewer
+     * items because the source returned fewer, filters removed items, or remaining credits cover
+     * fewer results. Keep requesting next_cursor while has_next_page is true, even when a page is
+     * empty. The deprecated limit and count aliases remain accepted.
+     */
+    fun pageSize(): Optional<Long> = Optional.ofNullable(pageSize)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -44,6 +53,7 @@ private constructor(
 
         private var id: String? = null
         private var cursor: String? = null
+        private var pageSize: Long? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -51,6 +61,7 @@ private constructor(
         internal fun from(tweetGetThreadParams: TweetGetThreadParams) = apply {
             id = tweetGetThreadParams.id
             cursor = tweetGetThreadParams.cursor
+            pageSize = tweetGetThreadParams.pageSize
             additionalHeaders = tweetGetThreadParams.additionalHeaders.toBuilder()
             additionalQueryParams = tweetGetThreadParams.additionalQueryParams.toBuilder()
         }
@@ -65,6 +76,24 @@ private constructor(
 
         /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
         fun cursor(cursor: Optional<String>) = cursor(cursor.getOrNull())
+
+        /**
+         * Maximum items requested from this page (1-100, default 20). The response can contain
+         * fewer items because the source returned fewer, filters removed items, or remaining
+         * credits cover fewer results. Keep requesting next_cursor while has_next_page is true,
+         * even when a page is empty. The deprecated limit and count aliases remain accepted.
+         */
+        fun pageSize(pageSize: Long?) = apply { this.pageSize = pageSize }
+
+        /**
+         * Alias for [Builder.pageSize].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun pageSize(pageSize: Long) = pageSize(pageSize as Long?)
+
+        /** Alias for calling [Builder.pageSize] with `pageSize.orElse(null)`. */
+        fun pageSize(pageSize: Optional<Long>) = pageSize(pageSize.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -173,6 +202,7 @@ private constructor(
             TweetGetThreadParams(
                 id,
                 cursor,
+                pageSize,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -190,6 +220,7 @@ private constructor(
         QueryParams.builder()
             .apply {
                 cursor?.let { put("cursor", it) }
+                pageSize?.let { put("pageSize", it.toString()) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -202,13 +233,14 @@ private constructor(
         return other is TweetGetThreadParams &&
             id == other.id &&
             cursor == other.cursor &&
+            pageSize == other.pageSize &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(id, cursor, additionalHeaders, additionalQueryParams)
+        Objects.hash(id, cursor, pageSize, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "TweetGetThreadParams{id=$id, cursor=$cursor, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "TweetGetThreadParams{id=$id, cursor=$cursor, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

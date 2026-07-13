@@ -6,8 +6,6 @@ import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.getPackageVersion
 import com.x_twitter_scraper.api.services.async.AccountServiceAsync
 import com.x_twitter_scraper.api.services.async.AccountServiceAsyncImpl
-import com.x_twitter_scraper.api.services.async.ApiKeyServiceAsync
-import com.x_twitter_scraper.api.services.async.ApiKeyServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.ComposeServiceAsync
 import com.x_twitter_scraper.api.services.async.ComposeServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.CreditServiceAsync
@@ -20,6 +18,8 @@ import com.x_twitter_scraper.api.services.async.EventServiceAsync
 import com.x_twitter_scraper.api.services.async.EventServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.ExtractionServiceAsync
 import com.x_twitter_scraper.api.services.async.ExtractionServiceAsyncImpl
+import com.x_twitter_scraper.api.services.async.GuestWalletServiceAsync
+import com.x_twitter_scraper.api.services.async.GuestWalletServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.MonitorServiceAsync
 import com.x_twitter_scraper.api.services.async.MonitorServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.RadarServiceAsync
@@ -58,10 +58,6 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
 
     private val account: AccountServiceAsync by lazy {
         AccountServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
-
-    private val apiKeys: ApiKeyServiceAsync by lazy {
-        ApiKeyServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
     private val subscribe: SubscribeServiceAsync by lazy {
@@ -116,6 +112,10 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
         CreditServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
+    private val guestWallets: GuestWalletServiceAsync by lazy {
+        GuestWalletServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
     override fun sync(): XTwitterScraperClient = sync
 
     override fun withRawResponse(): XTwitterScraperClientAsync.WithRawResponse = withRawResponse
@@ -127,9 +127,6 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
 
     /** Account info and settings */
     override fun account(): AccountServiceAsync = account
-
-    /** API key management (session auth only) */
-    override fun apiKeys(): ApiKeyServiceAsync = apiKeys
 
     /** Subscription, billing, and credits */
     override fun subscribe(): SubscribeServiceAsync = subscribe
@@ -152,7 +149,7 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
     /** Activity events from monitored accounts */
     override fun events(): EventServiceAsync = events
 
-    /** Bulk data extraction (20 tool types) */
+    /** Bulk data extraction (23 tool types) */
     override fun extractions(): ExtractionServiceAsync = extractions
 
     /** Giveaway draws from tweet replies */
@@ -171,6 +168,9 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
     /** Subscription, billing, and credits */
     override fun credits(): CreditServiceAsync = credits
 
+    /** Accountless prepaid access for paid read endpoints */
+    override fun guestWallets(): GuestWalletServiceAsync = guestWallets
+
     override fun close() = clientOptions.close()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -178,10 +178,6 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
 
         private val account: AccountServiceAsync.WithRawResponse by lazy {
             AccountServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
-
-        private val apiKeys: ApiKeyServiceAsync.WithRawResponse by lazy {
-            ApiKeyServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val subscribe: SubscribeServiceAsync.WithRawResponse by lazy {
@@ -240,6 +236,10 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
             CreditServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val guestWallets: GuestWalletServiceAsync.WithRawResponse by lazy {
+            GuestWalletServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): XTwitterScraperClientAsync.WithRawResponse =
@@ -249,9 +249,6 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
 
         /** Account info and settings */
         override fun account(): AccountServiceAsync.WithRawResponse = account
-
-        /** API key management (session auth only) */
-        override fun apiKeys(): ApiKeyServiceAsync.WithRawResponse = apiKeys
 
         /** Subscription, billing, and credits */
         override fun subscribe(): SubscribeServiceAsync.WithRawResponse = subscribe
@@ -274,7 +271,7 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
         /** Activity events from monitored accounts */
         override fun events(): EventServiceAsync.WithRawResponse = events
 
-        /** Bulk data extraction (20 tool types) */
+        /** Bulk data extraction (23 tool types) */
         override fun extractions(): ExtractionServiceAsync.WithRawResponse = extractions
 
         /** Giveaway draws from tweet replies */
@@ -292,5 +289,8 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
 
         /** Subscription, billing, and credits */
         override fun credits(): CreditServiceAsync.WithRawResponse = credits
+
+        /** Accountless prepaid access for paid read endpoints */
+        override fun guestWallets(): GuestWalletServiceAsync.WithRawResponse = guestWallets
     }
 }

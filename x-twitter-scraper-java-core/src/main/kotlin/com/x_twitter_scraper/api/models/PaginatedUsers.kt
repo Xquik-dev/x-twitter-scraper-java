@@ -18,7 +18,12 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** Paginated list of user profiles with cursor-based navigation. */
+/**
+ * Paginated user profiles. The item count can be lower than pageSize when the source returns fewer
+ * profiles or remaining credits cover fewer results. Follow next_cursor while has_next_page is
+ * true. A relationship can naturally contain fewer profiles than requested. Zero affordable results
+ * returns 402 insufficient_credits.
+ */
 class PaginatedUsers
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

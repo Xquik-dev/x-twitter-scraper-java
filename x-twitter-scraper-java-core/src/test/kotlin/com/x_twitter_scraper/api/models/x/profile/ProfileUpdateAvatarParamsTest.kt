@@ -13,7 +13,7 @@ internal class ProfileUpdateAvatarParamsTest {
     fun create() {
         ProfileUpdateAvatarParams.builder()
             .account("@elonmusk")
-            .file("Example data".byteInputStream())
+            .url("https://example.com/avatar.png")
             .build()
     }
 
@@ -22,7 +22,7 @@ internal class ProfileUpdateAvatarParamsTest {
         val params =
             ProfileUpdateAvatarParams.builder()
                 .account("@elonmusk")
-                .file("Example data".byteInputStream())
+                .url("https://example.com/avatar.png")
                 .build()
 
         val body = params._body()
@@ -38,7 +38,7 @@ internal class ProfileUpdateAvatarParamsTest {
             .isEqualTo(
                 mapOf(
                         "account" to MultipartField.of("@elonmusk"),
-                        "file" to MultipartField.of("Example data".byteInputStream()),
+                        "url" to MultipartField.of("https://example.com/avatar.png"),
                     )
                     .mapValues { (_, field) ->
                         field.map { (it as? ByteArray)?.inputStream() ?: it }

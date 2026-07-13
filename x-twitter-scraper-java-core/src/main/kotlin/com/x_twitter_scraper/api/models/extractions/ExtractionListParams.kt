@@ -16,7 +16,7 @@ import kotlin.jvm.optionals.getOrNull
 /** List extraction jobs */
 class ExtractionListParams
 private constructor(
-    private val after: String?,
+    private val cursor: String?,
     private val limit: Long?,
     private val status: Status?,
     private val toolType: ToolType?,
@@ -24,10 +24,14 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** Cursor for keyset pagination */
-    fun after(): Optional<String> = Optional.ofNullable(after)
+    /** Cursor for keyset pagination from prior response next_cursor */
+    fun cursor(): Optional<String> = Optional.ofNullable(cursor)
 
-    /** Maximum number of items to return (1-100, default 50) */
+    /**
+     * Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the
+     * returned count may be lower when remaining credits cannot cover the requested page. If zero
+     * paid results are affordable, the endpoint returns 402 insufficient_credits.
+     */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
     /** Filter by job status */
@@ -55,7 +59,7 @@ private constructor(
     /** A builder for [ExtractionListParams]. */
     class Builder internal constructor() {
 
-        private var after: String? = null
+        private var cursor: String? = null
         private var limit: Long? = null
         private var status: Status? = null
         private var toolType: ToolType? = null
@@ -64,7 +68,7 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(extractionListParams: ExtractionListParams) = apply {
-            after = extractionListParams.after
+            cursor = extractionListParams.cursor
             limit = extractionListParams.limit
             status = extractionListParams.status
             toolType = extractionListParams.toolType
@@ -72,13 +76,17 @@ private constructor(
             additionalQueryParams = extractionListParams.additionalQueryParams.toBuilder()
         }
 
-        /** Cursor for keyset pagination */
-        fun after(after: String?) = apply { this.after = after }
+        /** Cursor for keyset pagination from prior response next_cursor */
+        fun cursor(cursor: String?) = apply { this.cursor = cursor }
 
-        /** Alias for calling [Builder.after] with `after.orElse(null)`. */
-        fun after(after: Optional<String>) = after(after.getOrNull())
+        /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
+        fun cursor(cursor: Optional<String>) = cursor(cursor.getOrNull())
 
-        /** Maximum number of items to return (1-100, default 50) */
+        /**
+         * Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the
+         * returned count may be lower when remaining credits cannot cover the requested page. If
+         * zero paid results are affordable, the endpoint returns 402 insufficient_credits.
+         */
         fun limit(limit: Long?) = apply { this.limit = limit }
 
         /**
@@ -208,7 +216,7 @@ private constructor(
          */
         fun build(): ExtractionListParams =
             ExtractionListParams(
-                after,
+                cursor,
                 limit,
                 status,
                 toolType,
@@ -222,7 +230,7 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
-                after?.let { put("after", it) }
+                cursor?.let { put("cursor", it) }
                 limit?.let { put("limit", it.toString()) }
                 status?.let { put("status", it.toString()) }
                 toolType?.let { put("toolType", it.toString()) }
@@ -398,6 +406,8 @@ private constructor(
 
             @JvmField val COMMUNITY_SEARCH = of("community_search")
 
+            @JvmField val FAVORITERS = of("favoriters")
+
             @JvmField val FOLLOWER_EXPLORER = of("follower_explorer")
 
             @JvmField val FOLLOWING_EXPLORER = of("following_explorer")
@@ -426,6 +436,10 @@ private constructor(
 
             @JvmField val TWEET_SEARCH_EXTRACTOR = of("tweet_search_extractor")
 
+            @JvmField val USER_LIKES = of("user_likes")
+
+            @JvmField val USER_MEDIA = of("user_media")
+
             @JvmField val VERIFIED_FOLLOWER_EXPLORER = of("verified_follower_explorer")
 
             @JvmStatic fun of(value: String) = ToolType(JsonField.of(value))
@@ -438,6 +452,7 @@ private constructor(
             COMMUNITY_MODERATOR_EXPLORER,
             COMMUNITY_POST_EXTRACTOR,
             COMMUNITY_SEARCH,
+            FAVORITERS,
             FOLLOWER_EXPLORER,
             FOLLOWING_EXPLORER,
             LIST_FOLLOWER_EXPLORER,
@@ -452,6 +467,8 @@ private constructor(
             SPACE_EXPLORER,
             THREAD_EXTRACTOR,
             TWEET_SEARCH_EXTRACTOR,
+            USER_LIKES,
+            USER_MEDIA,
             VERIFIED_FOLLOWER_EXPLORER,
         }
 
@@ -470,6 +487,7 @@ private constructor(
             COMMUNITY_MODERATOR_EXPLORER,
             COMMUNITY_POST_EXTRACTOR,
             COMMUNITY_SEARCH,
+            FAVORITERS,
             FOLLOWER_EXPLORER,
             FOLLOWING_EXPLORER,
             LIST_FOLLOWER_EXPLORER,
@@ -484,6 +502,8 @@ private constructor(
             SPACE_EXPLORER,
             THREAD_EXTRACTOR,
             TWEET_SEARCH_EXTRACTOR,
+            USER_LIKES,
+            USER_MEDIA,
             VERIFIED_FOLLOWER_EXPLORER,
             /** An enum member indicating that [ToolType] was instantiated with an unknown value. */
             _UNKNOWN,
@@ -503,6 +523,7 @@ private constructor(
                 COMMUNITY_MODERATOR_EXPLORER -> Value.COMMUNITY_MODERATOR_EXPLORER
                 COMMUNITY_POST_EXTRACTOR -> Value.COMMUNITY_POST_EXTRACTOR
                 COMMUNITY_SEARCH -> Value.COMMUNITY_SEARCH
+                FAVORITERS -> Value.FAVORITERS
                 FOLLOWER_EXPLORER -> Value.FOLLOWER_EXPLORER
                 FOLLOWING_EXPLORER -> Value.FOLLOWING_EXPLORER
                 LIST_FOLLOWER_EXPLORER -> Value.LIST_FOLLOWER_EXPLORER
@@ -517,6 +538,8 @@ private constructor(
                 SPACE_EXPLORER -> Value.SPACE_EXPLORER
                 THREAD_EXTRACTOR -> Value.THREAD_EXTRACTOR
                 TWEET_SEARCH_EXTRACTOR -> Value.TWEET_SEARCH_EXTRACTOR
+                USER_LIKES -> Value.USER_LIKES
+                USER_MEDIA -> Value.USER_MEDIA
                 VERIFIED_FOLLOWER_EXPLORER -> Value.VERIFIED_FOLLOWER_EXPLORER
                 else -> Value._UNKNOWN
             }
@@ -537,6 +560,7 @@ private constructor(
                 COMMUNITY_MODERATOR_EXPLORER -> Known.COMMUNITY_MODERATOR_EXPLORER
                 COMMUNITY_POST_EXTRACTOR -> Known.COMMUNITY_POST_EXTRACTOR
                 COMMUNITY_SEARCH -> Known.COMMUNITY_SEARCH
+                FAVORITERS -> Known.FAVORITERS
                 FOLLOWER_EXPLORER -> Known.FOLLOWER_EXPLORER
                 FOLLOWING_EXPLORER -> Known.FOLLOWING_EXPLORER
                 LIST_FOLLOWER_EXPLORER -> Known.LIST_FOLLOWER_EXPLORER
@@ -551,6 +575,8 @@ private constructor(
                 SPACE_EXPLORER -> Known.SPACE_EXPLORER
                 THREAD_EXTRACTOR -> Known.THREAD_EXTRACTOR
                 TWEET_SEARCH_EXTRACTOR -> Known.TWEET_SEARCH_EXTRACTOR
+                USER_LIKES -> Known.USER_LIKES
+                USER_MEDIA -> Known.USER_MEDIA
                 VERIFIED_FOLLOWER_EXPLORER -> Known.VERIFIED_FOLLOWER_EXPLORER
                 else -> throw XTwitterScraperInvalidDataException("Unknown ToolType: $value")
             }
@@ -624,7 +650,7 @@ private constructor(
         }
 
         return other is ExtractionListParams &&
-            after == other.after &&
+            cursor == other.cursor &&
             limit == other.limit &&
             status == other.status &&
             toolType == other.toolType &&
@@ -633,8 +659,8 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(after, limit, status, toolType, additionalHeaders, additionalQueryParams)
+        Objects.hash(cursor, limit, status, toolType, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "ExtractionListParams{after=$after, limit=$limit, status=$status, toolType=$toolType, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ExtractionListParams{cursor=$cursor, limit=$limit, status=$status, toolType=$toolType, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

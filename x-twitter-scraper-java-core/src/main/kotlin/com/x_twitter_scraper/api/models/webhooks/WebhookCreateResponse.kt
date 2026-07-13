@@ -65,6 +65,8 @@ private constructor(
     fun eventTypes(): List<EventType> = eventTypes.getRequired("eventTypes")
 
     /**
+     * Plaintext HMAC signing secret returned only at creation.
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -211,6 +213,7 @@ private constructor(
                 }
         }
 
+        /** Plaintext HMAC signing secret returned only at creation. */
         fun secret(secret: String) = secret(JsonField.of(secret))
 
         /**

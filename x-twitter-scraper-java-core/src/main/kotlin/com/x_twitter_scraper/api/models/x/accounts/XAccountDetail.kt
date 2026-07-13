@@ -19,7 +19,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Full X account details including proxy, cookies, and update timestamp. */
+/** Full X account details with status, cookies, and update timestamp. */
 class XAccountDetail
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -30,7 +30,6 @@ private constructor(
     private val xUserId: JsonField<String>,
     private val xUsername: JsonField<String>,
     private val cookiesObtainedAt: JsonField<OffsetDateTime>,
-    private val proxyCountry: JsonField<String>,
     private val updatedAt: JsonField<OffsetDateTime>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -48,9 +47,6 @@ private constructor(
         @JsonProperty("cookiesObtainedAt")
         @ExcludeMissing
         cookiesObtainedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-        @JsonProperty("proxyCountry")
-        @ExcludeMissing
-        proxyCountry: JsonField<String> = JsonMissing.of(),
         @JsonProperty("updatedAt")
         @ExcludeMissing
         updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -62,7 +58,6 @@ private constructor(
         xUserId,
         xUsername,
         cookiesObtainedAt,
-        proxyCountry,
         updatedAt,
         mutableMapOf(),
     )
@@ -109,12 +104,6 @@ private constructor(
      */
     fun cookiesObtainedAt(): Optional<OffsetDateTime> =
         cookiesObtainedAt.getOptional("cookiesObtainedAt")
-
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun proxyCountry(): Optional<String> = proxyCountry.getOptional("proxyCountry")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -177,15 +166,6 @@ private constructor(
     fun _cookiesObtainedAt(): JsonField<OffsetDateTime> = cookiesObtainedAt
 
     /**
-     * Returns the raw JSON value of [proxyCountry].
-     *
-     * Unlike [proxyCountry], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("proxyCountry")
-    @ExcludeMissing
-    fun _proxyCountry(): JsonField<String> = proxyCountry
-
-    /**
      * Returns the raw JSON value of [updatedAt].
      *
      * Unlike [updatedAt], this method doesn't throw if the JSON field has an unexpected type.
@@ -234,7 +214,6 @@ private constructor(
         private var xUserId: JsonField<String>? = null
         private var xUsername: JsonField<String>? = null
         private var cookiesObtainedAt: JsonField<OffsetDateTime> = JsonMissing.of()
-        private var proxyCountry: JsonField<String> = JsonMissing.of()
         private var updatedAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -247,7 +226,6 @@ private constructor(
             xUserId = xAccountDetail.xUserId
             xUsername = xAccountDetail.xUsername
             cookiesObtainedAt = xAccountDetail.cookiesObtainedAt
-            proxyCountry = xAccountDetail.proxyCountry
             updatedAt = xAccountDetail.updatedAt
             additionalProperties = xAccountDetail.additionalProperties.toMutableMap()
         }
@@ -328,19 +306,6 @@ private constructor(
             this.cookiesObtainedAt = cookiesObtainedAt
         }
 
-        fun proxyCountry(proxyCountry: String) = proxyCountry(JsonField.of(proxyCountry))
-
-        /**
-         * Sets [Builder.proxyCountry] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.proxyCountry] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun proxyCountry(proxyCountry: JsonField<String>) = apply {
-            this.proxyCountry = proxyCountry
-        }
-
         fun updatedAt(updatedAt: OffsetDateTime) = updatedAt(JsonField.of(updatedAt))
 
         /**
@@ -397,7 +362,6 @@ private constructor(
                 checkRequired("xUserId", xUserId),
                 checkRequired("xUsername", xUsername),
                 cookiesObtainedAt,
-                proxyCountry,
                 updatedAt,
                 additionalProperties.toMutableMap(),
             )
@@ -425,7 +389,6 @@ private constructor(
         xUserId()
         xUsername()
         cookiesObtainedAt()
-        proxyCountry()
         updatedAt()
         validated = true
     }
@@ -452,7 +415,6 @@ private constructor(
             (if (xUserId.asKnown().isPresent) 1 else 0) +
             (if (xUsername.asKnown().isPresent) 1 else 0) +
             (if (cookiesObtainedAt.asKnown().isPresent) 1 else 0) +
-            (if (proxyCountry.asKnown().isPresent) 1 else 0) +
             (if (updatedAt.asKnown().isPresent) 1 else 0)
 
     class Health @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -628,7 +590,6 @@ private constructor(
             xUserId == other.xUserId &&
             xUsername == other.xUsername &&
             cookiesObtainedAt == other.cookiesObtainedAt &&
-            proxyCountry == other.proxyCountry &&
             updatedAt == other.updatedAt &&
             additionalProperties == other.additionalProperties
     }
@@ -642,7 +603,6 @@ private constructor(
             xUserId,
             xUsername,
             cookiesObtainedAt,
-            proxyCountry,
             updatedAt,
             additionalProperties,
         )
@@ -651,5 +611,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "XAccountDetail{id=$id, createdAt=$createdAt, health=$health, status=$status, xUserId=$xUserId, xUsername=$xUsername, cookiesObtainedAt=$cookiesObtainedAt, proxyCountry=$proxyCountry, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "XAccountDetail{id=$id, createdAt=$createdAt, health=$health, status=$status, xUserId=$xUserId, xUsername=$xUsername, cookiesObtainedAt=$cookiesObtainedAt, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }

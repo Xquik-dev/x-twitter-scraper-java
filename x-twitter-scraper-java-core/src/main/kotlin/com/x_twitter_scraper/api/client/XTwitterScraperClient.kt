@@ -4,13 +4,13 @@ package com.x_twitter_scraper.api.client
 
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.services.blocking.AccountService
-import com.x_twitter_scraper.api.services.blocking.ApiKeyService
 import com.x_twitter_scraper.api.services.blocking.ComposeService
 import com.x_twitter_scraper.api.services.blocking.CreditService
 import com.x_twitter_scraper.api.services.blocking.DraftService
 import com.x_twitter_scraper.api.services.blocking.DrawService
 import com.x_twitter_scraper.api.services.blocking.EventService
 import com.x_twitter_scraper.api.services.blocking.ExtractionService
+import com.x_twitter_scraper.api.services.blocking.GuestWalletService
 import com.x_twitter_scraper.api.services.blocking.MonitorService
 import com.x_twitter_scraper.api.services.blocking.RadarService
 import com.x_twitter_scraper.api.services.blocking.StyleService
@@ -60,9 +60,6 @@ interface XTwitterScraperClient {
     /** Account info and settings */
     fun account(): AccountService
 
-    /** API key management (session auth only) */
-    fun apiKeys(): ApiKeyService
-
     /** Subscription, billing, and credits */
     fun subscribe(): SubscribeService
 
@@ -84,7 +81,7 @@ interface XTwitterScraperClient {
     /** Activity events from monitored accounts */
     fun events(): EventService
 
-    /** Bulk data extraction (20 tool types) */
+    /** Bulk data extraction (23 tool types) */
     fun extractions(): ExtractionService
 
     /** Giveaway draws from tweet replies */
@@ -102,6 +99,9 @@ interface XTwitterScraperClient {
 
     /** Subscription, billing, and credits */
     fun credits(): CreditService
+
+    /** Accountless prepaid access for paid read endpoints */
+    fun guestWallets(): GuestWalletService
 
     /**
      * Closes this client, relinquishing any underlying resources.
@@ -133,9 +133,6 @@ interface XTwitterScraperClient {
         /** Account info and settings */
         fun account(): AccountService.WithRawResponse
 
-        /** API key management (session auth only) */
-        fun apiKeys(): ApiKeyService.WithRawResponse
-
         /** Subscription, billing, and credits */
         fun subscribe(): SubscribeService.WithRawResponse
 
@@ -157,7 +154,7 @@ interface XTwitterScraperClient {
         /** Activity events from monitored accounts */
         fun events(): EventService.WithRawResponse
 
-        /** Bulk data extraction (20 tool types) */
+        /** Bulk data extraction (23 tool types) */
         fun extractions(): ExtractionService.WithRawResponse
 
         /** Giveaway draws from tweet replies */
@@ -175,5 +172,8 @@ interface XTwitterScraperClient {
 
         /** Subscription, billing, and credits */
         fun credits(): CreditService.WithRawResponse
+
+        /** Accountless prepaid access for paid read endpoints */
+        fun guestWallets(): GuestWalletService.WithRawResponse
     }
 }

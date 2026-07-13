@@ -30,7 +30,15 @@ private constructor(
 ) : Params {
 
     /**
-     * Array of tweet URLs or IDs (bulk, max 50)
+     * Numeric tweet ID alias for tweetInput
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun tweetId(): Optional<String> = body.tweetId()
+
+    /**
+     * Array of tweet URLs or IDs (bulk, max 50 string items)
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -46,6 +54,21 @@ private constructor(
     fun tweetInput(): Optional<String> = body.tweetInput()
 
     /**
+     * Tweet URL alias for tweetInput
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun tweetUrl(): Optional<String> = body.tweetUrl()
+
+    /**
+     * Returns the raw JSON value of [tweetId].
+     *
+     * Unlike [tweetId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _tweetId(): JsonField<String> = body._tweetId()
+
+    /**
      * Returns the raw JSON value of [tweetIds].
      *
      * Unlike [tweetIds], this method doesn't throw if the JSON field has an unexpected type.
@@ -58,6 +81,13 @@ private constructor(
      * Unlike [tweetInput], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _tweetInput(): JsonField<String> = body._tweetInput()
+
+    /**
+     * Returns the raw JSON value of [tweetUrl].
+     *
+     * Unlike [tweetUrl], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _tweetUrl(): JsonField<String> = body._tweetUrl()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -96,12 +126,25 @@ private constructor(
          *
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
+         * - [tweetId]
          * - [tweetIds]
          * - [tweetInput]
+         * - [tweetUrl]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
-        /** Array of tweet URLs or IDs (bulk, max 50) */
+        /** Numeric tweet ID alias for tweetInput */
+        fun tweetId(tweetId: String) = apply { body.tweetId(tweetId) }
+
+        /**
+         * Sets [Builder.tweetId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.tweetId] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun tweetId(tweetId: JsonField<String>) = apply { body.tweetId(tweetId) }
+
+        /** Array of tweet URLs or IDs (bulk, max 50 string items) */
         fun tweetIds(tweetIds: List<String>) = apply { body.tweetIds(tweetIds) }
 
         /**
@@ -131,6 +174,17 @@ private constructor(
          * value.
          */
         fun tweetInput(tweetInput: JsonField<String>) = apply { body.tweetInput(tweetInput) }
+
+        /** Tweet URL alias for tweetInput */
+        fun tweetUrl(tweetUrl: String) = apply { body.tweetUrl(tweetUrl) }
+
+        /**
+         * Sets [Builder.tweetUrl] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.tweetUrl] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun tweetUrl(tweetUrl: JsonField<String>) = apply { body.tweetUrl(tweetUrl) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -271,23 +325,35 @@ private constructor(
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
+        private val tweetId: JsonField<String>,
         private val tweetIds: JsonField<List<String>>,
         private val tweetInput: JsonField<String>,
+        private val tweetUrl: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
+            @JsonProperty("tweetId") @ExcludeMissing tweetId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("tweetIds")
             @ExcludeMissing
             tweetIds: JsonField<List<String>> = JsonMissing.of(),
             @JsonProperty("tweetInput")
             @ExcludeMissing
             tweetInput: JsonField<String> = JsonMissing.of(),
-        ) : this(tweetIds, tweetInput, mutableMapOf())
+            @JsonProperty("tweetUrl") @ExcludeMissing tweetUrl: JsonField<String> = JsonMissing.of(),
+        ) : this(tweetId, tweetIds, tweetInput, tweetUrl, mutableMapOf())
 
         /**
-         * Array of tweet URLs or IDs (bulk, max 50)
+         * Numeric tweet ID alias for tweetInput
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun tweetId(): Optional<String> = tweetId.getOptional("tweetId")
+
+        /**
+         * Array of tweet URLs or IDs (bulk, max 50 string items)
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
          *   (e.g. if the server responded with an unexpected value).
@@ -301,6 +367,21 @@ private constructor(
          *   (e.g. if the server responded with an unexpected value).
          */
         fun tweetInput(): Optional<String> = tweetInput.getOptional("tweetInput")
+
+        /**
+         * Tweet URL alias for tweetInput
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun tweetUrl(): Optional<String> = tweetUrl.getOptional("tweetUrl")
+
+        /**
+         * Returns the raw JSON value of [tweetId].
+         *
+         * Unlike [tweetId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("tweetId") @ExcludeMissing fun _tweetId(): JsonField<String> = tweetId
 
         /**
          * Returns the raw JSON value of [tweetIds].
@@ -319,6 +400,13 @@ private constructor(
         @JsonProperty("tweetInput")
         @ExcludeMissing
         fun _tweetInput(): JsonField<String> = tweetInput
+
+        /**
+         * Returns the raw JSON value of [tweetUrl].
+         *
+         * Unlike [tweetUrl], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("tweetUrl") @ExcludeMissing fun _tweetUrl(): JsonField<String> = tweetUrl
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -341,18 +429,34 @@ private constructor(
         /** A builder for [Body]. */
         class Builder internal constructor() {
 
+            private var tweetId: JsonField<String> = JsonMissing.of()
             private var tweetIds: JsonField<MutableList<String>>? = null
             private var tweetInput: JsonField<String> = JsonMissing.of()
+            private var tweetUrl: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
+                tweetId = body.tweetId
                 tweetIds = body.tweetIds.map { it.toMutableList() }
                 tweetInput = body.tweetInput
+                tweetUrl = body.tweetUrl
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            /** Array of tweet URLs or IDs (bulk, max 50) */
+            /** Numeric tweet ID alias for tweetInput */
+            fun tweetId(tweetId: String) = tweetId(JsonField.of(tweetId))
+
+            /**
+             * Sets [Builder.tweetId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.tweetId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun tweetId(tweetId: JsonField<String>) = apply { this.tweetId = tweetId }
+
+            /** Array of tweet URLs or IDs (bulk, max 50 string items) */
             fun tweetIds(tweetIds: List<String>) = tweetIds(JsonField.of(tweetIds))
 
             /**
@@ -390,6 +494,18 @@ private constructor(
              */
             fun tweetInput(tweetInput: JsonField<String>) = apply { this.tweetInput = tweetInput }
 
+            /** Tweet URL alias for tweetInput */
+            fun tweetUrl(tweetUrl: String) = tweetUrl(JsonField.of(tweetUrl))
+
+            /**
+             * Sets [Builder.tweetUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.tweetUrl] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun tweetUrl(tweetUrl: JsonField<String>) = apply { this.tweetUrl = tweetUrl }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -416,8 +532,10 @@ private constructor(
              */
             fun build(): Body =
                 Body(
+                    tweetId,
                     (tweetIds ?: JsonMissing.of()).map { it.toImmutable() },
                     tweetInput,
+                    tweetUrl,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -438,8 +556,10 @@ private constructor(
                 return@apply
             }
 
+            tweetId()
             tweetIds()
             tweetInput()
+            tweetUrl()
             validated = true
         }
 
@@ -459,8 +579,10 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (tweetIds.asKnown().getOrNull()?.size ?: 0) +
-                (if (tweetInput.asKnown().isPresent) 1 else 0)
+            (if (tweetId.asKnown().isPresent) 1 else 0) +
+                (tweetIds.asKnown().getOrNull()?.size ?: 0) +
+                (if (tweetInput.asKnown().isPresent) 1 else 0) +
+                (if (tweetUrl.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -468,19 +590,21 @@ private constructor(
             }
 
             return other is Body &&
+                tweetId == other.tweetId &&
                 tweetIds == other.tweetIds &&
                 tweetInput == other.tweetInput &&
+                tweetUrl == other.tweetUrl &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(tweetIds, tweetInput, additionalProperties)
+            Objects.hash(tweetId, tweetIds, tweetInput, tweetUrl, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{tweetIds=$tweetIds, tweetInput=$tweetInput, additionalProperties=$additionalProperties}"
+            "Body{tweetId=$tweetId, tweetIds=$tweetIds, tweetInput=$tweetInput, tweetUrl=$tweetUrl, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

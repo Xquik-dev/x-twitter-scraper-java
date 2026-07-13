@@ -3,6 +3,7 @@
 package com.x_twitter_scraper.api.services.blocking
 
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
+import com.x_twitter_scraper.api.models.subscribe.SubscribeCreateParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -11,10 +12,17 @@ internal class SubscribeServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val subscribeService = client.subscribe()
 
-        val subscribe = subscribeService.create()
+        val subscribe =
+            subscribeService.create(
+                SubscribeCreateParams.builder().tier(SubscribeCreateParams.Tier.PRO).build()
+            )
 
         subscribe.validate()
     }

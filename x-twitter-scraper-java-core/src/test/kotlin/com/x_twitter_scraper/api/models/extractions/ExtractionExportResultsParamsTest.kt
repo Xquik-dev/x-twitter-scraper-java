@@ -18,7 +18,11 @@ internal class ExtractionExportResultsParamsTest {
 
     @Test
     fun pathParams() {
-        val params = ExtractionExportResultsParams.builder().id("id").build()
+        val params =
+            ExtractionExportResultsParams.builder()
+                .id("id")
+                .format(ExtractionExportResultsParams.Format.CSV)
+                .build()
 
         assertThat(params._pathParam(0)).isEqualTo("id")
         // out-of-bound path param
@@ -36,14 +40,5 @@ internal class ExtractionExportResultsParamsTest {
         val queryParams = params._queryParams()
 
         assertThat(queryParams).isEqualTo(QueryParams.builder().put("format", "csv").build())
-    }
-
-    @Test
-    fun queryParamsWithoutOptionalFields() {
-        val params = ExtractionExportResultsParams.builder().id("id").build()
-
-        val queryParams = params._queryParams()
-
-        assertThat(queryParams).isEqualTo(QueryParams.builder().build())
     }
 }

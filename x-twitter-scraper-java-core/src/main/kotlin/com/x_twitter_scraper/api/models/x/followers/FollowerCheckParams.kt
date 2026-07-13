@@ -17,10 +17,10 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** Username to check (without @) */
+    /** Source username, @username, or X or Twitter profile URL */
     fun source(): String = source
 
-    /** Target username (without @) */
+    /** Target username, @username, or X or Twitter profile URL */
     fun target(): String = target
 
     /** Additional headers to send with the request. */
@@ -61,10 +61,10 @@ private constructor(
             additionalQueryParams = followerCheckParams.additionalQueryParams.toBuilder()
         }
 
-        /** Username to check (without @) */
+        /** Source username, @username, or X or Twitter profile URL */
         fun source(source: String) = apply { this.source = source }
 
-        /** Target username (without @) */
+        /** Target username, @username, or X or Twitter profile URL */
         fun target(target: String) = apply { this.target = target }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {

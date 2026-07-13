@@ -16,7 +16,11 @@ internal class CommunityServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val communityService = client.x().communities()
 
         val community =
@@ -34,7 +38,11 @@ internal class CommunityServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val communityService = client.x().communities()
 
         val community =
@@ -52,7 +60,11 @@ internal class CommunityServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveInfo() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val communityService = client.x().communities()
 
         val response = communityService.retrieveInfo("id")
@@ -63,7 +75,11 @@ internal class CommunityServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveMembers() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val communityService = client.x().communities()
 
         val paginatedUsers =
@@ -71,7 +87,7 @@ internal class CommunityServiceTest {
                 CommunityRetrieveMembersParams.builder()
                     .id("id")
                     .cursor("cursor")
-                    .pageSize(0L)
+                    .pageSize(20L)
                     .build()
             )
 
@@ -81,7 +97,11 @@ internal class CommunityServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveModerators() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val communityService = client.x().communities()
 
         val paginatedUsers =
@@ -95,15 +115,21 @@ internal class CommunityServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveSearch() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val communityService = client.x().communities()
 
         val paginatedTweets =
             communityService.retrieveSearch(
                 CommunityRetrieveSearchParams.builder()
+                    .communityId("321669910225")
                     .q("q")
                     .cursor("cursor")
-                    .queryType("queryType")
+                    .pageSize(1L)
+                    .queryType(CommunityRetrieveSearchParams.QueryType.LATEST)
                     .build()
             )
 

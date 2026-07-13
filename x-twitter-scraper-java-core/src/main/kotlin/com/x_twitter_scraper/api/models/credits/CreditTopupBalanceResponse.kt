@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.x_twitter_scraper.api.core.ExcludeMissing
+import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
+import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.util.Collections
 import java.util.Objects
@@ -16,25 +18,51 @@ import java.util.Objects
 class CreditTopupBalanceResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val success: JsonValue,
+    private val redirectUrl: JsonField<String>,
+    private val url: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("success") @ExcludeMissing success: JsonValue = JsonMissing.of()
-    ) : this(success, mutableMapOf())
+        @JsonProperty("redirect_url")
+        @ExcludeMissing
+        redirectUrl: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
+    ) : this(redirectUrl, url, mutableMapOf())
 
     /**
-     * Expected to always return the following:
-     * ```java
-     * JsonValue.from(true)
-     * ```
+     * Stable first-party Xquik redirect URL for the active Stripe Checkout session.
      *
-     * However, this method can be useful for debugging and logging (e.g. if the server responded
-     * with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    @JsonProperty("success") @ExcludeMissing fun _success(): JsonValue = success
+    fun redirectUrl(): String = redirectUrl.getRequired("redirect_url")
+
+    /**
+     * Same stable first-party Xquik redirect URL as redirect_url. The response never exposes a raw
+     * Stripe Checkout URL.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun url(): String = url.getRequired("url")
+
+    /**
+     * Returns the raw JSON value of [redirectUrl].
+     *
+     * Unlike [redirectUrl], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("redirect_url")
+    @ExcludeMissing
+    fun _redirectUrl(): JsonField<String> = redirectUrl
+
+    /**
+     * Returns the raw JSON value of [url].
+     *
+     * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -52,6 +80,12 @@ private constructor(
 
         /**
          * Returns a mutable builder for constructing an instance of [CreditTopupBalanceResponse].
+         *
+         * The following fields are required:
+         * ```java
+         * .redirectUrl()
+         * .url()
+         * ```
          */
         @JvmStatic fun builder() = Builder()
     }
@@ -59,28 +93,42 @@ private constructor(
     /** A builder for [CreditTopupBalanceResponse]. */
     class Builder internal constructor() {
 
-        private var success: JsonValue = JsonValue.from(true)
+        private var redirectUrl: JsonField<String>? = null
+        private var url: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(creditTopupBalanceResponse: CreditTopupBalanceResponse) = apply {
-            success = creditTopupBalanceResponse.success
+            redirectUrl = creditTopupBalanceResponse.redirectUrl
+            url = creditTopupBalanceResponse.url
             additionalProperties = creditTopupBalanceResponse.additionalProperties.toMutableMap()
         }
 
+        /** Stable first-party Xquik redirect URL for the active Stripe Checkout session. */
+        fun redirectUrl(redirectUrl: String) = redirectUrl(JsonField.of(redirectUrl))
+
         /**
-         * Sets the field to an arbitrary JSON value.
+         * Sets [Builder.redirectUrl] to an arbitrary JSON value.
          *
-         * It is usually unnecessary to call this method because the field defaults to the
-         * following:
-         * ```java
-         * JsonValue.from(true)
-         * ```
-         *
+         * You should usually call [Builder.redirectUrl] with a well-typed [String] value instead.
          * This method is primarily for setting the field to an undocumented or not yet supported
          * value.
          */
-        fun success(success: JsonValue) = apply { this.success = success }
+        fun redirectUrl(redirectUrl: JsonField<String>) = apply { this.redirectUrl = redirectUrl }
+
+        /**
+         * Same stable first-party Xquik redirect URL as redirect_url. The response never exposes a
+         * raw Stripe Checkout URL.
+         */
+        fun url(url: String) = url(JsonField.of(url))
+
+        /**
+         * Sets [Builder.url] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.url] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun url(url: JsonField<String>) = apply { this.url = url }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -105,9 +153,21 @@ private constructor(
          * Returns an immutable instance of [CreditTopupBalanceResponse].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .redirectUrl()
+         * .url()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): CreditTopupBalanceResponse =
-            CreditTopupBalanceResponse(success, additionalProperties.toMutableMap())
+            CreditTopupBalanceResponse(
+                checkRequired("redirectUrl", redirectUrl),
+                checkRequired("url", url),
+                additionalProperties.toMutableMap(),
+            )
     }
 
     private var validated: Boolean = false
@@ -125,11 +185,8 @@ private constructor(
             return@apply
         }
 
-        _success().let {
-            if (it != JsonValue.from(true)) {
-                throw XTwitterScraperInvalidDataException("'success' is invalid, received $it")
-            }
-        }
+        redirectUrl()
+        url()
         validated = true
     }
 
@@ -147,7 +204,8 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int = success.let { if (it == JsonValue.from(true)) 1 else 0 }
+    internal fun validity(): Int =
+        (if (redirectUrl.asKnown().isPresent) 1 else 0) + (if (url.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -155,14 +213,15 @@ private constructor(
         }
 
         return other is CreditTopupBalanceResponse &&
-            success == other.success &&
+            redirectUrl == other.redirectUrl &&
+            url == other.url &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(success, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(redirectUrl, url, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CreditTopupBalanceResponse{success=$success, additionalProperties=$additionalProperties}"
+        "CreditTopupBalanceResponse{redirectUrl=$redirectUrl, url=$url, additionalProperties=$additionalProperties}"
 }

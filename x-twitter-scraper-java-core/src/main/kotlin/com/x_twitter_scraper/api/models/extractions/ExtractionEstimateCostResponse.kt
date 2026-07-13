@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.x_twitter_scraper.api.core.Enum
 import com.x_twitter_scraper.api.core.ExcludeMissing
 import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.core.JsonMissing
@@ -15,6 +16,7 @@ import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 class ExtractionEstimateCostResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -23,7 +25,7 @@ private constructor(
     private val creditsAvailable: JsonField<String>,
     private val creditsRequired: JsonField<String>,
     private val estimatedResults: JsonField<Long>,
-    private val source: JsonField<String>,
+    private val source: JsonField<Source>,
     private val resolvedXUserId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -40,7 +42,7 @@ private constructor(
         @JsonProperty("estimatedResults")
         @ExcludeMissing
         estimatedResults: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("source") @ExcludeMissing source: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("source") @ExcludeMissing source: JsonField<Source> = JsonMissing.of(),
         @JsonProperty("resolvedXUserId")
         @ExcludeMissing
         resolvedXUserId: JsonField<String> = JsonMissing.of(),
@@ -82,7 +84,7 @@ private constructor(
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun source(): String = source.getRequired("source")
+    fun source(): Source = source.getRequired("source")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -131,7 +133,7 @@ private constructor(
      *
      * Unlike [source], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("source") @ExcludeMissing fun _source(): JsonField<String> = source
+    @JsonProperty("source") @ExcludeMissing fun _source(): JsonField<Source> = source
 
     /**
      * Returns the raw JSON value of [resolvedXUserId].
@@ -179,7 +181,7 @@ private constructor(
         private var creditsAvailable: JsonField<String>? = null
         private var creditsRequired: JsonField<String>? = null
         private var estimatedResults: JsonField<Long>? = null
-        private var source: JsonField<String>? = null
+        private var source: JsonField<Source>? = null
         private var resolvedXUserId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -247,15 +249,15 @@ private constructor(
             this.estimatedResults = estimatedResults
         }
 
-        fun source(source: String) = source(JsonField.of(source))
+        fun source(source: Source) = source(JsonField.of(source))
 
         /**
          * Sets [Builder.source] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.source] with a well-typed [String] value instead. This
+         * You should usually call [Builder.source] with a well-typed [Source] value instead. This
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun source(source: JsonField<String>) = apply { this.source = source }
+        fun source(source: JsonField<Source>) = apply { this.source = source }
 
         fun resolvedXUserId(resolvedXUserId: String) =
             resolvedXUserId(JsonField.of(resolvedXUserId))
@@ -337,7 +339,7 @@ private constructor(
         creditsAvailable()
         creditsRequired()
         estimatedResults()
-        source()
+        source().validate()
         resolvedXUserId()
         validated = true
     }
@@ -361,8 +363,186 @@ private constructor(
             (if (creditsAvailable.asKnown().isPresent) 1 else 0) +
             (if (creditsRequired.asKnown().isPresent) 1 else 0) +
             (if (estimatedResults.asKnown().isPresent) 1 else 0) +
-            (if (source.asKnown().isPresent) 1 else 0) +
+            (source.asKnown().getOrNull()?.validity() ?: 0) +
             (if (resolvedXUserId.asKnown().isPresent) 1 else 0)
+
+    class Source @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val FOLLOWERS = of("followers")
+
+            @JvmField val FOLLOWING = of("following")
+
+            @JvmField val PAGINATION_CAP = of("paginationCap")
+
+            @JvmField val POSTS = of("posts")
+
+            @JvmField val QUOTE_COUNT = of("quoteCount")
+
+            @JvmField val REPLY_COUNT = of("replyCount")
+
+            @JvmField val RESULTS_LIMIT = of("resultsLimit")
+
+            @JvmField val RETWEET_COUNT = of("retweetCount")
+
+            @JvmField val UNKNOWN = of("unknown")
+
+            @JvmStatic fun of(value: String) = Source(JsonField.of(value))
+        }
+
+        /** An enum containing [Source]'s known values. */
+        enum class Known {
+            FOLLOWERS,
+            FOLLOWING,
+            PAGINATION_CAP,
+            POSTS,
+            QUOTE_COUNT,
+            REPLY_COUNT,
+            RESULTS_LIMIT,
+            RETWEET_COUNT,
+            UNKNOWN,
+        }
+
+        /**
+         * An enum containing [Source]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Source] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            FOLLOWERS,
+            FOLLOWING,
+            PAGINATION_CAP,
+            POSTS,
+            QUOTE_COUNT,
+            REPLY_COUNT,
+            RESULTS_LIMIT,
+            RETWEET_COUNT,
+            UNKNOWN,
+            /** An enum member indicating that [Source] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                FOLLOWERS -> Value.FOLLOWERS
+                FOLLOWING -> Value.FOLLOWING
+                PAGINATION_CAP -> Value.PAGINATION_CAP
+                POSTS -> Value.POSTS
+                QUOTE_COUNT -> Value.QUOTE_COUNT
+                REPLY_COUNT -> Value.REPLY_COUNT
+                RESULTS_LIMIT -> Value.RESULTS_LIMIT
+                RETWEET_COUNT -> Value.RETWEET_COUNT
+                UNKNOWN -> Value.UNKNOWN
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
+         */
+        fun known(): Known =
+            when (this) {
+                FOLLOWERS -> Known.FOLLOWERS
+                FOLLOWING -> Known.FOLLOWING
+                PAGINATION_CAP -> Known.PAGINATION_CAP
+                POSTS -> Known.POSTS
+                QUOTE_COUNT -> Known.QUOTE_COUNT
+                REPLY_COUNT -> Known.REPLY_COUNT
+                RESULTS_LIMIT -> Known.RESULTS_LIMIT
+                RETWEET_COUNT -> Known.RETWEET_COUNT
+                UNKNOWN -> Known.UNKNOWN
+                else -> throw XTwitterScraperInvalidDataException("Unknown Source: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): Source = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Source && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

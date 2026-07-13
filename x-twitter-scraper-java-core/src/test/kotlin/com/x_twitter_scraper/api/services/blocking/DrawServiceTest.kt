@@ -24,10 +24,14 @@ internal class DrawServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val drawService = client.draws()
 
-        val draw = drawService.retrieve("id")
+        val draw = drawService.retrieve("f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345")
 
         draw.validate()
     }
@@ -35,10 +39,14 @@ internal class DrawServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val drawService = client.draws()
 
-        val draws = drawService.list(DrawListParams.builder().after("after").limit(1L).build())
+        val draws = drawService.list(DrawListParams.builder().cursor("cursor").limit(1L).build())
 
         draws.validate()
     }
@@ -49,6 +57,7 @@ internal class DrawServiceTest {
             XTwitterScraperOkHttpClient.builder()
                 .baseUrl(wmRuntimeInfo.httpBaseUrl)
                 .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
                 .build()
         val drawService = client.draws()
         stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
@@ -56,7 +65,7 @@ internal class DrawServiceTest {
         val response =
             drawService.export(
                 DrawExportParams.builder()
-                    .id("id")
+                    .id("f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345")
                     .format(DrawExportParams.Format.CSV)
                     .type(DrawExportParams.Type.WINNERS)
                     .build()
@@ -68,7 +77,11 @@ internal class DrawServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun run() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val drawService = client.draws()
 
         val response =

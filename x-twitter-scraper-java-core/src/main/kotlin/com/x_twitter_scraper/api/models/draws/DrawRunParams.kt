@@ -22,7 +22,11 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Run giveaway draw */
+/**
+ * Runs a giveaway draw from a source tweet. The draw first checks the minimum credits needed to
+ * inspect the source tweet and at least one candidate. Remaining credits cap how many replies and
+ * retweeters can be inspected before filters and winner selection run.
+ */
 class DrawRunParams
 private constructor(
     private val body: Body,

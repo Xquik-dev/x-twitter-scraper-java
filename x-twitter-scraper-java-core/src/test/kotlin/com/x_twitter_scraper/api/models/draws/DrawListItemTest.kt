@@ -14,7 +14,7 @@ internal class DrawListItemTest {
     fun create() {
         val drawListItem =
             DrawListItem.builder()
-                .id("id")
+                .id("f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .status("status")
                 .totalEntries(0L)
@@ -23,7 +23,7 @@ internal class DrawListItemTest {
                 .drawnAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
-        assertThat(drawListItem.id()).isEqualTo("id")
+        assertThat(drawListItem.id()).isEqualTo("f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345")
         assertThat(drawListItem.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(drawListItem.status()).isEqualTo("status")
@@ -39,7 +39,7 @@ internal class DrawListItemTest {
         val jsonMapper = jsonMapper()
         val drawListItem =
             DrawListItem.builder()
-                .id("id")
+                .id("f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .status("status")
                 .totalEntries(0L)

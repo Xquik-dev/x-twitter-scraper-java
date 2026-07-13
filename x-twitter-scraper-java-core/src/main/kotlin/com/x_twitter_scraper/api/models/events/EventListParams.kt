@@ -13,7 +13,7 @@ import kotlin.jvm.optionals.getOrNull
 /** List events */
 class EventListParams
 private constructor(
-    private val after: String?,
+    private val cursor: String?,
     private val eventType: EventType?,
     private val limit: Long?,
     private val monitorId: String?,
@@ -21,13 +21,17 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** Cursor for keyset pagination */
-    fun after(): Optional<String> = Optional.ofNullable(after)
+    /** Cursor for keyset pagination from prior response next_cursor */
+    fun cursor(): Optional<String> = Optional.ofNullable(cursor)
 
     /** Filter events by type */
     fun eventType(): Optional<EventType> = Optional.ofNullable(eventType)
 
-    /** Maximum number of items to return (1-100, default 50) */
+    /**
+     * Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the
+     * returned count may be lower when remaining credits cannot cover the requested page. If zero
+     * paid results are affordable, the endpoint returns 402 insufficient_credits.
+     */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
     /** Filter events by monitor ID */
@@ -52,7 +56,7 @@ private constructor(
     /** A builder for [EventListParams]. */
     class Builder internal constructor() {
 
-        private var after: String? = null
+        private var cursor: String? = null
         private var eventType: EventType? = null
         private var limit: Long? = null
         private var monitorId: String? = null
@@ -61,7 +65,7 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(eventListParams: EventListParams) = apply {
-            after = eventListParams.after
+            cursor = eventListParams.cursor
             eventType = eventListParams.eventType
             limit = eventListParams.limit
             monitorId = eventListParams.monitorId
@@ -69,11 +73,11 @@ private constructor(
             additionalQueryParams = eventListParams.additionalQueryParams.toBuilder()
         }
 
-        /** Cursor for keyset pagination */
-        fun after(after: String?) = apply { this.after = after }
+        /** Cursor for keyset pagination from prior response next_cursor */
+        fun cursor(cursor: String?) = apply { this.cursor = cursor }
 
-        /** Alias for calling [Builder.after] with `after.orElse(null)`. */
-        fun after(after: Optional<String>) = after(after.getOrNull())
+        /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
+        fun cursor(cursor: Optional<String>) = cursor(cursor.getOrNull())
 
         /** Filter events by type */
         fun eventType(eventType: EventType?) = apply { this.eventType = eventType }
@@ -81,7 +85,11 @@ private constructor(
         /** Alias for calling [Builder.eventType] with `eventType.orElse(null)`. */
         fun eventType(eventType: Optional<EventType>) = eventType(eventType.getOrNull())
 
-        /** Maximum number of items to return (1-100, default 50) */
+        /**
+         * Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the
+         * returned count may be lower when remaining credits cannot cover the requested page. If
+         * zero paid results are affordable, the endpoint returns 402 insufficient_credits.
+         */
         fun limit(limit: Long?) = apply { this.limit = limit }
 
         /**
@@ -205,7 +213,7 @@ private constructor(
          */
         fun build(): EventListParams =
             EventListParams(
-                after,
+                cursor,
                 eventType,
                 limit,
                 monitorId,
@@ -219,7 +227,7 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
-                after?.let { put("after", it) }
+                cursor?.let { put("cursor", it) }
                 eventType?.let { put("eventType", it.toString()) }
                 limit?.let { put("limit", it.toString()) }
                 monitorId?.let { put("monitorId", it) }
@@ -233,7 +241,7 @@ private constructor(
         }
 
         return other is EventListParams &&
-            after == other.after &&
+            cursor == other.cursor &&
             eventType == other.eventType &&
             limit == other.limit &&
             monitorId == other.monitorId &&
@@ -242,8 +250,8 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(after, eventType, limit, monitorId, additionalHeaders, additionalQueryParams)
+        Objects.hash(cursor, eventType, limit, monitorId, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "EventListParams{after=$after, eventType=$eventType, limit=$limit, monitorId=$monitorId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "EventListParams{cursor=$cursor, eventType=$eventType, limit=$limit, monitorId=$monitorId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

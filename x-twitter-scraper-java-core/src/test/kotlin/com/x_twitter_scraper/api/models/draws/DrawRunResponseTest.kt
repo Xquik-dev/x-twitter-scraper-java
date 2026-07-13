@@ -13,7 +13,7 @@ internal class DrawRunResponseTest {
     fun create() {
         val drawRunResponse =
             DrawRunResponse.builder()
-                .id("42")
+                .id("f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345")
                 .totalEntries(250L)
                 .tweetId("1234567890")
                 .validEntries(200L)
@@ -27,7 +27,7 @@ internal class DrawRunResponseTest {
                 )
                 .build()
 
-        assertThat(drawRunResponse.id()).isEqualTo("42")
+        assertThat(drawRunResponse.id()).isEqualTo("f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345")
         assertThat(drawRunResponse.totalEntries()).isEqualTo(250L)
         assertThat(drawRunResponse.tweetId()).isEqualTo("1234567890")
         assertThat(drawRunResponse.validEntries()).isEqualTo(200L)
@@ -47,7 +47,7 @@ internal class DrawRunResponseTest {
         val jsonMapper = jsonMapper()
         val drawRunResponse =
             DrawRunResponse.builder()
-                .id("42")
+                .id("f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345")
                 .totalEntries(250L)
                 .tweetId("1234567890")
                 .validEntries(200L)

@@ -17,7 +17,7 @@ internal class ExtractionEstimateCostResponseTest {
                 .creditsAvailable("50000")
                 .creditsRequired("500")
                 .estimatedResults(500L)
-                .source("replyCount")
+                .source(ExtractionEstimateCostResponse.Source.REPLY_COUNT)
                 .resolvedXUserId("123456")
                 .build()
 
@@ -25,7 +25,8 @@ internal class ExtractionEstimateCostResponseTest {
         assertThat(extractionEstimateCostResponse.creditsAvailable()).isEqualTo("50000")
         assertThat(extractionEstimateCostResponse.creditsRequired()).isEqualTo("500")
         assertThat(extractionEstimateCostResponse.estimatedResults()).isEqualTo(500L)
-        assertThat(extractionEstimateCostResponse.source()).isEqualTo("replyCount")
+        assertThat(extractionEstimateCostResponse.source())
+            .isEqualTo(ExtractionEstimateCostResponse.Source.REPLY_COUNT)
         assertThat(extractionEstimateCostResponse.resolvedXUserId()).contains("123456")
     }
 
@@ -38,7 +39,7 @@ internal class ExtractionEstimateCostResponseTest {
                 .creditsAvailable("50000")
                 .creditsRequired("500")
                 .estimatedResults(500L)
-                .source("replyCount")
+                .source(ExtractionEstimateCostResponse.Source.REPLY_COUNT)
                 .resolvedXUserId("123456")
                 .build()
 

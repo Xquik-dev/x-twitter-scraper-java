@@ -14,12 +14,20 @@ internal class ListServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveFollowers() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val listServiceAsync = client.x().lists()
 
         val paginatedUsersFuture =
             listServiceAsync.retrieveFollowers(
-                ListRetrieveFollowersParams.builder().id("id").cursor("cursor").build()
+                ListRetrieveFollowersParams.builder()
+                    .id("id")
+                    .cursor("cursor")
+                    .pageSize(20L)
+                    .build()
             )
 
         val paginatedUsers = paginatedUsersFuture.get()
@@ -29,12 +37,16 @@ internal class ListServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveMembers() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val listServiceAsync = client.x().lists()
 
         val paginatedUsersFuture =
             listServiceAsync.retrieveMembers(
-                ListRetrieveMembersParams.builder().id("id").cursor("cursor").pageSize(0L).build()
+                ListRetrieveMembersParams.builder().id("id").cursor("cursor").pageSize(20L).build()
             )
 
         val paginatedUsers = paginatedUsersFuture.get()
@@ -44,7 +56,11 @@ internal class ListServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveTweets() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val listServiceAsync = client.x().lists()
 
         val paginatedTweetsFuture =
@@ -53,6 +69,7 @@ internal class ListServiceAsyncTest {
                     .id("id")
                     .cursor("cursor")
                     .includeReplies(true)
+                    .pageSize(1L)
                     .sinceTime("sinceTime")
                     .untilTime("untilTime")
                     .build()

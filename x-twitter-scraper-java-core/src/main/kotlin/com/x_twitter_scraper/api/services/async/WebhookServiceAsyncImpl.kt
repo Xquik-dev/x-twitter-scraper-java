@@ -25,6 +25,8 @@ import com.x_twitter_scraper.api.models.webhooks.WebhookListDeliveriesParams
 import com.x_twitter_scraper.api.models.webhooks.WebhookListDeliveriesResponse
 import com.x_twitter_scraper.api.models.webhooks.WebhookListParams
 import com.x_twitter_scraper.api.models.webhooks.WebhookListResponse
+import com.x_twitter_scraper.api.models.webhooks.WebhookResumeParams
+import com.x_twitter_scraper.api.models.webhooks.WebhookResumeResponse
 import com.x_twitter_scraper.api.models.webhooks.WebhookTestParams
 import com.x_twitter_scraper.api.models.webhooks.WebhookTestResponse
 import com.x_twitter_scraper.api.models.webhooks.WebhookUpdateParams
@@ -79,6 +81,13 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
     ): CompletableFuture<WebhookListDeliveriesResponse> =
         // get /webhooks/{id}/deliveries
         withRawResponse().listDeliveries(params, requestOptions).thenApply { it.parse() }
+
+    override fun resume(
+        params: WebhookResumeParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<WebhookResumeResponse> =
+        // post /webhooks/{id}/resume
+        withRawResponse().resume(params, requestOptions).thenApply { it.parse() }
 
     override fun test(
         params: WebhookTestParams,
@@ -252,6 +261,40 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     errorHandler.handle(response).parseable {
                         response
                             .use { listDeliveriesHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val resumeHandler: Handler<WebhookResumeResponse> =
+            jsonHandler<WebhookResumeResponse>(clientOptions.jsonMapper)
+
+        override fun resume(
+            params: WebhookResumeParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<WebhookResumeResponse>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("webhooks", params._pathParam(0), "resume")
+                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { resumeHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

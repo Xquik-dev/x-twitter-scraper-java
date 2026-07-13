@@ -13,8 +13,7 @@ internal class MediaUploadParamsTest {
     fun create() {
         MediaUploadParams.builder()
             .account("@elonmusk")
-            .file("Example data".byteInputStream())
-            .isLongVideo(true)
+            .url("https://example.com/image.png")
             .build()
     }
 
@@ -23,8 +22,7 @@ internal class MediaUploadParamsTest {
         val params =
             MediaUploadParams.builder()
                 .account("@elonmusk")
-                .file("Example data".byteInputStream())
-                .isLongVideo(true)
+                .url("https://example.com/image.png")
                 .build()
 
         val body = params._body()
@@ -40,37 +38,7 @@ internal class MediaUploadParamsTest {
             .isEqualTo(
                 mapOf(
                         "account" to MultipartField.of("@elonmusk"),
-                        "file" to MultipartField.of("Example data".byteInputStream()),
-                        "is_long_video" to MultipartField.of(true),
-                    )
-                    .mapValues { (_, field) ->
-                        field.map { (it as? ByteArray)?.inputStream() ?: it }
-                    }
-            )
-    }
-
-    @Test
-    fun bodyWithoutOptionalFields() {
-        val params =
-            MediaUploadParams.builder()
-                .account("@elonmusk")
-                .file("Example data".byteInputStream())
-                .build()
-
-        val body = params._body()
-
-        assertThat(body.filterValues { !it.value.isNull() })
-            .usingRecursiveComparison()
-            // TODO(AssertJ): Replace this and the `mapValues` below with:
-            // https://github.com/assertj/assertj/issues/3165
-            .withEqualsForType(
-                { a, b -> a.readBytes() contentEquals b.readBytes() },
-                InputStream::class.java,
-            )
-            .isEqualTo(
-                mapOf(
-                        "account" to MultipartField.of("@elonmusk"),
-                        "file" to MultipartField.of("Example data".byteInputStream()),
+                        "url" to MultipartField.of("https://example.com/image.png"),
                     )
                     .mapValues { (_, field) ->
                         field.map { (it as? ByteArray)?.inputStream() ?: it }

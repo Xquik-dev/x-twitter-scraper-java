@@ -12,7 +12,7 @@ internal class EventListParamsTest {
     @Test
     fun create() {
         EventListParams.builder()
-            .after("after")
+            .cursor("cursor")
             .eventType(EventType.TWEET_NEW)
             .limit(1L)
             .monitorId("monitorId")
@@ -23,7 +23,7 @@ internal class EventListParamsTest {
     fun queryParams() {
         val params =
             EventListParams.builder()
-                .after("after")
+                .cursor("cursor")
                 .eventType(EventType.TWEET_NEW)
                 .limit(1L)
                 .monitorId("monitorId")
@@ -34,7 +34,7 @@ internal class EventListParamsTest {
         assertThat(queryParams)
             .isEqualTo(
                 QueryParams.builder()
-                    .put("after", "after")
+                    .put("cursor", "cursor")
                     .put("eventType", "tweet.new")
                     .put("limit", "1")
                     .put("monitorId", "monitorId")

@@ -17,8 +17,12 @@ import com.x_twitter_scraper.api.core.http.QueryParams
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 
-/** Top up credits balance */
+/**
+ * Create a Stripe Checkout session only after the user confirms. The request never completes
+ * payment or adds credits by itself.
+ */
 class CreditTopupBalanceParams
 private constructor(
     private val body: Body,
@@ -27,19 +31,34 @@ private constructor(
 ) : Params {
 
     /**
-     * Amount to top up in credits
+     * Amount to top up in US dollars. Minimum 10.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun amount(): Long = body.amount()
+    fun dollars(): Long = body.dollars()
 
     /**
-     * Returns the raw JSON value of [amount].
+     * Optional checkout locale. Defaults to en.
      *
-     * Unlike [amount], this method doesn't throw if the JSON field has an unexpected type.
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
      */
-    fun _amount(): JsonField<Long> = body._amount()
+    fun locale(): Optional<String> = body.locale()
+
+    /**
+     * Returns the raw JSON value of [dollars].
+     *
+     * Unlike [dollars], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _dollars(): JsonField<Long> = body._dollars()
+
+    /**
+     * Returns the raw JSON value of [locale].
+     *
+     * Unlike [locale], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _locale(): JsonField<String> = body._locale()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -58,7 +77,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .amount()
+         * .dollars()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -83,20 +102,32 @@ private constructor(
          *
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
-         * - [amount]
+         * - [dollars]
+         * - [locale]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
-        /** Amount to top up in credits */
-        fun amount(amount: Long) = apply { body.amount(amount) }
+        /** Amount to top up in US dollars. Minimum 10. */
+        fun dollars(dollars: Long) = apply { body.dollars(dollars) }
 
         /**
-         * Sets [Builder.amount] to an arbitrary JSON value.
+         * Sets [Builder.dollars] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.amount] with a well-typed [Long] value instead. This
+         * You should usually call [Builder.dollars] with a well-typed [Long] value instead. This
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun amount(amount: JsonField<Long>) = apply { body.amount(amount) }
+        fun dollars(dollars: JsonField<Long>) = apply { body.dollars(dollars) }
+
+        /** Optional checkout locale. Defaults to en. */
+        fun locale(locale: String) = apply { body.locale(locale) }
+
+        /**
+         * Sets [Builder.locale] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.locale] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun locale(locale: JsonField<String>) = apply { body.locale(locale) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -222,7 +253,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .amount()
+         * .dollars()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -244,30 +275,47 @@ private constructor(
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
-        private val amount: JsonField<Long>,
+        private val dollars: JsonField<Long>,
+        private val locale: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("amount") @ExcludeMissing amount: JsonField<Long> = JsonMissing.of()
-        ) : this(amount, mutableMapOf())
+            @JsonProperty("dollars") @ExcludeMissing dollars: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("locale") @ExcludeMissing locale: JsonField<String> = JsonMissing.of(),
+        ) : this(dollars, locale, mutableMapOf())
 
         /**
-         * Amount to top up in credits
+         * Amount to top up in US dollars. Minimum 10.
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
          *   value).
          */
-        fun amount(): Long = amount.getRequired("amount")
+        fun dollars(): Long = dollars.getRequired("dollars")
 
         /**
-         * Returns the raw JSON value of [amount].
+         * Optional checkout locale. Defaults to en.
          *
-         * Unlike [amount], this method doesn't throw if the JSON field has an unexpected type.
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
          */
-        @JsonProperty("amount") @ExcludeMissing fun _amount(): JsonField<Long> = amount
+        fun locale(): Optional<String> = locale.getOptional("locale")
+
+        /**
+         * Returns the raw JSON value of [dollars].
+         *
+         * Unlike [dollars], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("dollars") @ExcludeMissing fun _dollars(): JsonField<Long> = dollars
+
+        /**
+         * Returns the raw JSON value of [locale].
+         *
+         * Unlike [locale], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("locale") @ExcludeMissing fun _locale(): JsonField<String> = locale
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -288,7 +336,7 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .amount()
+             * .dollars()
              * ```
              */
             @JvmStatic fun builder() = Builder()
@@ -297,26 +345,40 @@ private constructor(
         /** A builder for [Body]. */
         class Builder internal constructor() {
 
-            private var amount: JsonField<Long>? = null
+            private var dollars: JsonField<Long>? = null
+            private var locale: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
-                amount = body.amount
+                dollars = body.dollars
+                locale = body.locale
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            /** Amount to top up in credits */
-            fun amount(amount: Long) = amount(JsonField.of(amount))
+            /** Amount to top up in US dollars. Minimum 10. */
+            fun dollars(dollars: Long) = dollars(JsonField.of(dollars))
 
             /**
-             * Sets [Builder.amount] to an arbitrary JSON value.
+             * Sets [Builder.dollars] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.amount] with a well-typed [Long] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.dollars] with a well-typed [Long] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun amount(amount: JsonField<Long>) = apply { this.amount = amount }
+            fun dollars(dollars: JsonField<Long>) = apply { this.dollars = dollars }
+
+            /** Optional checkout locale. Defaults to en. */
+            fun locale(locale: String) = locale(JsonField.of(locale))
+
+            /**
+             * Sets [Builder.locale] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.locale] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun locale(locale: JsonField<String>) = apply { this.locale = locale }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -344,13 +406,13 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .amount()
+             * .dollars()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
              */
             fun build(): Body =
-                Body(checkRequired("amount", amount), additionalProperties.toMutableMap())
+                Body(checkRequired("dollars", dollars), locale, additionalProperties.toMutableMap())
         }
 
         private var validated: Boolean = false
@@ -369,7 +431,8 @@ private constructor(
                 return@apply
             }
 
-            amount()
+            dollars()
+            locale()
             validated = true
         }
 
@@ -387,7 +450,9 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic internal fun validity(): Int = (if (amount.asKnown().isPresent) 1 else 0)
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (dollars.asKnown().isPresent) 1 else 0) + (if (locale.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -395,15 +460,17 @@ private constructor(
             }
 
             return other is Body &&
-                amount == other.amount &&
+                dollars == other.dollars &&
+                locale == other.locale &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(amount, additionalProperties) }
+        private val hashCode: Int by lazy { Objects.hash(dollars, locale, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() = "Body{amount=$amount, additionalProperties=$additionalProperties}"
+        override fun toString() =
+            "Body{dollars=$dollars, locale=$locale, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

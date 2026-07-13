@@ -13,16 +13,15 @@ internal class SubscribeCreateResponseTest {
     fun create() {
         val subscribeCreateResponse =
             SubscribeCreateResponse.builder()
-                .url("https://checkout.stripe.com/c/pay/cs_test_123")
-                .message("Checkout session created")
+                .message("Billing session created")
                 .status(SubscribeCreateResponse.Status.CHECKOUT_CREATED)
+                .url("https://xquik.com/billing/session")
                 .build()
 
-        assertThat(subscribeCreateResponse.url())
-            .isEqualTo("https://checkout.stripe.com/c/pay/cs_test_123")
-        assertThat(subscribeCreateResponse.message()).contains("Checkout session created")
+        assertThat(subscribeCreateResponse.message()).isEqualTo("Billing session created")
         assertThat(subscribeCreateResponse.status())
-            .contains(SubscribeCreateResponse.Status.CHECKOUT_CREATED)
+            .isEqualTo(SubscribeCreateResponse.Status.CHECKOUT_CREATED)
+        assertThat(subscribeCreateResponse.url()).isEqualTo("https://xquik.com/billing/session")
     }
 
     @Test
@@ -30,9 +29,9 @@ internal class SubscribeCreateResponseTest {
         val jsonMapper = jsonMapper()
         val subscribeCreateResponse =
             SubscribeCreateResponse.builder()
-                .url("https://checkout.stripe.com/c/pay/cs_test_123")
-                .message("Checkout session created")
+                .message("Billing session created")
                 .status(SubscribeCreateResponse.Status.CHECKOUT_CREATED)
+                .url("https://xquik.com/billing/session")
                 .build()
 
         val roundtrippedSubscribeCreateResponse =

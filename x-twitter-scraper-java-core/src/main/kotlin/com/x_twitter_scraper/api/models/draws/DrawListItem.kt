@@ -51,6 +51,8 @@ private constructor(
     ) : this(id, createdAt, status, totalEntries, tweetUrl, validEntries, drawnAt, mutableMapOf())
 
     /**
+     * Draw public ID for detail responses.
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -201,6 +203,7 @@ private constructor(
             additionalProperties = drawListItem.additionalProperties.toMutableMap()
         }
 
+        /** Draw public ID for detail responses. */
         fun id(id: String) = id(JsonField.of(id))
 
         /**

@@ -1,7 +1,11 @@
 # Xquik API Library
 
+<!-- x-release-please-start-version -->
+
 [![Maven Central](https://img.shields.io/maven-central/v/com.x_twitter_scraper.api/x-twitter-scraper-java)](https://central.sonatype.com/artifact/com.x_twitter_scraper.api/x-twitter-scraper-java/0.3.0)
 [![javadoc](https://javadoc.io/badge2/com.x_twitter_scraper.api/x-twitter-scraper-java/0.3.0/javadoc.svg)](https://javadoc.io/doc/com.x_twitter_scraper.api/x-twitter-scraper-java/0.3.0)
+
+<!-- x-release-please-end -->
 
 The Xquik SDK provides convenient access to the [X Twitter Scraper REST API](https://xquik.com) from applications written in Java.
 
@@ -9,9 +13,15 @@ The X Twitter Scraper Java SDK is similar to the X Twitter Scraper Kotlin SDK bu
 
 It is generated with [Stainless](https://www.stainless.com/).
 
+<!-- x-release-please-start-version -->
+
 The REST API documentation can be found on [xquik.com](https://xquik.com). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.x_twitter_scraper.api/x-twitter-scraper-java/0.3.0).
 
+<!-- x-release-please-end -->
+
 ## Installation
+
+<!-- x-release-please-start-version -->
 
 ### Gradle
 
@@ -28,6 +38,8 @@ implementation("com.x_twitter_scraper.api:x-twitter-scraper-java:0.3.0")
   <version>0.3.0</version>
 </dependency>
 ```
+
+<!-- x-release-please-end -->
 
 ## Requirements
 
@@ -73,6 +85,7 @@ import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient;
 
 XTwitterScraperClient client = XTwitterScraperOkHttpClient.builder()
     .apiKey("My API Key")
+    .bearerToken("My Bearer Token")
     .build();
 ```
 
@@ -177,70 +190,6 @@ CompletableFuture<PaginatedTweets> paginatedTweets = client.x().tweets().search(
 
 The asynchronous client supports the same options as the synchronous one, except most methods return `CompletableFuture`s.
 
-## File uploads
-
-The SDK defines methods that accept files.
-
-To upload a file, pass a [`Path`](https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html):
-
-```java
-import com.x_twitter_scraper.api.models.x.media.MediaUploadParams;
-import com.x_twitter_scraper.api.models.x.media.MediaUploadResponse;
-import java.nio.file.Paths;
-
-MediaUploadParams params = MediaUploadParams.builder()
-    .account("@elonmusk")
-    .file(Paths.get("/path/to/file"))
-    .build();
-MediaUploadResponse response = client.x().media().upload(params);
-```
-
-Or an arbitrary [`InputStream`](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html):
-
-```java
-import com.x_twitter_scraper.api.models.x.media.MediaUploadParams;
-import com.x_twitter_scraper.api.models.x.media.MediaUploadResponse;
-import java.net.URL;
-
-MediaUploadParams params = MediaUploadParams.builder()
-    .account("@elonmusk")
-    .file(new URL("https://example.com//path/to/file").openStream())
-    .build();
-MediaUploadResponse response = client.x().media().upload(params);
-```
-
-Or a `byte[]` array:
-
-```java
-import com.x_twitter_scraper.api.models.x.media.MediaUploadParams;
-import com.x_twitter_scraper.api.models.x.media.MediaUploadResponse;
-
-MediaUploadParams params = MediaUploadParams.builder()
-    .account("@elonmusk")
-    .file("content".getBytes())
-    .build();
-MediaUploadResponse response = client.x().media().upload(params);
-```
-
-Note that when passing a non-`Path` its filename is unknown so it will not be included in the request. To manually set a filename, pass a [`MultipartField`](x-twitter-scraper-java-core/src/main/kotlin/com/x_twitter_scraper/api/core/Values.kt):
-
-```java
-import com.x_twitter_scraper.api.core.MultipartField;
-import com.x_twitter_scraper.api.models.x.media.MediaUploadParams;
-import com.x_twitter_scraper.api.models.x.media.MediaUploadResponse;
-import java.io.InputStream;
-import java.net.URL;
-
-MediaUploadParams params = MediaUploadParams.builder()
-    .account("@elonmusk")
-    .file(MultipartField.<InputStream>builder()
-        .value(new URL("https://example.com//path/to/file").openStream())
-        .filename("/path/to/file")
-        .build())
-    .build();
-MediaUploadResponse response = client.x().media().upload(params);
-```
-
 ## Binary responses
 
 The SDK defines methods that return binary responses, which are used for API responses that shouldn't necessarily be parsed, like non-JSON data.
@@ -251,7 +200,11 @@ These methods return [`HttpResponse`](x-twitter-scraper-java-core/src/main/kotli
 import com.x_twitter_scraper.api.core.http.HttpResponse;
 import com.x_twitter_scraper.api.models.extractions.ExtractionExportResultsParams;
 
-HttpResponse response = client.extractions().exportResults("id");
+ExtractionExportResultsParams params = ExtractionExportResultsParams.builder()
+    .id("id")
+    .format(ExtractionExportResultsParams.Format.CSV)
+    .build();
+HttpResponse response = client.extractions().exportResults(params);
 ```
 
 To save the response content to a file, use the [`Files.copy(...)`](https://docs.oracle.com/javase/8/docs/api/java/nio/file/Files.html#copy-java.io.InputStream-java.nio.file.Path-java.nio.file.CopyOption...-) method:
@@ -764,4 +717,4 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/x-twitter-scraper-java/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/Xquik-dev/x-twitter-scraper-java/issues) with questions, bugs, or suggestions.

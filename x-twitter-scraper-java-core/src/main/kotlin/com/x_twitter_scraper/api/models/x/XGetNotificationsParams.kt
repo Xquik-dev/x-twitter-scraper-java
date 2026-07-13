@@ -25,7 +25,7 @@ private constructor(
     /** Pagination cursor for notifications */
     fun cursor(): Optional<String> = Optional.ofNullable(cursor)
 
-    /** Notification type filter */
+    /** Notification type filter. Unrecognized values fall back to All. */
     fun type(): Optional<Type> = Optional.ofNullable(type)
 
     /** Additional headers to send with the request. */
@@ -66,7 +66,7 @@ private constructor(
         /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
         fun cursor(cursor: Optional<String>) = cursor(cursor.getOrNull())
 
-        /** Notification type filter */
+        /** Notification type filter. Unrecognized values fall back to All. */
         fun type(type: Type?) = apply { this.type = type }
 
         /** Alias for calling [Builder.type] with `type.orElse(null)`. */
@@ -195,7 +195,7 @@ private constructor(
             }
             .build()
 
-    /** Notification type filter */
+    /** Notification type filter. Unrecognized values fall back to All. */
     class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

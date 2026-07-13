@@ -14,7 +14,11 @@ internal class ProfileServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun update() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val profileService = client.x().profile()
 
         val profile =
@@ -34,14 +38,18 @@ internal class ProfileServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun updateAvatar() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val profileService = client.x().profile()
 
         val response =
             profileService.updateAvatar(
                 ProfileUpdateAvatarParams.builder()
                     .account("@elonmusk")
-                    .file("Example data".byteInputStream())
+                    .url("https://example.com/avatar.png")
                     .build()
             )
 
@@ -51,14 +59,18 @@ internal class ProfileServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun updateBanner() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val profileService = client.x().profile()
 
         val response =
             profileService.updateBanner(
                 ProfileUpdateBannerParams.builder()
                     .account("@elonmusk")
-                    .file("Example data".byteInputStream())
+                    .url("https://example.com/banner.png")
                     .build()
             )
 

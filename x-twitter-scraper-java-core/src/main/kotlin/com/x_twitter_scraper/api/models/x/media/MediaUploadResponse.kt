@@ -19,6 +19,7 @@ class MediaUploadResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val mediaId: JsonField<String>,
+    private val mediaUrl: JsonField<String>,
     private val success: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -26,14 +27,23 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("mediaId") @ExcludeMissing mediaId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("mediaUrl") @ExcludeMissing mediaUrl: JsonField<String> = JsonMissing.of(),
         @JsonProperty("success") @ExcludeMissing success: JsonValue = JsonMissing.of(),
-    ) : this(mediaId, success, mutableMapOf())
+    ) : this(mediaId, mediaUrl, success, mutableMapOf())
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun mediaId(): String = mediaId.getRequired("mediaId")
+
+    /**
+     * Public media URL for tweet `media` arrays.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun mediaUrl(): String = mediaUrl.getRequired("mediaUrl")
 
     /**
      * Expected to always return the following:
@@ -52,6 +62,13 @@ private constructor(
      * Unlike [mediaId], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("mediaId") @ExcludeMissing fun _mediaId(): JsonField<String> = mediaId
+
+    /**
+     * Returns the raw JSON value of [mediaUrl].
+     *
+     * Unlike [mediaUrl], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("mediaUrl") @ExcludeMissing fun _mediaUrl(): JsonField<String> = mediaUrl
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -73,6 +90,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .mediaId()
+         * .mediaUrl()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -82,12 +100,14 @@ private constructor(
     class Builder internal constructor() {
 
         private var mediaId: JsonField<String>? = null
+        private var mediaUrl: JsonField<String>? = null
         private var success: JsonValue = JsonValue.from(true)
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(mediaUploadResponse: MediaUploadResponse) = apply {
             mediaId = mediaUploadResponse.mediaId
+            mediaUrl = mediaUploadResponse.mediaUrl
             success = mediaUploadResponse.success
             additionalProperties = mediaUploadResponse.additionalProperties.toMutableMap()
         }
@@ -101,6 +121,17 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun mediaId(mediaId: JsonField<String>) = apply { this.mediaId = mediaId }
+
+        /** Public media URL for tweet `media` arrays. */
+        fun mediaUrl(mediaUrl: String) = mediaUrl(JsonField.of(mediaUrl))
+
+        /**
+         * Sets [Builder.mediaUrl] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.mediaUrl] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun mediaUrl(mediaUrl: JsonField<String>) = apply { this.mediaUrl = mediaUrl }
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -143,6 +174,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .mediaId()
+         * .mediaUrl()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -150,6 +182,7 @@ private constructor(
         fun build(): MediaUploadResponse =
             MediaUploadResponse(
                 checkRequired("mediaId", mediaId),
+                checkRequired("mediaUrl", mediaUrl),
                 success,
                 additionalProperties.toMutableMap(),
             )
@@ -171,6 +204,7 @@ private constructor(
         }
 
         mediaId()
+        mediaUrl()
         _success().let {
             if (it != JsonValue.from(true)) {
                 throw XTwitterScraperInvalidDataException("'success' is invalid, received $it")
@@ -195,6 +229,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (mediaId.asKnown().isPresent) 1 else 0) +
+            (if (mediaUrl.asKnown().isPresent) 1 else 0) +
             success.let { if (it == JsonValue.from(true)) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
@@ -204,14 +239,17 @@ private constructor(
 
         return other is MediaUploadResponse &&
             mediaId == other.mediaId &&
+            mediaUrl == other.mediaUrl &&
             success == other.success &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(mediaId, success, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(mediaId, mediaUrl, success, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "MediaUploadResponse{mediaId=$mediaId, success=$success, additionalProperties=$additionalProperties}"
+        "MediaUploadResponse{mediaId=$mediaId, mediaUrl=$mediaUrl, success=$success, additionalProperties=$additionalProperties}"
 }

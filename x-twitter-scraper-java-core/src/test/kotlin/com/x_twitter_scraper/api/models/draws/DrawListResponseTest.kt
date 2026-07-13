@@ -16,7 +16,7 @@ internal class DrawListResponseTest {
             DrawListResponse.builder()
                 .addDraw(
                     DrawListItem.builder()
-                        .id("id")
+                        .id("f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .status("status")
                         .totalEntries(0L)
@@ -32,7 +32,7 @@ internal class DrawListResponseTest {
         assertThat(drawListResponse.draws())
             .containsExactly(
                 DrawListItem.builder()
-                    .id("id")
+                    .id("f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .status("status")
                     .totalEntries(0L)
@@ -52,7 +52,7 @@ internal class DrawListResponseTest {
             DrawListResponse.builder()
                 .addDraw(
                     DrawListItem.builder()
-                        .id("id")
+                        .id("f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .status("status")
                         .totalEntries(0L)

@@ -14,12 +14,8 @@ import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
 import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
-import java.io.InputStream
-import java.nio.file.Path
 import java.util.Collections
 import java.util.Objects
-import kotlin.io.path.inputStream
-import kotlin.io.path.name
 
 /** Update profile banner */
 class ProfileUpdateBannerParams
@@ -30,7 +26,7 @@ private constructor(
 ) : Params {
 
     /**
-     * X account (@username or ID) for banner update
+     * X account (@username or ID) receiving banner from URL
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -38,12 +34,12 @@ private constructor(
     fun account(): String = body.account()
 
     /**
-     * Banner image (max 2MB)
+     * HTTPS URL to the banner image to download
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun file(): InputStream = body.file()
+    fun url(): String = body.url()
 
     /**
      * Returns the raw multipart value of [account].
@@ -53,11 +49,11 @@ private constructor(
     fun _account(): MultipartField<String> = body._account()
 
     /**
-     * Returns the raw multipart value of [file].
+     * Returns the raw multipart value of [url].
      *
-     * Unlike [file], this method doesn't throw if the multipart field has an unexpected type.
+     * Unlike [url], this method doesn't throw if the multipart field has an unexpected type.
      */
-    fun _file(): MultipartField<InputStream> = body._file()
+    fun _url(): MultipartField<String> = body._url()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -77,7 +73,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .account()
-         * .file()
+         * .url()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -103,11 +99,11 @@ private constructor(
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [account]
-         * - [file]
+         * - [url]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
-        /** X account (@username or ID) for banner update */
+        /** X account (@username or ID) receiving banner from URL */
         fun account(account: String) = apply { body.account(account) }
 
         /**
@@ -118,23 +114,16 @@ private constructor(
          */
         fun account(account: MultipartField<String>) = apply { body.account(account) }
 
-        /** Banner image (max 2MB) */
-        fun file(file: InputStream) = apply { body.file(file) }
+        /** HTTPS URL to the banner image to download */
+        fun url(url: String) = apply { body.url(url) }
 
         /**
-         * Sets [Builder.file] to an arbitrary multipart value.
+         * Sets [Builder.url] to an arbitrary multipart value.
          *
-         * You should usually call [Builder.file] with a well-typed [InputStream] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.url] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun file(file: MultipartField<InputStream>) = apply { body.file(file) }
-
-        /** Banner image (max 2MB) */
-        fun file(file: ByteArray) = apply { body.file(file) }
-
-        /** Banner image (max 2MB) */
-        fun file(path: Path) = apply { body.file(path) }
+        fun url(url: MultipartField<String>) = apply { body.url(url) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -261,7 +250,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .account()
-         * .file()
+         * .url()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -275,7 +264,7 @@ private constructor(
     }
 
     fun _body(): Map<String, MultipartField<*>> =
-        (mapOf("account" to _account(), "file" to _file()) +
+        (mapOf("account" to _account(), "url" to _url()) +
                 _additionalBodyProperties().mapValues { (_, value) -> MultipartField.of(value) })
             .toImmutable()
 
@@ -286,12 +275,12 @@ private constructor(
     class Body
     private constructor(
         private val account: MultipartField<String>,
-        private val file: MultipartField<InputStream>,
+        private val url: MultipartField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         /**
-         * X account (@username or ID) for banner update
+         * X account (@username or ID) receiving banner from URL
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
@@ -300,13 +289,13 @@ private constructor(
         fun account(): String = account.value.getRequired("account")
 
         /**
-         * Banner image (max 2MB)
+         * HTTPS URL to the banner image to download
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
          *   value).
          */
-        fun file(): InputStream = file.value.getRequired("file")
+        fun url(): String = url.value.getRequired("url")
 
         /**
          * Returns the raw multipart value of [account].
@@ -317,11 +306,11 @@ private constructor(
         @JsonProperty("account") @ExcludeMissing fun _account(): MultipartField<String> = account
 
         /**
-         * Returns the raw multipart value of [file].
+         * Returns the raw multipart value of [url].
          *
-         * Unlike [file], this method doesn't throw if the multipart field has an unexpected type.
+         * Unlike [url], this method doesn't throw if the multipart field has an unexpected type.
          */
-        @JsonProperty("file") @ExcludeMissing fun _file(): MultipartField<InputStream> = file
+        @JsonProperty("url") @ExcludeMissing fun _url(): MultipartField<String> = url
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -343,7 +332,7 @@ private constructor(
              * The following fields are required:
              * ```java
              * .account()
-             * .file()
+             * .url()
              * ```
              */
             @JvmStatic fun builder() = Builder()
@@ -353,17 +342,17 @@ private constructor(
         class Builder internal constructor() {
 
             private var account: MultipartField<String>? = null
-            private var file: MultipartField<InputStream>? = null
+            private var url: MultipartField<String>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 account = body.account
-                file = body.file
+                url = body.url
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            /** X account (@username or ID) for banner update */
+            /** X account (@username or ID) receiving banner from URL */
             fun account(account: String) = account(MultipartField.of(account))
 
             /**
@@ -375,29 +364,17 @@ private constructor(
              */
             fun account(account: MultipartField<String>) = apply { this.account = account }
 
-            /** Banner image (max 2MB) */
-            fun file(file: InputStream) = file(MultipartField.of(file))
+            /** HTTPS URL to the banner image to download */
+            fun url(url: String) = url(MultipartField.of(url))
 
             /**
-             * Sets [Builder.file] to an arbitrary multipart value.
+             * Sets [Builder.url] to an arbitrary multipart value.
              *
-             * You should usually call [Builder.file] with a well-typed [InputStream] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
+             * You should usually call [Builder.url] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
              */
-            fun file(file: MultipartField<InputStream>) = apply { this.file = file }
-
-            /** Banner image (max 2MB) */
-            fun file(file: ByteArray) = file(file.inputStream())
-
-            /** Banner image (max 2MB) */
-            fun file(path: Path) =
-                file(
-                    MultipartField.builder<InputStream>()
-                        .value(path.inputStream())
-                        .filename(path.name)
-                        .build()
-                )
+            fun url(url: MultipartField<String>) = apply { this.url = url }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -426,7 +403,7 @@ private constructor(
              * The following fields are required:
              * ```java
              * .account()
-             * .file()
+             * .url()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
@@ -434,7 +411,7 @@ private constructor(
             fun build(): Body =
                 Body(
                     checkRequired("account", account),
-                    checkRequired("file", file),
+                    checkRequired("url", url),
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -456,7 +433,7 @@ private constructor(
             }
 
             account()
-            file()
+            url()
             validated = true
         }
 
@@ -475,16 +452,16 @@ private constructor(
 
             return other is Body &&
                 account == other.account &&
-                file == other.file &&
+                url == other.url &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(account, file, additionalProperties) }
+        private val hashCode: Int by lazy { Objects.hash(account, url, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{account=$account, file=$file, additionalProperties=$additionalProperties}"
+            "Body{account=$account, url=$url, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

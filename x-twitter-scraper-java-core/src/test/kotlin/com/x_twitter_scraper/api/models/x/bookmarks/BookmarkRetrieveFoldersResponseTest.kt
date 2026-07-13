@@ -19,8 +19,8 @@ internal class BookmarkRetrieveFoldersResponseTest {
                         .name("Read Later")
                         .build()
                 )
-                .hasNextPage(true)
-                .nextCursor("DAACCgACGRElMJcAAA")
+                .hasNextPage(false)
+                .nextCursor("")
                 .build()
 
         assertThat(bookmarkRetrieveFoldersResponse.folders())
@@ -30,8 +30,8 @@ internal class BookmarkRetrieveFoldersResponseTest {
                     .name("Read Later")
                     .build()
             )
-        assertThat(bookmarkRetrieveFoldersResponse.hasNextPage()).isEqualTo(true)
-        assertThat(bookmarkRetrieveFoldersResponse.nextCursor()).isEqualTo("DAACCgACGRElMJcAAA")
+        assertThat(bookmarkRetrieveFoldersResponse.hasNextPage()).isEqualTo(false)
+        assertThat(bookmarkRetrieveFoldersResponse.nextCursor()).isEqualTo("")
     }
 
     @Test
@@ -45,8 +45,8 @@ internal class BookmarkRetrieveFoldersResponseTest {
                         .name("Read Later")
                         .build()
                 )
-                .hasNextPage(true)
-                .nextCursor("DAACCgACGRElMJcAAA")
+                .hasNextPage(false)
+                .nextCursor("")
                 .build()
 
         val roundtrippedBookmarkRetrieveFoldersResponse =

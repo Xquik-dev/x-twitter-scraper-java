@@ -14,6 +14,7 @@ import com.x_twitter_scraper.api.models.monitors.MonitorListParams
 import com.x_twitter_scraper.api.models.monitors.MonitorListResponse
 import com.x_twitter_scraper.api.models.monitors.MonitorRetrieveParams
 import com.x_twitter_scraper.api.models.monitors.MonitorUpdateParams
+import com.x_twitter_scraper.api.services.async.monitors.KeywordServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -32,7 +33,14 @@ interface MonitorServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): MonitorServiceAsync
 
-    /** Create monitor */
+    /** Real-time X account monitoring */
+    fun keywords(): KeywordServiceAsync
+
+    /**
+     * Creates an instant monitor. Monitors are unlimited. Active monitors check every 1 second and
+     * cost 21 credits per hour. Events and webhook deliveries are included. Creation requires
+     * available credits for the first hourly charge and username lookup.
+     */
     fun create(params: MonitorCreateParams): CompletableFuture<MonitorCreateResponse> =
         create(params, RequestOptions.none())
 
@@ -121,7 +129,7 @@ interface MonitorServiceAsync {
     fun list(requestOptions: RequestOptions): CompletableFuture<MonitorListResponse> =
         list(MonitorListParams.none(), requestOptions)
 
-    /** Deactivate monitor */
+    /** Delete monitor */
     fun deactivate(id: String): CompletableFuture<MonitorDeactivateResponse> =
         deactivate(id, MonitorDeactivateParams.none())
 
@@ -169,6 +177,9 @@ interface MonitorServiceAsync {
         fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): MonitorServiceAsync.WithRawResponse
+
+        /** Real-time X account monitoring */
+        fun keywords(): KeywordServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /monitors`, but is otherwise the same as

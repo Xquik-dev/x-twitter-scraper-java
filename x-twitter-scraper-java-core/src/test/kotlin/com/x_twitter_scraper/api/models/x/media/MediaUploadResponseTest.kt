@@ -12,16 +12,24 @@ internal class MediaUploadResponseTest {
     @Test
     fun create() {
         val mediaUploadResponse =
-            MediaUploadResponse.builder().mediaId("1234567890123456789").build()
+            MediaUploadResponse.builder()
+                .mediaId("1234567890123456789")
+                .mediaUrl("https://media.xquik.com/uploads/1234567890123456789.png")
+                .build()
 
         assertThat(mediaUploadResponse.mediaId()).isEqualTo("1234567890123456789")
+        assertThat(mediaUploadResponse.mediaUrl())
+            .isEqualTo("https://media.xquik.com/uploads/1234567890123456789.png")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val mediaUploadResponse =
-            MediaUploadResponse.builder().mediaId("1234567890123456789").build()
+            MediaUploadResponse.builder()
+                .mediaId("1234567890123456789")
+                .mediaUrl("https://media.xquik.com/uploads/1234567890123456789.png")
+                .build()
 
         val roundtrippedMediaUploadResponse =
             jsonMapper.readValue(

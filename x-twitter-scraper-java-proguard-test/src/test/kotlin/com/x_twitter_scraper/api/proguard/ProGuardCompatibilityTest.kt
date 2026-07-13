@@ -47,11 +47,14 @@ internal class ProGuardCompatibilityTest {
 
     @Test
     fun client() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
 
         assertThat(client).isNotNull()
         assertThat(client.account()).isNotNull()
-        assertThat(client.apiKeys()).isNotNull()
         assertThat(client.subscribe()).isNotNull()
         assertThat(client.compose()).isNotNull()
         assertThat(client.drafts()).isNotNull()
@@ -66,6 +69,7 @@ internal class ProGuardCompatibilityTest {
         assertThat(client.trends()).isNotNull()
         assertThat(client.support()).isNotNull()
         assertThat(client.credits()).isNotNull()
+        assertThat(client.guestWallets()).isNotNull()
     }
 
     @Test
@@ -73,15 +77,28 @@ internal class ProGuardCompatibilityTest {
         val jsonMapper = jsonMapper()
         val accountRetrieveResponse =
             AccountRetrieveResponse.builder()
-                .monitorsAllowed(10L)
+                .monitorBilling(
+                    AccountRetrieveResponse.MonitorBilling.builder()
+                        .activeDailyEstimate("1500")
+                        .activeHourlyBurn("63")
+                        .creditsPerActiveMonitorDay("500")
+                        .creditsPerActiveMonitorHour("21")
+                        .eventsIncluded(true)
+                        .instantCheckIntervalSeconds(1L)
+                        .unlimitedSlots(true)
+                        .build()
+                )
+                .monitorsAllowed(9007199254740991L)
                 .monitorsUsed(3L)
                 .plan(AccountRetrieveResponse.Plan.ACTIVE)
                 .creditInfo(
                     AccountRetrieveResponse.CreditInfo.builder()
+                        .autoTopupAmountDollars(10.0)
                         .autoTopupEnabled(false)
-                        .balance(50000L)
-                        .lifetimePurchased(140000L)
-                        .lifetimeUsed(90000L)
+                        .autoTopupThreshold("50000")
+                        .balance("50000")
+                        .lifetimePurchased("140000")
+                        .lifetimeUsed("90000")
                         .build()
                 )
                 .xUsername("elonmusk")

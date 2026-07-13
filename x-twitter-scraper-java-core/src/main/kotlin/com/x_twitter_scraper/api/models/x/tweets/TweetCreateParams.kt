@@ -57,8 +57,9 @@ private constructor(
     fun isNoteTweet(): Optional<Boolean> = body.isNoteTweet()
 
     /**
-     * Array of public image URLs to attach (max 4). Each URL must be publicly reachable - the
-     * browser composer fetches them directly.
+     * Array of public media URLs to attach. Supports up to 4 images or exactly 1 MP4 video up to
+     * 100 MB. Each URL must be publicly reachable. Attached media adds 2 credits per started MB
+     * across all files.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -226,8 +227,9 @@ private constructor(
         fun isNoteTweet(isNoteTweet: JsonField<Boolean>) = apply { body.isNoteTweet(isNoteTweet) }
 
         /**
-         * Array of public image URLs to attach (max 4). Each URL must be publicly reachable - the
-         * browser composer fetches them directly.
+         * Array of public media URLs to attach. Supports up to 4 images or exactly 1 MP4 video up
+         * to 100 MB. Each URL must be publicly reachable. Attached media adds 2 credits per started
+         * MB across all files.
          */
         fun media(media: List<String>) = apply { body.media(media) }
 
@@ -485,8 +487,9 @@ private constructor(
         fun isNoteTweet(): Optional<Boolean> = isNoteTweet.getOptional("is_note_tweet")
 
         /**
-         * Array of public image URLs to attach (max 4). Each URL must be publicly reachable - the
-         * browser composer fetches them directly.
+         * Array of public media URLs to attach. Supports up to 4 images or exactly 1 MP4 video up
+         * to 100 MB. Each URL must be publicly reachable. Attached media adds 2 credits per started
+         * MB across all files.
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
          *   (e.g. if the server responded with an unexpected value).
@@ -667,8 +670,9 @@ private constructor(
             }
 
             /**
-             * Array of public image URLs to attach (max 4). Each URL must be publicly reachable -
-             * the browser composer fetches them directly.
+             * Array of public media URLs to attach. Supports up to 4 images or exactly 1 MP4 video
+             * up to 100 MB. Each URL must be publicly reachable. Attached media adds 2 credits per
+             * started MB across all files.
              */
             fun media(media: List<String>) = media(JsonField.of(media))
 

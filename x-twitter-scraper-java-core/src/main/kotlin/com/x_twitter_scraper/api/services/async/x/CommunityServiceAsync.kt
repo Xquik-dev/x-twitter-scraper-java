@@ -184,7 +184,7 @@ interface CommunityServiceAsync {
     ): CompletableFuture<PaginatedUsers> =
         retrieveModerators(id, CommunityRetrieveModeratorsParams.none(), requestOptions)
 
-    /** Search for communities by keyword */
+    /** Returns tweets, not community records. Requires a Community ID. */
     fun retrieveSearch(params: CommunityRetrieveSearchParams): CompletableFuture<PaginatedTweets> =
         retrieveSearch(params, RequestOptions.none())
 

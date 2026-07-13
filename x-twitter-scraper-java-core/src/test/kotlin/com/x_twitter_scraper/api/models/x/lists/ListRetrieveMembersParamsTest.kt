@@ -10,7 +10,7 @@ internal class ListRetrieveMembersParamsTest {
 
     @Test
     fun create() {
-        ListRetrieveMembersParams.builder().id("id").cursor("cursor").pageSize(0L).build()
+        ListRetrieveMembersParams.builder().id("id").cursor("cursor").pageSize(20L).build()
     }
 
     @Test
@@ -25,12 +25,12 @@ internal class ListRetrieveMembersParamsTest {
     @Test
     fun queryParams() {
         val params =
-            ListRetrieveMembersParams.builder().id("id").cursor("cursor").pageSize(0L).build()
+            ListRetrieveMembersParams.builder().id("id").cursor("cursor").pageSize(20L).build()
 
         val queryParams = params._queryParams()
 
         assertThat(queryParams)
-            .isEqualTo(QueryParams.builder().put("cursor", "cursor").put("pageSize", "0").build())
+            .isEqualTo(QueryParams.builder().put("cursor", "cursor").put("pageSize", "20").build())
     }
 
     @Test

@@ -18,7 +18,7 @@ import com.x_twitter_scraper.api.models.extractions.ExtractionRunResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
-/** Bulk data extraction (20 tool types) */
+/** Bulk data extraction (23 tool types) */
 interface ExtractionServiceAsync {
 
     /**
@@ -99,36 +99,28 @@ interface ExtractionServiceAsync {
     ): CompletableFuture<ExtractionEstimateCostResponse>
 
     /** Export extraction results */
-    fun exportResults(id: String): CompletableFuture<HttpResponse> =
-        exportResults(id, ExtractionExportResultsParams.none())
-
-    /** @see exportResults */
     fun exportResults(
         id: String,
-        params: ExtractionExportResultsParams = ExtractionExportResultsParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<HttpResponse> =
-        exportResults(params.toBuilder().id(id).build(), requestOptions)
-
-    /** @see exportResults */
-    fun exportResults(
-        id: String,
-        params: ExtractionExportResultsParams = ExtractionExportResultsParams.none(),
+        params: ExtractionExportResultsParams,
     ): CompletableFuture<HttpResponse> = exportResults(id, params, RequestOptions.none())
 
     /** @see exportResults */
     fun exportResults(
+        id: String,
         params: ExtractionExportResultsParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<HttpResponse>
+    ): CompletableFuture<HttpResponse> =
+        exportResults(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see exportResults */
     fun exportResults(params: ExtractionExportResultsParams): CompletableFuture<HttpResponse> =
         exportResults(params, RequestOptions.none())
 
     /** @see exportResults */
-    fun exportResults(id: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
-        exportResults(id, ExtractionExportResultsParams.none(), requestOptions)
+    fun exportResults(
+        params: ExtractionExportResultsParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<HttpResponse>
 
     /** Run extraction */
     fun run(params: ExtractionRunParams): CompletableFuture<ExtractionRunResponse> =
@@ -240,28 +232,18 @@ interface ExtractionServiceAsync {
          * Returns a raw HTTP response for `get /extractions/{id}/export`, but is otherwise the same
          * as [ExtractionServiceAsync.exportResults].
          */
-        fun exportResults(id: String): CompletableFuture<HttpResponse> =
-            exportResults(id, ExtractionExportResultsParams.none())
-
-        /** @see exportResults */
         fun exportResults(
             id: String,
-            params: ExtractionExportResultsParams = ExtractionExportResultsParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse> =
-            exportResults(params.toBuilder().id(id).build(), requestOptions)
-
-        /** @see exportResults */
-        fun exportResults(
-            id: String,
-            params: ExtractionExportResultsParams = ExtractionExportResultsParams.none(),
+            params: ExtractionExportResultsParams,
         ): CompletableFuture<HttpResponse> = exportResults(id, params, RequestOptions.none())
 
         /** @see exportResults */
         fun exportResults(
+            id: String,
             params: ExtractionExportResultsParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse>
+        ): CompletableFuture<HttpResponse> =
+            exportResults(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see exportResults */
         fun exportResults(params: ExtractionExportResultsParams): CompletableFuture<HttpResponse> =
@@ -269,10 +251,9 @@ interface ExtractionServiceAsync {
 
         /** @see exportResults */
         fun exportResults(
-            id: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponse> =
-            exportResults(id, ExtractionExportResultsParams.none(), requestOptions)
+            params: ExtractionExportResultsParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse>
 
         /**
          * Returns a raw HTTP response for `post /extractions`, but is otherwise the same as

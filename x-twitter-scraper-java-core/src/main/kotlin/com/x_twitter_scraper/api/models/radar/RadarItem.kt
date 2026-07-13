@@ -82,7 +82,7 @@ private constructor(
     )
 
     /**
-     * Internal numeric identifier (stringified bigint).
+     * Radar item identifier.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -355,7 +355,7 @@ private constructor(
             additionalProperties = radarItem.additionalProperties.toMutableMap()
         }
 
-        /** Internal numeric identifier (stringified bigint). */
+        /** Radar item identifier. */
         fun id(id: String) = id(JsonField.of(id))
 
         /**

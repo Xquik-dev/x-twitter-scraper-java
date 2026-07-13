@@ -11,7 +11,7 @@ internal class ExtractionListParamsTest {
     @Test
     fun create() {
         ExtractionListParams.builder()
-            .after("after")
+            .cursor("cursor")
             .limit(1L)
             .status(ExtractionListParams.Status.RUNNING)
             .toolType(ExtractionListParams.ToolType.FOLLOWER_EXPLORER)
@@ -22,7 +22,7 @@ internal class ExtractionListParamsTest {
     fun queryParams() {
         val params =
             ExtractionListParams.builder()
-                .after("after")
+                .cursor("cursor")
                 .limit(1L)
                 .status(ExtractionListParams.Status.RUNNING)
                 .toolType(ExtractionListParams.ToolType.FOLLOWER_EXPLORER)
@@ -33,7 +33,7 @@ internal class ExtractionListParamsTest {
         assertThat(queryParams)
             .isEqualTo(
                 QueryParams.builder()
-                    .put("after", "after")
+                    .put("cursor", "cursor")
                     .put("limit", "1")
                     .put("status", "running")
                     .put("toolType", "follower_explorer")

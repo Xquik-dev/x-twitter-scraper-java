@@ -13,26 +13,34 @@ internal class JoinServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val joinService = client.x().communities().join()
 
-        val communityActionResult =
+        val join =
             joinService.create(JoinCreateParams.builder().id("id").account("@elonmusk").build())
 
-        communityActionResult.validate()
+        join.validate()
     }
 
     @Disabled("Mock server tests are disabled")
     @Test
     fun deleteAll() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val joinService = client.x().communities().join()
 
-        val communityActionResult =
+        val response =
             joinService.deleteAll(
                 JoinDeleteAllParams.builder().id("id").account("@elonmusk").build()
             )
 
-        communityActionResult.validate()
+        response.validate()
     }
 }

@@ -19,7 +19,7 @@ internal class WebhookCreateResponseTest {
                 .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .addEventType(EventType.TWEET_NEW)
                 .addEventType(EventType.TWEET_REPLY)
-                .secret("whsec_abc123def456")
+                .secret("a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2")
                 .url("https://example.com/webhook")
                 .build()
 
@@ -28,7 +28,8 @@ internal class WebhookCreateResponseTest {
             .isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
         assertThat(webhookCreateResponse.eventTypes())
             .containsExactly(EventType.TWEET_NEW, EventType.TWEET_REPLY)
-        assertThat(webhookCreateResponse.secret()).isEqualTo("whsec_abc123def456")
+        assertThat(webhookCreateResponse.secret())
+            .isEqualTo("a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2")
         assertThat(webhookCreateResponse.url()).isEqualTo("https://example.com/webhook")
     }
 
@@ -41,7 +42,7 @@ internal class WebhookCreateResponseTest {
                 .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .addEventType(EventType.TWEET_NEW)
                 .addEventType(EventType.TWEET_REPLY)
-                .secret("whsec_abc123def456")
+                .secret("a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2")
                 .url("https://example.com/webhook")
                 .build()
 

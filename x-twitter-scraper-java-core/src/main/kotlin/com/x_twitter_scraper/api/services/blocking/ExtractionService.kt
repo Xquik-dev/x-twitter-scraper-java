@@ -18,7 +18,7 @@ import com.x_twitter_scraper.api.models.extractions.ExtractionRunParams
 import com.x_twitter_scraper.api.models.extractions.ExtractionRunResponse
 import java.util.function.Consumer
 
-/** Bulk data extraction (20 tool types) */
+/** Bulk data extraction (23 tool types) */
 interface ExtractionService {
 
     /**
@@ -93,30 +93,16 @@ interface ExtractionService {
 
     /** Export extraction results */
     @MustBeClosed
-    fun exportResults(id: String): HttpResponse =
-        exportResults(id, ExtractionExportResultsParams.none())
+    fun exportResults(id: String, params: ExtractionExportResultsParams): HttpResponse =
+        exportResults(id, params, RequestOptions.none())
 
     /** @see exportResults */
     @MustBeClosed
     fun exportResults(
         id: String,
-        params: ExtractionExportResultsParams = ExtractionExportResultsParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): HttpResponse = exportResults(params.toBuilder().id(id).build(), requestOptions)
-
-    /** @see exportResults */
-    @MustBeClosed
-    fun exportResults(
-        id: String,
-        params: ExtractionExportResultsParams = ExtractionExportResultsParams.none(),
-    ): HttpResponse = exportResults(id, params, RequestOptions.none())
-
-    /** @see exportResults */
-    @MustBeClosed
-    fun exportResults(
         params: ExtractionExportResultsParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): HttpResponse
+    ): HttpResponse = exportResults(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see exportResults */
     @MustBeClosed
@@ -125,8 +111,10 @@ interface ExtractionService {
 
     /** @see exportResults */
     @MustBeClosed
-    fun exportResults(id: String, requestOptions: RequestOptions): HttpResponse =
-        exportResults(id, ExtractionExportResultsParams.none(), requestOptions)
+    fun exportResults(
+        params: ExtractionExportResultsParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): HttpResponse
 
     /** Run extraction */
     fun run(params: ExtractionRunParams): ExtractionRunResponse = run(params, RequestOptions.none())
@@ -241,30 +229,16 @@ interface ExtractionService {
          * as [ExtractionService.exportResults].
          */
         @MustBeClosed
-        fun exportResults(id: String): HttpResponse =
-            exportResults(id, ExtractionExportResultsParams.none())
+        fun exportResults(id: String, params: ExtractionExportResultsParams): HttpResponse =
+            exportResults(id, params, RequestOptions.none())
 
         /** @see exportResults */
         @MustBeClosed
         fun exportResults(
             id: String,
-            params: ExtractionExportResultsParams = ExtractionExportResultsParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse = exportResults(params.toBuilder().id(id).build(), requestOptions)
-
-        /** @see exportResults */
-        @MustBeClosed
-        fun exportResults(
-            id: String,
-            params: ExtractionExportResultsParams = ExtractionExportResultsParams.none(),
-        ): HttpResponse = exportResults(id, params, RequestOptions.none())
-
-        /** @see exportResults */
-        @MustBeClosed
-        fun exportResults(
             params: ExtractionExportResultsParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        ): HttpResponse = exportResults(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see exportResults */
         @MustBeClosed
@@ -273,8 +247,10 @@ interface ExtractionService {
 
         /** @see exportResults */
         @MustBeClosed
-        fun exportResults(id: String, requestOptions: RequestOptions): HttpResponse =
-            exportResults(id, ExtractionExportResultsParams.none(), requestOptions)
+        fun exportResults(
+            params: ExtractionExportResultsParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponse
 
         /**
          * Returns a raw HTTP response for `post /extractions`, but is otherwise the same as
