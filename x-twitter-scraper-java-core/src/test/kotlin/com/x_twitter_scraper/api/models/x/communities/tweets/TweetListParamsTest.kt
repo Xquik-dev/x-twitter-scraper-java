@@ -10,32 +10,49 @@ internal class TweetListParamsTest {
 
     @Test
     fun create() {
-        TweetListParams.builder().q("q").cursor("cursor").queryType("queryType").build()
+        TweetListParams.builder()
+            .communityId("321669910225")
+            .q("q")
+            .cursor("cursor")
+            .pageSize(1L)
+            .queryType(TweetListParams.QueryType.LATEST)
+            .build()
     }
 
     @Test
     fun queryParams() {
         val params =
-            TweetListParams.builder().q("q").cursor("cursor").queryType("queryType").build()
+            TweetListParams.builder()
+                .communityId("321669910225")
+                .q("q")
+                .cursor("cursor")
+                .pageSize(1L)
+                .queryType(TweetListParams.QueryType.LATEST)
+                .build()
 
         val queryParams = params._queryParams()
 
         assertThat(queryParams)
             .isEqualTo(
                 QueryParams.builder()
+                    .put("communityId", "321669910225")
                     .put("q", "q")
                     .put("cursor", "cursor")
-                    .put("queryType", "queryType")
+                    .put("pageSize", "1")
+                    .put("queryType", "Latest")
                     .build()
             )
     }
 
     @Test
     fun queryParamsWithoutOptionalFields() {
-        val params = TweetListParams.builder().q("q").build()
+        val params = TweetListParams.builder().communityId("321669910225").q("q").build()
 
         val queryParams = params._queryParams()
 
-        assertThat(queryParams).isEqualTo(QueryParams.builder().put("q", "q").build())
+        assertThat(queryParams)
+            .isEqualTo(
+                QueryParams.builder().put("communityId", "321669910225").put("q", "q").build()
+            )
     }
 }

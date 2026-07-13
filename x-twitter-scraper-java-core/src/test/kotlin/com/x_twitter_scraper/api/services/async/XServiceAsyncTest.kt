@@ -14,7 +14,11 @@ internal class XServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun getArticle() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val xServiceAsync = client.x()
 
         val responseFuture = xServiceAsync.getArticle("tweetId")
@@ -26,7 +30,11 @@ internal class XServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun getHomeTimeline() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val xServiceAsync = client.x()
 
         val paginatedTweetsFuture =
@@ -44,7 +52,11 @@ internal class XServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun getNotifications() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val xServiceAsync = client.x()
 
         val responseFuture =
@@ -62,7 +74,11 @@ internal class XServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun getTrends() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val xServiceAsync = client.x()
 
         val responseFuture =

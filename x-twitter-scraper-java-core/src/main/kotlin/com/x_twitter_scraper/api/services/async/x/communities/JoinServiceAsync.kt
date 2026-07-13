@@ -5,9 +5,10 @@ package com.x_twitter_scraper.api.services.async.x.communities
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
-import com.x_twitter_scraper.api.models.x.communities.CommunityActionResult
 import com.x_twitter_scraper.api.models.x.communities.join.JoinCreateParams
+import com.x_twitter_scraper.api.models.x.communities.join.JoinCreateResponse
 import com.x_twitter_scraper.api.models.x.communities.join.JoinDeleteAllParams
+import com.x_twitter_scraper.api.models.x.communities.join.JoinDeleteAllResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -27,7 +28,7 @@ interface JoinServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): JoinServiceAsync
 
     /** Join community */
-    fun create(id: String, params: JoinCreateParams): CompletableFuture<CommunityActionResult> =
+    fun create(id: String, params: JoinCreateParams): CompletableFuture<JoinCreateResponse> =
         create(id, params, RequestOptions.none())
 
     /** @see create */
@@ -35,42 +36,42 @@ interface JoinServiceAsync {
         id: String,
         params: JoinCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<CommunityActionResult> =
+    ): CompletableFuture<JoinCreateResponse> =
         create(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see create */
-    fun create(params: JoinCreateParams): CompletableFuture<CommunityActionResult> =
+    fun create(params: JoinCreateParams): CompletableFuture<JoinCreateResponse> =
         create(params, RequestOptions.none())
 
     /** @see create */
     fun create(
         params: JoinCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<CommunityActionResult>
+    ): CompletableFuture<JoinCreateResponse>
 
     /** Leave community */
     fun deleteAll(
         id: String,
         params: JoinDeleteAllParams,
-    ): CompletableFuture<CommunityActionResult> = deleteAll(id, params, RequestOptions.none())
+    ): CompletableFuture<JoinDeleteAllResponse> = deleteAll(id, params, RequestOptions.none())
 
     /** @see deleteAll */
     fun deleteAll(
         id: String,
         params: JoinDeleteAllParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<CommunityActionResult> =
+    ): CompletableFuture<JoinDeleteAllResponse> =
         deleteAll(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see deleteAll */
-    fun deleteAll(params: JoinDeleteAllParams): CompletableFuture<CommunityActionResult> =
+    fun deleteAll(params: JoinDeleteAllParams): CompletableFuture<JoinDeleteAllResponse> =
         deleteAll(params, RequestOptions.none())
 
     /** @see deleteAll */
     fun deleteAll(
         params: JoinDeleteAllParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<CommunityActionResult>
+    ): CompletableFuture<JoinDeleteAllResponse>
 
     /** A view of [JoinServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -89,7 +90,7 @@ interface JoinServiceAsync {
         fun create(
             id: String,
             params: JoinCreateParams,
-        ): CompletableFuture<HttpResponseFor<CommunityActionResult>> =
+        ): CompletableFuture<HttpResponseFor<JoinCreateResponse>> =
             create(id, params, RequestOptions.none())
 
         /** @see create */
@@ -97,20 +98,20 @@ interface JoinServiceAsync {
             id: String,
             params: JoinCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CommunityActionResult>> =
+        ): CompletableFuture<HttpResponseFor<JoinCreateResponse>> =
             create(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see create */
         fun create(
             params: JoinCreateParams
-        ): CompletableFuture<HttpResponseFor<CommunityActionResult>> =
+        ): CompletableFuture<HttpResponseFor<JoinCreateResponse>> =
             create(params, RequestOptions.none())
 
         /** @see create */
         fun create(
             params: JoinCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CommunityActionResult>>
+        ): CompletableFuture<HttpResponseFor<JoinCreateResponse>>
 
         /**
          * Returns a raw HTTP response for `delete /x/communities/{id}/join`, but is otherwise the
@@ -119,7 +120,7 @@ interface JoinServiceAsync {
         fun deleteAll(
             id: String,
             params: JoinDeleteAllParams,
-        ): CompletableFuture<HttpResponseFor<CommunityActionResult>> =
+        ): CompletableFuture<HttpResponseFor<JoinDeleteAllResponse>> =
             deleteAll(id, params, RequestOptions.none())
 
         /** @see deleteAll */
@@ -127,19 +128,19 @@ interface JoinServiceAsync {
             id: String,
             params: JoinDeleteAllParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CommunityActionResult>> =
+        ): CompletableFuture<HttpResponseFor<JoinDeleteAllResponse>> =
             deleteAll(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see deleteAll */
         fun deleteAll(
             params: JoinDeleteAllParams
-        ): CompletableFuture<HttpResponseFor<CommunityActionResult>> =
+        ): CompletableFuture<HttpResponseFor<JoinDeleteAllResponse>> =
             deleteAll(params, RequestOptions.none())
 
         /** @see deleteAll */
         fun deleteAll(
             params: JoinDeleteAllParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CommunityActionResult>>
+        ): CompletableFuture<HttpResponseFor<JoinDeleteAllResponse>>
     }
 }

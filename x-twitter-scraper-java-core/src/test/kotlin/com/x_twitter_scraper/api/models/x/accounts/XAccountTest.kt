@@ -18,16 +18,21 @@ internal class XAccountTest {
                 .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .health(XAccount.Health.HEALTHY)
                 .status("active")
+                .updatedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
                 .xUserId("9876543210")
                 .xUsername("elonmusk")
+                .cookiesObtainedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
                 .build()
 
         assertThat(xAccount.id()).isEqualTo("42")
         assertThat(xAccount.createdAt()).isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
         assertThat(xAccount.health()).isEqualTo(XAccount.Health.HEALTHY)
         assertThat(xAccount.status()).isEqualTo("active")
+        assertThat(xAccount.updatedAt()).isEqualTo(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
         assertThat(xAccount.xUserId()).isEqualTo("9876543210")
         assertThat(xAccount.xUsername()).isEqualTo("elonmusk")
+        assertThat(xAccount.cookiesObtainedAt())
+            .contains(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
     }
 
     @Test
@@ -39,8 +44,10 @@ internal class XAccountTest {
                 .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .health(XAccount.Health.HEALTHY)
                 .status("active")
+                .updatedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
                 .xUserId("9876543210")
                 .xUsername("elonmusk")
+                .cookiesObtainedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
                 .build()
 
         val roundtrippedXAccount =

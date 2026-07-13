@@ -9,15 +9,25 @@ internal class CreditTopupBalanceParamsTest {
 
     @Test
     fun create() {
-        CreditTopupBalanceParams.builder().amount(10000L).build()
+        CreditTopupBalanceParams.builder().dollars(10L).locale("en").build()
     }
 
     @Test
     fun body() {
-        val params = CreditTopupBalanceParams.builder().amount(10000L).build()
+        val params = CreditTopupBalanceParams.builder().dollars(10L).locale("en").build()
 
         val body = params._body()
 
-        assertThat(body.amount()).isEqualTo(10000L)
+        assertThat(body.dollars()).isEqualTo(10L)
+        assertThat(body.locale()).contains("en")
+    }
+
+    @Test
+    fun bodyWithoutOptionalFields() {
+        val params = CreditTopupBalanceParams.builder().dollars(10L).build()
+
+        val body = params._body()
+
+        assertThat(body.dollars()).isEqualTo(10L)
     }
 }

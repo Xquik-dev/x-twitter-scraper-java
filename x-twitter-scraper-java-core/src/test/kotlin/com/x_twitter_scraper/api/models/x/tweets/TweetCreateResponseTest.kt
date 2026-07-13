@@ -11,15 +11,30 @@ internal class TweetCreateResponseTest {
 
     @Test
     fun create() {
-        val tweetCreateResponse = TweetCreateResponse.builder().tweetId("1234567890").build()
+        val tweetCreateResponse =
+            TweetCreateResponse.builder()
+                .charged(true)
+                .chargedCredits("32")
+                .tweetId("1234567890")
+                .writeActionId("42")
+                .build()
 
+        assertThat(tweetCreateResponse.charged()).isEqualTo(true)
+        assertThat(tweetCreateResponse.chargedCredits()).isEqualTo("32")
         assertThat(tweetCreateResponse.tweetId()).isEqualTo("1234567890")
+        assertThat(tweetCreateResponse.writeActionId()).contains("42")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val tweetCreateResponse = TweetCreateResponse.builder().tweetId("1234567890").build()
+        val tweetCreateResponse =
+            TweetCreateResponse.builder()
+                .charged(true)
+                .chargedCredits("32")
+                .tweetId("1234567890")
+                .writeActionId("42")
+                .build()
 
         val roundtrippedTweetCreateResponse =
             jsonMapper.readValue(

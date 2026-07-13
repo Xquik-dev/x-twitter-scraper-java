@@ -13,7 +13,6 @@ internal class AccountCreateParamsTest {
             .email("user@example.com")
             .password("s3cur3Pa\$\$w0rd")
             .username("elonmusk")
-            .proxyCountry("US")
             .totpSecret("JBSWY3DPEHPK3PXP")
             .build()
     }
@@ -25,7 +24,6 @@ internal class AccountCreateParamsTest {
                 .email("user@example.com")
                 .password("s3cur3Pa\$\$w0rd")
                 .username("elonmusk")
-                .proxyCountry("US")
                 .totpSecret("JBSWY3DPEHPK3PXP")
                 .build()
 
@@ -34,7 +32,6 @@ internal class AccountCreateParamsTest {
         assertThat(body.email()).isEqualTo("user@example.com")
         assertThat(body.password()).isEqualTo("s3cur3Pa\$\$w0rd")
         assertThat(body.username()).isEqualTo("elonmusk")
-        assertThat(body.proxyCountry()).contains("US")
         assertThat(body.totpSecret()).contains("JBSWY3DPEHPK3PXP")
     }
 

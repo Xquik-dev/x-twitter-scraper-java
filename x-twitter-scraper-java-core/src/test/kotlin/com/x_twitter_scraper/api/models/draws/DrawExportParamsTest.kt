@@ -11,7 +11,7 @@ internal class DrawExportParamsTest {
     @Test
     fun create() {
         DrawExportParams.builder()
-            .id("id")
+            .id("f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345")
             .format(DrawExportParams.Format.CSV)
             .type(DrawExportParams.Type.WINNERS)
             .build()
@@ -19,9 +19,13 @@ internal class DrawExportParamsTest {
 
     @Test
     fun pathParams() {
-        val params = DrawExportParams.builder().id("id").build()
+        val params =
+            DrawExportParams.builder()
+                .id("f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345")
+                .format(DrawExportParams.Format.CSV)
+                .build()
 
-        assertThat(params._pathParam(0)).isEqualTo("id")
+        assertThat(params._pathParam(0)).isEqualTo("f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345")
         // out-of-bound path param
         assertThat(params._pathParam(1)).isEqualTo("")
     }
@@ -30,7 +34,7 @@ internal class DrawExportParamsTest {
     fun queryParams() {
         val params =
             DrawExportParams.builder()
-                .id("id")
+                .id("f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345")
                 .format(DrawExportParams.Format.CSV)
                 .type(DrawExportParams.Type.WINNERS)
                 .build()
@@ -43,10 +47,14 @@ internal class DrawExportParamsTest {
 
     @Test
     fun queryParamsWithoutOptionalFields() {
-        val params = DrawExportParams.builder().id("id").build()
+        val params =
+            DrawExportParams.builder()
+                .id("f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345")
+                .format(DrawExportParams.Format.CSV)
+                .build()
 
         val queryParams = params._queryParams()
 
-        assertThat(queryParams).isEqualTo(QueryParams.builder().build())
+        assertThat(queryParams).isEqualTo(QueryParams.builder().put("format", "csv").build())
     }
 }

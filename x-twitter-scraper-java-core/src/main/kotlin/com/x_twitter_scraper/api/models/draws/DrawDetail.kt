@@ -91,6 +91,8 @@ private constructor(
     )
 
     /**
+     * Draw public ID.
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -365,6 +367,7 @@ private constructor(
             additionalProperties = drawDetail.additionalProperties.toMutableMap()
         }
 
+        /** Draw public ID. */
         fun id(id: String) = id(JsonField.of(id))
 
         /**

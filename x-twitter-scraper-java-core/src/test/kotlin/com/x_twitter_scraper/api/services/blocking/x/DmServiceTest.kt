@@ -13,13 +13,18 @@ internal class DmServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveHistory() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val dmService = client.x().dm()
 
         val response =
             dmService.retrieveHistory(
                 DmRetrieveHistoryParams.builder()
                     .userId("userId")
+                    .account("account")
                     .cursor("cursor")
                     .maxId("maxId")
                     .build()
@@ -31,7 +36,11 @@ internal class DmServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun send() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val dmService = client.x().dm()
 
         val response =
@@ -41,7 +50,6 @@ internal class DmServiceTest {
                     .account("@elonmusk")
                     .text("Example text content")
                     .addMediaId("1234567890123456789")
-                    .replyToMessageId("1234567890123456789")
                     .build()
             )
 

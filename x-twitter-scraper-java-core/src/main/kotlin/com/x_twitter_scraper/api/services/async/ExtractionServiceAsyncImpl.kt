@@ -29,7 +29,7 @@ import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-/** Bulk data extraction (20 tool types) */
+/** Bulk data extraction (23 tool types) */
 class ExtractionServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     ExtractionServiceAsync {
 

@@ -14,6 +14,7 @@ import com.x_twitter_scraper.api.models.extractions.ExtractionExportResultsParam
 import com.x_twitter_scraper.api.models.extractions.ExtractionListParams
 import com.x_twitter_scraper.api.models.extractions.ExtractionRetrieveParams
 import com.x_twitter_scraper.api.models.extractions.ExtractionRunParams
+import java.time.LocalDate
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -26,12 +27,16 @@ internal class ExtractionServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val extractionServiceAsync = client.extractions()
 
         val extractionFuture =
             extractionServiceAsync.retrieve(
-                ExtractionRetrieveParams.builder().id("id").after("after").limit(1L).build()
+                ExtractionRetrieveParams.builder().id("id").cursor("cursor").limit(1L).build()
             )
 
         val extraction = extractionFuture.get()
@@ -41,13 +46,17 @@ internal class ExtractionServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val extractionServiceAsync = client.extractions()
 
         val extractionsFuture =
             extractionServiceAsync.list(
                 ExtractionListParams.builder()
-                    .after("after")
+                    .cursor("cursor")
                     .limit(1L)
                     .status(ExtractionListParams.Status.RUNNING)
                     .toolType(ExtractionListParams.ToolType.FOLLOWER_EXPLORER)
@@ -61,7 +70,11 @@ internal class ExtractionServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun estimateCost() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val extractionServiceAsync = client.extractions()
 
         val responseFuture =
@@ -69,14 +82,43 @@ internal class ExtractionServiceAsyncTest {
                 ExtractionEstimateCostParams.builder()
                     .toolType(ExtractionEstimateCostParams.ToolType.FOLLOWER_EXPLORER)
                     .advancedQuery("min_faves:100")
+                    .anyWords("ChatGPT AI model")
+                    .boundingBox("-74.1 40.6 -73.9 40.8")
+                    .cashtags("\$TSLA \$NVDA")
+                    .conversationId("1234567890")
                     .exactPhrase("artificial intelligence")
                     .excludeWords("spam")
+                    .fromUser("nasa")
+                    .hashtags("#AI startups")
+                    .inReplyToTweetId("1234567890")
+                    .language("en")
+                    .listId("1234567890")
+                    .mediaType(ExtractionEstimateCostParams.MediaType.IMAGES)
+                    .mentioning("example_user")
+                    .minFaves(10L)
+                    .minQuotes(2L)
+                    .minReplies(3L)
+                    .minRetweets(5L)
+                    .place("96683cc9126741d1")
+                    .placeCountry("US")
+                    .pointRadius("-73.99 40.73 25mi")
+                    .quotes(ExtractionEstimateCostParams.Quotes.INCLUDE)
+                    .quotesOfTweetId("1234567890")
+                    .replies(ExtractionEstimateCostParams.Replies.INCLUDE)
+                    .resultsLimit(1000L)
+                    .retweets(ExtractionEstimateCostParams.Retweets.EXCLUDE)
+                    .retweetsOfTweetId("1234567890")
                     .searchQuery("AI trends 2025")
+                    .sinceDate(LocalDate.parse("2025-01-01"))
                     .targetCommunityId("1500000000000000000")
                     .targetListId("1234567890")
                     .targetSpaceId("1vOGwMdBqpwGB")
                     .targetTweetId("1234567890")
                     .targetUsername("elonmusk")
+                    .toUser("openai")
+                    .untilDate(LocalDate.parse("2025-12-31"))
+                    .url("example.com")
+                    .verifiedOnly(false)
                     .build()
             )
 
@@ -90,6 +132,7 @@ internal class ExtractionServiceAsyncTest {
             XTwitterScraperOkHttpClientAsync.builder()
                 .baseUrl(wmRuntimeInfo.httpBaseUrl)
                 .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
                 .build()
         val extractionServiceAsync = client.extractions()
         stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
@@ -109,7 +152,11 @@ internal class ExtractionServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun run() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val extractionServiceAsync = client.extractions()
 
         val responseFuture =
@@ -117,14 +164,43 @@ internal class ExtractionServiceAsyncTest {
                 ExtractionRunParams.builder()
                     .toolType(ExtractionRunParams.ToolType.FOLLOWER_EXPLORER)
                     .advancedQuery("min_faves:100")
+                    .anyWords("ChatGPT AI model")
+                    .boundingBox("-74.1 40.6 -73.9 40.8")
+                    .cashtags("\$TSLA \$NVDA")
+                    .conversationId("1234567890")
                     .exactPhrase("artificial intelligence")
                     .excludeWords("spam")
+                    .fromUser("nasa")
+                    .hashtags("#AI startups")
+                    .inReplyToTweetId("1234567890")
+                    .language("en")
+                    .listId("1234567890")
+                    .mediaType(ExtractionRunParams.MediaType.IMAGES)
+                    .mentioning("example_user")
+                    .minFaves(10L)
+                    .minQuotes(2L)
+                    .minReplies(3L)
+                    .minRetweets(5L)
+                    .place("96683cc9126741d1")
+                    .placeCountry("US")
+                    .pointRadius("-73.99 40.73 25mi")
+                    .quotes(ExtractionRunParams.Quotes.INCLUDE)
+                    .quotesOfTweetId("1234567890")
+                    .replies(ExtractionRunParams.Replies.INCLUDE)
+                    .resultsLimit(1000L)
+                    .retweets(ExtractionRunParams.Retweets.EXCLUDE)
+                    .retweetsOfTweetId("1234567890")
                     .searchQuery("AI trends 2025")
+                    .sinceDate(LocalDate.parse("2025-01-01"))
                     .targetCommunityId("1500000000000000000")
                     .targetListId("1234567890")
                     .targetSpaceId("1vOGwMdBqpwGB")
                     .targetTweetId("1234567890")
                     .targetUsername("elonmusk")
+                    .toUser("openai")
+                    .untilDate(LocalDate.parse("2025-12-31"))
+                    .url("example.com")
+                    .verifiedOnly(false)
                     .build()
             )
 

@@ -288,7 +288,7 @@ interface TweetServiceAsync {
     fun getThread(id: String, requestOptions: RequestOptions): CompletableFuture<PaginatedTweets> =
         getThread(id, TweetGetThreadParams.none(), requestOptions)
 
-    /** Search tweets with X query operators and pagination */
+    /** Search tweets by query, Tweet ID, X status URL, or account date window */
     fun search(params: TweetSearchParams): CompletableFuture<PaginatedTweets> =
         search(params, RequestOptions.none())
 

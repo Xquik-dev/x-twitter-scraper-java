@@ -10,7 +10,13 @@ internal class UserRetrieveFollowingParamsTest {
 
     @Test
     fun create() {
-        UserRetrieveFollowingParams.builder().id("id").cursor("cursor").pageSize(0L).build()
+        UserRetrieveFollowingParams.builder()
+            .id("id")
+            .after("after")
+            .cursor("cursor")
+            .limit(0L)
+            .pageSize(20L)
+            .build()
     }
 
     @Test
@@ -25,12 +31,25 @@ internal class UserRetrieveFollowingParamsTest {
     @Test
     fun queryParams() {
         val params =
-            UserRetrieveFollowingParams.builder().id("id").cursor("cursor").pageSize(0L).build()
+            UserRetrieveFollowingParams.builder()
+                .id("id")
+                .after("after")
+                .cursor("cursor")
+                .limit(0L)
+                .pageSize(20L)
+                .build()
 
         val queryParams = params._queryParams()
 
         assertThat(queryParams)
-            .isEqualTo(QueryParams.builder().put("cursor", "cursor").put("pageSize", "0").build())
+            .isEqualTo(
+                QueryParams.builder()
+                    .put("after", "after")
+                    .put("cursor", "cursor")
+                    .put("limit", "0")
+                    .put("pageSize", "20")
+                    .build()
+            )
     }
 
     @Test

@@ -14,12 +14,20 @@ internal class ListServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveFollowers() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val listService = client.x().lists()
 
         val paginatedUsers =
             listService.retrieveFollowers(
-                ListRetrieveFollowersParams.builder().id("id").cursor("cursor").build()
+                ListRetrieveFollowersParams.builder()
+                    .id("id")
+                    .cursor("cursor")
+                    .pageSize(20L)
+                    .build()
             )
 
         paginatedUsers.validate()
@@ -28,12 +36,16 @@ internal class ListServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveMembers() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val listService = client.x().lists()
 
         val paginatedUsers =
             listService.retrieveMembers(
-                ListRetrieveMembersParams.builder().id("id").cursor("cursor").pageSize(0L).build()
+                ListRetrieveMembersParams.builder().id("id").cursor("cursor").pageSize(20L).build()
             )
 
         paginatedUsers.validate()
@@ -42,7 +54,11 @@ internal class ListServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveTweets() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val listService = client.x().lists()
 
         val paginatedTweets =
@@ -51,6 +67,7 @@ internal class ListServiceTest {
                     .id("id")
                     .cursor("cursor")
                     .includeReplies(true)
+                    .pageSize(1L)
                     .sinceTime("sinceTime")
                     .untilTime("untilTime")
                     .build()

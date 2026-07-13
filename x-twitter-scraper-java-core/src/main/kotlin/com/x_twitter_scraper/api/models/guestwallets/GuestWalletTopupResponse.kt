@@ -1,0 +1,1295 @@
+// File generated from our OpenAPI spec by Stainless.
+
+package com.x_twitter_scraper.api.models.guestwallets
+
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.x_twitter_scraper.api.core.Enum
+import com.x_twitter_scraper.api.core.ExcludeMissing
+import com.x_twitter_scraper.api.core.JsonField
+import com.x_twitter_scraper.api.core.JsonMissing
+import com.x_twitter_scraper.api.core.JsonValue
+import com.x_twitter_scraper.api.core.checkRequired
+import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import java.time.OffsetDateTime
+import java.util.Collections
+import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
+
+/** Pending Stripe checkout and guest wallet purchase details. */
+class GuestWalletTopupResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
+private constructor(
+    private val accountRequired: JsonValue,
+    private val amount: JsonField<GuestWalletAmount>,
+    private val checkoutUrl: JsonField<String>,
+    private val credits: JsonField<String>,
+    private val expiresAt: JsonField<OffsetDateTime>,
+    private val instructions: JsonValue,
+    private val pollAfterSeconds: JsonValue,
+    private val purchaseId: JsonField<String>,
+    private val requiresUserInteraction: JsonValue,
+    private val status: JsonField<Status>,
+    private val statusUrl: JsonValue,
+    private val walletId: JsonField<String>,
+    private val apiKey: JsonField<String>,
+    private val authorization: JsonField<Authorization>,
+    private val credentialNotice: JsonField<CredentialNotice>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
+) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("account_required")
+        @ExcludeMissing
+        accountRequired: JsonValue = JsonMissing.of(),
+        @JsonProperty("amount")
+        @ExcludeMissing
+        amount: JsonField<GuestWalletAmount> = JsonMissing.of(),
+        @JsonProperty("checkout_url")
+        @ExcludeMissing
+        checkoutUrl: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("credits") @ExcludeMissing credits: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("expires_at")
+        @ExcludeMissing
+        expiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("instructions") @ExcludeMissing instructions: JsonValue = JsonMissing.of(),
+        @JsonProperty("poll_after_seconds")
+        @ExcludeMissing
+        pollAfterSeconds: JsonValue = JsonMissing.of(),
+        @JsonProperty("purchase_id")
+        @ExcludeMissing
+        purchaseId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("requires_user_interaction")
+        @ExcludeMissing
+        requiresUserInteraction: JsonValue = JsonMissing.of(),
+        @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of(),
+        @JsonProperty("status_url") @ExcludeMissing statusUrl: JsonValue = JsonMissing.of(),
+        @JsonProperty("wallet_id") @ExcludeMissing walletId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("api_key") @ExcludeMissing apiKey: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("authorization")
+        @ExcludeMissing
+        authorization: JsonField<Authorization> = JsonMissing.of(),
+        @JsonProperty("credential_notice")
+        @ExcludeMissing
+        credentialNotice: JsonField<CredentialNotice> = JsonMissing.of(),
+    ) : this(
+        accountRequired,
+        amount,
+        checkoutUrl,
+        credits,
+        expiresAt,
+        instructions,
+        pollAfterSeconds,
+        purchaseId,
+        requiresUserInteraction,
+        status,
+        statusUrl,
+        walletId,
+        apiKey,
+        authorization,
+        credentialNotice,
+        mutableMapOf(),
+    )
+
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from(false)
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
+    @JsonProperty("account_required")
+    @ExcludeMissing
+    fun _accountRequired(): JsonValue = accountRequired
+
+    /**
+     * Confirmed USD amount for a guest wallet purchase.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun amount(): GuestWalletAmount = amount.getRequired("amount")
+
+    /**
+     * Raw Stripe-hosted checkout URL for user interaction.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun checkoutUrl(): String = checkoutUrl.getRequired("checkout_url")
+
+    /**
+     * Credits granted after verified payment.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun credits(): String = credits.getRequired("credits")
+
+    /**
+     * Time when the pending checkout expires.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun expiresAt(): OffsetDateTime = expiresAt.getRequired("expires_at")
+
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("Give checkout_url to the user. They must complete payment on Stripe. Never submit payment for them. After payment, poll status_url every poll_after_seconds until latest_purchase.status is no longer pending.")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
+    @JsonProperty("instructions") @ExcludeMissing fun _instructions(): JsonValue = instructions
+
+    /**
+     * Wait at least this long before polling status_url.
+     *
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from(2)
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
+    @JsonProperty("poll_after_seconds")
+    @ExcludeMissing
+    fun _pollAfterSeconds(): JsonValue = pollAfterSeconds
+
+    /**
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun purchaseId(): String = purchaseId.getRequired("purchase_id")
+
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from(true)
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
+    @JsonProperty("requires_user_interaction")
+    @ExcludeMissing
+    fun _requiresUserInteraction(): JsonValue = requiresUserInteraction
+
+    /**
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun status(): Status = status.getRequired("status")
+
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("https://xquik.com/api/v1/guest-wallets/status")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
+    @JsonProperty("status_url") @ExcludeMissing fun _statusUrl(): JsonValue = statusUrl
+
+    /**
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun walletId(): String = walletId.getRequired("wallet_id")
+
+    /**
+     * Paid-read bearer credential returned only by initial creation. Store it as a secret. Never
+     * place it in a URL or log.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun apiKey(): Optional<String> = apiKey.getOptional("api_key")
+
+    /**
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun authorization(): Optional<Authorization> = authorization.getOptional("authorization")
+
+    /**
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun credentialNotice(): Optional<CredentialNotice> =
+        credentialNotice.getOptional("credential_notice")
+
+    /**
+     * Returns the raw JSON value of [amount].
+     *
+     * Unlike [amount], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("amount") @ExcludeMissing fun _amount(): JsonField<GuestWalletAmount> = amount
+
+    /**
+     * Returns the raw JSON value of [checkoutUrl].
+     *
+     * Unlike [checkoutUrl], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("checkout_url")
+    @ExcludeMissing
+    fun _checkoutUrl(): JsonField<String> = checkoutUrl
+
+    /**
+     * Returns the raw JSON value of [credits].
+     *
+     * Unlike [credits], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("credits") @ExcludeMissing fun _credits(): JsonField<String> = credits
+
+    /**
+     * Returns the raw JSON value of [expiresAt].
+     *
+     * Unlike [expiresAt], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("expires_at")
+    @ExcludeMissing
+    fun _expiresAt(): JsonField<OffsetDateTime> = expiresAt
+
+    /**
+     * Returns the raw JSON value of [purchaseId].
+     *
+     * Unlike [purchaseId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("purchase_id") @ExcludeMissing fun _purchaseId(): JsonField<String> = purchaseId
+
+    /**
+     * Returns the raw JSON value of [status].
+     *
+     * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<Status> = status
+
+    /**
+     * Returns the raw JSON value of [walletId].
+     *
+     * Unlike [walletId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("wallet_id") @ExcludeMissing fun _walletId(): JsonField<String> = walletId
+
+    /**
+     * Returns the raw JSON value of [apiKey].
+     *
+     * Unlike [apiKey], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("api_key") @ExcludeMissing fun _apiKey(): JsonField<String> = apiKey
+
+    /**
+     * Returns the raw JSON value of [authorization].
+     *
+     * Unlike [authorization], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("authorization")
+    @ExcludeMissing
+    fun _authorization(): JsonField<Authorization> = authorization
+
+    /**
+     * Returns the raw JSON value of [credentialNotice].
+     *
+     * Unlike [credentialNotice], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("credential_notice")
+    @ExcludeMissing
+    fun _credentialNotice(): JsonField<CredentialNotice> = credentialNotice
+
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
+    @JsonAnyGetter
+    @ExcludeMissing
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
+
+    fun toBuilder() = Builder().from(this)
+
+    companion object {
+
+        /**
+         * Returns a mutable builder for constructing an instance of [GuestWalletTopupResponse].
+         *
+         * The following fields are required:
+         * ```java
+         * .amount()
+         * .checkoutUrl()
+         * .credits()
+         * .expiresAt()
+         * .purchaseId()
+         * .status()
+         * .walletId()
+         * ```
+         */
+        @JvmStatic fun builder() = Builder()
+    }
+
+    /** A builder for [GuestWalletTopupResponse]. */
+    class Builder internal constructor() {
+
+        private var accountRequired: JsonValue = JsonValue.from(false)
+        private var amount: JsonField<GuestWalletAmount>? = null
+        private var checkoutUrl: JsonField<String>? = null
+        private var credits: JsonField<String>? = null
+        private var expiresAt: JsonField<OffsetDateTime>? = null
+        private var instructions: JsonValue =
+            JsonValue.from(
+                "Give checkout_url to the user. They must complete payment on Stripe. Never submit payment for them. After payment, poll status_url every poll_after_seconds until latest_purchase.status is no longer pending."
+            )
+        private var pollAfterSeconds: JsonValue = JsonValue.from(2)
+        private var purchaseId: JsonField<String>? = null
+        private var requiresUserInteraction: JsonValue = JsonValue.from(true)
+        private var status: JsonField<Status>? = null
+        private var statusUrl: JsonValue =
+            JsonValue.from("https://xquik.com/api/v1/guest-wallets/status")
+        private var walletId: JsonField<String>? = null
+        private var apiKey: JsonField<String> = JsonMissing.of()
+        private var authorization: JsonField<Authorization> = JsonMissing.of()
+        private var credentialNotice: JsonField<CredentialNotice> = JsonMissing.of()
+        private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+        @JvmSynthetic
+        internal fun from(guestWalletTopupResponse: GuestWalletTopupResponse) = apply {
+            accountRequired = guestWalletTopupResponse.accountRequired
+            amount = guestWalletTopupResponse.amount
+            checkoutUrl = guestWalletTopupResponse.checkoutUrl
+            credits = guestWalletTopupResponse.credits
+            expiresAt = guestWalletTopupResponse.expiresAt
+            instructions = guestWalletTopupResponse.instructions
+            pollAfterSeconds = guestWalletTopupResponse.pollAfterSeconds
+            purchaseId = guestWalletTopupResponse.purchaseId
+            requiresUserInteraction = guestWalletTopupResponse.requiresUserInteraction
+            status = guestWalletTopupResponse.status
+            statusUrl = guestWalletTopupResponse.statusUrl
+            walletId = guestWalletTopupResponse.walletId
+            apiKey = guestWalletTopupResponse.apiKey
+            authorization = guestWalletTopupResponse.authorization
+            credentialNotice = guestWalletTopupResponse.credentialNotice
+            additionalProperties = guestWalletTopupResponse.additionalProperties.toMutableMap()
+        }
+
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from(false)
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun accountRequired(accountRequired: JsonValue) = apply {
+            this.accountRequired = accountRequired
+        }
+
+        /** Confirmed USD amount for a guest wallet purchase. */
+        fun amount(amount: GuestWalletAmount) = amount(JsonField.of(amount))
+
+        /**
+         * Sets [Builder.amount] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.amount] with a well-typed [GuestWalletAmount] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun amount(amount: JsonField<GuestWalletAmount>) = apply { this.amount = amount }
+
+        /** Raw Stripe-hosted checkout URL for user interaction. */
+        fun checkoutUrl(checkoutUrl: String) = checkoutUrl(JsonField.of(checkoutUrl))
+
+        /**
+         * Sets [Builder.checkoutUrl] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.checkoutUrl] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun checkoutUrl(checkoutUrl: JsonField<String>) = apply { this.checkoutUrl = checkoutUrl }
+
+        /** Credits granted after verified payment. */
+        fun credits(credits: String) = credits(JsonField.of(credits))
+
+        /**
+         * Sets [Builder.credits] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.credits] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun credits(credits: JsonField<String>) = apply { this.credits = credits }
+
+        /** Time when the pending checkout expires. */
+        fun expiresAt(expiresAt: OffsetDateTime) = expiresAt(JsonField.of(expiresAt))
+
+        /**
+         * Sets [Builder.expiresAt] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.expiresAt] with a well-typed [OffsetDateTime] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun expiresAt(expiresAt: JsonField<OffsetDateTime>) = apply { this.expiresAt = expiresAt }
+
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("Give checkout_url to the user. They must complete payment on Stripe. Never submit payment for them. After payment, poll status_url every poll_after_seconds until latest_purchase.status is no longer pending.")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun instructions(instructions: JsonValue) = apply { this.instructions = instructions }
+
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from(2)
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun pollAfterSeconds(pollAfterSeconds: JsonValue) = apply {
+            this.pollAfterSeconds = pollAfterSeconds
+        }
+
+        fun purchaseId(purchaseId: String) = purchaseId(JsonField.of(purchaseId))
+
+        /**
+         * Sets [Builder.purchaseId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.purchaseId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun purchaseId(purchaseId: JsonField<String>) = apply { this.purchaseId = purchaseId }
+
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from(true)
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun requiresUserInteraction(requiresUserInteraction: JsonValue) = apply {
+            this.requiresUserInteraction = requiresUserInteraction
+        }
+
+        fun status(status: Status) = status(JsonField.of(status))
+
+        /**
+         * Sets [Builder.status] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.status] with a well-typed [Status] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun status(status: JsonField<Status>) = apply { this.status = status }
+
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("https://xquik.com/api/v1/guest-wallets/status")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun statusUrl(statusUrl: JsonValue) = apply { this.statusUrl = statusUrl }
+
+        fun walletId(walletId: String) = walletId(JsonField.of(walletId))
+
+        /**
+         * Sets [Builder.walletId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.walletId] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun walletId(walletId: JsonField<String>) = apply { this.walletId = walletId }
+
+        /**
+         * Paid-read bearer credential returned only by initial creation. Store it as a secret.
+         * Never place it in a URL or log.
+         */
+        fun apiKey(apiKey: String) = apiKey(JsonField.of(apiKey))
+
+        /**
+         * Sets [Builder.apiKey] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.apiKey] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun apiKey(apiKey: JsonField<String>) = apply { this.apiKey = apiKey }
+
+        fun authorization(authorization: Authorization) = authorization(JsonField.of(authorization))
+
+        /**
+         * Sets [Builder.authorization] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.authorization] with a well-typed [Authorization] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun authorization(authorization: JsonField<Authorization>) = apply {
+            this.authorization = authorization
+        }
+
+        fun credentialNotice(credentialNotice: CredentialNotice) =
+            credentialNotice(JsonField.of(credentialNotice))
+
+        /**
+         * Sets [Builder.credentialNotice] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.credentialNotice] with a well-typed [CredentialNotice]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun credentialNotice(credentialNotice: JsonField<CredentialNotice>) = apply {
+            this.credentialNotice = credentialNotice
+        }
+
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+            this.additionalProperties.clear()
+            putAllAdditionalProperties(additionalProperties)
+        }
+
+        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+            additionalProperties.put(key, value)
+        }
+
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+            this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
+        }
+
+        /**
+         * Returns an immutable instance of [GuestWalletTopupResponse].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .amount()
+         * .checkoutUrl()
+         * .credits()
+         * .expiresAt()
+         * .purchaseId()
+         * .status()
+         * .walletId()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
+        fun build(): GuestWalletTopupResponse =
+            GuestWalletTopupResponse(
+                accountRequired,
+                checkRequired("amount", amount),
+                checkRequired("checkoutUrl", checkoutUrl),
+                checkRequired("credits", credits),
+                checkRequired("expiresAt", expiresAt),
+                instructions,
+                pollAfterSeconds,
+                checkRequired("purchaseId", purchaseId),
+                requiresUserInteraction,
+                checkRequired("status", status),
+                statusUrl,
+                checkRequired("walletId", walletId),
+                apiKey,
+                authorization,
+                credentialNotice,
+                additionalProperties.toMutableMap(),
+            )
+    }
+
+    private var validated: Boolean = false
+
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
+     */
+    fun validate(): GuestWalletTopupResponse = apply {
+        if (validated) {
+            return@apply
+        }
+
+        _accountRequired().let {
+            if (it != JsonValue.from(false)) {
+                throw XTwitterScraperInvalidDataException(
+                    "'accountRequired' is invalid, received $it"
+                )
+            }
+        }
+        amount().validate()
+        checkoutUrl()
+        credits()
+        expiresAt()
+        _instructions().let {
+            if (
+                it !=
+                    JsonValue.from(
+                        "Give checkout_url to the user. They must complete payment on Stripe. Never submit payment for them. After payment, poll status_url every poll_after_seconds until latest_purchase.status is no longer pending."
+                    )
+            ) {
+                throw XTwitterScraperInvalidDataException("'instructions' is invalid, received $it")
+            }
+        }
+        _pollAfterSeconds().let {
+            if (it != JsonValue.from(2)) {
+                throw XTwitterScraperInvalidDataException(
+                    "'pollAfterSeconds' is invalid, received $it"
+                )
+            }
+        }
+        purchaseId()
+        _requiresUserInteraction().let {
+            if (it != JsonValue.from(true)) {
+                throw XTwitterScraperInvalidDataException(
+                    "'requiresUserInteraction' is invalid, received $it"
+                )
+            }
+        }
+        status().validate()
+        _statusUrl().let {
+            if (it != JsonValue.from("https://xquik.com/api/v1/guest-wallets/status")) {
+                throw XTwitterScraperInvalidDataException("'statusUrl' is invalid, received $it")
+            }
+        }
+        walletId()
+        apiKey()
+        authorization().ifPresent { it.validate() }
+        credentialNotice().ifPresent { it.validate() }
+        validated = true
+    }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: XTwitterScraperInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        accountRequired.let { if (it == JsonValue.from(false)) 1 else 0 } +
+            (amount.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (checkoutUrl.asKnown().isPresent) 1 else 0) +
+            (if (credits.asKnown().isPresent) 1 else 0) +
+            (if (expiresAt.asKnown().isPresent) 1 else 0) +
+            instructions.let {
+                if (
+                    it ==
+                        JsonValue.from(
+                            "Give checkout_url to the user. They must complete payment on Stripe. Never submit payment for them. After payment, poll status_url every poll_after_seconds until latest_purchase.status is no longer pending."
+                        )
+                )
+                    1
+                else 0
+            } +
+            pollAfterSeconds.let { if (it == JsonValue.from(2)) 1 else 0 } +
+            (if (purchaseId.asKnown().isPresent) 1 else 0) +
+            requiresUserInteraction.let { if (it == JsonValue.from(true)) 1 else 0 } +
+            (status.asKnown().getOrNull()?.validity() ?: 0) +
+            statusUrl.let {
+                if (it == JsonValue.from("https://xquik.com/api/v1/guest-wallets/status")) 1 else 0
+            } +
+            (if (walletId.asKnown().isPresent) 1 else 0) +
+            (if (apiKey.asKnown().isPresent) 1 else 0) +
+            (authorization.asKnown().getOrNull()?.validity() ?: 0) +
+            (credentialNotice.asKnown().getOrNull()?.validity() ?: 0)
+
+    class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val CREATING = of("creating")
+
+            @JvmField val PENDING = of("pending")
+
+            @JvmField val PAID = of("paid")
+
+            @JvmField val EXPIRED = of("expired")
+
+            @JvmField val FAILED = of("failed")
+
+            @JvmField val REFUNDED = of("refunded")
+
+            @JvmField val DISPUTED = of("disputed")
+
+            @JvmStatic fun of(value: String) = Status(JsonField.of(value))
+        }
+
+        /** An enum containing [Status]'s known values. */
+        enum class Known {
+            CREATING,
+            PENDING,
+            PAID,
+            EXPIRED,
+            FAILED,
+            REFUNDED,
+            DISPUTED,
+        }
+
+        /**
+         * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Status] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            CREATING,
+            PENDING,
+            PAID,
+            EXPIRED,
+            FAILED,
+            REFUNDED,
+            DISPUTED,
+            /** An enum member indicating that [Status] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                CREATING -> Value.CREATING
+                PENDING -> Value.PENDING
+                PAID -> Value.PAID
+                EXPIRED -> Value.EXPIRED
+                FAILED -> Value.FAILED
+                REFUNDED -> Value.REFUNDED
+                DISPUTED -> Value.DISPUTED
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
+         */
+        fun known(): Known =
+            when (this) {
+                CREATING -> Known.CREATING
+                PENDING -> Known.PENDING
+                PAID -> Known.PAID
+                EXPIRED -> Known.EXPIRED
+                FAILED -> Known.FAILED
+                REFUNDED -> Known.REFUNDED
+                DISPUTED -> Known.DISPUTED
+                else -> throw XTwitterScraperInvalidDataException("Unknown Status: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): Status = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Status && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
+    class Authorization
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val header: JsonValue,
+        private val scheme: JsonValue,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("header") @ExcludeMissing header: JsonValue = JsonMissing.of(),
+            @JsonProperty("scheme") @ExcludeMissing scheme: JsonValue = JsonMissing.of(),
+        ) : this(header, scheme, mutableMapOf())
+
+        /**
+         * Expected to always return the following:
+         * ```java
+         * JsonValue.from("Authorization")
+         * ```
+         *
+         * However, this method can be useful for debugging and logging (e.g. if the server
+         * responded with an unexpected value).
+         */
+        @JsonProperty("header") @ExcludeMissing fun _header(): JsonValue = header
+
+        /**
+         * Expected to always return the following:
+         * ```java
+         * JsonValue.from("Bearer")
+         * ```
+         *
+         * However, this method can be useful for debugging and logging (e.g. if the server
+         * responded with an unexpected value).
+         */
+        @JsonProperty("scheme") @ExcludeMissing fun _scheme(): JsonValue = scheme
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [Authorization]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Authorization]. */
+        class Builder internal constructor() {
+
+            private var header: JsonValue = JsonValue.from("Authorization")
+            private var scheme: JsonValue = JsonValue.from("Bearer")
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(authorization: Authorization) = apply {
+                header = authorization.header
+                scheme = authorization.scheme
+                additionalProperties = authorization.additionalProperties.toMutableMap()
+            }
+
+            /**
+             * Sets the field to an arbitrary JSON value.
+             *
+             * It is usually unnecessary to call this method because the field defaults to the
+             * following:
+             * ```java
+             * JsonValue.from("Authorization")
+             * ```
+             *
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun header(header: JsonValue) = apply { this.header = header }
+
+            /**
+             * Sets the field to an arbitrary JSON value.
+             *
+             * It is usually unnecessary to call this method because the field defaults to the
+             * following:
+             * ```java
+             * JsonValue.from("Bearer")
+             * ```
+             *
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun scheme(scheme: JsonValue) = apply { this.scheme = scheme }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Authorization].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): Authorization =
+                Authorization(header, scheme, additionalProperties.toMutableMap())
+        }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): Authorization = apply {
+            if (validated) {
+                return@apply
+            }
+
+            _header().let {
+                if (it != JsonValue.from("Authorization")) {
+                    throw XTwitterScraperInvalidDataException("'header' is invalid, received $it")
+                }
+            }
+            _scheme().let {
+                if (it != JsonValue.from("Bearer")) {
+                    throw XTwitterScraperInvalidDataException("'scheme' is invalid, received $it")
+                }
+            }
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            header.let { if (it == JsonValue.from("Authorization")) 1 else 0 } +
+                scheme.let { if (it == JsonValue.from("Bearer")) 1 else 0 }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Authorization &&
+                header == other.header &&
+                scheme == other.scheme &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(header, scheme, additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "Authorization{header=$header, scheme=$scheme, additionalProperties=$additionalProperties}"
+    }
+
+    class CredentialNotice @JsonCreator private constructor(private val value: JsonField<String>) :
+        Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField
+            val STORE_API_KEY_AND_THE_IDEMPOTENCY_KEY_SECURELY_BEFORE_SHARING_CHECKOUT_URL_NO_EMAIL_RECOVERY_IS_AVAILABLE =
+                of(
+                    "Store api_key and the Idempotency-Key securely before sharing checkout_url. No email recovery is available."
+                )
+
+            @JvmStatic fun of(value: String) = CredentialNotice(JsonField.of(value))
+        }
+
+        /** An enum containing [CredentialNotice]'s known values. */
+        enum class Known {
+            STORE_API_KEY_AND_THE_IDEMPOTENCY_KEY_SECURELY_BEFORE_SHARING_CHECKOUT_URL_NO_EMAIL_RECOVERY_IS_AVAILABLE
+        }
+
+        /**
+         * An enum containing [CredentialNotice]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [CredentialNotice] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            STORE_API_KEY_AND_THE_IDEMPOTENCY_KEY_SECURELY_BEFORE_SHARING_CHECKOUT_URL_NO_EMAIL_RECOVERY_IS_AVAILABLE,
+            /**
+             * An enum member indicating that [CredentialNotice] was instantiated with an unknown
+             * value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                STORE_API_KEY_AND_THE_IDEMPOTENCY_KEY_SECURELY_BEFORE_SHARING_CHECKOUT_URL_NO_EMAIL_RECOVERY_IS_AVAILABLE ->
+                    Value
+                        .STORE_API_KEY_AND_THE_IDEMPOTENCY_KEY_SECURELY_BEFORE_SHARING_CHECKOUT_URL_NO_EMAIL_RECOVERY_IS_AVAILABLE
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
+         */
+        fun known(): Known =
+            when (this) {
+                STORE_API_KEY_AND_THE_IDEMPOTENCY_KEY_SECURELY_BEFORE_SHARING_CHECKOUT_URL_NO_EMAIL_RECOVERY_IS_AVAILABLE ->
+                    Known
+                        .STORE_API_KEY_AND_THE_IDEMPOTENCY_KEY_SECURELY_BEFORE_SHARING_CHECKOUT_URL_NO_EMAIL_RECOVERY_IS_AVAILABLE
+                else ->
+                    throw XTwitterScraperInvalidDataException("Unknown CredentialNotice: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): CredentialNotice = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is CredentialNotice && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+
+        return other is GuestWalletTopupResponse &&
+            accountRequired == other.accountRequired &&
+            amount == other.amount &&
+            checkoutUrl == other.checkoutUrl &&
+            credits == other.credits &&
+            expiresAt == other.expiresAt &&
+            instructions == other.instructions &&
+            pollAfterSeconds == other.pollAfterSeconds &&
+            purchaseId == other.purchaseId &&
+            requiresUserInteraction == other.requiresUserInteraction &&
+            status == other.status &&
+            statusUrl == other.statusUrl &&
+            walletId == other.walletId &&
+            apiKey == other.apiKey &&
+            authorization == other.authorization &&
+            credentialNotice == other.credentialNotice &&
+            additionalProperties == other.additionalProperties
+    }
+
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            accountRequired,
+            amount,
+            checkoutUrl,
+            credits,
+            expiresAt,
+            instructions,
+            pollAfterSeconds,
+            purchaseId,
+            requiresUserInteraction,
+            status,
+            statusUrl,
+            walletId,
+            apiKey,
+            authorization,
+            credentialNotice,
+            additionalProperties,
+        )
+    }
+
+    override fun hashCode(): Int = hashCode
+
+    override fun toString() =
+        "GuestWalletTopupResponse{accountRequired=$accountRequired, amount=$amount, checkoutUrl=$checkoutUrl, credits=$credits, expiresAt=$expiresAt, instructions=$instructions, pollAfterSeconds=$pollAfterSeconds, purchaseId=$purchaseId, requiresUserInteraction=$requiresUserInteraction, status=$status, statusUrl=$statusUrl, walletId=$walletId, apiKey=$apiKey, authorization=$authorization, credentialNotice=$credentialNotice, additionalProperties=$additionalProperties}"
+}

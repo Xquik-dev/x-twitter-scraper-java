@@ -24,7 +24,11 @@ private constructor(
     /** Pagination cursor */
     fun cursor(): Optional<String> = Optional.ofNullable(cursor)
 
-    /** Items per page (20-200, default 20) */
+    /**
+     * Items per page (20-200, default 20). This is an upper bound for paid authenticated calls:
+     * remaining credits can reduce the returned page size, and zero affordable results returns 402
+     * insufficient_credits.
+     */
     fun pageSize(): Optional<Long> = Optional.ofNullable(pageSize)
 
     /** Additional headers to send with the request. */
@@ -75,7 +79,11 @@ private constructor(
         /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
         fun cursor(cursor: Optional<String>) = cursor(cursor.getOrNull())
 
-        /** Items per page (20-200, default 20) */
+        /**
+         * Items per page (20-200, default 20). This is an upper bound for paid authenticated calls:
+         * remaining credits can reduce the returned page size, and zero affordable results returns
+         * 402 insufficient_credits.
+         */
         fun pageSize(pageSize: Long?) = apply { this.pageSize = pageSize }
 
         /**

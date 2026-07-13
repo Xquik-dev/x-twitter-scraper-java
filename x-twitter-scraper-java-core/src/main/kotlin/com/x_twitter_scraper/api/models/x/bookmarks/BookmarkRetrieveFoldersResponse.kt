@@ -47,12 +47,16 @@ private constructor(
     fun folders(): List<Folder> = folders.getRequired("folders")
 
     /**
+     * Always false for the current bookmark folder route
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun hasNextPage(): Boolean = hasNextPage.getRequired("has_next_page")
 
     /**
+     * Always empty for the current bookmark folder route
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -152,6 +156,7 @@ private constructor(
                 }
         }
 
+        /** Always false for the current bookmark folder route */
         fun hasNextPage(hasNextPage: Boolean) = hasNextPage(JsonField.of(hasNextPage))
 
         /**
@@ -163,6 +168,7 @@ private constructor(
          */
         fun hasNextPage(hasNextPage: JsonField<Boolean>) = apply { this.hasNextPage = hasNextPage }
 
+        /** Always empty for the current bookmark folder route */
         fun nextCursor(nextCursor: String) = nextCursor(JsonField.of(nextCursor))
 
         /**

@@ -13,7 +13,6 @@ internal class AccountReauthParamsTest {
             .id("id")
             .password("password_value")
             .email("user@example.com")
-            .proxyCountry("US")
             .totpSecret("totp_secret_value")
             .build()
     }
@@ -34,7 +33,6 @@ internal class AccountReauthParamsTest {
                 .id("id")
                 .password("password_value")
                 .email("user@example.com")
-                .proxyCountry("US")
                 .totpSecret("totp_secret_value")
                 .build()
 
@@ -42,7 +40,6 @@ internal class AccountReauthParamsTest {
 
         assertThat(body.password()).isEqualTo("password_value")
         assertThat(body.email()).contains("user@example.com")
-        assertThat(body.proxyCountry()).contains("US")
         assertThat(body.totpSecret()).contains("totp_secret_value")
     }
 

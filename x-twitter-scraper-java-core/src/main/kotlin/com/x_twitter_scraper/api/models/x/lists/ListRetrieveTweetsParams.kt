@@ -15,6 +15,7 @@ private constructor(
     private val id: String?,
     private val cursor: String?,
     private val includeReplies: Boolean?,
+    private val pageSize: Long?,
     private val sinceTime: String?,
     private val untilTime: String?,
     private val additionalHeaders: Headers,
@@ -28,6 +29,14 @@ private constructor(
 
     /** Include replies (default false) */
     fun includeReplies(): Optional<Boolean> = Optional.ofNullable(includeReplies)
+
+    /**
+     * Maximum items requested from this page (1-100, default 20). The response can contain fewer
+     * items because the source returned fewer, filters removed items, or remaining credits cover
+     * fewer results. Keep requesting next_cursor while has_next_page is true, even when a page is
+     * empty. The deprecated limit and count aliases remain accepted.
+     */
+    fun pageSize(): Optional<Long> = Optional.ofNullable(pageSize)
 
     /** Unix timestamp - filter after */
     fun sinceTime(): Optional<String> = Optional.ofNullable(sinceTime)
@@ -57,6 +66,7 @@ private constructor(
         private var id: String? = null
         private var cursor: String? = null
         private var includeReplies: Boolean? = null
+        private var pageSize: Long? = null
         private var sinceTime: String? = null
         private var untilTime: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -67,6 +77,7 @@ private constructor(
             id = listRetrieveTweetsParams.id
             cursor = listRetrieveTweetsParams.cursor
             includeReplies = listRetrieveTweetsParams.includeReplies
+            pageSize = listRetrieveTweetsParams.pageSize
             sinceTime = listRetrieveTweetsParams.sinceTime
             untilTime = listRetrieveTweetsParams.untilTime
             additionalHeaders = listRetrieveTweetsParams.additionalHeaders.toBuilder()
@@ -99,6 +110,24 @@ private constructor(
         /** Alias for calling [Builder.includeReplies] with `includeReplies.orElse(null)`. */
         fun includeReplies(includeReplies: Optional<Boolean>) =
             includeReplies(includeReplies.getOrNull())
+
+        /**
+         * Maximum items requested from this page (1-100, default 20). The response can contain
+         * fewer items because the source returned fewer, filters removed items, or remaining
+         * credits cover fewer results. Keep requesting next_cursor while has_next_page is true,
+         * even when a page is empty. The deprecated limit and count aliases remain accepted.
+         */
+        fun pageSize(pageSize: Long?) = apply { this.pageSize = pageSize }
+
+        /**
+         * Alias for [Builder.pageSize].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun pageSize(pageSize: Long) = pageSize(pageSize as Long?)
+
+        /** Alias for calling [Builder.pageSize] with `pageSize.orElse(null)`. */
+        fun pageSize(pageSize: Optional<Long>) = pageSize(pageSize.getOrNull())
 
         /** Unix timestamp - filter after */
         fun sinceTime(sinceTime: String?) = apply { this.sinceTime = sinceTime }
@@ -220,6 +249,7 @@ private constructor(
                 id,
                 cursor,
                 includeReplies,
+                pageSize,
                 sinceTime,
                 untilTime,
                 additionalHeaders.build(),
@@ -240,6 +270,7 @@ private constructor(
             .apply {
                 cursor?.let { put("cursor", it) }
                 includeReplies?.let { put("includeReplies", it.toString()) }
+                pageSize?.let { put("pageSize", it.toString()) }
                 sinceTime?.let { put("sinceTime", it) }
                 untilTime?.let { put("untilTime", it) }
                 putAll(additionalQueryParams)
@@ -255,6 +286,7 @@ private constructor(
             id == other.id &&
             cursor == other.cursor &&
             includeReplies == other.includeReplies &&
+            pageSize == other.pageSize &&
             sinceTime == other.sinceTime &&
             untilTime == other.untilTime &&
             additionalHeaders == other.additionalHeaders &&
@@ -266,6 +298,7 @@ private constructor(
             id,
             cursor,
             includeReplies,
+            pageSize,
             sinceTime,
             untilTime,
             additionalHeaders,
@@ -273,5 +306,5 @@ private constructor(
         )
 
     override fun toString() =
-        "ListRetrieveTweetsParams{id=$id, cursor=$cursor, includeReplies=$includeReplies, sinceTime=$sinceTime, untilTime=$untilTime, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ListRetrieveTweetsParams{id=$id, cursor=$cursor, includeReplies=$includeReplies, pageSize=$pageSize, sinceTime=$sinceTime, untilTime=$untilTime, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

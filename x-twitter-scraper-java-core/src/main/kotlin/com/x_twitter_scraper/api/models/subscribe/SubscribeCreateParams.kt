@@ -2,24 +2,51 @@
 
 package com.x_twitter_scraper.api.models.subscribe
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.x_twitter_scraper.api.core.Enum
+import com.x_twitter_scraper.api.core.ExcludeMissing
+import com.x_twitter_scraper.api.core.JsonField
+import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.Params
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
-import com.x_twitter_scraper.api.core.toImmutable
+import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
-/** Get checkout or billing URL */
+/**
+ * Create a subscription checkout or billing-management URL only after the user confirms. The
+ * request never completes payment by itself.
+ */
 class SubscribeCreateParams
 private constructor(
+    private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
-    private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
 
-    /** Additional body properties to send with the request. */
-    fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
+    /**
+     * Subscription tier to pre-select.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun tier(): Optional<Tier> = body.tier()
+
+    /**
+     * Returns the raw JSON value of [tier].
+     *
+     * Unlike [tier], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _tier(): JsonField<Tier> = body._tier()
+
+    fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -40,15 +67,54 @@ private constructor(
     /** A builder for [SubscribeCreateParams]. */
     class Builder internal constructor() {
 
+        private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
-        private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(subscribeCreateParams: SubscribeCreateParams) = apply {
+            body = subscribeCreateParams.body.toBuilder()
             additionalHeaders = subscribeCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = subscribeCreateParams.additionalQueryParams.toBuilder()
-            additionalBodyProperties = subscribeCreateParams.additionalBodyProperties.toMutableMap()
+        }
+
+        /**
+         * Sets the entire request body.
+         *
+         * This is generally only useful if you are already constructing the body separately.
+         * Otherwise, it's more convenient to use the top-level setters instead:
+         * - [tier]
+         */
+        fun body(body: Body) = apply { this.body = body.toBuilder() }
+
+        /** Subscription tier to pre-select. */
+        fun tier(tier: Tier) = apply { body.tier(tier) }
+
+        /**
+         * Sets [Builder.tier] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.tier] with a well-typed [Tier] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun tier(tier: JsonField<Tier>) = apply { body.tier(tier) }
+
+        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
+            body.additionalProperties(additionalBodyProperties)
+        }
+
+        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
+            body.putAdditionalProperty(key, value)
+        }
+
+        fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
+            apply {
+                body.putAllAdditionalProperties(additionalBodyProperties)
+            }
+
+        fun removeAdditionalBodyProperty(key: String) = apply { body.removeAdditionalProperty(key) }
+
+        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
+            body.removeAllAdditionalProperties(keys)
         }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
@@ -149,28 +215,6 @@ private constructor(
             additionalQueryParams.removeAll(keys)
         }
 
-        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
-            this.additionalBodyProperties.clear()
-            putAllAdditionalBodyProperties(additionalBodyProperties)
-        }
-
-        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
-            additionalBodyProperties.put(key, value)
-        }
-
-        fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
-            apply {
-                this.additionalBodyProperties.putAll(additionalBodyProperties)
-            }
-
-        fun removeAdditionalBodyProperty(key: String) = apply {
-            additionalBodyProperties.remove(key)
-        }
-
-        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalBodyProperty)
-        }
-
         /**
          * Returns an immutable instance of [SubscribeCreateParams].
          *
@@ -178,18 +222,309 @@ private constructor(
          */
         fun build(): SubscribeCreateParams =
             SubscribeCreateParams(
+                body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
-                additionalBodyProperties.toImmutable(),
             )
     }
 
-    fun _body(): Optional<Map<String, JsonValue>> =
-        Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
+    fun _body(): Body = body
 
     override fun _headers(): Headers = additionalHeaders
 
     override fun _queryParams(): QueryParams = additionalQueryParams
+
+    class Body
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val tier: JsonField<Tier>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("tier") @ExcludeMissing tier: JsonField<Tier> = JsonMissing.of()
+        ) : this(tier, mutableMapOf())
+
+        /**
+         * Subscription tier to pre-select.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun tier(): Optional<Tier> = tier.getOptional("tier")
+
+        /**
+         * Returns the raw JSON value of [tier].
+         *
+         * Unlike [tier], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("tier") @ExcludeMissing fun _tier(): JsonField<Tier> = tier
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [Body]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Body]. */
+        class Builder internal constructor() {
+
+            private var tier: JsonField<Tier> = JsonMissing.of()
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(body: Body) = apply {
+                tier = body.tier
+                additionalProperties = body.additionalProperties.toMutableMap()
+            }
+
+            /** Subscription tier to pre-select. */
+            fun tier(tier: Tier) = tier(JsonField.of(tier))
+
+            /**
+             * Sets [Builder.tier] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.tier] with a well-typed [Tier] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun tier(tier: JsonField<Tier>) = apply { this.tier = tier }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Body].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): Body = Body(tier, additionalProperties.toMutableMap())
+        }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): Body = apply {
+            if (validated) {
+                return@apply
+            }
+
+            tier().ifPresent { it.validate() }
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = (tier.asKnown().getOrNull()?.validity() ?: 0)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Body &&
+                tier == other.tier &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(tier, additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() = "Body{tier=$tier, additionalProperties=$additionalProperties}"
+    }
+
+    /** Subscription tier to pre-select. */
+    class Tier @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val STARTER = of("starter")
+
+            @JvmField val PRO = of("pro")
+
+            @JvmField val BUSINESS = of("business")
+
+            @JvmStatic fun of(value: String) = Tier(JsonField.of(value))
+        }
+
+        /** An enum containing [Tier]'s known values. */
+        enum class Known {
+            STARTER,
+            PRO,
+            BUSINESS,
+        }
+
+        /**
+         * An enum containing [Tier]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Tier] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            STARTER,
+            PRO,
+            BUSINESS,
+            /** An enum member indicating that [Tier] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                STARTER -> Value.STARTER
+                PRO -> Value.PRO
+                BUSINESS -> Value.BUSINESS
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
+         */
+        fun known(): Known =
+            when (this) {
+                STARTER -> Known.STARTER
+                PRO -> Known.PRO
+                BUSINESS -> Known.BUSINESS
+                else -> throw XTwitterScraperInvalidDataException("Unknown Tier: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): Tier = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Tier && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -197,14 +532,13 @@ private constructor(
         }
 
         return other is SubscribeCreateParams &&
+            body == other.body &&
             additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams &&
-            additionalBodyProperties == other.additionalBodyProperties
+            additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(additionalHeaders, additionalQueryParams, additionalBodyProperties)
+    override fun hashCode(): Int = Objects.hash(body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "SubscribeCreateParams{additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "SubscribeCreateParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

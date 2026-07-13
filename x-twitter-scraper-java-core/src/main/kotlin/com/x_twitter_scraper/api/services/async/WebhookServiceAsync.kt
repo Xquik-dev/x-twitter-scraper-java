@@ -14,6 +14,8 @@ import com.x_twitter_scraper.api.models.webhooks.WebhookListDeliveriesParams
 import com.x_twitter_scraper.api.models.webhooks.WebhookListDeliveriesResponse
 import com.x_twitter_scraper.api.models.webhooks.WebhookListParams
 import com.x_twitter_scraper.api.models.webhooks.WebhookListResponse
+import com.x_twitter_scraper.api.models.webhooks.WebhookResumeParams
+import com.x_twitter_scraper.api.models.webhooks.WebhookResumeResponse
 import com.x_twitter_scraper.api.models.webhooks.WebhookTestParams
 import com.x_twitter_scraper.api.models.webhooks.WebhookTestResponse
 import com.x_twitter_scraper.api.models.webhooks.WebhookUpdateParams
@@ -165,6 +167,41 @@ interface WebhookServiceAsync {
         requestOptions: RequestOptions,
     ): CompletableFuture<WebhookListDeliveriesResponse> =
         listDeliveries(id, WebhookListDeliveriesParams.none(), requestOptions)
+
+    /** Test and resume webhook endpoint */
+    fun resume(id: String): CompletableFuture<WebhookResumeResponse> =
+        resume(id, WebhookResumeParams.none())
+
+    /** @see resume */
+    fun resume(
+        id: String,
+        params: WebhookResumeParams = WebhookResumeParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<WebhookResumeResponse> =
+        resume(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see resume */
+    fun resume(
+        id: String,
+        params: WebhookResumeParams = WebhookResumeParams.none(),
+    ): CompletableFuture<WebhookResumeResponse> = resume(id, params, RequestOptions.none())
+
+    /** @see resume */
+    fun resume(
+        params: WebhookResumeParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<WebhookResumeResponse>
+
+    /** @see resume */
+    fun resume(params: WebhookResumeParams): CompletableFuture<WebhookResumeResponse> =
+        resume(params, RequestOptions.none())
+
+    /** @see resume */
+    fun resume(
+        id: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<WebhookResumeResponse> =
+        resume(id, WebhookResumeParams.none(), requestOptions)
 
     /** Test webhook endpoint */
     fun test(id: String): CompletableFuture<WebhookTestResponse> =
@@ -373,6 +410,47 @@ interface WebhookServiceAsync {
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<WebhookListDeliveriesResponse>> =
             listDeliveries(id, WebhookListDeliveriesParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `post /webhooks/{id}/resume`, but is otherwise the same
+         * as [WebhookServiceAsync.resume].
+         */
+        fun resume(id: String): CompletableFuture<HttpResponseFor<WebhookResumeResponse>> =
+            resume(id, WebhookResumeParams.none())
+
+        /** @see resume */
+        fun resume(
+            id: String,
+            params: WebhookResumeParams = WebhookResumeParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<WebhookResumeResponse>> =
+            resume(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see resume */
+        fun resume(
+            id: String,
+            params: WebhookResumeParams = WebhookResumeParams.none(),
+        ): CompletableFuture<HttpResponseFor<WebhookResumeResponse>> =
+            resume(id, params, RequestOptions.none())
+
+        /** @see resume */
+        fun resume(
+            params: WebhookResumeParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<WebhookResumeResponse>>
+
+        /** @see resume */
+        fun resume(
+            params: WebhookResumeParams
+        ): CompletableFuture<HttpResponseFor<WebhookResumeResponse>> =
+            resume(params, RequestOptions.none())
+
+        /** @see resume */
+        fun resume(
+            id: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<WebhookResumeResponse>> =
+            resume(id, WebhookResumeParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `post /webhooks/{id}/test`, but is otherwise the same as

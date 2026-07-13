@@ -21,7 +21,6 @@ internal class XAccountDetailTest {
                 .xUserId("9876543210")
                 .xUsername("elonmusk")
                 .cookiesObtainedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
-                .proxyCountry("US")
                 .updatedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
                 .build()
 
@@ -34,7 +33,6 @@ internal class XAccountDetailTest {
         assertThat(xAccountDetail.xUsername()).isEqualTo("elonmusk")
         assertThat(xAccountDetail.cookiesObtainedAt())
             .contains(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
-        assertThat(xAccountDetail.proxyCountry()).contains("US")
         assertThat(xAccountDetail.updatedAt())
             .contains(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
     }
@@ -51,7 +49,6 @@ internal class XAccountDetailTest {
                 .xUserId("9876543210")
                 .xUsername("elonmusk")
                 .cookiesObtainedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
-                .proxyCountry("US")
                 .updatedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
                 .build()
 

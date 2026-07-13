@@ -15,49 +15,41 @@ import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.util.Collections
 import java.util.Objects
-import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class SubscribeCreateResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val url: JsonField<String>,
     private val message: JsonField<String>,
     private val status: JsonField<Status>,
+    private val url: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
         @JsonProperty("message") @ExcludeMissing message: JsonField<String> = JsonMissing.of(),
         @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of(),
-    ) : this(url, message, status, mutableMapOf())
+        @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
+    ) : this(message, status, url, mutableMapOf())
+
+    /**
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun message(): String = message.getRequired("message")
+
+    /**
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun status(): Status = status.getRequired("status")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun url(): String = url.getRequired("url")
-
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun message(): Optional<String> = message.getOptional("message")
-
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun status(): Optional<Status> = status.getOptional("status")
-
-    /**
-     * Returns the raw JSON value of [url].
-     *
-     * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
 
     /**
      * Returns the raw JSON value of [message].
@@ -72,6 +64,13 @@ private constructor(
      * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<Status> = status
+
+    /**
+     * Returns the raw JSON value of [url].
+     *
+     * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -92,6 +91,8 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .message()
+         * .status()
          * .url()
          * ```
          */
@@ -101,28 +102,18 @@ private constructor(
     /** A builder for [SubscribeCreateResponse]. */
     class Builder internal constructor() {
 
+        private var message: JsonField<String>? = null
+        private var status: JsonField<Status>? = null
         private var url: JsonField<String>? = null
-        private var message: JsonField<String> = JsonMissing.of()
-        private var status: JsonField<Status> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(subscribeCreateResponse: SubscribeCreateResponse) = apply {
-            url = subscribeCreateResponse.url
             message = subscribeCreateResponse.message
             status = subscribeCreateResponse.status
+            url = subscribeCreateResponse.url
             additionalProperties = subscribeCreateResponse.additionalProperties.toMutableMap()
         }
-
-        fun url(url: String) = url(JsonField.of(url))
-
-        /**
-         * Sets [Builder.url] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.url] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun url(url: JsonField<String>) = apply { this.url = url }
 
         fun message(message: String) = message(JsonField.of(message))
 
@@ -143,6 +134,16 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun status(status: JsonField<Status>) = apply { this.status = status }
+
+        fun url(url: String) = url(JsonField.of(url))
+
+        /**
+         * Sets [Builder.url] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.url] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun url(url: JsonField<String>) = apply { this.url = url }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -170,6 +171,8 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .message()
+         * .status()
          * .url()
          * ```
          *
@@ -177,9 +180,9 @@ private constructor(
          */
         fun build(): SubscribeCreateResponse =
             SubscribeCreateResponse(
+                checkRequired("message", message),
+                checkRequired("status", status),
                 checkRequired("url", url),
-                message,
-                status,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -199,9 +202,9 @@ private constructor(
             return@apply
         }
 
-        url()
         message()
-        status().ifPresent { it.validate() }
+        status().validate()
+        url()
         validated = true
     }
 
@@ -220,9 +223,9 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (url.asKnown().isPresent) 1 else 0) +
-            (if (message.asKnown().isPresent) 1 else 0) +
-            (status.asKnown().getOrNull()?.validity() ?: 0)
+        (if (message.asKnown().isPresent) 1 else 0) +
+            (status.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (url.asKnown().isPresent) 1 else 0)
 
     class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -372,16 +375,16 @@ private constructor(
         }
 
         return other is SubscribeCreateResponse &&
-            url == other.url &&
             message == other.message &&
             status == other.status &&
+            url == other.url &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(url, message, status, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(message, status, url, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SubscribeCreateResponse{url=$url, message=$message, status=$status, additionalProperties=$additionalProperties}"
+        "SubscribeCreateResponse{message=$message, status=$status, url=$url, additionalProperties=$additionalProperties}"
 }

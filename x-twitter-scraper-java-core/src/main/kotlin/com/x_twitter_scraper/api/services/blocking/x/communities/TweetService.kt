@@ -26,7 +26,7 @@ interface TweetService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): TweetService
 
-    /** List tweets across all communities */
+    /** Requires a Community ID and keyword query. */
     fun list(params: TweetListParams): PaginatedTweets = list(params, RequestOptions.none())
 
     /** @see list */

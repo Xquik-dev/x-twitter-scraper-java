@@ -11,15 +11,17 @@ internal class TicketCreateResponseTest {
 
     @Test
     fun create() {
-        val ticketCreateResponse = TicketCreateResponse.builder().publicId("tk_abc123").build()
+        val ticketCreateResponse =
+            TicketCreateResponse.builder().publicId("tkt_a1b2c3d4e5f6a1b2c3d4e5f6").build()
 
-        assertThat(ticketCreateResponse.publicId()).contains("tk_abc123")
+        assertThat(ticketCreateResponse.publicId()).contains("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val ticketCreateResponse = TicketCreateResponse.builder().publicId("tk_abc123").build()
+        val ticketCreateResponse =
+            TicketCreateResponse.builder().publicId("tkt_a1b2c3d4e5f6a1b2c3d4e5f6").build()
 
         val roundtrippedTicketCreateResponse =
             jsonMapper.readValue(

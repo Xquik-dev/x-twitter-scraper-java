@@ -2,32 +2,49 @@
 
 package com.x_twitter_scraper.api.models.x.communities.tweets
 
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.x_twitter_scraper.api.core.Enum
+import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.core.Params
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
+import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** List tweets across all communities */
+/** Requires a Community ID and keyword query. */
 class TweetListParams
 private constructor(
+    private val communityId: String,
     private val q: String,
     private val cursor: String?,
-    private val queryType: String?,
+    private val pageSize: Long?,
+    private val queryType: QueryType?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** Search query for cross-community tweets */
+    /** Numeric ID of the community to search */
+    fun communityId(): String = communityId
+
+    /** Keyword query within the selected community */
     fun q(): String = q
 
-    /** Pagination cursor for cross-community results */
+    /** Pagination cursor for community results */
     fun cursor(): Optional<String> = Optional.ofNullable(cursor)
 
-    /** Sort order for cross-community results (Latest or Top) */
-    fun queryType(): Optional<String> = Optional.ofNullable(queryType)
+    /**
+     * Maximum items requested from this page (1-100, default 20). The response can contain fewer
+     * items because the source returned fewer, filters removed items, or remaining credits cover
+     * fewer results. Keep requesting next_cursor while has_next_page is true, even when a page is
+     * empty. The deprecated limit and count aliases remain accepted.
+     */
+    fun pageSize(): Optional<Long> = Optional.ofNullable(pageSize)
+
+    /** Sort order for community results (Latest or Top) */
+    fun queryType(): Optional<QueryType> = Optional.ofNullable(queryType)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -44,6 +61,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .communityId()
          * .q()
          * ```
          */
@@ -53,35 +71,60 @@ private constructor(
     /** A builder for [TweetListParams]. */
     class Builder internal constructor() {
 
+        private var communityId: String? = null
         private var q: String? = null
         private var cursor: String? = null
-        private var queryType: String? = null
+        private var pageSize: Long? = null
+        private var queryType: QueryType? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(tweetListParams: TweetListParams) = apply {
+            communityId = tweetListParams.communityId
             q = tweetListParams.q
             cursor = tweetListParams.cursor
+            pageSize = tweetListParams.pageSize
             queryType = tweetListParams.queryType
             additionalHeaders = tweetListParams.additionalHeaders.toBuilder()
             additionalQueryParams = tweetListParams.additionalQueryParams.toBuilder()
         }
 
-        /** Search query for cross-community tweets */
+        /** Numeric ID of the community to search */
+        fun communityId(communityId: String) = apply { this.communityId = communityId }
+
+        /** Keyword query within the selected community */
         fun q(q: String) = apply { this.q = q }
 
-        /** Pagination cursor for cross-community results */
+        /** Pagination cursor for community results */
         fun cursor(cursor: String?) = apply { this.cursor = cursor }
 
         /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
         fun cursor(cursor: Optional<String>) = cursor(cursor.getOrNull())
 
-        /** Sort order for cross-community results (Latest or Top) */
-        fun queryType(queryType: String?) = apply { this.queryType = queryType }
+        /**
+         * Maximum items requested from this page (1-100, default 20). The response can contain
+         * fewer items because the source returned fewer, filters removed items, or remaining
+         * credits cover fewer results. Keep requesting next_cursor while has_next_page is true,
+         * even when a page is empty. The deprecated limit and count aliases remain accepted.
+         */
+        fun pageSize(pageSize: Long?) = apply { this.pageSize = pageSize }
+
+        /**
+         * Alias for [Builder.pageSize].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun pageSize(pageSize: Long) = pageSize(pageSize as Long?)
+
+        /** Alias for calling [Builder.pageSize] with `pageSize.orElse(null)`. */
+        fun pageSize(pageSize: Optional<Long>) = pageSize(pageSize.getOrNull())
+
+        /** Sort order for community results (Latest or Top) */
+        fun queryType(queryType: QueryType?) = apply { this.queryType = queryType }
 
         /** Alias for calling [Builder.queryType] with `queryType.orElse(null)`. */
-        fun queryType(queryType: Optional<String>) = queryType(queryType.getOrNull())
+        fun queryType(queryType: Optional<QueryType>) = queryType(queryType.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -188,6 +231,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .communityId()
          * .q()
          * ```
          *
@@ -195,8 +239,10 @@ private constructor(
          */
         fun build(): TweetListParams =
             TweetListParams(
+                checkRequired("communityId", communityId),
                 checkRequired("q", q),
                 cursor,
+                pageSize,
                 queryType,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -208,12 +254,153 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
+                put("communityId", communityId)
                 put("q", q)
                 cursor?.let { put("cursor", it) }
-                queryType?.let { put("queryType", it) }
+                pageSize?.let { put("pageSize", it.toString()) }
+                queryType?.let { put("queryType", it.toString()) }
                 putAll(additionalQueryParams)
             }
             .build()
+
+    /** Sort order for community results (Latest or Top) */
+    class QueryType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val LATEST = of("Latest")
+
+            @JvmField val TOP = of("Top")
+
+            @JvmStatic fun of(value: String) = QueryType(JsonField.of(value))
+        }
+
+        /** An enum containing [QueryType]'s known values. */
+        enum class Known {
+            LATEST,
+            TOP,
+        }
+
+        /**
+         * An enum containing [QueryType]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [QueryType] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            LATEST,
+            TOP,
+            /**
+             * An enum member indicating that [QueryType] was instantiated with an unknown value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                LATEST -> Value.LATEST
+                TOP -> Value.TOP
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
+         */
+        fun known(): Known =
+            when (this) {
+                LATEST -> Known.LATEST
+                TOP -> Known.TOP
+                else -> throw XTwitterScraperInvalidDataException("Unknown QueryType: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): QueryType = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is QueryType && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -221,16 +408,26 @@ private constructor(
         }
 
         return other is TweetListParams &&
+            communityId == other.communityId &&
             q == other.q &&
             cursor == other.cursor &&
+            pageSize == other.pageSize &&
             queryType == other.queryType &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(q, cursor, queryType, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            communityId,
+            q,
+            cursor,
+            pageSize,
+            queryType,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "TweetListParams{q=$q, cursor=$cursor, queryType=$queryType, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "TweetListParams{communityId=$communityId, q=$q, cursor=$cursor, pageSize=$pageSize, queryType=$queryType, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

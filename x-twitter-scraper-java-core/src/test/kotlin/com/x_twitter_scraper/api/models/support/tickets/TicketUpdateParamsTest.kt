@@ -9,15 +9,21 @@ internal class TicketUpdateParamsTest {
 
     @Test
     fun create() {
-        TicketUpdateParams.builder().id("id").status(TicketUpdateParams.Status.RESOLVED).build()
+        TicketUpdateParams.builder()
+            .id("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
+            .status(TicketUpdateParams.Status.RESOLVED)
+            .build()
     }
 
     @Test
     fun pathParams() {
         val params =
-            TicketUpdateParams.builder().id("id").status(TicketUpdateParams.Status.RESOLVED).build()
+            TicketUpdateParams.builder()
+                .id("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
+                .status(TicketUpdateParams.Status.RESOLVED)
+                .build()
 
-        assertThat(params._pathParam(0)).isEqualTo("id")
+        assertThat(params._pathParam(0)).isEqualTo("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
         // out-of-bound path param
         assertThat(params._pathParam(1)).isEqualTo("")
     }
@@ -25,7 +31,10 @@ internal class TicketUpdateParamsTest {
     @Test
     fun body() {
         val params =
-            TicketUpdateParams.builder().id("id").status(TicketUpdateParams.Status.RESOLVED).build()
+            TicketUpdateParams.builder()
+                .id("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
+                .status(TicketUpdateParams.Status.RESOLVED)
+                .build()
 
         val body = params._body()
 

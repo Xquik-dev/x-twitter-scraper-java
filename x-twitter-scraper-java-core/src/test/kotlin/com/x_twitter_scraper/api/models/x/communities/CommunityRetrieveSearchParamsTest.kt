@@ -11,9 +11,11 @@ internal class CommunityRetrieveSearchParamsTest {
     @Test
     fun create() {
         CommunityRetrieveSearchParams.builder()
+            .communityId("321669910225")
             .q("q")
             .cursor("cursor")
-            .queryType("queryType")
+            .pageSize(1L)
+            .queryType(CommunityRetrieveSearchParams.QueryType.LATEST)
             .build()
     }
 
@@ -21,9 +23,11 @@ internal class CommunityRetrieveSearchParamsTest {
     fun queryParams() {
         val params =
             CommunityRetrieveSearchParams.builder()
+                .communityId("321669910225")
                 .q("q")
                 .cursor("cursor")
-                .queryType("queryType")
+                .pageSize(1L)
+                .queryType(CommunityRetrieveSearchParams.QueryType.LATEST)
                 .build()
 
         val queryParams = params._queryParams()
@@ -31,19 +35,25 @@ internal class CommunityRetrieveSearchParamsTest {
         assertThat(queryParams)
             .isEqualTo(
                 QueryParams.builder()
+                    .put("communityId", "321669910225")
                     .put("q", "q")
                     .put("cursor", "cursor")
-                    .put("queryType", "queryType")
+                    .put("pageSize", "1")
+                    .put("queryType", "Latest")
                     .build()
             )
     }
 
     @Test
     fun queryParamsWithoutOptionalFields() {
-        val params = CommunityRetrieveSearchParams.builder().q("q").build()
+        val params =
+            CommunityRetrieveSearchParams.builder().communityId("321669910225").q("q").build()
 
         val queryParams = params._queryParams()
 
-        assertThat(queryParams).isEqualTo(QueryParams.builder().put("q", "q").build())
+        assertThat(queryParams)
+            .isEqualTo(
+                QueryParams.builder().put("communityId", "321669910225").put("q", "q").build()
+            )
     }
 }

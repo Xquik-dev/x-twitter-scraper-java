@@ -12,7 +12,11 @@ internal class ComposeServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val composeServiceAsync = client.compose()
 
         val composeFuture =

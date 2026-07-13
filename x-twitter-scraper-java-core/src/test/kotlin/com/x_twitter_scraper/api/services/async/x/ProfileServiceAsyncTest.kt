@@ -14,7 +14,11 @@ internal class ProfileServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun update() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val profileServiceAsync = client.x().profile()
 
         val profileFuture =
@@ -35,14 +39,18 @@ internal class ProfileServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun updateAvatar() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val profileServiceAsync = client.x().profile()
 
         val responseFuture =
             profileServiceAsync.updateAvatar(
                 ProfileUpdateAvatarParams.builder()
                     .account("@elonmusk")
-                    .file("Example data".byteInputStream())
+                    .url("https://example.com/avatar.png")
                     .build()
             )
 
@@ -53,14 +61,18 @@ internal class ProfileServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun updateBanner() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val profileServiceAsync = client.x().profile()
 
         val responseFuture =
             profileServiceAsync.updateBanner(
                 ProfileUpdateBannerParams.builder()
                     .account("@elonmusk")
-                    .file("Example data".byteInputStream())
+                    .url("https://example.com/banner.png")
                     .build()
             )
 

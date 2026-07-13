@@ -79,20 +79,21 @@ interface DrawService {
         list(DrawListParams.none(), requestOptions)
 
     /** Export draw data */
-    @MustBeClosed fun export(id: String): HttpResponse = export(id, DrawExportParams.none())
+    @MustBeClosed
+    fun export(id: String, params: DrawExportParams): HttpResponse =
+        export(id, params, RequestOptions.none())
 
     /** @see export */
     @MustBeClosed
     fun export(
         id: String,
-        params: DrawExportParams = DrawExportParams.none(),
+        params: DrawExportParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): HttpResponse = export(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see export */
     @MustBeClosed
-    fun export(id: String, params: DrawExportParams = DrawExportParams.none()): HttpResponse =
-        export(id, params, RequestOptions.none())
+    fun export(params: DrawExportParams): HttpResponse = export(params, RequestOptions.none())
 
     /** @see export */
     @MustBeClosed
@@ -101,16 +102,11 @@ interface DrawService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): HttpResponse
 
-    /** @see export */
-    @MustBeClosed
-    fun export(params: DrawExportParams): HttpResponse = export(params, RequestOptions.none())
-
-    /** @see export */
-    @MustBeClosed
-    fun export(id: String, requestOptions: RequestOptions): HttpResponse =
-        export(id, DrawExportParams.none(), requestOptions)
-
-    /** Run giveaway draw */
+    /**
+     * Runs a giveaway draw from a source tweet. The draw first checks the minimum credits needed to
+     * inspect the source tweet and at least one candidate. Remaining credits cap how many replies
+     * and retweeters can be inspected before filters and winner selection run.
+     */
     fun run(params: DrawRunParams): DrawRunResponse = run(params, RequestOptions.none())
 
     /** @see run */
@@ -201,27 +197,17 @@ interface DrawService {
          * Returns a raw HTTP response for `get /draws/{id}/export`, but is otherwise the same as
          * [DrawService.export].
          */
-        @MustBeClosed fun export(id: String): HttpResponse = export(id, DrawExportParams.none())
-
-        /** @see export */
         @MustBeClosed
-        fun export(
-            id: String,
-            params: DrawExportParams = DrawExportParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse = export(params.toBuilder().id(id).build(), requestOptions)
-
-        /** @see export */
-        @MustBeClosed
-        fun export(id: String, params: DrawExportParams = DrawExportParams.none()): HttpResponse =
+        fun export(id: String, params: DrawExportParams): HttpResponse =
             export(id, params, RequestOptions.none())
 
         /** @see export */
         @MustBeClosed
         fun export(
+            id: String,
             params: DrawExportParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        ): HttpResponse = export(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see export */
         @MustBeClosed
@@ -229,8 +215,10 @@ interface DrawService {
 
         /** @see export */
         @MustBeClosed
-        fun export(id: String, requestOptions: RequestOptions): HttpResponse =
-            export(id, DrawExportParams.none(), requestOptions)
+        fun export(
+            params: DrawExportParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponse
 
         /**
          * Returns a raw HTTP response for `post /draws`, but is otherwise the same as

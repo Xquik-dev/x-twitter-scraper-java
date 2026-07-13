@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.x_twitter_scraper.api.core.Enum
 import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.core.Params
+import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
@@ -17,7 +18,7 @@ import kotlin.jvm.optionals.getOrNull
 class DrawExportParams
 private constructor(
     private val id: String?,
-    private val format: Format?,
+    private val format: Format,
     private val type: Type?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -26,7 +27,7 @@ private constructor(
     fun id(): Optional<String> = Optional.ofNullable(id)
 
     /** Export output format */
-    fun format(): Optional<Format> = Optional.ofNullable(format)
+    fun format(): Format = format
 
     /** Export winners or all entries */
     fun type(): Optional<Type> = Optional.ofNullable(type)
@@ -41,9 +42,14 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): DrawExportParams = builder().build()
-
-        /** Returns a mutable builder for constructing an instance of [DrawExportParams]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [DrawExportParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .format()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -71,10 +77,7 @@ private constructor(
         fun id(id: Optional<String>) = id(id.getOrNull())
 
         /** Export output format */
-        fun format(format: Format?) = apply { this.format = format }
-
-        /** Alias for calling [Builder.format] with `format.orElse(null)`. */
-        fun format(format: Optional<Format>) = format(format.getOrNull())
+        fun format(format: Format) = apply { this.format = format }
 
         /** Export winners or all entries */
         fun type(type: Type?) = apply { this.type = type }
@@ -184,11 +187,18 @@ private constructor(
          * Returns an immutable instance of [DrawExportParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .format()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): DrawExportParams =
             DrawExportParams(
                 id,
-                format,
+                checkRequired("format", format),
                 type,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -206,7 +216,7 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
-                format?.let { put("format", it.toString()) }
+                put("format", format.toString())
                 type?.let { put("type", it.toString()) }
                 putAll(additionalQueryParams)
             }

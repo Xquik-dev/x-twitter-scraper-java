@@ -4,6 +4,8 @@ package com.x_twitter_scraper.api.services.async
 
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
+import com.x_twitter_scraper.api.core.SecurityOptions
+import com.x_twitter_scraper.api.core.handlers.emptyHandler
 import com.x_twitter_scraper.api.core.handlers.errorBodyHandler
 import com.x_twitter_scraper.api.core.handlers.errorHandler
 import com.x_twitter_scraper.api.core.handlers.jsonHandler
@@ -15,8 +17,11 @@ import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.json
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepareAsync
+import com.x_twitter_scraper.api.models.credits.CreditRedirectTopupCheckoutParams
 import com.x_twitter_scraper.api.models.credits.CreditRetrieveBalanceParams
 import com.x_twitter_scraper.api.models.credits.CreditRetrieveBalanceResponse
+import com.x_twitter_scraper.api.models.credits.CreditRetrieveTopupStatusParams
+import com.x_twitter_scraper.api.models.credits.CreditRetrieveTopupStatusResponse
 import com.x_twitter_scraper.api.models.credits.CreditTopupBalanceParams
 import com.x_twitter_scraper.api.models.credits.CreditTopupBalanceResponse
 import java.util.concurrent.CompletableFuture
@@ -35,12 +40,26 @@ class CreditServiceAsyncImpl internal constructor(private val clientOptions: Cli
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CreditServiceAsync =
         CreditServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
+    override fun redirectTopupCheckout(
+        params: CreditRedirectTopupCheckoutParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<Void?> =
+        // get /credits/topup/redirect
+        withRawResponse().redirectTopupCheckout(params, requestOptions).thenAccept {}
+
     override fun retrieveBalance(
         params: CreditRetrieveBalanceParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<CreditRetrieveBalanceResponse> =
         // get /credits
         withRawResponse().retrieveBalance(params, requestOptions).thenApply { it.parse() }
+
+    override fun retrieveTopupStatus(
+        params: CreditRetrieveTopupStatusParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<CreditRetrieveTopupStatusResponse> =
+        // get /credits/topup/status
+        withRawResponse().retrieveTopupStatus(params, requestOptions).thenApply { it.parse() }
 
     override fun topupBalance(
         params: CreditTopupBalanceParams,
@@ -61,6 +80,29 @@ class CreditServiceAsyncImpl internal constructor(private val clientOptions: Cli
             CreditServiceAsyncImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        private val redirectTopupCheckoutHandler: Handler<Void?> = emptyHandler()
+
+        override fun redirectTopupCheckout(
+            params: CreditRedirectTopupCheckoutParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponse> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("credits", "topup", "redirect")
+                    .build()
+                    .prepareAsync(clientOptions, params, SecurityOptions.none())
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response.use { redirectTopupCheckoutHandler.handle(it) }
+                    }
+                }
+        }
 
         private val retrieveBalanceHandler: Handler<CreditRetrieveBalanceResponse> =
             jsonHandler<CreditRetrieveBalanceResponse>(clientOptions.jsonMapper)
@@ -83,6 +125,36 @@ class CreditServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     errorHandler.handle(response).parseable {
                         response
                             .use { retrieveBalanceHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val retrieveTopupStatusHandler: Handler<CreditRetrieveTopupStatusResponse> =
+            jsonHandler<CreditRetrieveTopupStatusResponse>(clientOptions.jsonMapper)
+
+        override fun retrieveTopupStatus(
+            params: CreditRetrieveTopupStatusParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<CreditRetrieveTopupStatusResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("credits", "topup", "status")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { retrieveTopupStatusHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

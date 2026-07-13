@@ -267,7 +267,7 @@ interface TweetService {
     fun getThread(id: String, requestOptions: RequestOptions): PaginatedTweets =
         getThread(id, TweetGetThreadParams.none(), requestOptions)
 
-    /** Search tweets with X query operators and pagination */
+    /** Search tweets by query, Tweet ID, X status URL, or account date window */
     fun search(params: TweetSearchParams): PaginatedTweets = search(params, RequestOptions.none())
 
     /** @see search */

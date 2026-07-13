@@ -26,7 +26,7 @@ interface TweetServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): TweetServiceAsync
 
-    /** List tweets across all communities */
+    /** Requires a Community ID and keyword query. */
     fun list(params: TweetListParams): CompletableFuture<PaginatedTweets> =
         list(params, RequestOptions.none())
 

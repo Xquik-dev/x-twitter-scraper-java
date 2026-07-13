@@ -10,12 +10,17 @@ internal class DmRetrieveHistoryParamsTest {
 
     @Test
     fun create() {
-        DmRetrieveHistoryParams.builder().userId("userId").cursor("cursor").maxId("maxId").build()
+        DmRetrieveHistoryParams.builder()
+            .userId("userId")
+            .account("account")
+            .cursor("cursor")
+            .maxId("maxId")
+            .build()
     }
 
     @Test
     fun pathParams() {
-        val params = DmRetrieveHistoryParams.builder().userId("userId").build()
+        val params = DmRetrieveHistoryParams.builder().userId("userId").account("account").build()
 
         assertThat(params._pathParam(0)).isEqualTo("userId")
         // out-of-bound path param
@@ -27,6 +32,7 @@ internal class DmRetrieveHistoryParamsTest {
         val params =
             DmRetrieveHistoryParams.builder()
                 .userId("userId")
+                .account("account")
                 .cursor("cursor")
                 .maxId("maxId")
                 .build()
@@ -34,15 +40,21 @@ internal class DmRetrieveHistoryParamsTest {
         val queryParams = params._queryParams()
 
         assertThat(queryParams)
-            .isEqualTo(QueryParams.builder().put("cursor", "cursor").put("maxId", "maxId").build())
+            .isEqualTo(
+                QueryParams.builder()
+                    .put("account", "account")
+                    .put("cursor", "cursor")
+                    .put("maxId", "maxId")
+                    .build()
+            )
     }
 
     @Test
     fun queryParamsWithoutOptionalFields() {
-        val params = DmRetrieveHistoryParams.builder().userId("userId").build()
+        val params = DmRetrieveHistoryParams.builder().userId("userId").account("account").build()
 
         val queryParams = params._queryParams()
 
-        assertThat(queryParams).isEqualTo(QueryParams.builder().build())
+        assertThat(queryParams).isEqualTo(QueryParams.builder().put("account", "account").build())
     }
 }

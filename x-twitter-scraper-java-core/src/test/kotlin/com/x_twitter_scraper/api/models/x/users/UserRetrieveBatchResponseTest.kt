@@ -1,0 +1,185 @@
+// File generated from our OpenAPI spec by Stainless.
+
+package com.x_twitter_scraper.api.models.x.users
+
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import com.x_twitter_scraper.api.core.JsonValue
+import com.x_twitter_scraper.api.core.jsonMapper
+import com.x_twitter_scraper.api.models.UserProfile
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+
+internal class UserRetrieveBatchResponseTest {
+
+    @Test
+    fun create() {
+        val userRetrieveBatchResponse =
+            UserRetrieveBatchResponse.builder()
+                .nextCursor("")
+                .processedCount(0L)
+                .requestedCount(0L)
+                .returnedCount(0L)
+                .addUnavailableId("321669910225")
+                .addUnprocessedId("321669910225")
+                .addUser(
+                    UserProfile.builder()
+                        .id("9876543210")
+                        .name("Elon Musk")
+                        .username("elonmusk")
+                        .automatedBy("example_user")
+                        .canDm(false)
+                        .communityRole("Member")
+                        .coverPicture("https://pbs.twimg.com/profile_banners/example.jpg")
+                        .createdAt("2009-06-02T20:12:29Z")
+                        .description("CEO of Tesla, SpaceX, and X")
+                        .favouritesCount(18000L)
+                        .followers(150000000L)
+                        .following(500L)
+                        .hasCustomTimelines(true)
+                        .isAutomated(false)
+                        .isBlueVerified(true)
+                        .isTranslator(false)
+                        .isVerified(true)
+                        .location("Austin, TX")
+                        .mediaCount(1200L)
+                        .addPinnedTweetId("1234567890")
+                        .possiblySensitive(false)
+                        .profileBio(
+                            UserProfile.ProfileBio.builder()
+                                .putAdditionalProperty("description", JsonValue.from("bar"))
+                                .putAdditionalProperty("entities", JsonValue.from("bar"))
+                                .build()
+                        )
+                        .profileBannerUrl("https://pbs.twimg.com/profile_banners/example.jpg")
+                        .profilePicture("https://pbs.twimg.com/profile_images/example.jpg")
+                        .protected_(false)
+                        .statusesCount(35000L)
+                        .unavailable(false)
+                        .unavailableReason("suspended")
+                        .url("https://xquik.com")
+                        .verified(true)
+                        .verifiedType("Business")
+                        .viewerFollowedBy(false)
+                        .viewerFollowing(true)
+                        .addWithheldInCountry("DE")
+                        .build()
+                )
+                .build()
+
+        assertThat(userRetrieveBatchResponse.nextCursor()).isEqualTo("")
+        assertThat(userRetrieveBatchResponse.processedCount()).isEqualTo(0L)
+        assertThat(userRetrieveBatchResponse.requestedCount()).isEqualTo(0L)
+        assertThat(userRetrieveBatchResponse.returnedCount()).isEqualTo(0L)
+        assertThat(userRetrieveBatchResponse.unavailableIds()).containsExactly("321669910225")
+        assertThat(userRetrieveBatchResponse.unprocessedIds()).containsExactly("321669910225")
+        assertThat(userRetrieveBatchResponse.users())
+            .containsExactly(
+                UserProfile.builder()
+                    .id("9876543210")
+                    .name("Elon Musk")
+                    .username("elonmusk")
+                    .automatedBy("example_user")
+                    .canDm(false)
+                    .communityRole("Member")
+                    .coverPicture("https://pbs.twimg.com/profile_banners/example.jpg")
+                    .createdAt("2009-06-02T20:12:29Z")
+                    .description("CEO of Tesla, SpaceX, and X")
+                    .favouritesCount(18000L)
+                    .followers(150000000L)
+                    .following(500L)
+                    .hasCustomTimelines(true)
+                    .isAutomated(false)
+                    .isBlueVerified(true)
+                    .isTranslator(false)
+                    .isVerified(true)
+                    .location("Austin, TX")
+                    .mediaCount(1200L)
+                    .addPinnedTweetId("1234567890")
+                    .possiblySensitive(false)
+                    .profileBio(
+                        UserProfile.ProfileBio.builder()
+                            .putAdditionalProperty("description", JsonValue.from("bar"))
+                            .putAdditionalProperty("entities", JsonValue.from("bar"))
+                            .build()
+                    )
+                    .profileBannerUrl("https://pbs.twimg.com/profile_banners/example.jpg")
+                    .profilePicture("https://pbs.twimg.com/profile_images/example.jpg")
+                    .protected_(false)
+                    .statusesCount(35000L)
+                    .unavailable(false)
+                    .unavailableReason("suspended")
+                    .url("https://xquik.com")
+                    .verified(true)
+                    .verifiedType("Business")
+                    .viewerFollowedBy(false)
+                    .viewerFollowing(true)
+                    .addWithheldInCountry("DE")
+                    .build()
+            )
+    }
+
+    @Test
+    fun roundtrip() {
+        val jsonMapper = jsonMapper()
+        val userRetrieveBatchResponse =
+            UserRetrieveBatchResponse.builder()
+                .nextCursor("")
+                .processedCount(0L)
+                .requestedCount(0L)
+                .returnedCount(0L)
+                .addUnavailableId("321669910225")
+                .addUnprocessedId("321669910225")
+                .addUser(
+                    UserProfile.builder()
+                        .id("9876543210")
+                        .name("Elon Musk")
+                        .username("elonmusk")
+                        .automatedBy("example_user")
+                        .canDm(false)
+                        .communityRole("Member")
+                        .coverPicture("https://pbs.twimg.com/profile_banners/example.jpg")
+                        .createdAt("2009-06-02T20:12:29Z")
+                        .description("CEO of Tesla, SpaceX, and X")
+                        .favouritesCount(18000L)
+                        .followers(150000000L)
+                        .following(500L)
+                        .hasCustomTimelines(true)
+                        .isAutomated(false)
+                        .isBlueVerified(true)
+                        .isTranslator(false)
+                        .isVerified(true)
+                        .location("Austin, TX")
+                        .mediaCount(1200L)
+                        .addPinnedTweetId("1234567890")
+                        .possiblySensitive(false)
+                        .profileBio(
+                            UserProfile.ProfileBio.builder()
+                                .putAdditionalProperty("description", JsonValue.from("bar"))
+                                .putAdditionalProperty("entities", JsonValue.from("bar"))
+                                .build()
+                        )
+                        .profileBannerUrl("https://pbs.twimg.com/profile_banners/example.jpg")
+                        .profilePicture("https://pbs.twimg.com/profile_images/example.jpg")
+                        .protected_(false)
+                        .statusesCount(35000L)
+                        .unavailable(false)
+                        .unavailableReason("suspended")
+                        .url("https://xquik.com")
+                        .verified(true)
+                        .verifiedType("Business")
+                        .viewerFollowedBy(false)
+                        .viewerFollowing(true)
+                        .addWithheldInCountry("DE")
+                        .build()
+                )
+                .build()
+
+        val roundtrippedUserRetrieveBatchResponse =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(userRetrieveBatchResponse),
+                jacksonTypeRef<UserRetrieveBatchResponse>(),
+            )
+
+        assertThat(roundtrippedUserRetrieveBatchResponse).isEqualTo(userRetrieveBatchResponse)
+    }
+}

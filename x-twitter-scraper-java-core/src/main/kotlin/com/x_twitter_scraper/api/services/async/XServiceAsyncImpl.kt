@@ -23,6 +23,8 @@ import com.x_twitter_scraper.api.models.x.XGetNotificationsParams
 import com.x_twitter_scraper.api.models.x.XGetNotificationsResponse
 import com.x_twitter_scraper.api.models.x.XGetTrendsParams
 import com.x_twitter_scraper.api.models.x.XGetTrendsResponse
+import com.x_twitter_scraper.api.services.async.x.AccountConnectionChallengeServiceAsync
+import com.x_twitter_scraper.api.services.async.x.AccountConnectionChallengeServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.AccountServiceAsync
 import com.x_twitter_scraper.api.services.async.x.AccountServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.BookmarkServiceAsync
@@ -43,6 +45,8 @@ import com.x_twitter_scraper.api.services.async.x.TweetServiceAsync
 import com.x_twitter_scraper.api.services.async.x.TweetServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.UserServiceAsync
 import com.x_twitter_scraper.api.services.async.x.UserServiceAsyncImpl
+import com.x_twitter_scraper.api.services.async.x.WriteActionServiceAsync
+import com.x_twitter_scraper.api.services.async.x.WriteActionServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -52,6 +56,10 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
 
     private val withRawResponse: XServiceAsync.WithRawResponse by lazy {
         WithRawResponseImpl(clientOptions)
+    }
+
+    private val writeActions: WriteActionServiceAsync by lazy {
+        WriteActionServiceAsyncImpl(clientOptions)
     }
 
     private val tweets: TweetServiceAsync by lazy { TweetServiceAsyncImpl(clientOptions) }
@@ -72,6 +80,10 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
 
     private val accounts: AccountServiceAsync by lazy { AccountServiceAsyncImpl(clientOptions) }
 
+    private val accountConnectionChallenges: AccountConnectionChallengeServiceAsync by lazy {
+        AccountConnectionChallengeServiceAsyncImpl(clientOptions)
+    }
+
     private val bookmarks: BookmarkServiceAsync by lazy { BookmarkServiceAsyncImpl(clientOptions) }
 
     private val lists: ListServiceAsync by lazy { ListServiceAsyncImpl(clientOptions) }
@@ -81,9 +93,11 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): XServiceAsync =
         XServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
+    /** X write actions (tweets, likes, follows, DMs) */
+    override fun writeActions(): WriteActionServiceAsync = writeActions
+
     override fun tweets(): TweetServiceAsync = tweets
 
-    /** Look up, search, and explore user profiles and relationships */
     override fun users(): UserServiceAsync = users
 
     /** Look up, search, and explore user profiles and relationships */
@@ -101,6 +115,10 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
 
     /** Connected X account management */
     override fun accounts(): AccountServiceAsync = accounts
+
+    /** Connected X account management */
+    override fun accountConnectionChallenges(): AccountConnectionChallengeServiceAsync =
+        accountConnectionChallenges
 
     /** Look up, search, and analyze individual tweets */
     override fun bookmarks(): BookmarkServiceAsync = bookmarks
@@ -142,6 +160,10 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
+        private val writeActions: WriteActionServiceAsync.WithRawResponse by lazy {
+            WriteActionServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val tweets: TweetServiceAsync.WithRawResponse by lazy {
             TweetServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
@@ -174,6 +196,11 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
             AccountServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val accountConnectionChallenges:
+            AccountConnectionChallengeServiceAsync.WithRawResponse by lazy {
+            AccountConnectionChallengeServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val bookmarks: BookmarkServiceAsync.WithRawResponse by lazy {
             BookmarkServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
@@ -189,9 +216,11 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
+        /** X write actions (tweets, likes, follows, DMs) */
+        override fun writeActions(): WriteActionServiceAsync.WithRawResponse = writeActions
+
         override fun tweets(): TweetServiceAsync.WithRawResponse = tweets
 
-        /** Look up, search, and explore user profiles and relationships */
         override fun users(): UserServiceAsync.WithRawResponse = users
 
         /** Look up, search, and explore user profiles and relationships */
@@ -209,6 +238,10 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
 
         /** Connected X account management */
         override fun accounts(): AccountServiceAsync.WithRawResponse = accounts
+
+        /** Connected X account management */
+        override fun accountConnectionChallenges():
+            AccountConnectionChallengeServiceAsync.WithRawResponse = accountConnectionChallenges
 
         /** Look up, search, and analyze individual tweets */
         override fun bookmarks(): BookmarkServiceAsync.WithRawResponse = bookmarks

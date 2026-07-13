@@ -21,7 +21,7 @@ private constructor(
     /** Pagination cursor for timeline */
     fun cursor(): Optional<String> = Optional.ofNullable(cursor)
 
-    /** Comma-separated tweet IDs to exclude from results */
+    /** Comma-separated tweet IDs to exclude from results. Empty entries are ignored. */
     fun seenTweetIds(): Optional<String> = Optional.ofNullable(seenTweetIds)
 
     /** Additional headers to send with the request. */
@@ -62,7 +62,7 @@ private constructor(
         /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
         fun cursor(cursor: Optional<String>) = cursor(cursor.getOrNull())
 
-        /** Comma-separated tweet IDs to exclude from results */
+        /** Comma-separated tweet IDs to exclude from results. Empty entries are ignored. */
         fun seenTweetIds(seenTweetIds: String?) = apply { this.seenTweetIds = seenTweetIds }
 
         /** Alias for calling [Builder.seenTweetIds] with `seenTweetIds.orElse(null)`. */

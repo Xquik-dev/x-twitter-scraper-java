@@ -13,16 +13,20 @@ internal class CreditRetrieveBalanceResponseTest {
     fun create() {
         val creditRetrieveBalanceResponse =
             CreditRetrieveBalanceResponse.builder()
+                .autoTopupAmountDollars(10.0)
                 .autoTopupEnabled(false)
-                .balance(50000L)
-                .lifetimePurchased(200000L)
-                .lifetimeUsed(150000L)
+                .autoTopupThreshold("50000")
+                .balance("50000")
+                .lifetimePurchased("200000")
+                .lifetimeUsed("150000")
                 .build()
 
+        assertThat(creditRetrieveBalanceResponse.autoTopupAmountDollars()).isEqualTo(10.0)
         assertThat(creditRetrieveBalanceResponse.autoTopupEnabled()).isEqualTo(false)
-        assertThat(creditRetrieveBalanceResponse.balance()).isEqualTo(50000L)
-        assertThat(creditRetrieveBalanceResponse.lifetimePurchased()).isEqualTo(200000L)
-        assertThat(creditRetrieveBalanceResponse.lifetimeUsed()).isEqualTo(150000L)
+        assertThat(creditRetrieveBalanceResponse.autoTopupThreshold()).isEqualTo("50000")
+        assertThat(creditRetrieveBalanceResponse.balance()).isEqualTo("50000")
+        assertThat(creditRetrieveBalanceResponse.lifetimePurchased()).isEqualTo("200000")
+        assertThat(creditRetrieveBalanceResponse.lifetimeUsed()).isEqualTo("150000")
     }
 
     @Test
@@ -30,10 +34,12 @@ internal class CreditRetrieveBalanceResponseTest {
         val jsonMapper = jsonMapper()
         val creditRetrieveBalanceResponse =
             CreditRetrieveBalanceResponse.builder()
+                .autoTopupAmountDollars(10.0)
                 .autoTopupEnabled(false)
-                .balance(50000L)
-                .lifetimePurchased(200000L)
-                .lifetimeUsed(150000L)
+                .autoTopupThreshold("50000")
+                .balance("50000")
+                .lifetimePurchased("200000")
+                .lifetimeUsed("150000")
                 .build()
 
         val roundtrippedCreditRetrieveBalanceResponse =

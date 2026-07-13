@@ -13,12 +13,22 @@ internal class TweetServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val tweetServiceAsync = client.x().communities().tweets()
 
         val paginatedTweetsFuture =
             tweetServiceAsync.list(
-                TweetListParams.builder().q("q").cursor("cursor").queryType("queryType").build()
+                TweetListParams.builder()
+                    .communityId("321669910225")
+                    .q("q")
+                    .cursor("cursor")
+                    .pageSize(1L)
+                    .queryType(TweetListParams.QueryType.LATEST)
+                    .build()
             )
 
         val paginatedTweets = paginatedTweetsFuture.get()
@@ -28,12 +38,16 @@ internal class TweetServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun listByCommunity() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val tweetServiceAsync = client.x().communities().tweets()
 
         val paginatedTweetsFuture =
             tweetServiceAsync.listByCommunity(
-                TweetListByCommunityParams.builder().id("id").cursor("cursor").build()
+                TweetListByCommunityParams.builder().id("id").cursor("cursor").pageSize(1L).build()
             )
 
         val paginatedTweets = paginatedTweetsFuture.get()

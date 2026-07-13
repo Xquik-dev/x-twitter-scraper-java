@@ -20,7 +20,6 @@ internal class AccountReauthResponseTest {
                 .status("active")
                 .xUserId("9876543210")
                 .xUsername("elonmusk")
-                .loginCountry("US")
                 .build()
 
         assertThat(accountReauthResponse.id()).isEqualTo("42")
@@ -30,7 +29,6 @@ internal class AccountReauthResponseTest {
         assertThat(accountReauthResponse.status()).isEqualTo("active")
         assertThat(accountReauthResponse.xUserId()).isEqualTo("9876543210")
         assertThat(accountReauthResponse.xUsername()).isEqualTo("elonmusk")
-        assertThat(accountReauthResponse.loginCountry()).contains("US")
     }
 
     @Test
@@ -44,7 +42,6 @@ internal class AccountReauthResponseTest {
                 .status("active")
                 .xUserId("9876543210")
                 .xUsername("elonmusk")
-                .loginCountry("US")
                 .build()
 
         val roundtrippedAccountReauthResponse =

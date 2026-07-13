@@ -5,9 +5,13 @@ package com.x_twitter_scraper.api.services.blocking
 import com.google.errorprone.annotations.MustBeClosed
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
+import com.x_twitter_scraper.api.core.http.HttpResponse
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
+import com.x_twitter_scraper.api.models.credits.CreditRedirectTopupCheckoutParams
 import com.x_twitter_scraper.api.models.credits.CreditRetrieveBalanceParams
 import com.x_twitter_scraper.api.models.credits.CreditRetrieveBalanceResponse
+import com.x_twitter_scraper.api.models.credits.CreditRetrieveTopupStatusParams
+import com.x_twitter_scraper.api.models.credits.CreditRetrieveTopupStatusResponse
 import com.x_twitter_scraper.api.models.credits.CreditTopupBalanceParams
 import com.x_twitter_scraper.api.models.credits.CreditTopupBalanceResponse
 import java.util.function.Consumer
@@ -26,6 +30,16 @@ interface CreditService {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): CreditService
+
+    /** Redirect to an active top-up payment page */
+    fun redirectTopupCheckout(params: CreditRedirectTopupCheckoutParams) =
+        redirectTopupCheckout(params, RequestOptions.none())
+
+    /** @see redirectTopupCheckout */
+    fun redirectTopupCheckout(
+        params: CreditRedirectTopupCheckoutParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    )
 
     /** Get credits balance */
     fun retrieveBalance(): CreditRetrieveBalanceResponse =
@@ -46,7 +60,21 @@ interface CreditService {
     fun retrieveBalance(requestOptions: RequestOptions): CreditRetrieveBalanceResponse =
         retrieveBalance(CreditRetrieveBalanceParams.none(), requestOptions)
 
-    /** Top up credits balance */
+    /** Get top-up billing status */
+    fun retrieveTopupStatus(
+        params: CreditRetrieveTopupStatusParams
+    ): CreditRetrieveTopupStatusResponse = retrieveTopupStatus(params, RequestOptions.none())
+
+    /** @see retrieveTopupStatus */
+    fun retrieveTopupStatus(
+        params: CreditRetrieveTopupStatusParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CreditRetrieveTopupStatusResponse
+
+    /**
+     * Create a Stripe Checkout session only after the user confirms. The request never completes
+     * payment or adds credits by itself.
+     */
     fun topupBalance(params: CreditTopupBalanceParams): CreditTopupBalanceResponse =
         topupBalance(params, RequestOptions.none())
 
@@ -65,6 +93,21 @@ interface CreditService {
          * The original service is not modified.
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): CreditService.WithRawResponse
+
+        /**
+         * Returns a raw HTTP response for `get /credits/topup/redirect`, but is otherwise the same
+         * as [CreditService.redirectTopupCheckout].
+         */
+        @MustBeClosed
+        fun redirectTopupCheckout(params: CreditRedirectTopupCheckoutParams): HttpResponse =
+            redirectTopupCheckout(params, RequestOptions.none())
+
+        /** @see redirectTopupCheckout */
+        @MustBeClosed
+        fun redirectTopupCheckout(
+            params: CreditRedirectTopupCheckoutParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponse
 
         /**
          * Returns a raw HTTP response for `get /credits`, but is otherwise the same as
@@ -94,6 +137,23 @@ interface CreditService {
             requestOptions: RequestOptions
         ): HttpResponseFor<CreditRetrieveBalanceResponse> =
             retrieveBalance(CreditRetrieveBalanceParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /credits/topup/status`, but is otherwise the same as
+         * [CreditService.retrieveTopupStatus].
+         */
+        @MustBeClosed
+        fun retrieveTopupStatus(
+            params: CreditRetrieveTopupStatusParams
+        ): HttpResponseFor<CreditRetrieveTopupStatusResponse> =
+            retrieveTopupStatus(params, RequestOptions.none())
+
+        /** @see retrieveTopupStatus */
+        @MustBeClosed
+        fun retrieveTopupStatus(
+            params: CreditRetrieveTopupStatusParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<CreditRetrieveTopupStatusResponse>
 
         /**
          * Returns a raw HTTP response for `post /credits/topup`, but is otherwise the same as

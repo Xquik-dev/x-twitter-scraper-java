@@ -25,6 +25,8 @@ import com.x_twitter_scraper.api.models.monitors.MonitorListParams
 import com.x_twitter_scraper.api.models.monitors.MonitorListResponse
 import com.x_twitter_scraper.api.models.monitors.MonitorRetrieveParams
 import com.x_twitter_scraper.api.models.monitors.MonitorUpdateParams
+import com.x_twitter_scraper.api.services.async.monitors.KeywordServiceAsync
+import com.x_twitter_scraper.api.services.async.monitors.KeywordServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -37,10 +39,15 @@ class MonitorServiceAsyncImpl internal constructor(private val clientOptions: Cl
         WithRawResponseImpl(clientOptions)
     }
 
+    private val keywords: KeywordServiceAsync by lazy { KeywordServiceAsyncImpl(clientOptions) }
+
     override fun withRawResponse(): MonitorServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): MonitorServiceAsync =
         MonitorServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    /** Real-time X account monitoring */
+    override fun keywords(): KeywordServiceAsync = keywords
 
     override fun create(
         params: MonitorCreateParams,
@@ -83,12 +90,19 @@ class MonitorServiceAsyncImpl internal constructor(private val clientOptions: Cl
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
+        private val keywords: KeywordServiceAsync.WithRawResponse by lazy {
+            KeywordServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): MonitorServiceAsync.WithRawResponse =
             MonitorServiceAsyncImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        /** Real-time X account monitoring */
+        override fun keywords(): KeywordServiceAsync.WithRawResponse = keywords
 
         private val createHandler: Handler<MonitorCreateResponse> =
             jsonHandler<MonitorCreateResponse>(clientOptions.jsonMapper)

@@ -15,7 +15,6 @@ internal class DmSendParamsTest {
             .account("@elonmusk")
             .text("Example text content")
             .addMediaId("1234567890123456789")
-            .replyToMessageId("1234567890123456789")
             .build()
     }
 
@@ -41,7 +40,6 @@ internal class DmSendParamsTest {
                 .account("@elonmusk")
                 .text("Example text content")
                 .addMediaId("1234567890123456789")
-                .replyToMessageId("1234567890123456789")
                 .build()
 
         val body = params._body()
@@ -49,7 +47,6 @@ internal class DmSendParamsTest {
         assertThat(body.account()).isEqualTo("@elonmusk")
         assertThat(body.text()).isEqualTo("Example text content")
         assertThat(body.mediaIds().getOrNull()).containsExactly("1234567890123456789")
-        assertThat(body.replyToMessageId()).contains("1234567890123456789")
     }
 
     @Test
