@@ -13,6 +13,7 @@ import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo
 import com.github.tomakehurst.wiremock.junit5.WireMockTest
 import com.x_twitter_scraper.api.client.XTwitterScraperClient
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
+import com.x_twitter_scraper.api.models.account.AccountRetrieveParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
@@ -32,6 +33,26 @@ internal class ServiceParamsTest {
                 .baseUrl(wmRuntimeInfo.httpBaseUrl)
                 .apiKey("My API Key")
                 .build()
+    }
+
+    @Disabled("Mock server tests are disabled")
+    @Test
+    fun retrieve() {
+        val accountService = client.account()
+        stubFor(get(anyUrl()).willReturn(ok("{}")))
+
+        accountService.retrieve(
+            AccountRetrieveParams.builder()
+                .putAdditionalHeader("Secret-Header", "42")
+                .putAdditionalQueryParam("secret_query_param", "42")
+                .build()
+        )
+
+        verify(
+            getRequestedFor(anyUrl())
+                .withHeader("Secret-Header", equalTo("42"))
+                .withQueryParam("secret_query_param", equalTo("42"))
+        )
     }
 
     @Disabled("Mock server tests are disabled")

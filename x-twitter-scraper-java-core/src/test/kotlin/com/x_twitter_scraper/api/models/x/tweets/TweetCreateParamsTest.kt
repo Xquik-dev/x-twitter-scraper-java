@@ -16,7 +16,6 @@ internal class TweetCreateParamsTest {
             .communityId("1500000000000000000")
             .isNoteTweet(false)
             .addMedia("https://example.com/image.jpg")
-            .addMediaId("1234567890123456789")
             .replyToTweetId("1234567890")
             .text("Just launched our new feature!")
             .build()
@@ -31,7 +30,6 @@ internal class TweetCreateParamsTest {
                 .communityId("1500000000000000000")
                 .isNoteTweet(false)
                 .addMedia("https://example.com/image.jpg")
-                .addMediaId("1234567890123456789")
                 .replyToTweetId("1234567890")
                 .text("Just launched our new feature!")
                 .build()
@@ -43,7 +41,6 @@ internal class TweetCreateParamsTest {
         assertThat(body.communityId()).contains("1500000000000000000")
         assertThat(body.isNoteTweet()).contains(false)
         assertThat(body.media().getOrNull()).containsExactly("https://example.com/image.jpg")
-        assertThat(body.mediaIds().getOrNull()).containsExactly("1234567890123456789")
         assertThat(body.replyToTweetId()).contains("1234567890")
         assertThat(body.text()).contains("Just launched our new feature!")
     }

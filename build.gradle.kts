@@ -8,7 +8,7 @@ repositories {
 
 allprojects {
     group = "com.x_twitter_scraper.api"
-    version = "0.4.0" // x-release-please-version
+    version = "0.3.0"
 }
 
 subprojects {
@@ -21,7 +21,6 @@ subprojects {
         group = "Verification"
         description = "Verifies all source files are formatted."
     }
-    apply(plugin = "org.jetbrains.dokka")
 }
 
 subprojects {

@@ -34,7 +34,7 @@ internal class ListServiceAsyncTest {
 
         val paginatedUsersFuture =
             listServiceAsync.retrieveMembers(
-                ListRetrieveMembersParams.builder().id("id").cursor("cursor").build()
+                ListRetrieveMembersParams.builder().id("id").cursor("cursor").pageSize(0L).build()
             )
 
         val paginatedUsers = paginatedUsersFuture.get()

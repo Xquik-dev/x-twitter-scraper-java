@@ -1,37 +1,32 @@
-# X (Twitter) Scraper Java SDK: Tweet Search, Profile Tweets, Followers & Posting
+# Xquik API Library
 
-> **Xquik is an independent third-party service.** Not affiliated with X Corp.
-> "Twitter" and "X" are trademarks of X Corp.
+[![Maven Central](https://img.shields.io/maven-central/v/com.x_twitter_scraper.api/x-twitter-scraper-java)](https://central.sonatype.com/artifact/com.x_twitter_scraper.api/x-twitter-scraper-java/0.3.0)
+[![javadoc](https://javadoc.io/badge2/com.x_twitter_scraper.api/x-twitter-scraper-java/0.3.0/javadoc.svg)](https://javadoc.io/doc/com.x_twitter_scraper.api/x-twitter-scraper-java/0.3.0)
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg?url=https%3A%2F%2Fgithub.com%2FXquik-dev%2Fx-twitter-scraper-java)](https://deepwiki.com/Xquik-dev/x-twitter-scraper-java)
-[![Skills.sh x-twitter-scraper Skill](https://skills.sh/b/xquik-dev/x-twitter-scraper)](https://skills.sh/xquik-dev/x-twitter-scraper)
+The Xquik SDK provides convenient access to the [X Twitter Scraper REST API](https://xquik.com) from applications written in Java.
 
-> Maven Central publication is pending. Build from source until the
-> `com.x_twitter_scraper.api:x-twitter-scraper-java` artifact resolves in Maven
-> Central.
-
-The Xquik Java SDK is a Twitter API SDK and X API alternative for tweet search, advanced Twitter search queries, profile tweets, user lookup, follower export, media download, media upload, monitoring, webhooks, and posting automation.
-
-Use it from Java services to get tweets from profiles, search tweets by keyword or operator query, send tweets, post replies, like, repost, follow, DM, run giveaway draws, and automate X workflows. It is similar to the X Twitter Scraper Kotlin SDK but with Java ergonomics such as `Optional` instead of nullable values, `Stream` instead of `Sequence`, and `CompletableFuture` instead of suspend functions.
+The X Twitter Scraper Java SDK is similar to the X Twitter Scraper Kotlin SDK but with minor differences that make it more ergonomic for use in Java, such as `Optional` instead of nullable values, `Stream` instead of `Sequence`, and `CompletableFuture` instead of suspend functions.
 
 It is generated with [Stainless](https://www.stainless.com/).
 
-The REST API documentation can be found on [xquik.com](https://xquik.com). Generated Javadocs can be built locally from source.
+The REST API documentation can be found on [xquik.com](https://xquik.com). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.x_twitter_scraper.api/x-twitter-scraper-java/0.3.0).
 
 ## Installation
 
-### Source Build
+### Gradle
 
-```bash
-git clone https://github.com/Xquik-dev/x-twitter-scraper-java.git
-cd x-twitter-scraper-java
-./gradlew build
+```kotlin
+implementation("com.x_twitter_scraper.api:x-twitter-scraper-java:0.3.0")
 ```
 
-### Local Maven Testing
+### Maven
 
-```bash
-./gradlew publishToMavenLocal -PpublishLocal
+```xml
+<dependency>
+  <groupId>com.x_twitter_scraper.api</groupId>
+  <artifactId>x-twitter-scraper-java</artifactId>
+  <version>0.3.0</version>
+</dependency>
 ```
 
 ## Requirements
@@ -303,25 +298,21 @@ To access this data, prefix any HTTP method call on a client or service with `wi
 ```java
 import com.x_twitter_scraper.api.core.http.Headers;
 import com.x_twitter_scraper.api.core.http.HttpResponseFor;
-import com.x_twitter_scraper.api.models.PaginatedTweets;
-import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams;
+import com.x_twitter_scraper.api.models.account.AccountRetrieveParams;
+import com.x_twitter_scraper.api.models.account.AccountRetrieveResponse;
 
-TweetSearchParams params = TweetSearchParams.builder()
-    .q("from:elonmusk")
-    .limit(10L)
-    .build();
-HttpResponseFor<PaginatedTweets> paginatedTweets = client.x().tweets().withRawResponse().search(params);
+HttpResponseFor<AccountRetrieveResponse> account = client.account().withRawResponse().retrieve();
 
-int statusCode = paginatedTweets.statusCode();
-Headers headers = paginatedTweets.headers();
+int statusCode = account.statusCode();
+Headers headers = account.headers();
 ```
 
 You can still deserialize the response into an instance of a Java class if needed:
 
 ```java
-import com.x_twitter_scraper.api.models.PaginatedTweets;
+import com.x_twitter_scraper.api.models.account.AccountRetrieveResponse;
 
-PaginatedTweets parsedPaginatedTweets = paginatedTweets.parse();
+AccountRetrieveResponse parsedAccount = account.parse();
 ```
 
 ## Error handling
@@ -351,8 +342,6 @@ The SDK throws custom unchecked exception types:
 
 ## Logging
 
-The SDK uses the standard [OkHttp logging interceptor](https://github.com/square/okhttp/tree/master/okhttp-logging-interceptor).
-
 Enable logging by setting the `X_TWITTER_SCRAPER_LOG` environment variable to `info`:
 
 ```sh
@@ -363,6 +352,19 @@ Or to `debug` for more verbose logging:
 
 ```sh
 export X_TWITTER_SCRAPER_LOG=debug
+```
+
+Or configure the client manually using the `logLevel` method:
+
+```java
+import com.x_twitter_scraper.api.client.XTwitterScraperClient;
+import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient;
+import com.x_twitter_scraper.api.core.LogLevel;
+
+XTwitterScraperClient client = XTwitterScraperOkHttpClient.builder()
+    .fromEnv()
+    .logLevel(LogLevel.INFO)
+    .build();
 ```
 
 ## ProGuard and R8
@@ -419,11 +421,9 @@ Requests time out after 1 minute by default.
 To set a custom timeout, configure the method call using the `timeout` method:
 
 ```java
-import com.x_twitter_scraper.api.models.PaginatedTweets;
+import com.x_twitter_scraper.api.models.account.AccountRetrieveResponse;
 
-PaginatedTweets paginatedTweets = client.x().tweets().search(
-  params, RequestOptions.builder().timeout(Duration.ofSeconds(30)).build()
-);
+AccountRetrieveResponse account = client.account().retrieve(RequestOptions.builder().timeout(Duration.ofSeconds(30)).build());
 ```
 
 Or configure the default for all method calls at the client level:
@@ -456,6 +456,21 @@ XTwitterScraperClient client = XTwitterScraperOkHttpClient.builder()
         "https://example.com", 8080
       )
     ))
+    .build();
+```
+
+If the proxy responds with `407 Proxy Authentication Required`, supply credentials by also configuring `proxyAuthenticator`:
+
+```java
+import com.x_twitter_scraper.api.client.XTwitterScraperClient;
+import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient;
+import com.x_twitter_scraper.api.core.http.ProxyAuthenticator;
+
+XTwitterScraperClient client = XTwitterScraperOkHttpClient.builder()
+    .fromEnv()
+    .proxy(...)
+    // Or a custom implementation of `ProxyAuthenticator`.
+    .proxyAuthenticator(ProxyAuthenticator.basic("username", "password"))
     .build();
 ```
 
@@ -679,7 +694,9 @@ In rare cases, the API may return a response that doesn't match the expected typ
 
 By default, the SDK will not throw an exception in this case. It will throw [`XTwitterScraperInvalidDataException`](x-twitter-scraper-java-core/src/main/kotlin/com/x_twitter_scraper/api/errors/XTwitterScraperInvalidDataException.kt) only if you directly access the property.
 
-If you would prefer to check that the response is completely well-typed upfront, then either call `validate()`:
+Validating the response is _not_ forwards compatible with new types from the API for existing fields.
+
+If you would still prefer to check that the response is completely well-typed upfront, then either call `validate()`:
 
 ```java
 import com.x_twitter_scraper.api.models.PaginatedTweets;
@@ -747,4 +764,4 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/Xquik-dev/x-twitter-scraper-java/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/x-twitter-scraper-java/issues) with questions, bugs, or suggestions.

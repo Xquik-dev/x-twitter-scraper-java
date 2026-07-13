@@ -6,10 +6,12 @@ import com.fasterxml.jackson.databind.json.JsonMapper
 import com.x_twitter_scraper.api.client.XTwitterScraperClient
 import com.x_twitter_scraper.api.client.XTwitterScraperClientImpl
 import com.x_twitter_scraper.api.core.ClientOptions
+import com.x_twitter_scraper.api.core.LogLevel
 import com.x_twitter_scraper.api.core.Sleeper
 import com.x_twitter_scraper.api.core.Timeout
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.HttpClient
+import com.x_twitter_scraper.api.core.http.ProxyAuthenticator
 import com.x_twitter_scraper.api.core.http.QueryParams
 import com.x_twitter_scraper.api.core.jsonMapper
 import java.net.Proxy
@@ -47,6 +49,7 @@ class XTwitterScraperOkHttpClient private constructor() {
         private var clientOptions: ClientOptions.Builder = ClientOptions.builder()
         private var dispatcherExecutorService: ExecutorService? = null
         private var proxy: Proxy? = null
+        private var proxyAuthenticator: ProxyAuthenticator? = null
         private var maxIdleConnections: Int? = null
         private var keepAliveDuration: Duration? = null
         private var sslSocketFactory: SSLSocketFactory? = null
@@ -76,6 +79,20 @@ class XTwitterScraperOkHttpClient private constructor() {
 
         /** Alias for calling [Builder.proxy] with `proxy.orElse(null)`. */
         fun proxy(proxy: Optional<Proxy>) = proxy(proxy.getOrNull())
+
+        /**
+         * Provides credentials when an HTTP proxy responds with `407 Proxy Authentication
+         * Required`.
+         */
+        fun proxyAuthenticator(proxyAuthenticator: ProxyAuthenticator?) = apply {
+            this.proxyAuthenticator = proxyAuthenticator
+        }
+
+        /**
+         * Alias for calling [Builder.proxyAuthenticator] with `proxyAuthenticator.orElse(null)`.
+         */
+        fun proxyAuthenticator(proxyAuthenticator: Optional<ProxyAuthenticator>) =
+            proxyAuthenticator(proxyAuthenticator.getOrNull())
 
         /**
          * The maximum number of idle connections kept by the underlying OkHttp connection pool.
@@ -217,6 +234,9 @@ class XTwitterScraperOkHttpClient private constructor() {
         /**
          * Whether to call `validate` on every response before returning it.
          *
+         * Setting this to `true` is _not_ forwards compatible with new types from the API for
+         * existing fields.
+         *
          * Defaults to false, which means the shape of the response will not be validated upfront.
          * Instead, validation will only occur for the parts of the response that are accessed.
          */
@@ -257,6 +277,15 @@ class XTwitterScraperOkHttpClient private constructor() {
          * Defaults to 2.
          */
         fun maxRetries(maxRetries: Int) = apply { clientOptions.maxRetries(maxRetries) }
+
+        /**
+         * The level at which to log request and response information.
+         *
+         * [fromEnv] will set the level from environment variables. See [LogLevel.fromEnv].
+         *
+         * Defaults to [LogLevel.fromEnv].
+         */
+        fun logLevel(logLevel: LogLevel) = apply { clientOptions.logLevel(logLevel) }
 
         fun apiKey(apiKey: String?) = apply { clientOptions.apiKey(apiKey) }
 
@@ -368,6 +397,7 @@ class XTwitterScraperOkHttpClient private constructor() {
                         OkHttpClient.builder()
                             .timeout(clientOptions.timeout())
                             .proxy(proxy)
+                            .proxyAuthenticator(proxyAuthenticator)
                             .maxIdleConnections(maxIdleConnections)
                             .keepAliveDuration(keepAliveDuration)
                             .dispatcherExecutorService(dispatcherExecutorService)

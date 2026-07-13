@@ -25,6 +25,7 @@ private constructor(
     private val monitorsUsed: JsonField<Long>,
     private val plan: JsonField<Plan>,
     private val creditInfo: JsonField<CreditInfo>,
+    private val xUsername: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -40,7 +41,8 @@ private constructor(
         @JsonProperty("creditInfo")
         @ExcludeMissing
         creditInfo: JsonField<CreditInfo> = JsonMissing.of(),
-    ) : this(monitorsAllowed, monitorsUsed, plan, creditInfo, mutableMapOf())
+        @JsonProperty("xUsername") @ExcludeMissing xUsername: JsonField<String> = JsonMissing.of(),
+    ) : this(monitorsAllowed, monitorsUsed, plan, creditInfo, xUsername, mutableMapOf())
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -65,6 +67,14 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun creditInfo(): Optional<CreditInfo> = creditInfo.getOptional("creditInfo")
+
+    /**
+     * Linked X username, omitted when no X account is connected.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun xUsername(): Optional<String> = xUsername.getOptional("xUsername")
 
     /**
      * Returns the raw JSON value of [monitorsAllowed].
@@ -100,6 +110,13 @@ private constructor(
     @ExcludeMissing
     fun _creditInfo(): JsonField<CreditInfo> = creditInfo
 
+    /**
+     * Returns the raw JSON value of [xUsername].
+     *
+     * Unlike [xUsername], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("xUsername") @ExcludeMissing fun _xUsername(): JsonField<String> = xUsername
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -134,6 +151,7 @@ private constructor(
         private var monitorsUsed: JsonField<Long>? = null
         private var plan: JsonField<Plan>? = null
         private var creditInfo: JsonField<CreditInfo> = JsonMissing.of()
+        private var xUsername: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -142,6 +160,7 @@ private constructor(
             monitorsUsed = accountRetrieveResponse.monitorsUsed
             plan = accountRetrieveResponse.plan
             creditInfo = accountRetrieveResponse.creditInfo
+            xUsername = accountRetrieveResponse.xUsername
             additionalProperties = accountRetrieveResponse.additionalProperties.toMutableMap()
         }
 
@@ -190,6 +209,18 @@ private constructor(
          */
         fun creditInfo(creditInfo: JsonField<CreditInfo>) = apply { this.creditInfo = creditInfo }
 
+        /** Linked X username, omitted when no X account is connected. */
+        fun xUsername(xUsername: String) = xUsername(JsonField.of(xUsername))
+
+        /**
+         * Sets [Builder.xUsername] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.xUsername] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun xUsername(xUsername: JsonField<String>) = apply { this.xUsername = xUsername }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -229,12 +260,21 @@ private constructor(
                 checkRequired("monitorsUsed", monitorsUsed),
                 checkRequired("plan", plan),
                 creditInfo,
+                xUsername,
                 additionalProperties.toMutableMap(),
             )
     }
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
+     */
     fun validate(): AccountRetrieveResponse = apply {
         if (validated) {
             return@apply
@@ -244,6 +284,7 @@ private constructor(
         monitorsUsed()
         plan().validate()
         creditInfo().ifPresent { it.validate() }
+        xUsername()
         validated = true
     }
 
@@ -265,7 +306,8 @@ private constructor(
         (if (monitorsAllowed.asKnown().isPresent) 1 else 0) +
             (if (monitorsUsed.asKnown().isPresent) 1 else 0) +
             (plan.asKnown().getOrNull()?.validity() ?: 0) +
-            (creditInfo.asKnown().getOrNull()?.validity() ?: 0)
+            (creditInfo.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (xUsername.asKnown().isPresent) 1 else 0)
 
     class Plan @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -356,6 +398,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
         fun validate(): Plan = apply {
             if (validated) {
                 return@apply
@@ -627,6 +678,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
         fun validate(): CreditInfo = apply {
             if (validated) {
                 return@apply
@@ -699,15 +759,23 @@ private constructor(
             monitorsUsed == other.monitorsUsed &&
             plan == other.plan &&
             creditInfo == other.creditInfo &&
+            xUsername == other.xUsername &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(monitorsAllowed, monitorsUsed, plan, creditInfo, additionalProperties)
+        Objects.hash(
+            monitorsAllowed,
+            monitorsUsed,
+            plan,
+            creditInfo,
+            xUsername,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "AccountRetrieveResponse{monitorsAllowed=$monitorsAllowed, monitorsUsed=$monitorsUsed, plan=$plan, creditInfo=$creditInfo, additionalProperties=$additionalProperties}"
+        "AccountRetrieveResponse{monitorsAllowed=$monitorsAllowed, monitorsUsed=$monitorsUsed, plan=$plan, creditInfo=$creditInfo, xUsername=$xUsername, additionalProperties=$additionalProperties}"
 }

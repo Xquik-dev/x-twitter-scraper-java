@@ -71,7 +71,11 @@ internal class CommunityServiceAsyncTest {
 
         val paginatedUsersFuture =
             communityServiceAsync.retrieveMembers(
-                CommunityRetrieveMembersParams.builder().id("id").cursor("cursor").build()
+                CommunityRetrieveMembersParams.builder()
+                    .id("id")
+                    .cursor("cursor")
+                    .pageSize(0L)
+                    .build()
             )
 
         val paginatedUsers = paginatedUsersFuture.get()

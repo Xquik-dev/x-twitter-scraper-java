@@ -5,12 +5,16 @@ package com.x_twitter_scraper.api.errors
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.http.Headers
+import com.x_twitter_scraper.api.core.jsonMapper
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class UnauthorizedException
 private constructor(private val headers: Headers, private val body: JsonValue, cause: Throwable?) :
-    XTwitterScraperServiceException("401: $body", cause) {
+    XTwitterScraperServiceException(
+        "401: ${if (body.isMissing()) "Unknown" else jsonMapper().writeValueAsString(body)}",
+        cause,
+    ) {
 
     override fun statusCode(): Int = 401
 

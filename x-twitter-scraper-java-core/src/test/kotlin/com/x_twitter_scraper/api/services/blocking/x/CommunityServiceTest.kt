@@ -68,7 +68,11 @@ internal class CommunityServiceTest {
 
         val paginatedUsers =
             communityService.retrieveMembers(
-                CommunityRetrieveMembersParams.builder().id("id").cursor("cursor").build()
+                CommunityRetrieveMembersParams.builder()
+                    .id("id")
+                    .cursor("cursor")
+                    .pageSize(0L)
+                    .build()
             )
 
         paginatedUsers.validate()

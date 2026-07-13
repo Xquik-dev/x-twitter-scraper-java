@@ -33,7 +33,7 @@ internal class ListServiceTest {
 
         val paginatedUsers =
             listService.retrieveMembers(
-                ListRetrieveMembersParams.builder().id("id").cursor("cursor").build()
+                ListRetrieveMembersParams.builder().id("id").cursor("cursor").pageSize(0L).build()
             )
 
         paginatedUsers.validate()

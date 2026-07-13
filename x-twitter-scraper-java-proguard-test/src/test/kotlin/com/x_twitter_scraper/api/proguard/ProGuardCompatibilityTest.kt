@@ -6,7 +6,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
 import com.x_twitter_scraper.api.core.jsonMapper
 import com.x_twitter_scraper.api.models.EventType
-import com.x_twitter_scraper.api.models.x.tweets.TweetAuthor
+import com.x_twitter_scraper.api.models.account.AccountRetrieveResponse
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.jvm.javaMethod
 import org.assertj.core.api.Assertions.assertThat
@@ -69,24 +69,31 @@ internal class ProGuardCompatibilityTest {
     }
 
     @Test
-    fun tweetAuthorRoundtrip() {
+    fun accountRetrieveResponseRoundtrip() {
         val jsonMapper = jsonMapper()
-        val tweetAuthor =
-            TweetAuthor.builder()
-                .id("9876543210")
-                .followers(150000000L)
-                .username("elonmusk")
-                .verified(true)
-                .profilePicture("https://pbs.twimg.com/profile_images/example.jpg")
+        val accountRetrieveResponse =
+            AccountRetrieveResponse.builder()
+                .monitorsAllowed(10L)
+                .monitorsUsed(3L)
+                .plan(AccountRetrieveResponse.Plan.ACTIVE)
+                .creditInfo(
+                    AccountRetrieveResponse.CreditInfo.builder()
+                        .autoTopupEnabled(false)
+                        .balance(50000L)
+                        .lifetimePurchased(140000L)
+                        .lifetimeUsed(90000L)
+                        .build()
+                )
+                .xUsername("elonmusk")
                 .build()
 
-        val roundtrippedTweetAuthor =
+        val roundtrippedAccountRetrieveResponse =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(tweetAuthor),
-                jacksonTypeRef<TweetAuthor>(),
+                jsonMapper.writeValueAsString(accountRetrieveResponse),
+                jacksonTypeRef<AccountRetrieveResponse>(),
             )
 
-        assertThat(roundtrippedTweetAuthor).isEqualTo(tweetAuthor)
+        assertThat(roundtrippedAccountRetrieveResponse).isEqualTo(accountRetrieveResponse)
     }
 
     @Test
