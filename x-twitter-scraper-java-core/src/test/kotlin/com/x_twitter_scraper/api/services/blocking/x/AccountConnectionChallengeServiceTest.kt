@@ -23,7 +23,7 @@ internal class AccountConnectionChallengeServiceTest {
             accountConnectionChallengeService.submit(
                 AccountConnectionChallengeSubmitParams.builder()
                     .id("id")
-                    .emailCode("123456")
+                    .emailCode("<EMAIL_VERIFICATION_CODE>")
                     .build()
             )
 

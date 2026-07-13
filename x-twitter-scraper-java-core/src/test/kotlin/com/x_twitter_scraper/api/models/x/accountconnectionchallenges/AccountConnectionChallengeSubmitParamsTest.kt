@@ -9,13 +9,19 @@ internal class AccountConnectionChallengeSubmitParamsTest {
 
     @Test
     fun create() {
-        AccountConnectionChallengeSubmitParams.builder().id("id").emailCode("123456").build()
+        AccountConnectionChallengeSubmitParams.builder()
+            .id("id")
+            .emailCode("<EMAIL_VERIFICATION_CODE>")
+            .build()
     }
 
     @Test
     fun pathParams() {
         val params =
-            AccountConnectionChallengeSubmitParams.builder().id("id").emailCode("123456").build()
+            AccountConnectionChallengeSubmitParams.builder()
+                .id("id")
+                .emailCode("<EMAIL_VERIFICATION_CODE>")
+                .build()
 
         assertThat(params._pathParam(0)).isEqualTo("id")
         // out-of-bound path param
@@ -25,10 +31,13 @@ internal class AccountConnectionChallengeSubmitParamsTest {
     @Test
     fun body() {
         val params =
-            AccountConnectionChallengeSubmitParams.builder().id("id").emailCode("123456").build()
+            AccountConnectionChallengeSubmitParams.builder()
+                .id("id")
+                .emailCode("<EMAIL_VERIFICATION_CODE>")
+                .build()
 
         val body = params._body()
 
-        assertThat(body.emailCode()).isEqualTo("123456")
+        assertThat(body.emailCode()).isEqualTo("<EMAIL_VERIFICATION_CODE>")
     }
 }

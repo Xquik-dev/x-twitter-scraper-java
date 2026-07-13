@@ -11,15 +11,15 @@ internal class AccountReauthParamsTest {
     fun create() {
         AccountReauthParams.builder()
             .id("id")
-            .password("password_value")
-            .email("user@example.com")
-            .totpSecret("totp_secret_value")
+            .password("<ACCOUNT_PASSWORD>")
+            .email("account@example.invalid")
+            .totpSecret("<TOTP_SECRET>")
             .build()
     }
 
     @Test
     fun pathParams() {
-        val params = AccountReauthParams.builder().id("id").password("password_value").build()
+        val params = AccountReauthParams.builder().id("id").password("<ACCOUNT_PASSWORD>").build()
 
         assertThat(params._pathParam(0)).isEqualTo("id")
         // out-of-bound path param
@@ -31,24 +31,24 @@ internal class AccountReauthParamsTest {
         val params =
             AccountReauthParams.builder()
                 .id("id")
-                .password("password_value")
-                .email("user@example.com")
-                .totpSecret("totp_secret_value")
+                .password("<ACCOUNT_PASSWORD>")
+                .email("account@example.invalid")
+                .totpSecret("<TOTP_SECRET>")
                 .build()
 
         val body = params._body()
 
-        assertThat(body.password()).isEqualTo("password_value")
-        assertThat(body.email()).contains("user@example.com")
-        assertThat(body.totpSecret()).contains("totp_secret_value")
+        assertThat(body.password()).isEqualTo("<ACCOUNT_PASSWORD>")
+        assertThat(body.email()).contains("account@example.invalid")
+        assertThat(body.totpSecret()).contains("<TOTP_SECRET>")
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = AccountReauthParams.builder().id("id").password("password_value").build()
+        val params = AccountReauthParams.builder().id("id").password("<ACCOUNT_PASSWORD>").build()
 
         val body = params._body()
 
-        assertThat(body.password()).isEqualTo("password_value")
+        assertThat(body.password()).isEqualTo("<ACCOUNT_PASSWORD>")
     }
 }
