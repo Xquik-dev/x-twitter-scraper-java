@@ -19,7 +19,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Full X account details with status, cookies, and update timestamp. */
+/** Connected X account details with health and timestamp metadata. */
 class XAccountDetail
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

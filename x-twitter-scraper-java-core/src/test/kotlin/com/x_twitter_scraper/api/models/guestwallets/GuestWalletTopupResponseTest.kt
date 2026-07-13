@@ -22,7 +22,12 @@ internal class GuestWalletTopupResponseTest {
                 .status(GuestWalletTopupResponse.Status.PENDING)
                 .walletId("gw_example")
                 .apiKey("xq_example_returned_once")
-                .authorization(GuestWalletTopupResponse.Authorization.builder().build())
+                .authorization(
+                    GuestWalletTopupResponse.Authorization.builder()
+                        .header(GuestWalletTopupResponse.Authorization.Header.AUTHORIZATION)
+                        .scheme(GuestWalletTopupResponse.Authorization.Scheme.BEARER)
+                        .build()
+                )
                 .credentialNotice(
                     GuestWalletTopupResponse.CredentialNotice
                         .STORE_API_KEY_AND_THE_IDEMPOTENCY_KEY_SECURELY_BEFORE_SHARING_CHECKOUT_URL_NO_EMAIL_RECOVERY_IS_AVAILABLE
@@ -42,7 +47,12 @@ internal class GuestWalletTopupResponseTest {
         assertThat(guestWalletTopupResponse.walletId()).isEqualTo("gw_example")
         assertThat(guestWalletTopupResponse.apiKey()).contains("xq_example_returned_once")
         assertThat(guestWalletTopupResponse.authorization())
-            .contains(GuestWalletTopupResponse.Authorization.builder().build())
+            .contains(
+                GuestWalletTopupResponse.Authorization.builder()
+                    .header(GuestWalletTopupResponse.Authorization.Header.AUTHORIZATION)
+                    .scheme(GuestWalletTopupResponse.Authorization.Scheme.BEARER)
+                    .build()
+            )
         assertThat(guestWalletTopupResponse.credentialNotice())
             .contains(
                 GuestWalletTopupResponse.CredentialNotice
@@ -63,7 +73,12 @@ internal class GuestWalletTopupResponseTest {
                 .status(GuestWalletTopupResponse.Status.PENDING)
                 .walletId("gw_example")
                 .apiKey("xq_example_returned_once")
-                .authorization(GuestWalletTopupResponse.Authorization.builder().build())
+                .authorization(
+                    GuestWalletTopupResponse.Authorization.builder()
+                        .header(GuestWalletTopupResponse.Authorization.Header.AUTHORIZATION)
+                        .scheme(GuestWalletTopupResponse.Authorization.Scheme.BEARER)
+                        .build()
+                )
                 .credentialNotice(
                     GuestWalletTopupResponse.CredentialNotice
                         .STORE_API_KEY_AND_THE_IDEMPOTENCY_KEY_SECURELY_BEFORE_SHARING_CHECKOUT_URL_NO_EMAIL_RECOVERY_IS_AVAILABLE
