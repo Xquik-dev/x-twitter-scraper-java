@@ -1,5 +1,9 @@
 # Jackson uses reflection and depends heavily on runtime attributes.
--keepattributes Exceptions,InnerClasses,Signature,Deprecated,*Annotation*
+-keepattributes Exceptions,InnerClasses,EnclosingMethod,Signature,Deprecated,*Annotation*
+
+# Jackson reads generic type information from concrete TypeReference subclasses at runtime.
+-keep,allowobfuscation class com.fasterxml.jackson.core.type.TypeReference
+-keep,allowobfuscation class * extends com.fasterxml.jackson.core.type.TypeReference
 
 # Jackson uses Kotlin reflection utilities, which themselves use reflection to access things.
 -keep class kotlin.reflect.** { *; }
@@ -16,10 +20,6 @@
 -keepclassmembers @interface com.fasterxml.jackson.annotation.** {
     *;
 }
-
-# Jackson uses reified type information to serialize and deserialize our classes (via `TypeReference`).
--keep class com.fasterxml.jackson.core.type.TypeReference { *; }
--keep class * extends com.fasterxml.jackson.core.type.TypeReference { *; }
 
 # Jackson uses reflection to access our class serializers and deserializers.
 -keep @com.fasterxml.jackson.databind.annotation.JsonSerialize class com.x_twitter_scraper.api.** { *; }

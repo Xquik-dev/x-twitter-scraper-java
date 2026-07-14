@@ -1,16 +1,22 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.x_twitter_scraper.api.proguard
+package com.xquik.consumer.proguard
 
-import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import com.fasterxml.jackson.core.type.TypeReference
+import com.x_twitter_scraper.api.client.XTwitterScraperClientImpl
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
+import com.x_twitter_scraper.api.core.ClientOptions
+import com.x_twitter_scraper.api.core.RequestOptions
+import com.x_twitter_scraper.api.core.http.Headers
+import com.x_twitter_scraper.api.core.http.HttpClient
+import com.x_twitter_scraper.api.core.http.HttpRequest
+import com.x_twitter_scraper.api.core.http.HttpResponse
 import com.x_twitter_scraper.api.core.jsonMapper
 import com.x_twitter_scraper.api.models.EventType
 import com.x_twitter_scraper.api.models.x.tweets.TweetAuthor
-import kotlin.reflect.full.memberFunctions
-import kotlin.reflect.jvm.javaMethod
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import java.io.ByteArrayInputStream
+import java.io.InputStream
+import java.util.concurrent.CompletableFuture
 
 internal class ProGuardCompatibilityTest {
 
@@ -22,53 +28,64 @@ internal class ProGuardCompatibilityTest {
             val jarPath = this::class.java.getProtectionDomain().codeSource.location
             println("JAR being used: $jarPath")
 
-            // We have to manually run the test methods instead of using the JUnit runner because it
-            // seems impossible to get working with R8.
             val test = ProGuardCompatibilityTest()
-            test::class
-                .memberFunctions
-                .asSequence()
-                .filter { function ->
-                    function.javaMethod?.isAnnotationPresent(Test::class.java) == true
-                }
-                .forEach { it.call(test) }
+            test.proguardRules()
+            test.client()
+            test.productionDeserialization()
+            test.tweetAuthorRoundtrip()
+            test.eventTypeRoundtrip()
         }
     }
 
-    @Test
     fun proguardRules() {
         val rulesFile =
             javaClass.classLoader.getResourceAsStream(
                 "META-INF/proguard/x-twitter-scraper-java-core.pro"
             )
 
-        assertThat(rulesFile).isNotNull()
+        checkNotNull(rulesFile).close()
     }
 
-    @Test
     fun client() {
         val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
 
-        assertThat(client).isNotNull()
-        assertThat(client.account()).isNotNull()
-        assertThat(client.apiKeys()).isNotNull()
-        assertThat(client.subscribe()).isNotNull()
-        assertThat(client.compose()).isNotNull()
-        assertThat(client.drafts()).isNotNull()
-        assertThat(client.styles()).isNotNull()
-        assertThat(client.radar()).isNotNull()
-        assertThat(client.monitors()).isNotNull()
-        assertThat(client.events()).isNotNull()
-        assertThat(client.extractions()).isNotNull()
-        assertThat(client.draws()).isNotNull()
-        assertThat(client.webhooks()).isNotNull()
-        assertThat(client.x()).isNotNull()
-        assertThat(client.trends()).isNotNull()
-        assertThat(client.support()).isNotNull()
-        assertThat(client.credits()).isNotNull()
+        client.account()
+        client.apiKeys()
+        client.subscribe()
+        client.compose()
+        client.drafts()
+        client.styles()
+        client.radar()
+        client.monitors()
+        client.events()
+        client.extractions()
+        client.draws()
+        client.webhooks()
+        client.x()
+        client.trends()
+        client.support()
+        client.credits()
+        client.close()
     }
 
-    @Test
+    fun productionDeserialization() {
+        val client =
+            XTwitterScraperClientImpl(
+                ClientOptions.builder()
+                    .httpClient(FixedResponseHttpClient(CREDIT_BALANCE_JSON))
+                    .apiKey("My API Key")
+                    .maxRetries(0)
+                    .build()
+            )
+
+        val balance = client.credits().retrieveBalance()
+        check(balance.autoTopupEnabled())
+        check(balance.balance() == 42L)
+        check(balance.lifetimePurchased() == 100L)
+        check(balance.lifetimeUsed() == 58L)
+        client.close()
+    }
+
     fun tweetAuthorRoundtrip() {
         val jsonMapper = jsonMapper()
         val tweetAuthor =
@@ -83,13 +100,12 @@ internal class ProGuardCompatibilityTest {
         val roundtrippedTweetAuthor =
             jsonMapper.readValue(
                 jsonMapper.writeValueAsString(tweetAuthor),
-                jacksonTypeRef<TweetAuthor>(),
+                object : TypeReference<TweetAuthor>() {},
             )
 
-        assertThat(roundtrippedTweetAuthor).isEqualTo(tweetAuthor)
+        check(roundtrippedTweetAuthor == tweetAuthor)
     }
 
-    @Test
     fun eventTypeRoundtrip() {
         val jsonMapper = jsonMapper()
         val eventType = EventType.TWEET_NEW
@@ -97,9 +113,39 @@ internal class ProGuardCompatibilityTest {
         val roundtrippedEventType =
             jsonMapper.readValue(
                 jsonMapper.writeValueAsString(eventType),
-                jacksonTypeRef<EventType>(),
+                object : TypeReference<EventType>() {},
             )
 
-        assertThat(roundtrippedEventType).isEqualTo(eventType)
+        check(roundtrippedEventType == eventType)
     }
+}
+
+private const val CREDIT_BALANCE_JSON =
+    """{"auto_topup_enabled":true,"balance":42,"lifetime_purchased":100,"lifetime_used":58}"""
+
+private class FixedResponseHttpClient(responseBody: String) : HttpClient {
+
+    private val responseBody = responseBody.toByteArray()
+
+    override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse =
+        response()
+
+    override fun executeAsync(
+        request: HttpRequest,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<HttpResponse> = CompletableFuture.completedFuture(response())
+
+    override fun close() {}
+
+    private fun response(): HttpResponse =
+        object : HttpResponse {
+
+            override fun statusCode(): Int = 200
+
+            override fun headers(): Headers = Headers.builder().build()
+
+            override fun body(): InputStream = ByteArrayInputStream(responseBody)
+
+            override fun close() {}
+        }
 }
