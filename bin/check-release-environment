@@ -22,6 +22,36 @@ if (( ${#missing_secrets[@]} > 0 )); then
   exit 1
 fi
 
+central_token="$(printf '%s:%s' "$SONATYPE_USERNAME" "$SONATYPE_PASSWORD" | base64 | tr -d '\n')"
+if ! central_status="$(
+  curl \
+    --silent \
+    --show-error \
+    --output /dev/null \
+    --write-out '%{http_code}' \
+    --request POST \
+    --connect-timeout 10 \
+    --max-time 30 \
+    --header "Authorization: Bearer $central_token" \
+    'https://central.sonatype.com/api/v1/publisher/status?id=00000000-0000-0000-0000-000000000000'
+)"; then
+  printf 'Maven Central credential validation could not reach Central Portal.\n'
+  exit 1
+fi
+
+case "$central_status" in
+  200 | 400 | 404)
+    ;;
+  401 | 403)
+    printf 'Maven Central rejected the configured user token.\n'
+    exit 1
+    ;;
+  *)
+    printf 'Maven Central credential validation returned HTTP %s.\n' "$central_status"
+    exit 1
+    ;;
+esac
+
 if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
   declared_version="$(sed -n 's/.*version = "\([^"]*\)".*/\1/p' build.gradle.kts | head -1)"
   expected_tag="v${declared_version}"
