@@ -32,7 +32,9 @@ private constructor(
     private constructor(
         @JsonProperty("hasMore") @ExcludeMissing hasMore: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("items") @ExcludeMissing items: JsonField<List<RadarItem>> = JsonMissing.of(),
-        @JsonProperty("nextCursor") @ExcludeMissing nextCursor: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("nextCursor")
+        @ExcludeMissing
+        nextCursor: JsonField<String> = JsonMissing.of(),
     ) : this(hasMore, items, nextCursor, mutableMapOf())
 
     /**
@@ -237,7 +239,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (hasMore.asKnown().isPresent) 1 else 0) +
-            (items.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (items.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (if (nextCursor.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {

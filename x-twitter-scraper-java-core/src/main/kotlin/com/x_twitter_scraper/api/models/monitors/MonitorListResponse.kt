@@ -202,7 +202,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (monitors.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+        (monitors.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (if (total.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {

@@ -462,7 +462,7 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (eventTypes.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (eventTypes.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
                 (if (isActive.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {

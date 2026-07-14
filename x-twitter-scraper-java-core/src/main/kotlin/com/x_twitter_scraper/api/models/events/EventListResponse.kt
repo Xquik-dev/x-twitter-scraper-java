@@ -32,7 +32,9 @@ private constructor(
     private constructor(
         @JsonProperty("events") @ExcludeMissing events: JsonField<List<Event>> = JsonMissing.of(),
         @JsonProperty("hasMore") @ExcludeMissing hasMore: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("nextCursor") @ExcludeMissing nextCursor: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("nextCursor")
+        @ExcludeMissing
+        nextCursor: JsonField<String> = JsonMissing.of(),
     ) : this(events, hasMore, nextCursor, mutableMapOf())
 
     /**
@@ -231,7 +233,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (events.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+        (events.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (if (hasMore.asKnown().isPresent) 1 else 0) +
             (if (nextCursor.asKnown().isPresent) 1 else 0)
 

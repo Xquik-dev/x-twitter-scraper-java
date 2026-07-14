@@ -242,7 +242,7 @@ private constructor(
     internal fun validity(): Int =
         (if (hasNextPage.asKnown().isPresent) 1 else 0) +
             (if (nextCursor.asKnown().isPresent) 1 else 0) +
-            (users.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+            (users.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

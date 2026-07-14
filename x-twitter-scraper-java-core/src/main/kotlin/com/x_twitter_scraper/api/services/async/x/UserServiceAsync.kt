@@ -768,7 +768,8 @@ interface UserServiceAsync {
         /** @see retrieveVerifiedFollowers */
         fun retrieveVerifiedFollowers(
             id: String,
-            params: UserRetrieveVerifiedFollowersParams = UserRetrieveVerifiedFollowersParams.none(),
+            params: UserRetrieveVerifiedFollowersParams =
+                UserRetrieveVerifiedFollowersParams.none(),
         ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveVerifiedFollowers(id, params, RequestOptions.none())
 

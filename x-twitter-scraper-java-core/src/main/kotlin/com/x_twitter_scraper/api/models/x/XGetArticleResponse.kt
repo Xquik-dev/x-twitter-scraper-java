@@ -231,7 +231,9 @@ private constructor(
             @ExcludeMissing
             replyCount: JsonField<Long> = JsonMissing.of(),
             @JsonProperty("title") @ExcludeMissing title: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("viewCount") @ExcludeMissing viewCount: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("viewCount")
+            @ExcludeMissing
+            viewCount: JsonField<Long> = JsonMissing.of(),
         ) : this(
             contents,
             coverImageUrl,
@@ -606,7 +608,7 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (contents.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (contents.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
                 (if (coverImageUrl.asKnown().isPresent) 1 else 0) +
                 (if (createdAt.asKnown().isPresent) 1 else 0) +
                 (if (likeCount.asKnown().isPresent) 1 else 0) +

@@ -244,7 +244,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (folders.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+        (folders.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (if (hasNextPage.asKnown().isPresent) 1 else 0) +
             (if (nextCursor.asKnown().isPresent) 1 else 0)
 

@@ -7,7 +7,7 @@
 [![Skills.sh x-twitter-scraper Skill](https://skills.sh/b/xquik-dev/x-twitter-scraper)](https://skills.sh/xquik-dev/x-twitter-scraper)
 
 > Maven Central publication is pending. Build from source until the
-> `com.x_twitter_scraper.api:x-twitter-scraper-java` artifact resolves in Maven
+> `com.xquik.api:x-twitter-scraper-java` artifact resolves in Maven
 > Central.
 
 The Xquik Java SDK is a Twitter API SDK and X API alternative for tweet search, advanced Twitter search queries, profile tweets, user lookup, follower export, media download, media upload, monitoring, webhooks, and posting automation.
@@ -373,7 +373,7 @@ ProGuard and R8 should automatically detect and use the published rules, but you
 
 ## Jackson
 
-The SDK depends on [Jackson](https://github.com/FasterXML/jackson) for JSON serialization/deserialization. It is compatible with version 2.13.4 or higher, but depends on version 2.18.2 by default.
+The SDK depends on [Jackson](https://github.com/FasterXML/jackson) for JSON serialization/deserialization. It requires version 2.22 or later and selects version 2.22.1 by default.
 
 The SDK throws an exception if it detects an incompatible Jackson version at runtime (e.g. if the default version was overridden in your Maven or Gradle config).
 

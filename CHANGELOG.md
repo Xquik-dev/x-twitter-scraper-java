@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.1 (2026-07-14)
+
+Full Changelog: [v0.4.0...v0.4.1](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.4.0...v0.4.1)
+
+### Chores
+
+* align Maven coordinates with the Xquik namespace
+* upgrade to Java 26, Gradle 9.6.1, Kotlin 2.4.0, and current stable dependencies
+* harden CI and Maven Central publishing
+* include Xquik non-affiliation in published POM metadata
+
 ## 0.4.0 (2026-04-25)
 
 Full Changelog: [v0.3.0...v0.4.0](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.3.0...v0.4.0)

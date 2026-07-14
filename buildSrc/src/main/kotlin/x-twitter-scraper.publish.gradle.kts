@@ -1,21 +1,21 @@
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinJvm
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
-import com.vanniktech.maven.publish.SonatypeHost
+import com.vanniktech.maven.publish.SourcesJar
 
 plugins {
     id("com.vanniktech.maven.publish")
 }
 
 publishing {
-  repositories {
-      if (project.hasProperty("publishLocal")) {
-          maven {
-              name = "LocalFileSystem"
-              url = uri("${rootProject.layout.buildDirectory.get()}/local-maven-repo")
-          }
-      }
-  }
+    repositories {
+        if (project.hasProperty("publishLocal")) {
+            maven {
+                name = "LocalFileSystem"
+                url = uri("${rootProject.layout.buildDirectory.get()}/local-maven-repo")
+            }
+        }
+    }
 }
 
 repositories {
@@ -30,38 +30,45 @@ extra["signingInMemoryKeyPassword"] = System.getenv("GPG_SIGNING_PASSWORD")
 configure<MavenPublishBaseExtension> {
     if (!project.hasProperty("publishLocal")) {
         signAllPublications()
-        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+        publishToMavenCentral()
     }
 
     coordinates(project.group.toString(), project.name, project.version.toString())
     configure(
         KotlinJvm(
-            javadocJar = JavadocJar.Dokka("dokkaJavadoc"),
-            sourcesJar = true,
+            javadocJar = JavadocJar.Dokka("dokkaGeneratePublicationHtml"),
+            sourcesJar = SourcesJar.Sources(),
         )
     )
 
     pom {
-        name.set("Xquik API")
-        description.set("Look up any tweet, user, or trend on X. Search tweets, check follower\nrelationships, download media, and monitor accounts in real time. 32 pay-per-use\nread endpoints work without a subscription — just pay per call. Write endpoints\n(post, like, retweet, follow, DM) and automation endpoints (bulk extractions,\ngiveaway draws, monitors, webhooks) require an API key or OAuth 2.1 bearer\ntoken.")
+        name.set("Xquik Java SDK")
+        description.set(
+            "Java SDK for the Xquik REST API. Xquik is an independent third-party service. " +
+                "Not affiliated with X Corp. \"Twitter\" and \"X\" are trademarks of X Corp."
+        )
         url.set("https://xquik.com")
 
         licenses {
             license {
-                name.set("Apache-2.0")
+                name.set("The Apache License, Version 2.0")
+                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                distribution.set("repo")
             }
         }
 
         developers {
             developer {
-                name.set("X Twitter Scraper")
+                name.set("Xquik")
                 email.set("support@xquik.com")
+                organization.set("Xquik")
+                organizationUrl.set("https://xquik.com")
             }
         }
 
         scm {
-            connection.set("scm:git:git://github.com/Xquik-dev/x-twitter-scraper-java.git")
-            developerConnection.set("scm:git:git://github.com/Xquik-dev/x-twitter-scraper-java.git")
+            connection.set("scm:git:https://github.com/Xquik-dev/x-twitter-scraper-java.git")
+            developerConnection.set("scm:git:ssh://git@github.com/Xquik-dev/x-twitter-scraper-java.git")
             url.set("https://github.com/Xquik-dev/x-twitter-scraper-java")
         }
     }

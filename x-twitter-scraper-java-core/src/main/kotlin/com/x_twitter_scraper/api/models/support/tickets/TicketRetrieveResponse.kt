@@ -314,7 +314,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (createdAt.asKnown().isPresent) 1 else 0) +
-            (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (messages.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (if (publicId.asKnown().isPresent) 1 else 0) +
             (if (status.asKnown().isPresent) 1 else 0) +
             (if (subject.asKnown().isPresent) 1 else 0) +

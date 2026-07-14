@@ -377,7 +377,11 @@ sealed class JsonValue : JsonField<Nothing>() {
                     JsonArray.of(node.elements().asSequence().map { fromJsonNode(it) }.toList())
                 OBJECT ->
                     JsonObject.of(
-                        node.fields().asSequence().map { it.key to fromJsonNode(it.value) }.toMap()
+                        node
+                            .properties()
+                            .asSequence()
+                            .map { it.key to fromJsonNode(it.value) }
+                            .toMap()
                     )
                 BINARY,
                 POJO,

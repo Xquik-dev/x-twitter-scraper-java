@@ -1,8 +1,10 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     id("x-twitter-scraper.java")
+    id("org.jetbrains.dokka")
     kotlin("jvm")
 }
 
@@ -12,21 +14,19 @@ repositories {
 
 kotlin {
     jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(26))
     }
 
     compilerOptions {
+        allWarningsAsErrors.set(true)
         freeCompilerArgs = listOf(
-            "-Xjvm-default=all",
             "-Xjdk-release=1.8",
-            // Suppress deprecation warnings because we may still reference and test deprecated members.
-            // TODO: Replace with `-Xsuppress-warning=DEPRECATION` once we use Kotlin compiler 2.1.0+.
-            "-nowarn",
         )
+        jvmDefault.set(JvmDefaultMode.NO_COMPATIBILITY)
         jvmTarget.set(JvmTarget.JVM_1_8)
-        languageVersion.set(KotlinVersion.KOTLIN_1_8)
-        apiVersion.set(KotlinVersion.KOTLIN_1_8)
-        coreLibrariesVersion = "1.8.0"
+        languageVersion.set(KotlinVersion.KOTLIN_2_2)
+        apiVersion.set(KotlinVersion.KOTLIN_2_2)
+        coreLibrariesVersion = "2.3.20"
     }
 }
 
@@ -38,9 +38,9 @@ tasks.withType<Test>().configureEach {
     inputs.property("skipMockTests", System.getenv("SKIP_MOCK_TESTS")).optional(true)
 }
 
-val ktfmt by configurations.creating
+val ktfmt = configurations.create("ktfmt")
 dependencies {
-    ktfmt("com.facebook:ktfmt:0.61")
+    ktfmt("com.facebook:ktfmt:0.64")
 }
 
 fun registerKtfmt(

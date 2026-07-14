@@ -4,6 +4,9 @@
 # For the testing framework.
 -keep class org.junit.** { *; }
 
+# Kotlin reflection loads runtime classes dynamically.
+-keep class kotlin.** { *; }
+
 # Many warnings don't apply for our testing purposes.
 -dontnote
 -dontwarn

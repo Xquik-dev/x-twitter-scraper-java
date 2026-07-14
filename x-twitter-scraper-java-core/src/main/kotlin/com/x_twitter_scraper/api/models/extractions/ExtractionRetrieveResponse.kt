@@ -36,7 +36,9 @@ private constructor(
         @JsonProperty("results")
         @ExcludeMissing
         results: JsonField<List<Result>> = JsonMissing.of(),
-        @JsonProperty("nextCursor") @ExcludeMissing nextCursor: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("nextCursor")
+        @ExcludeMissing
+        nextCursor: JsonField<String> = JsonMissing.of(),
     ) : this(hasMore, job, results, nextCursor, mutableMapOf())
 
     /**
@@ -46,7 +48,7 @@ private constructor(
     fun hasMore(): Boolean = hasMore.getRequired("hasMore")
 
     /**
-     * Extraction job metadata — shape varies by tool type (JSON)
+     * Extraction job metadata - shape varies by tool type (JSON)
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -148,7 +150,7 @@ private constructor(
          */
         fun hasMore(hasMore: JsonField<Boolean>) = apply { this.hasMore = hasMore }
 
-        /** Extraction job metadata — shape varies by tool type (JSON) */
+        /** Extraction job metadata - shape varies by tool type (JSON) */
         fun job(job: Job) = job(JsonField.of(job))
 
         /**
@@ -269,10 +271,10 @@ private constructor(
     internal fun validity(): Int =
         (if (hasMore.asKnown().isPresent) 1 else 0) +
             (job.asKnown().getOrNull()?.validity() ?: 0) +
-            (results.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (results.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (if (nextCursor.asKnown().isPresent) 1 else 0)
 
-    /** Extraction job metadata — shape varies by tool type (JSON) */
+    /** Extraction job metadata - shape varies by tool type (JSON) */
     class Job
     @JsonCreator
     private constructor(
@@ -354,8 +356,9 @@ private constructor(
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+        internal fun validity(): Int = additionalProperties.count { (_, value) ->
+            !value.isNull() && !value.isMissing()
+        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -453,8 +456,9 @@ private constructor(
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+        internal fun validity(): Int = additionalProperties.count { (_, value) ->
+            !value.isNull() && !value.isMissing()
+        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
