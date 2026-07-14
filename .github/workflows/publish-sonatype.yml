@@ -52,13 +52,11 @@ jobs:
           GPG_SIGNING_KEY_ID="$(gpg --batch --with-colons --list-secret-keys | awk -F: '$1 == "fpr" { print "0x" substr($10, length($10) - 15); exit }')"
           export GPG_SIGNING_KEY_ID
           ./gradlew publishAndReleaseToMavenCentral \
-            -PmavenCentralUsername="$SONATYPE_USERNAME" \
-            -PmavenCentralPassword="$SONATYPE_PASSWORD" \
             --no-configuration-cache \
             --no-daemon \
             --stacktrace
         env:
-          SONATYPE_USERNAME: ${{ secrets.X_TWITTER_SCRAPER_SONATYPE_USERNAME }}
-          SONATYPE_PASSWORD: ${{ secrets.X_TWITTER_SCRAPER_SONATYPE_PASSWORD }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.X_TWITTER_SCRAPER_SONATYPE_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.X_TWITTER_SCRAPER_SONATYPE_PASSWORD }}
           GPG_SIGNING_KEY: ${{ secrets.X_TWITTER_SCRAPER_SONATYPE_GPG_SIGNING_KEY }}
           GPG_SIGNING_PASSWORD: ${{ secrets.X_TWITTER_SCRAPER_SONATYPE_GPG_SIGNING_PASSWORD }}
