@@ -32,8 +32,10 @@ if ! central_status="$(
     --request POST \
     --connect-timeout 10 \
     --max-time 30 \
-    --header "Authorization: Bearer $central_token" \
-    'https://central.sonatype.com/api/v1/publisher/status?id=00000000-0000-0000-0000-000000000000'
+    --config - \
+    'https://central.sonatype.com/api/v1/publisher/status?id=00000000-0000-0000-0000-000000000000' <<CURL_CONFIG
+header = "Authorization: Bearer $central_token"
+CURL_CONFIG
 )"; then
   printf 'Maven Central credential validation could not reach Central Portal.\n'
   exit 1
