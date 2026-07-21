@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.ResourceLock
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
+import org.slf4j.LoggerFactory
 
 @ResourceLock("stderr")
 internal class LoggingHttpClientTest {
@@ -32,6 +33,7 @@ internal class LoggingHttpClientTest {
 
     @BeforeEach
     fun beforeEach() {
+        LoggerFactory.getILoggerFactory()
         originalErr = System.err
         errContent = ByteArrayOutputStream()
         System.setErr(PrintStream(errContent))
