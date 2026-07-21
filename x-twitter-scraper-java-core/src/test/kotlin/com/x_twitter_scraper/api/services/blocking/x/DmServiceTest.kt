@@ -47,6 +47,7 @@ internal class DmServiceTest {
             dmService.send(
                 DmSendParams.builder()
                     .userId("userId")
+                    .idempotencyKey("Idempotency-Key")
                     .account("@elonmusk")
                     .text("Example text content")
                     .addMediaId("1234567890123456789")

@@ -22,7 +22,11 @@ internal class FollowServiceAsyncTest {
 
         val followFuture =
             followServiceAsync.create(
-                FollowCreateParams.builder().id("id").account("@elonmusk").build()
+                FollowCreateParams.builder()
+                    .id("id")
+                    .idempotencyKey("Idempotency-Key")
+                    .account("@elonmusk")
+                    .build()
             )
 
         val follow = followFuture.get()
@@ -41,7 +45,11 @@ internal class FollowServiceAsyncTest {
 
         val responseFuture =
             followServiceAsync.deleteAll(
-                FollowDeleteAllParams.builder().id("id").account("@elonmusk").build()
+                FollowDeleteAllParams.builder()
+                    .id("id")
+                    .idempotencyKey("Idempotency-Key")
+                    .account("@elonmusk")
+                    .build()
             )
 
         val response = responseFuture.get()

@@ -47,6 +47,7 @@ internal class MediaServiceTest {
         val response =
             mediaService.upload(
                 MediaUploadParams.builder()
+                    .idempotencyKey("Idempotency-Key")
                     .account("@elonmusk")
                     .url("https://example.com/image.png")
                     .build()

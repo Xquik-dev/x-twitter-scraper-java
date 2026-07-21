@@ -22,10 +22,13 @@ import java.util.Optional
 /** Create community */
 class CommunityCreateParams
 private constructor(
+    private val idempotencyKey: String,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    fun idempotencyKey(): String = idempotencyKey
 
     /**
      * X account (@username or ID) creating the community
@@ -89,6 +92,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .idempotencyKey()
          * .account()
          * .name()
          * ```
@@ -99,16 +103,20 @@ private constructor(
     /** A builder for [CommunityCreateParams]. */
     class Builder internal constructor() {
 
+        private var idempotencyKey: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(communityCreateParams: CommunityCreateParams) = apply {
+            idempotencyKey = communityCreateParams.idempotencyKey
             body = communityCreateParams.body.toBuilder()
             additionalHeaders = communityCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = communityCreateParams.additionalQueryParams.toBuilder()
         }
+
+        fun idempotencyKey(idempotencyKey: String) = apply { this.idempotencyKey = idempotencyKey }
 
         /**
          * Sets the entire request body.
@@ -279,6 +287,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .idempotencyKey()
          * .account()
          * .name()
          * ```
@@ -287,6 +296,7 @@ private constructor(
          */
         fun build(): CommunityCreateParams =
             CommunityCreateParams(
+                checkRequired("idempotencyKey", idempotencyKey),
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -295,7 +305,13 @@ private constructor(
 
     fun _body(): Body = body
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                put("Idempotency-Key", idempotencyKey)
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -557,13 +573,15 @@ private constructor(
         }
 
         return other is CommunityCreateParams &&
+            idempotencyKey == other.idempotencyKey &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(idempotencyKey, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "CommunityCreateParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "CommunityCreateParams{idempotencyKey=$idempotencyKey, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -99,7 +99,6 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
 
     override fun dm(): DmService = dm
 
-    /** Media upload and download */
     override fun media(): MediaService = media
 
     /** X write actions (tweets, likes, follows, DMs) */
@@ -222,7 +221,6 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
 
         override fun dm(): DmService.WithRawResponse = dm
 
-        /** Media upload and download */
         override fun media(): MediaService.WithRawResponse = media
 
         /** X write actions (tweets, likes, follows, DMs) */

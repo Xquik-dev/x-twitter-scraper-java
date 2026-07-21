@@ -3,6 +3,7 @@
 package com.x_twitter_scraper.api.models.x.media
 
 import com.x_twitter_scraper.api.core.MultipartField
+import com.x_twitter_scraper.api.core.http.Headers
 import java.io.InputStream
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -12,15 +13,32 @@ internal class MediaUploadParamsTest {
     @Test
     fun create() {
         MediaUploadParams.builder()
+            .idempotencyKey("Idempotency-Key")
             .account("@elonmusk")
             .url("https://example.com/image.png")
             .build()
     }
 
     @Test
+    fun headers() {
+        val params =
+            MediaUploadParams.builder()
+                .idempotencyKey("Idempotency-Key")
+                .account("@elonmusk")
+                .url("https://example.com/image.png")
+                .build()
+
+        val headers = params._headers()
+
+        assertThat(headers)
+            .isEqualTo(Headers.builder().put("Idempotency-Key", "Idempotency-Key").build())
+    }
+
+    @Test
     fun body() {
         val params =
             MediaUploadParams.builder()
+                .idempotencyKey("Idempotency-Key")
                 .account("@elonmusk")
                 .url("https://example.com/image.png")
                 .build()

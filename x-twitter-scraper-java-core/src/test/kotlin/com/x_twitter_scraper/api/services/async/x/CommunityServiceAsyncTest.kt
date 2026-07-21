@@ -26,6 +26,7 @@ internal class CommunityServiceAsyncTest {
         val communityFuture =
             communityServiceAsync.create(
                 CommunityCreateParams.builder()
+                    .idempotencyKey("Idempotency-Key")
                     .account("@elonmusk")
                     .name("Example Name")
                     .description("A community for Tesla enthusiasts")
@@ -50,6 +51,7 @@ internal class CommunityServiceAsyncTest {
             communityServiceAsync.delete(
                 CommunityDeleteParams.builder()
                     .id("id")
+                    .idempotencyKey("Idempotency-Key")
                     .account("@elonmusk")
                     .communityName("Tesla Fans")
                     .build()

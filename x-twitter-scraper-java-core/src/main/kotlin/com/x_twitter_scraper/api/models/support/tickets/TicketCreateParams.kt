@@ -4,27 +4,31 @@ package com.x_twitter_scraper.api.models.support.tickets
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.x_twitter_scraper.api.core.ExcludeMissing
-import com.x_twitter_scraper.api.core.JsonField
-import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
+import com.x_twitter_scraper.api.core.MultipartField
 import com.x_twitter_scraper.api.core.Params
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
+import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /** Create a support ticket */
 class TicketCreateParams
 private constructor(
+    private val idempotencyKey: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    fun idempotencyKey(): Optional<String> = Optional.ofNullable(idempotencyKey)
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -39,18 +43,18 @@ private constructor(
     fun subject(): String = body.subject()
 
     /**
-     * Returns the raw JSON value of [body].
+     * Returns the raw multipart value of [body].
      *
-     * Unlike [body], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [body], this method doesn't throw if the multipart field has an unexpected type.
      */
-    fun _body_(): JsonField<String> = this.body._body_()
+    fun _body_(): MultipartField<String> = this.body._body_()
 
     /**
-     * Returns the raw JSON value of [subject].
+     * Returns the raw multipart value of [subject].
      *
-     * Unlike [subject], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [subject], this method doesn't throw if the multipart field has an unexpected type.
      */
-    fun _subject(): JsonField<String> = body._subject()
+    fun _subject(): MultipartField<String> = body._subject()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -79,16 +83,24 @@ private constructor(
     /** A builder for [TicketCreateParams]. */
     class Builder internal constructor() {
 
+        private var idempotencyKey: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(ticketCreateParams: TicketCreateParams) = apply {
+            idempotencyKey = ticketCreateParams.idempotencyKey
             body = ticketCreateParams.body.toBuilder()
             additionalHeaders = ticketCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = ticketCreateParams.additionalQueryParams.toBuilder()
         }
+
+        fun idempotencyKey(idempotencyKey: String?) = apply { this.idempotencyKey = idempotencyKey }
+
+        /** Alias for calling [Builder.idempotencyKey] with `idempotencyKey.orElse(null)`. */
+        fun idempotencyKey(idempotencyKey: Optional<String>) =
+            idempotencyKey(idempotencyKey.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -103,22 +115,22 @@ private constructor(
         fun body(body: String) = apply { this.body.body(body) }
 
         /**
-         * Sets [Builder.body] to an arbitrary JSON value.
+         * Sets [Builder.body] to an arbitrary multipart value.
          *
          * You should usually call [Builder.body] with a well-typed [String] value instead. This
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun body(body: JsonField<String>) = apply { this.body.body(body) }
+        fun body(body: MultipartField<String>) = apply { this.body.body(body) }
 
         fun subject(subject: String) = apply { body.subject(subject) }
 
         /**
-         * Sets [Builder.subject] to an arbitrary JSON value.
+         * Sets [Builder.subject] to an arbitrary multipart value.
          *
          * You should usually call [Builder.subject] with a well-typed [String] value instead. This
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun subject(subject: JsonField<String>) = apply { body.subject(subject) }
+        fun subject(subject: MultipartField<String>) = apply { body.subject(subject) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -252,59 +264,63 @@ private constructor(
          */
         fun build(): TicketCreateParams =
             TicketCreateParams(
+                idempotencyKey,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
     }
 
-    fun _body(): Body = body
+    fun _body(): Map<String, MultipartField<*>> =
+        (mapOf("body" to _body_(), "subject" to _subject()) +
+                _additionalBodyProperties().mapValues { (_, value) -> MultipartField.of(value) })
+            .toImmutable()
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                idempotencyKey?.let { put("Idempotency-Key", it) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
     class Body
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
-        private val body: JsonField<String>,
-        private val subject: JsonField<String>,
+        private val body: MultipartField<String>,
+        private val subject: MultipartField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
-        @JsonCreator
-        private constructor(
-            @JsonProperty("body") @ExcludeMissing body: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("subject") @ExcludeMissing subject: JsonField<String> = JsonMissing.of(),
-        ) : this(body, subject, mutableMapOf())
+        /**
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun body(): String = body.value.getRequired("body")
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
          *   value).
          */
-        fun body(): String = body.getRequired("body")
+        fun subject(): String = subject.value.getRequired("subject")
 
         /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
-         */
-        fun subject(): String = subject.getRequired("subject")
-
-        /**
-         * Returns the raw JSON value of [body].
+         * Returns the raw multipart value of [body].
          *
-         * Unlike [body], this method doesn't throw if the JSON field has an unexpected type.
+         * Unlike [body], this method doesn't throw if the multipart field has an unexpected type.
          */
-        @JsonProperty("body") @ExcludeMissing fun _body_(): JsonField<String> = body
+        @JsonProperty("body") @ExcludeMissing fun _body_(): MultipartField<String> = body
 
         /**
-         * Returns the raw JSON value of [subject].
+         * Returns the raw multipart value of [subject].
          *
-         * Unlike [subject], this method doesn't throw if the JSON field has an unexpected type.
+         * Unlike [subject], this method doesn't throw if the multipart field has an unexpected
+         * type.
          */
-        @JsonProperty("subject") @ExcludeMissing fun _subject(): JsonField<String> = subject
+        @JsonProperty("subject") @ExcludeMissing fun _subject(): MultipartField<String> = subject
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -335,8 +351,8 @@ private constructor(
         /** A builder for [Body]. */
         class Builder internal constructor() {
 
-            private var body: JsonField<String>? = null
-            private var subject: JsonField<String>? = null
+            private var body: MultipartField<String>? = null
+            private var subject: MultipartField<String>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -346,27 +362,27 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            fun body(body: String) = body(JsonField.of(body))
+            fun body(body: String) = body(MultipartField.of(body))
 
             /**
-             * Sets [Builder.body] to an arbitrary JSON value.
+             * Sets [Builder.body] to an arbitrary multipart value.
              *
              * You should usually call [Builder.body] with a well-typed [String] value instead. This
              * method is primarily for setting the field to an undocumented or not yet supported
              * value.
              */
-            fun body(body: JsonField<String>) = apply { this.body = body }
+            fun body(body: MultipartField<String>) = apply { this.body = body }
 
-            fun subject(subject: String) = subject(JsonField.of(subject))
+            fun subject(subject: String) = subject(MultipartField.of(subject))
 
             /**
-             * Sets [Builder.subject] to an arbitrary JSON value.
+             * Sets [Builder.subject] to an arbitrary multipart value.
              *
              * You should usually call [Builder.subject] with a well-typed [String] value instead.
              * This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun subject(subject: JsonField<String>) = apply { this.subject = subject }
+            fun subject(subject: MultipartField<String>) = apply { this.subject = subject }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -437,16 +453,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            (if (body.asKnown().isPresent) 1 else 0) + (if (subject.asKnown().isPresent) 1 else 0)
-
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
@@ -472,13 +478,15 @@ private constructor(
         }
 
         return other is TicketCreateParams &&
+            idempotencyKey == other.idempotencyKey &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(idempotencyKey, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "TicketCreateParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "TicketCreateParams{idempotencyKey=$idempotencyKey, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

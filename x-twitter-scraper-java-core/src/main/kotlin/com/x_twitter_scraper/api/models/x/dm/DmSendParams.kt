@@ -26,12 +26,15 @@ import kotlin.jvm.optionals.getOrNull
 class DmSendParams
 private constructor(
     private val userId: String?,
+    private val idempotencyKey: String,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     fun userId(): Optional<String> = Optional.ofNullable(userId)
+
+    fun idempotencyKey(): String = idempotencyKey
 
     /**
      * X account (@username or ID) sending the DM
@@ -93,6 +96,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .idempotencyKey()
          * .account()
          * .text()
          * ```
@@ -104,6 +108,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var userId: String? = null
+        private var idempotencyKey: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -111,6 +116,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(dmSendParams: DmSendParams) = apply {
             userId = dmSendParams.userId
+            idempotencyKey = dmSendParams.idempotencyKey
             body = dmSendParams.body.toBuilder()
             additionalHeaders = dmSendParams.additionalHeaders.toBuilder()
             additionalQueryParams = dmSendParams.additionalQueryParams.toBuilder()
@@ -120,6 +126,8 @@ private constructor(
 
         /** Alias for calling [Builder.userId] with `userId.orElse(null)`. */
         fun userId(userId: Optional<String>) = userId(userId.getOrNull())
+
+        fun idempotencyKey(idempotencyKey: String) = apply { this.idempotencyKey = idempotencyKey }
 
         /**
          * Sets the entire request body.
@@ -296,6 +304,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .idempotencyKey()
          * .account()
          * .text()
          * ```
@@ -305,6 +314,7 @@ private constructor(
         fun build(): DmSendParams =
             DmSendParams(
                 userId,
+                checkRequired("idempotencyKey", idempotencyKey),
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -319,7 +329,13 @@ private constructor(
             else -> ""
         }
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                put("Idempotency-Key", idempotencyKey)
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -591,14 +607,15 @@ private constructor(
 
         return other is DmSendParams &&
             userId == other.userId &&
+            idempotencyKey == other.idempotencyKey &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(userId, body, additionalHeaders, additionalQueryParams)
+        Objects.hash(userId, idempotencyKey, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "DmSendParams{userId=$userId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "DmSendParams{userId=$userId, idempotencyKey=$idempotencyKey, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
