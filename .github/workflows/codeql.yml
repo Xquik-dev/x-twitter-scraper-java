@@ -44,7 +44,7 @@ jobs:
           queries: security-extended
 
       - name: Build analyzed sources
-        run: ./gradlew classes --no-daemon
+        run: ./gradlew clean classes --no-daemon --no-build-cache
 
       - name: Analyze
         uses: github/codeql-action/analyze@7188fc363630916deb702c7fdcf4e481b751f97a # v4.37.1
