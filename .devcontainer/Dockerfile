@@ -12,7 +12,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   unzip \
   libc++1 \
   vim \
-  && apt-get clean autoclean
+  && apt-get clean autoclean \
+  && rm -rf /var/lib/apt/lists/* \
+  && useradd --create-home --shell /bin/bash vscode \
+  && install -d -o vscode -g vscode /workspace
 
 # Ensure UTF-8 encoding
 ENV LANG=C.UTF-8
@@ -20,4 +23,8 @@ ENV LC_ALL=C.UTF-8
 
 WORKDIR /workspace
 
-COPY . /workspace
+COPY --chown=vscode:vscode . /workspace
+
+USER vscode
+
+HEALTHCHECK NONE
