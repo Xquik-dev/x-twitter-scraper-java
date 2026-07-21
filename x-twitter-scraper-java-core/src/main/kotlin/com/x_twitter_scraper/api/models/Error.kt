@@ -37,13 +37,23 @@ class Error
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val error: JsonField<InnerError>,
+    private val message: JsonField<String>,
+    private val reason: JsonField<String>,
+    private val retryAfter: JsonField<Long>,
+    private val retryAfterMs: JsonField<Long>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("error") @ExcludeMissing error: JsonField<InnerError> = JsonMissing.of()
-    ) : this(error, mutableMapOf())
+        @JsonProperty("error") @ExcludeMissing error: JsonField<InnerError> = JsonMissing.of(),
+        @JsonProperty("message") @ExcludeMissing message: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("reason") @ExcludeMissing reason: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("retryAfter") @ExcludeMissing retryAfter: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("retryAfterMs")
+        @ExcludeMissing
+        retryAfterMs: JsonField<Long> = JsonMissing.of(),
+    ) : this(error, message, reason, retryAfter, retryAfterMs, mutableMapOf())
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -52,11 +62,73 @@ private constructor(
     fun error(): InnerError = error.getRequired("error")
 
     /**
+     * Human-readable error guidance.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun message(): Optional<String> = message.getOptional("message")
+
+    /**
+     * Machine-readable reason for a login cooldown.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun reason(): Optional<String> = reason.getOptional("reason")
+
+    /**
+     * Required wait in seconds.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun retryAfter(): Optional<Long> = retryAfter.getOptional("retryAfter")
+
+    /**
+     * Required wait in milliseconds.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun retryAfterMs(): Optional<Long> = retryAfterMs.getOptional("retryAfterMs")
+
+    /**
      * Returns the raw JSON value of [error].
      *
      * Unlike [error], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("error") @ExcludeMissing fun _error(): JsonField<InnerError> = error
+
+    /**
+     * Returns the raw JSON value of [message].
+     *
+     * Unlike [message], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("message") @ExcludeMissing fun _message(): JsonField<String> = message
+
+    /**
+     * Returns the raw JSON value of [reason].
+     *
+     * Unlike [reason], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("reason") @ExcludeMissing fun _reason(): JsonField<String> = reason
+
+    /**
+     * Returns the raw JSON value of [retryAfter].
+     *
+     * Unlike [retryAfter], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("retryAfter") @ExcludeMissing fun _retryAfter(): JsonField<Long> = retryAfter
+
+    /**
+     * Returns the raw JSON value of [retryAfterMs].
+     *
+     * Unlike [retryAfterMs], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("retryAfterMs")
+    @ExcludeMissing
+    fun _retryAfterMs(): JsonField<Long> = retryAfterMs
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -87,11 +159,19 @@ private constructor(
     class Builder internal constructor() {
 
         private var error: JsonField<InnerError>? = null
+        private var message: JsonField<String> = JsonMissing.of()
+        private var reason: JsonField<String> = JsonMissing.of()
+        private var retryAfter: JsonField<Long> = JsonMissing.of()
+        private var retryAfterMs: JsonField<Long> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(error: Error) = apply {
             this.error = error.error
+            message = error.message
+            reason = error.reason
+            retryAfter = error.retryAfter
+            retryAfterMs = error.retryAfterMs
             additionalProperties = error.additionalProperties.toMutableMap()
         }
 
@@ -113,6 +193,51 @@ private constructor(
         /** Alias for calling [error] with `InnerError.ofStructured(structured)`. */
         fun error(structured: InnerError.StructuredError) =
             error(InnerError.ofStructured(structured))
+
+        /** Human-readable error guidance. */
+        fun message(message: String) = message(JsonField.of(message))
+
+        /**
+         * Sets [Builder.message] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.message] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun message(message: JsonField<String>) = apply { this.message = message }
+
+        /** Machine-readable reason for a login cooldown. */
+        fun reason(reason: String) = reason(JsonField.of(reason))
+
+        /**
+         * Sets [Builder.reason] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.reason] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun reason(reason: JsonField<String>) = apply { this.reason = reason }
+
+        /** Required wait in seconds. */
+        fun retryAfter(retryAfter: Long) = retryAfter(JsonField.of(retryAfter))
+
+        /**
+         * Sets [Builder.retryAfter] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.retryAfter] with a well-typed [Long] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun retryAfter(retryAfter: JsonField<Long>) = apply { this.retryAfter = retryAfter }
+
+        /** Required wait in milliseconds. */
+        fun retryAfterMs(retryAfterMs: Long) = retryAfterMs(JsonField.of(retryAfterMs))
+
+        /**
+         * Sets [Builder.retryAfterMs] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.retryAfterMs] with a well-typed [Long] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun retryAfterMs(retryAfterMs: JsonField<Long>) = apply { this.retryAfterMs = retryAfterMs }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -146,7 +271,14 @@ private constructor(
          * @throws IllegalStateException if any required field is unset.
          */
         fun build(): Error =
-            Error(checkRequired("error", error), additionalProperties.toMutableMap())
+            Error(
+                checkRequired("error", error),
+                message,
+                reason,
+                retryAfter,
+                retryAfterMs,
+                additionalProperties.toMutableMap(),
+            )
     }
 
     private var validated: Boolean = false
@@ -165,6 +297,10 @@ private constructor(
         }
 
         error().validate()
+        message()
+        reason()
+        retryAfter()
+        retryAfterMs()
         validated = true
     }
 
@@ -181,7 +317,13 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic internal fun validity(): Int = (error.asKnown().getOrNull()?.validity() ?: 0)
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (error.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (message.asKnown().isPresent) 1 else 0) +
+            (if (reason.asKnown().isPresent) 1 else 0) +
+            (if (retryAfter.asKnown().isPresent) 1 else 0) +
+            (if (retryAfterMs.asKnown().isPresent) 1 else 0)
 
     @JsonDeserialize(using = InnerError.Deserializer::class)
     @JsonSerialize(using = InnerError.Serializer::class)
@@ -548,8 +690,6 @@ private constructor(
 
                 @JvmField val X_WRITE_FAILED = of("x_write_failed")
 
-                @JvmField val X_WRITE_UNCONFIRMED = of("x_write_unconfirmed")
-
                 @JvmStatic fun of(value: String) = LegacyErrorCode(JsonField.of(value))
             }
 
@@ -621,7 +761,6 @@ private constructor(
                 X_USER_LOOKUP_FAILED,
                 X_WRITE_AMBIGUOUS,
                 X_WRITE_FAILED,
-                X_WRITE_UNCONFIRMED,
             }
 
             /**
@@ -700,7 +839,6 @@ private constructor(
                 X_USER_LOOKUP_FAILED,
                 X_WRITE_AMBIGUOUS,
                 X_WRITE_FAILED,
-                X_WRITE_UNCONFIRMED,
                 /**
                  * An enum member indicating that [LegacyErrorCode] was instantiated with an unknown
                  * value.
@@ -783,7 +921,6 @@ private constructor(
                     X_USER_LOOKUP_FAILED -> Value.X_USER_LOOKUP_FAILED
                     X_WRITE_AMBIGUOUS -> Value.X_WRITE_AMBIGUOUS
                     X_WRITE_FAILED -> Value.X_WRITE_FAILED
-                    X_WRITE_UNCONFIRMED -> Value.X_WRITE_UNCONFIRMED
                     else -> Value._UNKNOWN
                 }
 
@@ -864,7 +1001,6 @@ private constructor(
                     X_USER_LOOKUP_FAILED -> Known.X_USER_LOOKUP_FAILED
                     X_WRITE_AMBIGUOUS -> Known.X_WRITE_AMBIGUOUS
                     X_WRITE_FAILED -> Known.X_WRITE_FAILED
-                    X_WRITE_UNCONFIRMED -> Known.X_WRITE_UNCONFIRMED
                     else ->
                         throw XTwitterScraperInvalidDataException("Unknown LegacyErrorCode: $value")
                 }
@@ -1304,8 +1440,6 @@ private constructor(
 
                     @JvmField val X_WRITE_FAILED = of("x_write_failed")
 
-                    @JvmField val X_WRITE_UNCONFIRMED = of("x_write_unconfirmed")
-
                     @JvmStatic fun of(value: String) = Code(JsonField.of(value))
                 }
 
@@ -1377,7 +1511,6 @@ private constructor(
                     X_USER_LOOKUP_FAILED,
                     X_WRITE_AMBIGUOUS,
                     X_WRITE_FAILED,
-                    X_WRITE_UNCONFIRMED,
                 }
 
                 /**
@@ -1456,7 +1589,6 @@ private constructor(
                     X_USER_LOOKUP_FAILED,
                     X_WRITE_AMBIGUOUS,
                     X_WRITE_FAILED,
-                    X_WRITE_UNCONFIRMED,
                     /**
                      * An enum member indicating that [Code] was instantiated with an unknown value.
                      */
@@ -1538,7 +1670,6 @@ private constructor(
                         X_USER_LOOKUP_FAILED -> Value.X_USER_LOOKUP_FAILED
                         X_WRITE_AMBIGUOUS -> Value.X_WRITE_AMBIGUOUS
                         X_WRITE_FAILED -> Value.X_WRITE_FAILED
-                        X_WRITE_UNCONFIRMED -> Value.X_WRITE_UNCONFIRMED
                         else -> Value._UNKNOWN
                     }
 
@@ -1619,7 +1750,6 @@ private constructor(
                         X_USER_LOOKUP_FAILED -> Known.X_USER_LOOKUP_FAILED
                         X_WRITE_AMBIGUOUS -> Known.X_WRITE_AMBIGUOUS
                         X_WRITE_FAILED -> Known.X_WRITE_FAILED
-                        X_WRITE_UNCONFIRMED -> Known.X_WRITE_UNCONFIRMED
                         else -> throw XTwitterScraperInvalidDataException("Unknown Code: $value")
                     }
 
@@ -1887,12 +2017,19 @@ private constructor(
 
         return other is Error &&
             error == other.error &&
+            message == other.message &&
+            reason == other.reason &&
+            retryAfter == other.retryAfter &&
+            retryAfterMs == other.retryAfterMs &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(error, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(error, message, reason, retryAfter, retryAfterMs, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() = "Error{error=$error, additionalProperties=$additionalProperties}"
+    override fun toString() =
+        "Error{error=$error, message=$message, reason=$reason, retryAfter=$retryAfter, retryAfterMs=$retryAfterMs, additionalProperties=$additionalProperties}"
 }

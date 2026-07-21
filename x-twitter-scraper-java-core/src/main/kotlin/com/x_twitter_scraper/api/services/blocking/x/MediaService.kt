@@ -12,7 +12,6 @@ import com.x_twitter_scraper.api.models.x.media.MediaUploadParams
 import com.x_twitter_scraper.api.models.x.media.MediaUploadResponse
 import java.util.function.Consumer
 
-/** Media upload and download */
 interface MediaService {
 
     /**

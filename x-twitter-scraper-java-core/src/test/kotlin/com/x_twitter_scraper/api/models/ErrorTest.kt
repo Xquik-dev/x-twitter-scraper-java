@@ -11,18 +11,36 @@ internal class ErrorTest {
 
     @Test
     fun create() {
-        val error = Error.builder().error(Error.InnerError.LegacyErrorCode.INVALID_INPUT).build()
+        val error =
+            Error.builder()
+                .error(Error.InnerError.LegacyErrorCode.INVALID_INPUT)
+                .message("message")
+                .reason("reason")
+                .retryAfter(1L)
+                .retryAfterMs(1L)
+                .build()
 
         assertThat(error.error())
             .isEqualTo(
                 Error.InnerError.ofLegacyErrorCode(Error.InnerError.LegacyErrorCode.INVALID_INPUT)
             )
+        assertThat(error.message()).contains("message")
+        assertThat(error.reason()).contains("reason")
+        assertThat(error.retryAfter()).contains(1L)
+        assertThat(error.retryAfterMs()).contains(1L)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val error = Error.builder().error(Error.InnerError.LegacyErrorCode.INVALID_INPUT).build()
+        val error =
+            Error.builder()
+                .error(Error.InnerError.LegacyErrorCode.INVALID_INPUT)
+                .message("message")
+                .reason("reason")
+                .retryAfter(1L)
+                .retryAfterMs(1L)
+                .build()
 
         val roundtrippedError =
             jsonMapper.readValue(jsonMapper.writeValueAsString(error), jacksonTypeRef<Error>())

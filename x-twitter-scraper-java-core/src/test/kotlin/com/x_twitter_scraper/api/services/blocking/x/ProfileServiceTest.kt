@@ -24,6 +24,7 @@ internal class ProfileServiceTest {
         val profile =
             profileService.update(
                 ProfileUpdateParams.builder()
+                    .idempotencyKey("Idempotency-Key")
                     .account("@elonmusk")
                     .description("description_value")
                     .location("location_value")
@@ -48,6 +49,7 @@ internal class ProfileServiceTest {
         val response =
             profileService.updateAvatar(
                 ProfileUpdateAvatarParams.builder()
+                    .idempotencyKey("Idempotency-Key")
                     .account("@elonmusk")
                     .url("https://example.com/avatar.png")
                     .build()
@@ -69,6 +71,7 @@ internal class ProfileServiceTest {
         val response =
             profileService.updateBanner(
                 ProfileUpdateBannerParams.builder()
+                    .idempotencyKey("Idempotency-Key")
                     .account("@elonmusk")
                     .url("https://example.com/banner.png")
                     .build()

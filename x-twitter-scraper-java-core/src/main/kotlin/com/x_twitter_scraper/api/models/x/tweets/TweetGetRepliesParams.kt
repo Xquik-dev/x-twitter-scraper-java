@@ -14,7 +14,12 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** List replies to a tweet */
+/**
+ * Returns visible replies. For an unfiltered first page, Xquik compares a terminal page with the
+ * post's reported reply count. If the page is visibly incomplete, the endpoint returns 424
+ * `replies_incomplete` instead of presenting partial coverage as complete. Use tweet search with a
+ * `conversation_id:{id}` query as the broader fallback.
+ */
 class TweetGetRepliesParams
 private constructor(
     private val id: String?,

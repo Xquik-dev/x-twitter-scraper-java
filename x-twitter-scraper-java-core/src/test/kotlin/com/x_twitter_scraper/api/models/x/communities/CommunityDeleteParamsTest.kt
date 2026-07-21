@@ -2,6 +2,7 @@
 
 package com.x_twitter_scraper.api.models.x.communities
 
+import com.x_twitter_scraper.api.core.http.Headers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -11,6 +12,7 @@ internal class CommunityDeleteParamsTest {
     fun create() {
         CommunityDeleteParams.builder()
             .id("id")
+            .idempotencyKey("Idempotency-Key")
             .account("@elonmusk")
             .communityName("Tesla Fans")
             .build()
@@ -21,6 +23,7 @@ internal class CommunityDeleteParamsTest {
         val params =
             CommunityDeleteParams.builder()
                 .id("id")
+                .idempotencyKey("Idempotency-Key")
                 .account("@elonmusk")
                 .communityName("Tesla Fans")
                 .build()
@@ -31,10 +34,27 @@ internal class CommunityDeleteParamsTest {
     }
 
     @Test
+    fun headers() {
+        val params =
+            CommunityDeleteParams.builder()
+                .id("id")
+                .idempotencyKey("Idempotency-Key")
+                .account("@elonmusk")
+                .communityName("Tesla Fans")
+                .build()
+
+        val headers = params._headers()
+
+        assertThat(headers)
+            .isEqualTo(Headers.builder().put("Idempotency-Key", "Idempotency-Key").build())
+    }
+
+    @Test
     fun body() {
         val params =
             CommunityDeleteParams.builder()
                 .id("id")
+                .idempotencyKey("Idempotency-Key")
                 .account("@elonmusk")
                 .communityName("Tesla Fans")
                 .build()

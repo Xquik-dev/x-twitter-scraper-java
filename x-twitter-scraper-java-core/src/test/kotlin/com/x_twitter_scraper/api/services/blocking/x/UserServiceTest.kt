@@ -48,7 +48,11 @@ internal class UserServiceTest {
 
         val response =
             userService.removeFollower(
-                UserRemoveFollowerParams.builder().id("id").account("@elonmusk").build()
+                UserRemoveFollowerParams.builder()
+                    .id("id")
+                    .idempotencyKey("Idempotency-Key")
+                    .account("@elonmusk")
+                    .build()
             )
 
         response.validate()

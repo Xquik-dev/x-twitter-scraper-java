@@ -25,10 +25,13 @@ import kotlin.jvm.optionals.getOrNull
 /** Create tweet */
 class TweetCreateParams
 private constructor(
+    private val idempotencyKey: String,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    fun idempotencyKey(): String = idempotencyKey
 
     /**
      * X account (@username or account ID)
@@ -37,12 +40,6 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun account(): String = body.account()
-
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun attachmentUrl(): Optional<String> = body.attachmentUrl()
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -86,13 +83,6 @@ private constructor(
      * Unlike [account], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _account(): JsonField<String> = body._account()
-
-    /**
-     * Returns the raw JSON value of [attachmentUrl].
-     *
-     * Unlike [attachmentUrl], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    fun _attachmentUrl(): JsonField<String> = body._attachmentUrl()
 
     /**
      * Returns the raw JSON value of [communityId].
@@ -146,6 +136,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .idempotencyKey()
          * .account()
          * ```
          */
@@ -155,16 +146,20 @@ private constructor(
     /** A builder for [TweetCreateParams]. */
     class Builder internal constructor() {
 
+        private var idempotencyKey: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(tweetCreateParams: TweetCreateParams) = apply {
+            idempotencyKey = tweetCreateParams.idempotencyKey
             body = tweetCreateParams.body.toBuilder()
             additionalHeaders = tweetCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = tweetCreateParams.additionalQueryParams.toBuilder()
         }
+
+        fun idempotencyKey(idempotencyKey: String) = apply { this.idempotencyKey = idempotencyKey }
 
         /**
          * Sets the entire request body.
@@ -172,10 +167,10 @@ private constructor(
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [account]
-         * - [attachmentUrl]
          * - [communityId]
          * - [isNoteTweet]
          * - [media]
+         * - [replyToTweetId]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -190,19 +185,6 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun account(account: JsonField<String>) = apply { body.account(account) }
-
-        fun attachmentUrl(attachmentUrl: String) = apply { body.attachmentUrl(attachmentUrl) }
-
-        /**
-         * Sets [Builder.attachmentUrl] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.attachmentUrl] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun attachmentUrl(attachmentUrl: JsonField<String>) = apply {
-            body.attachmentUrl(attachmentUrl)
-        }
 
         fun communityId(communityId: String) = apply { body.communityId(communityId) }
 
@@ -397,6 +379,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .idempotencyKey()
          * .account()
          * ```
          *
@@ -404,6 +387,7 @@ private constructor(
          */
         fun build(): TweetCreateParams =
             TweetCreateParams(
+                checkRequired("idempotencyKey", idempotencyKey),
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -412,7 +396,13 @@ private constructor(
 
     fun _body(): Body = body
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                put("Idempotency-Key", idempotencyKey)
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -420,7 +410,6 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val account: JsonField<String>,
-        private val attachmentUrl: JsonField<String>,
         private val communityId: JsonField<String>,
         private val isNoteTweet: JsonField<Boolean>,
         private val media: JsonField<List<String>>,
@@ -432,9 +421,6 @@ private constructor(
         @JsonCreator
         private constructor(
             @JsonProperty("account") @ExcludeMissing account: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("attachment_url")
-            @ExcludeMissing
-            attachmentUrl: JsonField<String> = JsonMissing.of(),
             @JsonProperty("community_id")
             @ExcludeMissing
             communityId: JsonField<String> = JsonMissing.of(),
@@ -448,16 +434,7 @@ private constructor(
             @ExcludeMissing
             replyToTweetId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("text") @ExcludeMissing text: JsonField<String> = JsonMissing.of(),
-        ) : this(
-            account,
-            attachmentUrl,
-            communityId,
-            isNoteTweet,
-            media,
-            replyToTweetId,
-            text,
-            mutableMapOf(),
-        )
+        ) : this(account, communityId, isNoteTweet, media, replyToTweetId, text, mutableMapOf())
 
         /**
          * X account (@username or account ID)
@@ -467,12 +444,6 @@ private constructor(
          *   value).
          */
         fun account(): String = account.getRequired("account")
-
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
-        fun attachmentUrl(): Optional<String> = attachmentUrl.getOptional("attachment_url")
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
@@ -516,16 +487,6 @@ private constructor(
          * Unlike [account], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("account") @ExcludeMissing fun _account(): JsonField<String> = account
-
-        /**
-         * Returns the raw JSON value of [attachmentUrl].
-         *
-         * Unlike [attachmentUrl], this method doesn't throw if the JSON field has an unexpected
-         * type.
-         */
-        @JsonProperty("attachment_url")
-        @ExcludeMissing
-        fun _attachmentUrl(): JsonField<String> = attachmentUrl
 
         /**
          * Returns the raw JSON value of [communityId].
@@ -598,7 +559,6 @@ private constructor(
         class Builder internal constructor() {
 
             private var account: JsonField<String>? = null
-            private var attachmentUrl: JsonField<String> = JsonMissing.of()
             private var communityId: JsonField<String> = JsonMissing.of()
             private var isNoteTweet: JsonField<Boolean> = JsonMissing.of()
             private var media: JsonField<MutableList<String>>? = null
@@ -609,7 +569,6 @@ private constructor(
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 account = body.account
-                attachmentUrl = body.attachmentUrl
                 communityId = body.communityId
                 isNoteTweet = body.isNoteTweet
                 media = body.media.map { it.toMutableList() }
@@ -629,19 +588,6 @@ private constructor(
              * supported value.
              */
             fun account(account: JsonField<String>) = apply { this.account = account }
-
-            fun attachmentUrl(attachmentUrl: String) = attachmentUrl(JsonField.of(attachmentUrl))
-
-            /**
-             * Sets [Builder.attachmentUrl] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.attachmentUrl] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun attachmentUrl(attachmentUrl: JsonField<String>) = apply {
-                this.attachmentUrl = attachmentUrl
-            }
 
             fun communityId(communityId: String) = communityId(JsonField.of(communityId))
 
@@ -759,7 +705,6 @@ private constructor(
             fun build(): Body =
                 Body(
                     checkRequired("account", account),
-                    attachmentUrl,
                     communityId,
                     isNoteTweet,
                     (media ?: JsonMissing.of()).map { it.toImmutable() },
@@ -786,7 +731,6 @@ private constructor(
             }
 
             account()
-            attachmentUrl()
             communityId()
             isNoteTweet()
             media()
@@ -812,7 +756,6 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (if (account.asKnown().isPresent) 1 else 0) +
-                (if (attachmentUrl.asKnown().isPresent) 1 else 0) +
                 (if (communityId.asKnown().isPresent) 1 else 0) +
                 (if (isNoteTweet.asKnown().isPresent) 1 else 0) +
                 (media.asKnown().getOrNull()?.size ?: 0) +
@@ -826,7 +769,6 @@ private constructor(
 
             return other is Body &&
                 account == other.account &&
-                attachmentUrl == other.attachmentUrl &&
                 communityId == other.communityId &&
                 isNoteTweet == other.isNoteTweet &&
                 media == other.media &&
@@ -838,7 +780,6 @@ private constructor(
         private val hashCode: Int by lazy {
             Objects.hash(
                 account,
-                attachmentUrl,
                 communityId,
                 isNoteTweet,
                 media,
@@ -851,7 +792,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{account=$account, attachmentUrl=$attachmentUrl, communityId=$communityId, isNoteTweet=$isNoteTweet, media=$media, replyToTweetId=$replyToTweetId, text=$text, additionalProperties=$additionalProperties}"
+            "Body{account=$account, communityId=$communityId, isNoteTweet=$isNoteTweet, media=$media, replyToTweetId=$replyToTweetId, text=$text, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
@@ -860,13 +801,15 @@ private constructor(
         }
 
         return other is TweetCreateParams &&
+            idempotencyKey == other.idempotencyKey &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(idempotencyKey, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "TweetCreateParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "TweetCreateParams{idempotencyKey=$idempotencyKey, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

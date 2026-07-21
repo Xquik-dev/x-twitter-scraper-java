@@ -26,6 +26,7 @@ internal class CommunityServiceTest {
         val community =
             communityService.create(
                 CommunityCreateParams.builder()
+                    .idempotencyKey("Idempotency-Key")
                     .account("@elonmusk")
                     .name("Example Name")
                     .description("A community for Tesla enthusiasts")
@@ -49,6 +50,7 @@ internal class CommunityServiceTest {
             communityService.delete(
                 CommunityDeleteParams.builder()
                     .id("id")
+                    .idempotencyKey("Idempotency-Key")
                     .account("@elonmusk")
                     .communityName("Tesla Fans")
                     .build()

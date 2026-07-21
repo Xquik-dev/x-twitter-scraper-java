@@ -49,7 +49,11 @@ internal class UserServiceAsyncTest {
 
         val responseFuture =
             userServiceAsync.removeFollower(
-                UserRemoveFollowerParams.builder().id("id").account("@elonmusk").build()
+                UserRemoveFollowerParams.builder()
+                    .id("id")
+                    .idempotencyKey("Idempotency-Key")
+                    .account("@elonmusk")
+                    .build()
             )
 
         val response = responseFuture.get()

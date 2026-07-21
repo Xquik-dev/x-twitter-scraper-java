@@ -9,7 +9,11 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** List users who liked a tweet */
+/**
+ * Returns liker profiles that X makes visible for the post. X can withhold liker identities even
+ * when the post reports likes. In that case this endpoint returns 424 `favoriters_unavailable`
+ * instead of a misleading empty success.
+ */
 class TweetGetFavoritersParams
 private constructor(
     private val id: String?,

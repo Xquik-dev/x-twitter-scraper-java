@@ -23,7 +23,6 @@ import com.x_twitter_scraper.api.models.x.media.MediaUploadResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
-/** Media upload and download */
 class MediaServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     MediaServiceAsync {
 

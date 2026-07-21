@@ -18,6 +18,19 @@ internal class TicketRetrieveResponseTest {
                 .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .addMessage(
                     TicketRetrieveResponse.Message.builder()
+                        .addAttachment(
+                            TicketRetrieveResponse.Message.Attachment.builder()
+                                .contentType(
+                                    TicketRetrieveResponse.Message.Attachment.ContentType.IMAGE_JPEG
+                                )
+                                .filename("screen.png")
+                                .kind(TicketRetrieveResponse.Message.Attachment.Kind.IMAGE)
+                                .publicId("att_a1b2c3d4e5f6a1b2c3d4e5f6")
+                                .sizeBytes(204800L)
+                                .status(TicketRetrieveResponse.Message.Attachment.Status.PENDING)
+                                .url("/api/v1/support/attachments/att_a1b2c3d4e5f6a1b2c3d4e5f6")
+                                .build()
+                        )
                         .body("I am unable to connect my X account.")
                         .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                         .sender("user")
@@ -34,6 +47,19 @@ internal class TicketRetrieveResponseTest {
         assertThat(ticketRetrieveResponse.messages().getOrNull())
             .containsExactly(
                 TicketRetrieveResponse.Message.builder()
+                    .addAttachment(
+                        TicketRetrieveResponse.Message.Attachment.builder()
+                            .contentType(
+                                TicketRetrieveResponse.Message.Attachment.ContentType.IMAGE_JPEG
+                            )
+                            .filename("screen.png")
+                            .kind(TicketRetrieveResponse.Message.Attachment.Kind.IMAGE)
+                            .publicId("att_a1b2c3d4e5f6a1b2c3d4e5f6")
+                            .sizeBytes(204800L)
+                            .status(TicketRetrieveResponse.Message.Attachment.Status.PENDING)
+                            .url("/api/v1/support/attachments/att_a1b2c3d4e5f6a1b2c3d4e5f6")
+                            .build()
+                    )
                     .body("I am unable to connect my X account.")
                     .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                     .sender("user")
@@ -54,6 +80,19 @@ internal class TicketRetrieveResponseTest {
                 .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .addMessage(
                     TicketRetrieveResponse.Message.builder()
+                        .addAttachment(
+                            TicketRetrieveResponse.Message.Attachment.builder()
+                                .contentType(
+                                    TicketRetrieveResponse.Message.Attachment.ContentType.IMAGE_JPEG
+                                )
+                                .filename("screen.png")
+                                .kind(TicketRetrieveResponse.Message.Attachment.Kind.IMAGE)
+                                .publicId("att_a1b2c3d4e5f6a1b2c3d4e5f6")
+                                .sizeBytes(204800L)
+                                .status(TicketRetrieveResponse.Message.Attachment.Status.PENDING)
+                                .url("/api/v1/support/attachments/att_a1b2c3d4e5f6a1b2c3d4e5f6")
+                                .build()
+                        )
                         .body("I am unable to connect my X account.")
                         .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                         .sender("user")

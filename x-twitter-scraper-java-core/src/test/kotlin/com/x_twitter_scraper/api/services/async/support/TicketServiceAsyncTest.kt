@@ -24,6 +24,7 @@ internal class TicketServiceAsyncTest {
         val ticketFuture =
             ticketServiceAsync.create(
                 TicketCreateParams.builder()
+                    .idempotencyKey("Idempotency-Key")
                     .body("I am unable to connect my X account. Please help.")
                     .subject("Cannot connect X account")
                     .build()
@@ -101,6 +102,7 @@ internal class TicketServiceAsyncTest {
             ticketServiceAsync.reply(
                 TicketReplyParams.builder()
                     .id("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
+                    .idempotencyKey("Idempotency-Key")
                     .body("Thank you for the update.")
                     .build()
             )
