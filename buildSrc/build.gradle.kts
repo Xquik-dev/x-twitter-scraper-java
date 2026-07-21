@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     `kotlin-dsl`
-    id("com.vanniktech.maven.publish") version "0.37.0"
 }
 
 java {
