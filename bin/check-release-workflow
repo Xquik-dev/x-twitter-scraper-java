@@ -25,5 +25,7 @@ for workflow in "${workflows[@]}"; do
 done
 
 grep -Fq 'environment: maven-central' .github/workflows/publish-sonatype.yml
+grep -Fq 'release_ref:' .github/workflows/publish-sonatype.yml
+grep -Fq 'git describe --tags --exact-match' .github/workflows/publish-sonatype.yml
 
-printf 'Release workflows use the configured Maven Central secrets.\n'
+printf 'Release workflows support safe Maven Central retries.\n'
