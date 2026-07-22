@@ -4,7 +4,6 @@ package com.x_twitter_scraper.api.models.support.tickets
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.core.jsonMapper
-import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -20,17 +19,17 @@ internal class TicketReplyResponseTest {
                         .status(TicketReplyResponse.Attachment.Status.PENDING)
                         .build()
                 )
-                .publicId("publicId")
+                .publicId("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
                 .build()
 
-        assertThat(ticketReplyResponse.attachments().getOrNull())
+        assertThat(ticketReplyResponse.attachments())
             .containsExactly(
                 TicketReplyResponse.Attachment.builder()
                     .publicId("att_a1b2c3d4e5f6a1b2c3d4e5f6")
                     .status(TicketReplyResponse.Attachment.Status.PENDING)
                     .build()
             )
-        assertThat(ticketReplyResponse.publicId()).contains("publicId")
+        assertThat(ticketReplyResponse.publicId()).isEqualTo("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
     }
 
     @Test
@@ -44,7 +43,7 @@ internal class TicketReplyResponseTest {
                         .status(TicketReplyResponse.Attachment.Status.PENDING)
                         .build()
                 )
-                .publicId("publicId")
+                .publicId("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
                 .build()
 
         val roundtrippedTicketReplyResponse =

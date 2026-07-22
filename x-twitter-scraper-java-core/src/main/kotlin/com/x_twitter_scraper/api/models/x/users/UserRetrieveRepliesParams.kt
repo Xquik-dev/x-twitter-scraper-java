@@ -76,7 +76,7 @@ private constructor(
     /** Hashtags separated by spaces, commas, or lines. */
     fun hashtags(): Optional<String> = Optional.ofNullable(hashtags)
 
-    /** Include parent tweet for replies */
+    /** Include each reply's parent tweet. */
     fun includeParentTweet(): Optional<Boolean> = Optional.ofNullable(includeParentTweet)
 
     /** Only replies to this tweet ID. */
@@ -285,7 +285,7 @@ private constructor(
         /** Alias for calling [Builder.hashtags] with `hashtags.orElse(null)`. */
         fun hashtags(hashtags: Optional<String>) = hashtags(hashtags.getOrNull())
 
-        /** Include parent tweet for replies */
+        /** Include each reply's parent tweet. */
         fun includeParentTweet(includeParentTweet: Boolean?) = apply {
             this.includeParentTweet = includeParentTweet
         }

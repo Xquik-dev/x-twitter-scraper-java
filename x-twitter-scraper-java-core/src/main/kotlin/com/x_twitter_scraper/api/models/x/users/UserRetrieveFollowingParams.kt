@@ -23,7 +23,7 @@ private constructor(
 
     fun id(): Optional<String> = Optional.ofNullable(id)
 
-    /** Legacy cursor alias. Prefer cursor. */
+    /** Deprecated following cursor alias. Prefer cursor. */
     fun after(): Optional<String> = Optional.ofNullable(after)
 
     /** Pagination cursor for following list */
@@ -85,7 +85,7 @@ private constructor(
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
 
-        /** Legacy cursor alias. Prefer cursor. */
+        /** Deprecated following cursor alias. Prefer cursor. */
         fun after(after: String?) = apply { this.after = after }
 
         /** Alias for calling [Builder.after] with `after.orElse(null)`. */

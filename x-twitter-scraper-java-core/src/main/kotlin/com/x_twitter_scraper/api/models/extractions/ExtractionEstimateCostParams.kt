@@ -258,7 +258,7 @@ private constructor(
     fun retweetsOfTweetId(): Optional<String> = body.retweetsOfTweetId()
 
     /**
-     * Required for tweet_search_extractor & community_search.
+     * Query used to price tweet_search_extractor or community_search.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -274,7 +274,7 @@ private constructor(
     fun sinceDate(): Optional<LocalDate> = body.sinceDate()
 
     /**
-     * Required for community_post_extractor & community_search.
+     * Community ID used to price community_post_extractor or community_search.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -282,7 +282,7 @@ private constructor(
     fun targetCommunityId(): Optional<String> = body.targetCommunityId()
 
     /**
-     * Required for list_follower_explorer, list_member_extractor & list_post_extractor.
+     * List ID used to price list_follower_explorer, list_member_extractor, or list_post_extractor.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -290,7 +290,7 @@ private constructor(
     fun targetListId(): Optional<String> = body.targetListId()
 
     /**
-     * Required for space_explorer.
+     * Space ID used to price space_explorer.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -1023,7 +1023,7 @@ private constructor(
             body.retweetsOfTweetId(retweetsOfTweetId)
         }
 
-        /** Required for tweet_search_extractor & community_search. */
+        /** Query used to price tweet_search_extractor or community_search. */
         fun searchQuery(searchQuery: String) = apply { body.searchQuery(searchQuery) }
 
         /**
@@ -1047,7 +1047,7 @@ private constructor(
          */
         fun sinceDate(sinceDate: JsonField<LocalDate>) = apply { body.sinceDate(sinceDate) }
 
-        /** Required for community_post_extractor & community_search. */
+        /** Community ID used to price community_post_extractor or community_search. */
         fun targetCommunityId(targetCommunityId: String) = apply {
             body.targetCommunityId(targetCommunityId)
         }
@@ -1063,7 +1063,10 @@ private constructor(
             body.targetCommunityId(targetCommunityId)
         }
 
-        /** Required for list_follower_explorer, list_member_extractor & list_post_extractor. */
+        /**
+         * List ID used to price list_follower_explorer, list_member_extractor, or
+         * list_post_extractor.
+         */
         fun targetListId(targetListId: String) = apply { body.targetListId(targetListId) }
 
         /**
@@ -1077,7 +1080,7 @@ private constructor(
             body.targetListId(targetListId)
         }
 
-        /** Required for space_explorer. */
+        /** Space ID used to price space_explorer. */
         fun targetSpaceId(targetSpaceId: String) = apply { body.targetSpaceId(targetSpaceId) }
 
         /**
@@ -1731,7 +1734,7 @@ private constructor(
             retweetsOfTweetId.getOptional("retweetsOfTweetId")
 
         /**
-         * Required for tweet_search_extractor & community_search.
+         * Query used to price tweet_search_extractor or community_search.
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
          *   (e.g. if the server responded with an unexpected value).
@@ -1747,7 +1750,7 @@ private constructor(
         fun sinceDate(): Optional<LocalDate> = sinceDate.getOptional("sinceDate")
 
         /**
-         * Required for community_post_extractor & community_search.
+         * Community ID used to price community_post_extractor or community_search.
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
          *   (e.g. if the server responded with an unexpected value).
@@ -1756,7 +1759,8 @@ private constructor(
             targetCommunityId.getOptional("targetCommunityId")
 
         /**
-         * Required for list_follower_explorer, list_member_extractor & list_post_extractor.
+         * List ID used to price list_follower_explorer, list_member_extractor, or
+         * list_post_extractor.
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
          *   (e.g. if the server responded with an unexpected value).
@@ -1764,7 +1768,7 @@ private constructor(
         fun targetListId(): Optional<String> = targetListId.getOptional("targetListId")
 
         /**
-         * Required for space_explorer.
+         * Space ID used to price space_explorer.
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
          *   (e.g. if the server responded with an unexpected value).
@@ -2637,7 +2641,7 @@ private constructor(
                 this.retweetsOfTweetId = retweetsOfTweetId
             }
 
-            /** Required for tweet_search_extractor & community_search. */
+            /** Query used to price tweet_search_extractor or community_search. */
             fun searchQuery(searchQuery: String) = searchQuery(JsonField.of(searchQuery))
 
             /**
@@ -2663,7 +2667,7 @@ private constructor(
              */
             fun sinceDate(sinceDate: JsonField<LocalDate>) = apply { this.sinceDate = sinceDate }
 
-            /** Required for community_post_extractor & community_search. */
+            /** Community ID used to price community_post_extractor or community_search. */
             fun targetCommunityId(targetCommunityId: String) =
                 targetCommunityId(JsonField.of(targetCommunityId))
 
@@ -2678,7 +2682,10 @@ private constructor(
                 this.targetCommunityId = targetCommunityId
             }
 
-            /** Required for list_follower_explorer, list_member_extractor & list_post_extractor. */
+            /**
+             * List ID used to price list_follower_explorer, list_member_extractor, or
+             * list_post_extractor.
+             */
             fun targetListId(targetListId: String) = targetListId(JsonField.of(targetListId))
 
             /**
@@ -2692,7 +2699,7 @@ private constructor(
                 this.targetListId = targetListId
             }
 
-            /** Required for space_explorer. */
+            /** Space ID used to price space_explorer. */
             fun targetSpaceId(targetSpaceId: String) = targetSpaceId(JsonField.of(targetSpaceId))
 
             /**
