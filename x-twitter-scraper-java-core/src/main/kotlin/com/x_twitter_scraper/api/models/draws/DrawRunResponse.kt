@@ -39,7 +39,9 @@ private constructor(
         @JsonProperty("validEntries")
         @ExcludeMissing
         validEntries: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("winners") @ExcludeMissing winners: JsonField<List<Winner>> = JsonMissing.of(),
+        @JsonProperty("winners")
+        @ExcludeMissing
+        winners: JsonField<List<Winner>> = JsonMissing.of(),
     ) : this(id, totalEntries, tweetId, validEntries, winners, mutableMapOf())
 
     /**
@@ -329,7 +331,7 @@ private constructor(
             (if (totalEntries.asKnown().isPresent) 1 else 0) +
             (if (tweetId.asKnown().isPresent) 1 else 0) +
             (if (validEntries.asKnown().isPresent) 1 else 0) +
-            (winners.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+            (winners.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

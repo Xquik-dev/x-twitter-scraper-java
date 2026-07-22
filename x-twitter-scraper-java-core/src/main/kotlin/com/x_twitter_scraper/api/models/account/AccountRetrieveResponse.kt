@@ -214,7 +214,9 @@ private constructor(
 
         /** Deprecated. Monitor slots are unlimited, so this is always Number.MAX_SAFE_INTEGER. */
         @Deprecated("Monitor slots are unlimited. Use monitorBilling.unlimitedSlots instead.")
-        fun monitorsAllowed(monitorsAllowed: Long) = monitorsAllowed(JsonField.of(monitorsAllowed))
+        fun monitorsAllowed(monitorsAllowed: Long) = apply {
+            this.monitorsAllowed = JsonField.of(monitorsAllowed)
+        }
 
         /**
          * Sets [Builder.monitorsAllowed] to an arbitrary JSON value.
@@ -334,7 +336,7 @@ private constructor(
         }
 
         monitorBilling().validate()
-        monitorsAllowed()
+        monitorsAllowed.getRequired("monitorsAllowed")
         monitorsUsed()
         plan().validate()
         creditInfo().ifPresent { it.validate() }

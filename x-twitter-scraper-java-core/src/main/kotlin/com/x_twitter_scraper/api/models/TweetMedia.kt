@@ -288,7 +288,7 @@ private constructor(
         (if (mediaUrl.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0) +
             (if (url.asKnown().isPresent) 1 else 0) +
-            (videoVariants.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+            (videoVariants.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 
     class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 

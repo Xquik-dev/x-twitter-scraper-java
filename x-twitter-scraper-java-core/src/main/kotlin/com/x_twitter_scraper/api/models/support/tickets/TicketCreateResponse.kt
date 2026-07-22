@@ -213,7 +213,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (attachments.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+        (attachments.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (if (publicId.asKnown().isPresent) 1 else 0)
 
     /** Attachment identifier and initial processing state. */

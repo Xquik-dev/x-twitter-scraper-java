@@ -1,24 +1,44 @@
 name: Release Doctor
+
 on:
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
-jobs:
-  release_doctor:
-    name: release doctor
-    runs-on: ubuntu-latest
-    if: github.repository == 'Xquik-dev/x-twitter-scraper-java' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || startsWith(github.head_ref, 'release-please') || github.head_ref == 'next')
+permissions:
+  contents: read
 
+concurrency:
+  group: release-doctor-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release-doctor:
+    name: Release Doctor
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Java
+        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        with:
+          distribution: temurin
+          java-version: "26"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@3f131e8634966bd73d06cc69884922b02e6faf92 # v6.2.0
+        with:
+          cache-cleanup: always
 
       - name: Check release environment
-        run: |
-          bash ./bin/check-release-environment
+        run: bash ./bin/check-release-environment
         env:
-          SONATYPE_USERNAME: ${{ secrets.X_TWITTER_SCRAPER_SONATYPE_USERNAME || secrets.SONATYPE_USERNAME }}
-          SONATYPE_PASSWORD: ${{ secrets.X_TWITTER_SCRAPER_SONATYPE_PASSWORD || secrets.SONATYPE_PASSWORD }}
-          GPG_SIGNING_KEY: ${{ secrets.X_TWITTER_SCRAPER_SONATYPE_GPG_SIGNING_KEY || secrets.GPG_SIGNING_KEY }}
-          GPG_SIGNING_PASSWORD: ${{ secrets.X_TWITTER_SCRAPER_SONATYPE_GPG_SIGNING_PASSWORD || secrets.GPG_SIGNING_PASSWORD }}
+          SONATYPE_USERNAME: ${{ secrets.X_TWITTER_SCRAPER_SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.X_TWITTER_SCRAPER_SONATYPE_PASSWORD }}
+          GPG_SIGNING_KEY: ${{ secrets.X_TWITTER_SCRAPER_SONATYPE_GPG_SIGNING_KEY }}
+          GPG_SIGNING_PASSWORD: ${{ secrets.X_TWITTER_SCRAPER_SONATYPE_GPG_SIGNING_PASSWORD }}
+
+      - name: Build local Maven artifacts
+        run: ./gradlew publishToMavenLocal -PpublishLocal --no-daemon --stacktrace

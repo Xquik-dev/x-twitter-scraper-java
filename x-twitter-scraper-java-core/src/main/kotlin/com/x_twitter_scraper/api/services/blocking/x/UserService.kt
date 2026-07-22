@@ -889,7 +889,8 @@ interface UserService {
         @MustBeClosed
         fun retrieveVerifiedFollowers(
             id: String,
-            params: UserRetrieveVerifiedFollowersParams = UserRetrieveVerifiedFollowersParams.none(),
+            params: UserRetrieveVerifiedFollowersParams =
+                UserRetrieveVerifiedFollowersParams.none(),
         ): HttpResponseFor<PaginatedUsers> =
             retrieveVerifiedFollowers(id, params, RequestOptions.none())
 

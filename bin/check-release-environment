@@ -1,33 +1,66 @@
 #!/usr/bin/env bash
 
-errors=()
+set -euo pipefail
 
-if [ -z "${SONATYPE_USERNAME}" ]; then
-  errors+=("The SONATYPE_USERNAME secret has not been set. Please set it in either this repository's secrets or your organization secrets")
-fi
+required_secrets=(
+  SONATYPE_USERNAME
+  SONATYPE_PASSWORD
+  GPG_SIGNING_KEY
+  GPG_SIGNING_PASSWORD
+)
+missing_secrets=()
 
-if [ -z "${SONATYPE_PASSWORD}" ]; then
-  errors+=("The SONATYPE_PASSWORD secret has not been set. Please set it in either this repository's secrets or your organization secrets")
-fi
+for secret_name in "${required_secrets[@]}"; do
+  if [[ -z "${!secret_name:-}" ]]; then
+    missing_secrets+=("$secret_name")
+  fi
+done
 
-if [ -z "${GPG_SIGNING_KEY}" ]; then
-  errors+=("The GPG_SIGNING_KEY secret has not been set. Please set it in either this repository's secrets or your organization secrets")
-fi
-
-if [ -z "${GPG_SIGNING_PASSWORD}" ]; then
-  errors+=("The GPG_SIGNING_PASSWORD secret has not been set. Please set it in either this repository's secrets or your organization secrets")
-fi
-
-lenErrors=${#errors[@]}
-
-if [[ lenErrors -gt 0 ]]; then
-  echo -e "Found the following errors in the release environment:\n"
-
-  for error in "${errors[@]}"; do
-    echo -e "- $error\n"
-  done
-
+if (( ${#missing_secrets[@]} > 0 )); then
+  printf 'Missing release secrets:\n'
+  printf '  - %s\n' "${missing_secrets[@]}"
   exit 1
 fi
 
-echo "The environment is ready to push releases!"
+central_token="$(printf '%s:%s' "$SONATYPE_USERNAME" "$SONATYPE_PASSWORD" | base64 | tr -d '\n')"
+if ! central_status="$(
+  curl \
+    --silent \
+    --show-error \
+    --output /dev/null \
+    --write-out '%{http_code}' \
+    --request POST \
+    --connect-timeout 10 \
+    --max-time 30 \
+    --config - \
+    'https://central.sonatype.com/api/v1/publisher/status?id=00000000-0000-0000-0000-000000000000' <<CURL_CONFIG
+header = "Authorization: Bearer $central_token"
+CURL_CONFIG
+)"; then
+  printf 'Maven Central credential validation could not reach Central Portal.\n'
+  exit 1
+fi
+
+case "$central_status" in
+  200 | 400 | 404)
+    ;;
+  401 | 403)
+    printf 'Maven Central rejected the configured user token.\n'
+    exit 1
+    ;;
+  *)
+    printf 'Maven Central credential validation returned HTTP %s.\n' "$central_status"
+    exit 1
+    ;;
+esac
+
+if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
+  declared_version="$(sed -n 's/.*version = "\([^"]*\)".*/\1/p' build.gradle.kts | head -1)"
+  expected_tag="v${declared_version}"
+  if [[ "${GITHUB_REF_NAME:-}" != "$expected_tag" ]]; then
+    printf 'Release tag must be %s.\n' "$expected_tag"
+    exit 1
+  fi
+fi
+
+printf 'Release environment is configured.\n'

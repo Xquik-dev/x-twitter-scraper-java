@@ -320,7 +320,7 @@ private constructor(
         (if (fetchedAt.asKnown().isPresent) 1 else 0) +
             (if (isOwnAccount.asKnown().isPresent) 1 else 0) +
             (if (tweetCount.asKnown().isPresent) 1 else 0) +
-            (tweets.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (tweets.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (if (xUsername.asKnown().isPresent) 1 else 0)
 
     class Tweet

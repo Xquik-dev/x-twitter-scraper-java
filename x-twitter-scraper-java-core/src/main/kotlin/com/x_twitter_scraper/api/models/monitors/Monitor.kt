@@ -392,7 +392,7 @@ private constructor(
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
-            (eventTypes.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (eventTypes.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (if (isActive.asKnown().isPresent) 1 else 0) +
             (if (nextBillingAt.asKnown().isPresent) 1 else 0) +
             (if (username.asKnown().isPresent) 1 else 0) +

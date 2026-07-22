@@ -503,7 +503,7 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (if (label.asKnown().isPresent) 1 else 0) +
-                (tweets.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+                (tweets.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

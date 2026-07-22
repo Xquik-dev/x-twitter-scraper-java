@@ -36,7 +36,9 @@ private constructor(
         @JsonProperty("results")
         @ExcludeMissing
         results: JsonField<List<Result>> = JsonMissing.of(),
-        @JsonProperty("nextCursor") @ExcludeMissing nextCursor: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("nextCursor")
+        @ExcludeMissing
+        nextCursor: JsonField<String> = JsonMissing.of(),
     ) : this(hasMore, job, results, nextCursor, mutableMapOf())
 
     /**
@@ -277,7 +279,7 @@ private constructor(
     internal fun validity(): Int =
         (if (hasMore.asKnown().isPresent) 1 else 0) +
             (job.asKnown().getOrNull()?.validity() ?: 0) +
-            (results.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (results.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (if (nextCursor.asKnown().isPresent) 1 else 0)
 
     /** Extraction job metadata - shape varies by tool type (JSON) */
@@ -371,8 +373,9 @@ private constructor(
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+        internal fun validity(): Int = additionalProperties.count { (_, value) ->
+            !value.isNull() && !value.isMissing()
+        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -479,8 +482,9 @@ private constructor(
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+        internal fun validity(): Int = additionalProperties.count { (_, value) ->
+            !value.isNull() && !value.isMissing()
+        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

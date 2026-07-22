@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM debian:bookworm-slim
+FROM debian:bookworm-slim@sha256:7b140f374b289a7c2befc338f42ebe6441b7ea838a042bbd5acbfca6ec875818
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
   libxkbcommon0 \
@@ -12,7 +12,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   unzip \
   libc++1 \
   vim \
-  && apt-get clean autoclean
+  && apt-get clean autoclean \
+  && rm -rf /var/lib/apt/lists/* \
+  && useradd --create-home --shell /bin/bash vscode \
+  && install -d -o vscode -g vscode /workspace
 
 # Ensure UTF-8 encoding
 ENV LANG=C.UTF-8
@@ -20,4 +23,8 @@ ENV LC_ALL=C.UTF-8
 
 WORKDIR /workspace
 
-COPY . /workspace
+COPY --chown=vscode:vscode . /workspace
+
+USER vscode
+
+HEALTHCHECK NONE

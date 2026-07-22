@@ -7,6 +7,7 @@ import com.x_twitter_scraper.api.core.jsonMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
+@Suppress("DEPRECATION")
 internal class AccountRetrieveResponseTest {
 
     @Test

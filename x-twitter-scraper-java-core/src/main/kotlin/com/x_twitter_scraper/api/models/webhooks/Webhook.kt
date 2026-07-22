@@ -460,7 +460,7 @@ private constructor(
             (if (consecutiveFailures.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (deliveryStatus.asKnown().getOrNull()?.validity() ?: 0) +
-            (eventTypes.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (eventTypes.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (if (failureHardCap.asKnown().isPresent) 1 else 0) +
             (if (isActive.asKnown().isPresent) 1 else 0) +
             (if (url.asKnown().isPresent) 1 else 0)

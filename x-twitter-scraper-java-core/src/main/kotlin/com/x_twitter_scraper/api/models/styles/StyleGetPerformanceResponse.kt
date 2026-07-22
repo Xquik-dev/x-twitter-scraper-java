@@ -242,7 +242,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (tweetCount.asKnown().isPresent) 1 else 0) +
-            (tweets.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (tweets.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (if (xUsername.asKnown().isPresent) 1 else 0)
 
     class Tweet
@@ -274,7 +274,9 @@ private constructor(
             @JsonProperty("retweetCount")
             @ExcludeMissing
             retweetCount: JsonField<Long> = JsonMissing.of(),
-            @JsonProperty("viewCount") @ExcludeMissing viewCount: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("viewCount")
+            @ExcludeMissing
+            viewCount: JsonField<Long> = JsonMissing.of(),
         ) : this(
             id,
             text,

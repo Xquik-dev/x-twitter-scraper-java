@@ -34,7 +34,9 @@ private constructor(
         @ExcludeMissing
         draws: JsonField<List<DrawListItem>> = JsonMissing.of(),
         @JsonProperty("hasMore") @ExcludeMissing hasMore: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("nextCursor") @ExcludeMissing nextCursor: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("nextCursor")
+        @ExcludeMissing
+        nextCursor: JsonField<String> = JsonMissing.of(),
     ) : this(draws, hasMore, nextCursor, mutableMapOf())
 
     /**
@@ -239,7 +241,7 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (draws.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+        (draws.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (if (hasMore.asKnown().isPresent) 1 else 0) +
             (if (nextCursor.asKnown().isPresent) 1 else 0)
 

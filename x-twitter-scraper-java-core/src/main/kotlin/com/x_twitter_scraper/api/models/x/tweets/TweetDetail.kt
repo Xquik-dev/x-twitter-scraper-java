@@ -1220,7 +1220,7 @@ private constructor(
             (if (isQuoteStatus.asKnown().isPresent) 1 else 0) +
             (if (isReply.asKnown().isPresent) 1 else 0) +
             (if (lang.asKnown().isPresent) 1 else 0) +
-            (media.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (media.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (quotedTweet.asKnown().getOrNull()?.validity() ?: 0) +
             (retweetedTweet.asKnown().getOrNull()?.validity() ?: 0) +
             (if (source.asKnown().isPresent) 1 else 0) +
@@ -1318,8 +1318,9 @@ private constructor(
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+        internal fun validity(): Int = additionalProperties.count { (_, value) ->
+            !value.isNull() && !value.isMissing()
+        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

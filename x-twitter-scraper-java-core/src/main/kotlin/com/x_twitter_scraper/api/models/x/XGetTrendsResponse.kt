@@ -241,7 +241,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (count.asKnown().isPresent) 1 else 0) +
-            (trends.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (trends.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (if (woeid.asKnown().isPresent) 1 else 0)
 
     class Trend

@@ -1,7 +1,18 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     `kotlin-dsl`
-    kotlin("jvm") version "1.9.20"
-    id("com.vanniktech.maven.publish") version "0.28.0"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_25)
+    }
 }
 
 repositories {
@@ -10,6 +21,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.20")
-    implementation("com.vanniktech:gradle-maven-publish-plugin:0.28.0")
+    implementation("org.jetbrains.dokka:dokka-gradle-plugin:2.2.0")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.0")
+    implementation("com.vanniktech:gradle-maven-publish-plugin:0.37.0")
 }

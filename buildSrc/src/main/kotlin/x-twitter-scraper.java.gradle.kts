@@ -10,7 +10,7 @@ repositories {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(26))
     }
 
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -43,9 +43,9 @@ tasks.withType<Test>().configureEach {
     }
 }
 
-val palantir by configurations.creating
+val palantir = configurations.create("palantir")
 dependencies {
-    palantir("com.palantir.javaformat:palantir-java-format:2.89.0")
+    palantir("com.palantir.javaformat:palantir-java-format:2.96.0")
 }
 
 fun registerPalantir(

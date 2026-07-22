@@ -251,7 +251,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (hasNextPage.asKnown().isPresent) 1 else 0) +
-            (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (messages.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (if (nextCursor.asKnown().isPresent) 1 else 0)
 
     class Message

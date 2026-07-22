@@ -29,7 +29,9 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("draw") @ExcludeMissing draw: JsonField<DrawDetail> = JsonMissing.of(),
-        @JsonProperty("winners") @ExcludeMissing winners: JsonField<List<Winner>> = JsonMissing.of(),
+        @JsonProperty("winners")
+        @ExcludeMissing
+        winners: JsonField<List<Winner>> = JsonMissing.of(),
     ) : this(draw, winners, mutableMapOf())
 
     /**
@@ -212,7 +214,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (draw.asKnown().getOrNull()?.validity() ?: 0) +
-            (winners.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+            (winners.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -867,7 +867,7 @@ private constructor(
                 (if (name.asKnown().isPresent) 1 else 0) +
                 (primaryTopic.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (role.asKnown().isPresent) 1 else 0) +
-                (rules.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+                (rules.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 
         class Creator
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)

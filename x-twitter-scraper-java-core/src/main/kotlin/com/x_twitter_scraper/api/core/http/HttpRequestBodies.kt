@@ -135,7 +135,7 @@ private fun serializePart(name: String, node: JsonNode): Sequence<Pair<String, I
                         .byteInputStream()
             )
         JsonNodeType.OBJECT ->
-            node.fields().asSequence().flatMap { (key, value) ->
+            node.properties().asSequence().flatMap { (key, value) ->
                 serializePart("$name[$key]", value)
             }
         JsonNodeType.POJO,
