@@ -18,7 +18,7 @@ import com.x_twitter_scraper.api.services.async.monitors.KeywordServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
-/** Real-time X account monitoring */
+/** X account monitoring with 1-second checks */
 interface MonitorServiceAsync {
 
     /**
@@ -33,11 +33,11 @@ interface MonitorServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): MonitorServiceAsync
 
-    /** Real-time X account monitoring */
+    /** X account monitoring with 1-second checks */
     fun keywords(): KeywordServiceAsync
 
     /**
-     * Creates an instant monitor. Monitors are unlimited. Active monitors check every 1 second and
+     * Creates an account monitor. Monitors are unlimited. Active monitors check every 1 second and
      * cost 21 credits per hour. Events and webhook deliveries are included. Creation requires
      * available credits for the first hourly charge and username lookup.
      */
@@ -178,7 +178,7 @@ interface MonitorServiceAsync {
             modifier: Consumer<ClientOptions.Builder>
         ): MonitorServiceAsync.WithRawResponse
 
-        /** Real-time X account monitoring */
+        /** X account monitoring with 1-second checks */
         fun keywords(): KeywordServiceAsync.WithRawResponse
 
         /**

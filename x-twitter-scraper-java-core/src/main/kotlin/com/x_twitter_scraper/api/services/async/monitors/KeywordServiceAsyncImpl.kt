@@ -30,7 +30,7 @@ import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-/** Real-time X account monitoring */
+/** X account monitoring with 1-second checks */
 class KeywordServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     KeywordServiceAsync {
 

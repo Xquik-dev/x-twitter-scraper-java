@@ -3,6 +3,7 @@
 package com.xquik.consumer.proguard
 
 import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.client.XTwitterScraperClientImpl
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -13,6 +14,7 @@ import com.x_twitter_scraper.api.core.http.HttpRequest
 import com.x_twitter_scraper.api.core.http.HttpResponse
 import com.x_twitter_scraper.api.core.jsonMapper
 import com.x_twitter_scraper.api.models.EventType
+import com.x_twitter_scraper.api.models.compose.ComposeCreateResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetAuthor
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -33,6 +35,7 @@ internal class ProGuardCompatibilityTest {
             test.client()
             test.productionDeserialization()
             test.tweetAuthorRoundtrip()
+            test.composeCreateResponseRoundtrip()
             test.eventTypeRoundtrip()
         }
     }
@@ -106,6 +109,257 @@ internal class ProGuardCompatibilityTest {
 
         check(roundtrippedTweetAuthor == tweetAuthor) {
             "TweetAuthor roundtrip changed: expected=$tweetAuthor, actual=$roundtrippedTweetAuthor"
+        }
+    }
+
+    fun composeCreateResponseRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val composeCreateResponse =
+            ComposeCreateResponse.ofPrepareResult(
+                ComposeCreateResponse.ComposePrepareResult.builder()
+                    .contentRules(
+                        listOf(
+                            ComposeCreateResponse.ComposePrepareResult.ContentRule.builder()
+                                .rule("rule")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ContentRule.builder()
+                                .rule("rule")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ContentRule.builder()
+                                .rule("rule")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ContentRule.builder()
+                                .rule("rule")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ContentRule.builder()
+                                .rule("rule")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ContentRule.builder()
+                                .rule("rule")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ContentRule.builder()
+                                .rule("rule")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ContentRule.builder()
+                                .rule("rule")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ContentRule.builder()
+                                .rule("rule")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ContentRule.builder()
+                                .rule("rule")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ContentRule.builder()
+                                .rule("rule")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ContentRule.builder()
+                                .rule("rule")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ContentRule.builder()
+                                .rule("rule")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ContentRule.builder()
+                                .rule("rule")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ContentRule.builder()
+                                .rule("rule")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ContentRule.builder()
+                                .rule("rule")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ContentRule.builder()
+                                .rule("rule")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ContentRule.builder()
+                                .rule("rule")
+                                .build(),
+                        )
+                    )
+                    .engagementMultipliers(
+                        listOf(
+                            ComposeCreateResponse.ComposePrepareResult.EngagementMultiplier
+                                .builder()
+                                .action("action")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.EngagementMultiplier
+                                .builder()
+                                .action("action")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.EngagementMultiplier
+                                .builder()
+                                .action("action")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.EngagementMultiplier
+                                .builder()
+                                .action("action")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.EngagementMultiplier
+                                .builder()
+                                .action("action")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.EngagementMultiplier
+                                .builder()
+                                .action("action")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.EngagementMultiplier
+                                .builder()
+                                .action("action")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.EngagementMultiplier
+                                .builder()
+                                .action("action")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.EngagementMultiplier
+                                .builder()
+                                .action("action")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.EngagementMultiplier
+                                .builder()
+                                .action("action")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.EngagementMultiplier
+                                .builder()
+                                .action("action")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.EngagementMultiplier
+                                .builder()
+                                .action("action")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.EngagementMultiplier
+                                .builder()
+                                .action("action")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.EngagementMultiplier
+                                .builder()
+                                .action("action")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.EngagementMultiplier
+                                .builder()
+                                .action("action")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.EngagementMultiplier
+                                .builder()
+                                .action("action")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.EngagementMultiplier
+                                .builder()
+                                .action("action")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.EngagementMultiplier
+                                .builder()
+                                .action("action")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.EngagementMultiplier
+                                .builder()
+                                .action("action")
+                                .build(),
+                        )
+                    )
+                    .engagementVelocity("engagementVelocity")
+                    .followUpQuestions(listOf("string", "string", "string", "string"))
+                    .intentUrl("https://example.com")
+                    .nextStep("nextStep")
+                    .scorerWeights(
+                        listOf(
+                            ComposeCreateResponse.ComposePrepareResult.ScorerWeight.builder()
+                                .context("context")
+                                .signal("signal")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ScorerWeight.builder()
+                                .context("context")
+                                .signal("signal")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ScorerWeight.builder()
+                                .context("context")
+                                .signal("signal")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ScorerWeight.builder()
+                                .context("context")
+                                .signal("signal")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ScorerWeight.builder()
+                                .context("context")
+                                .signal("signal")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ScorerWeight.builder()
+                                .context("context")
+                                .signal("signal")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ScorerWeight.builder()
+                                .context("context")
+                                .signal("signal")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ScorerWeight.builder()
+                                .context("context")
+                                .signal("signal")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ScorerWeight.builder()
+                                .context("context")
+                                .signal("signal")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ScorerWeight.builder()
+                                .context("context")
+                                .signal("signal")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ScorerWeight.builder()
+                                .context("context")
+                                .signal("signal")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ScorerWeight.builder()
+                                .context("context")
+                                .signal("signal")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ScorerWeight.builder()
+                                .context("context")
+                                .signal("signal")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ScorerWeight.builder()
+                                .context("context")
+                                .signal("signal")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ScorerWeight.builder()
+                                .context("context")
+                                .signal("signal")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ScorerWeight.builder()
+                                .context("context")
+                                .signal("signal")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ScorerWeight.builder()
+                                .context("context")
+                                .signal("signal")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ScorerWeight.builder()
+                                .context("context")
+                                .signal("signal")
+                                .build(),
+                            ComposeCreateResponse.ComposePrepareResult.ScorerWeight.builder()
+                                .context("context")
+                                .signal("signal")
+                                .build(),
+                        )
+                    )
+                    .source("source")
+                    .topPenalties(listOf("string", "string", "string", "string"))
+                    .addSavedStyle(
+                        ComposeCreateResponse.ComposePrepareResult.SavedStyle.builder()
+                            .tweetCount(0L)
+                            .username("username")
+                            .build()
+                    )
+                    .styleNote("styleNote")
+                    .addStyleTweet("string")
+                    .build()
+            )
+
+        val roundtrippedComposeCreateResponse =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(composeCreateResponse),
+                jacksonTypeRef<ComposeCreateResponse>(),
+            )
+
+        check(roundtrippedComposeCreateResponse == composeCreateResponse) {
+            "ComposeCreateResponse roundtrip changed"
         }
     }
 
