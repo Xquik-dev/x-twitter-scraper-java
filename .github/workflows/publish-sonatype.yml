@@ -2,6 +2,11 @@ name: Publish Maven Central
 
 on:
   workflow_dispatch:
+    inputs:
+      release_ref:
+        description: Release tag to publish
+        required: true
+        type: string
   release:
     types: [published]
 
@@ -15,7 +20,7 @@ concurrency:
 jobs:
   publish:
     name: Publish
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     environment: maven-central
@@ -23,7 +28,13 @@ jobs:
       - name: Check out release tag
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.release_ref || github.ref }}
           persist-credentials: false
+
+      - name: Verify release tag
+        env:
+          RELEASE_REF: ${{ github.event_name == 'workflow_dispatch' && inputs.release_ref || github.ref_name }}
+        run: test "$(git describe --tags --exact-match)" = "$RELEASE_REF"
 
       - name: Set up Java
         uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
