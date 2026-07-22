@@ -16,10 +16,10 @@ internal class UserRetrieveBatchResponseTest {
         val userRetrieveBatchResponse =
             UserRetrieveBatchResponse.builder()
                 .nextCursor("")
-                .processedCount(0L)
-                .requestedCount(0L)
-                .returnedCount(0L)
-                .addUnavailableId("321669910225")
+                .processedCount(2L)
+                .requestedCount(2L)
+                .returnedCount(1L)
+                .addUnavailableId("1234567890")
                 .addUnprocessedId("321669910225")
                 .addUser(
                     UserProfile.builder()
@@ -67,10 +67,10 @@ internal class UserRetrieveBatchResponseTest {
                 .build()
 
         assertThat(userRetrieveBatchResponse.nextCursor()).isEqualTo("")
-        assertThat(userRetrieveBatchResponse.processedCount()).isEqualTo(0L)
-        assertThat(userRetrieveBatchResponse.requestedCount()).isEqualTo(0L)
-        assertThat(userRetrieveBatchResponse.returnedCount()).isEqualTo(0L)
-        assertThat(userRetrieveBatchResponse.unavailableIds()).containsExactly("321669910225")
+        assertThat(userRetrieveBatchResponse.processedCount()).isEqualTo(2L)
+        assertThat(userRetrieveBatchResponse.requestedCount()).isEqualTo(2L)
+        assertThat(userRetrieveBatchResponse.returnedCount()).isEqualTo(1L)
+        assertThat(userRetrieveBatchResponse.unavailableIds()).containsExactly("1234567890")
         assertThat(userRetrieveBatchResponse.unprocessedIds()).containsExactly("321669910225")
         assertThat(userRetrieveBatchResponse.users())
             .containsExactly(
@@ -124,10 +124,10 @@ internal class UserRetrieveBatchResponseTest {
         val userRetrieveBatchResponse =
             UserRetrieveBatchResponse.builder()
                 .nextCursor("")
-                .processedCount(0L)
-                .requestedCount(0L)
-                .returnedCount(0L)
-                .addUnavailableId("321669910225")
+                .processedCount(2L)
+                .requestedCount(2L)
+                .returnedCount(1L)
+                .addUnavailableId("1234567890")
                 .addUnprocessedId("321669910225")
                 .addUser(
                     UserProfile.builder()

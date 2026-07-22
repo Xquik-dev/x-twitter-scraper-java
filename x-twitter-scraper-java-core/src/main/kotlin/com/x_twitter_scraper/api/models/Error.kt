@@ -78,7 +78,7 @@ private constructor(
     fun reason(): Optional<String> = reason.getOptional("reason")
 
     /**
-     * Required wait in seconds.
+     * Seconds until the next permitted request.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -216,7 +216,7 @@ private constructor(
          */
         fun reason(reason: JsonField<String>) = apply { this.reason = reason }
 
-        /** Required wait in seconds. */
+        /** Seconds until the next permitted request. */
         fun retryAfter(retryAfter: Long) = retryAfter(JsonField.of(retryAfter))
 
         /**
@@ -638,6 +638,72 @@ private constructor(
 
                 @JvmField val USER_NOT_FOUND = of("user_not_found")
 
+                @JvmField val BODY_TOO_LARGE = of("body_too_large")
+
+                @JvmField val CHECKOUT_UNAVAILABLE = of("checkout_unavailable")
+
+                @JvmField val CONNECTION_CHALLENGE_EXPIRED = of("connection_challenge_expired")
+
+                @JvmField val CONNECTION_CHALLENGE_INACTIVE = of("connection_challenge_inactive")
+
+                @JvmField val DRAFT_NOT_FOUND = of("draft_not_found")
+
+                @JvmField val FAVORITERS_UNAVAILABLE = of("favoriters_unavailable")
+
+                @JvmField val FORBIDDEN = of("forbidden")
+
+                @JvmField val GUEST_WALLET_UNAVAILABLE = of("guest_wallet_unavailable")
+
+                @JvmField val GUEST_WALLETS_DISABLED = of("guest_wallets_disabled")
+
+                @JvmField val GUEST_WALLETS_UNAVAILABLE = of("guest_wallets_unavailable")
+
+                @JvmField val IDEMPOTENCY_CONFLICT = of("idempotency_conflict")
+
+                @JvmField val IDEMPOTENCY_KEY_CONFLICT = of("idempotency_key_conflict")
+
+                @JvmField val INVALID_COMMUNITY_ID = of("invalid_community_id")
+
+                @JvmField val INVALID_IDEMPOTENCY_KEY = of("invalid_idempotency_key")
+
+                @JvmField val INVALID_LIST_ID = of("invalid_list_id")
+
+                @JvmField val INVALID_PAYMENT_AMOUNT = of("invalid_payment_amount")
+
+                @JvmField val INVALID_RANGE = of("invalid_range")
+
+                @JvmField val LOGIN_RATE_LIMITED = of("login_rate_limited")
+
+                @JvmField val MISSING_IDEMPOTENCY_KEY = of("missing_idempotency_key")
+
+                @JvmField val MISSING_IDS = of("missing_ids")
+
+                @JvmField val NO_CACHED_STYLE = of("no_cached_style")
+
+                @JvmField val PASSKEY_REQUIRED = of("passkey_required")
+
+                @JvmField val RATE_LIMITED = of("rate_limited")
+
+                @JvmField val READ_REQUEST_TIMEOUT = of("read_request_timeout")
+
+                @JvmField val REPLIES_INCOMPLETE = of("replies_incomplete")
+
+                @JvmField val SUPPORT_MEDIA_RATE_LIMIT = of("support_media_rate_limit")
+
+                @JvmField val SUPPORT_REQUEST_RATE_LIMIT = of("support_request_rate_limit")
+
+                @JvmField val TOO_MANY_IDS = of("too_many_ids")
+
+                @JvmField val UNKNOWN_FIELD = of("unknown_field")
+
+                @JvmField val UNSUPPORTED_MEDIA_TYPE = of("unsupported_media_type")
+
+                @JvmField val WEBHOOK_INACTIVE = of("webhook_inactive")
+
+                @JvmField val WRITE_TRACKING_UNAVAILABLE = of("write_tracking_unavailable")
+
+                @JvmField val X_WRITE_UNCONFIRMED = of("x_write_unconfirmed")
+
                 @JvmField val X_ACCOUNT_FEATURE_REQUIRED = of("x_account_feature_required")
 
                 @JvmField val X_ACCOUNT_PROTECTED = of("x_account_protected")
@@ -735,6 +801,39 @@ private constructor(
                 UNAUTHENTICATED,
                 UNSUPPORTED_FIELD,
                 USER_NOT_FOUND,
+                BODY_TOO_LARGE,
+                CHECKOUT_UNAVAILABLE,
+                CONNECTION_CHALLENGE_EXPIRED,
+                CONNECTION_CHALLENGE_INACTIVE,
+                DRAFT_NOT_FOUND,
+                FAVORITERS_UNAVAILABLE,
+                FORBIDDEN,
+                GUEST_WALLET_UNAVAILABLE,
+                GUEST_WALLETS_DISABLED,
+                GUEST_WALLETS_UNAVAILABLE,
+                IDEMPOTENCY_CONFLICT,
+                IDEMPOTENCY_KEY_CONFLICT,
+                INVALID_COMMUNITY_ID,
+                INVALID_IDEMPOTENCY_KEY,
+                INVALID_LIST_ID,
+                INVALID_PAYMENT_AMOUNT,
+                INVALID_RANGE,
+                LOGIN_RATE_LIMITED,
+                MISSING_IDEMPOTENCY_KEY,
+                MISSING_IDS,
+                NO_CACHED_STYLE,
+                PASSKEY_REQUIRED,
+                RATE_LIMITED,
+                READ_REQUEST_TIMEOUT,
+                REPLIES_INCOMPLETE,
+                SUPPORT_MEDIA_RATE_LIMIT,
+                SUPPORT_REQUEST_RATE_LIMIT,
+                TOO_MANY_IDS,
+                UNKNOWN_FIELD,
+                UNSUPPORTED_MEDIA_TYPE,
+                WEBHOOK_INACTIVE,
+                WRITE_TRACKING_UNAVAILABLE,
+                X_WRITE_UNCONFIRMED,
                 X_ACCOUNT_FEATURE_REQUIRED,
                 X_ACCOUNT_PROTECTED,
                 X_ACCOUNT_SUSPENDED,
@@ -813,6 +912,39 @@ private constructor(
                 UNAUTHENTICATED,
                 UNSUPPORTED_FIELD,
                 USER_NOT_FOUND,
+                BODY_TOO_LARGE,
+                CHECKOUT_UNAVAILABLE,
+                CONNECTION_CHALLENGE_EXPIRED,
+                CONNECTION_CHALLENGE_INACTIVE,
+                DRAFT_NOT_FOUND,
+                FAVORITERS_UNAVAILABLE,
+                FORBIDDEN,
+                GUEST_WALLET_UNAVAILABLE,
+                GUEST_WALLETS_DISABLED,
+                GUEST_WALLETS_UNAVAILABLE,
+                IDEMPOTENCY_CONFLICT,
+                IDEMPOTENCY_KEY_CONFLICT,
+                INVALID_COMMUNITY_ID,
+                INVALID_IDEMPOTENCY_KEY,
+                INVALID_LIST_ID,
+                INVALID_PAYMENT_AMOUNT,
+                INVALID_RANGE,
+                LOGIN_RATE_LIMITED,
+                MISSING_IDEMPOTENCY_KEY,
+                MISSING_IDS,
+                NO_CACHED_STYLE,
+                PASSKEY_REQUIRED,
+                RATE_LIMITED,
+                READ_REQUEST_TIMEOUT,
+                REPLIES_INCOMPLETE,
+                SUPPORT_MEDIA_RATE_LIMIT,
+                SUPPORT_REQUEST_RATE_LIMIT,
+                TOO_MANY_IDS,
+                UNKNOWN_FIELD,
+                UNSUPPORTED_MEDIA_TYPE,
+                WEBHOOK_INACTIVE,
+                WRITE_TRACKING_UNAVAILABLE,
+                X_WRITE_UNCONFIRMED,
                 X_ACCOUNT_FEATURE_REQUIRED,
                 X_ACCOUNT_PROTECTED,
                 X_ACCOUNT_SUSPENDED,
@@ -895,6 +1027,39 @@ private constructor(
                     UNAUTHENTICATED -> Value.UNAUTHENTICATED
                     UNSUPPORTED_FIELD -> Value.UNSUPPORTED_FIELD
                     USER_NOT_FOUND -> Value.USER_NOT_FOUND
+                    BODY_TOO_LARGE -> Value.BODY_TOO_LARGE
+                    CHECKOUT_UNAVAILABLE -> Value.CHECKOUT_UNAVAILABLE
+                    CONNECTION_CHALLENGE_EXPIRED -> Value.CONNECTION_CHALLENGE_EXPIRED
+                    CONNECTION_CHALLENGE_INACTIVE -> Value.CONNECTION_CHALLENGE_INACTIVE
+                    DRAFT_NOT_FOUND -> Value.DRAFT_NOT_FOUND
+                    FAVORITERS_UNAVAILABLE -> Value.FAVORITERS_UNAVAILABLE
+                    FORBIDDEN -> Value.FORBIDDEN
+                    GUEST_WALLET_UNAVAILABLE -> Value.GUEST_WALLET_UNAVAILABLE
+                    GUEST_WALLETS_DISABLED -> Value.GUEST_WALLETS_DISABLED
+                    GUEST_WALLETS_UNAVAILABLE -> Value.GUEST_WALLETS_UNAVAILABLE
+                    IDEMPOTENCY_CONFLICT -> Value.IDEMPOTENCY_CONFLICT
+                    IDEMPOTENCY_KEY_CONFLICT -> Value.IDEMPOTENCY_KEY_CONFLICT
+                    INVALID_COMMUNITY_ID -> Value.INVALID_COMMUNITY_ID
+                    INVALID_IDEMPOTENCY_KEY -> Value.INVALID_IDEMPOTENCY_KEY
+                    INVALID_LIST_ID -> Value.INVALID_LIST_ID
+                    INVALID_PAYMENT_AMOUNT -> Value.INVALID_PAYMENT_AMOUNT
+                    INVALID_RANGE -> Value.INVALID_RANGE
+                    LOGIN_RATE_LIMITED -> Value.LOGIN_RATE_LIMITED
+                    MISSING_IDEMPOTENCY_KEY -> Value.MISSING_IDEMPOTENCY_KEY
+                    MISSING_IDS -> Value.MISSING_IDS
+                    NO_CACHED_STYLE -> Value.NO_CACHED_STYLE
+                    PASSKEY_REQUIRED -> Value.PASSKEY_REQUIRED
+                    RATE_LIMITED -> Value.RATE_LIMITED
+                    READ_REQUEST_TIMEOUT -> Value.READ_REQUEST_TIMEOUT
+                    REPLIES_INCOMPLETE -> Value.REPLIES_INCOMPLETE
+                    SUPPORT_MEDIA_RATE_LIMIT -> Value.SUPPORT_MEDIA_RATE_LIMIT
+                    SUPPORT_REQUEST_RATE_LIMIT -> Value.SUPPORT_REQUEST_RATE_LIMIT
+                    TOO_MANY_IDS -> Value.TOO_MANY_IDS
+                    UNKNOWN_FIELD -> Value.UNKNOWN_FIELD
+                    UNSUPPORTED_MEDIA_TYPE -> Value.UNSUPPORTED_MEDIA_TYPE
+                    WEBHOOK_INACTIVE -> Value.WEBHOOK_INACTIVE
+                    WRITE_TRACKING_UNAVAILABLE -> Value.WRITE_TRACKING_UNAVAILABLE
+                    X_WRITE_UNCONFIRMED -> Value.X_WRITE_UNCONFIRMED
                     X_ACCOUNT_FEATURE_REQUIRED -> Value.X_ACCOUNT_FEATURE_REQUIRED
                     X_ACCOUNT_PROTECTED -> Value.X_ACCOUNT_PROTECTED
                     X_ACCOUNT_SUSPENDED -> Value.X_ACCOUNT_SUSPENDED
@@ -975,6 +1140,39 @@ private constructor(
                     UNAUTHENTICATED -> Known.UNAUTHENTICATED
                     UNSUPPORTED_FIELD -> Known.UNSUPPORTED_FIELD
                     USER_NOT_FOUND -> Known.USER_NOT_FOUND
+                    BODY_TOO_LARGE -> Known.BODY_TOO_LARGE
+                    CHECKOUT_UNAVAILABLE -> Known.CHECKOUT_UNAVAILABLE
+                    CONNECTION_CHALLENGE_EXPIRED -> Known.CONNECTION_CHALLENGE_EXPIRED
+                    CONNECTION_CHALLENGE_INACTIVE -> Known.CONNECTION_CHALLENGE_INACTIVE
+                    DRAFT_NOT_FOUND -> Known.DRAFT_NOT_FOUND
+                    FAVORITERS_UNAVAILABLE -> Known.FAVORITERS_UNAVAILABLE
+                    FORBIDDEN -> Known.FORBIDDEN
+                    GUEST_WALLET_UNAVAILABLE -> Known.GUEST_WALLET_UNAVAILABLE
+                    GUEST_WALLETS_DISABLED -> Known.GUEST_WALLETS_DISABLED
+                    GUEST_WALLETS_UNAVAILABLE -> Known.GUEST_WALLETS_UNAVAILABLE
+                    IDEMPOTENCY_CONFLICT -> Known.IDEMPOTENCY_CONFLICT
+                    IDEMPOTENCY_KEY_CONFLICT -> Known.IDEMPOTENCY_KEY_CONFLICT
+                    INVALID_COMMUNITY_ID -> Known.INVALID_COMMUNITY_ID
+                    INVALID_IDEMPOTENCY_KEY -> Known.INVALID_IDEMPOTENCY_KEY
+                    INVALID_LIST_ID -> Known.INVALID_LIST_ID
+                    INVALID_PAYMENT_AMOUNT -> Known.INVALID_PAYMENT_AMOUNT
+                    INVALID_RANGE -> Known.INVALID_RANGE
+                    LOGIN_RATE_LIMITED -> Known.LOGIN_RATE_LIMITED
+                    MISSING_IDEMPOTENCY_KEY -> Known.MISSING_IDEMPOTENCY_KEY
+                    MISSING_IDS -> Known.MISSING_IDS
+                    NO_CACHED_STYLE -> Known.NO_CACHED_STYLE
+                    PASSKEY_REQUIRED -> Known.PASSKEY_REQUIRED
+                    RATE_LIMITED -> Known.RATE_LIMITED
+                    READ_REQUEST_TIMEOUT -> Known.READ_REQUEST_TIMEOUT
+                    REPLIES_INCOMPLETE -> Known.REPLIES_INCOMPLETE
+                    SUPPORT_MEDIA_RATE_LIMIT -> Known.SUPPORT_MEDIA_RATE_LIMIT
+                    SUPPORT_REQUEST_RATE_LIMIT -> Known.SUPPORT_REQUEST_RATE_LIMIT
+                    TOO_MANY_IDS -> Known.TOO_MANY_IDS
+                    UNKNOWN_FIELD -> Known.UNKNOWN_FIELD
+                    UNSUPPORTED_MEDIA_TYPE -> Known.UNSUPPORTED_MEDIA_TYPE
+                    WEBHOOK_INACTIVE -> Known.WEBHOOK_INACTIVE
+                    WRITE_TRACKING_UNAVAILABLE -> Known.WRITE_TRACKING_UNAVAILABLE
+                    X_WRITE_UNCONFIRMED -> Known.X_WRITE_UNCONFIRMED
                     X_ACCOUNT_FEATURE_REQUIRED -> Known.X_ACCOUNT_FEATURE_REQUIRED
                     X_ACCOUNT_PROTECTED -> Known.X_ACCOUNT_PROTECTED
                     X_ACCOUNT_SUSPENDED -> Known.X_ACCOUNT_SUSPENDED
@@ -1388,6 +1586,73 @@ private constructor(
 
                     @JvmField val USER_NOT_FOUND = of("user_not_found")
 
+                    @JvmField val BODY_TOO_LARGE = of("body_too_large")
+
+                    @JvmField val CHECKOUT_UNAVAILABLE = of("checkout_unavailable")
+
+                    @JvmField val CONNECTION_CHALLENGE_EXPIRED = of("connection_challenge_expired")
+
+                    @JvmField
+                    val CONNECTION_CHALLENGE_INACTIVE = of("connection_challenge_inactive")
+
+                    @JvmField val DRAFT_NOT_FOUND = of("draft_not_found")
+
+                    @JvmField val FAVORITERS_UNAVAILABLE = of("favoriters_unavailable")
+
+                    @JvmField val FORBIDDEN = of("forbidden")
+
+                    @JvmField val GUEST_WALLET_UNAVAILABLE = of("guest_wallet_unavailable")
+
+                    @JvmField val GUEST_WALLETS_DISABLED = of("guest_wallets_disabled")
+
+                    @JvmField val GUEST_WALLETS_UNAVAILABLE = of("guest_wallets_unavailable")
+
+                    @JvmField val IDEMPOTENCY_CONFLICT = of("idempotency_conflict")
+
+                    @JvmField val IDEMPOTENCY_KEY_CONFLICT = of("idempotency_key_conflict")
+
+                    @JvmField val INVALID_COMMUNITY_ID = of("invalid_community_id")
+
+                    @JvmField val INVALID_IDEMPOTENCY_KEY = of("invalid_idempotency_key")
+
+                    @JvmField val INVALID_LIST_ID = of("invalid_list_id")
+
+                    @JvmField val INVALID_PAYMENT_AMOUNT = of("invalid_payment_amount")
+
+                    @JvmField val INVALID_RANGE = of("invalid_range")
+
+                    @JvmField val LOGIN_RATE_LIMITED = of("login_rate_limited")
+
+                    @JvmField val MISSING_IDEMPOTENCY_KEY = of("missing_idempotency_key")
+
+                    @JvmField val MISSING_IDS = of("missing_ids")
+
+                    @JvmField val NO_CACHED_STYLE = of("no_cached_style")
+
+                    @JvmField val PASSKEY_REQUIRED = of("passkey_required")
+
+                    @JvmField val RATE_LIMITED = of("rate_limited")
+
+                    @JvmField val READ_REQUEST_TIMEOUT = of("read_request_timeout")
+
+                    @JvmField val REPLIES_INCOMPLETE = of("replies_incomplete")
+
+                    @JvmField val SUPPORT_MEDIA_RATE_LIMIT = of("support_media_rate_limit")
+
+                    @JvmField val SUPPORT_REQUEST_RATE_LIMIT = of("support_request_rate_limit")
+
+                    @JvmField val TOO_MANY_IDS = of("too_many_ids")
+
+                    @JvmField val UNKNOWN_FIELD = of("unknown_field")
+
+                    @JvmField val UNSUPPORTED_MEDIA_TYPE = of("unsupported_media_type")
+
+                    @JvmField val WEBHOOK_INACTIVE = of("webhook_inactive")
+
+                    @JvmField val WRITE_TRACKING_UNAVAILABLE = of("write_tracking_unavailable")
+
+                    @JvmField val X_WRITE_UNCONFIRMED = of("x_write_unconfirmed")
+
                     @JvmField val X_ACCOUNT_FEATURE_REQUIRED = of("x_account_feature_required")
 
                     @JvmField val X_ACCOUNT_PROTECTED = of("x_account_protected")
@@ -1485,6 +1750,39 @@ private constructor(
                     UNAUTHENTICATED,
                     UNSUPPORTED_FIELD,
                     USER_NOT_FOUND,
+                    BODY_TOO_LARGE,
+                    CHECKOUT_UNAVAILABLE,
+                    CONNECTION_CHALLENGE_EXPIRED,
+                    CONNECTION_CHALLENGE_INACTIVE,
+                    DRAFT_NOT_FOUND,
+                    FAVORITERS_UNAVAILABLE,
+                    FORBIDDEN,
+                    GUEST_WALLET_UNAVAILABLE,
+                    GUEST_WALLETS_DISABLED,
+                    GUEST_WALLETS_UNAVAILABLE,
+                    IDEMPOTENCY_CONFLICT,
+                    IDEMPOTENCY_KEY_CONFLICT,
+                    INVALID_COMMUNITY_ID,
+                    INVALID_IDEMPOTENCY_KEY,
+                    INVALID_LIST_ID,
+                    INVALID_PAYMENT_AMOUNT,
+                    INVALID_RANGE,
+                    LOGIN_RATE_LIMITED,
+                    MISSING_IDEMPOTENCY_KEY,
+                    MISSING_IDS,
+                    NO_CACHED_STYLE,
+                    PASSKEY_REQUIRED,
+                    RATE_LIMITED,
+                    READ_REQUEST_TIMEOUT,
+                    REPLIES_INCOMPLETE,
+                    SUPPORT_MEDIA_RATE_LIMIT,
+                    SUPPORT_REQUEST_RATE_LIMIT,
+                    TOO_MANY_IDS,
+                    UNKNOWN_FIELD,
+                    UNSUPPORTED_MEDIA_TYPE,
+                    WEBHOOK_INACTIVE,
+                    WRITE_TRACKING_UNAVAILABLE,
+                    X_WRITE_UNCONFIRMED,
                     X_ACCOUNT_FEATURE_REQUIRED,
                     X_ACCOUNT_PROTECTED,
                     X_ACCOUNT_SUSPENDED,
@@ -1563,6 +1861,39 @@ private constructor(
                     UNAUTHENTICATED,
                     UNSUPPORTED_FIELD,
                     USER_NOT_FOUND,
+                    BODY_TOO_LARGE,
+                    CHECKOUT_UNAVAILABLE,
+                    CONNECTION_CHALLENGE_EXPIRED,
+                    CONNECTION_CHALLENGE_INACTIVE,
+                    DRAFT_NOT_FOUND,
+                    FAVORITERS_UNAVAILABLE,
+                    FORBIDDEN,
+                    GUEST_WALLET_UNAVAILABLE,
+                    GUEST_WALLETS_DISABLED,
+                    GUEST_WALLETS_UNAVAILABLE,
+                    IDEMPOTENCY_CONFLICT,
+                    IDEMPOTENCY_KEY_CONFLICT,
+                    INVALID_COMMUNITY_ID,
+                    INVALID_IDEMPOTENCY_KEY,
+                    INVALID_LIST_ID,
+                    INVALID_PAYMENT_AMOUNT,
+                    INVALID_RANGE,
+                    LOGIN_RATE_LIMITED,
+                    MISSING_IDEMPOTENCY_KEY,
+                    MISSING_IDS,
+                    NO_CACHED_STYLE,
+                    PASSKEY_REQUIRED,
+                    RATE_LIMITED,
+                    READ_REQUEST_TIMEOUT,
+                    REPLIES_INCOMPLETE,
+                    SUPPORT_MEDIA_RATE_LIMIT,
+                    SUPPORT_REQUEST_RATE_LIMIT,
+                    TOO_MANY_IDS,
+                    UNKNOWN_FIELD,
+                    UNSUPPORTED_MEDIA_TYPE,
+                    WEBHOOK_INACTIVE,
+                    WRITE_TRACKING_UNAVAILABLE,
+                    X_WRITE_UNCONFIRMED,
                     X_ACCOUNT_FEATURE_REQUIRED,
                     X_ACCOUNT_PROTECTED,
                     X_ACCOUNT_SUSPENDED,
@@ -1644,6 +1975,39 @@ private constructor(
                         UNAUTHENTICATED -> Value.UNAUTHENTICATED
                         UNSUPPORTED_FIELD -> Value.UNSUPPORTED_FIELD
                         USER_NOT_FOUND -> Value.USER_NOT_FOUND
+                        BODY_TOO_LARGE -> Value.BODY_TOO_LARGE
+                        CHECKOUT_UNAVAILABLE -> Value.CHECKOUT_UNAVAILABLE
+                        CONNECTION_CHALLENGE_EXPIRED -> Value.CONNECTION_CHALLENGE_EXPIRED
+                        CONNECTION_CHALLENGE_INACTIVE -> Value.CONNECTION_CHALLENGE_INACTIVE
+                        DRAFT_NOT_FOUND -> Value.DRAFT_NOT_FOUND
+                        FAVORITERS_UNAVAILABLE -> Value.FAVORITERS_UNAVAILABLE
+                        FORBIDDEN -> Value.FORBIDDEN
+                        GUEST_WALLET_UNAVAILABLE -> Value.GUEST_WALLET_UNAVAILABLE
+                        GUEST_WALLETS_DISABLED -> Value.GUEST_WALLETS_DISABLED
+                        GUEST_WALLETS_UNAVAILABLE -> Value.GUEST_WALLETS_UNAVAILABLE
+                        IDEMPOTENCY_CONFLICT -> Value.IDEMPOTENCY_CONFLICT
+                        IDEMPOTENCY_KEY_CONFLICT -> Value.IDEMPOTENCY_KEY_CONFLICT
+                        INVALID_COMMUNITY_ID -> Value.INVALID_COMMUNITY_ID
+                        INVALID_IDEMPOTENCY_KEY -> Value.INVALID_IDEMPOTENCY_KEY
+                        INVALID_LIST_ID -> Value.INVALID_LIST_ID
+                        INVALID_PAYMENT_AMOUNT -> Value.INVALID_PAYMENT_AMOUNT
+                        INVALID_RANGE -> Value.INVALID_RANGE
+                        LOGIN_RATE_LIMITED -> Value.LOGIN_RATE_LIMITED
+                        MISSING_IDEMPOTENCY_KEY -> Value.MISSING_IDEMPOTENCY_KEY
+                        MISSING_IDS -> Value.MISSING_IDS
+                        NO_CACHED_STYLE -> Value.NO_CACHED_STYLE
+                        PASSKEY_REQUIRED -> Value.PASSKEY_REQUIRED
+                        RATE_LIMITED -> Value.RATE_LIMITED
+                        READ_REQUEST_TIMEOUT -> Value.READ_REQUEST_TIMEOUT
+                        REPLIES_INCOMPLETE -> Value.REPLIES_INCOMPLETE
+                        SUPPORT_MEDIA_RATE_LIMIT -> Value.SUPPORT_MEDIA_RATE_LIMIT
+                        SUPPORT_REQUEST_RATE_LIMIT -> Value.SUPPORT_REQUEST_RATE_LIMIT
+                        TOO_MANY_IDS -> Value.TOO_MANY_IDS
+                        UNKNOWN_FIELD -> Value.UNKNOWN_FIELD
+                        UNSUPPORTED_MEDIA_TYPE -> Value.UNSUPPORTED_MEDIA_TYPE
+                        WEBHOOK_INACTIVE -> Value.WEBHOOK_INACTIVE
+                        WRITE_TRACKING_UNAVAILABLE -> Value.WRITE_TRACKING_UNAVAILABLE
+                        X_WRITE_UNCONFIRMED -> Value.X_WRITE_UNCONFIRMED
                         X_ACCOUNT_FEATURE_REQUIRED -> Value.X_ACCOUNT_FEATURE_REQUIRED
                         X_ACCOUNT_PROTECTED -> Value.X_ACCOUNT_PROTECTED
                         X_ACCOUNT_SUSPENDED -> Value.X_ACCOUNT_SUSPENDED
@@ -1724,6 +2088,39 @@ private constructor(
                         UNAUTHENTICATED -> Known.UNAUTHENTICATED
                         UNSUPPORTED_FIELD -> Known.UNSUPPORTED_FIELD
                         USER_NOT_FOUND -> Known.USER_NOT_FOUND
+                        BODY_TOO_LARGE -> Known.BODY_TOO_LARGE
+                        CHECKOUT_UNAVAILABLE -> Known.CHECKOUT_UNAVAILABLE
+                        CONNECTION_CHALLENGE_EXPIRED -> Known.CONNECTION_CHALLENGE_EXPIRED
+                        CONNECTION_CHALLENGE_INACTIVE -> Known.CONNECTION_CHALLENGE_INACTIVE
+                        DRAFT_NOT_FOUND -> Known.DRAFT_NOT_FOUND
+                        FAVORITERS_UNAVAILABLE -> Known.FAVORITERS_UNAVAILABLE
+                        FORBIDDEN -> Known.FORBIDDEN
+                        GUEST_WALLET_UNAVAILABLE -> Known.GUEST_WALLET_UNAVAILABLE
+                        GUEST_WALLETS_DISABLED -> Known.GUEST_WALLETS_DISABLED
+                        GUEST_WALLETS_UNAVAILABLE -> Known.GUEST_WALLETS_UNAVAILABLE
+                        IDEMPOTENCY_CONFLICT -> Known.IDEMPOTENCY_CONFLICT
+                        IDEMPOTENCY_KEY_CONFLICT -> Known.IDEMPOTENCY_KEY_CONFLICT
+                        INVALID_COMMUNITY_ID -> Known.INVALID_COMMUNITY_ID
+                        INVALID_IDEMPOTENCY_KEY -> Known.INVALID_IDEMPOTENCY_KEY
+                        INVALID_LIST_ID -> Known.INVALID_LIST_ID
+                        INVALID_PAYMENT_AMOUNT -> Known.INVALID_PAYMENT_AMOUNT
+                        INVALID_RANGE -> Known.INVALID_RANGE
+                        LOGIN_RATE_LIMITED -> Known.LOGIN_RATE_LIMITED
+                        MISSING_IDEMPOTENCY_KEY -> Known.MISSING_IDEMPOTENCY_KEY
+                        MISSING_IDS -> Known.MISSING_IDS
+                        NO_CACHED_STYLE -> Known.NO_CACHED_STYLE
+                        PASSKEY_REQUIRED -> Known.PASSKEY_REQUIRED
+                        RATE_LIMITED -> Known.RATE_LIMITED
+                        READ_REQUEST_TIMEOUT -> Known.READ_REQUEST_TIMEOUT
+                        REPLIES_INCOMPLETE -> Known.REPLIES_INCOMPLETE
+                        SUPPORT_MEDIA_RATE_LIMIT -> Known.SUPPORT_MEDIA_RATE_LIMIT
+                        SUPPORT_REQUEST_RATE_LIMIT -> Known.SUPPORT_REQUEST_RATE_LIMIT
+                        TOO_MANY_IDS -> Known.TOO_MANY_IDS
+                        UNKNOWN_FIELD -> Known.UNKNOWN_FIELD
+                        UNSUPPORTED_MEDIA_TYPE -> Known.UNSUPPORTED_MEDIA_TYPE
+                        WEBHOOK_INACTIVE -> Known.WEBHOOK_INACTIVE
+                        WRITE_TRACKING_UNAVAILABLE -> Known.WRITE_TRACKING_UNAVAILABLE
+                        X_WRITE_UNCONFIRMED -> Known.X_WRITE_UNCONFIRMED
                         X_ACCOUNT_FEATURE_REQUIRED -> Known.X_ACCOUNT_FEATURE_REQUIRED
                         X_ACCOUNT_PROTECTED -> Known.X_ACCOUNT_PROTECTED
                         X_ACCOUNT_SUSPENDED -> Known.X_ACCOUNT_SUSPENDED

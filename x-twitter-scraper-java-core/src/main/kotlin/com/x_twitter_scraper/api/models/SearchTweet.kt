@@ -228,7 +228,7 @@ private constructor(
     fun createdAt(): Optional<String> = createdAt.getOptional("createdAt")
 
     /**
-     * Start and end offsets for rendered tweet text
+     * Rendered text's start and end offsets.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -244,7 +244,7 @@ private constructor(
     fun entities(): Optional<Entities> = entities.getOptional("entities")
 
     /**
-     * Tweet ID being replied to
+     * ID of the tweet this result replies to.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -252,7 +252,7 @@ private constructor(
     fun inReplyToId(): Optional<String> = inReplyToId.getOptional("inReplyToId")
 
     /**
-     * User ID being replied to
+     * ID of the user this result replies to.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -260,7 +260,7 @@ private constructor(
     fun inReplyToUserId(): Optional<String> = inReplyToUserId.getOptional("inReplyToUserId")
 
     /**
-     * Username being replied to
+     * Username this result replies to.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -300,7 +300,7 @@ private constructor(
     fun isReply(): Optional<Boolean> = isReply.getOptional("isReply")
 
     /**
-     * Tweet language code
+     * Search result language code.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -350,7 +350,7 @@ private constructor(
     fun type(): Optional<String> = type.getOptional("type")
 
     /**
-     * Tweet permalink URL
+     * Search result permalink.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -817,7 +817,7 @@ private constructor(
          */
         fun createdAt(createdAt: JsonField<String>) = apply { this.createdAt = createdAt }
 
-        /** Start and end offsets for rendered tweet text */
+        /** Rendered text's start and end offsets. */
         fun displayTextRange(displayTextRange: List<Long>) =
             displayTextRange(JsonField.of(displayTextRange))
 
@@ -856,7 +856,7 @@ private constructor(
          */
         fun entities(entities: JsonField<Entities>) = apply { this.entities = entities }
 
-        /** Tweet ID being replied to */
+        /** ID of the tweet this result replies to. */
         fun inReplyToId(inReplyToId: String) = inReplyToId(JsonField.of(inReplyToId))
 
         /**
@@ -868,7 +868,7 @@ private constructor(
          */
         fun inReplyToId(inReplyToId: JsonField<String>) = apply { this.inReplyToId = inReplyToId }
 
-        /** User ID being replied to */
+        /** ID of the user this result replies to. */
         fun inReplyToUserId(inReplyToUserId: String) =
             inReplyToUserId(JsonField.of(inReplyToUserId))
 
@@ -883,7 +883,7 @@ private constructor(
             this.inReplyToUserId = inReplyToUserId
         }
 
-        /** Username being replied to */
+        /** Username this result replies to. */
         fun inReplyToUsername(inReplyToUsername: String) =
             inReplyToUsername(JsonField.of(inReplyToUsername))
 
@@ -949,7 +949,7 @@ private constructor(
          */
         fun isReply(isReply: JsonField<Boolean>) = apply { this.isReply = isReply }
 
-        /** Tweet language code */
+        /** Search result language code. */
         fun lang(lang: String) = lang(JsonField.of(lang))
 
         /**
@@ -1044,7 +1044,7 @@ private constructor(
          */
         fun type(type: JsonField<String>) = apply { this.type = type }
 
-        /** Tweet permalink URL */
+        /** Search result permalink. */
         fun url(url: String) = url(JsonField.of(url))
 
         /**

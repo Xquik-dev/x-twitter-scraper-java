@@ -16,7 +16,7 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** Billing session ID returned by the top-up billing flow. */
+    /** Top-up session ID to inspect. */
     fun sessionId(): String = sessionId
 
     /** Additional headers to send with the request. */
@@ -57,7 +57,7 @@ private constructor(
                     creditRetrieveTopupStatusParams.additionalQueryParams.toBuilder()
             }
 
-        /** Billing session ID returned by the top-up billing flow. */
+        /** Top-up session ID to inspect. */
         fun sessionId(sessionId: String) = apply { this.sessionId = sessionId }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {

@@ -34,7 +34,7 @@ private constructor(
     fun idempotencyKey(): String = idempotencyKey
 
     /**
-     * Confirmed USD amount in cents.
+     * USD cents accepted for this checkout.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -111,7 +111,7 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
-        /** Confirmed USD amount in cents. */
+        /** USD cents accepted for this checkout. */
         fun amountMinor(amountMinor: Long) = apply { body.amountMinor(amountMinor) }
 
         /**
@@ -306,7 +306,7 @@ private constructor(
         ) : this(amountMinor, currency, mutableMapOf())
 
         /**
-         * Confirmed USD amount in cents.
+         * USD cents accepted for this checkout.
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
@@ -373,7 +373,7 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            /** Confirmed USD amount in cents. */
+            /** USD cents accepted for this checkout. */
             fun amountMinor(amountMinor: Long) = amountMinor(JsonField.of(amountMinor))
 
             /**
