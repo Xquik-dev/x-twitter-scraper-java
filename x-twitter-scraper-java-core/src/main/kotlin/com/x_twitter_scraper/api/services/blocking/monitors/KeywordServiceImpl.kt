@@ -29,7 +29,7 @@ import com.x_twitter_scraper.api.models.monitors.keywords.KeywordUpdateResponse
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-/** Real-time X account monitoring */
+/** X account monitoring with 1-second checks */
 class KeywordServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     KeywordService {
 

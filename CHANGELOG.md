@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.1 (2026-07-22)
+
+Full Changelog: [v0.5.0...v0.5.1](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.5.0...v0.5.1)
+
+### Chores
+
+* sync generated SDK contracts ([e422d45](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/e422d456b0a188d215c3b169ed7dd2223142ec4a))
+* verify final public contract ([123a4d1](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/123a4d17b1d30dec47b0ce90cb46171008a66070))
+
 ## 0.5.0 (2026-07-22)
 
 Full Changelog: [v0.4.1...v0.5.0](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.4.1...v0.5.0)

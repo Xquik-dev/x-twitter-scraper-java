@@ -21,18 +21,10 @@ internal class ComposeServiceAsyncTest {
 
         val composeFuture =
             composeServiceAsync.create(
-                ComposeCreateParams.builder()
-                    .step(ComposeCreateParams.Step.COMPOSE)
-                    .additionalContext("https://x.com/elonmusk/status/1234567890")
-                    .callToAction("Follow for more")
-                    .draft("AI is changing everything. Here's why.")
-                    .goal(ComposeCreateParams.Goal.ENGAGEMENT)
-                    .hasLink(false)
-                    .hasMedia(false)
-                    .mediaType(ComposeCreateParams.MediaType.NONE)
-                    .styleUsername("elonmusk")
-                    .tone("professional")
-                    .topic("AI trends in 2025")
+                ComposeCreateParams.Body.ComposePrepareRequest.builder()
+                    .topic("PostgreSQL query planning")
+                    .goal(ComposeCreateParams.Body.ComposePrepareRequest.Goal.ENGAGEMENT)
+                    .styleUsername("x")
                     .build()
             )
 
