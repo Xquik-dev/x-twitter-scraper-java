@@ -6,6 +6,8 @@ cd "$(dirname "$0")/.."
 
 echo "==> Running lints"
 
+bash ./bin/check-release-workflow
+
 if command -v ktfmt &> /dev/null; then
     echo "==> Checking ktfmt"
     ./scripts/kotlin-format --dry-run --set-exit-if-changed

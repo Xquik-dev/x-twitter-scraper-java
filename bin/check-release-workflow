@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+cd -- "$(dirname -- "$0")/.."
+
+workflows=(
+  .github/workflows/publish-sonatype.yml
+  .github/workflows/release-doctor.yml
+)
+secret_fallbacks=(
+  "secrets.X_TWITTER_SCRAPER_SONATYPE_USERNAME || secrets.SONATYPE_USERNAME"
+  "secrets.X_TWITTER_SCRAPER_SONATYPE_PASSWORD || secrets.SONATYPE_PASSWORD"
+  "secrets.X_TWITTER_SCRAPER_SONATYPE_GPG_SIGNING_KEY || secrets.GPG_SIGNING_KEY"
+  "secrets.X_TWITTER_SCRAPER_SONATYPE_GPG_SIGNING_PASSWORD || secrets.GPG_SIGNING_PASSWORD"
+)
+
+for workflow in "${workflows[@]}"; do
+  for fallback in "${secret_fallbacks[@]}"; do
+    if ! grep -Fq "$fallback" "$workflow"; then
+      printf '%s must support %s.\n' "$workflow" "$fallback"
+      exit 1
+    fi
+  done
+done
+
+grep -Fq 'environment: maven-central' .github/workflows/publish-sonatype.yml
+
+printf 'Release workflows use the configured Maven Central secrets.\n'
