@@ -26,6 +26,8 @@ private constructor(
     private val id: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val eventTypes: JsonField<List<EventType>>,
+    private val isActive: JsonField<Boolean>,
+    private val nextBillingAt: JsonField<OffsetDateTime>,
     private val username: JsonField<String>,
     private val xUserId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -40,9 +42,13 @@ private constructor(
         @JsonProperty("eventTypes")
         @ExcludeMissing
         eventTypes: JsonField<List<EventType>> = JsonMissing.of(),
+        @JsonProperty("isActive") @ExcludeMissing isActive: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("nextBillingAt")
+        @ExcludeMissing
+        nextBillingAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("username") @ExcludeMissing username: JsonField<String> = JsonMissing.of(),
         @JsonProperty("xUserId") @ExcludeMissing xUserId: JsonField<String> = JsonMissing.of(),
-    ) : this(id, createdAt, eventTypes, username, xUserId, mutableMapOf())
+    ) : this(id, createdAt, eventTypes, isActive, nextBillingAt, username, xUserId, mutableMapOf())
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -63,6 +69,20 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun eventTypes(): List<EventType> = eventTypes.getRequired("eventTypes")
+
+    /**
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun isActive(): Boolean = isActive.getRequired("isActive")
+
+    /**
+     * Next hourly credit charge time. New active monitors are due immediately.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun nextBillingAt(): OffsetDateTime = nextBillingAt.getRequired("nextBillingAt")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -102,6 +122,22 @@ private constructor(
     fun _eventTypes(): JsonField<List<EventType>> = eventTypes
 
     /**
+     * Returns the raw JSON value of [isActive].
+     *
+     * Unlike [isActive], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("isActive") @ExcludeMissing fun _isActive(): JsonField<Boolean> = isActive
+
+    /**
+     * Returns the raw JSON value of [nextBillingAt].
+     *
+     * Unlike [nextBillingAt], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("nextBillingAt")
+    @ExcludeMissing
+    fun _nextBillingAt(): JsonField<OffsetDateTime> = nextBillingAt
+
+    /**
      * Returns the raw JSON value of [username].
      *
      * Unlike [username], this method doesn't throw if the JSON field has an unexpected type.
@@ -137,6 +173,8 @@ private constructor(
          * .id()
          * .createdAt()
          * .eventTypes()
+         * .isActive()
+         * .nextBillingAt()
          * .username()
          * .xUserId()
          * ```
@@ -150,6 +188,8 @@ private constructor(
         private var id: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var eventTypes: JsonField<MutableList<EventType>>? = null
+        private var isActive: JsonField<Boolean>? = null
+        private var nextBillingAt: JsonField<OffsetDateTime>? = null
         private var username: JsonField<String>? = null
         private var xUserId: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -159,6 +199,8 @@ private constructor(
             id = monitorCreateResponse.id
             createdAt = monitorCreateResponse.createdAt
             eventTypes = monitorCreateResponse.eventTypes.map { it.toMutableList() }
+            isActive = monitorCreateResponse.isActive
+            nextBillingAt = monitorCreateResponse.nextBillingAt
             username = monitorCreateResponse.username
             xUserId = monitorCreateResponse.xUserId
             additionalProperties = monitorCreateResponse.additionalProperties.toMutableMap()
@@ -211,6 +253,32 @@ private constructor(
                 }
         }
 
+        fun isActive(isActive: Boolean) = isActive(JsonField.of(isActive))
+
+        /**
+         * Sets [Builder.isActive] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.isActive] with a well-typed [Boolean] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun isActive(isActive: JsonField<Boolean>) = apply { this.isActive = isActive }
+
+        /** Next hourly credit charge time. New active monitors are due immediately. */
+        fun nextBillingAt(nextBillingAt: OffsetDateTime) =
+            nextBillingAt(JsonField.of(nextBillingAt))
+
+        /**
+         * Sets [Builder.nextBillingAt] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.nextBillingAt] with a well-typed [OffsetDateTime] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun nextBillingAt(nextBillingAt: JsonField<OffsetDateTime>) = apply {
+            this.nextBillingAt = nextBillingAt
+        }
+
         fun username(username: String) = username(JsonField.of(username))
 
         /**
@@ -260,6 +328,8 @@ private constructor(
          * .id()
          * .createdAt()
          * .eventTypes()
+         * .isActive()
+         * .nextBillingAt()
          * .username()
          * .xUserId()
          * ```
@@ -271,6 +341,8 @@ private constructor(
                 checkRequired("id", id),
                 checkRequired("createdAt", createdAt),
                 checkRequired("eventTypes", eventTypes).map { it.toImmutable() },
+                checkRequired("isActive", isActive),
+                checkRequired("nextBillingAt", nextBillingAt),
                 checkRequired("username", username),
                 checkRequired("xUserId", xUserId),
                 additionalProperties.toMutableMap(),
@@ -279,6 +351,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
+     */
     fun validate(): MonitorCreateResponse = apply {
         if (validated) {
             return@apply
@@ -287,6 +367,8 @@ private constructor(
         id()
         createdAt()
         eventTypes().forEach { it.validate() }
+        isActive()
+        nextBillingAt()
         username()
         xUserId()
         validated = true
@@ -310,6 +392,8 @@ private constructor(
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (eventTypes.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
+            (if (isActive.asKnown().isPresent) 1 else 0) +
+            (if (nextBillingAt.asKnown().isPresent) 1 else 0) +
             (if (username.asKnown().isPresent) 1 else 0) +
             (if (xUserId.asKnown().isPresent) 1 else 0)
 
@@ -322,17 +406,28 @@ private constructor(
             id == other.id &&
             createdAt == other.createdAt &&
             eventTypes == other.eventTypes &&
+            isActive == other.isActive &&
+            nextBillingAt == other.nextBillingAt &&
             username == other.username &&
             xUserId == other.xUserId &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, createdAt, eventTypes, username, xUserId, additionalProperties)
+        Objects.hash(
+            id,
+            createdAt,
+            eventTypes,
+            isActive,
+            nextBillingAt,
+            username,
+            xUserId,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "MonitorCreateResponse{id=$id, createdAt=$createdAt, eventTypes=$eventTypes, username=$username, xUserId=$xUserId, additionalProperties=$additionalProperties}"
+        "MonitorCreateResponse{id=$id, createdAt=$createdAt, eventTypes=$eventTypes, isActive=$isActive, nextBillingAt=$nextBillingAt, username=$username, xUserId=$xUserId, additionalProperties=$additionalProperties}"
 }

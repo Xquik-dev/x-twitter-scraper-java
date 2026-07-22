@@ -12,12 +12,19 @@ internal class BookmarkServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val bookmarkServiceAsync = client.x().bookmarks()
 
         val paginatedTweetsFuture =
             bookmarkServiceAsync.list(
-                BookmarkListParams.builder().cursor("folders_value").folderId("folderId").build()
+                BookmarkListParams.builder()
+                    .cursor("DAACCgACGRElMJcAAA")
+                    .folderId("folderId")
+                    .build()
             )
 
         val paginatedTweets = paginatedTweetsFuture.get()
@@ -27,7 +34,11 @@ internal class BookmarkServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveFolders() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val bookmarkServiceAsync = client.x().bookmarks()
 
         val responseFuture = bookmarkServiceAsync.retrieveFolders()

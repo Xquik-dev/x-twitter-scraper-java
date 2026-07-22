@@ -84,20 +84,19 @@ interface DrawServiceAsync {
         list(DrawListParams.none(), requestOptions)
 
     /** Export draw data */
-    fun export(id: String): CompletableFuture<HttpResponse> = export(id, DrawExportParams.none())
+    fun export(id: String, params: DrawExportParams): CompletableFuture<HttpResponse> =
+        export(id, params, RequestOptions.none())
 
     /** @see export */
     fun export(
         id: String,
-        params: DrawExportParams = DrawExportParams.none(),
+        params: DrawExportParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<HttpResponse> = export(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see export */
-    fun export(
-        id: String,
-        params: DrawExportParams = DrawExportParams.none(),
-    ): CompletableFuture<HttpResponse> = export(id, params, RequestOptions.none())
+    fun export(params: DrawExportParams): CompletableFuture<HttpResponse> =
+        export(params, RequestOptions.none())
 
     /** @see export */
     fun export(
@@ -105,15 +104,11 @@ interface DrawServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<HttpResponse>
 
-    /** @see export */
-    fun export(params: DrawExportParams): CompletableFuture<HttpResponse> =
-        export(params, RequestOptions.none())
-
-    /** @see export */
-    fun export(id: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
-        export(id, DrawExportParams.none(), requestOptions)
-
-    /** Run giveaway draw */
+    /**
+     * Runs a giveaway draw from a source tweet. The draw first checks the minimum credits needed to
+     * inspect the source tweet and at least one candidate. Remaining credits cap how many replies
+     * and retweeters can be inspected before filters and winner selection run.
+     */
     fun run(params: DrawRunParams): CompletableFuture<DrawRunResponse> =
         run(params, RequestOptions.none())
 
@@ -203,36 +198,26 @@ interface DrawServiceAsync {
          * Returns a raw HTTP response for `get /draws/{id}/export`, but is otherwise the same as
          * [DrawServiceAsync.export].
          */
-        fun export(id: String): CompletableFuture<HttpResponse> =
-            export(id, DrawExportParams.none())
+        fun export(id: String, params: DrawExportParams): CompletableFuture<HttpResponse> =
+            export(id, params, RequestOptions.none())
 
         /** @see export */
         fun export(
             id: String,
-            params: DrawExportParams = DrawExportParams.none(),
+            params: DrawExportParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponse> =
             export(params.toBuilder().id(id).build(), requestOptions)
-
-        /** @see export */
-        fun export(
-            id: String,
-            params: DrawExportParams = DrawExportParams.none(),
-        ): CompletableFuture<HttpResponse> = export(id, params, RequestOptions.none())
-
-        /** @see export */
-        fun export(
-            params: DrawExportParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse>
 
         /** @see export */
         fun export(params: DrawExportParams): CompletableFuture<HttpResponse> =
             export(params, RequestOptions.none())
 
         /** @see export */
-        fun export(id: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
-            export(id, DrawExportParams.none(), requestOptions)
+        fun export(
+            params: DrawExportParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse>
 
         /**
          * Returns a raw HTTP response for `post /draws`, but is otherwise the same as

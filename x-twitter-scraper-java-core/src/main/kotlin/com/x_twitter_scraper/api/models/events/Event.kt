@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.x_twitter_scraper.api.core.Enum
 import com.x_twitter_scraper.api.core.ExcludeMissing
 import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.core.JsonMissing
@@ -17,17 +18,21 @@ import com.x_twitter_scraper.api.models.EventType
 import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Monitor event summary with type, username, and occurrence time. */
+/** Monitor event summary with source metadata and occurrence time. */
 class Event
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val data: JsonField<Data>,
     private val monitorId: JsonField<String>,
+    private val monitorType: JsonField<MonitorType>,
     private val occurredAt: JsonField<OffsetDateTime>,
     private val type: JsonField<EventType>,
+    private val keywordMonitorId: JsonField<String>,
+    private val query: JsonField<String>,
     private val username: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -37,12 +42,30 @@ private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
         @JsonProperty("data") @ExcludeMissing data: JsonField<Data> = JsonMissing.of(),
         @JsonProperty("monitorId") @ExcludeMissing monitorId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("monitorType")
+        @ExcludeMissing
+        monitorType: JsonField<MonitorType> = JsonMissing.of(),
         @JsonProperty("occurredAt")
         @ExcludeMissing
         occurredAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonField<EventType> = JsonMissing.of(),
+        @JsonProperty("keywordMonitorId")
+        @ExcludeMissing
+        keywordMonitorId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("query") @ExcludeMissing query: JsonField<String> = JsonMissing.of(),
         @JsonProperty("username") @ExcludeMissing username: JsonField<String> = JsonMissing.of(),
-    ) : this(id, data, monitorId, occurredAt, type, username, mutableMapOf())
+    ) : this(
+        id,
+        data,
+        monitorId,
+        monitorType,
+        occurredAt,
+        type,
+        keywordMonitorId,
+        query,
+        username,
+        mutableMapOf(),
+    )
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -57,10 +80,20 @@ private constructor(
     fun data(): Data = data.getRequired("data")
 
     /**
+     * Account monitor ID for account events, or keyword monitor ID for keyword events.
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun monitorId(): String = monitorId.getRequired("monitorId")
+
+    /**
+     * Source monitor type.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun monitorType(): MonitorType = monitorType.getRequired("monitorType")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -77,10 +110,28 @@ private constructor(
     fun type(): EventType = type.getRequired("type")
 
     /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * Keyword monitor ID, present for keyword monitor events.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
      */
-    fun username(): String = username.getRequired("username")
+    fun keywordMonitorId(): Optional<String> = keywordMonitorId.getOptional("keywordMonitorId")
+
+    /**
+     * Keyword query, present for keyword monitor events.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun query(): Optional<String> = query.getOptional("query")
+
+    /**
+     * Account username, present for account monitor events.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun username(): Optional<String> = username.getOptional("username")
 
     /**
      * Returns the raw JSON value of [id].
@@ -104,6 +155,15 @@ private constructor(
     @JsonProperty("monitorId") @ExcludeMissing fun _monitorId(): JsonField<String> = monitorId
 
     /**
+     * Returns the raw JSON value of [monitorType].
+     *
+     * Unlike [monitorType], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("monitorType")
+    @ExcludeMissing
+    fun _monitorType(): JsonField<MonitorType> = monitorType
+
+    /**
      * Returns the raw JSON value of [occurredAt].
      *
      * Unlike [occurredAt], this method doesn't throw if the JSON field has an unexpected type.
@@ -118,6 +178,23 @@ private constructor(
      * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<EventType> = type
+
+    /**
+     * Returns the raw JSON value of [keywordMonitorId].
+     *
+     * Unlike [keywordMonitorId], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("keywordMonitorId")
+    @ExcludeMissing
+    fun _keywordMonitorId(): JsonField<String> = keywordMonitorId
+
+    /**
+     * Returns the raw JSON value of [query].
+     *
+     * Unlike [query], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("query") @ExcludeMissing fun _query(): JsonField<String> = query
 
     /**
      * Returns the raw JSON value of [username].
@@ -148,9 +225,9 @@ private constructor(
          * .id()
          * .data()
          * .monitorId()
+         * .monitorType()
          * .occurredAt()
          * .type()
-         * .username()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -162,9 +239,12 @@ private constructor(
         private var id: JsonField<String>? = null
         private var data: JsonField<Data>? = null
         private var monitorId: JsonField<String>? = null
+        private var monitorType: JsonField<MonitorType>? = null
         private var occurredAt: JsonField<OffsetDateTime>? = null
         private var type: JsonField<EventType>? = null
-        private var username: JsonField<String>? = null
+        private var keywordMonitorId: JsonField<String> = JsonMissing.of()
+        private var query: JsonField<String> = JsonMissing.of()
+        private var username: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -172,8 +252,11 @@ private constructor(
             id = event.id
             data = event.data
             monitorId = event.monitorId
+            monitorType = event.monitorType
             occurredAt = event.occurredAt
             type = event.type
+            keywordMonitorId = event.keywordMonitorId
+            query = event.query
             username = event.username
             additionalProperties = event.additionalProperties.toMutableMap()
         }
@@ -198,6 +281,7 @@ private constructor(
          */
         fun data(data: JsonField<Data>) = apply { this.data = data }
 
+        /** Account monitor ID for account events, or keyword monitor ID for keyword events. */
         fun monitorId(monitorId: String) = monitorId(JsonField.of(monitorId))
 
         /**
@@ -208,6 +292,20 @@ private constructor(
          * value.
          */
         fun monitorId(monitorId: JsonField<String>) = apply { this.monitorId = monitorId }
+
+        /** Source monitor type. */
+        fun monitorType(monitorType: MonitorType) = monitorType(JsonField.of(monitorType))
+
+        /**
+         * Sets [Builder.monitorType] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.monitorType] with a well-typed [MonitorType] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun monitorType(monitorType: JsonField<MonitorType>) = apply {
+            this.monitorType = monitorType
+        }
 
         fun occurredAt(occurredAt: OffsetDateTime) = occurredAt(JsonField.of(occurredAt))
 
@@ -233,6 +331,33 @@ private constructor(
          */
         fun type(type: JsonField<EventType>) = apply { this.type = type }
 
+        /** Keyword monitor ID, present for keyword monitor events. */
+        fun keywordMonitorId(keywordMonitorId: String) =
+            keywordMonitorId(JsonField.of(keywordMonitorId))
+
+        /**
+         * Sets [Builder.keywordMonitorId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.keywordMonitorId] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun keywordMonitorId(keywordMonitorId: JsonField<String>) = apply {
+            this.keywordMonitorId = keywordMonitorId
+        }
+
+        /** Keyword query, present for keyword monitor events. */
+        fun query(query: String) = query(JsonField.of(query))
+
+        /**
+         * Sets [Builder.query] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.query] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun query(query: JsonField<String>) = apply { this.query = query }
+
+        /** Account username, present for account monitor events. */
         fun username(username: String) = username(JsonField.of(username))
 
         /**
@@ -272,9 +397,9 @@ private constructor(
          * .id()
          * .data()
          * .monitorId()
+         * .monitorType()
          * .occurredAt()
          * .type()
-         * .username()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -284,15 +409,26 @@ private constructor(
                 checkRequired("id", id),
                 checkRequired("data", data),
                 checkRequired("monitorId", monitorId),
+                checkRequired("monitorType", monitorType),
                 checkRequired("occurredAt", occurredAt),
                 checkRequired("type", type),
-                checkRequired("username", username),
+                keywordMonitorId,
+                query,
+                username,
                 additionalProperties.toMutableMap(),
             )
     }
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
+     */
     fun validate(): Event = apply {
         if (validated) {
             return@apply
@@ -301,8 +437,11 @@ private constructor(
         id()
         data().validate()
         monitorId()
+        monitorType().validate()
         occurredAt()
         type().validate()
+        keywordMonitorId()
+        query()
         username()
         validated = true
     }
@@ -325,8 +464,11 @@ private constructor(
         (if (id.asKnown().isPresent) 1 else 0) +
             (data.asKnown().getOrNull()?.validity() ?: 0) +
             (if (monitorId.asKnown().isPresent) 1 else 0) +
+            (monitorType.asKnown().getOrNull()?.validity() ?: 0) +
             (if (occurredAt.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (keywordMonitorId.asKnown().isPresent) 1 else 0) +
+            (if (query.asKnown().isPresent) 1 else 0) +
             (if (username.asKnown().isPresent) 1 else 0)
 
     class Data
@@ -387,6 +529,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
         fun validate(): Data = apply {
             if (validated) {
                 return@apply
@@ -429,6 +580,146 @@ private constructor(
         override fun toString() = "Data{additionalProperties=$additionalProperties}"
     }
 
+    /** Source monitor type. */
+    class MonitorType @JsonCreator private constructor(private val value: JsonField<String>) :
+        Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val ACCOUNT = of("account")
+
+            @JvmField val KEYWORD = of("keyword")
+
+            @JvmStatic fun of(value: String) = MonitorType(JsonField.of(value))
+        }
+
+        /** An enum containing [MonitorType]'s known values. */
+        enum class Known {
+            ACCOUNT,
+            KEYWORD,
+        }
+
+        /**
+         * An enum containing [MonitorType]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [MonitorType] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            ACCOUNT,
+            KEYWORD,
+            /**
+             * An enum member indicating that [MonitorType] was instantiated with an unknown value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                ACCOUNT -> Value.ACCOUNT
+                KEYWORD -> Value.KEYWORD
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
+         */
+        fun known(): Known =
+            when (this) {
+                ACCOUNT -> Known.ACCOUNT
+                KEYWORD -> Known.KEYWORD
+                else -> throw XTwitterScraperInvalidDataException("Unknown MonitorType: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): MonitorType = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is MonitorType && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -438,18 +729,32 @@ private constructor(
             id == other.id &&
             data == other.data &&
             monitorId == other.monitorId &&
+            monitorType == other.monitorType &&
             occurredAt == other.occurredAt &&
             type == other.type &&
+            keywordMonitorId == other.keywordMonitorId &&
+            query == other.query &&
             username == other.username &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, data, monitorId, occurredAt, type, username, additionalProperties)
+        Objects.hash(
+            id,
+            data,
+            monitorId,
+            monitorType,
+            occurredAt,
+            type,
+            keywordMonitorId,
+            query,
+            username,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Event{id=$id, data=$data, monitorId=$monitorId, occurredAt=$occurredAt, type=$type, username=$username, additionalProperties=$additionalProperties}"
+        "Event{id=$id, data=$data, monitorId=$monitorId, monitorType=$monitorType, occurredAt=$occurredAt, type=$type, keywordMonitorId=$keywordMonitorId, query=$query, username=$username, additionalProperties=$additionalProperties}"
 }

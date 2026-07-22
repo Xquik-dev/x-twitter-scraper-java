@@ -32,13 +32,13 @@ private constructor(
     /** Filter by category. */
     fun category(): Optional<Category> = Optional.ofNullable(category)
 
-    /** Lookback window in hours (1-168, default 24). */
+    /** Lookback window in hours (1-72, default 6). */
     fun hours(): Optional<Long> = Optional.ofNullable(hours)
 
     /** Number of items to return (1-100, default 50). */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
-    /** Region filter (us, global, etc.) */
+    /** Region filter. Use `global` or a region code such as `US`, `GB`, `TR`, or `ES`. */
     fun region(): Optional<String> = Optional.ofNullable(region)
 
     /**
@@ -104,7 +104,7 @@ private constructor(
         /** Alias for calling [Builder.category] with `category.orElse(null)`. */
         fun category(category: Optional<Category>) = category(category.getOrNull())
 
-        /** Lookback window in hours (1-168, default 24). */
+        /** Lookback window in hours (1-72, default 6). */
         fun hours(hours: Long?) = apply { this.hours = hours }
 
         /**
@@ -130,7 +130,7 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
 
-        /** Region filter (us, global, etc.) */
+        /** Region filter. Use `global` or a region code such as `US`, `GB`, `TR`, or `ES`. */
         fun region(region: String?) = apply { this.region = region }
 
         /** Alias for calling [Builder.region] with `region.orElse(null)`. */
@@ -402,6 +402,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
         fun validate(): Category = apply {
             if (validated) {
                 return@apply
@@ -563,6 +572,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
         fun validate(): Source = apply {
             if (validated) {
                 return@apply

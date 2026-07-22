@@ -4,7 +4,7 @@
 
 Security fixes target the latest published release.
 
-## Reporting A Vulnerability
+## Report a Vulnerability
 
 Report vulnerabilities privately through
 [support@xquik.com](mailto:support@xquik.com).

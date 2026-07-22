@@ -14,12 +14,17 @@ internal class TicketServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val ticketServiceAsync = client.support().tickets()
 
         val ticketFuture =
             ticketServiceAsync.create(
                 TicketCreateParams.builder()
+                    .idempotencyKey("Idempotency-Key")
                     .body("I am unable to connect my X account. Please help.")
                     .subject("Cannot connect X account")
                     .build()
@@ -32,10 +37,14 @@ internal class TicketServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val ticketServiceAsync = client.support().tickets()
 
-        val ticketFuture = ticketServiceAsync.retrieve("messages_value")
+        val ticketFuture = ticketServiceAsync.retrieve("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
 
         val ticket = ticketFuture.get()
         ticket.validate()
@@ -44,13 +53,17 @@ internal class TicketServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun update() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val ticketServiceAsync = client.support().tickets()
 
         val ticketFuture =
             ticketServiceAsync.update(
                 TicketUpdateParams.builder()
-                    .id("id")
+                    .id("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
                     .status(TicketUpdateParams.Status.RESOLVED)
                     .build()
             )
@@ -62,7 +75,11 @@ internal class TicketServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val ticketServiceAsync = client.support().tickets()
 
         val ticketsFuture = ticketServiceAsync.list()
@@ -74,12 +91,20 @@ internal class TicketServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun reply() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val ticketServiceAsync = client.support().tickets()
 
         val responseFuture =
             ticketServiceAsync.reply(
-                TicketReplyParams.builder().id("id").body("Thank you for the update.").build()
+                TicketReplyParams.builder()
+                    .id("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
+                    .idempotencyKey("Idempotency-Key")
+                    .body("Thank you for the update.")
+                    .build()
             )
 
         val response = responseFuture.get()

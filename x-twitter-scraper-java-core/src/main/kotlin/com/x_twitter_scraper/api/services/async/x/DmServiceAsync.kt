@@ -27,29 +27,19 @@ interface DmServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): DmServiceAsync
 
     /** Get DM conversation history */
-    fun retrieveHistory(userId: String): CompletableFuture<DmRetrieveHistoryResponse> =
-        retrieveHistory(userId, DmRetrieveHistoryParams.none())
-
-    /** @see retrieveHistory */
     fun retrieveHistory(
         userId: String,
-        params: DmRetrieveHistoryParams = DmRetrieveHistoryParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<DmRetrieveHistoryResponse> =
-        retrieveHistory(params.toBuilder().userId(userId).build(), requestOptions)
-
-    /** @see retrieveHistory */
-    fun retrieveHistory(
-        userId: String,
-        params: DmRetrieveHistoryParams = DmRetrieveHistoryParams.none(),
+        params: DmRetrieveHistoryParams,
     ): CompletableFuture<DmRetrieveHistoryResponse> =
         retrieveHistory(userId, params, RequestOptions.none())
 
     /** @see retrieveHistory */
     fun retrieveHistory(
+        userId: String,
         params: DmRetrieveHistoryParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<DmRetrieveHistoryResponse>
+    ): CompletableFuture<DmRetrieveHistoryResponse> =
+        retrieveHistory(params.toBuilder().userId(userId).build(), requestOptions)
 
     /** @see retrieveHistory */
     fun retrieveHistory(
@@ -58,10 +48,9 @@ interface DmServiceAsync {
 
     /** @see retrieveHistory */
     fun retrieveHistory(
-        userId: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<DmRetrieveHistoryResponse> =
-        retrieveHistory(userId, DmRetrieveHistoryParams.none(), requestOptions)
+        params: DmRetrieveHistoryParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<DmRetrieveHistoryResponse>
 
     /** Send direct message */
     fun send(userId: String, params: DmSendParams): CompletableFuture<DmSendResponse> =
@@ -100,30 +89,18 @@ interface DmServiceAsync {
          * as [DmServiceAsync.retrieveHistory].
          */
         fun retrieveHistory(
-            userId: String
-        ): CompletableFuture<HttpResponseFor<DmRetrieveHistoryResponse>> =
-            retrieveHistory(userId, DmRetrieveHistoryParams.none())
-
-        /** @see retrieveHistory */
-        fun retrieveHistory(
             userId: String,
-            params: DmRetrieveHistoryParams = DmRetrieveHistoryParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<DmRetrieveHistoryResponse>> =
-            retrieveHistory(params.toBuilder().userId(userId).build(), requestOptions)
-
-        /** @see retrieveHistory */
-        fun retrieveHistory(
-            userId: String,
-            params: DmRetrieveHistoryParams = DmRetrieveHistoryParams.none(),
+            params: DmRetrieveHistoryParams,
         ): CompletableFuture<HttpResponseFor<DmRetrieveHistoryResponse>> =
             retrieveHistory(userId, params, RequestOptions.none())
 
         /** @see retrieveHistory */
         fun retrieveHistory(
+            userId: String,
             params: DmRetrieveHistoryParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<DmRetrieveHistoryResponse>>
+        ): CompletableFuture<HttpResponseFor<DmRetrieveHistoryResponse>> =
+            retrieveHistory(params.toBuilder().userId(userId).build(), requestOptions)
 
         /** @see retrieveHistory */
         fun retrieveHistory(
@@ -133,10 +110,9 @@ interface DmServiceAsync {
 
         /** @see retrieveHistory */
         fun retrieveHistory(
-            userId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<DmRetrieveHistoryResponse>> =
-            retrieveHistory(userId, DmRetrieveHistoryParams.none(), requestOptions)
+            params: DmRetrieveHistoryParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<DmRetrieveHistoryResponse>>
 
         /**
          * Returns a raw HTTP response for `post /x/dm/{userId}`, but is otherwise the same as

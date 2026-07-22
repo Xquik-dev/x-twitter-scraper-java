@@ -21,8 +21,11 @@ internal class EventTest {
                     Event.Data.builder().putAdditionalProperty("foo", JsonValue.from("bar")).build()
                 )
                 .monitorId("monitorId")
+                .monitorType(Event.MonitorType.ACCOUNT)
                 .occurredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .type(EventType.TWEET_NEW)
+                .keywordMonitorId("keywordMonitorId")
+                .query("query")
                 .username("username")
                 .build()
 
@@ -32,9 +35,12 @@ internal class EventTest {
                 Event.Data.builder().putAdditionalProperty("foo", JsonValue.from("bar")).build()
             )
         assertThat(event.monitorId()).isEqualTo("monitorId")
+        assertThat(event.monitorType()).isEqualTo(Event.MonitorType.ACCOUNT)
         assertThat(event.occurredAt()).isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(event.type()).isEqualTo(EventType.TWEET_NEW)
-        assertThat(event.username()).isEqualTo("username")
+        assertThat(event.keywordMonitorId()).contains("keywordMonitorId")
+        assertThat(event.query()).contains("query")
+        assertThat(event.username()).contains("username")
     }
 
     @Test
@@ -47,8 +53,11 @@ internal class EventTest {
                     Event.Data.builder().putAdditionalProperty("foo", JsonValue.from("bar")).build()
                 )
                 .monitorId("monitorId")
+                .monitorType(Event.MonitorType.ACCOUNT)
                 .occurredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .type(EventType.TWEET_NEW)
+                .keywordMonitorId("keywordMonitorId")
+                .query("query")
                 .username("username")
                 .build()
 

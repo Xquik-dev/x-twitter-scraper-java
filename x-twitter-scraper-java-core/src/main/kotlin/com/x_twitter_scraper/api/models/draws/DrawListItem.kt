@@ -51,6 +51,8 @@ private constructor(
     ) : this(id, createdAt, status, totalEntries, tweetUrl, validEntries, drawnAt, mutableMapOf())
 
     /**
+     * Draw public ID for detail responses.
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -201,6 +203,7 @@ private constructor(
             additionalProperties = drawListItem.additionalProperties.toMutableMap()
         }
 
+        /** Draw public ID for detail responses. */
         fun id(id: String) = id(JsonField.of(id))
 
         /**
@@ -326,6 +329,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
+     */
     fun validate(): DrawListItem = apply {
         if (validated) {
             return@apply

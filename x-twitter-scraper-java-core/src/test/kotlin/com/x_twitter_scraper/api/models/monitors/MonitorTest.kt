@@ -20,6 +20,7 @@ internal class MonitorTest {
                 .addEventType(EventType.TWEET_NEW)
                 .addEventType(EventType.TWEET_REPLY)
                 .isActive(true)
+                .nextBillingAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .username("elonmusk")
                 .xUserId("9876543210")
                 .build()
@@ -28,6 +29,7 @@ internal class MonitorTest {
         assertThat(monitor.createdAt()).isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
         assertThat(monitor.eventTypes()).containsExactly(EventType.TWEET_NEW, EventType.TWEET_REPLY)
         assertThat(monitor.isActive()).isEqualTo(true)
+        assertThat(monitor.nextBillingAt()).isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
         assertThat(monitor.username()).isEqualTo("elonmusk")
         assertThat(monitor.xUserId()).isEqualTo("9876543210")
     }
@@ -42,6 +44,7 @@ internal class MonitorTest {
                 .addEventType(EventType.TWEET_NEW)
                 .addEventType(EventType.TWEET_REPLY)
                 .isActive(true)
+                .nextBillingAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .username("elonmusk")
                 .xUserId("9876543210")
                 .build()

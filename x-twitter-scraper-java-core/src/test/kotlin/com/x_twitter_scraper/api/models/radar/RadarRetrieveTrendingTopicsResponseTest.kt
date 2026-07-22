@@ -38,7 +38,7 @@ internal class RadarRetrieveTrendingTopicsResponseTest {
                         .url("https://example.com/article/ai-revolution")
                         .build()
                 )
-                .nextCursor("nextCursor")
+                .nextCursor("eyJ0IjoxNzM5OTcyODAwLCJpIjoiOTk5In0=")
                 .build()
 
         assertThat(radarRetrieveTrendingTopicsResponse.hasMore()).isEqualTo(false)
@@ -65,7 +65,8 @@ internal class RadarRetrieveTrendingTopicsResponseTest {
                     .url("https://example.com/article/ai-revolution")
                     .build()
             )
-        assertThat(radarRetrieveTrendingTopicsResponse.nextCursor()).contains("nextCursor")
+        assertThat(radarRetrieveTrendingTopicsResponse.nextCursor())
+            .contains("eyJ0IjoxNzM5OTcyODAwLCJpIjoiOTk5In0=")
     }
 
     @Test
@@ -96,7 +97,7 @@ internal class RadarRetrieveTrendingTopicsResponseTest {
                         .url("https://example.com/article/ai-revolution")
                         .build()
                 )
-                .nextCursor("nextCursor")
+                .nextCursor("eyJ0IjoxNzM5OTcyODAwLCJpIjoiOTk5In0=")
                 .build()
 
         val roundtrippedRadarRetrieveTrendingTopicsResponse =

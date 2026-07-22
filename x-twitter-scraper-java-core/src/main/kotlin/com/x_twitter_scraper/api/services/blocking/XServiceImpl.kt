@@ -23,6 +23,8 @@ import com.x_twitter_scraper.api.models.x.XGetNotificationsParams
 import com.x_twitter_scraper.api.models.x.XGetNotificationsResponse
 import com.x_twitter_scraper.api.models.x.XGetTrendsParams
 import com.x_twitter_scraper.api.models.x.XGetTrendsResponse
+import com.x_twitter_scraper.api.services.blocking.x.AccountConnectionChallengeService
+import com.x_twitter_scraper.api.services.blocking.x.AccountConnectionChallengeServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.AccountService
 import com.x_twitter_scraper.api.services.blocking.x.AccountServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.BookmarkService
@@ -43,6 +45,8 @@ import com.x_twitter_scraper.api.services.blocking.x.TweetService
 import com.x_twitter_scraper.api.services.blocking.x.TweetServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.UserService
 import com.x_twitter_scraper.api.services.blocking.x.UserServiceImpl
+import com.x_twitter_scraper.api.services.blocking.x.WriteActionService
+import com.x_twitter_scraper.api.services.blocking.x.WriteActionServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -51,6 +55,8 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
     private val withRawResponse: XService.WithRawResponse by lazy {
         WithRawResponseImpl(clientOptions)
     }
+
+    private val writeActions: WriteActionService by lazy { WriteActionServiceImpl(clientOptions) }
 
     private val tweets: TweetService by lazy { TweetServiceImpl(clientOptions) }
 
@@ -68,6 +74,10 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
 
     private val accounts: AccountService by lazy { AccountServiceImpl(clientOptions) }
 
+    private val accountConnectionChallenges: AccountConnectionChallengeService by lazy {
+        AccountConnectionChallengeServiceImpl(clientOptions)
+    }
+
     private val bookmarks: BookmarkService by lazy { BookmarkServiceImpl(clientOptions) }
 
     private val lists: ListService by lazy { ListServiceImpl(clientOptions) }
@@ -77,9 +87,11 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): XService =
         XServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
+    /** X write actions (tweets, likes, follows, DMs) */
+    override fun writeActions(): WriteActionService = writeActions
+
     override fun tweets(): TweetService = tweets
 
-    /** Look up, search, and explore user profiles and relationships */
     override fun users(): UserService = users
 
     /** Look up, search, and explore user profiles and relationships */
@@ -87,7 +99,6 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
 
     override fun dm(): DmService = dm
 
-    /** Media upload and download */
     override fun media(): MediaService = media
 
     /** X write actions (tweets, likes, follows, DMs) */
@@ -97,6 +108,10 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
 
     /** Connected X account management */
     override fun accounts(): AccountService = accounts
+
+    /** Connected X account management */
+    override fun accountConnectionChallenges(): AccountConnectionChallengeService =
+        accountConnectionChallenges
 
     /** Look up, search, and analyze individual tweets */
     override fun bookmarks(): BookmarkService = bookmarks
@@ -138,6 +153,10 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
+        private val writeActions: WriteActionService.WithRawResponse by lazy {
+            WriteActionServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val tweets: TweetService.WithRawResponse by lazy {
             TweetServiceImpl.WithRawResponseImpl(clientOptions)
         }
@@ -170,6 +189,11 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
             AccountServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val accountConnectionChallenges:
+            AccountConnectionChallengeService.WithRawResponse by lazy {
+            AccountConnectionChallengeServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val bookmarks: BookmarkService.WithRawResponse by lazy {
             BookmarkServiceImpl.WithRawResponseImpl(clientOptions)
         }
@@ -185,9 +209,11 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
+        /** X write actions (tweets, likes, follows, DMs) */
+        override fun writeActions(): WriteActionService.WithRawResponse = writeActions
+
         override fun tweets(): TweetService.WithRawResponse = tweets
 
-        /** Look up, search, and explore user profiles and relationships */
         override fun users(): UserService.WithRawResponse = users
 
         /** Look up, search, and explore user profiles and relationships */
@@ -195,7 +221,6 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
 
         override fun dm(): DmService.WithRawResponse = dm
 
-        /** Media upload and download */
         override fun media(): MediaService.WithRawResponse = media
 
         /** X write actions (tweets, likes, follows, DMs) */
@@ -205,6 +230,10 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
 
         /** Connected X account management */
         override fun accounts(): AccountService.WithRawResponse = accounts
+
+        /** Connected X account management */
+        override fun accountConnectionChallenges():
+            AccountConnectionChallengeService.WithRawResponse = accountConnectionChallenges
 
         /** Look up, search, and analyze individual tweets */
         override fun bookmarks(): BookmarkService.WithRawResponse = bookmarks

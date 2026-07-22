@@ -9,7 +9,10 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Retrieve the full content of an X Article (long-form post) by tweet ID. */
+/**
+ * Retrieve the full content of an X Article (long-form post) by numeric tweet ID. Returns
+ * article_not_found when the tweet is valid but is not an X Article.
+ */
 class XGetArticleParams
 private constructor(
     private val tweetId: String?,

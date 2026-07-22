@@ -50,7 +50,7 @@ internal class ProGuardCompatibilityTest {
         val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
 
         client.account()
-        client.apiKeys()
+        client.guestWallets()
         client.subscribe()
         client.compose()
         client.drafts()
@@ -80,9 +80,9 @@ internal class ProGuardCompatibilityTest {
 
         val balance = client.credits().retrieveBalance()
         check(balance.autoTopupEnabled())
-        check(balance.balance() == 42L)
-        check(balance.lifetimePurchased() == 100L)
-        check(balance.lifetimeUsed() == 58L)
+        check(balance.balance() == "42")
+        check(balance.lifetimePurchased() == "100")
+        check(balance.lifetimeUsed() == "58")
         client.close()
     }
 
@@ -91,6 +91,7 @@ internal class ProGuardCompatibilityTest {
         val tweetAuthor =
             TweetAuthor.builder()
                 .id("9876543210")
+                .name("Elon Musk")
                 .followers(150000000L)
                 .username("elonmusk")
                 .verified(true)
@@ -103,7 +104,9 @@ internal class ProGuardCompatibilityTest {
                 object : TypeReference<TweetAuthor>() {},
             )
 
-        check(roundtrippedTweetAuthor == tweetAuthor)
+        check(roundtrippedTweetAuthor == tweetAuthor) {
+            "TweetAuthor roundtrip changed: expected=$tweetAuthor, actual=$roundtrippedTweetAuthor"
+        }
     }
 
     fun eventTypeRoundtrip() {
@@ -116,12 +119,14 @@ internal class ProGuardCompatibilityTest {
                 object : TypeReference<EventType>() {},
             )
 
-        check(roundtrippedEventType == eventType)
+        check(roundtrippedEventType == eventType) {
+            "EventType roundtrip changed: expected=$eventType, actual=$roundtrippedEventType"
+        }
     }
 }
 
 private const val CREDIT_BALANCE_JSON =
-    """{"auto_topup_enabled":true,"balance":42,"lifetime_purchased":100,"lifetime_used":58}"""
+    """{"auto_topup_enabled":true,"balance":"42","lifetime_purchased":"100","lifetime_used":"58"}"""
 
 private class FixedResponseHttpClient(responseBody: String) : HttpClient {
 

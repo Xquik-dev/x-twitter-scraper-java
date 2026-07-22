@@ -27,36 +27,28 @@ interface DmService {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): DmService
 
     /** Get DM conversation history */
-    fun retrieveHistory(userId: String): DmRetrieveHistoryResponse =
-        retrieveHistory(userId, DmRetrieveHistoryParams.none())
-
-    /** @see retrieveHistory */
     fun retrieveHistory(
         userId: String,
-        params: DmRetrieveHistoryParams = DmRetrieveHistoryParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): DmRetrieveHistoryResponse =
-        retrieveHistory(params.toBuilder().userId(userId).build(), requestOptions)
-
-    /** @see retrieveHistory */
-    fun retrieveHistory(
-        userId: String,
-        params: DmRetrieveHistoryParams = DmRetrieveHistoryParams.none(),
+        params: DmRetrieveHistoryParams,
     ): DmRetrieveHistoryResponse = retrieveHistory(userId, params, RequestOptions.none())
 
     /** @see retrieveHistory */
     fun retrieveHistory(
+        userId: String,
         params: DmRetrieveHistoryParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): DmRetrieveHistoryResponse
+    ): DmRetrieveHistoryResponse =
+        retrieveHistory(params.toBuilder().userId(userId).build(), requestOptions)
 
     /** @see retrieveHistory */
     fun retrieveHistory(params: DmRetrieveHistoryParams): DmRetrieveHistoryResponse =
         retrieveHistory(params, RequestOptions.none())
 
     /** @see retrieveHistory */
-    fun retrieveHistory(userId: String, requestOptions: RequestOptions): DmRetrieveHistoryResponse =
-        retrieveHistory(userId, DmRetrieveHistoryParams.none(), requestOptions)
+    fun retrieveHistory(
+        params: DmRetrieveHistoryParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): DmRetrieveHistoryResponse
 
     /** Send direct message */
     fun send(userId: String, params: DmSendParams): DmSendResponse =
@@ -93,32 +85,20 @@ interface DmService {
          * as [DmService.retrieveHistory].
          */
         @MustBeClosed
-        fun retrieveHistory(userId: String): HttpResponseFor<DmRetrieveHistoryResponse> =
-            retrieveHistory(userId, DmRetrieveHistoryParams.none())
-
-        /** @see retrieveHistory */
-        @MustBeClosed
         fun retrieveHistory(
             userId: String,
-            params: DmRetrieveHistoryParams = DmRetrieveHistoryParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<DmRetrieveHistoryResponse> =
-            retrieveHistory(params.toBuilder().userId(userId).build(), requestOptions)
-
-        /** @see retrieveHistory */
-        @MustBeClosed
-        fun retrieveHistory(
-            userId: String,
-            params: DmRetrieveHistoryParams = DmRetrieveHistoryParams.none(),
+            params: DmRetrieveHistoryParams,
         ): HttpResponseFor<DmRetrieveHistoryResponse> =
             retrieveHistory(userId, params, RequestOptions.none())
 
         /** @see retrieveHistory */
         @MustBeClosed
         fun retrieveHistory(
+            userId: String,
             params: DmRetrieveHistoryParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<DmRetrieveHistoryResponse>
+        ): HttpResponseFor<DmRetrieveHistoryResponse> =
+            retrieveHistory(params.toBuilder().userId(userId).build(), requestOptions)
 
         /** @see retrieveHistory */
         @MustBeClosed
@@ -130,10 +110,9 @@ interface DmService {
         /** @see retrieveHistory */
         @MustBeClosed
         fun retrieveHistory(
-            userId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<DmRetrieveHistoryResponse> =
-            retrieveHistory(userId, DmRetrieveHistoryParams.none(), requestOptions)
+            params: DmRetrieveHistoryParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<DmRetrieveHistoryResponse>
 
         /**
          * Returns a raw HTTP response for `post /x/dm/{userId}`, but is otherwise the same as

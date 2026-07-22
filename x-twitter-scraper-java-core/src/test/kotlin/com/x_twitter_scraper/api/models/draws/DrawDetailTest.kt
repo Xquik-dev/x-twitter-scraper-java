@@ -14,7 +14,7 @@ internal class DrawDetailTest {
     fun create() {
         val drawDetail =
             DrawDetail.builder()
-                .id("https://example.com/webhook")
+                .id("f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .status("status")
                 .totalEntries(0L)
@@ -30,7 +30,7 @@ internal class DrawDetailTest {
                 .drawnAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
-        assertThat(drawDetail.id()).isEqualTo("https://example.com/webhook")
+        assertThat(drawDetail.id()).isEqualTo("f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345")
         assertThat(drawDetail.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(drawDetail.status()).isEqualTo("status")
@@ -52,7 +52,7 @@ internal class DrawDetailTest {
         val jsonMapper = jsonMapper()
         val drawDetail =
             DrawDetail.builder()
-                .id("https://example.com/webhook")
+                .id("f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .status("status")
                 .totalEntries(0L)

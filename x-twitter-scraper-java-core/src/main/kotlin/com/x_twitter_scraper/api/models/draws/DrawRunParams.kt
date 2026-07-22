@@ -22,7 +22,11 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Run giveaway draw */
+/**
+ * Runs a giveaway draw from a source tweet. The draw first checks the minimum credits needed to
+ * inspect the source tweet and at least one candidate. Remaining credits cap how many replies and
+ * retweeters can be inspected before filters and winner selection run.
+ */
 class DrawRunParams
 private constructor(
     private val body: Body,
@@ -1141,6 +1145,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
         fun validate(): Body = apply {
             if (validated) {
                 return@apply

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.x_twitter_scraper.api.core.Enum
 import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.core.Params
+import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
@@ -17,7 +18,7 @@ import kotlin.jvm.optionals.getOrNull
 class ExtractionExportResultsParams
 private constructor(
     private val id: String?,
-    private val format: Format?,
+    private val format: Format,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -25,7 +26,7 @@ private constructor(
     fun id(): Optional<String> = Optional.ofNullable(id)
 
     /** Export file format */
-    fun format(): Optional<Format> = Optional.ofNullable(format)
+    fun format(): Format = format
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -37,11 +38,14 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): ExtractionExportResultsParams = builder().build()
-
         /**
          * Returns a mutable builder for constructing an instance of
          * [ExtractionExportResultsParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .format()
+         * ```
          */
         @JvmStatic fun builder() = Builder()
     }
@@ -68,10 +72,7 @@ private constructor(
         fun id(id: Optional<String>) = id(id.getOrNull())
 
         /** Export file format */
-        fun format(format: Format?) = apply { this.format = format }
-
-        /** Alias for calling [Builder.format] with `format.orElse(null)`. */
-        fun format(format: Optional<Format>) = format(format.getOrNull())
+        fun format(format: Format) = apply { this.format = format }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -175,11 +176,18 @@ private constructor(
          * Returns an immutable instance of [ExtractionExportResultsParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .format()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): ExtractionExportResultsParams =
             ExtractionExportResultsParams(
                 id,
-                format,
+                checkRequired("format", format),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -196,7 +204,7 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
-                format?.let { put("format", it.toString()) }
+                put("format", format.toString())
                 putAll(additionalQueryParams)
             }
             .build()
@@ -321,6 +329,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
         fun validate(): Format = apply {
             if (validated) {
                 return@apply

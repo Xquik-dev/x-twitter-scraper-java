@@ -16,7 +16,10 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** Comma-separated user IDs (max 100) */
+    /**
+     * Comma-separated numeric user IDs (1-100 values). Duplicate IDs are ignored while preserving
+     * first-seen order.
+     */
     fun ids(): String = ids
 
     /** Additional headers to send with the request. */
@@ -54,7 +57,10 @@ private constructor(
             additionalQueryParams = userRetrieveBatchParams.additionalQueryParams.toBuilder()
         }
 
-        /** Comma-separated user IDs (max 100) */
+        /**
+         * Comma-separated numeric user IDs (1-100 values). Duplicate IDs are ignored while
+         * preserving first-seen order.
+         */
         fun ids(ids: String) = apply { this.ids = ids }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {

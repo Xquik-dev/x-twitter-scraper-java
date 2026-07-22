@@ -65,6 +65,8 @@ private constructor(
     fun eventTypes(): List<EventType> = eventTypes.getRequired("eventTypes")
 
     /**
+     * Plaintext HMAC signing secret returned only at creation.
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -211,6 +213,7 @@ private constructor(
                 }
         }
 
+        /** Plaintext HMAC signing secret returned only at creation. */
         fun secret(secret: String) = secret(JsonField.of(secret))
 
         /**
@@ -279,6 +282,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
+     */
     fun validate(): WebhookCreateResponse = apply {
         if (validated) {
             return@apply

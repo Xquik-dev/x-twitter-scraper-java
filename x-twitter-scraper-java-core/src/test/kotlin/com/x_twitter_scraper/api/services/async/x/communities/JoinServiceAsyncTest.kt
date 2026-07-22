@@ -13,30 +13,46 @@ internal class JoinServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val joinServiceAsync = client.x().communities().join()
 
-        val communityActionResultFuture =
+        val joinFuture =
             joinServiceAsync.create(
-                JoinCreateParams.builder().id("id").account("@elonmusk").build()
+                JoinCreateParams.builder()
+                    .id("id")
+                    .idempotencyKey("Idempotency-Key")
+                    .account("@elonmusk")
+                    .build()
             )
 
-        val communityActionResult = communityActionResultFuture.get()
-        communityActionResult.validate()
+        val join = joinFuture.get()
+        join.validate()
     }
 
     @Disabled("Mock server tests are disabled")
     @Test
     fun deleteAll() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val joinServiceAsync = client.x().communities().join()
 
-        val communityActionResultFuture =
+        val responseFuture =
             joinServiceAsync.deleteAll(
-                JoinDeleteAllParams.builder().id("id").account("@elonmusk").build()
+                JoinDeleteAllParams.builder()
+                    .id("id")
+                    .idempotencyKey("Idempotency-Key")
+                    .account("@elonmusk")
+                    .build()
             )
 
-        val communityActionResult = communityActionResultFuture.get()
-        communityActionResult.validate()
+        val response = responseFuture.get()
+        response.validate()
     }
 }

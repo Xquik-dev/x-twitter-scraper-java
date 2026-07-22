@@ -13,12 +13,22 @@ internal class TweetServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val tweetService = client.x().communities().tweets()
 
         val paginatedTweets =
             tweetService.list(
-                TweetListParams.builder().q("q").cursor("cursor").queryType("queryType").build()
+                TweetListParams.builder()
+                    .communityId("321669910225")
+                    .q("q")
+                    .cursor("cursor")
+                    .pageSize(1L)
+                    .queryType(TweetListParams.QueryType.LATEST)
+                    .build()
             )
 
         paginatedTweets.validate()
@@ -27,12 +37,16 @@ internal class TweetServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun listByCommunity() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val tweetService = client.x().communities().tweets()
 
         val paginatedTweets =
             tweetService.listByCommunity(
-                TweetListByCommunityParams.builder().id("id").cursor("cursor").build()
+                TweetListByCommunityParams.builder().id("id").cursor("cursor").pageSize(1L).build()
             )
 
         paginatedTweets.validate()

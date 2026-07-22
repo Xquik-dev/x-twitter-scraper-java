@@ -13,12 +13,20 @@ internal class FollowServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val followServiceAsync = client.x().users().follow()
 
         val followFuture =
             followServiceAsync.create(
-                FollowCreateParams.builder().id("id").account("@elonmusk").build()
+                FollowCreateParams.builder()
+                    .id("id")
+                    .idempotencyKey("Idempotency-Key")
+                    .account("@elonmusk")
+                    .build()
             )
 
         val follow = followFuture.get()
@@ -28,12 +36,20 @@ internal class FollowServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun deleteAll() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val followServiceAsync = client.x().users().follow()
 
         val responseFuture =
             followServiceAsync.deleteAll(
-                FollowDeleteAllParams.builder().id("id").account("@elonmusk").build()
+                FollowDeleteAllParams.builder()
+                    .id("id")
+                    .idempotencyKey("Idempotency-Key")
+                    .account("@elonmusk")
+                    .build()
             )
 
         val response = responseFuture.get()

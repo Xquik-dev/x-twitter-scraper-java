@@ -22,7 +22,6 @@ import com.x_twitter_scraper.api.errors.UnauthorizedException
 import com.x_twitter_scraper.api.errors.UnexpectedStatusCodeException
 import com.x_twitter_scraper.api.errors.UnprocessableEntityException
 import com.x_twitter_scraper.api.errors.XTwitterScraperException
-import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.entry
 import org.junit.jupiter.api.BeforeEach
@@ -55,12 +54,13 @@ internal class ErrorHandlingTest {
             XTwitterScraperOkHttpClient.builder()
                 .baseUrl(wmRuntimeInfo.httpBaseUrl)
                 .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
                 .build()
     }
 
     @Test
-    fun tweetsSearch400() {
-        val tweetService = client.x().tweets()
+    fun accountRetrieve400() {
+        val accountService = client.account()
         stubFor(
             get(anyUrl())
                 .willReturn(
@@ -68,19 +68,7 @@ internal class ErrorHandlingTest {
                 )
         )
 
-        val e =
-            assertThrows<BadRequestException> {
-                tweetService.search(
-                    TweetSearchParams.builder()
-                        .q("q")
-                        .cursor("cursor")
-                        .limit(200L)
-                        .queryType(TweetSearchParams.QueryType.LATEST)
-                        .sinceTime("sinceTime")
-                        .untilTime("untilTime")
-                        .build()
-                )
-            }
+        val e = assertThrows<BadRequestException> { accountService.retrieve() }
 
         assertThat(e.statusCode()).isEqualTo(400)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -88,8 +76,8 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun tweetsSearch400WithRawResponse() {
-        val tweetService = client.x().tweets().withRawResponse()
+    fun accountRetrieve400WithRawResponse() {
+        val accountService = client.account().withRawResponse()
         stubFor(
             get(anyUrl())
                 .willReturn(
@@ -97,19 +85,7 @@ internal class ErrorHandlingTest {
                 )
         )
 
-        val e =
-            assertThrows<BadRequestException> {
-                tweetService.search(
-                    TweetSearchParams.builder()
-                        .q("q")
-                        .cursor("cursor")
-                        .limit(200L)
-                        .queryType(TweetSearchParams.QueryType.LATEST)
-                        .sinceTime("sinceTime")
-                        .untilTime("untilTime")
-                        .build()
-                )
-            }
+        val e = assertThrows<BadRequestException> { accountService.retrieve() }
 
         assertThat(e.statusCode()).isEqualTo(400)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -117,8 +93,8 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun tweetsSearch401() {
-        val tweetService = client.x().tweets()
+    fun accountRetrieve401() {
+        val accountService = client.account()
         stubFor(
             get(anyUrl())
                 .willReturn(
@@ -126,19 +102,7 @@ internal class ErrorHandlingTest {
                 )
         )
 
-        val e =
-            assertThrows<UnauthorizedException> {
-                tweetService.search(
-                    TweetSearchParams.builder()
-                        .q("q")
-                        .cursor("cursor")
-                        .limit(200L)
-                        .queryType(TweetSearchParams.QueryType.LATEST)
-                        .sinceTime("sinceTime")
-                        .untilTime("untilTime")
-                        .build()
-                )
-            }
+        val e = assertThrows<UnauthorizedException> { accountService.retrieve() }
 
         assertThat(e.statusCode()).isEqualTo(401)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -146,8 +110,8 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun tweetsSearch401WithRawResponse() {
-        val tweetService = client.x().tweets().withRawResponse()
+    fun accountRetrieve401WithRawResponse() {
+        val accountService = client.account().withRawResponse()
         stubFor(
             get(anyUrl())
                 .willReturn(
@@ -155,19 +119,7 @@ internal class ErrorHandlingTest {
                 )
         )
 
-        val e =
-            assertThrows<UnauthorizedException> {
-                tweetService.search(
-                    TweetSearchParams.builder()
-                        .q("q")
-                        .cursor("cursor")
-                        .limit(200L)
-                        .queryType(TweetSearchParams.QueryType.LATEST)
-                        .sinceTime("sinceTime")
-                        .untilTime("untilTime")
-                        .build()
-                )
-            }
+        val e = assertThrows<UnauthorizedException> { accountService.retrieve() }
 
         assertThat(e.statusCode()).isEqualTo(401)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -175,8 +127,8 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun tweetsSearch403() {
-        val tweetService = client.x().tweets()
+    fun accountRetrieve403() {
+        val accountService = client.account()
         stubFor(
             get(anyUrl())
                 .willReturn(
@@ -184,19 +136,7 @@ internal class ErrorHandlingTest {
                 )
         )
 
-        val e =
-            assertThrows<PermissionDeniedException> {
-                tweetService.search(
-                    TweetSearchParams.builder()
-                        .q("q")
-                        .cursor("cursor")
-                        .limit(200L)
-                        .queryType(TweetSearchParams.QueryType.LATEST)
-                        .sinceTime("sinceTime")
-                        .untilTime("untilTime")
-                        .build()
-                )
-            }
+        val e = assertThrows<PermissionDeniedException> { accountService.retrieve() }
 
         assertThat(e.statusCode()).isEqualTo(403)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -204,8 +144,8 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun tweetsSearch403WithRawResponse() {
-        val tweetService = client.x().tweets().withRawResponse()
+    fun accountRetrieve403WithRawResponse() {
+        val accountService = client.account().withRawResponse()
         stubFor(
             get(anyUrl())
                 .willReturn(
@@ -213,19 +153,7 @@ internal class ErrorHandlingTest {
                 )
         )
 
-        val e =
-            assertThrows<PermissionDeniedException> {
-                tweetService.search(
-                    TweetSearchParams.builder()
-                        .q("q")
-                        .cursor("cursor")
-                        .limit(200L)
-                        .queryType(TweetSearchParams.QueryType.LATEST)
-                        .sinceTime("sinceTime")
-                        .untilTime("untilTime")
-                        .build()
-                )
-            }
+        val e = assertThrows<PermissionDeniedException> { accountService.retrieve() }
 
         assertThat(e.statusCode()).isEqualTo(403)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -233,8 +161,8 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun tweetsSearch404() {
-        val tweetService = client.x().tweets()
+    fun accountRetrieve404() {
+        val accountService = client.account()
         stubFor(
             get(anyUrl())
                 .willReturn(
@@ -242,19 +170,7 @@ internal class ErrorHandlingTest {
                 )
         )
 
-        val e =
-            assertThrows<NotFoundException> {
-                tweetService.search(
-                    TweetSearchParams.builder()
-                        .q("q")
-                        .cursor("cursor")
-                        .limit(200L)
-                        .queryType(TweetSearchParams.QueryType.LATEST)
-                        .sinceTime("sinceTime")
-                        .untilTime("untilTime")
-                        .build()
-                )
-            }
+        val e = assertThrows<NotFoundException> { accountService.retrieve() }
 
         assertThat(e.statusCode()).isEqualTo(404)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -262,8 +178,8 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun tweetsSearch404WithRawResponse() {
-        val tweetService = client.x().tweets().withRawResponse()
+    fun accountRetrieve404WithRawResponse() {
+        val accountService = client.account().withRawResponse()
         stubFor(
             get(anyUrl())
                 .willReturn(
@@ -271,19 +187,7 @@ internal class ErrorHandlingTest {
                 )
         )
 
-        val e =
-            assertThrows<NotFoundException> {
-                tweetService.search(
-                    TweetSearchParams.builder()
-                        .q("q")
-                        .cursor("cursor")
-                        .limit(200L)
-                        .queryType(TweetSearchParams.QueryType.LATEST)
-                        .sinceTime("sinceTime")
-                        .untilTime("untilTime")
-                        .build()
-                )
-            }
+        val e = assertThrows<NotFoundException> { accountService.retrieve() }
 
         assertThat(e.statusCode()).isEqualTo(404)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -291,8 +195,8 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun tweetsSearch422() {
-        val tweetService = client.x().tweets()
+    fun accountRetrieve422() {
+        val accountService = client.account()
         stubFor(
             get(anyUrl())
                 .willReturn(
@@ -300,19 +204,7 @@ internal class ErrorHandlingTest {
                 )
         )
 
-        val e =
-            assertThrows<UnprocessableEntityException> {
-                tweetService.search(
-                    TweetSearchParams.builder()
-                        .q("q")
-                        .cursor("cursor")
-                        .limit(200L)
-                        .queryType(TweetSearchParams.QueryType.LATEST)
-                        .sinceTime("sinceTime")
-                        .untilTime("untilTime")
-                        .build()
-                )
-            }
+        val e = assertThrows<UnprocessableEntityException> { accountService.retrieve() }
 
         assertThat(e.statusCode()).isEqualTo(422)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -320,8 +212,8 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun tweetsSearch422WithRawResponse() {
-        val tweetService = client.x().tweets().withRawResponse()
+    fun accountRetrieve422WithRawResponse() {
+        val accountService = client.account().withRawResponse()
         stubFor(
             get(anyUrl())
                 .willReturn(
@@ -329,19 +221,7 @@ internal class ErrorHandlingTest {
                 )
         )
 
-        val e =
-            assertThrows<UnprocessableEntityException> {
-                tweetService.search(
-                    TweetSearchParams.builder()
-                        .q("q")
-                        .cursor("cursor")
-                        .limit(200L)
-                        .queryType(TweetSearchParams.QueryType.LATEST)
-                        .sinceTime("sinceTime")
-                        .untilTime("untilTime")
-                        .build()
-                )
-            }
+        val e = assertThrows<UnprocessableEntityException> { accountService.retrieve() }
 
         assertThat(e.statusCode()).isEqualTo(422)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -349,8 +229,8 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun tweetsSearch429() {
-        val tweetService = client.x().tweets()
+    fun accountRetrieve429() {
+        val accountService = client.account()
         stubFor(
             get(anyUrl())
                 .willReturn(
@@ -358,19 +238,7 @@ internal class ErrorHandlingTest {
                 )
         )
 
-        val e =
-            assertThrows<RateLimitException> {
-                tweetService.search(
-                    TweetSearchParams.builder()
-                        .q("q")
-                        .cursor("cursor")
-                        .limit(200L)
-                        .queryType(TweetSearchParams.QueryType.LATEST)
-                        .sinceTime("sinceTime")
-                        .untilTime("untilTime")
-                        .build()
-                )
-            }
+        val e = assertThrows<RateLimitException> { accountService.retrieve() }
 
         assertThat(e.statusCode()).isEqualTo(429)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -378,8 +246,8 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun tweetsSearch429WithRawResponse() {
-        val tweetService = client.x().tweets().withRawResponse()
+    fun accountRetrieve429WithRawResponse() {
+        val accountService = client.account().withRawResponse()
         stubFor(
             get(anyUrl())
                 .willReturn(
@@ -387,19 +255,7 @@ internal class ErrorHandlingTest {
                 )
         )
 
-        val e =
-            assertThrows<RateLimitException> {
-                tweetService.search(
-                    TweetSearchParams.builder()
-                        .q("q")
-                        .cursor("cursor")
-                        .limit(200L)
-                        .queryType(TweetSearchParams.QueryType.LATEST)
-                        .sinceTime("sinceTime")
-                        .untilTime("untilTime")
-                        .build()
-                )
-            }
+        val e = assertThrows<RateLimitException> { accountService.retrieve() }
 
         assertThat(e.statusCode()).isEqualTo(429)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -407,8 +263,8 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun tweetsSearch500() {
-        val tweetService = client.x().tweets()
+    fun accountRetrieve500() {
+        val accountService = client.account()
         stubFor(
             get(anyUrl())
                 .willReturn(
@@ -416,19 +272,7 @@ internal class ErrorHandlingTest {
                 )
         )
 
-        val e =
-            assertThrows<InternalServerException> {
-                tweetService.search(
-                    TweetSearchParams.builder()
-                        .q("q")
-                        .cursor("cursor")
-                        .limit(200L)
-                        .queryType(TweetSearchParams.QueryType.LATEST)
-                        .sinceTime("sinceTime")
-                        .untilTime("untilTime")
-                        .build()
-                )
-            }
+        val e = assertThrows<InternalServerException> { accountService.retrieve() }
 
         assertThat(e.statusCode()).isEqualTo(500)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -436,8 +280,8 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun tweetsSearch500WithRawResponse() {
-        val tweetService = client.x().tweets().withRawResponse()
+    fun accountRetrieve500WithRawResponse() {
+        val accountService = client.account().withRawResponse()
         stubFor(
             get(anyUrl())
                 .willReturn(
@@ -445,19 +289,7 @@ internal class ErrorHandlingTest {
                 )
         )
 
-        val e =
-            assertThrows<InternalServerException> {
-                tweetService.search(
-                    TweetSearchParams.builder()
-                        .q("q")
-                        .cursor("cursor")
-                        .limit(200L)
-                        .queryType(TweetSearchParams.QueryType.LATEST)
-                        .sinceTime("sinceTime")
-                        .untilTime("untilTime")
-                        .build()
-                )
-            }
+        val e = assertThrows<InternalServerException> { accountService.retrieve() }
 
         assertThat(e.statusCode()).isEqualTo(500)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -465,8 +297,8 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun tweetsSearch999() {
-        val tweetService = client.x().tweets()
+    fun accountRetrieve999() {
+        val accountService = client.account()
         stubFor(
             get(anyUrl())
                 .willReturn(
@@ -474,19 +306,7 @@ internal class ErrorHandlingTest {
                 )
         )
 
-        val e =
-            assertThrows<UnexpectedStatusCodeException> {
-                tweetService.search(
-                    TweetSearchParams.builder()
-                        .q("q")
-                        .cursor("cursor")
-                        .limit(200L)
-                        .queryType(TweetSearchParams.QueryType.LATEST)
-                        .sinceTime("sinceTime")
-                        .untilTime("untilTime")
-                        .build()
-                )
-            }
+        val e = assertThrows<UnexpectedStatusCodeException> { accountService.retrieve() }
 
         assertThat(e.statusCode()).isEqualTo(999)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -494,8 +314,8 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun tweetsSearch999WithRawResponse() {
-        val tweetService = client.x().tweets().withRawResponse()
+    fun accountRetrieve999WithRawResponse() {
+        val accountService = client.account().withRawResponse()
         stubFor(
             get(anyUrl())
                 .willReturn(
@@ -503,19 +323,7 @@ internal class ErrorHandlingTest {
                 )
         )
 
-        val e =
-            assertThrows<UnexpectedStatusCodeException> {
-                tweetService.search(
-                    TweetSearchParams.builder()
-                        .q("q")
-                        .cursor("cursor")
-                        .limit(200L)
-                        .queryType(TweetSearchParams.QueryType.LATEST)
-                        .sinceTime("sinceTime")
-                        .untilTime("untilTime")
-                        .build()
-                )
-            }
+        val e = assertThrows<UnexpectedStatusCodeException> { accountService.retrieve() }
 
         assertThat(e.statusCode()).isEqualTo(999)
         assertThat(e.headers().toMap()).contains(entry(HEADER_NAME, listOf(HEADER_VALUE)))
@@ -523,26 +331,14 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun tweetsSearchInvalidJsonBody() {
-        val tweetService = client.x().tweets()
+    fun accountRetrieveInvalidJsonBody() {
+        val accountService = client.account()
         stubFor(
             get(anyUrl())
                 .willReturn(status(200).withHeader(HEADER_NAME, HEADER_VALUE).withBody(NOT_JSON))
         )
 
-        val e =
-            assertThrows<XTwitterScraperException> {
-                tweetService.search(
-                    TweetSearchParams.builder()
-                        .q("q")
-                        .cursor("cursor")
-                        .limit(200L)
-                        .queryType(TweetSearchParams.QueryType.LATEST)
-                        .sinceTime("sinceTime")
-                        .untilTime("untilTime")
-                        .build()
-                )
-            }
+        val e = assertThrows<XTwitterScraperException> { accountService.retrieve() }
 
         assertThat(e).hasMessage("Error reading response")
     }

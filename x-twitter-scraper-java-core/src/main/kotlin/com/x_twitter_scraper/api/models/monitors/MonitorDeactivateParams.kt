@@ -11,7 +11,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Deactivate monitor */
+/** Delete monitor */
 class MonitorDeactivateParams
 private constructor(
     private val id: String?,

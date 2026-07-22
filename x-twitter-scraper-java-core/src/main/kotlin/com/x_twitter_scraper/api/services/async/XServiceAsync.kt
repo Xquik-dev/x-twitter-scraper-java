@@ -13,6 +13,7 @@ import com.x_twitter_scraper.api.models.x.XGetNotificationsParams
 import com.x_twitter_scraper.api.models.x.XGetNotificationsResponse
 import com.x_twitter_scraper.api.models.x.XGetTrendsParams
 import com.x_twitter_scraper.api.models.x.XGetTrendsResponse
+import com.x_twitter_scraper.api.services.async.x.AccountConnectionChallengeServiceAsync
 import com.x_twitter_scraper.api.services.async.x.AccountServiceAsync
 import com.x_twitter_scraper.api.services.async.x.BookmarkServiceAsync
 import com.x_twitter_scraper.api.services.async.x.CommunityServiceAsync
@@ -23,6 +24,7 @@ import com.x_twitter_scraper.api.services.async.x.MediaServiceAsync
 import com.x_twitter_scraper.api.services.async.x.ProfileServiceAsync
 import com.x_twitter_scraper.api.services.async.x.TweetServiceAsync
 import com.x_twitter_scraper.api.services.async.x.UserServiceAsync
+import com.x_twitter_scraper.api.services.async.x.WriteActionServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -40,9 +42,11 @@ interface XServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): XServiceAsync
 
+    /** X write actions (tweets, likes, follows, DMs) */
+    fun writeActions(): WriteActionServiceAsync
+
     fun tweets(): TweetServiceAsync
 
-    /** Look up, search, and explore user profiles and relationships */
     fun users(): UserServiceAsync
 
     /** Look up, search, and explore user profiles and relationships */
@@ -50,7 +54,6 @@ interface XServiceAsync {
 
     fun dm(): DmServiceAsync
 
-    /** Media upload and download */
     fun media(): MediaServiceAsync
 
     /** X write actions (tweets, likes, follows, DMs) */
@@ -61,13 +64,19 @@ interface XServiceAsync {
     /** Connected X account management */
     fun accounts(): AccountServiceAsync
 
+    /** Connected X account management */
+    fun accountConnectionChallenges(): AccountConnectionChallengeServiceAsync
+
     /** Look up, search, and analyze individual tweets */
     fun bookmarks(): BookmarkServiceAsync
 
     /** X List followers, members, and tweets */
     fun lists(): ListServiceAsync
 
-    /** Retrieve the full content of an X Article (long-form post) by tweet ID. */
+    /**
+     * Retrieve the full content of an X Article (long-form post) by numeric tweet ID. Returns
+     * article_not_found when the tweet is valid but is not an X Article.
+     */
     fun getArticle(tweetId: String): CompletableFuture<XGetArticleResponse> =
         getArticle(tweetId, XGetArticleParams.none())
 
@@ -171,9 +180,11 @@ interface XServiceAsync {
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): XServiceAsync.WithRawResponse
 
+        /** X write actions (tweets, likes, follows, DMs) */
+        fun writeActions(): WriteActionServiceAsync.WithRawResponse
+
         fun tweets(): TweetServiceAsync.WithRawResponse
 
-        /** Look up, search, and explore user profiles and relationships */
         fun users(): UserServiceAsync.WithRawResponse
 
         /** Look up, search, and explore user profiles and relationships */
@@ -181,7 +192,6 @@ interface XServiceAsync {
 
         fun dm(): DmServiceAsync.WithRawResponse
 
-        /** Media upload and download */
         fun media(): MediaServiceAsync.WithRawResponse
 
         /** X write actions (tweets, likes, follows, DMs) */
@@ -191,6 +201,9 @@ interface XServiceAsync {
 
         /** Connected X account management */
         fun accounts(): AccountServiceAsync.WithRawResponse
+
+        /** Connected X account management */
+        fun accountConnectionChallenges(): AccountConnectionChallengeServiceAsync.WithRawResponse
 
         /** Look up, search, and analyze individual tweets */
         fun bookmarks(): BookmarkServiceAsync.WithRawResponse

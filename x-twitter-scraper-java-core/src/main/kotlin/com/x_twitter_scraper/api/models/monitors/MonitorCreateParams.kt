@@ -22,7 +22,11 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** Create monitor */
+/**
+ * Creates an instant monitor. Monitors are unlimited. Active monitors check every 1 second and cost
+ * 21 credits per hour. Events and webhook deliveries are included. Creation requires available
+ * credits for the first hourly charge and username lookup.
+ */
 class MonitorCreateParams
 private constructor(
     private val body: Body,
@@ -456,6 +460,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
         fun validate(): Body = apply {
             if (validated) {
                 return@apply

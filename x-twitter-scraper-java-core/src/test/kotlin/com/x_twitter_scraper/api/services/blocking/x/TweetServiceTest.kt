@@ -12,6 +12,7 @@ import com.x_twitter_scraper.api.models.x.tweets.TweetGetRetweetersParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetThreadParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetListParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams
+import java.time.LocalDate
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -20,18 +21,21 @@ internal class TweetServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val tweetService = client.x().tweets()
 
         val tweet =
             tweetService.create(
                 TweetCreateParams.builder()
+                    .idempotencyKey("Idempotency-Key")
                     .account("@elonmusk")
-                    .attachmentUrl("https://x.com/elonmusk/status/1234567890")
                     .communityId("1500000000000000000")
                     .isNoteTweet(false)
-                    .addMedia("https://example.com/image.jpg")
-                    .addMediaId("1234567890123456789")
+                    .addMedia("https://example.com/video.mp4")
                     .replyToTweetId("1234567890")
                     .text("Just launched our new feature!")
                     .build()
@@ -43,7 +47,11 @@ internal class TweetServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val tweetService = client.x().tweets()
 
         val tweet = tweetService.retrieve("id")
@@ -54,7 +62,11 @@ internal class TweetServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val tweetService = client.x().tweets()
 
         val paginatedTweets = tweetService.list(TweetListParams.builder().ids("ids").build())
@@ -65,11 +77,21 @@ internal class TweetServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val tweetService = client.x().tweets()
 
         val tweet =
-            tweetService.delete(TweetDeleteParams.builder().id("id").account("@elonmusk").build())
+            tweetService.delete(
+                TweetDeleteParams.builder()
+                    .id("id")
+                    .idempotencyKey("Idempotency-Key")
+                    .account("@elonmusk")
+                    .build()
+            )
 
         tweet.validate()
     }
@@ -77,12 +99,16 @@ internal class TweetServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun getFavoriters() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val tweetService = client.x().tweets()
 
         val paginatedUsers =
             tweetService.getFavoriters(
-                TweetGetFavoritersParams.builder().id("id").cursor("cursor").build()
+                TweetGetFavoritersParams.builder().id("id").cursor("cursor").pageSize(20L).build()
             )
 
         paginatedUsers.validate()
@@ -91,17 +117,47 @@ internal class TweetServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun getQuotes() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val tweetService = client.x().tweets()
 
         val paginatedTweets =
             tweetService.getQuotes(
                 TweetGetQuotesParams.builder()
                     .id("id")
+                    .anyWords("anyWords")
+                    .cashtags("cashtags")
+                    .conversationId("conversationId")
                     .cursor("cursor")
+                    .exactPhrase("exactPhrase")
+                    .excludeWords("excludeWords")
+                    .fromUser("fromUser")
+                    .hashtags("hashtags")
                     .includeReplies(true)
+                    .inReplyToTweetId("inReplyToTweetId")
+                    .language("language")
+                    .mediaType(TweetGetQuotesParams.MediaType.IMAGES)
+                    .mentioning("mentioning")
+                    .minFaves(0L)
+                    .minQuotes(0L)
+                    .minReplies(0L)
+                    .minRetweets(0L)
+                    .pageSize(1L)
+                    .quotes(TweetGetQuotesParams.Quotes.INCLUDE)
+                    .quotesOfTweetId("quotesOfTweetId")
+                    .replies(TweetGetQuotesParams.Replies.INCLUDE)
+                    .retweets(TweetGetQuotesParams.Retweets.INCLUDE)
+                    .retweetsOfTweetId("retweetsOfTweetId")
+                    .sinceDate(LocalDate.parse("2019-12-27"))
                     .sinceTime("sinceTime")
+                    .toUser("toUser")
+                    .untilDate(LocalDate.parse("2019-12-27"))
                     .untilTime("untilTime")
+                    .url("url")
+                    .verifiedOnly(true)
                     .build()
             )
 
@@ -111,16 +167,46 @@ internal class TweetServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun getReplies() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val tweetService = client.x().tweets()
 
         val paginatedTweets =
             tweetService.getReplies(
                 TweetGetRepliesParams.builder()
                     .id("id")
+                    .anyWords("anyWords")
+                    .cashtags("cashtags")
+                    .conversationId("conversationId")
                     .cursor("cursor")
+                    .exactPhrase("exactPhrase")
+                    .excludeWords("excludeWords")
+                    .fromUser("fromUser")
+                    .hashtags("hashtags")
+                    .inReplyToTweetId("inReplyToTweetId")
+                    .language("language")
+                    .mediaType(TweetGetRepliesParams.MediaType.IMAGES)
+                    .mentioning("mentioning")
+                    .minFaves(0L)
+                    .minQuotes(0L)
+                    .minReplies(0L)
+                    .minRetweets(0L)
+                    .pageSize(1L)
+                    .quotes(TweetGetRepliesParams.Quotes.INCLUDE)
+                    .quotesOfTweetId("quotesOfTweetId")
+                    .replies(TweetGetRepliesParams.Replies.INCLUDE)
+                    .retweets(TweetGetRepliesParams.Retweets.INCLUDE)
+                    .retweetsOfTweetId("retweetsOfTweetId")
+                    .sinceDate(LocalDate.parse("2019-12-27"))
                     .sinceTime("sinceTime")
+                    .toUser("toUser")
+                    .untilDate(LocalDate.parse("2019-12-27"))
                     .untilTime("untilTime")
+                    .url("url")
+                    .verifiedOnly(true)
                     .build()
             )
 
@@ -130,12 +216,16 @@ internal class TweetServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun getRetweeters() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val tweetService = client.x().tweets()
 
         val paginatedUsers =
             tweetService.getRetweeters(
-                TweetGetRetweetersParams.builder().id("id").cursor("cursor").build()
+                TweetGetRetweetersParams.builder().id("id").cursor("cursor").pageSize(20L).build()
             )
 
         paginatedUsers.validate()
@@ -144,11 +234,17 @@ internal class TweetServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun getThread() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val tweetService = client.x().tweets()
 
         val paginatedTweets =
-            tweetService.getThread(TweetGetThreadParams.builder().id("id").cursor("cursor").build())
+            tweetService.getThread(
+                TweetGetThreadParams.builder().id("id").cursor("cursor").pageSize(1L).build()
+            )
 
         paginatedTweets.validate()
     }
@@ -156,18 +252,53 @@ internal class TweetServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun search() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val tweetService = client.x().tweets()
 
         val paginatedTweets =
             tweetService.search(
                 TweetSearchParams.builder()
                     .q("q")
+                    .advancedQuery("advancedQuery")
+                    .anyWords("anyWords")
+                    .boundingBox("boundingBox")
+                    .cashtags("cashtags")
+                    .conversationId("conversationId")
                     .cursor("cursor")
+                    .exactPhrase("exactPhrase")
+                    .excludeWords("excludeWords")
+                    .fromUser("fromUser")
+                    .hashtags("hashtags")
+                    .inReplyToTweetId("inReplyToTweetId")
+                    .language("language")
                     .limit(200L)
+                    .listId("listId")
+                    .mediaType(TweetSearchParams.MediaType.IMAGES)
+                    .mentioning("mentioning")
+                    .minFaves(0L)
+                    .minQuotes(0L)
+                    .minReplies(0L)
+                    .minRetweets(0L)
+                    .place("place")
+                    .placeCountry("placeCountry")
+                    .pointRadius("pointRadius")
                     .queryType(TweetSearchParams.QueryType.LATEST)
+                    .quotes(TweetSearchParams.Quotes.INCLUDE)
+                    .quotesOfTweetId("quotesOfTweetId")
+                    .replies(TweetSearchParams.Replies.INCLUDE)
+                    .retweets(TweetSearchParams.Retweets.INCLUDE)
+                    .retweetsOfTweetId("retweetsOfTweetId")
+                    .sinceDate(LocalDate.parse("2019-12-27"))
                     .sinceTime("sinceTime")
+                    .toUser("toUser")
+                    .untilDate(LocalDate.parse("2019-12-27"))
                     .untilTime("untilTime")
+                    .url("url")
+                    .verifiedOnly(true)
                     .build()
             )
 

@@ -29,6 +29,40 @@ class EventType @JsonCreator private constructor(private val value: JsonField<St
 
         @JvmField val TWEET_QUOTE = of("tweet.quote")
 
+        @JvmField val TWEET_MEDIA = of("tweet.media")
+
+        @JvmField val TWEET_LINK = of("tweet.link")
+
+        @JvmField val TWEET_POLL = of("tweet.poll")
+
+        @JvmField val TWEET_MENTION = of("tweet.mention")
+
+        @JvmField val TWEET_HASHTAG = of("tweet.hashtag")
+
+        @JvmField val TWEET_LONGFORM = of("tweet.longform")
+
+        @JvmField val PROFILE_AVATAR_CHANGED = of("profile.avatar.changed")
+
+        @JvmField val PROFILE_BANNER_CHANGED = of("profile.banner.changed")
+
+        @JvmField val PROFILE_NAME_CHANGED = of("profile.name.changed")
+
+        @JvmField val PROFILE_USERNAME_CHANGED = of("profile.username.changed")
+
+        @JvmField val PROFILE_BIO_CHANGED = of("profile.bio.changed")
+
+        @JvmField val PROFILE_LOCATION_CHANGED = of("profile.location.changed")
+
+        @JvmField val PROFILE_URL_CHANGED = of("profile.url.changed")
+
+        @JvmField val PROFILE_VERIFIED_CHANGED = of("profile.verified.changed")
+
+        @JvmField val PROFILE_PROTECTED_CHANGED = of("profile.protected.changed")
+
+        @JvmField val PROFILE_PINNED_TWEET_CHANGED = of("profile.pinned_tweet.changed")
+
+        @JvmField val PROFILE_UNAVAILABLE_CHANGED = of("profile.unavailable.changed")
+
         @JvmStatic fun of(value: String) = EventType(JsonField.of(value))
     }
 
@@ -38,6 +72,23 @@ class EventType @JsonCreator private constructor(private val value: JsonField<St
         TWEET_REPLY,
         TWEET_RETWEET,
         TWEET_QUOTE,
+        TWEET_MEDIA,
+        TWEET_LINK,
+        TWEET_POLL,
+        TWEET_MENTION,
+        TWEET_HASHTAG,
+        TWEET_LONGFORM,
+        PROFILE_AVATAR_CHANGED,
+        PROFILE_BANNER_CHANGED,
+        PROFILE_NAME_CHANGED,
+        PROFILE_USERNAME_CHANGED,
+        PROFILE_BIO_CHANGED,
+        PROFILE_LOCATION_CHANGED,
+        PROFILE_URL_CHANGED,
+        PROFILE_VERIFIED_CHANGED,
+        PROFILE_PROTECTED_CHANGED,
+        PROFILE_PINNED_TWEET_CHANGED,
+        PROFILE_UNAVAILABLE_CHANGED,
     }
 
     /**
@@ -54,6 +105,23 @@ class EventType @JsonCreator private constructor(private val value: JsonField<St
         TWEET_REPLY,
         TWEET_RETWEET,
         TWEET_QUOTE,
+        TWEET_MEDIA,
+        TWEET_LINK,
+        TWEET_POLL,
+        TWEET_MENTION,
+        TWEET_HASHTAG,
+        TWEET_LONGFORM,
+        PROFILE_AVATAR_CHANGED,
+        PROFILE_BANNER_CHANGED,
+        PROFILE_NAME_CHANGED,
+        PROFILE_USERNAME_CHANGED,
+        PROFILE_BIO_CHANGED,
+        PROFILE_LOCATION_CHANGED,
+        PROFILE_URL_CHANGED,
+        PROFILE_VERIFIED_CHANGED,
+        PROFILE_PROTECTED_CHANGED,
+        PROFILE_PINNED_TWEET_CHANGED,
+        PROFILE_UNAVAILABLE_CHANGED,
         /** An enum member indicating that [EventType] was instantiated with an unknown value. */
         _UNKNOWN,
     }
@@ -71,6 +139,23 @@ class EventType @JsonCreator private constructor(private val value: JsonField<St
             TWEET_REPLY -> Value.TWEET_REPLY
             TWEET_RETWEET -> Value.TWEET_RETWEET
             TWEET_QUOTE -> Value.TWEET_QUOTE
+            TWEET_MEDIA -> Value.TWEET_MEDIA
+            TWEET_LINK -> Value.TWEET_LINK
+            TWEET_POLL -> Value.TWEET_POLL
+            TWEET_MENTION -> Value.TWEET_MENTION
+            TWEET_HASHTAG -> Value.TWEET_HASHTAG
+            TWEET_LONGFORM -> Value.TWEET_LONGFORM
+            PROFILE_AVATAR_CHANGED -> Value.PROFILE_AVATAR_CHANGED
+            PROFILE_BANNER_CHANGED -> Value.PROFILE_BANNER_CHANGED
+            PROFILE_NAME_CHANGED -> Value.PROFILE_NAME_CHANGED
+            PROFILE_USERNAME_CHANGED -> Value.PROFILE_USERNAME_CHANGED
+            PROFILE_BIO_CHANGED -> Value.PROFILE_BIO_CHANGED
+            PROFILE_LOCATION_CHANGED -> Value.PROFILE_LOCATION_CHANGED
+            PROFILE_URL_CHANGED -> Value.PROFILE_URL_CHANGED
+            PROFILE_VERIFIED_CHANGED -> Value.PROFILE_VERIFIED_CHANGED
+            PROFILE_PROTECTED_CHANGED -> Value.PROFILE_PROTECTED_CHANGED
+            PROFILE_PINNED_TWEET_CHANGED -> Value.PROFILE_PINNED_TWEET_CHANGED
+            PROFILE_UNAVAILABLE_CHANGED -> Value.PROFILE_UNAVAILABLE_CHANGED
             else -> Value._UNKNOWN
         }
 
@@ -89,6 +174,23 @@ class EventType @JsonCreator private constructor(private val value: JsonField<St
             TWEET_REPLY -> Known.TWEET_REPLY
             TWEET_RETWEET -> Known.TWEET_RETWEET
             TWEET_QUOTE -> Known.TWEET_QUOTE
+            TWEET_MEDIA -> Known.TWEET_MEDIA
+            TWEET_LINK -> Known.TWEET_LINK
+            TWEET_POLL -> Known.TWEET_POLL
+            TWEET_MENTION -> Known.TWEET_MENTION
+            TWEET_HASHTAG -> Known.TWEET_HASHTAG
+            TWEET_LONGFORM -> Known.TWEET_LONGFORM
+            PROFILE_AVATAR_CHANGED -> Known.PROFILE_AVATAR_CHANGED
+            PROFILE_BANNER_CHANGED -> Known.PROFILE_BANNER_CHANGED
+            PROFILE_NAME_CHANGED -> Known.PROFILE_NAME_CHANGED
+            PROFILE_USERNAME_CHANGED -> Known.PROFILE_USERNAME_CHANGED
+            PROFILE_BIO_CHANGED -> Known.PROFILE_BIO_CHANGED
+            PROFILE_LOCATION_CHANGED -> Known.PROFILE_LOCATION_CHANGED
+            PROFILE_URL_CHANGED -> Known.PROFILE_URL_CHANGED
+            PROFILE_VERIFIED_CHANGED -> Known.PROFILE_VERIFIED_CHANGED
+            PROFILE_PROTECTED_CHANGED -> Known.PROFILE_PROTECTED_CHANGED
+            PROFILE_PINNED_TWEET_CHANGED -> Known.PROFILE_PINNED_TWEET_CHANGED
+            PROFILE_UNAVAILABLE_CHANGED -> Known.PROFILE_UNAVAILABLE_CHANGED
             else -> throw XTwitterScraperInvalidDataException("Unknown EventType: $value")
         }
 
@@ -108,6 +210,14 @@ class EventType @JsonCreator private constructor(private val value: JsonField<St
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
+     */
     fun validate(): EventType = apply {
         if (validated) {
             return@apply

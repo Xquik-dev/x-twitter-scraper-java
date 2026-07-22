@@ -3,6 +3,8 @@ plugins {
     id("x-twitter-scraper.publish")
 }
 
+val mockitoAgent = configurations.create("mockitoAgent")
+
 configurations.all {
     resolutionStrategy {
         force("com.fasterxml.jackson.core:jackson-core:2.22.1")
@@ -15,6 +17,10 @@ configurations.all {
 }
 
 dependencies {
+    mockitoAgent("org.mockito:mockito-core:5.23.0") {
+        isTransitive = false
+    }
+
     api("com.fasterxml.jackson.core:jackson-core:2.22.1")
     api("com.fasterxml.jackson.core:jackson-databind:2.22.1")
     api("com.google.errorprone:error_prone_annotations:2.50.0")
@@ -35,4 +41,9 @@ dependencies {
     testImplementation("org.mockito:mockito-core:5.23.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.23.0")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
+    testRuntimeOnly("org.slf4j:slf4j-nop:1.7.36")
+}
+
+tasks.withType<Test>().configureEach {
+    jvmArgs("-javaagent:${mockitoAgent.asPath}")
 }

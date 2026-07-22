@@ -25,6 +25,8 @@ import com.x_twitter_scraper.api.models.monitors.MonitorListParams
 import com.x_twitter_scraper.api.models.monitors.MonitorListResponse
 import com.x_twitter_scraper.api.models.monitors.MonitorRetrieveParams
 import com.x_twitter_scraper.api.models.monitors.MonitorUpdateParams
+import com.x_twitter_scraper.api.services.blocking.monitors.KeywordService
+import com.x_twitter_scraper.api.services.blocking.monitors.KeywordServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -36,10 +38,15 @@ class MonitorServiceImpl internal constructor(private val clientOptions: ClientO
         WithRawResponseImpl(clientOptions)
     }
 
+    private val keywords: KeywordService by lazy { KeywordServiceImpl(clientOptions) }
+
     override fun withRawResponse(): MonitorService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): MonitorService =
         MonitorServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    /** Real-time X account monitoring */
+    override fun keywords(): KeywordService = keywords
 
     override fun create(
         params: MonitorCreateParams,
@@ -76,12 +83,19 @@ class MonitorServiceImpl internal constructor(private val clientOptions: ClientO
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
+        private val keywords: KeywordService.WithRawResponse by lazy {
+            KeywordServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): MonitorService.WithRawResponse =
             MonitorServiceImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        /** Real-time X account monitoring */
+        override fun keywords(): KeywordService.WithRawResponse = keywords
 
         private val createHandler: Handler<MonitorCreateResponse> =
             jsonHandler<MonitorCreateResponse>(clientOptions.jsonMapper)

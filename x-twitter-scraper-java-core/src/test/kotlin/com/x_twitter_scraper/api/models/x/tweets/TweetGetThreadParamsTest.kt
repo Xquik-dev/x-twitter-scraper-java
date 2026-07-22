@@ -10,7 +10,7 @@ internal class TweetGetThreadParamsTest {
 
     @Test
     fun create() {
-        TweetGetThreadParams.builder().id("id").cursor("cursor").build()
+        TweetGetThreadParams.builder().id("id").cursor("cursor").pageSize(1L).build()
     }
 
     @Test
@@ -24,11 +24,12 @@ internal class TweetGetThreadParamsTest {
 
     @Test
     fun queryParams() {
-        val params = TweetGetThreadParams.builder().id("id").cursor("cursor").build()
+        val params = TweetGetThreadParams.builder().id("id").cursor("cursor").pageSize(1L).build()
 
         val queryParams = params._queryParams()
 
-        assertThat(queryParams).isEqualTo(QueryParams.builder().put("cursor", "cursor").build())
+        assertThat(queryParams)
+            .isEqualTo(QueryParams.builder().put("cursor", "cursor").put("pageSize", "1").build())
     }
 
     @Test

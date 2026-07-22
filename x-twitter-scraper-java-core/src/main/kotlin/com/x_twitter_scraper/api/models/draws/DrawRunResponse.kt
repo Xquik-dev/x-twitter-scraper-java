@@ -51,6 +51,9 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
+     * Candidate entries inspected for this draw after the credit-derived cap. This may be lower
+     * than the source tweet's full reply count.
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -63,6 +66,9 @@ private constructor(
     fun tweetId(): String = tweetId.getRequired("tweetId")
 
     /**
+     * Entries from the inspected candidate set that passed all filters. This is not necessarily
+     * every valid reply on the source tweet when credits cap inspection.
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -172,6 +178,10 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
+        /**
+         * Candidate entries inspected for this draw after the credit-derived cap. This may be lower
+         * than the source tweet's full reply count.
+         */
         fun totalEntries(totalEntries: Long) = totalEntries(JsonField.of(totalEntries))
 
         /**
@@ -193,6 +203,10 @@ private constructor(
          */
         fun tweetId(tweetId: JsonField<String>) = apply { this.tweetId = tweetId }
 
+        /**
+         * Entries from the inspected candidate set that passed all filters. This is not necessarily
+         * every valid reply on the source tweet when credits cap inspection.
+         */
         fun validEntries(validEntries: Long) = validEntries(JsonField.of(validEntries))
 
         /**
@@ -277,6 +291,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
+     */
     fun validate(): DrawRunResponse = apply {
         if (validated) {
             return@apply

@@ -25,7 +25,10 @@ interface SubscribeServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): SubscribeServiceAsync
 
-    /** Get checkout or billing URL */
+    /**
+     * Create a subscription checkout or billing-management URL only after the user confirms. The
+     * request never completes payment by itself.
+     */
     fun create(): CompletableFuture<SubscribeCreateResponse> = create(SubscribeCreateParams.none())
 
     /** @see create */

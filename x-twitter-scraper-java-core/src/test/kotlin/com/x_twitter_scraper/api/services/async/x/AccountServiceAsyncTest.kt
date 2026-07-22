@@ -13,17 +13,20 @@ internal class AccountServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val accountServiceAsync = client.x().accounts()
 
         val accountFuture =
             accountServiceAsync.create(
                 AccountCreateParams.builder()
-                    .email("user@example.com")
-                    .password("s3cur3Pa\$\$w0rd")
-                    .username("elonmusk")
-                    .proxyCountry("US")
-                    .totpSecret("JBSWY3DPEHPK3PXP")
+                    .email("account@example.invalid")
+                    .password("<ACCOUNT_PASSWORD>")
+                    .username("your_x_username")
+                    .totpSecret("<TOTP_SECRET>")
                     .build()
             )
 
@@ -34,7 +37,11 @@ internal class AccountServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val accountServiceAsync = client.x().accounts()
 
         val xAccountDetailFuture = accountServiceAsync.retrieve("id")
@@ -46,7 +53,11 @@ internal class AccountServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val accountServiceAsync = client.x().accounts()
 
         val accountsFuture = accountServiceAsync.list()
@@ -58,7 +69,11 @@ internal class AccountServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val accountServiceAsync = client.x().accounts()
 
         val accountFuture = accountServiceAsync.delete("id")
@@ -70,7 +85,11 @@ internal class AccountServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun bulkRetry() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val accountServiceAsync = client.x().accounts()
 
         val responseFuture = accountServiceAsync.bulkRetry()
@@ -82,17 +101,20 @@ internal class AccountServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun reauth() {
-        val client = XTwitterScraperOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val accountServiceAsync = client.x().accounts()
 
         val responseFuture =
             accountServiceAsync.reauth(
                 AccountReauthParams.builder()
                     .id("id")
-                    .password("password_value")
-                    .email("user@example.com")
-                    .proxyCountry("US")
-                    .totpSecret("totp_secret_value")
+                    .password("<ACCOUNT_PASSWORD>")
+                    .email("account@example.invalid")
+                    .totpSecret("<TOTP_SECRET>")
                     .build()
             )
 

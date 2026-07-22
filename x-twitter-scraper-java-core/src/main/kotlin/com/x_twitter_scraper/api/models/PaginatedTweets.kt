@@ -18,7 +18,12 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** Paginated list of tweets with cursor-based navigation. */
+/**
+ * Paginated tweet results. The item count can be lower than pageSize when the source returns fewer
+ * tweets, filters remove tweets, or remaining credits cover fewer results. Follow next_cursor while
+ * has_next_page is true. An empty page can still have has_next_page true after filtering. Zero
+ * affordable results returns 402 insufficient_credits.
+ */
 class PaginatedTweets
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -216,6 +221,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
+     */
     fun validate(): PaginatedTweets = apply {
         if (validated) {
             return@apply

@@ -10,11 +10,10 @@ internal class AccountCreateParamsTest {
     @Test
     fun create() {
         AccountCreateParams.builder()
-            .email("user@example.com")
-            .password("s3cur3Pa\$\$w0rd")
-            .username("elonmusk")
-            .proxyCountry("US")
-            .totpSecret("JBSWY3DPEHPK3PXP")
+            .email("account@example.invalid")
+            .password("<ACCOUNT_PASSWORD>")
+            .username("your_x_username")
+            .totpSecret("<TOTP_SECRET>")
             .build()
     }
 
@@ -22,35 +21,33 @@ internal class AccountCreateParamsTest {
     fun body() {
         val params =
             AccountCreateParams.builder()
-                .email("user@example.com")
-                .password("s3cur3Pa\$\$w0rd")
-                .username("elonmusk")
-                .proxyCountry("US")
-                .totpSecret("JBSWY3DPEHPK3PXP")
+                .email("account@example.invalid")
+                .password("<ACCOUNT_PASSWORD>")
+                .username("your_x_username")
+                .totpSecret("<TOTP_SECRET>")
                 .build()
 
         val body = params._body()
 
-        assertThat(body.email()).isEqualTo("user@example.com")
-        assertThat(body.password()).isEqualTo("s3cur3Pa\$\$w0rd")
-        assertThat(body.username()).isEqualTo("elonmusk")
-        assertThat(body.proxyCountry()).contains("US")
-        assertThat(body.totpSecret()).contains("JBSWY3DPEHPK3PXP")
+        assertThat(body.email()).isEqualTo("account@example.invalid")
+        assertThat(body.password()).isEqualTo("<ACCOUNT_PASSWORD>")
+        assertThat(body.username()).isEqualTo("your_x_username")
+        assertThat(body.totpSecret()).contains("<TOTP_SECRET>")
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
         val params =
             AccountCreateParams.builder()
-                .email("user@example.com")
-                .password("s3cur3Pa\$\$w0rd")
-                .username("elonmusk")
+                .email("account@example.invalid")
+                .password("<ACCOUNT_PASSWORD>")
+                .username("your_x_username")
                 .build()
 
         val body = params._body()
 
-        assertThat(body.email()).isEqualTo("user@example.com")
-        assertThat(body.password()).isEqualTo("s3cur3Pa\$\$w0rd")
-        assertThat(body.username()).isEqualTo("elonmusk")
+        assertThat(body.email()).isEqualTo("account@example.invalid")
+        assertThat(body.password()).isEqualTo("<ACCOUNT_PASSWORD>")
+        assertThat(body.username()).isEqualTo("your_x_username")
     }
 }

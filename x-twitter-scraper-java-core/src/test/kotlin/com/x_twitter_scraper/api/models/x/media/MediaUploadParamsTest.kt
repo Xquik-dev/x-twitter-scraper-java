@@ -3,6 +3,7 @@
 package com.x_twitter_scraper.api.models.x.media
 
 import com.x_twitter_scraper.api.core.MultipartField
+import com.x_twitter_scraper.api.core.http.Headers
 import java.io.InputStream
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -12,19 +13,34 @@ internal class MediaUploadParamsTest {
     @Test
     fun create() {
         MediaUploadParams.builder()
+            .idempotencyKey("Idempotency-Key")
             .account("@elonmusk")
-            .file("Example data".byteInputStream())
-            .isLongVideo(true)
+            .url("https://example.com/image.png")
             .build()
+    }
+
+    @Test
+    fun headers() {
+        val params =
+            MediaUploadParams.builder()
+                .idempotencyKey("Idempotency-Key")
+                .account("@elonmusk")
+                .url("https://example.com/image.png")
+                .build()
+
+        val headers = params._headers()
+
+        assertThat(headers)
+            .isEqualTo(Headers.builder().put("Idempotency-Key", "Idempotency-Key").build())
     }
 
     @Test
     fun body() {
         val params =
             MediaUploadParams.builder()
+                .idempotencyKey("Idempotency-Key")
                 .account("@elonmusk")
-                .file("Example data".byteInputStream())
-                .isLongVideo(true)
+                .url("https://example.com/image.png")
                 .build()
 
         val body = params._body()
@@ -40,37 +56,7 @@ internal class MediaUploadParamsTest {
             .isEqualTo(
                 mapOf(
                         "account" to MultipartField.of("@elonmusk"),
-                        "file" to MultipartField.of("Example data".byteInputStream()),
-                        "is_long_video" to MultipartField.of(true),
-                    )
-                    .mapValues { (_, field) ->
-                        field.map { (it as? ByteArray)?.inputStream() ?: it }
-                    }
-            )
-    }
-
-    @Test
-    fun bodyWithoutOptionalFields() {
-        val params =
-            MediaUploadParams.builder()
-                .account("@elonmusk")
-                .file("Example data".byteInputStream())
-                .build()
-
-        val body = params._body()
-
-        assertThat(body.filterValues { !it.value.isNull() })
-            .usingRecursiveComparison()
-            // TODO(AssertJ): Replace this and the `mapValues` below with:
-            // https://github.com/assertj/assertj/issues/3165
-            .withEqualsForType(
-                { a, b -> a.readBytes() contentEquals b.readBytes() },
-                InputStream::class.java,
-            )
-            .isEqualTo(
-                mapOf(
-                        "account" to MultipartField.of("@elonmusk"),
-                        "file" to MultipartField.of("Example data".byteInputStream()),
+                        "url" to MultipartField.of("https://example.com/image.png"),
                     )
                     .mapValues { (_, field) ->
                         field.map { (it as? ByteArray)?.inputStream() ?: it }

@@ -3,6 +3,7 @@
 package com.x_twitter_scraper.api.models.x.profile
 
 import com.x_twitter_scraper.api.core.MultipartField
+import com.x_twitter_scraper.api.core.http.Headers
 import java.io.InputStream
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -12,17 +13,34 @@ internal class ProfileUpdateAvatarParamsTest {
     @Test
     fun create() {
         ProfileUpdateAvatarParams.builder()
+            .idempotencyKey("Idempotency-Key")
             .account("@elonmusk")
-            .file("Example data".byteInputStream())
+            .url("https://example.com/avatar.png")
             .build()
+    }
+
+    @Test
+    fun headers() {
+        val params =
+            ProfileUpdateAvatarParams.builder()
+                .idempotencyKey("Idempotency-Key")
+                .account("@elonmusk")
+                .url("https://example.com/avatar.png")
+                .build()
+
+        val headers = params._headers()
+
+        assertThat(headers)
+            .isEqualTo(Headers.builder().put("Idempotency-Key", "Idempotency-Key").build())
     }
 
     @Test
     fun body() {
         val params =
             ProfileUpdateAvatarParams.builder()
+                .idempotencyKey("Idempotency-Key")
                 .account("@elonmusk")
-                .file("Example data".byteInputStream())
+                .url("https://example.com/avatar.png")
                 .build()
 
         val body = params._body()
@@ -38,7 +56,7 @@ internal class ProfileUpdateAvatarParamsTest {
             .isEqualTo(
                 mapOf(
                         "account" to MultipartField.of("@elonmusk"),
-                        "file" to MultipartField.of("Example data".byteInputStream()),
+                        "url" to MultipartField.of("https://example.com/avatar.png"),
                     )
                     .mapValues { (_, field) ->
                         field.map { (it as? ByteArray)?.inputStream() ?: it }

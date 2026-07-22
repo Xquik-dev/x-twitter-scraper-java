@@ -2,6 +2,7 @@
 
 package com.x_twitter_scraper.api.models.x.dm
 
+import com.x_twitter_scraper.api.core.http.Headers
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -12,10 +13,10 @@ internal class DmSendParamsTest {
     fun create() {
         DmSendParams.builder()
             .userId("userId")
+            .idempotencyKey("Idempotency-Key")
             .account("@elonmusk")
             .text("Example text content")
             .addMediaId("1234567890123456789")
-            .replyToMessageId("1234567890123456789")
             .build()
     }
 
@@ -24,6 +25,7 @@ internal class DmSendParamsTest {
         val params =
             DmSendParams.builder()
                 .userId("userId")
+                .idempotencyKey("Idempotency-Key")
                 .account("@elonmusk")
                 .text("Example text content")
                 .build()
@@ -34,14 +36,47 @@ internal class DmSendParamsTest {
     }
 
     @Test
+    fun headers() {
+        val params =
+            DmSendParams.builder()
+                .userId("userId")
+                .idempotencyKey("Idempotency-Key")
+                .account("@elonmusk")
+                .text("Example text content")
+                .addMediaId("1234567890123456789")
+                .build()
+
+        val headers = params._headers()
+
+        assertThat(headers)
+            .isEqualTo(Headers.builder().put("Idempotency-Key", "Idempotency-Key").build())
+    }
+
+    @Test
+    fun headersWithoutOptionalFields() {
+        val params =
+            DmSendParams.builder()
+                .userId("userId")
+                .idempotencyKey("Idempotency-Key")
+                .account("@elonmusk")
+                .text("Example text content")
+                .build()
+
+        val headers = params._headers()
+
+        assertThat(headers)
+            .isEqualTo(Headers.builder().put("Idempotency-Key", "Idempotency-Key").build())
+    }
+
+    @Test
     fun body() {
         val params =
             DmSendParams.builder()
                 .userId("userId")
+                .idempotencyKey("Idempotency-Key")
                 .account("@elonmusk")
                 .text("Example text content")
                 .addMediaId("1234567890123456789")
-                .replyToMessageId("1234567890123456789")
                 .build()
 
         val body = params._body()
@@ -49,7 +84,6 @@ internal class DmSendParamsTest {
         assertThat(body.account()).isEqualTo("@elonmusk")
         assertThat(body.text()).isEqualTo("Example text content")
         assertThat(body.mediaIds().getOrNull()).containsExactly("1234567890123456789")
-        assertThat(body.replyToMessageId()).contains("1234567890123456789")
     }
 
     @Test
@@ -57,6 +91,7 @@ internal class DmSendParamsTest {
         val params =
             DmSendParams.builder()
                 .userId("userId")
+                .idempotencyKey("Idempotency-Key")
                 .account("@elonmusk")
                 .text("Example text content")
                 .build()

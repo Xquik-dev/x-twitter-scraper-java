@@ -10,7 +10,7 @@ internal class ListRetrieveFollowersParamsTest {
 
     @Test
     fun create() {
-        ListRetrieveFollowersParams.builder().id("id").cursor("cursor").build()
+        ListRetrieveFollowersParams.builder().id("id").cursor("cursor").pageSize(20L).build()
     }
 
     @Test
@@ -24,11 +24,13 @@ internal class ListRetrieveFollowersParamsTest {
 
     @Test
     fun queryParams() {
-        val params = ListRetrieveFollowersParams.builder().id("id").cursor("cursor").build()
+        val params =
+            ListRetrieveFollowersParams.builder().id("id").cursor("cursor").pageSize(20L).build()
 
         val queryParams = params._queryParams()
 
-        assertThat(queryParams).isEqualTo(QueryParams.builder().put("cursor", "cursor").build())
+        assertThat(queryParams)
+            .isEqualTo(QueryParams.builder().put("cursor", "cursor").put("pageSize", "20").build())
     }
 
     @Test

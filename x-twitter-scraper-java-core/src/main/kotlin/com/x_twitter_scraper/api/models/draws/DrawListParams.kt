@@ -12,16 +12,20 @@ import kotlin.jvm.optionals.getOrNull
 /** List draws */
 class DrawListParams
 private constructor(
-    private val after: String?,
+    private val cursor: String?,
     private val limit: Long?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** Cursor for keyset pagination */
-    fun after(): Optional<String> = Optional.ofNullable(after)
+    /** Cursor for keyset pagination from prior response next_cursor */
+    fun cursor(): Optional<String> = Optional.ofNullable(cursor)
 
-    /** Maximum number of items to return (1-100, default 50) */
+    /**
+     * Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the
+     * returned count may be lower when remaining credits cannot cover the requested page. If zero
+     * paid results are affordable, the endpoint returns 402 insufficient_credits.
+     */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
     /** Additional headers to send with the request. */
@@ -43,26 +47,30 @@ private constructor(
     /** A builder for [DrawListParams]. */
     class Builder internal constructor() {
 
-        private var after: String? = null
+        private var cursor: String? = null
         private var limit: Long? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(drawListParams: DrawListParams) = apply {
-            after = drawListParams.after
+            cursor = drawListParams.cursor
             limit = drawListParams.limit
             additionalHeaders = drawListParams.additionalHeaders.toBuilder()
             additionalQueryParams = drawListParams.additionalQueryParams.toBuilder()
         }
 
-        /** Cursor for keyset pagination */
-        fun after(after: String?) = apply { this.after = after }
+        /** Cursor for keyset pagination from prior response next_cursor */
+        fun cursor(cursor: String?) = apply { this.cursor = cursor }
 
-        /** Alias for calling [Builder.after] with `after.orElse(null)`. */
-        fun after(after: Optional<String>) = after(after.getOrNull())
+        /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
+        fun cursor(cursor: Optional<String>) = cursor(cursor.getOrNull())
 
-        /** Maximum number of items to return (1-100, default 50) */
+        /**
+         * Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the
+         * returned count may be lower when remaining credits cannot cover the requested page. If
+         * zero paid results are affordable, the endpoint returns 402 insufficient_credits.
+         */
         fun limit(limit: Long?) = apply { this.limit = limit }
 
         /**
@@ -179,7 +187,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          */
         fun build(): DrawListParams =
-            DrawListParams(after, limit, additionalHeaders.build(), additionalQueryParams.build())
+            DrawListParams(cursor, limit, additionalHeaders.build(), additionalQueryParams.build())
     }
 
     override fun _headers(): Headers = additionalHeaders
@@ -187,7 +195,7 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
-                after?.let { put("after", it) }
+                cursor?.let { put("cursor", it) }
                 limit?.let { put("limit", it.toString()) }
                 putAll(additionalQueryParams)
             }
@@ -199,15 +207,15 @@ private constructor(
         }
 
         return other is DrawListParams &&
-            after == other.after &&
+            cursor == other.cursor &&
             limit == other.limit &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(after, limit, additionalHeaders, additionalQueryParams)
+        Objects.hash(cursor, limit, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "DrawListParams{after=$after, limit=$limit, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "DrawListParams{cursor=$cursor, limit=$limit, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

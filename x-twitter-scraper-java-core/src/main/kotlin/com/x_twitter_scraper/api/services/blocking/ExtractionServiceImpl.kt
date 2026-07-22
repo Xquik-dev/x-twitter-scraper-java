@@ -28,7 +28,7 @@ import com.x_twitter_scraper.api.models.extractions.ExtractionRunResponse
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-/** Bulk data extraction (20 tool types) */
+/** Bulk data extraction (23 tool types) */
 class ExtractionServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     ExtractionService {
 

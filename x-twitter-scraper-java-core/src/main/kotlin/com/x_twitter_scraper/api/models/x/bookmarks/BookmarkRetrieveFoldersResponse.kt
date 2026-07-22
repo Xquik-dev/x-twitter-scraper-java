@@ -47,12 +47,16 @@ private constructor(
     fun folders(): List<Folder> = folders.getRequired("folders")
 
     /**
+     * Always false for the current bookmark folder route
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun hasNextPage(): Boolean = hasNextPage.getRequired("has_next_page")
 
     /**
+     * Always empty for the current bookmark folder route
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -152,6 +156,7 @@ private constructor(
                 }
         }
 
+        /** Always false for the current bookmark folder route */
         fun hasNextPage(hasNextPage: Boolean) = hasNextPage(JsonField.of(hasNextPage))
 
         /**
@@ -163,6 +168,7 @@ private constructor(
          */
         fun hasNextPage(hasNextPage: JsonField<Boolean>) = apply { this.hasNextPage = hasNextPage }
 
+        /** Always empty for the current bookmark folder route */
         fun nextCursor(nextCursor: String) = nextCursor(JsonField.of(nextCursor))
 
         /**
@@ -218,6 +224,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
+     */
     fun validate(): BookmarkRetrieveFoldersResponse = apply {
         if (validated) {
             return@apply
@@ -394,6 +408,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
         fun validate(): Folder = apply {
             if (validated) {
                 return@apply

@@ -4,16 +4,15 @@ package com.x_twitter_scraper.api.models.support.tickets
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.x_twitter_scraper.api.core.ExcludeMissing
-import com.x_twitter_scraper.api.core.JsonField
-import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
+import com.x_twitter_scraper.api.core.MultipartField
 import com.x_twitter_scraper.api.core.Params
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
+import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.util.Collections
 import java.util.Objects
@@ -24,12 +23,15 @@ import kotlin.jvm.optionals.getOrNull
 class TicketReplyParams
 private constructor(
     private val id: String?,
+    private val idempotencyKey: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     fun id(): Optional<String> = Optional.ofNullable(id)
+
+    fun idempotencyKey(): Optional<String> = Optional.ofNullable(idempotencyKey)
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -38,11 +40,11 @@ private constructor(
     fun body(): String = body.body()
 
     /**
-     * Returns the raw JSON value of [body].
+     * Returns the raw multipart value of [body].
      *
-     * Unlike [body], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [body], this method doesn't throw if the multipart field has an unexpected type.
      */
-    fun _body_(): JsonField<String> = this.body._body_()
+    fun _body_(): MultipartField<String> = this.body._body_()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -71,6 +73,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: String? = null
+        private var idempotencyKey: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -78,6 +81,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(ticketReplyParams: TicketReplyParams) = apply {
             id = ticketReplyParams.id
+            idempotencyKey = ticketReplyParams.idempotencyKey
             body = ticketReplyParams.body.toBuilder()
             additionalHeaders = ticketReplyParams.additionalHeaders.toBuilder()
             additionalQueryParams = ticketReplyParams.additionalQueryParams.toBuilder()
@@ -87,6 +91,12 @@ private constructor(
 
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
+
+        fun idempotencyKey(idempotencyKey: String?) = apply { this.idempotencyKey = idempotencyKey }
+
+        /** Alias for calling [Builder.idempotencyKey] with `idempotencyKey.orElse(null)`. */
+        fun idempotencyKey(idempotencyKey: Optional<String>) =
+            idempotencyKey(idempotencyKey.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -100,12 +110,12 @@ private constructor(
         fun body(body: String) = apply { this.body.body(body) }
 
         /**
-         * Sets [Builder.body] to an arbitrary JSON value.
+         * Sets [Builder.body] to an arbitrary multipart value.
          *
          * You should usually call [Builder.body] with a well-typed [String] value instead. This
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun body(body: JsonField<String>) = apply { this.body.body(body) }
+        fun body(body: MultipartField<String>) = apply { this.body.body(body) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -239,13 +249,17 @@ private constructor(
         fun build(): TicketReplyParams =
             TicketReplyParams(
                 id,
+                idempotencyKey,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
     }
 
-    fun _body(): Body = body
+    fun _body(): Map<String, MultipartField<*>> =
+        (mapOf("body" to _body_()) +
+                _additionalBodyProperties().mapValues { (_, value) -> MultipartField.of(value) })
+            .toImmutable()
 
     fun _pathParam(index: Int): String =
         when (index) {
@@ -253,35 +267,35 @@ private constructor(
             else -> ""
         }
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                idempotencyKey?.let { put("Idempotency-Key", it) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
     class Body
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
-        private val body: JsonField<String>,
+        private val body: MultipartField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
-
-        @JsonCreator
-        private constructor(
-            @JsonProperty("body") @ExcludeMissing body: JsonField<String> = JsonMissing.of()
-        ) : this(body, mutableMapOf())
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
          *   value).
          */
-        fun body(): String = body.getRequired("body")
+        fun body(): String = body.value.getRequired("body")
 
         /**
-         * Returns the raw JSON value of [body].
+         * Returns the raw multipart value of [body].
          *
-         * Unlike [body], this method doesn't throw if the JSON field has an unexpected type.
+         * Unlike [body], this method doesn't throw if the multipart field has an unexpected type.
          */
-        @JsonProperty("body") @ExcludeMissing fun _body_(): JsonField<String> = body
+        @JsonProperty("body") @ExcludeMissing fun _body_(): MultipartField<String> = body
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -311,7 +325,7 @@ private constructor(
         /** A builder for [Body]. */
         class Builder internal constructor() {
 
-            private var body: JsonField<String>? = null
+            private var body: MultipartField<String>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -320,16 +334,16 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            fun body(body: String) = body(JsonField.of(body))
+            fun body(body: String) = body(MultipartField.of(body))
 
             /**
-             * Sets [Builder.body] to an arbitrary JSON value.
+             * Sets [Builder.body] to an arbitrary multipart value.
              *
              * You should usually call [Builder.body] with a well-typed [String] value instead. This
              * method is primarily for setting the field to an undocumented or not yet supported
              * value.
              */
-            fun body(body: JsonField<String>) = apply { this.body = body }
+            fun body(body: MultipartField<String>) = apply { this.body = body }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -368,6 +382,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
         fun validate(): Body = apply {
             if (validated) {
                 return@apply
@@ -384,14 +407,6 @@ private constructor(
             } catch (e: XTwitterScraperInvalidDataException) {
                 false
             }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = (if (body.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -417,13 +432,15 @@ private constructor(
 
         return other is TicketReplyParams &&
             id == other.id &&
+            idempotencyKey == other.idempotencyKey &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(id, body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(id, idempotencyKey, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "TicketReplyParams{id=$id, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "TicketReplyParams{id=$id, idempotencyKey=$idempotencyKey, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -16,12 +16,17 @@ internal class CommunityServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val communityService = client.x().communities()
 
         val community =
             communityService.create(
                 CommunityCreateParams.builder()
+                    .idempotencyKey("Idempotency-Key")
                     .account("@elonmusk")
                     .name("Example Name")
                     .description("A community for Tesla enthusiasts")
@@ -34,13 +39,18 @@ internal class CommunityServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val communityService = client.x().communities()
 
         val community =
             communityService.delete(
                 CommunityDeleteParams.builder()
                     .id("id")
+                    .idempotencyKey("Idempotency-Key")
                     .account("@elonmusk")
                     .communityName("Tesla Fans")
                     .build()
@@ -52,7 +62,11 @@ internal class CommunityServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveInfo() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val communityService = client.x().communities()
 
         val response = communityService.retrieveInfo("id")
@@ -63,12 +77,20 @@ internal class CommunityServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveMembers() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val communityService = client.x().communities()
 
         val paginatedUsers =
             communityService.retrieveMembers(
-                CommunityRetrieveMembersParams.builder().id("id").cursor("cursor").build()
+                CommunityRetrieveMembersParams.builder()
+                    .id("id")
+                    .cursor("cursor")
+                    .pageSize(20L)
+                    .build()
             )
 
         paginatedUsers.validate()
@@ -77,7 +99,11 @@ internal class CommunityServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveModerators() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val communityService = client.x().communities()
 
         val paginatedUsers =
@@ -91,15 +117,21 @@ internal class CommunityServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveSearch() {
-        val client = XTwitterScraperOkHttpClient.builder().apiKey("My API Key").build()
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
         val communityService = client.x().communities()
 
         val paginatedTweets =
             communityService.retrieveSearch(
                 CommunityRetrieveSearchParams.builder()
+                    .communityId("321669910225")
                     .q("q")
                     .cursor("cursor")
-                    .queryType("queryType")
+                    .pageSize(1L)
+                    .queryType(CommunityRetrieveSearchParams.QueryType.LATEST)
                     .build()
             )
 
