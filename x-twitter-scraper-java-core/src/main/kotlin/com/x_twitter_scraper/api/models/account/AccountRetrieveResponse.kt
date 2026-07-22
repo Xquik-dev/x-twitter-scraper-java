@@ -430,7 +430,7 @@ private constructor(
         fun activeHourlyBurn(): String = activeHourlyBurn.getRequired("activeHourlyBurn")
 
         /**
-         * Estimated daily credits for 1 active instant monitor.
+         * Rounded daily estimate for 1 active monitor.
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
@@ -440,7 +440,7 @@ private constructor(
             creditsPerActiveMonitorDay.getRequired("creditsPerActiveMonitorDay")
 
         /**
-         * Hourly credits charged for 1 active instant monitor.
+         * Hourly credits charged for 1 active monitor.
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
          *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
@@ -632,7 +632,7 @@ private constructor(
                 this.activeHourlyBurn = activeHourlyBurn
             }
 
-            /** Estimated daily credits for 1 active instant monitor. */
+            /** Rounded daily estimate for 1 active monitor. */
             fun creditsPerActiveMonitorDay(creditsPerActiveMonitorDay: String) =
                 creditsPerActiveMonitorDay(JsonField.of(creditsPerActiveMonitorDay))
 
@@ -647,7 +647,7 @@ private constructor(
                 this.creditsPerActiveMonitorDay = creditsPerActiveMonitorDay
             }
 
-            /** Hourly credits charged for 1 active instant monitor. */
+            /** Hourly credits charged for 1 active monitor. */
             fun creditsPerActiveMonitorHour(creditsPerActiveMonitorHour: String) =
                 creditsPerActiveMonitorHour(JsonField.of(creditsPerActiveMonitorHour))
 

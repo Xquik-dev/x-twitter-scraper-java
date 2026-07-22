@@ -75,7 +75,7 @@ interface XTwitterScraperClient {
     /** AI tweet composition, drafts, writing styles, and radar */
     fun radar(): RadarService
 
-    /** Real-time X account monitoring */
+    /** X account monitoring with 1-second checks */
     fun monitors(): MonitorService
 
     /** Activity events from monitored accounts */
@@ -148,7 +148,7 @@ interface XTwitterScraperClient {
         /** AI tweet composition, drafts, writing styles, and radar */
         fun radar(): RadarService.WithRawResponse
 
-        /** Real-time X account monitoring */
+        /** X account monitoring with 1-second checks */
         fun monitors(): MonitorService.WithRawResponse
 
         /** Activity events from monitored accounts */

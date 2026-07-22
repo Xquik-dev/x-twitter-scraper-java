@@ -120,7 +120,7 @@ class XTwitterScraperClientImpl(private val clientOptions: ClientOptions) : XTwi
     /** AI tweet composition, drafts, writing styles, and radar */
     override fun radar(): RadarService = radar
 
-    /** Real-time X account monitoring */
+    /** X account monitoring with 1-second checks */
     override fun monitors(): MonitorService = monitors
 
     /** Activity events from monitored accounts */
@@ -242,7 +242,7 @@ class XTwitterScraperClientImpl(private val clientOptions: ClientOptions) : XTwi
         /** AI tweet composition, drafts, writing styles, and radar */
         override fun radar(): RadarService.WithRawResponse = radar
 
-        /** Real-time X account monitoring */
+        /** X account monitoring with 1-second checks */
         override fun monitors(): MonitorService.WithRawResponse = monitors
 
         /** Activity events from monitored accounts */

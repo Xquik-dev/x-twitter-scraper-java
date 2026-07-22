@@ -31,7 +31,7 @@ import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-/** Real-time X account monitoring */
+/** X account monitoring with 1-second checks */
 class MonitorServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     MonitorServiceAsync {
 
@@ -46,7 +46,7 @@ class MonitorServiceAsyncImpl internal constructor(private val clientOptions: Cl
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): MonitorServiceAsync =
         MonitorServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    /** Real-time X account monitoring */
+    /** X account monitoring with 1-second checks */
     override fun keywords(): KeywordServiceAsync = keywords
 
     override fun create(
@@ -101,7 +101,7 @@ class MonitorServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        /** Real-time X account monitoring */
+        /** X account monitoring with 1-second checks */
         override fun keywords(): KeywordServiceAsync.WithRawResponse = keywords
 
         private val createHandler: Handler<MonitorCreateResponse> =

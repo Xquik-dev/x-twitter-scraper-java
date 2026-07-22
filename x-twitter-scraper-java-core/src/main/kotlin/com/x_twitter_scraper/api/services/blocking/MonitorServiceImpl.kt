@@ -30,7 +30,7 @@ import com.x_twitter_scraper.api.services.blocking.monitors.KeywordServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-/** Real-time X account monitoring */
+/** X account monitoring with 1-second checks */
 class MonitorServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     MonitorService {
 
@@ -45,7 +45,7 @@ class MonitorServiceImpl internal constructor(private val clientOptions: ClientO
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): MonitorService =
         MonitorServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    /** Real-time X account monitoring */
+    /** X account monitoring with 1-second checks */
     override fun keywords(): KeywordService = keywords
 
     override fun create(
@@ -94,7 +94,7 @@ class MonitorServiceImpl internal constructor(private val clientOptions: ClientO
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        /** Real-time X account monitoring */
+        /** X account monitoring with 1-second checks */
         override fun keywords(): KeywordService.WithRawResponse = keywords
 
         private val createHandler: Handler<MonitorCreateResponse> =
