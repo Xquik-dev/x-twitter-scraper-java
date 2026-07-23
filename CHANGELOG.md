@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.2 (2026-07-23)
+
+Full Changelog: [v0.5.1...v0.5.2](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.5.1...v0.5.2)
+
+### Documentation
+
+* map common X data tasks ([#12](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/12)) ([f3438ea](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/f3438ea480f091967958c158a10fc7722d6298fd))
+
 ## 0.5.1 (2026-07-22)
 
 Full Changelog: [v0.5.0...v0.5.1](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.5.0...v0.5.1)
