@@ -4,7 +4,7 @@ repositories {
 
 allprojects {
     group = "com.xquik.api"
-    version = "0.5.1" // x-release-please-version
+    version = "0.5.2" // x-release-please-version
 }
 
 subprojects {
