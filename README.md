@@ -1,6 +1,8 @@
-# Xquik Java SDK
+# X (Twitter) Scraper Java SDK: Tweet Search, Timelines, Followers & Posting
 
-Use the Xquik REST API from Java 8 or later.
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13735/badge)](https://www.bestpractices.dev/projects/13735)
+
+Use Xquik's typed Java client for X data and confirmed actions.
 
 [API reference](https://docs.xquik.com/api-reference/overview) ·
 [Authentication](https://xquik.com/auth.md) ·
@@ -12,6 +14,20 @@ Use the Xquik REST API from Java 8 or later.
 [![Javadocs](https://javadoc.io/badge2/com.xquik.api/x-twitter-scraper-java/0.5.1/javadoc.svg)](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java/0.5.1)
 
 <!-- x-release-please-end -->
+
+## Common X Data Tasks
+
+Use the linked Javadocs for typed method names.
+
+| Customer Question | REST Route | Workflow Note |
+| --- | --- | --- |
+| How do I search tweets? | `GET /x/tweets/search` | Use keyword or advanced operator queries. |
+| How do I read a profile timeline? | `GET /x/users/{id}/tweets` | Paginate bounded results. |
+| How do I scrape followers? | `GET /x/users/{id}/followers` | Use an extraction for complete datasets. |
+| How do I scrape following accounts? | `GET /x/users/{id}/following` | Use an extraction for complete datasets. |
+| How do I read my home timeline? | `GET /x/timeline` | Approve this private read. |
+| How do I monitor an account? | `POST /monitors` | Deliver events through HMAC webhooks. |
+| How do I post or reply? | `POST /x/tweets` | Confirm the account and payload. |
 
 ## Install
 
