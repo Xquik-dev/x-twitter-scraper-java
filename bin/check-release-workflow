@@ -33,6 +33,8 @@ grep -Fq "./bin/verify-release-signature \"\$RELEASE_REF\"" \
   .github/workflows/publish-sonatype.yml
 grep -Fq "./bin/verify-release-signature \"\$RELEASE_REF\"" \
   .github/workflows/release-doctor.yml
+grep -Fq 'publishToMavenLocal -PpublishLocal --no-configuration-cache' \
+  .github/workflows/release-doctor.yml
 
 publish_line="$(
   grep -nF -- '- name: Publish signed artifacts' \
