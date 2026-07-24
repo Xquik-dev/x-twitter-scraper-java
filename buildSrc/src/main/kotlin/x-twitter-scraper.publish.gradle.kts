@@ -74,6 +74,24 @@ configure<MavenPublishBaseExtension> {
     }
 }
 
+tasks.matching { task -> task.name == "dokkaGeneratePublicationHtml" }.configureEach {
+    doLast {
+        fileTree(layout.buildDirectory.dir("dokka/html")) {
+            include("**/*.html")
+        }.forEach { htmlFile ->
+            val original = htmlFile.readText()
+            val normalized =
+                original.replace(
+                    Regex("""org\.jetbrains\.dokka\.pages\.commenttable@[0-9a-f]+"""),
+                    "org.jetbrains.dokka.pages.commenttable",
+                )
+            if (normalized != original) {
+                htmlFile.writeText(normalized)
+            }
+        }
+    }
+}
+
 tasks.withType<Zip>().configureEach {
     isZip64 = true
 }

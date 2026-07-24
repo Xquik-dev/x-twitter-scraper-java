@@ -9,6 +9,13 @@ buildscript {
         google()
     }
 
+    configurations.configureEach {
+        resolutionStrategy.force(
+            "org.apache.logging.log4j:log4j-api:2.25.4",
+            "org.apache.logging.log4j:log4j-core:2.25.4",
+        )
+    }
+
     dependencies {
         classpath("com.guardsquare:proguard-gradle:7.9.1")
         classpath("com.android.tools:r8:9.1.31")

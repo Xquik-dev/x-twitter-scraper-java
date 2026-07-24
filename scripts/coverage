@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+cd -- "$(dirname -- "$0")/.."
+
+echo "==> Measuring aggregate line and branch coverage"
+./gradlew coverage --no-build-cache --no-configuration-cache "$@"

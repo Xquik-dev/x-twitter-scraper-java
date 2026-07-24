@@ -1,7 +1,9 @@
+import org.gradle.api.attributes.java.TargetJvmVersion
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
     `java-library`
+    jacoco
 }
 
 repositories {
@@ -17,9 +19,21 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
+jacoco {
+    toolVersion = "0.8.15"
+}
+
 tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs.add("-Werror")
     options.release.set(8)
+}
+
+tasks.withType<Zip>().configureEach {
+    isPreserveFileTimestamps = false
+    isReproducibleFileOrder = true
+    from(rootProject.file("LICENSE")) {
+        into("META-INF")
+    }
 }
 
 tasks.named<Jar>("jar") {
@@ -41,6 +55,11 @@ tasks.withType<Test>().configureEach {
     testLogging {
         exceptionFormat = TestExceptionFormat.FULL
     }
+}
+
+configurations.matching { it.name.startsWith("test") }.configureEach {
+    // Tests run on the configured Java 26 toolchain, while published bytecode remains Java 8.
+    attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 26)
 }
 
 val palantir = configurations.create("palantir")

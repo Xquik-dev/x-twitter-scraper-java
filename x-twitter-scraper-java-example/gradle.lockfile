@@ -1,0 +1,40 @@
+# This is a Gradle generated file for dependency locking.
+# Manual edits can break the build and are not advised.
+# This file is expected to be part of source control.
+# To regenerate this file, run: ./gradlew :x-twitter-scraper-java-example:dependencies --write-locks
+com.fasterxml.jackson.core:jackson-annotations:2.22=compileClasspath,palantir,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+com.fasterxml.jackson.core:jackson-core:2.22.1=compileClasspath,palantir,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+com.fasterxml.jackson.core:jackson-databind:2.22.1=compileClasspath,palantir,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+com.fasterxml.jackson.datatype:jackson-datatype-guava:2.22.1=palantir
+com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.22.1=palantir,runtimeClasspath,testRuntimeClasspath
+com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.22.1=runtimeClasspath,testRuntimeClasspath
+com.fasterxml.jackson.module:jackson-module-kotlin:2.22.1=runtimeClasspath,testRuntimeClasspath
+com.fasterxml.jackson.module:jackson-module-parameter-names:2.22.1=palantir
+com.fasterxml.jackson:jackson-bom:2.22.1=compileClasspath,palantir,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+com.google.code.findbugs:jsr305:3.0.2=palantir
+com.google.errorprone:error_prone_annotations:2.47.0=palantir
+com.google.errorprone:error_prone_annotations:2.50.0=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+com.google.guava:failureaccess:1.0.3=palantir
+com.google.guava:guava:33.6.0-jre=palantir
+com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava=palantir
+com.google.j2objc:j2objc-annotations:3.1=palantir
+com.palantir.javaformat:palantir-java-format-spi:2.96.0=palantir
+com.palantir.javaformat:palantir-java-format:2.96.0=palantir
+com.squareup.okhttp3:logging-interceptor:5.4.0=runtimeClasspath,testRuntimeClasspath
+com.squareup.okhttp3:okhttp-jvm:5.4.0=runtimeClasspath,testRuntimeClasspath
+com.squareup.okhttp3:okhttp:5.4.0=runtimeClasspath,testRuntimeClasspath
+com.squareup.okio:okio-jvm:3.17.0=runtimeClasspath,testRuntimeClasspath
+com.squareup.okio:okio:3.17.0=runtimeClasspath,testRuntimeClasspath
+org.functionaljava:functionaljava:5.0=palantir
+org.jacoco:org.jacoco.agent:0.8.15=jacocoAgent,jacocoAnt
+org.jacoco:org.jacoco.ant:0.8.15=jacocoAnt
+org.jacoco:org.jacoco.core:0.8.15=jacocoAnt
+org.jacoco:org.jacoco.report:0.8.15=jacocoAnt
+org.jetbrains.kotlin:kotlin-reflect:2.3.20=runtimeClasspath,testRuntimeClasspath
+org.jetbrains.kotlin:kotlin-stdlib:2.3.20=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+org.jetbrains:annotations:13.0=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+org.jspecify:jspecify:1.0.0=palantir
+org.ow2.asm:asm-commons:9.10.1=jacocoAnt
+org.ow2.asm:asm-tree:9.10.1=jacocoAnt
+org.ow2.asm:asm:9.10.1=jacocoAnt
+empty=annotationProcessor,testAnnotationProcessor

@@ -1,10 +1,46 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
-cd "$(dirname "$0")/.."
-
-
+cd -- "$(dirname -- "$0")/.."
 
 echo "==> Running tests"
 ./gradlew test "$@"
+
+test_count=0
+skipped_count=0
+failure_count=0
+error_count=0
+report_count=0
+
+while IFS= read -r -d '' report; do
+    suite="$(grep -m 1 '<testsuite ' "$report")"
+    tests="$(printf '%s\n' "$suite" | sed -n 's/.* tests="\([0-9][0-9]*\)".*/\1/p')"
+    skipped="$(printf '%s\n' "$suite" | sed -n 's/.* skipped="\([0-9][0-9]*\)".*/\1/p')"
+    failures="$(printf '%s\n' "$suite" | sed -n 's/.* failures="\([0-9][0-9]*\)".*/\1/p')"
+    errors="$(printf '%s\n' "$suite" | sed -n 's/.* errors="\([0-9][0-9]*\)".*/\1/p')"
+
+    if [[ -z "$tests" || -z "$skipped" || -z "$failures" || -z "$errors" ]]; then
+        printf 'Could not parse JUnit report %s.\n' "$report" >&2
+        exit 1
+    fi
+
+    test_count=$((test_count + tests))
+    skipped_count=$((skipped_count + skipped))
+    failure_count=$((failure_count + failures))
+    error_count=$((error_count + errors))
+    report_count=$((report_count + 1))
+done < <(find . -path '*/build/test-results/test/TEST-*.xml' -type f -print0)
+
+if (( report_count == 0 || test_count == 0 )); then
+    echo "No executed JUnit tests found." >&2
+    exit 1
+fi
+
+printf 'Verified %d tests across %d suites: %d failures, %d errors, %d skipped.\n' \
+    "$test_count" "$report_count" "$failure_count" "$error_count" "$skipped_count"
+
+if (( failure_count != 0 || error_count != 0 || skipped_count != 0 )); then
+    echo "Tests must pass without skips." >&2
+    exit 1
+fi

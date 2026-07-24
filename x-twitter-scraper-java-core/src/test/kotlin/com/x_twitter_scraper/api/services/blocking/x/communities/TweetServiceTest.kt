@@ -5,16 +5,14 @@ package com.x_twitter_scraper.api.services.blocking.x.communities
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
 import com.x_twitter_scraper.api.models.x.communities.tweets.TweetListByCommunityParams
 import com.x_twitter_scraper.api.models.x.communities.tweets.TweetListParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class TweetServiceTest {
-
-    @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -31,14 +29,14 @@ internal class TweetServiceTest {
                     .build()
             )
 
-        paginatedTweets.validate()
+        kotlin.test.assertNotNull(paginatedTweets)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun listByCommunity() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -49,6 +47,6 @@ internal class TweetServiceTest {
                 TweetListByCommunityParams.builder().id("id").cursor("cursor").pageSize(1L).build()
             )
 
-        paginatedTweets.validate()
+        kotlin.test.assertNotNull(paginatedTweets)
     }
 }

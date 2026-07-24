@@ -1,0 +1,25 @@
+{
+  "allowedLicenses": [
+    {
+      "moduleLicense": "Apache-2.0"
+    },
+    {
+      "moduleLicense": "BSD-3-Clause"
+    },
+    {
+      "moduleLicense": "EPL-2.0"
+    },
+    {
+      "moduleLicense": "GPL v2 with the Classpath exception"
+    },
+    {
+      "moduleLicense": "GPL-2.0-only WITH Classpath-exception-2.0"
+    },
+    {
+      "moduleLicense": "MIT"
+    },
+    {
+      "moduleLicense": "Universal Permissive License, Version 1.0"
+    }
+  ]
+}
