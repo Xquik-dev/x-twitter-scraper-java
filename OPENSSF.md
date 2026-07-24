@@ -23,7 +23,7 @@ No OpenSSF-defined ineligibility applies.
 | Governance | Public roles, decisions, releases, and continuity policy |
 | Security reporting | Private reporting, response targets, boundaries, and threat model |
 | Runtime compatibility | Java 8 bytecode with JDK 26 tests |
-| Functional tests | 1,346 tests across 316 suites with no skips |
+| Functional tests | 1,342 tests across 316 suites with no skips |
 | Line coverage | `./scripts/coverage` enforces 90% |
 | Branch coverage | `./scripts/coverage` enforces 80% |
 | Static analysis | Compiler checks, formatting checks, and CodeQL |
