@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import org.gradle.api.attributes.java.TargetJvmVersion
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 

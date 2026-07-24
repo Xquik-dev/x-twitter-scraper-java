@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import com.github.jk1.license.filter.DependencyFilter
 import com.github.jk1.license.filter.SpdxLicenseBundleNormalizer
 import com.github.jk1.license.render.CsvReportRenderer
@@ -83,6 +87,7 @@ val allCoverageClasses =
         include("x-twitter-scraper-java*/build/classes/kotlin/main/**/*.class")
     }
 val generatedSourceMarker = "// File generated from our OpenAPI spec by Stainless."
+val generatedSourceHeaderLineLimit = 12
 val maintainedGeneratedSources =
     setOf(
         "x-twitter-scraper-java-core/src/main/kotlin/com/x_twitter_scraper/api/core/http/RetryingHttpClient.kt"
@@ -98,7 +103,9 @@ val generatedCoverageExclusions =
                     .walkTopDown()
                     .filter { it.isFile && it.extension in setOf("java", "kt") }
                     .filter { source ->
-                        source.useLines { lines -> lines.firstOrNull() == generatedSourceMarker } &&
+                        source.useLines { lines ->
+                            lines.take(generatedSourceHeaderLineLimit).any { it == generatedSourceMarker }
+                        } &&
                             source.relativeTo(rootDir).invariantSeparatorsPath !in
                                 maintainedGeneratedSources
                     }
