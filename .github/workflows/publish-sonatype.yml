@@ -73,3 +73,8 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.X_TWITTER_SCRAPER_SONATYPE_GPG_SIGNING_PASSWORD || secrets.GPG_SIGNING_PASSWORD }}
           GPG_SIGNING_KEY: ${{ secrets.X_TWITTER_SCRAPER_SONATYPE_GPG_SIGNING_KEY || secrets.GPG_SIGNING_KEY }}
           GPG_SIGNING_PASSWORD: ${{ secrets.X_TWITTER_SCRAPER_SONATYPE_GPG_SIGNING_PASSWORD || secrets.GPG_SIGNING_PASSWORD }}
+
+      - name: Verify published signature
+        env:
+          RELEASE_REF: ${{ github.event_name == 'workflow_dispatch' && inputs.release_ref || github.ref_name }}
+        run: ./bin/verify-release-signature "$RELEASE_REF"
