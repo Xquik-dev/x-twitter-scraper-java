@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.1 (2026-07-24)
+
+Full Changelog: [v0.6.0...v0.6.1](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.6.0...v0.6.1)
+
 ## 0.6.0 (2026-07-24)
 
 Full Changelog: [v0.5.2...v0.6.0](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.5.2...v0.6.0)
