@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+
+# SPDX-FileCopyrightText: 2026 Xquik contributors
+#
+# SPDX-License-Identifier: Apache-2.0
+
+set -euo pipefail
+
+cd -- "$(dirname -- "$0")/.."
+
+release_ref="${1:-}"
+if [[ ! "$release_ref" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-+][0-9A-Za-z.+-]+)?$ ]]; then
+    echo "Pass a valid v-prefixed release version." >&2
+    exit 1
+fi
+
+version="${release_ref#v}"
+module="x-twitter-scraper-java"
+artifact="$module-$version.jar"
+base_url="https://repo.maven.apache.org/maven2/com/xquik/api/$module/$version"
+expected_fingerprint="6965E561C0ACEE32060AB961D2037E4157E62A59"
+verification_workspace="$(
+    mktemp -d "/tmp/xquik-java-verify.XXXXXX"
+)"
+verification_gnupg="$verification_workspace/gnupg"
+trap 'rm -rf -- "$verification_workspace"' EXIT
+mkdir -m 700 "$verification_gnupg"
+
+for ((attempt = 1; attempt <= 40; attempt++)); do
+    if curl \
+        --fail \
+        --location \
+        --proto '=https' \
+        --show-error \
+        --silent \
+        --tlsv1.2 \
+        "$base_url/$artifact" \
+        --output "$verification_workspace/$artifact" &&
+        curl \
+            --fail \
+            --location \
+            --proto '=https' \
+            --show-error \
+            --silent \
+            --tlsv1.2 \
+            "$base_url/$artifact.asc" \
+            --output "$verification_workspace/$artifact.asc"; then
+        break
+    fi
+    if (( attempt == 40 )); then
+        echo "Maven Central did not publish $artifact within 10 minutes." >&2
+        exit 1
+    fi
+    sleep 15
+done
+
+GNUPGHOME="$verification_gnupg" gpg \
+    --batch \
+    --keyserver hkps://keyserver.ubuntu.com \
+    --recv-keys "0x${expected_fingerprint: -16}"
+
+signature_status="$(
+    GNUPGHOME="$verification_gnupg" gpg \
+        --batch \
+        --status-fd 1 \
+        --verify \
+        "$verification_workspace/$artifact.asc" \
+        "$verification_workspace/$artifact" \
+        2>/dev/null
+)"
+if ! grep -Fq "[GNUPG:] VALIDSIG $expected_fingerprint " <<<"$signature_status"; then
+    echo "The Maven signature does not match the expected Xquik key." >&2
+    exit 1
+fi
+
+digest="$(sha256sum "$verification_workspace/$artifact" | awk '{print $1}')"
+printf 'Verified %s with fingerprint %s and SHA-256 %s.\n' \
+    "$artifact" "$expected_fingerprint" "$digest"

@@ -52,6 +52,7 @@ jobs:
           shellcheck
           bin/check-release-environment
           bin/check-release-workflow
+          bin/verify-release-signature
           scripts/audit
           scripts/build
           scripts/check-reproducible

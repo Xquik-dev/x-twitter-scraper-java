@@ -73,6 +73,23 @@ Maven:
 
 <!-- x-release-please-end -->
 
+## Verify Maven Signatures
+
+Every Maven Central file has a detached OpenPGP signature.
+
+Verify the main Java artifact:
+
+```sh
+artifact="x-twitter-scraper-java-0.5.2.jar"
+base="https://repo.maven.apache.org/maven2/com/xquik/api/x-twitter-scraper-java/0.5.2"
+curl --fail --location --remote-name "$base/$artifact"
+curl --fail --location --remote-name "$base/$artifact.asc"
+gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 0xD2037E4157E62A59
+gpg --verify "$artifact.asc" "$artifact"
+```
+
+Confirm fingerprint `6965 E561 C0AC EE32 060A B961 D203 7E41 57E6 2A59`.
+
 ## Authenticate
 
 Create an API key in the Xquik dashboard. Then set:
