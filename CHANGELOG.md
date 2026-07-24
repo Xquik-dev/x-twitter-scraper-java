@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.6.0 (2026-07-24)
+
+Full Changelog: [v0.5.2...v0.6.0](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.5.2...v0.6.0)
+
+### Features
+
+* add OpenSSF Gold quality gates ([f0fb44d](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/f0fb44d9b07c3c612ff9b005a694e6f838081f3a))
+
+
+### Bug Fixes
+
+* align SLF4J test provider ([e760ae0](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/e760ae0bc9ff0ecb402e6f989c319908d1282875))
+* trust verified Gradle metadata ([e0e3e87](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/e0e3e8783d7b3077af70647d8e5f67565da4bc3f))
+
+
+### Chores
+
+* neutralize coverage source classification ([0089073](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/0089073842fc8fe912ae99232b163a3be11313de))
+* preserve coverage gates with SPDX headers ([873219a](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/873219ac82c57fdceb4fef37c8393d447a03781f))
+
+
+### Documentation
+
+* clarify repository discovery ([e6c115b](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/e6c115b50205ce8720f5d30c7cfdf48f780537b3))
+* correct Java test evidence count ([6e6a171](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/6e6a171d428896d32833fa94e5860c68ad7e2739))
+
 ## 0.5.2 (2026-07-23)
 
 Full Changelog: [v0.5.1...v0.5.2](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.5.1...v0.5.2)
