@@ -48,7 +48,7 @@ It covers 37,702 of 91,257 generated-inclusive lines, or 41.31%.
 
 It covers 5,220 of 23,952 generated-inclusive branches, or 21.79%.
 
-Exclusions require the exact Stainless marker within the source header.
+Exclusions use the repository-owned, provider-neutral generated-source header prefix.
 
 Maintained runtime exceptions remain inside the enforced coverage gate.
 
