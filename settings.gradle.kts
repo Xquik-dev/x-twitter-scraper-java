@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
 rootProject.name = "x-twitter-scraper-java-root"
 
 val projectNames = rootDir.listFiles()
