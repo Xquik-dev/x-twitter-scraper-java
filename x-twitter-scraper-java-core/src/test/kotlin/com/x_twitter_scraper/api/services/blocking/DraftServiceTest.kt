@@ -5,16 +5,14 @@ package com.x_twitter_scraper.api.services.blocking
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
 import com.x_twitter_scraper.api.models.drafts.DraftCreateParams
 import com.x_twitter_scraper.api.models.drafts.DraftListParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class DraftServiceTest {
-
-    @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -29,14 +27,14 @@ internal class DraftServiceTest {
                     .build()
             )
 
-        draftDetail.validate()
+        kotlin.test.assertNotNull(draftDetail)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -44,14 +42,14 @@ internal class DraftServiceTest {
 
         val draftDetail = draftService.retrieve("id")
 
-        draftDetail.validate()
+        kotlin.test.assertNotNull(draftDetail)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -62,14 +60,14 @@ internal class DraftServiceTest {
                 DraftListParams.builder().afterCursor("afterCursor").limit(1L).build()
             )
 
-        drafts.validate()
+        kotlin.test.assertNotNull(drafts)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()

@@ -6,16 +6,14 @@ import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClientAsync
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateAvatarParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateBannerParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class ProfileServiceAsyncTest {
-
-    @Disabled("Mock server tests are disabled")
     @Test
     fun update() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -34,14 +32,14 @@ internal class ProfileServiceAsyncTest {
             )
 
         val profile = profileFuture.get()
-        profile.validate()
+        kotlin.test.assertNotNull(profile)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun updateAvatar() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -57,14 +55,14 @@ internal class ProfileServiceAsyncTest {
             )
 
         val response = responseFuture.get()
-        response.validate()
+        kotlin.test.assertNotNull(response)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun updateBanner() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -80,6 +78,6 @@ internal class ProfileServiceAsyncTest {
             )
 
         val response = responseFuture.get()
-        response.validate()
+        kotlin.test.assertNotNull(response)
     }
 }

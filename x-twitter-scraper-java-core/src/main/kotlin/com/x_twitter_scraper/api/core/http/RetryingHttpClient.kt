@@ -10,11 +10,10 @@ import com.x_twitter_scraper.api.errors.XTwitterScraperIoException
 import com.x_twitter_scraper.api.errors.XTwitterScraperRetryableException
 import java.io.IOException
 import java.time.Clock
+import java.time.DateTimeException
 import java.time.Duration
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
-import java.time.temporal.ChronoUnit
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ThreadLocalRandom
@@ -190,33 +189,23 @@ private constructor(
     private fun getRetryBackoffDuration(retries: Int, response: HttpResponse?): Duration {
         // About the Retry-After header:
         // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After
-        response
-            ?.headers()
-            ?.let { headers ->
-                headers
-                    .values("Retry-After-Ms")
-                    .getOrNull(0)
-                    ?.toFloatOrNull()
-                    ?.times(TimeUnit.MILLISECONDS.toNanos(1))
-                    ?: headers.values("Retry-After").getOrNull(0)?.let { retryAfter ->
-                        retryAfter.toFloatOrNull()?.times(TimeUnit.SECONDS.toNanos(1))
-                            ?: try {
-                                ChronoUnit.NANOS.between(
-                                    OffsetDateTime.now(clock),
-                                    OffsetDateTime.parse(
-                                        retryAfter,
-                                        DateTimeFormatter.RFC_1123_DATE_TIME,
-                                    ),
-                                )
-                            } catch (e: DateTimeParseException) {
-                                null
-                            }
-                    }
+        response?.headers()?.let { headers ->
+            val retryAfterMs =
+                headers.values("Retry-After-Ms").getOrNull(0)?.let {
+                    parseServerDelay(it, TimeUnit.MILLISECONDS.toNanos(1))
+                }
+            if (retryAfterMs != null) {
+                return retryAfterMs
             }
-            ?.let { retryAfterNanos ->
-                // If the API asks us to wait a certain amount of time, do what it says.
-                return Duration.ofNanos(retryAfterNanos.toLong())
+
+            val retryAfter =
+                headers.values("Retry-After").getOrNull(0)?.let {
+                    parseServerDelay(it, TimeUnit.SECONDS.toNanos(1)) ?: parseServerDate(it)
+                }
+            if (retryAfter != null) {
+                return retryAfter
             }
+        }
 
         // Apply exponential backoff, but not more than the max.
         val backoffSeconds = min(0.5 * 2.0.pow(retries - 1), 8.0)
@@ -227,7 +216,27 @@ private constructor(
         return Duration.ofNanos((TimeUnit.SECONDS.toNanos(1) * backoffSeconds * jitter).toLong())
     }
 
+    private fun parseServerDelay(value: String, nanosPerUnit: Long): Duration? {
+        val amount = value.toDoubleOrNull()?.takeIf { it.isFinite() && it >= 0.0 } ?: return null
+        val nanos = min(amount * nanosPerUnit, MAX_SERVER_RETRY_DELAY.toNanos().toDouble())
+        return Duration.ofNanos(nanos.toLong())
+    }
+
+    private fun parseServerDate(value: String): Duration? =
+        try {
+            val delay =
+                Duration.between(
+                    OffsetDateTime.now(clock),
+                    OffsetDateTime.parse(value, DateTimeFormatter.RFC_1123_DATE_TIME),
+                )
+            if (delay.isNegative) null else minOf(delay, MAX_SERVER_RETRY_DELAY)
+        } catch (e: DateTimeException) {
+            null
+        }
+
     companion object {
+
+        private val MAX_SERVER_RETRY_DELAY: Duration = Duration.ofSeconds(60)
 
         @JvmStatic fun builder() = Builder()
     }

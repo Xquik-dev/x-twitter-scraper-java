@@ -1,8 +1,13 @@
 # X (Twitter) Scraper Java SDK: Tweet Search, Timelines, Followers & Posting
 
+[![CI](https://github.com/Xquik-dev/x-twitter-scraper-java/actions/workflows/ci.yml/badge.svg)](https://github.com/Xquik-dev/x-twitter-scraper-java/actions/workflows/ci.yml)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13735/badge)](https://www.bestpractices.dev/projects/13735)
 
 Use Xquik's typed Java client for X data and confirmed actions.
+
+It supports tweet search, timeline extraction, follower exports, monitoring, and posting.
+
+Use it as a typed X API or Twitter API alternative.
 
 [API reference](https://docs.xquik.com/api-reference/overview) ·
 [Authentication](https://xquik.com/auth.md) ·
@@ -17,17 +22,34 @@ Use Xquik's typed Java client for X data and confirmed actions.
 
 ## Common X Data Tasks
 
-Use the linked Javadocs for typed method names.
+These questions map customer language to exact routes and Java services.
 
-| Customer Question | REST Route | Workflow Note |
+| Customer Question | REST Route | Java Service |
 | --- | --- | --- |
-| How do I search tweets? | `GET /x/tweets/search` | Use keyword or advanced operator queries. |
-| How do I read a profile timeline? | `GET /x/users/{id}/tweets` | Paginate bounded results. |
-| How do I scrape followers? | `GET /x/users/{id}/followers` | Use an extraction for complete datasets. |
-| How do I scrape following accounts? | `GET /x/users/{id}/following` | Use an extraction for complete datasets. |
-| How do I read my home timeline? | `GET /x/timeline` | Approve this private read. |
-| How do I monitor an account? | `POST /monitors` | Deliver events through HMAC webhooks. |
-| How do I post or reply? | `POST /x/tweets` | Confirm the account and payload. |
+| How do I search tweets without the X API? | `GET /x/tweets/search` | `client.x().tweets()` |
+| How do I retrieve tweets, threads, replies, or quotes? | `GET /x/tweets/{id}`, `GET /x/tweets/{id}/thread` | `client.x().tweets()` |
+| How do I search X or Twitter users? | `GET /x/users/search` | `client.x().users()` |
+| How do I scrape an X profile timeline? | `GET /x/users/{id}/tweets` | `client.x().users()` |
+| How do I export X followers? | `GET /x/users/{id}/followers` | `client.x().users()` |
+| How do I export X following accounts? | `GET /x/users/{id}/following` | `client.x().users()` |
+| How do I collect verified followers? | `GET /x/users/{id}/verified-followers` | `client.x().users()` |
+| How do I collect mentions, likes, replies, or media? | `GET /x/users/{id}/mentions`, `GET /x/users/{id}/likes` | `client.x().users()` |
+| How do I extract my X home timeline? | `GET /x/timeline` | `client.x()` |
+| How do I extract list tweets, members, or followers? | `GET /x/lists/{id}/tweets`, `GET /x/lists/{id}/members` | `client.x().lists()` |
+| How do I search communities and collect their tweets? | `GET /x/communities/search`, `GET /x/communities/{id}/tweets` | `client.x().communities()` |
+| How do I read bookmarks and bookmark folders? | `GET /x/bookmarks`, `GET /x/bookmarks/folders` | `client.x().bookmarks()` |
+| How do I read notifications or direct messages? | `GET /x/notifications`, `GET /x/dm/{userId}/history` | `client.x()`, `client.x().dm()` |
+| How do I discover X trends? | `GET /x/trends` | `client.x().getTrends()` |
+| How do I export large X datasets? | `POST /extractions` | `client.extractions()` |
+| How do I monitor tweet keywords or accounts? | `POST /monitors/keywords`, `POST /monitors` | `client.monitors()` |
+| How do I receive signed event deliveries? | `POST /webhooks` | `client.webhooks()` |
+| How do I post, like, retweet, or follow? | `POST /x/tweets`, `POST /x/users/{id}/follow` | `client.x().tweets()`, `client.x().users()` |
+| How do I send media or update a profile? | `POST /x/media`, `PATCH /x/profile` | `client.x().media()`, `client.x().profile()` |
+| How do I manage connected X accounts? | `GET /x/accounts`, `POST /x/accounts` | `client.x().accounts()` |
+
+Use [Javadocs](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java) for typed methods.
+
+Use [API reference](https://docs.xquik.com/api-reference/overview) for request contracts.
 
 ## Install
 
@@ -155,6 +177,9 @@ Binary endpoints return `HttpResponse`. Close each response after reading it.
 - API questions: [docs.xquik.com](https://docs.xquik.com)
 - Security reports: [SECURITY.md](SECURITY.md)
 - SDK defects: [GitHub Issues](https://github.com/Xquik-dev/x-twitter-scraper-java/issues)
+- Contributions: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Governance: [GOVERNANCE.md](GOVERNANCE.md)
+- OpenSSF evidence: [OPENSSF.md](OPENSSF.md)
 
 ## License
 

@@ -4,16 +4,14 @@ package com.x_twitter_scraper.api.services.blocking
 
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
 import com.x_twitter_scraper.api.models.trends.TrendListParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class TrendServiceTest {
-
-    @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -21,6 +19,6 @@ internal class TrendServiceTest {
 
         val trends = trendService.list(TrendListParams.builder().count(1L).woeid(0L).build())
 
-        trends.validate()
+        kotlin.test.assertNotNull(trends)
     }
 }

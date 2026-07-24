@@ -43,10 +43,8 @@ class OkHttpClient
 internal constructor(@JvmSynthetic internal val okHttpClient: okhttp3.OkHttpClient) : HttpClient {
 
     override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse {
-        val call = newCall(request, requestOptions)
-
         return try {
-            call.execute().toHttpResponse()
+            newCall(request, requestOptions).execute().toHttpResponse()
         } catch (e: IOException) {
             throw XTwitterScraperIoException("Request failed", e)
         } finally {
@@ -60,18 +58,13 @@ internal constructor(@JvmSynthetic internal val okHttpClient: okhttp3.OkHttpClie
     ): CompletableFuture<HttpResponse> {
         val future = CompletableFuture<HttpResponse>()
 
-        val call = newCall(request, requestOptions)
-        call.enqueue(
-            object : Callback {
-                override fun onResponse(call: Call, response: Response) {
-                    future.complete(response.toHttpResponse())
-                }
-
-                override fun onFailure(call: Call, e: IOException) {
-                    future.completeExceptionally(XTwitterScraperIoException("Request failed", e))
-                }
+        val call =
+            try {
+                newCall(request, requestOptions)
+            } catch (throwable: Throwable) {
+                request.body?.close()
+                throw throwable
             }
-        )
 
         future.whenComplete { _, e ->
             if (e is CancellationException) {
@@ -79,6 +72,21 @@ internal constructor(@JvmSynthetic internal val okHttpClient: okhttp3.OkHttpClie
             }
             request.body?.close()
         }
+
+        call.enqueue(
+            object : Callback {
+                override fun onResponse(call: Call, response: Response) {
+                    val httpResponse = response.toHttpResponse()
+                    if (!future.complete(httpResponse)) {
+                        httpResponse.close()
+                    }
+                }
+
+                override fun onFailure(call: Call, e: IOException) {
+                    future.completeExceptionally(XTwitterScraperIoException("Request failed", e))
+                }
+            }
+        )
 
         return future
     }
@@ -173,6 +181,13 @@ internal constructor(@JvmSynthetic internal val okHttpClient: okhttp3.OkHttpClie
                 okhttp3.OkHttpClient.Builder()
                     // `RetryingHttpClient` handles retries if the user enabled them.
                     .retryOnConnectionFailure(false)
+                    // Never forward SDK credentials through an automatic redirect.
+                    .followRedirects(false)
+                    .followSslRedirects(false)
+                    // Bound numeric retry delays before OkHttp parses them as 32-bit integers.
+                    .addNetworkInterceptor { chain ->
+                        chain.proceed(chain.request()).withBoundedRetryAfter()
+                    }
                     .connectTimeout(timeout.connect())
                     .readTimeout(timeout.read())
                     .writeTimeout(timeout.write())
@@ -349,8 +364,24 @@ private fun Response.toHttpResponse(): HttpResponse {
     }
 }
 
+private fun Response.withBoundedRetryAfter(): Response {
+    val retryAfter = header("Retry-After")?.trim() ?: return this
+    if (!retryAfter.all(Char::isDigit)) {
+        return this
+    }
+
+    val seconds = retryAfter.toLongOrNull()
+    if (seconds != null && seconds <= MAX_SERVER_RETRY_AFTER_SECONDS) {
+        return this
+    }
+
+    return newBuilder().header("Retry-After", MAX_SERVER_RETRY_AFTER_SECONDS.toString()).build()
+}
+
 private fun okhttp3.Headers.toHeaders(): Headers {
     val headersBuilder = Headers.builder()
     forEach { (name, value) -> headersBuilder.put(name, value) }
     return headersBuilder.build()
 }
+
+private const val MAX_SERVER_RETRY_AFTER_SECONDS: Long = 60

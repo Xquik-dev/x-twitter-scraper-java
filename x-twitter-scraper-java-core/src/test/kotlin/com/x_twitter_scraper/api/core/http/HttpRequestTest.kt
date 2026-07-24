@@ -1,6 +1,9 @@
 package com.x_twitter_scraper.api.core.http
 
+import java.io.OutputStream
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 
@@ -106,5 +109,79 @@ internal class HttpRequestTest {
         val actualUrl = testCase.request.url()
 
         assertThat(actualUrl).isEqualTo(testCase.expectedUrl)
+    }
+
+    @Test
+    fun builderOperationsAndCopy() {
+        val body =
+            object : HttpRequestBody {
+                override fun contentType(): String = "text/plain"
+
+                override fun contentLength(): Long = 4
+
+                override fun repeatable(): Boolean = true
+
+                override fun writeTo(outputStream: OutputStream) {
+                    outputStream.write("body".toByteArray())
+                }
+
+                override fun close() {}
+            }
+        val initialHeaders = Headers.builder().put("initial", "1").build()
+        val finalHeaders = Headers.builder().put("final", "2").build()
+        val initialQuery = QueryParams.builder().put("initial", "1").build()
+        val finalQuery = QueryParams.builder().put("final", "2").build()
+
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.POST)
+                .baseUrl("https://api.example.com")
+                .headers(initialHeaders)
+                .headers(mapOf("mapped" to listOf("1")))
+                .putHeader("single", "1")
+                .putHeaders("many", listOf("1", "2"))
+                .putAllHeaders(initialHeaders)
+                .putAllHeaders(mapOf("more" to listOf("1")))
+                .replaceHeaders("single", "2")
+                .replaceHeaders("many", listOf("3", "4"))
+                .replaceAllHeaders(initialHeaders)
+                .replaceAllHeaders(mapOf("temporary" to listOf("1")))
+                .removeHeaders("temporary")
+                .putAllHeaders(finalHeaders)
+                .removeAllHeaders(setOf("absent"))
+                .queryParams(initialQuery)
+                .queryParams(mapOf("mapped" to listOf("1")))
+                .putQueryParam("single", "1")
+                .putQueryParams("many", listOf("1", "2"))
+                .putAllQueryParams(initialQuery)
+                .putAllQueryParams(mapOf("more" to listOf("1")))
+                .replaceQueryParams("single", "2")
+                .replaceQueryParams("many", listOf("3", "4"))
+                .replaceAllQueryParams(initialQuery)
+                .replaceAllQueryParams(mapOf("temporary" to listOf("1")))
+                .removeQueryParams("temporary")
+                .putAllQueryParams(finalQuery)
+                .removeAllQueryParams(setOf("absent"))
+                .body(body)
+                .build()
+        val copied = request.toBuilder().build()
+
+        assertThat(copied.method).isEqualTo(HttpMethod.POST)
+        assertThat(copied.baseUrl).isEqualTo("https://api.example.com")
+        assertThat(copied.pathSegments).isEmpty()
+        assertThat(copied.headers.values("final")).containsExactly("2")
+        assertThat(copied.queryParams.values("final")).containsExactly("2")
+        assertThat(copied.body).isSameAs(body)
+        assertThat(copied.toString()).contains("method=POST", "baseUrl=https://api.example.com")
+    }
+
+    @Test
+    fun buildRequiresMethodAndBaseUrl() {
+        assertThatThrownBy { HttpRequest.builder().baseUrl("https://api.example.com").build() }
+            .isInstanceOf(IllegalStateException::class.java)
+            .hasMessage("`method` is required, but was not set")
+        assertThatThrownBy { HttpRequest.builder().method(HttpMethod.GET).build() }
+            .isInstanceOf(IllegalStateException::class.java)
+            .hasMessage("`baseUrl` is required, but was not set")
     }
 }
