@@ -86,7 +86,7 @@ val allCoverageClasses =
         include("x-twitter-scraper-java*/build/classes/java/main/**/*.class")
         include("x-twitter-scraper-java*/build/classes/kotlin/main/**/*.class")
     }
-val generatedSourceMarker = "// File generated from our OpenAPI spec by Stainless."
+val generatedSourceHeaderPrefix = "// File generated from our OpenAPI spec"
 val generatedSourceHeaderLineLimit = 12
 val maintainedGeneratedSources =
     setOf(
@@ -104,7 +104,9 @@ val generatedCoverageExclusions =
                     .filter { it.isFile && it.extension in setOf("java", "kt") }
                     .filter { source ->
                         source.useLines { lines ->
-                            lines.take(generatedSourceHeaderLineLimit).any { it == generatedSourceMarker }
+                            lines
+                                .take(generatedSourceHeaderLineLimit)
+                                .any { it.startsWith(generatedSourceHeaderPrefix) }
                         } &&
                             source.relativeTo(rootDir).invariantSeparatorsPath !in
                                 maintainedGeneratedSources
