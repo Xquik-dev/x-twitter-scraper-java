@@ -20,6 +20,12 @@ Use it as a typed X API or Twitter API alternative.
 
 <!-- x-release-please-end -->
 
+## Choose the Java SDK
+
+Choose this client for Java services using builders and typed models.
+Use the synchronous client for simple request flows.
+Call `client.async()` for `CompletableFuture` pipelines.
+
 ## Common X Data Tasks
 
 These questions map customer language to exact routes and Java services.
