@@ -1,7 +1,19 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
 package com.x_twitter_scraper.api.core
 
+import com.fasterxml.jackson.core.JsonFactory
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.node.JsonNodeFactory
+import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 
@@ -140,5 +152,238 @@ internal class ValuesTest {
         val obj = testCase.value.asObject()
 
         assertThat(obj).isEqualTo(testCase.expectedAsObject)
+    }
+
+    @Test
+    fun fieldAccessMappingAndVisitors() {
+        val known: JsonField<String> = JsonField.of("known")
+        val missing: JsonField<String> = JsonMissing.of()
+        val nullValue: JsonField<String> = JsonNull.of()
+        val unknown: JsonField<String> = JsonString.of("unknown")
+
+        assertThat(known.asUnknown()).isEmpty()
+        assertThat(unknown.asUnknown()).contains(JsonString.of("unknown"))
+        assertThat(known.asStringOrThrow()).isEqualTo("known")
+        assertThatThrownBy { JsonNumber.of(42).asStringOrThrow() }
+            .isInstanceOf(XTwitterScraperInvalidDataException::class.java)
+            .hasMessage("Value is not a string")
+
+        assertThat(known.getRequired("field")).isEqualTo("known")
+        assertThatThrownBy { missing.getRequired("field") }
+            .isInstanceOf(XTwitterScraperInvalidDataException::class.java)
+            .hasMessage("`field` is not set")
+        assertThatThrownBy { nullValue.getRequired("field") }
+            .isInstanceOf(XTwitterScraperInvalidDataException::class.java)
+            .hasMessage("`field` is null")
+        assertThatThrownBy { unknown.getRequired("field") }
+            .isInstanceOf(XTwitterScraperInvalidDataException::class.java)
+            .hasMessageContaining("`field` is invalid")
+
+        assertThat(known.getOptional("field")).contains("known")
+        assertThat(missing.getOptional("field")).isEmpty()
+        assertThat(nullValue.getOptional("field")).isEmpty()
+        assertThatThrownBy { unknown.getOptional("field") }
+            .isInstanceOf(XTwitterScraperInvalidDataException::class.java)
+            .hasMessageContaining("`field` is invalid")
+
+        assertThat(known.map(String::length)).isEqualTo(JsonField.of(5))
+        assertThat(unknown.map(String::length)).isSameAs(unknown)
+
+        var consumed: String? = null
+        known.accept { consumed = it }
+        unknown.accept { consumed = "unexpected" }
+        assertThat(consumed).isEqualTo("known")
+
+        val visitor =
+            object : JsonField.Visitor<String, String> {
+                override fun visitKnown(value: String): String = "known:$value"
+
+                override fun visitString(value: String): String = "unknown:$value"
+            }
+        assertThat(known.accept(visitor)).isEqualTo("known:known")
+        assertThat(unknown.accept(visitor)).isEqualTo("unknown:unknown")
+
+        val defaultVisitor = object : JsonField.Visitor<String, String> {}
+        assertThatThrownBy { known.accept(defaultVisitor) }
+            .isInstanceOf(IllegalArgumentException::class.java)
+            .hasMessage("Unexpected value")
+
+        assertThat(JsonField.ofNullable("value")).isEqualTo(JsonField.of("value"))
+        assertThat(JsonField.ofNullable<String>(null)).isSameAs(JsonNull.of())
+        assertThat(JsonField.IsMissing()).isEqualTo(JsonMissing.of())
+        assertThat(JsonField.IsMissing()).isNotEqualTo(JsonNull.of())
+        assertThat(JsonField.IsMissing().hashCode()).isEqualTo(JsonField.IsMissing().hashCode())
+    }
+
+    @Test
+    fun jsonValueConversionsNodesAndVisitors() {
+        val values =
+            listOf(
+                JsonMissing.of() to "missing",
+                JsonNull.of() to "null",
+                JsonBoolean.of(true) to "boolean:true",
+                JsonNumber.of(42) to "number:42",
+                JsonString.of("value") to "string:value",
+                JsonArray.of(listOf(JsonString.of("value"))) to "array:1",
+                JsonObject.of(mapOf("key" to JsonString.of("value"))) to "object:1",
+            )
+        val visitor =
+            object : JsonValue.Visitor<String> {
+                override fun visitMissing(): String = "missing"
+
+                override fun visitNull(): String = "null"
+
+                override fun visitBoolean(value: Boolean): String = "boolean:$value"
+
+                override fun visitNumber(value: Number): String = "number:$value"
+
+                override fun visitString(value: String): String = "string:$value"
+
+                override fun visitArray(values: List<JsonValue>): String = "array:${values.size}"
+
+                override fun visitObject(values: Map<String, JsonValue>): String =
+                    "object:${values.size}"
+            }
+
+        values.forEach { (value, expected) ->
+            assertThat(value.accept(visitor)).isEqualTo(expected)
+        }
+
+        val defaultVisitor = object : JsonValue.Visitor<String> {}
+        values.forEach { (value) ->
+            assertThatThrownBy { value.accept(defaultVisitor) }
+                .isInstanceOf(IllegalArgumentException::class.java)
+                .hasMessage("Unexpected value")
+        }
+
+        assertThat(JsonString.of("value").convert(String::class.java)).isEqualTo("value")
+        assertThat(
+                JsonObject.of(mapOf("key" to JsonString.of("value")))
+                    .convert(object : TypeReference<Map<String, String>>() {})
+            )
+            .containsEntry("key", "value")
+
+        val nodes = JsonNodeFactory.instance
+        assertThat(JsonValue.fromJsonNode(nodes.missingNode())).isSameAs(JsonMissing.of())
+        assertThat(JsonValue.fromJsonNode(nodes.nullNode())).isSameAs(JsonNull.of())
+        assertThat(JsonValue.fromJsonNode(nodes.booleanNode(true))).isEqualTo(JsonBoolean.of(true))
+        assertThat(JsonValue.fromJsonNode(nodes.numberNode(42))).isEqualTo(JsonNumber.of(42))
+        assertThat(JsonValue.fromJsonNode(nodes.textNode("value")))
+            .isEqualTo(JsonString.of("value"))
+        assertThat(JsonValue.fromJsonNode(nodes.arrayNode().add(1)))
+            .isEqualTo(JsonArray.of(listOf(JsonNumber.of(1))))
+        assertThat(JsonValue.fromJsonNode(nodes.objectNode().put("key", "value")))
+            .isEqualTo(JsonObject.of(mapOf("key" to JsonString.of("value"))))
+        assertThatThrownBy { JsonValue.fromJsonNode(nodes.binaryNode(byteArrayOf(1))) }
+            .isInstanceOf(IllegalStateException::class.java)
+            .hasMessageContaining("Unexpected JsonNode type")
+        assertThatThrownBy { JsonValue.fromJsonNode(nodes.pojoNode(Any())) }
+            .isInstanceOf(IllegalStateException::class.java)
+            .hasMessageContaining("Unexpected JsonNode type")
+
+        assertThat(JsonValue.from(null)).isSameAs(JsonNull.of())
+        val existing = JsonString.of("existing")
+        assertThat(JsonValue.from(existing)).isSameAs(existing)
+        assertThat(JsonValue.Deserializer().getNullValue(null)).isSameAs(JsonNull.of())
+    }
+
+    @Test
+    fun valueSemanticsAndMissingSerialization() {
+        val known = KnownValue.of(byteArrayOf(1, 2))
+        assertThat(known).isEqualTo(known)
+        assertThat(known).isEqualTo(KnownValue.of(byteArrayOf(1, 2)))
+        assertThat(known).isNotEqualTo(KnownValue.of(byteArrayOf(2, 1)))
+        assertThat(known).isNotEqualTo(JsonString.of("value"))
+        assertThat(known.hashCode()).isEqualTo(KnownValue.of(byteArrayOf(1, 2)).hashCode())
+        assertThat(known.toString()).contains("1", "2")
+
+        val scalarValues =
+            listOf<JsonValue>(JsonBoolean.of(true), JsonNumber.of(42), JsonString.of("value"))
+        scalarValues.forEach { value ->
+            assertThat(value).isEqualTo(value)
+            assertThat(value.hashCode()).isEqualTo(value.hashCode())
+            assertThat(value.toString()).isNotEmpty()
+        }
+        assertThat(JsonBoolean.of(true)).isNotEqualTo(JsonBoolean.of(false))
+        assertThat(JsonBoolean.of(true)).isNotEqualTo(JsonNumber.of(1))
+        assertThat(JsonNumber.of(42)).isNotEqualTo(JsonNumber.of(43))
+        assertThat(JsonNumber.of(42)).isNotEqualTo(JsonString.of("42"))
+        assertThat(JsonString.of("value")).isNotEqualTo(JsonString.of("other"))
+        assertThat(JsonString.of("value")).isNotEqualTo(JsonNumber.of(1))
+
+        val mutableArray = mutableListOf<JsonValue>(JsonNumber.of(1))
+        val array = JsonArray.of(mutableArray)
+        mutableArray.add(JsonNumber.of(2))
+        assertThat(array.values).containsExactly(JsonNumber.of(1))
+        assertThat(array).isEqualTo(array)
+        assertThat(array).isEqualTo(JsonArray.of(listOf(JsonNumber.of(1))))
+        assertThat(array).isNotEqualTo(JsonArray.of(emptyList()))
+        assertThat(array).isNotEqualTo(JsonObject.of(emptyMap()))
+        assertThat(array.hashCode()).isEqualTo(array.values.hashCode())
+        assertThat(array.toString()).isEqualTo("[1]")
+
+        val mutableObject = mutableMapOf<String, JsonValue>("key" to JsonNumber.of(1))
+        val obj = JsonObject.of(mutableObject)
+        mutableObject["other"] = JsonNumber.of(2)
+        assertThat(obj.values).containsOnlyKeys("key")
+        assertThat(obj).isEqualTo(obj)
+        assertThat(obj).isEqualTo(JsonObject.of(mapOf("key" to JsonNumber.of(1))))
+        assertThat(obj).isNotEqualTo(JsonObject.of(emptyMap()))
+        assertThat(obj).isNotEqualTo(JsonArray.of(emptyList()))
+        assertThat(obj.hashCode()).isEqualTo(obj.values.hashCode())
+        assertThat(obj.toString()).contains("key=1")
+        assertThat(JsonMissing.of().toString()).isEmpty()
+        assertThat(JsonNull.of().toString()).isEqualTo("null")
+
+        val output = ByteArrayOutputStream()
+        JsonFactory().createGenerator(output).use { generator ->
+            assertThatThrownBy {
+                    JsonMissing.Serializer()
+                        .serialize(JsonMissing.of(), generator, jsonMapper().serializerProvider)
+                }
+                .isInstanceOf(IllegalStateException::class.java)
+                .hasMessage("JsonMissing cannot be serialized")
+        }
+    }
+
+    @Test
+    fun multipartFields() {
+        val text = MultipartField.of("value")
+        val bytes = MultipartField.of(byteArrayOf(1, 2))
+        val stream = MultipartField.of(ByteArrayInputStream(byteArrayOf(1, 2)))
+        val custom =
+            MultipartField.builder<String>()
+                .value("value")
+                .contentType("application/custom")
+                .filename(Optional.of("value.txt"))
+                .build()
+        val noFilename =
+            MultipartField.builder<String>()
+                .value(JsonField.of("value"))
+                .filename(Optional.empty())
+                .build()
+
+        assertThat(text.contentType).isEqualTo("text/plain; charset=utf-8")
+        assertThat(bytes.contentType).isEqualTo("application/octet-stream")
+        assertThat(stream.contentType).isEqualTo("application/octet-stream")
+        assertThat(custom.filename()).contains("value.txt")
+        assertThat(noFilename.filename()).isEmpty()
+        assertThat(custom.map(String::length).value.asKnown()).contains(5)
+        assertThat(custom).isEqualTo(custom)
+        assertThat(custom)
+            .isEqualTo(
+                MultipartField.builder<String>()
+                    .value("value")
+                    .contentType("application/custom")
+                    .filename("value.txt")
+                    .build()
+            )
+        assertThat(custom).isNotEqualTo(text)
+        assertThat(custom).isNotEqualTo("value")
+        assertThat(custom.hashCode()).isEqualTo(custom.hashCode())
+        assertThat(custom.toString()).contains("application/custom", "value.txt")
+        assertThatThrownBy { MultipartField.builder<String>().build() }
+            .isInstanceOf(IllegalStateException::class.java)
+            .hasMessage("`value` is required, but was not set")
     }
 }

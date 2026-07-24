@@ -27,5 +27,26 @@ done
 grep -Fq 'environment: maven-central' .github/workflows/publish-sonatype.yml
 grep -Fq 'release_ref:' .github/workflows/publish-sonatype.yml
 grep -Fq 'git describe --tags --exact-match' .github/workflows/publish-sonatype.yml
+grep -Fq 'ORG_GRADLE_PROJECT_signingInMemoryKey:' .github/workflows/publish-sonatype.yml
+grep -Fq 'ORG_GRADLE_PROJECT_signingInMemoryKeyPassword:' .github/workflows/publish-sonatype.yml
+grep -Fq "./bin/verify-release-signature \"\$RELEASE_REF\"" \
+  .github/workflows/publish-sonatype.yml
+grep -Fq "./bin/verify-release-signature \"\$RELEASE_REF\"" \
+  .github/workflows/release-doctor.yml
+grep -Fq 'publishToMavenLocal -PpublishLocal --no-configuration-cache' \
+  .github/workflows/release-doctor.yml
+
+publish_line="$(
+  grep -nF -- '- name: Publish signed artifacts' \
+    .github/workflows/publish-sonatype.yml | cut -d: -f1
+)"
+verify_line="$(
+  grep -nF -- '- name: Verify published signature' \
+    .github/workflows/publish-sonatype.yml | cut -d: -f1
+)"
+if ((verify_line <= publish_line)); then
+  printf 'Published signatures must be verified after publication.\n'
+  exit 1
+fi
 
 printf 'Release workflows support safe Maven Central retries.\n'

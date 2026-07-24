@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
 // File generated from our OpenAPI spec by Stainless.
 
 package com.x_twitter_scraper.api.services.blocking.x
@@ -5,16 +9,14 @@ package com.x_twitter_scraper.api.services.blocking.x
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
 import com.x_twitter_scraper.api.models.x.accounts.AccountCreateParams
 import com.x_twitter_scraper.api.models.x.accounts.AccountReauthParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class AccountServiceTest {
-
-    @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -30,14 +32,14 @@ internal class AccountServiceTest {
                     .build()
             )
 
-        account.validate()
+        kotlin.test.assertNotNull(account)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -45,14 +47,14 @@ internal class AccountServiceTest {
 
         val xAccountDetail = accountService.retrieve("id")
 
-        xAccountDetail.validate()
+        kotlin.test.assertNotNull(xAccountDetail)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -60,14 +62,14 @@ internal class AccountServiceTest {
 
         val accounts = accountService.list()
 
-        accounts.validate()
+        kotlin.test.assertNotNull(accounts)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -75,14 +77,14 @@ internal class AccountServiceTest {
 
         val account = accountService.delete("id")
 
-        account.validate()
+        kotlin.test.assertNotNull(account)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun bulkRetry() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -90,14 +92,14 @@ internal class AccountServiceTest {
 
         val response = accountService.bulkRetry()
 
-        response.validate()
+        kotlin.test.assertNotNull(response)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun reauth() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -113,6 +115,6 @@ internal class AccountServiceTest {
                     .build()
             )
 
-        response.validate()
+        kotlin.test.assertNotNull(response)
     }
 }

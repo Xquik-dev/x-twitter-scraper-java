@@ -6,7 +6,11 @@ on:
   schedule:
     - cron: "29 3 * * 6"
 
-permissions: read-all
+permissions: {}
+
+concurrency:
+  group: scorecard-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   analysis:
@@ -15,8 +19,8 @@ jobs:
     timeout-minutes: 20
     permissions:
       contents: read
-      security-events: write
-      id-token: write
+      security-events: write # Required to upload the SARIF report.
+      id-token: write # Required to publish signed Scorecard results.
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

@@ -2,6 +2,11 @@ name: Release Doctor
 
 on:
   workflow_dispatch:
+    inputs:
+      release_ref:
+        description: Optional public release tag to verify
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -41,4 +46,10 @@ jobs:
           GPG_SIGNING_PASSWORD: ${{ secrets.X_TWITTER_SCRAPER_SONATYPE_GPG_SIGNING_PASSWORD || secrets.GPG_SIGNING_PASSWORD }}
 
       - name: Build local Maven artifacts
-        run: ./gradlew publishToMavenLocal -PpublishLocal --no-daemon --stacktrace
+        run: ./gradlew publishToMavenLocal -PpublishLocal --no-configuration-cache --no-daemon --stacktrace
+
+      - name: Verify public release signature
+        if: inputs.release_ref != ''
+        env:
+          RELEASE_REF: ${{ inputs.release_ref }}
+        run: ./bin/verify-release-signature "$RELEASE_REF"

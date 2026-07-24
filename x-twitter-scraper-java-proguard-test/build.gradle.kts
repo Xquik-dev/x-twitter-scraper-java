@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier
 
 plugins {
@@ -7,6 +11,13 @@ plugins {
 buildscript {
     repositories {
         google()
+    }
+
+    configurations.configureEach {
+        resolutionStrategy.force(
+            "org.apache.logging.log4j:log4j-api:2.25.4",
+            "org.apache.logging.log4j:log4j-core:2.25.4",
+        )
     }
 
     dependencies {

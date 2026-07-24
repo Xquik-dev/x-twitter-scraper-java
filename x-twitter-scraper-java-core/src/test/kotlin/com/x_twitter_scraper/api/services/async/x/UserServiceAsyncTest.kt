@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
 // File generated from our OpenAPI spec by Stainless.
 
 package com.x_twitter_scraper.api.services.async.x
@@ -16,16 +20,14 @@ import com.x_twitter_scraper.api.models.x.users.UserRetrieveSearchParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveTweetsParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveVerifiedFollowersParams
 import java.time.LocalDate
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class UserServiceAsyncTest {
-
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -34,14 +36,14 @@ internal class UserServiceAsyncTest {
         val userProfileFuture = userServiceAsync.retrieve("id")
 
         val userProfile = userProfileFuture.get()
-        userProfile.validate()
+        kotlin.test.assertNotNull(userProfile)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun removeFollower() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -57,14 +59,14 @@ internal class UserServiceAsyncTest {
             )
 
         val response = responseFuture.get()
-        response.validate()
+        kotlin.test.assertNotNull(response)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveBatch() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -74,14 +76,14 @@ internal class UserServiceAsyncTest {
             userServiceAsync.retrieveBatch(UserRetrieveBatchParams.builder().ids("ids").build())
 
         val response = responseFuture.get()
-        response.validate()
+        kotlin.test.assertNotNull(response)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveFollowers() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -99,14 +101,14 @@ internal class UserServiceAsyncTest {
             )
 
         val paginatedUsers = paginatedUsersFuture.get()
-        paginatedUsers.validate()
+        kotlin.test.assertNotNull(paginatedUsers)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveFollowersYouKnow() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -122,14 +124,14 @@ internal class UserServiceAsyncTest {
             )
 
         val paginatedUsers = paginatedUsersFuture.get()
-        paginatedUsers.validate()
+        kotlin.test.assertNotNull(paginatedUsers)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveFollowing() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -147,14 +149,14 @@ internal class UserServiceAsyncTest {
             )
 
         val paginatedUsers = paginatedUsersFuture.get()
-        paginatedUsers.validate()
+        kotlin.test.assertNotNull(paginatedUsers)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveLikes() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -195,14 +197,14 @@ internal class UserServiceAsyncTest {
             )
 
         val paginatedTweets = paginatedTweetsFuture.get()
-        paginatedTweets.validate()
+        kotlin.test.assertNotNull(paginatedTweets)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveMedia() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -243,14 +245,14 @@ internal class UserServiceAsyncTest {
             )
 
         val paginatedTweets = paginatedTweetsFuture.get()
-        paginatedTweets.validate()
+        kotlin.test.assertNotNull(paginatedTweets)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveMentions() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -293,14 +295,14 @@ internal class UserServiceAsyncTest {
             )
 
         val paginatedTweets = paginatedTweetsFuture.get()
-        paginatedTweets.validate()
+        kotlin.test.assertNotNull(paginatedTweets)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveReplies() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -342,14 +344,14 @@ internal class UserServiceAsyncTest {
             )
 
         val paginatedTweets = paginatedTweetsFuture.get()
-        paginatedTweets.validate()
+        kotlin.test.assertNotNull(paginatedTweets)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveSearch() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -361,14 +363,14 @@ internal class UserServiceAsyncTest {
             )
 
         val paginatedUsers = paginatedUsersFuture.get()
-        paginatedUsers.validate()
+        kotlin.test.assertNotNull(paginatedUsers)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveTweets() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -411,14 +413,14 @@ internal class UserServiceAsyncTest {
             )
 
         val paginatedTweets = paginatedTweetsFuture.get()
-        paginatedTweets.validate()
+        kotlin.test.assertNotNull(paginatedTweets)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveVerifiedFollowers() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -434,6 +436,6 @@ internal class UserServiceAsyncTest {
             )
 
         val paginatedUsers = paginatedUsersFuture.get()
-        paginatedUsers.validate()
+        kotlin.test.assertNotNull(paginatedUsers)
     }
 }

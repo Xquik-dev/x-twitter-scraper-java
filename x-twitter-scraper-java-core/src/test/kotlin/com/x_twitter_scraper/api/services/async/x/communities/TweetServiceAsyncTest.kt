@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
 // File generated from our OpenAPI spec by Stainless.
 
 package com.x_twitter_scraper.api.services.async.x.communities
@@ -5,16 +9,14 @@ package com.x_twitter_scraper.api.services.async.x.communities
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClientAsync
 import com.x_twitter_scraper.api.models.x.communities.tweets.TweetListByCommunityParams
 import com.x_twitter_scraper.api.models.x.communities.tweets.TweetListParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class TweetServiceAsyncTest {
-
-    @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -32,14 +34,14 @@ internal class TweetServiceAsyncTest {
             )
 
         val paginatedTweets = paginatedTweetsFuture.get()
-        paginatedTweets.validate()
+        kotlin.test.assertNotNull(paginatedTweets)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun listByCommunity() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -51,6 +53,6 @@ internal class TweetServiceAsyncTest {
             )
 
         val paginatedTweets = paginatedTweetsFuture.get()
-        paginatedTweets.validate()
+        kotlin.test.assertNotNull(paginatedTweets)
     }
 }

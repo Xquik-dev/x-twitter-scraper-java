@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+
+# SPDX-FileCopyrightText: 2026 Xquik contributors
+#
+# SPDX-License-Identifier: Apache-2.0
+
+set -euo pipefail
+
+cd -- "$(dirname -- "$0")/.."
+
+reproducibility_workspace="$(
+    mktemp -d "${TMPDIR:-/tmp}/xquik-java-reproducibility.XXXXXX"
+)"
+trap 'rm -rf -- "$reproducibility_workspace"' EXIT
+
+copy_source() {
+    local destination="$1"
+    local source_manifest="$2"
+    mkdir -p "$destination"
+    git ls-files --cached --others --exclude-standard -z |
+        while IFS= read -r -d '' source_file; do
+            case "$source_file" in
+                .env | .env.* | */.env | */.env.*)
+                    continue
+                    ;;
+            esac
+            printf '%s\0' "$source_file"
+        done >"$source_manifest"
+    tar --null -T "$source_manifest" -cf - | tar -xf - -C "$destination"
+}
+
+build_public_artifacts() {
+    local source_root="$1"
+    (
+        cd "$source_root"
+        ./gradlew \
+            :x-twitter-scraper-java:publishAllPublicationsToLocalFileSystemRepository \
+            :x-twitter-scraper-java-client-okhttp:publishAllPublicationsToLocalFileSystemRepository \
+            :x-twitter-scraper-java-core:publishAllPublicationsToLocalFileSystemRepository \
+            -PpublishLocal \
+            --no-build-cache \
+            --no-configuration-cache \
+            --no-daemon \
+            --no-parallel
+    )
+}
+
+first_source="$reproducibility_workspace/first"
+second_source="$reproducibility_workspace/second"
+copy_source "$first_source" "$reproducibility_workspace/first-source-files"
+copy_source "$second_source" "$reproducibility_workspace/second-source-files"
+
+echo "==> Building Maven artifacts in two isolated source trees"
+build_public_artifacts "$first_source"
+build_public_artifacts "$second_source"
+
+first_repository="$first_source/build/local-maven-repo"
+second_repository="$second_source/build/local-maven-repo"
+first_manifest="$reproducibility_workspace/first-artifacts.txt"
+second_manifest="$reproducibility_workspace/second-artifacts.txt"
+
+find "$first_repository" -type f \
+    \( -name '*.jar' -o -name '*.module' -o -name '*.pom' \) \
+    | sed "s#^$first_repository/##" \
+    | sort >"$first_manifest"
+find "$second_repository" -type f \
+    \( -name '*.jar' -o -name '*.module' -o -name '*.pom' \) \
+    | sed "s#^$second_repository/##" \
+    | sort >"$second_manifest"
+
+artifact_count="$(wc -l <"$first_manifest" | tr -d ' ')"
+if (( artifact_count == 0 )); then
+    echo "No Maven artifacts were produced." >&2
+    exit 1
+fi
+
+diff -u "$first_manifest" "$second_manifest"
+while IFS= read -r artifact; do
+    cmp "$first_repository/$artifact" "$second_repository/$artifact"
+    if [[ "$artifact" == *.jar ]]; then
+        if ! unzip -Z1 "$first_repository/$artifact" | grep -Fxq 'META-INF/LICENSE'; then
+            printf '%s omits META-INF/LICENSE.\n' "$artifact" >&2
+            exit 1
+        fi
+    fi
+done <"$first_manifest"
+
+printf 'Verified %d byte-identical Maven artifacts with license notices.\n' "$artifact_count"

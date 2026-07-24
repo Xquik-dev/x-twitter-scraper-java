@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinJvm
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
@@ -70,6 +74,24 @@ configure<MavenPublishBaseExtension> {
             connection.set("scm:git:https://github.com/Xquik-dev/x-twitter-scraper-java.git")
             developerConnection.set("scm:git:ssh://git@github.com/Xquik-dev/x-twitter-scraper-java.git")
             url.set("https://github.com/Xquik-dev/x-twitter-scraper-java")
+        }
+    }
+}
+
+tasks.matching { task -> task.name == "dokkaGeneratePublicationHtml" }.configureEach {
+    doLast {
+        fileTree(layout.buildDirectory.dir("dokka/html")) {
+            include("**/*.html")
+        }.forEach { htmlFile ->
+            val original = htmlFile.readText()
+            val normalized =
+                original.replace(
+                    Regex("""org\.jetbrains\.dokka\.pages\.commenttable@[0-9a-f]+"""),
+                    "org.jetbrains.dokka.pages.commenttable",
+                )
+            if (normalized != original) {
+                htmlFile.writeText(normalized)
+            }
         }
     }
 }

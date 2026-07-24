@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
 @file:JvmName("PrepareRequest")
 
 package com.x_twitter_scraper.api.core

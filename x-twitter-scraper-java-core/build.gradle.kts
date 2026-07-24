@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
 plugins {
     id("x-twitter-scraper.kotlin")
     id("x-twitter-scraper.publish")
@@ -33,15 +37,19 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation(project(":x-twitter-scraper-java-client-okhttp"))
-    testImplementation("com.github.tomakehurst:wiremock-jre8:2.35.2")
+    testImplementation(enforcedPlatform("org.eclipse.jetty:jetty-bom:12.0.37"))
+    testImplementation(enforcedPlatform("org.eclipse.jetty.ee10:jetty-ee10-bom:12.0.37"))
+    testImplementation("org.wiremock:wiremock-jetty12:3.13.2")
     testImplementation("org.assertj:assertj-core:3.27.7")
+    testImplementation("com.code-intelligence:jazzer-junit:0.30.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.14.3")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.14.3")
+    testImplementation("org.junit.platform:junit-platform-launcher:1.14.3")
     testImplementation("org.junit-pioneer:junit-pioneer:1.9.1")
     testImplementation("org.mockito:mockito-core:5.23.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.23.0")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
-    testRuntimeOnly("org.slf4j:slf4j-nop:1.7.36")
+    testRuntimeOnly("org.slf4j:slf4j-nop:2.0.17")
 }
 
 tasks.withType<Test>().configureEach {

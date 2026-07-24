@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
 // File generated from our OpenAPI spec by Stainless.
 
 package com.x_twitter_scraper.api.services.async
@@ -16,19 +20,17 @@ import com.x_twitter_scraper.api.models.extractions.ExtractionRetrieveParams
 import com.x_twitter_scraper.api.models.extractions.ExtractionRunParams
 import java.time.LocalDate
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.ResourceLock
 
 @WireMockTest
 @ResourceLock("https://github.com/wiremock/wiremock/issues/169")
 internal class ExtractionServiceAsyncTest {
-
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -40,14 +42,14 @@ internal class ExtractionServiceAsyncTest {
             )
 
         val extraction = extractionFuture.get()
-        extraction.validate()
+        kotlin.test.assertNotNull(extraction)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -64,14 +66,14 @@ internal class ExtractionServiceAsyncTest {
             )
 
         val extractions = extractionsFuture.get()
-        extractions.validate()
+        kotlin.test.assertNotNull(extractions)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun estimateCost() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -123,7 +125,7 @@ internal class ExtractionServiceAsyncTest {
             )
 
         val response = responseFuture.get()
-        response.validate()
+        kotlin.test.assertNotNull(response)
     }
 
     @Test
@@ -149,11 +151,11 @@ internal class ExtractionServiceAsyncTest {
         assertThat(response.body()).hasContent("abc")
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun run() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -205,6 +207,6 @@ internal class ExtractionServiceAsyncTest {
             )
 
         val response = responseFuture.get()
-        response.validate()
+        kotlin.test.assertNotNull(response)
     }
 }

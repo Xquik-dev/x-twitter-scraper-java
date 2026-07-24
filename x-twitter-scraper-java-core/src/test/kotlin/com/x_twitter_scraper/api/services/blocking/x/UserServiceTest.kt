@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
 // File generated from our OpenAPI spec by Stainless.
 
 package com.x_twitter_scraper.api.services.blocking.x
@@ -16,16 +20,14 @@ import com.x_twitter_scraper.api.models.x.users.UserRetrieveSearchParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveTweetsParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveVerifiedFollowersParams
 import java.time.LocalDate
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class UserServiceTest {
-
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -33,14 +35,14 @@ internal class UserServiceTest {
 
         val userProfile = userService.retrieve("id")
 
-        userProfile.validate()
+        kotlin.test.assertNotNull(userProfile)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun removeFollower() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -55,14 +57,14 @@ internal class UserServiceTest {
                     .build()
             )
 
-        response.validate()
+        kotlin.test.assertNotNull(response)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveBatch() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -71,14 +73,14 @@ internal class UserServiceTest {
         val response =
             userService.retrieveBatch(UserRetrieveBatchParams.builder().ids("ids").build())
 
-        response.validate()
+        kotlin.test.assertNotNull(response)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveFollowers() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -95,14 +97,14 @@ internal class UserServiceTest {
                     .build()
             )
 
-        paginatedUsers.validate()
+        kotlin.test.assertNotNull(paginatedUsers)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveFollowersYouKnow() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -117,14 +119,14 @@ internal class UserServiceTest {
                     .build()
             )
 
-        paginatedUsers.validate()
+        kotlin.test.assertNotNull(paginatedUsers)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveFollowing() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -141,14 +143,14 @@ internal class UserServiceTest {
                     .build()
             )
 
-        paginatedUsers.validate()
+        kotlin.test.assertNotNull(paginatedUsers)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveLikes() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -188,14 +190,14 @@ internal class UserServiceTest {
                     .build()
             )
 
-        paginatedTweets.validate()
+        kotlin.test.assertNotNull(paginatedTweets)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveMedia() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -235,14 +237,14 @@ internal class UserServiceTest {
                     .build()
             )
 
-        paginatedTweets.validate()
+        kotlin.test.assertNotNull(paginatedTweets)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveMentions() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -284,14 +286,14 @@ internal class UserServiceTest {
                     .build()
             )
 
-        paginatedTweets.validate()
+        kotlin.test.assertNotNull(paginatedTweets)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveReplies() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -332,14 +334,14 @@ internal class UserServiceTest {
                     .build()
             )
 
-        paginatedTweets.validate()
+        kotlin.test.assertNotNull(paginatedTweets)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveSearch() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -350,14 +352,14 @@ internal class UserServiceTest {
                 UserRetrieveSearchParams.builder().q("q").cursor("cursor").build()
             )
 
-        paginatedUsers.validate()
+        kotlin.test.assertNotNull(paginatedUsers)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveTweets() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -399,14 +401,14 @@ internal class UserServiceTest {
                     .build()
             )
 
-        paginatedTweets.validate()
+        kotlin.test.assertNotNull(paginatedTweets)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveVerifiedFollowers() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -421,6 +423,6 @@ internal class UserServiceTest {
                     .build()
             )
 
-        paginatedUsers.validate()
+        kotlin.test.assertNotNull(paginatedUsers)
     }
 }

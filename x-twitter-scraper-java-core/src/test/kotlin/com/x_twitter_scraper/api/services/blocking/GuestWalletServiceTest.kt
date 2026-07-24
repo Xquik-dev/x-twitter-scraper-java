@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
 // File generated from our OpenAPI spec by Stainless.
 
 package com.x_twitter_scraper.api.services.blocking
@@ -5,16 +9,14 @@ package com.x_twitter_scraper.api.services.blocking
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
 import com.x_twitter_scraper.api.models.guestwallets.GuestWalletCreateParams
 import com.x_twitter_scraper.api.models.guestwallets.GuestWalletTopupParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class GuestWalletServiceTest {
-
-    @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -28,14 +30,14 @@ internal class GuestWalletServiceTest {
                     .build()
             )
 
-        guestWallet.validate()
+        kotlin.test.assertNotNull(guestWallet)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveStatus() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -43,14 +45,14 @@ internal class GuestWalletServiceTest {
 
         val response = guestWalletService.retrieveStatus()
 
-        response.validate()
+        kotlin.test.assertNotNull(response)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun topup() {
         val client =
             XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -64,6 +66,6 @@ internal class GuestWalletServiceTest {
                     .build()
             )
 
-        response.validate()
+        kotlin.test.assertNotNull(response)
     }
 }

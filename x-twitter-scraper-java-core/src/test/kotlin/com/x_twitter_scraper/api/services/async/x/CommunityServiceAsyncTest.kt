@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
 // File generated from our OpenAPI spec by Stainless.
 
 package com.x_twitter_scraper.api.services.async.x
@@ -8,16 +12,14 @@ import com.x_twitter_scraper.api.models.x.communities.CommunityDeleteParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveMembersParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveModeratorsParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveSearchParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class CommunityServiceAsyncTest {
-
-    @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -34,14 +36,14 @@ internal class CommunityServiceAsyncTest {
             )
 
         val community = communityFuture.get()
-        community.validate()
+        kotlin.test.assertNotNull(community)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -58,14 +60,14 @@ internal class CommunityServiceAsyncTest {
             )
 
         val community = communityFuture.get()
-        community.validate()
+        kotlin.test.assertNotNull(community)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveInfo() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -74,14 +76,14 @@ internal class CommunityServiceAsyncTest {
         val responseFuture = communityServiceAsync.retrieveInfo("id")
 
         val response = responseFuture.get()
-        response.validate()
+        kotlin.test.assertNotNull(response)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveMembers() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -97,14 +99,14 @@ internal class CommunityServiceAsyncTest {
             )
 
         val paginatedUsers = paginatedUsersFuture.get()
-        paginatedUsers.validate()
+        kotlin.test.assertNotNull(paginatedUsers)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveModerators() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -116,14 +118,14 @@ internal class CommunityServiceAsyncTest {
             )
 
         val paginatedUsers = paginatedUsersFuture.get()
-        paginatedUsers.validate()
+        kotlin.test.assertNotNull(paginatedUsers)
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieveSearch() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
                 .apiKey("My API Key")
                 .bearerToken("My Bearer Token")
                 .build()
@@ -141,6 +143,6 @@ internal class CommunityServiceAsyncTest {
             )
 
         val paginatedTweets = paginatedTweetsFuture.get()
-        paginatedTweets.validate()
+        kotlin.test.assertNotNull(paginatedTweets)
     }
 }

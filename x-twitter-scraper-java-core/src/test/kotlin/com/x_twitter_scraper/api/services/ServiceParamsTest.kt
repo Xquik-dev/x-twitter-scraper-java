@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
 // File generated from our OpenAPI spec by Stainless.
 
 package com.x_twitter_scraper.api.services
@@ -17,7 +21,6 @@ import com.x_twitter_scraper.api.models.account.AccountRetrieveParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams
 import java.time.LocalDate
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.ResourceLock
 
@@ -37,7 +40,6 @@ internal class ServiceParamsTest {
                 .build()
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun retrieve() {
         val accountService = client.account()
@@ -57,7 +59,6 @@ internal class ServiceParamsTest {
         )
     }
 
-    @Disabled("Mock server tests are disabled")
     @Test
     fun search() {
         val tweetService = client.x().tweets()
