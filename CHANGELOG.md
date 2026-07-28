@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.6.2 (2026-07-28)
+
+Full Changelog: [v0.6.1...v0.6.2](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.6.1...v0.6.2)
+
+### Chores
+
+* **deps:** bump github/codeql-action/analyze from 4.37.1 to 4.37.2 ([#22](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/22)) ([d307843](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/d3078435464e3144075d865d972e38d5bbd59482))
+* **deps:** bump github/codeql-action/upload-sarif ([#23](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/23)) ([977ccd8](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/977ccd80c70faa598845c08f1a776ea48d198a51))
+* **deps:** bump org.apache.logging.log4j:log4j-api ([#20](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/20)) ([13ec838](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/13ec8385e24b81e280f66f6897398b1385c8aec6))
+
 ## 0.6.1 (2026-07-24)
 
 Full Changelog: [v0.6.0...v0.6.1](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.6.0...v0.6.1)
