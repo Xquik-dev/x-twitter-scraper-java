@@ -32,6 +32,11 @@ tasks.withType<JavaCompile>().configureEach {
     options.release.set(8)
 }
 
+tasks.named<JavaCompile>("compileTestJava") {
+    // Tests use Java 26 dependencies and never enter published artifacts.
+    options.release.set(26)
+}
+
 tasks.withType<Zip>().configureEach {
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
