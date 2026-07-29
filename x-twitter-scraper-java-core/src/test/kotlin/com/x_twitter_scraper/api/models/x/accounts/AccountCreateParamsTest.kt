@@ -16,8 +16,8 @@ internal class AccountCreateParamsTest {
         AccountCreateParams.builder()
             .email("account@example.invalid")
             .password("<ACCOUNT_PASSWORD>")
-            .username("your_x_username")
             .totpSecret("<TOTP_SECRET>")
+            .username("your_x_username")
             .build()
     }
 
@@ -27,24 +27,7 @@ internal class AccountCreateParamsTest {
             AccountCreateParams.builder()
                 .email("account@example.invalid")
                 .password("<ACCOUNT_PASSWORD>")
-                .username("your_x_username")
                 .totpSecret("<TOTP_SECRET>")
-                .build()
-
-        val body = params._body()
-
-        assertThat(body.email()).isEqualTo("account@example.invalid")
-        assertThat(body.password()).isEqualTo("<ACCOUNT_PASSWORD>")
-        assertThat(body.username()).isEqualTo("your_x_username")
-        assertThat(body.totpSecret()).contains("<TOTP_SECRET>")
-    }
-
-    @Test
-    fun bodyWithoutOptionalFields() {
-        val params =
-            AccountCreateParams.builder()
-                .email("account@example.invalid")
-                .password("<ACCOUNT_PASSWORD>")
                 .username("your_x_username")
                 .build()
 
@@ -52,6 +35,7 @@ internal class AccountCreateParamsTest {
 
         assertThat(body.email()).isEqualTo("account@example.invalid")
         assertThat(body.password()).isEqualTo("<ACCOUNT_PASSWORD>")
+        assertThat(body.totpSecret()).isEqualTo("<TOTP_SECRET>")
         assertThat(body.username()).isEqualTo("your_x_username")
     }
 }

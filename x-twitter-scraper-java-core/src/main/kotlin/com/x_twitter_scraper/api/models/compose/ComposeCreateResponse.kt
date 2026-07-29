@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.core.BaseDeserializer
 import com.x_twitter_scraper.api.core.BaseSerializer
+import com.x_twitter_scraper.api.core.Enum
 import com.x_twitter_scraper.api.core.ExcludeMissing
 import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.core.JsonMissing
@@ -288,6 +289,7 @@ private constructor(
         private val followUpQuestions: JsonField<List<String>>,
         private val intentUrl: JsonField<String>,
         private val nextStep: JsonField<String>,
+        private val radarRecommendations: JsonField<List<RadarRecommendation>>,
         private val scorerWeights: JsonField<List<ScorerWeight>>,
         private val source: JsonField<String>,
         private val topPenalties: JsonField<List<String>>,
@@ -317,6 +319,9 @@ private constructor(
             @JsonProperty("nextStep")
             @ExcludeMissing
             nextStep: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("radarRecommendations")
+            @ExcludeMissing
+            radarRecommendations: JsonField<List<RadarRecommendation>> = JsonMissing.of(),
             @JsonProperty("scorerWeights")
             @ExcludeMissing
             scorerWeights: JsonField<List<ScorerWeight>> = JsonMissing.of(),
@@ -340,6 +345,7 @@ private constructor(
             followUpQuestions,
             intentUrl,
             nextStep,
+            radarRecommendations,
             scorerWeights,
             source,
             topPenalties,
@@ -399,6 +405,16 @@ private constructor(
          *   value).
          */
         fun nextStep(): String = nextStep.getRequired("nextStep")
+
+        /**
+         * Sources and guidance for researching a fresh post angle.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun radarRecommendations(): List<RadarRecommendation> =
+            radarRecommendations.getRequired("radarRecommendations")
 
         /**
          * Published signal names with unpublished weights as null.
@@ -506,6 +522,16 @@ private constructor(
         @JsonProperty("nextStep") @ExcludeMissing fun _nextStep(): JsonField<String> = nextStep
 
         /**
+         * Returns the raw JSON value of [radarRecommendations].
+         *
+         * Unlike [radarRecommendations], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("radarRecommendations")
+        @ExcludeMissing
+        fun _radarRecommendations(): JsonField<List<RadarRecommendation>> = radarRecommendations
+
+        /**
          * Returns the raw JSON value of [scorerWeights].
          *
          * Unlike [scorerWeights], this method doesn't throw if the JSON field has an unexpected
@@ -582,6 +608,7 @@ private constructor(
              * .followUpQuestions()
              * .intentUrl()
              * .nextStep()
+             * .radarRecommendations()
              * .scorerWeights()
              * .source()
              * .topPenalties()
@@ -599,6 +626,7 @@ private constructor(
             private var followUpQuestions: JsonField<MutableList<String>>? = null
             private var intentUrl: JsonField<String>? = null
             private var nextStep: JsonField<String>? = null
+            private var radarRecommendations: JsonField<MutableList<RadarRecommendation>>? = null
             private var scorerWeights: JsonField<MutableList<ScorerWeight>>? = null
             private var source: JsonField<String>? = null
             private var topPenalties: JsonField<MutableList<String>>? = null
@@ -617,6 +645,8 @@ private constructor(
                     composePrepareResult.followUpQuestions.map { it.toMutableList() }
                 intentUrl = composePrepareResult.intentUrl
                 nextStep = composePrepareResult.nextStep
+                radarRecommendations =
+                    composePrepareResult.radarRecommendations.map { it.toMutableList() }
                 scorerWeights = composePrepareResult.scorerWeights.map { it.toMutableList() }
                 source = composePrepareResult.source
                 topPenalties = composePrepareResult.topPenalties.map { it.toMutableList() }
@@ -745,6 +775,34 @@ private constructor(
              * supported value.
              */
             fun nextStep(nextStep: JsonField<String>) = apply { this.nextStep = nextStep }
+
+            /** Sources and guidance for researching a fresh post angle. */
+            fun radarRecommendations(radarRecommendations: List<RadarRecommendation>) =
+                radarRecommendations(JsonField.of(radarRecommendations))
+
+            /**
+             * Sets [Builder.radarRecommendations] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.radarRecommendations] with a well-typed
+             * `List<RadarRecommendation>` value instead. This method is primarily for setting the
+             * field to an undocumented or not yet supported value.
+             */
+            fun radarRecommendations(radarRecommendations: JsonField<List<RadarRecommendation>>) =
+                apply {
+                    this.radarRecommendations = radarRecommendations.map { it.toMutableList() }
+                }
+
+            /**
+             * Adds a single [RadarRecommendation] to [radarRecommendations].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addRadarRecommendation(radarRecommendation: RadarRecommendation) = apply {
+                radarRecommendations =
+                    (radarRecommendations ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("radarRecommendations", it).add(radarRecommendation)
+                    }
+            }
 
             /** Published signal names with unpublished weights as null. */
             fun scorerWeights(scorerWeights: List<ScorerWeight>) =
@@ -907,6 +965,7 @@ private constructor(
              * .followUpQuestions()
              * .intentUrl()
              * .nextStep()
+             * .radarRecommendations()
              * .scorerWeights()
              * .source()
              * .topPenalties()
@@ -924,6 +983,9 @@ private constructor(
                     checkRequired("followUpQuestions", followUpQuestions).map { it.toImmutable() },
                     checkRequired("intentUrl", intentUrl),
                     checkRequired("nextStep", nextStep),
+                    checkRequired("radarRecommendations", radarRecommendations).map {
+                        it.toImmutable()
+                    },
                     checkRequired("scorerWeights", scorerWeights).map { it.toImmutable() },
                     checkRequired("source", source),
                     checkRequired("topPenalties", topPenalties).map { it.toImmutable() },
@@ -956,6 +1018,7 @@ private constructor(
             followUpQuestions()
             intentUrl()
             nextStep()
+            radarRecommendations().forEach { it.validate() }
             scorerWeights().forEach { it.validate() }
             source()
             topPenalties()
@@ -987,6 +1050,7 @@ private constructor(
                 (followUpQuestions.asKnown().getOrNull()?.size ?: 0) +
                 (if (intentUrl.asKnown().isPresent) 1 else 0) +
                 (if (nextStep.asKnown().isPresent) 1 else 0) +
+                (radarRecommendations.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
                 (scorerWeights.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
                 (if (source.asKnown().isPresent) 1 else 0) +
                 (topPenalties.asKnown().getOrNull()?.size ?: 0) +
@@ -1382,6 +1446,475 @@ private constructor(
 
             override fun toString() =
                 "EngagementMultiplier{action=$action, multiplier=$multiplier, additionalProperties=$additionalProperties}"
+        }
+
+        class RadarRecommendation
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+        private constructor(
+            private val endpoint: JsonField<String>,
+            private val guidance: JsonField<String>,
+            private val source: JsonField<Source>,
+            private val useFor: JsonField<String>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("endpoint")
+                @ExcludeMissing
+                endpoint: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("guidance")
+                @ExcludeMissing
+                guidance: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("source")
+                @ExcludeMissing
+                source: JsonField<Source> = JsonMissing.of(),
+                @JsonProperty("useFor")
+                @ExcludeMissing
+                useFor: JsonField<String> = JsonMissing.of(),
+            ) : this(endpoint, guidance, source, useFor, mutableMapOf())
+
+            /**
+             * Radar endpoint for this source.
+             *
+             * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+             *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun endpoint(): String = endpoint.getRequired("endpoint")
+
+            /**
+             * Source-specific drafting guidance.
+             *
+             * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+             *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun guidance(): String = guidance.getRequired("guidance")
+
+            /**
+             * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+             *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun source(): Source = source.getRequired("source")
+
+            /**
+             * Current-topic research this source supports.
+             *
+             * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+             *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun useFor(): String = useFor.getRequired("useFor")
+
+            /**
+             * Returns the raw JSON value of [endpoint].
+             *
+             * Unlike [endpoint], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("endpoint") @ExcludeMissing fun _endpoint(): JsonField<String> = endpoint
+
+            /**
+             * Returns the raw JSON value of [guidance].
+             *
+             * Unlike [guidance], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("guidance") @ExcludeMissing fun _guidance(): JsonField<String> = guidance
+
+            /**
+             * Returns the raw JSON value of [source].
+             *
+             * Unlike [source], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("source") @ExcludeMissing fun _source(): JsonField<Source> = source
+
+            /**
+             * Returns the raw JSON value of [useFor].
+             *
+             * Unlike [useFor], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("useFor") @ExcludeMissing fun _useFor(): JsonField<String> = useFor
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /**
+                 * Returns a mutable builder for constructing an instance of [RadarRecommendation].
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .endpoint()
+                 * .guidance()
+                 * .source()
+                 * .useFor()
+                 * ```
+                 */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [RadarRecommendation]. */
+            class Builder internal constructor() {
+
+                private var endpoint: JsonField<String>? = null
+                private var guidance: JsonField<String>? = null
+                private var source: JsonField<Source>? = null
+                private var useFor: JsonField<String>? = null
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(radarRecommendation: RadarRecommendation) = apply {
+                    endpoint = radarRecommendation.endpoint
+                    guidance = radarRecommendation.guidance
+                    source = radarRecommendation.source
+                    useFor = radarRecommendation.useFor
+                    additionalProperties = radarRecommendation.additionalProperties.toMutableMap()
+                }
+
+                /** Radar endpoint for this source. */
+                fun endpoint(endpoint: String) = endpoint(JsonField.of(endpoint))
+
+                /**
+                 * Sets [Builder.endpoint] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.endpoint] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun endpoint(endpoint: JsonField<String>) = apply { this.endpoint = endpoint }
+
+                /** Source-specific drafting guidance. */
+                fun guidance(guidance: String) = guidance(JsonField.of(guidance))
+
+                /**
+                 * Sets [Builder.guidance] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.guidance] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun guidance(guidance: JsonField<String>) = apply { this.guidance = guidance }
+
+                fun source(source: Source) = source(JsonField.of(source))
+
+                /**
+                 * Sets [Builder.source] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.source] with a well-typed [Source] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun source(source: JsonField<Source>) = apply { this.source = source }
+
+                /** Current-topic research this source supports. */
+                fun useFor(useFor: String) = useFor(JsonField.of(useFor))
+
+                /**
+                 * Sets [Builder.useFor] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.useFor] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun useFor(useFor: JsonField<String>) = apply { this.useFor = useFor }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [RadarRecommendation].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .endpoint()
+                 * .guidance()
+                 * .source()
+                 * .useFor()
+                 * ```
+                 *
+                 * @throws IllegalStateException if any required field is unset.
+                 */
+                fun build(): RadarRecommendation =
+                    RadarRecommendation(
+                        checkRequired("endpoint", endpoint),
+                        checkRequired("guidance", guidance),
+                        checkRequired("source", source),
+                        checkRequired("useFor", useFor),
+                        additionalProperties.toMutableMap(),
+                    )
+            }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
+             */
+            fun validate(): RadarRecommendation = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                endpoint()
+                guidance()
+                source().validate()
+                useFor()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: XTwitterScraperInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                (if (endpoint.asKnown().isPresent) 1 else 0) +
+                    (if (guidance.asKnown().isPresent) 1 else 0) +
+                    (source.asKnown().getOrNull()?.validity() ?: 0) +
+                    (if (useFor.asKnown().isPresent) 1 else 0)
+
+            class Source @JsonCreator private constructor(private val value: JsonField<String>) :
+                Enum {
+
+                /**
+                 * Returns this class instance's raw value.
+                 *
+                 * This is usually only useful if this instance was deserialized from data that
+                 * doesn't match any known member, and you want to know that value. For example, if
+                 * the SDK is on an older version than the API, then the API may respond with new
+                 * members that the SDK is unaware of.
+                 */
+                @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+                companion object {
+
+                    @JvmField val REDDIT = of("reddit")
+
+                    @JvmField val GITHUB = of("github")
+
+                    @JvmField val TRUSTMRR = of("trustmrr")
+
+                    @JvmField val HACKER_NEWS = of("hacker_news")
+
+                    @JvmField val GOOGLE_TRENDS = of("google_trends")
+
+                    @JvmField val WIKIPEDIA = of("wikipedia")
+
+                    @JvmField val POLYMARKET = of("polymarket")
+
+                    @JvmStatic fun of(value: String) = Source(JsonField.of(value))
+                }
+
+                /** An enum containing [Source]'s known values. */
+                enum class Known {
+                    REDDIT,
+                    GITHUB,
+                    TRUSTMRR,
+                    HACKER_NEWS,
+                    GOOGLE_TRENDS,
+                    WIKIPEDIA,
+                    POLYMARKET,
+                }
+
+                /**
+                 * An enum containing [Source]'s known values, as well as an [_UNKNOWN] member.
+                 *
+                 * An instance of [Source] can contain an unknown value in a couple of cases:
+                 * - It was deserialized from data that doesn't match any known member. For example,
+                 *   if the SDK is on an older version than the API, then the API may respond with
+                 *   new members that the SDK is unaware of.
+                 * - It was constructed with an arbitrary value using the [of] method.
+                 */
+                enum class Value {
+                    REDDIT,
+                    GITHUB,
+                    TRUSTMRR,
+                    HACKER_NEWS,
+                    GOOGLE_TRENDS,
+                    WIKIPEDIA,
+                    POLYMARKET,
+                    /**
+                     * An enum member indicating that [Source] was instantiated with an unknown
+                     * value.
+                     */
+                    _UNKNOWN,
+                }
+
+                /**
+                 * Returns an enum member corresponding to this class instance's value, or
+                 * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+                 *
+                 * Use the [known] method instead if you're certain the value is always known or if
+                 * you want to throw for the unknown case.
+                 */
+                fun value(): Value =
+                    when (this) {
+                        REDDIT -> Value.REDDIT
+                        GITHUB -> Value.GITHUB
+                        TRUSTMRR -> Value.TRUSTMRR
+                        HACKER_NEWS -> Value.HACKER_NEWS
+                        GOOGLE_TRENDS -> Value.GOOGLE_TRENDS
+                        WIKIPEDIA -> Value.WIKIPEDIA
+                        POLYMARKET -> Value.POLYMARKET
+                        else -> Value._UNKNOWN
+                    }
+
+                /**
+                 * Returns an enum member corresponding to this class instance's value.
+                 *
+                 * Use the [value] method instead if you're uncertain the value is always known and
+                 * don't want to throw for the unknown case.
+                 *
+                 * @throws XTwitterScraperInvalidDataException if this class instance's value is a
+                 *   not a known member.
+                 */
+                fun known(): Known =
+                    when (this) {
+                        REDDIT -> Known.REDDIT
+                        GITHUB -> Known.GITHUB
+                        TRUSTMRR -> Known.TRUSTMRR
+                        HACKER_NEWS -> Known.HACKER_NEWS
+                        GOOGLE_TRENDS -> Known.GOOGLE_TRENDS
+                        WIKIPEDIA -> Known.WIKIPEDIA
+                        POLYMARKET -> Known.POLYMARKET
+                        else -> throw XTwitterScraperInvalidDataException("Unknown Source: $value")
+                    }
+
+                /**
+                 * Returns this class instance's primitive wire representation.
+                 *
+                 * This differs from the [toString] method because that method is primarily for
+                 * debugging and generally doesn't throw.
+                 *
+                 * @throws XTwitterScraperInvalidDataException if this class instance's value does
+                 *   not have the expected primitive type.
+                 */
+                fun asString(): String =
+                    _value().asString().orElseThrow {
+                        XTwitterScraperInvalidDataException("Value is not a String")
+                    }
+
+                private var validated: Boolean = false
+
+                /**
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
+                 *
+                 * This method is _not_ forwards compatible with new types from the API for existing
+                 * fields.
+                 *
+                 * @throws XTwitterScraperInvalidDataException if any value type in this object
+                 *   doesn't match its expected type.
+                 */
+                fun validate(): Source = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    known()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: XTwitterScraperInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is Source && value == other.value
+                }
+
+                override fun hashCode() = value.hashCode()
+
+                override fun toString() = value.toString()
+            }
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is RadarRecommendation &&
+                    endpoint == other.endpoint &&
+                    guidance == other.guidance &&
+                    source == other.source &&
+                    useFor == other.useFor &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy {
+                Objects.hash(endpoint, guidance, source, useFor, additionalProperties)
+            }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "RadarRecommendation{endpoint=$endpoint, guidance=$guidance, source=$source, useFor=$useFor, additionalProperties=$additionalProperties}"
         }
 
         class ScorerWeight
@@ -1873,6 +2406,7 @@ private constructor(
                 followUpQuestions == other.followUpQuestions &&
                 intentUrl == other.intentUrl &&
                 nextStep == other.nextStep &&
+                radarRecommendations == other.radarRecommendations &&
                 scorerWeights == other.scorerWeights &&
                 source == other.source &&
                 topPenalties == other.topPenalties &&
@@ -1890,6 +2424,7 @@ private constructor(
                 followUpQuestions,
                 intentUrl,
                 nextStep,
+                radarRecommendations,
                 scorerWeights,
                 source,
                 topPenalties,
@@ -1903,7 +2438,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "ComposePrepareResult{contentRules=$contentRules, engagementMultipliers=$engagementMultipliers, engagementVelocity=$engagementVelocity, followUpQuestions=$followUpQuestions, intentUrl=$intentUrl, nextStep=$nextStep, scorerWeights=$scorerWeights, source=$source, topPenalties=$topPenalties, savedStyles=$savedStyles, styleNote=$styleNote, styleTweets=$styleTweets, additionalProperties=$additionalProperties}"
+            "ComposePrepareResult{contentRules=$contentRules, engagementMultipliers=$engagementMultipliers, engagementVelocity=$engagementVelocity, followUpQuestions=$followUpQuestions, intentUrl=$intentUrl, nextStep=$nextStep, radarRecommendations=$radarRecommendations, scorerWeights=$scorerWeights, source=$source, topPenalties=$topPenalties, savedStyles=$savedStyles, styleNote=$styleNote, styleTweets=$styleTweets, additionalProperties=$additionalProperties}"
     }
 
     class ComposeRefineResult
