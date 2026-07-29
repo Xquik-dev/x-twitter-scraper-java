@@ -48,7 +48,17 @@ internal object LoopbackTestServer {
                             }
                         }
 
-                        val response = "{}".toByteArray(StandardCharsets.UTF_8)
+                        val responseBody =
+                            if (
+                                exchange.requestURI.path.startsWith(
+                                    "/x/account-connection-attempts/"
+                                )
+                            ) {
+                                """{"id":"xatt_0123456789abcdef0123456789abcdef","object":"x_account_connection_attempt","pollAfterMs":3000,"status":"pending"}"""
+                            } else {
+                                "{}"
+                            }
+                        val response = responseBody.toByteArray(StandardCharsets.UTF_8)
                         exchange.responseHeaders.set("Content-Type", "application/json")
                         exchange.sendResponseHeaders(200, response.size.toLong())
                         exchange.responseBody.use { it.write(response) }

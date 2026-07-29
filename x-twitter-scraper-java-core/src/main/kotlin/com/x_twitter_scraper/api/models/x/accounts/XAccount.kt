@@ -79,10 +79,10 @@ private constructor(
     fun createdAt(): OffsetDateTime = createdAt.getRequired("createdAt")
 
     /**
-     * Derived connection health. `healthy` = session active. `needsReauth` = user must submit fresh
+     * Derived connection health. `healthy` = ready to use. `needsReauth` = user must submit fresh
      * credentials. `locked` = X locked the account; unlock on x.com first. `suspended` = X banned
-     * the account. `recovering` = past cooldown, will auto-retry on next use. `temporaryIssue` =
-     * temporary connection problem; retry shortly.
+     * the account. `recovering` = cooldown ended; the account can reconnect on its next use.
+     * `temporaryIssue` = temporary connection problem; wait before the next use.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -262,10 +262,10 @@ private constructor(
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
         /**
-         * Derived connection health. `healthy` = session active. `needsReauth` = user must submit
+         * Derived connection health. `healthy` = ready to use. `needsReauth` = user must submit
          * fresh credentials. `locked` = X locked the account; unlock on x.com first. `suspended` =
-         * X banned the account. `recovering` = past cooldown, will auto-retry on next use.
-         * `temporaryIssue` = temporary connection problem; retry shortly.
+         * X banned the account. `recovering` = cooldown ended; the account can reconnect on its
+         * next use. `temporaryIssue` = temporary connection problem; wait before the next use.
          */
         fun health(health: Health) = health(JsonField.of(health))
 
@@ -435,10 +435,10 @@ private constructor(
             (if (cookiesObtainedAt.asKnown().isPresent) 1 else 0)
 
     /**
-     * Derived connection health. `healthy` = session active. `needsReauth` = user must submit fresh
+     * Derived connection health. `healthy` = ready to use. `needsReauth` = user must submit fresh
      * credentials. `locked` = X locked the account; unlock on x.com first. `suspended` = X banned
-     * the account. `recovering` = past cooldown, will auto-retry on next use. `temporaryIssue` =
-     * temporary connection problem; retry shortly.
+     * the account. `recovering` = cooldown ended; the account can reconnect on its next use.
+     * `temporaryIssue` = temporary connection problem; wait before the next use.
      */
     class Health @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 

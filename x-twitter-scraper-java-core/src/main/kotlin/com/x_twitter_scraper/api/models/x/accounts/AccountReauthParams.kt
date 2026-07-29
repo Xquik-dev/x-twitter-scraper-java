@@ -52,7 +52,7 @@ private constructor(
     fun email(): Optional<String> = body.email()
 
     /**
-     * TOTP secret for 2FA re-authentication
+     * Replacement Authenticator App TOTP secret. Omit it to reuse the saved secret.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -157,7 +157,7 @@ private constructor(
          */
         fun email(email: JsonField<String>) = apply { body.email(email) }
 
-        /** TOTP secret for 2FA re-authentication */
+        /** Replacement Authenticator App TOTP secret. Omit it to reuse the saved secret. */
         fun totpSecret(totpSecret: String) = apply { body.totpSecret(totpSecret) }
 
         /**
@@ -357,7 +357,7 @@ private constructor(
         fun email(): Optional<String> = email.getOptional("email")
 
         /**
-         * TOTP secret for 2FA re-authentication
+         * Replacement Authenticator App TOTP secret. Omit it to reuse the saved secret.
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
          *   (e.g. if the server responded with an unexpected value).
@@ -452,7 +452,7 @@ private constructor(
              */
             fun email(email: JsonField<String>) = apply { this.email = email }
 
-            /** TOTP secret for 2FA re-authentication */
+            /** Replacement Authenticator App TOTP secret. Omit it to reuse the saved secret. */
             fun totpSecret(totpSecret: String) = totpSecret(JsonField.of(totpSecret))
 
             /**
