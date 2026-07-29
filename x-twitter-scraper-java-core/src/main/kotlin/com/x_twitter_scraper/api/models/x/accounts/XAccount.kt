@@ -79,7 +79,7 @@ private constructor(
     fun createdAt(): OffsetDateTime = createdAt.getRequired("createdAt")
 
     /**
-     * Derived connection health. `healthy` = session active. `needsReauth` = user must submit fresh
+     * Derived connection health. `healthy` = ready to use. `needsReauth` = user must submit fresh
      * credentials. `locked` = X locked the account; unlock on x.com first. `suspended` = X banned
      * the account. `recovering` = cooldown ended; the account can reconnect on its next use.
      * `temporaryIssue` = temporary connection problem; wait before the next use.
@@ -262,7 +262,7 @@ private constructor(
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
         /**
-         * Derived connection health. `healthy` = session active. `needsReauth` = user must submit
+         * Derived connection health. `healthy` = ready to use. `needsReauth` = user must submit
          * fresh credentials. `locked` = X locked the account; unlock on x.com first. `suspended` =
          * X banned the account. `recovering` = cooldown ended; the account can reconnect on its
          * next use. `temporaryIssue` = temporary connection problem; wait before the next use.
@@ -435,7 +435,7 @@ private constructor(
             (if (cookiesObtainedAt.asKnown().isPresent) 1 else 0)
 
     /**
-     * Derived connection health. `healthy` = session active. `needsReauth` = user must submit fresh
+     * Derived connection health. `healthy` = ready to use. `needsReauth` = user must submit fresh
      * credentials. `locked` = X locked the account; unlock on x.com first. `suspended` = X banned
      * the account. `recovering` = cooldown ended; the account can reconnect on its next use.
      * `temporaryIssue` = temporary connection problem; wait before the next use.
