@@ -3,7 +3,6 @@
 package com.x_twitter_scraper.api.models.radar
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.jsonMapper
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -24,7 +23,16 @@ internal class RadarRetrieveTrendingTopicsResponseTest {
                         .language("en")
                         .metadata(
                             RadarItem.Metadata.builder()
-                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .author("author")
+                                .contentUrl("https://example.com")
+                                .estimatedDownvotes(0L)
+                                .estimatedUpvotes(0L)
+                                .numberComments(0L)
+                                .score(0L)
+                                .selftext("selftext")
+                                .sourceFormat(RadarItem.Metadata.SourceFormat.HTML)
+                                .subreddit("subreddit")
+                                .upvoteRatio(0.0)
                                 .build()
                         )
                         .publishedAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
@@ -51,7 +59,16 @@ internal class RadarRetrieveTrendingTopicsResponseTest {
                     .language("en")
                     .metadata(
                         RadarItem.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .author("author")
+                            .contentUrl("https://example.com")
+                            .estimatedDownvotes(0L)
+                            .estimatedUpvotes(0L)
+                            .numberComments(0L)
+                            .score(0L)
+                            .selftext("selftext")
+                            .sourceFormat(RadarItem.Metadata.SourceFormat.HTML)
+                            .subreddit("subreddit")
+                            .upvoteRatio(0.0)
                             .build()
                     )
                     .publishedAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
@@ -83,7 +100,16 @@ internal class RadarRetrieveTrendingTopicsResponseTest {
                         .language("en")
                         .metadata(
                             RadarItem.Metadata.builder()
-                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .author("author")
+                                .contentUrl("https://example.com")
+                                .estimatedDownvotes(0L)
+                                .estimatedUpvotes(0L)
+                                .numberComments(0L)
+                                .score(0L)
+                                .selftext("selftext")
+                                .sourceFormat(RadarItem.Metadata.SourceFormat.HTML)
+                                .subreddit("subreddit")
+                                .upvoteRatio(0.0)
                                 .build()
                         )
                         .publishedAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))

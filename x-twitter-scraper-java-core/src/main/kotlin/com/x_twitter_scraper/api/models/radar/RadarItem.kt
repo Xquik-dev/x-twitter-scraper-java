@@ -12,7 +12,6 @@ import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.checkRequired
-import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.time.OffsetDateTime
 import java.util.Collections
@@ -102,6 +101,8 @@ private constructor(
     fun createdAt(): OffsetDateTime = createdAt.getRequired("createdAt")
 
     /**
+     * BCP-47 language code. und means the source did not identify a language.
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -109,15 +110,29 @@ private constructor(
 
     /**
      * Source-specific fields. Shape varies per source:
-     * - reddit: { subreddit: string, author: string }
+     * - reddit: { author, authorId?, subreddit, subredditId?, subredditSubscribers?, sourceFormat,
+     *   score?, upvoteRatio?, estimatedUpvotes?, estimatedDownvotes?, numberComments?,
+     *   numberCrossposts?, selftext?, contentUrl?, domain?, postHint?, linkFlairText?,
+     *   distinguished?, totalAwardsReceived?, viewCount?, editedAt?, galleryImageUrls?,
+     *   redditVideo?, archived?, contestMode?, isCrosspostable?, isMeta?, isNsfw?,
+     *   isOriginalContent?, isRobotIndexable?, isSelf?, isSpoiler?, isVideo?, locked?, stickied? }.
+     *   `score` is Reddit's public net score. Exact public upvote and downvote counts are not
+     *   available. Estimated counts derive from the public score and upvote ratio, which Reddit may
+     *   fuzz. Comment bodies are not included. Current items combine public listing discovery with
+     *   server-rendered post data and use `sourceFormat: html`; `json` and `rss` remain for legacy
+     *   rows.
      * - github: { starsToday: number }
      * - hacker_news: { points: number, numberComments: number }
      * - google_trends: { approxTraffic: number }
      * - polymarket: { volume24hr: number }
      * - wikipedia: { views: number }
      * - trustmrr: { mrr, growthPercent, last30Days, total, customers, activeSubscriptions, onSale,
-     *   xHandle?, category?, askingPrice?, country?, growthMrrPercent?, multiple?,
-     *   paymentProvider?, rank? }
+     *   xHandle?, category?, askingPrice?, country?, foundedDate?,
+     *   googleSearchImpressionsLast30Days?, growthMrrPercent?, multiple?, paymentProvider?,
+     *   profitMarginLast30Days?, rank?, revenuePerVisitor?, targetAudience?, visitorsLast30Days? }
+     *   For the startup growth source, xHandle is the founder's X username without @. The rank
+     *   field is the source's revenue rank. Result order represents reported 30-day revenue-growth
+     *   rank.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -169,6 +184,8 @@ private constructor(
     fun description(): Optional<String> = description.getOptional("description")
 
     /**
+     * Source image. Startup growth items return the logo here.
+     *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -388,6 +405,7 @@ private constructor(
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
+        /** BCP-47 language code. und means the source did not identify a language. */
         fun language(language: String) = language(JsonField.of(language))
 
         /**
@@ -400,15 +418,29 @@ private constructor(
 
         /**
          * Source-specific fields. Shape varies per source:
-         * - reddit: { subreddit: string, author: string }
+         * - reddit: { author, authorId?, subreddit, subredditId?, subredditSubscribers?,
+         *   sourceFormat, score?, upvoteRatio?, estimatedUpvotes?, estimatedDownvotes?,
+         *   numberComments?, numberCrossposts?, selftext?, contentUrl?, domain?, postHint?,
+         *   linkFlairText?, distinguished?, totalAwardsReceived?, viewCount?, editedAt?,
+         *   galleryImageUrls?, redditVideo?, archived?, contestMode?, isCrosspostable?, isMeta?,
+         *   isNsfw?, isOriginalContent?, isRobotIndexable?, isSelf?, isSpoiler?, isVideo?, locked?,
+         *   stickied? }. `score` is Reddit's public net score. Exact public upvote and downvote
+         *   counts are not available. Estimated counts derive from the public score and upvote
+         *   ratio, which Reddit may fuzz. Comment bodies are not included. Current items combine
+         *   public listing discovery with server-rendered post data and use `sourceFormat: html`;
+         *   `json` and `rss` remain for legacy rows.
          * - github: { starsToday: number }
          * - hacker_news: { points: number, numberComments: number }
          * - google_trends: { approxTraffic: number }
          * - polymarket: { volume24hr: number }
          * - wikipedia: { views: number }
          * - trustmrr: { mrr, growthPercent, last30Days, total, customers, activeSubscriptions,
-         *   onSale, xHandle?, category?, askingPrice?, country?, growthMrrPercent?, multiple?,
-         *   paymentProvider?, rank? }
+         *   onSale, xHandle?, category?, askingPrice?, country?, foundedDate?,
+         *   googleSearchImpressionsLast30Days?, growthMrrPercent?, multiple?, paymentProvider?,
+         *   profitMarginLast30Days?, rank?, revenuePerVisitor?, targetAudience?,
+         *   visitorsLast30Days? } For the startup growth source, xHandle is the founder's X
+         *   username without @. The rank field is the source's revenue rank. Result order
+         *   represents reported 30-day revenue-growth rank.
          */
         fun metadata(metadata: Metadata) = metadata(JsonField.of(metadata))
 
@@ -496,6 +528,7 @@ private constructor(
          */
         fun description(description: JsonField<String>) = apply { this.description = description }
 
+        /** Source image. Startup growth items return the logo here. */
         fun imageUrl(imageUrl: String) = imageUrl(JsonField.of(imageUrl))
 
         /**
@@ -813,26 +846,246 @@ private constructor(
 
     /**
      * Source-specific fields. Shape varies per source:
-     * - reddit: { subreddit: string, author: string }
+     * - reddit: { author, authorId?, subreddit, subredditId?, subredditSubscribers?, sourceFormat,
+     *   score?, upvoteRatio?, estimatedUpvotes?, estimatedDownvotes?, numberComments?,
+     *   numberCrossposts?, selftext?, contentUrl?, domain?, postHint?, linkFlairText?,
+     *   distinguished?, totalAwardsReceived?, viewCount?, editedAt?, galleryImageUrls?,
+     *   redditVideo?, archived?, contestMode?, isCrosspostable?, isMeta?, isNsfw?,
+     *   isOriginalContent?, isRobotIndexable?, isSelf?, isSpoiler?, isVideo?, locked?, stickied? }.
+     *   `score` is Reddit's public net score. Exact public upvote and downvote counts are not
+     *   available. Estimated counts derive from the public score and upvote ratio, which Reddit may
+     *   fuzz. Comment bodies are not included. Current items combine public listing discovery with
+     *   server-rendered post data and use `sourceFormat: html`; `json` and `rss` remain for legacy
+     *   rows.
      * - github: { starsToday: number }
      * - hacker_news: { points: number, numberComments: number }
      * - google_trends: { approxTraffic: number }
      * - polymarket: { volume24hr: number }
      * - wikipedia: { views: number }
      * - trustmrr: { mrr, growthPercent, last30Days, total, customers, activeSubscriptions, onSale,
-     *   xHandle?, category?, askingPrice?, country?, growthMrrPercent?, multiple?,
-     *   paymentProvider?, rank? }
+     *   xHandle?, category?, askingPrice?, country?, foundedDate?,
+     *   googleSearchImpressionsLast30Days?, growthMrrPercent?, multiple?, paymentProvider?,
+     *   profitMarginLast30Days?, rank?, revenuePerVisitor?, targetAudience?, visitorsLast30Days? }
+     *   For the startup growth source, xHandle is the founder's X username without @. The rank
+     *   field is the source's revenue rank. Result order represents reported 30-day revenue-growth
+     *   rank.
      */
     class Metadata
-    @JsonCreator
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
-        @com.fasterxml.jackson.annotation.JsonValue
-        private val additionalProperties: Map<String, JsonValue>
+        private val author: JsonField<String>,
+        private val contentUrl: JsonField<String>,
+        private val estimatedDownvotes: JsonField<Long>,
+        private val estimatedUpvotes: JsonField<Long>,
+        private val numberComments: JsonField<Long>,
+        private val score: JsonField<Long>,
+        private val selftext: JsonField<String>,
+        private val sourceFormat: JsonField<SourceFormat>,
+        private val subreddit: JsonField<String>,
+        private val upvoteRatio: JsonField<Double>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("author") @ExcludeMissing author: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("contentUrl")
+            @ExcludeMissing
+            contentUrl: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("estimatedDownvotes")
+            @ExcludeMissing
+            estimatedDownvotes: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("estimatedUpvotes")
+            @ExcludeMissing
+            estimatedUpvotes: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("numberComments")
+            @ExcludeMissing
+            numberComments: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("score") @ExcludeMissing score: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("selftext")
+            @ExcludeMissing
+            selftext: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("sourceFormat")
+            @ExcludeMissing
+            sourceFormat: JsonField<SourceFormat> = JsonMissing.of(),
+            @JsonProperty("subreddit")
+            @ExcludeMissing
+            subreddit: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("upvoteRatio")
+            @ExcludeMissing
+            upvoteRatio: JsonField<Double> = JsonMissing.of(),
+        ) : this(
+            author,
+            contentUrl,
+            estimatedDownvotes,
+            estimatedUpvotes,
+            numberComments,
+            score,
+            selftext,
+            sourceFormat,
+            subreddit,
+            upvoteRatio,
+            mutableMapOf(),
+        )
+
+        /**
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun author(): Optional<String> = author.getOptional("author")
+
+        /**
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun contentUrl(): Optional<String> = contentUrl.getOptional("contentUrl")
+
+        /**
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun estimatedDownvotes(): Optional<Long> =
+            estimatedDownvotes.getOptional("estimatedDownvotes")
+
+        /**
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun estimatedUpvotes(): Optional<Long> = estimatedUpvotes.getOptional("estimatedUpvotes")
+
+        /**
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun numberComments(): Optional<Long> = numberComments.getOptional("numberComments")
+
+        /**
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun score(): Optional<Long> = score.getOptional("score")
+
+        /**
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun selftext(): Optional<String> = selftext.getOptional("selftext")
+
+        /**
+         * Current items use html. json and rss are retained for legacy rows.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun sourceFormat(): Optional<SourceFormat> = sourceFormat.getOptional("sourceFormat")
+
+        /**
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun subreddit(): Optional<String> = subreddit.getOptional("subreddit")
+
+        /**
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun upvoteRatio(): Optional<Double> = upvoteRatio.getOptional("upvoteRatio")
+
+        /**
+         * Returns the raw JSON value of [author].
+         *
+         * Unlike [author], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("author") @ExcludeMissing fun _author(): JsonField<String> = author
+
+        /**
+         * Returns the raw JSON value of [contentUrl].
+         *
+         * Unlike [contentUrl], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("contentUrl")
+        @ExcludeMissing
+        fun _contentUrl(): JsonField<String> = contentUrl
+
+        /**
+         * Returns the raw JSON value of [estimatedDownvotes].
+         *
+         * Unlike [estimatedDownvotes], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("estimatedDownvotes")
+        @ExcludeMissing
+        fun _estimatedDownvotes(): JsonField<Long> = estimatedDownvotes
+
+        /**
+         * Returns the raw JSON value of [estimatedUpvotes].
+         *
+         * Unlike [estimatedUpvotes], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("estimatedUpvotes")
+        @ExcludeMissing
+        fun _estimatedUpvotes(): JsonField<Long> = estimatedUpvotes
+
+        /**
+         * Returns the raw JSON value of [numberComments].
+         *
+         * Unlike [numberComments], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("numberComments")
+        @ExcludeMissing
+        fun _numberComments(): JsonField<Long> = numberComments
+
+        /**
+         * Returns the raw JSON value of [score].
+         *
+         * Unlike [score], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("score") @ExcludeMissing fun _score(): JsonField<Long> = score
+
+        /**
+         * Returns the raw JSON value of [selftext].
+         *
+         * Unlike [selftext], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("selftext") @ExcludeMissing fun _selftext(): JsonField<String> = selftext
+
+        /**
+         * Returns the raw JSON value of [sourceFormat].
+         *
+         * Unlike [sourceFormat], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("sourceFormat")
+        @ExcludeMissing
+        fun _sourceFormat(): JsonField<SourceFormat> = sourceFormat
+
+        /**
+         * Returns the raw JSON value of [subreddit].
+         *
+         * Unlike [subreddit], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("subreddit") @ExcludeMissing fun _subreddit(): JsonField<String> = subreddit
+
+        /**
+         * Returns the raw JSON value of [upvoteRatio].
+         *
+         * Unlike [upvoteRatio], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("upvoteRatio")
+        @ExcludeMissing
+        fun _upvoteRatio(): JsonField<Double> = upvoteRatio
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -845,11 +1098,154 @@ private constructor(
         /** A builder for [Metadata]. */
         class Builder internal constructor() {
 
+            private var author: JsonField<String> = JsonMissing.of()
+            private var contentUrl: JsonField<String> = JsonMissing.of()
+            private var estimatedDownvotes: JsonField<Long> = JsonMissing.of()
+            private var estimatedUpvotes: JsonField<Long> = JsonMissing.of()
+            private var numberComments: JsonField<Long> = JsonMissing.of()
+            private var score: JsonField<Long> = JsonMissing.of()
+            private var selftext: JsonField<String> = JsonMissing.of()
+            private var sourceFormat: JsonField<SourceFormat> = JsonMissing.of()
+            private var subreddit: JsonField<String> = JsonMissing.of()
+            private var upvoteRatio: JsonField<Double> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(metadata: Metadata) = apply {
+                author = metadata.author
+                contentUrl = metadata.contentUrl
+                estimatedDownvotes = metadata.estimatedDownvotes
+                estimatedUpvotes = metadata.estimatedUpvotes
+                numberComments = metadata.numberComments
+                score = metadata.score
+                selftext = metadata.selftext
+                sourceFormat = metadata.sourceFormat
+                subreddit = metadata.subreddit
+                upvoteRatio = metadata.upvoteRatio
                 additionalProperties = metadata.additionalProperties.toMutableMap()
+            }
+
+            fun author(author: String) = author(JsonField.of(author))
+
+            /**
+             * Sets [Builder.author] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.author] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun author(author: JsonField<String>) = apply { this.author = author }
+
+            fun contentUrl(contentUrl: String) = contentUrl(JsonField.of(contentUrl))
+
+            /**
+             * Sets [Builder.contentUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.contentUrl] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun contentUrl(contentUrl: JsonField<String>) = apply { this.contentUrl = contentUrl }
+
+            fun estimatedDownvotes(estimatedDownvotes: Long) =
+                estimatedDownvotes(JsonField.of(estimatedDownvotes))
+
+            /**
+             * Sets [Builder.estimatedDownvotes] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.estimatedDownvotes] with a well-typed [Long] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun estimatedDownvotes(estimatedDownvotes: JsonField<Long>) = apply {
+                this.estimatedDownvotes = estimatedDownvotes
+            }
+
+            fun estimatedUpvotes(estimatedUpvotes: Long) =
+                estimatedUpvotes(JsonField.of(estimatedUpvotes))
+
+            /**
+             * Sets [Builder.estimatedUpvotes] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.estimatedUpvotes] with a well-typed [Long] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun estimatedUpvotes(estimatedUpvotes: JsonField<Long>) = apply {
+                this.estimatedUpvotes = estimatedUpvotes
+            }
+
+            fun numberComments(numberComments: Long) = numberComments(JsonField.of(numberComments))
+
+            /**
+             * Sets [Builder.numberComments] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.numberComments] with a well-typed [Long] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun numberComments(numberComments: JsonField<Long>) = apply {
+                this.numberComments = numberComments
+            }
+
+            fun score(score: Long) = score(JsonField.of(score))
+
+            /**
+             * Sets [Builder.score] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.score] with a well-typed [Long] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun score(score: JsonField<Long>) = apply { this.score = score }
+
+            fun selftext(selftext: String) = selftext(JsonField.of(selftext))
+
+            /**
+             * Sets [Builder.selftext] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.selftext] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun selftext(selftext: JsonField<String>) = apply { this.selftext = selftext }
+
+            /** Current items use html. json and rss are retained for legacy rows. */
+            fun sourceFormat(sourceFormat: SourceFormat) = sourceFormat(JsonField.of(sourceFormat))
+
+            /**
+             * Sets [Builder.sourceFormat] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.sourceFormat] with a well-typed [SourceFormat] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun sourceFormat(sourceFormat: JsonField<SourceFormat>) = apply {
+                this.sourceFormat = sourceFormat
+            }
+
+            fun subreddit(subreddit: String) = subreddit(JsonField.of(subreddit))
+
+            /**
+             * Sets [Builder.subreddit] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.subreddit] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun subreddit(subreddit: JsonField<String>) = apply { this.subreddit = subreddit }
+
+            fun upvoteRatio(upvoteRatio: Double) = upvoteRatio(JsonField.of(upvoteRatio))
+
+            /**
+             * Sets [Builder.upvoteRatio] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.upvoteRatio] with a well-typed [Double] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun upvoteRatio(upvoteRatio: JsonField<Double>) = apply {
+                this.upvoteRatio = upvoteRatio
             }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -876,7 +1272,20 @@ private constructor(
              *
              * Further updates to this [Builder] will not mutate the returned instance.
              */
-            fun build(): Metadata = Metadata(additionalProperties.toImmutable())
+            fun build(): Metadata =
+                Metadata(
+                    author,
+                    contentUrl,
+                    estimatedDownvotes,
+                    estimatedUpvotes,
+                    numberComments,
+                    score,
+                    selftext,
+                    sourceFormat,
+                    subreddit,
+                    upvoteRatio,
+                    additionalProperties.toMutableMap(),
+                )
         }
 
         private var validated: Boolean = false
@@ -895,6 +1304,16 @@ private constructor(
                 return@apply
             }
 
+            author()
+            contentUrl()
+            estimatedDownvotes()
+            estimatedUpvotes()
+            numberComments()
+            score()
+            selftext()
+            sourceFormat().ifPresent { it.validate() }
+            subreddit()
+            upvoteRatio()
             validated = true
         }
 
@@ -914,21 +1333,205 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+            (if (author.asKnown().isPresent) 1 else 0) +
+                (if (contentUrl.asKnown().isPresent) 1 else 0) +
+                (if (estimatedDownvotes.asKnown().isPresent) 1 else 0) +
+                (if (estimatedUpvotes.asKnown().isPresent) 1 else 0) +
+                (if (numberComments.asKnown().isPresent) 1 else 0) +
+                (if (score.asKnown().isPresent) 1 else 0) +
+                (if (selftext.asKnown().isPresent) 1 else 0) +
+                (sourceFormat.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (subreddit.asKnown().isPresent) 1 else 0) +
+                (if (upvoteRatio.asKnown().isPresent) 1 else 0)
+
+        /** Current items use html. json and rss are retained for legacy rows. */
+        class SourceFormat @JsonCreator private constructor(private val value: JsonField<String>) :
+            Enum {
+
+            /**
+             * Returns this class instance's raw value.
+             *
+             * This is usually only useful if this instance was deserialized from data that doesn't
+             * match any known member, and you want to know that value. For example, if the SDK is
+             * on an older version than the API, then the API may respond with new members that the
+             * SDK is unaware of.
+             */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val HTML = of("html")
+
+                @JvmField val JSON = of("json")
+
+                @JvmField val RSS = of("rss")
+
+                @JvmStatic fun of(value: String) = SourceFormat(JsonField.of(value))
+            }
+
+            /** An enum containing [SourceFormat]'s known values. */
+            enum class Known {
+                HTML,
+                JSON,
+                RSS,
+            }
+
+            /**
+             * An enum containing [SourceFormat]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [SourceFormat] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                HTML,
+                JSON,
+                RSS,
+                /**
+                 * An enum member indicating that [SourceFormat] was instantiated with an unknown
+                 * value.
+                 */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             *
+             * Use the [known] method instead if you're certain the value is always known or if you
+             * want to throw for the unknown case.
+             */
+            fun value(): Value =
+                when (this) {
+                    HTML -> Value.HTML
+                    JSON -> Value.JSON
+                    RSS -> Value.RSS
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * Use the [value] method instead if you're uncertain the value is always known and
+             * don't want to throw for the unknown case.
+             *
+             * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+             *   known member.
+             */
+            fun known(): Known =
+                when (this) {
+                    HTML -> Known.HTML
+                    JSON -> Known.JSON
+                    RSS -> Known.RSS
+                    else ->
+                        throw XTwitterScraperInvalidDataException("Unknown SourceFormat: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * This differs from the [toString] method because that method is primarily for
+             * debugging and generally doesn't throw.
+             *
+             * @throws XTwitterScraperInvalidDataException if this class instance's value does not
+             *   have the expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    XTwitterScraperInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
+             */
+            fun validate(): SourceFormat = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: XTwitterScraperInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is SourceFormat && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
             }
 
-            return other is Metadata && additionalProperties == other.additionalProperties
+            return other is Metadata &&
+                author == other.author &&
+                contentUrl == other.contentUrl &&
+                estimatedDownvotes == other.estimatedDownvotes &&
+                estimatedUpvotes == other.estimatedUpvotes &&
+                numberComments == other.numberComments &&
+                score == other.score &&
+                selftext == other.selftext &&
+                sourceFormat == other.sourceFormat &&
+                subreddit == other.subreddit &&
+                upvoteRatio == other.upvoteRatio &&
+                additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+        private val hashCode: Int by lazy {
+            Objects.hash(
+                author,
+                contentUrl,
+                estimatedDownvotes,
+                estimatedUpvotes,
+                numberComments,
+                score,
+                selftext,
+                sourceFormat,
+                subreddit,
+                upvoteRatio,
+                additionalProperties,
+            )
+        }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() = "Metadata{additionalProperties=$additionalProperties}"
+        override fun toString() =
+            "Metadata{author=$author, contentUrl=$contentUrl, estimatedDownvotes=$estimatedDownvotes, estimatedUpvotes=$estimatedUpvotes, numberComments=$numberComments, score=$score, selftext=$selftext, sourceFormat=$sourceFormat, subreddit=$subreddit, upvoteRatio=$upvoteRatio, additionalProperties=$additionalProperties}"
     }
 
     class Source @JsonCreator private constructor(private val value: JsonField<String>) : Enum {

@@ -25,8 +25,8 @@ internal class AccountServiceTest {
                 AccountCreateParams.builder()
                     .email("account@example.invalid")
                     .password("<ACCOUNT_PASSWORD>")
-                    .username("your_x_username")
                     .totpSecret("<TOTP_SECRET>")
+                    .username("your_x_username")
                     .build()
             )
 

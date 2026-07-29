@@ -14,6 +14,7 @@ import com.x_twitter_scraper.api.models.x.XGetNotificationsParams
 import com.x_twitter_scraper.api.models.x.XGetNotificationsResponse
 import com.x_twitter_scraper.api.models.x.XGetTrendsParams
 import com.x_twitter_scraper.api.models.x.XGetTrendsResponse
+import com.x_twitter_scraper.api.services.blocking.x.AccountConnectionAttemptService
 import com.x_twitter_scraper.api.services.blocking.x.AccountConnectionChallengeService
 import com.x_twitter_scraper.api.services.blocking.x.AccountService
 import com.x_twitter_scraper.api.services.blocking.x.BookmarkService
@@ -66,6 +67,9 @@ interface XService {
 
     /** Connected X account management */
     fun accountConnectionChallenges(): AccountConnectionChallengeService
+
+    /** Connected X account management */
+    fun accountConnectionAttempts(): AccountConnectionAttemptService
 
     /** Look up, search, and analyze individual tweets */
     fun bookmarks(): BookmarkService
@@ -195,6 +199,9 @@ interface XService {
 
         /** Connected X account management */
         fun accountConnectionChallenges(): AccountConnectionChallengeService.WithRawResponse
+
+        /** Connected X account management */
+        fun accountConnectionAttempts(): AccountConnectionAttemptService.WithRawResponse
 
         /** Look up, search, and analyze individual tweets */
         fun bookmarks(): BookmarkService.WithRawResponse

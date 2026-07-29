@@ -17,7 +17,6 @@ import com.x_twitter_scraper.api.core.http.QueryParams
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.util.Collections
 import java.util.Objects
-import java.util.Optional
 
 /** Connect X account */
 class AccountCreateParams
@@ -44,20 +43,20 @@ private constructor(
     fun password(): String = body.password()
 
     /**
+     * Authenticator App TOTP secret required for durable login
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun totpSecret(): String = body.totpSecret()
+
+    /**
      * X username
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun username(): String = body.username()
-
-    /**
-     * TOTP secret for 2FA
-     *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun totpSecret(): Optional<String> = body.totpSecret()
 
     /**
      * Returns the raw JSON value of [email].
@@ -74,18 +73,18 @@ private constructor(
     fun _password(): JsonField<String> = body._password()
 
     /**
-     * Returns the raw JSON value of [username].
-     *
-     * Unlike [username], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    fun _username(): JsonField<String> = body._username()
-
-    /**
      * Returns the raw JSON value of [totpSecret].
      *
      * Unlike [totpSecret], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _totpSecret(): JsonField<String> = body._totpSecret()
+
+    /**
+     * Returns the raw JSON value of [username].
+     *
+     * Unlike [username], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _username(): JsonField<String> = body._username()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -106,6 +105,7 @@ private constructor(
          * ```java
          * .email()
          * .password()
+         * .totpSecret()
          * .username()
          * ```
          */
@@ -133,8 +133,8 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [email]
          * - [password]
-         * - [username]
          * - [totpSecret]
+         * - [username]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
@@ -160,18 +160,7 @@ private constructor(
          */
         fun password(password: JsonField<String>) = apply { body.password(password) }
 
-        /** X username */
-        fun username(username: String) = apply { body.username(username) }
-
-        /**
-         * Sets [Builder.username] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.username] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun username(username: JsonField<String>) = apply { body.username(username) }
-
-        /** TOTP secret for 2FA */
+        /** Authenticator App TOTP secret required for durable login */
         fun totpSecret(totpSecret: String) = apply { body.totpSecret(totpSecret) }
 
         /**
@@ -182,6 +171,17 @@ private constructor(
          * value.
          */
         fun totpSecret(totpSecret: JsonField<String>) = apply { body.totpSecret(totpSecret) }
+
+        /** X username */
+        fun username(username: String) = apply { body.username(username) }
+
+        /**
+         * Sets [Builder.username] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.username] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun username(username: JsonField<String>) = apply { body.username(username) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -309,6 +309,7 @@ private constructor(
          * ```java
          * .email()
          * .password()
+         * .totpSecret()
          * .username()
          * ```
          *
@@ -333,8 +334,8 @@ private constructor(
     private constructor(
         private val email: JsonField<String>,
         private val password: JsonField<String>,
-        private val username: JsonField<String>,
         private val totpSecret: JsonField<String>,
+        private val username: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -344,13 +345,11 @@ private constructor(
             @JsonProperty("password")
             @ExcludeMissing
             password: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("username")
-            @ExcludeMissing
-            username: JsonField<String> = JsonMissing.of(),
             @JsonProperty("totp_secret")
             @ExcludeMissing
             totpSecret: JsonField<String> = JsonMissing.of(),
-        ) : this(email, password, username, totpSecret, mutableMapOf())
+            @JsonProperty("username") @ExcludeMissing username: JsonField<String> = JsonMissing.of(),
+        ) : this(email, password, totpSecret, username, mutableMapOf())
 
         /**
          * Account email
@@ -371,6 +370,15 @@ private constructor(
         fun password(): String = password.getRequired("password")
 
         /**
+         * Authenticator App TOTP secret required for durable login
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
+         */
+        fun totpSecret(): String = totpSecret.getRequired("totp_secret")
+
+        /**
          * X username
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
@@ -378,14 +386,6 @@ private constructor(
          *   value).
          */
         fun username(): String = username.getRequired("username")
-
-        /**
-         * TOTP secret for 2FA
-         *
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
-        fun totpSecret(): Optional<String> = totpSecret.getOptional("totp_secret")
 
         /**
          * Returns the raw JSON value of [email].
@@ -402,13 +402,6 @@ private constructor(
         @JsonProperty("password") @ExcludeMissing fun _password(): JsonField<String> = password
 
         /**
-         * Returns the raw JSON value of [username].
-         *
-         * Unlike [username], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("username") @ExcludeMissing fun _username(): JsonField<String> = username
-
-        /**
          * Returns the raw JSON value of [totpSecret].
          *
          * Unlike [totpSecret], this method doesn't throw if the JSON field has an unexpected type.
@@ -416,6 +409,13 @@ private constructor(
         @JsonProperty("totp_secret")
         @ExcludeMissing
         fun _totpSecret(): JsonField<String> = totpSecret
+
+        /**
+         * Returns the raw JSON value of [username].
+         *
+         * Unlike [username], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("username") @ExcludeMissing fun _username(): JsonField<String> = username
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -438,6 +438,7 @@ private constructor(
              * ```java
              * .email()
              * .password()
+             * .totpSecret()
              * .username()
              * ```
              */
@@ -449,16 +450,16 @@ private constructor(
 
             private var email: JsonField<String>? = null
             private var password: JsonField<String>? = null
+            private var totpSecret: JsonField<String>? = null
             private var username: JsonField<String>? = null
-            private var totpSecret: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 email = body.email
                 password = body.password
-                username = body.username
                 totpSecret = body.totpSecret
+                username = body.username
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -486,6 +487,18 @@ private constructor(
              */
             fun password(password: JsonField<String>) = apply { this.password = password }
 
+            /** Authenticator App TOTP secret required for durable login */
+            fun totpSecret(totpSecret: String) = totpSecret(JsonField.of(totpSecret))
+
+            /**
+             * Sets [Builder.totpSecret] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.totpSecret] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun totpSecret(totpSecret: JsonField<String>) = apply { this.totpSecret = totpSecret }
+
             /** X username */
             fun username(username: String) = username(JsonField.of(username))
 
@@ -497,18 +510,6 @@ private constructor(
              * supported value.
              */
             fun username(username: JsonField<String>) = apply { this.username = username }
-
-            /** TOTP secret for 2FA */
-            fun totpSecret(totpSecret: String) = totpSecret(JsonField.of(totpSecret))
-
-            /**
-             * Sets [Builder.totpSecret] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.totpSecret] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun totpSecret(totpSecret: JsonField<String>) = apply { this.totpSecret = totpSecret }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -538,6 +539,7 @@ private constructor(
              * ```java
              * .email()
              * .password()
+             * .totpSecret()
              * .username()
              * ```
              *
@@ -547,8 +549,8 @@ private constructor(
                 Body(
                     checkRequired("email", email),
                     checkRequired("password", password),
+                    checkRequired("totpSecret", totpSecret),
                     checkRequired("username", username),
-                    totpSecret,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -571,8 +573,8 @@ private constructor(
 
             email()
             password()
-            username()
             totpSecret()
+            username()
             validated = true
         }
 
@@ -594,8 +596,8 @@ private constructor(
         internal fun validity(): Int =
             (if (email.asKnown().isPresent) 1 else 0) +
                 (if (password.asKnown().isPresent) 1 else 0) +
-                (if (username.asKnown().isPresent) 1 else 0) +
-                (if (totpSecret.asKnown().isPresent) 1 else 0)
+                (if (totpSecret.asKnown().isPresent) 1 else 0) +
+                (if (username.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -605,19 +607,19 @@ private constructor(
             return other is Body &&
                 email == other.email &&
                 password == other.password &&
-                username == other.username &&
                 totpSecret == other.totpSecret &&
+                username == other.username &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(email, password, username, totpSecret, additionalProperties)
+            Objects.hash(email, password, totpSecret, username, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{email=$email, password=$password, username=$username, totpSecret=$totpSecret, additionalProperties=$additionalProperties}"
+            "Body{email=$email, password=$password, totpSecret=$totpSecret, username=$username, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
