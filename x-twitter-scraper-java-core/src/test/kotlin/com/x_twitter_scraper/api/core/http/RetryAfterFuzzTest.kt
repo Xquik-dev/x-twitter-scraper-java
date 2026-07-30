@@ -16,7 +16,7 @@ internal class RetryAfterFuzzTest {
 
     @FuzzTest(maxDuration = "30s")
     fun retryAfterDelayRemainsBounded(data: FuzzedDataProvider) {
-        val retryAfter = data.consumeRemainingAsString()
+        val retryAfter = RetryAfterFuzzInput.consume(data)
         val sleeper = RecordingRetrySleeper()
         val transport =
             SequenceHttpClient(

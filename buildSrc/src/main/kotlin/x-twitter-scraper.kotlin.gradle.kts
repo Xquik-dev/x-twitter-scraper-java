@@ -5,6 +5,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("x-twitter-scraper.java")
@@ -40,6 +41,13 @@ tasks.withType<Test>().configureEach {
 
     // `SKIP_MOCK_TESTS` affects which tests run so it must be added as input for proper cache invalidation.
     inputs.property("skipMockTests", System.getenv("SKIP_MOCK_TESTS")).optional(true)
+}
+
+tasks.named<KotlinCompile>("compileTestKotlin") {
+    compilerOptions {
+        freeCompilerArgs.set(emptyList())
+        jvmTarget.set(JvmTarget.JVM_26)
+    }
 }
 
 val ktfmt = configurations.create("ktfmt")
