@@ -183,7 +183,7 @@ internal class TweetServiceAsyncTest {
                 .build()
         val tweetServiceAsync = client.x().tweets()
 
-        val paginatedTweetsFuture =
+        val responseFuture =
             tweetServiceAsync.getReplies(
                 TweetGetRepliesParams.builder()
                     .id("id")
@@ -197,12 +197,14 @@ internal class TweetServiceAsyncTest {
                     .hashtags("hashtags")
                     .inReplyToTweetId("inReplyToTweetId")
                     .language("language")
+                    .limit(1L)
                     .mediaType(TweetGetRepliesParams.MediaType.IMAGES)
                     .mentioning("mentioning")
                     .minFaves(0L)
                     .minQuotes(0L)
                     .minReplies(0L)
                     .minRetweets(0L)
+                    .mode(TweetGetRepliesParams.Mode.COMPLETE)
                     .pageSize(1L)
                     .quotes(TweetGetRepliesParams.Quotes.INCLUDE)
                     .quotesOfTweetId("quotesOfTweetId")
@@ -219,8 +221,8 @@ internal class TweetServiceAsyncTest {
                     .build()
             )
 
-        val paginatedTweets = paginatedTweetsFuture.get()
-        kotlin.test.assertNotNull(paginatedTweets)
+        val response = responseFuture.get()
+        kotlin.test.assertNotNull(response)
     }
 
     @Test

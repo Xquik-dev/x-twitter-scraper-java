@@ -107,7 +107,10 @@ internal class GeneratedModelContractTest {
         val serializedModel = MAPPER.writeValueAsString(populatedModel)
         val roundTripModel = MAPPER.readValue(serializedModel, modelClass)
         val populatedCopy = copyOf(populatedModel)
-        val rawGetters = rawFieldGetters(modelClass)
+        val rawGetters =
+            rawFieldGetters(modelClass).filterNot {
+                referencesAncestor(it.genericReturnType, setOf(modelClass))
+            }
 
         verifyValidation(populatedModel, expectedValid = true)
         verifyValidation(roundTripModel, expectedValid = true)
@@ -348,7 +351,12 @@ internal class GeneratedModelContractTest {
                         validModelValue(nestedModel, populatedAncestors)
                     }
                 },
-                ::preservesDefaultJsonLiteral,
+                { method ->
+                    preservesDefaultJsonLiteral(method) ||
+                        method.genericParameterTypes.any {
+                            referencesAncestor(it, populatedAncestors)
+                        }
+                },
             )
 
         check(unsupportedMethods.isEmpty()) {
@@ -362,6 +370,19 @@ internal class GeneratedModelContractTest {
         method.parameterTypes.singleOrNull()?.let {
             JsonValue::class.java.isAssignableFrom(it)
         } == true
+
+    private fun referencesAncestor(type: Type, ancestors: Set<Class<*>>): Boolean =
+        when (type) {
+            is Class<*> -> type in ancestors
+            is GenericArrayType -> referencesAncestor(type.genericComponentType, ancestors)
+            is ParameterizedType ->
+                referencesAncestor(type.rawType, ancestors) ||
+                    type.actualTypeArguments.any { referencesAncestor(it, ancestors) }
+            is TypeVariable<*> -> type.bounds.any { referencesAncestor(it, ancestors) }
+            is WildcardType ->
+                (type.lowerBounds + type.upperBounds).any { referencesAncestor(it, ancestors) }
+            else -> false
+        }
 
     private fun builderMethodOrder(method: Method): Int =
         when {

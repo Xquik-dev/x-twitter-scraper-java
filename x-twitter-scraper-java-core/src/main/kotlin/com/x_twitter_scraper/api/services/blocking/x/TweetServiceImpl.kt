@@ -29,6 +29,7 @@ import com.x_twitter_scraper.api.models.x.tweets.TweetDeleteResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetFavoritersParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetQuotesParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetRepliesParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetGetRepliesResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetRetweetersParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetThreadParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetListParams
@@ -106,7 +107,7 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
     override fun getReplies(
         params: TweetGetRepliesParams,
         requestOptions: RequestOptions,
-    ): PaginatedTweets =
+    ): TweetGetRepliesResponse =
         // get /x/tweets/{id}/replies
         withRawResponse().getReplies(params, requestOptions).parse()
 
@@ -334,13 +335,13 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
             }
         }
 
-        private val getRepliesHandler: Handler<PaginatedTweets> =
-            jsonHandler<PaginatedTweets>(clientOptions.jsonMapper)
+        private val getRepliesHandler: Handler<TweetGetRepliesResponse> =
+            jsonHandler<TweetGetRepliesResponse>(clientOptions.jsonMapper)
 
         override fun getReplies(
             params: TweetGetRepliesParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<PaginatedTweets> {
+        ): HttpResponseFor<TweetGetRepliesResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())

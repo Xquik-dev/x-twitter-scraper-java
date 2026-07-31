@@ -32,7 +32,6 @@ internal class CommunityRetrieveInfoResponseTest {
                         )
                         .description("description")
                         .invitesPolicy("invites_policy")
-                        .isMember(true)
                         .isNsfw(true)
                         .joinPolicy("join_policy")
                         .memberCount(0L)
@@ -44,7 +43,6 @@ internal class CommunityRetrieveInfoResponseTest {
                                 .name("name")
                                 .build()
                         )
-                        .role("role")
                         .addRule(
                             CommunityRetrieveInfoResponse.Community.Rule.builder()
                                 .id("id")
@@ -72,7 +70,6 @@ internal class CommunityRetrieveInfoResponseTest {
                     )
                     .description("description")
                     .invitesPolicy("invites_policy")
-                    .isMember(true)
                     .isNsfw(true)
                     .joinPolicy("join_policy")
                     .memberCount(0L)
@@ -84,7 +81,6 @@ internal class CommunityRetrieveInfoResponseTest {
                             .name("name")
                             .build()
                     )
-                    .role("role")
                     .addRule(
                         CommunityRetrieveInfoResponse.Community.Rule.builder()
                             .id("id")
@@ -116,7 +112,6 @@ internal class CommunityRetrieveInfoResponseTest {
                         )
                         .description("description")
                         .invitesPolicy("invites_policy")
-                        .isMember(true)
                         .isNsfw(true)
                         .joinPolicy("join_policy")
                         .memberCount(0L)
@@ -128,7 +123,6 @@ internal class CommunityRetrieveInfoResponseTest {
                                 .name("name")
                                 .build()
                         )
-                        .role("role")
                         .addRule(
                             CommunityRetrieveInfoResponse.Community.Rule.builder()
                                 .id("id")
