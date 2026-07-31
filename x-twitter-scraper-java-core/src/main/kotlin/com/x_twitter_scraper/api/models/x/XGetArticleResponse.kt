@@ -1353,7 +1353,6 @@ private constructor(
         private val id: JsonField<String>,
         private val name: JsonField<String>,
         private val username: JsonField<String>,
-        private val canDm: JsonField<Boolean>,
         private val createdAt: JsonField<String>,
         private val description: JsonField<String>,
         private val favouritesCount: JsonField<Long>,
@@ -1379,7 +1378,6 @@ private constructor(
             @JsonProperty("username")
             @ExcludeMissing
             username: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("canDm") @ExcludeMissing canDm: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("createdAt")
             @ExcludeMissing
             createdAt: JsonField<String> = JsonMissing.of(),
@@ -1427,7 +1425,6 @@ private constructor(
             id,
             name,
             username,
-            canDm,
             createdAt,
             description,
             favouritesCount,
@@ -1466,12 +1463,6 @@ private constructor(
          *   value).
          */
         fun username(): String = username.getRequired("username")
-
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
-        fun canDm(): Optional<Boolean> = canDm.getOptional("canDm")
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
@@ -1583,13 +1574,6 @@ private constructor(
          * Unlike [username], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("username") @ExcludeMissing fun _username(): JsonField<String> = username
-
-        /**
-         * Returns the raw JSON value of [canDm].
-         *
-         * Unlike [canDm], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("canDm") @ExcludeMissing fun _canDm(): JsonField<Boolean> = canDm
 
         /**
          * Returns the raw JSON value of [createdAt].
@@ -1759,7 +1743,6 @@ private constructor(
             private var id: JsonField<String>? = null
             private var name: JsonField<String>? = null
             private var username: JsonField<String>? = null
-            private var canDm: JsonField<Boolean> = JsonMissing.of()
             private var createdAt: JsonField<String> = JsonMissing.of()
             private var description: JsonField<String> = JsonMissing.of()
             private var favouritesCount: JsonField<Long> = JsonMissing.of()
@@ -1782,7 +1765,6 @@ private constructor(
                 id = author.id
                 name = author.name
                 username = author.username
-                canDm = author.canDm
                 createdAt = author.createdAt
                 description = author.description
                 favouritesCount = author.favouritesCount
@@ -1833,17 +1815,6 @@ private constructor(
              * supported value.
              */
             fun username(username: JsonField<String>) = apply { this.username = username }
-
-            fun canDm(canDm: Boolean) = canDm(JsonField.of(canDm))
-
-            /**
-             * Sets [Builder.canDm] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.canDm] with a well-typed [Boolean] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun canDm(canDm: JsonField<Boolean>) = apply { this.canDm = canDm }
 
             fun createdAt(createdAt: String) = createdAt(JsonField.of(createdAt))
 
@@ -2070,7 +2041,6 @@ private constructor(
                     checkRequired("id", id),
                     checkRequired("name", name),
                     checkRequired("username", username),
-                    canDm,
                     createdAt,
                     description,
                     favouritesCount,
@@ -2109,7 +2079,6 @@ private constructor(
             id()
             name()
             username()
-            canDm()
             createdAt()
             description()
             favouritesCount()
@@ -2147,7 +2116,6 @@ private constructor(
             (if (id.asKnown().isPresent) 1 else 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
                 (if (username.asKnown().isPresent) 1 else 0) +
-                (if (canDm.asKnown().isPresent) 1 else 0) +
                 (if (createdAt.asKnown().isPresent) 1 else 0) +
                 (if (description.asKnown().isPresent) 1 else 0) +
                 (if (favouritesCount.asKnown().isPresent) 1 else 0) +
@@ -2173,7 +2141,6 @@ private constructor(
                 id == other.id &&
                 name == other.name &&
                 username == other.username &&
-                canDm == other.canDm &&
                 createdAt == other.createdAt &&
                 description == other.description &&
                 favouritesCount == other.favouritesCount &&
@@ -2197,7 +2164,6 @@ private constructor(
                 id,
                 name,
                 username,
-                canDm,
                 createdAt,
                 description,
                 favouritesCount,
@@ -2220,7 +2186,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Author{id=$id, name=$name, username=$username, canDm=$canDm, createdAt=$createdAt, description=$description, favouritesCount=$favouritesCount, followersCount=$followersCount, followingCount=$followingCount, isBlueVerified=$isBlueVerified, isTranslator=$isTranslator, isVerified=$isVerified, location=$location, mediaCount=$mediaCount, profileBannerUrl=$profileBannerUrl, profilePicture=$profilePicture, protected_=$protected_, statusesCount=$statusesCount, url=$url, additionalProperties=$additionalProperties}"
+            "Author{id=$id, name=$name, username=$username, createdAt=$createdAt, description=$description, favouritesCount=$favouritesCount, followersCount=$followersCount, followingCount=$followingCount, isBlueVerified=$isBlueVerified, isTranslator=$isTranslator, isVerified=$isVerified, location=$location, mediaCount=$mediaCount, profileBannerUrl=$profileBannerUrl, profilePicture=$profilePicture, protected_=$protected_, statusesCount=$statusesCount, url=$url, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

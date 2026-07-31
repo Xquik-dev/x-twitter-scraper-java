@@ -14,11 +14,11 @@ internal class TicketUpdateResponseTest {
         val ticketUpdateResponse =
             TicketUpdateResponse.builder()
                 .publicId("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
-                .status("resolved")
+                .status(TicketUpdateResponse.Status.RESOLVED)
                 .build()
 
-        assertThat(ticketUpdateResponse.publicId()).contains("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
-        assertThat(ticketUpdateResponse.status()).contains("resolved")
+        assertThat(ticketUpdateResponse.publicId()).isEqualTo("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
+        assertThat(ticketUpdateResponse.status()).isEqualTo(TicketUpdateResponse.Status.RESOLVED)
     }
 
     @Test
@@ -27,7 +27,7 @@ internal class TicketUpdateResponseTest {
         val ticketUpdateResponse =
             TicketUpdateResponse.builder()
                 .publicId("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
-                .status("resolved")
+                .status(TicketUpdateResponse.Status.RESOLVED)
                 .build()
 
         val roundtrippedTicketUpdateResponse =

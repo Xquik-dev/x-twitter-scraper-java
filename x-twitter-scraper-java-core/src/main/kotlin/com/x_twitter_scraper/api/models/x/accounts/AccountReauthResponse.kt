@@ -25,7 +25,7 @@ private constructor(
     private val id: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val health: JsonField<Health>,
-    private val status: JsonField<String>,
+    private val status: JsonValue,
     private val xUserId: JsonField<String>,
     private val xUsername: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -38,7 +38,7 @@ private constructor(
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("health") @ExcludeMissing health: JsonField<Health> = JsonMissing.of(),
-        @JsonProperty("status") @ExcludeMissing status: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("status") @ExcludeMissing status: JsonValue = JsonMissing.of(),
         @JsonProperty("xUserId") @ExcludeMissing xUserId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("xUsername") @ExcludeMissing xUsername: JsonField<String> = JsonMissing.of(),
     ) : this(id, createdAt, health, status, xUserId, xUsername, mutableMapOf())
@@ -62,10 +62,15 @@ private constructor(
     fun health(): Health = health.getRequired("health")
 
     /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("active")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
      */
-    fun status(): String = status.getRequired("status")
+    @JsonProperty("status") @ExcludeMissing fun _status(): JsonValue = status
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -103,13 +108,6 @@ private constructor(
     @JsonProperty("health") @ExcludeMissing fun _health(): JsonField<Health> = health
 
     /**
-     * Returns the raw JSON value of [status].
-     *
-     * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<String> = status
-
-    /**
      * Returns the raw JSON value of [xUserId].
      *
      * Unlike [xUserId], this method doesn't throw if the JSON field has an unexpected type.
@@ -145,7 +143,6 @@ private constructor(
          * .id()
          * .createdAt()
          * .health()
-         * .status()
          * .xUserId()
          * .xUsername()
          * ```
@@ -159,7 +156,7 @@ private constructor(
         private var id: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var health: JsonField<Health>? = null
-        private var status: JsonField<String>? = null
+        private var status: JsonValue = JsonValue.from("active")
         private var xUserId: JsonField<String>? = null
         private var xUsername: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -206,15 +203,19 @@ private constructor(
          */
         fun health(health: JsonField<Health>) = apply { this.health = health }
 
-        fun status(status: String) = status(JsonField.of(status))
-
         /**
-         * Sets [Builder.status] to an arbitrary JSON value.
+         * Sets the field to an arbitrary JSON value.
          *
-         * You should usually call [Builder.status] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("active")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun status(status: JsonField<String>) = apply { this.status = status }
+        fun status(status: JsonValue) = apply { this.status = status }
 
         fun xUserId(xUserId: String) = xUserId(JsonField.of(xUserId))
 
@@ -266,7 +267,6 @@ private constructor(
          * .id()
          * .createdAt()
          * .health()
-         * .status()
          * .xUserId()
          * .xUsername()
          * ```
@@ -278,7 +278,7 @@ private constructor(
                 checkRequired("id", id),
                 checkRequired("createdAt", createdAt),
                 checkRequired("health", health),
-                checkRequired("status", status),
+                status,
                 checkRequired("xUserId", xUserId),
                 checkRequired("xUsername", xUsername),
                 additionalProperties.toMutableMap(),
@@ -303,7 +303,11 @@ private constructor(
         id()
         createdAt()
         health().validate()
-        status()
+        _status().let {
+            if (it != JsonValue.from("active")) {
+                throw XTwitterScraperInvalidDataException("'status' is invalid, received $it")
+            }
+        }
         xUserId()
         xUsername()
         validated = true
@@ -327,7 +331,7 @@ private constructor(
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (health.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (status.asKnown().isPresent) 1 else 0) +
+            status.let { if (it == JsonValue.from("active")) 1 else 0 } +
             (if (xUserId.asKnown().isPresent) 1 else 0) +
             (if (xUsername.asKnown().isPresent) 1 else 0)
 

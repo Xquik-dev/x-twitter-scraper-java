@@ -30,36 +30,48 @@ private constructor(
     private val id: JsonField<String>,
     private val name: JsonField<String>,
     private val username: JsonField<String>,
+    private val affiliatesHighlightedLabel: JsonField<UserProfile.AffiliatesHighlightedLabel>,
     private val automatedBy: JsonField<String>,
-    private val canDm: JsonField<Boolean>,
+    private val businessAccountAffiliatesCount: JsonField<Long>,
     private val communityRole: JsonField<String>,
     private val coverPicture: JsonField<String>,
     private val createdAt: JsonField<String>,
+    private val creatorSubscriptionsCount: JsonField<Long>,
     private val description: JsonField<String>,
     private val favouritesCount: JsonField<Long>,
     private val followers: JsonField<Long>,
     private val following: JsonField<Long>,
     private val hasCustomTimelines: JsonField<Boolean>,
+    private val hasGraduatedAccess: JsonField<Boolean>,
+    private val hasHiddenSubscriptionsOnProfile: JsonField<Boolean>,
+    private val highlightsInfo: JsonField<UserProfile.HighlightsInfo>,
+    private val identityVerification: JsonField<UserProfile.IdentityVerification>,
     private val isAutomated: JsonField<Boolean>,
     private val isBlueVerified: JsonField<Boolean>,
+    private val isProfileTranslatable: JsonField<Boolean>,
     private val isTranslator: JsonField<Boolean>,
     private val isVerified: JsonField<Boolean>,
     private val location: JsonField<String>,
     private val mediaCount: JsonField<Long>,
+    private val parodyCommentaryFanLabel: JsonField<String>,
     private val pinnedTweetIds: JsonField<List<String>>,
     private val possiblySensitive: JsonField<Boolean>,
     private val profileBio: JsonField<UserProfile.ProfileBio>,
     private val profileBannerUrl: JsonField<String>,
+    private val profileDescriptionLanguage: JsonField<String>,
+    private val profileImageShape: JsonField<String>,
+    private val profileInterstitialType: JsonField<String>,
     private val profilePicture: JsonField<String>,
+    private val profileSortEnabled: JsonField<Boolean>,
+    private val profileTranslatorType: JsonField<String>,
     private val protected_: JsonField<Boolean>,
     private val statusesCount: JsonField<Long>,
+    private val superFollowEligible: JsonField<Boolean>,
     private val unavailable: JsonField<Boolean>,
     private val unavailableReason: JsonField<String>,
     private val url: JsonField<String>,
     private val verified: JsonField<Boolean>,
     private val verifiedType: JsonField<String>,
-    private val viewerFollowedBy: JsonField<Boolean>,
-    private val viewerFollowing: JsonField<Boolean>,
     private val withheldInCountries: JsonField<List<String>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -69,10 +81,16 @@ private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
         @JsonProperty("username") @ExcludeMissing username: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("affiliatesHighlightedLabel")
+        @ExcludeMissing
+        affiliatesHighlightedLabel: JsonField<UserProfile.AffiliatesHighlightedLabel> =
+            JsonMissing.of(),
         @JsonProperty("automatedBy")
         @ExcludeMissing
         automatedBy: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("canDm") @ExcludeMissing canDm: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("businessAccountAffiliatesCount")
+        @ExcludeMissing
+        businessAccountAffiliatesCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("communityRole")
         @ExcludeMissing
         communityRole: JsonField<String> = JsonMissing.of(),
@@ -80,6 +98,9 @@ private constructor(
         @ExcludeMissing
         coverPicture: JsonField<String> = JsonMissing.of(),
         @JsonProperty("createdAt") @ExcludeMissing createdAt: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("creatorSubscriptionsCount")
+        @ExcludeMissing
+        creatorSubscriptionsCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("description")
         @ExcludeMissing
         description: JsonField<String> = JsonMissing.of(),
@@ -91,12 +112,27 @@ private constructor(
         @JsonProperty("hasCustomTimelines")
         @ExcludeMissing
         hasCustomTimelines: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("hasGraduatedAccess")
+        @ExcludeMissing
+        hasGraduatedAccess: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("hasHiddenSubscriptionsOnProfile")
+        @ExcludeMissing
+        hasHiddenSubscriptionsOnProfile: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("highlightsInfo")
+        @ExcludeMissing
+        highlightsInfo: JsonField<UserProfile.HighlightsInfo> = JsonMissing.of(),
+        @JsonProperty("identityVerification")
+        @ExcludeMissing
+        identityVerification: JsonField<UserProfile.IdentityVerification> = JsonMissing.of(),
         @JsonProperty("isAutomated")
         @ExcludeMissing
         isAutomated: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("isBlueVerified")
         @ExcludeMissing
         isBlueVerified: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("isProfileTranslatable")
+        @ExcludeMissing
+        isProfileTranslatable: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("isTranslator")
         @ExcludeMissing
         isTranslator: JsonField<Boolean> = JsonMissing.of(),
@@ -105,6 +141,9 @@ private constructor(
         isVerified: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("location") @ExcludeMissing location: JsonField<String> = JsonMissing.of(),
         @JsonProperty("mediaCount") @ExcludeMissing mediaCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("parodyCommentaryFanLabel")
+        @ExcludeMissing
+        parodyCommentaryFanLabel: JsonField<String> = JsonMissing.of(),
         @JsonProperty("pinnedTweetIds")
         @ExcludeMissing
         pinnedTweetIds: JsonField<List<String>> = JsonMissing.of(),
@@ -117,15 +156,33 @@ private constructor(
         @JsonProperty("profileBannerUrl")
         @ExcludeMissing
         profileBannerUrl: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("profileDescriptionLanguage")
+        @ExcludeMissing
+        profileDescriptionLanguage: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("profileImageShape")
+        @ExcludeMissing
+        profileImageShape: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("profileInterstitialType")
+        @ExcludeMissing
+        profileInterstitialType: JsonField<String> = JsonMissing.of(),
         @JsonProperty("profilePicture")
         @ExcludeMissing
         profilePicture: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("profileSortEnabled")
+        @ExcludeMissing
+        profileSortEnabled: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("profileTranslatorType")
+        @ExcludeMissing
+        profileTranslatorType: JsonField<String> = JsonMissing.of(),
         @JsonProperty("protected")
         @ExcludeMissing
         protected_: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("statusesCount")
         @ExcludeMissing
         statusesCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("superFollowEligible")
+        @ExcludeMissing
+        superFollowEligible: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("unavailable")
         @ExcludeMissing
         unavailable: JsonField<Boolean> = JsonMissing.of(),
@@ -137,12 +194,6 @@ private constructor(
         @JsonProperty("verifiedType")
         @ExcludeMissing
         verifiedType: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("viewerFollowedBy")
-        @ExcludeMissing
-        viewerFollowedBy: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("viewerFollowing")
-        @ExcludeMissing
-        viewerFollowing: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("withheldInCountries")
         @ExcludeMissing
         withheldInCountries: JsonField<List<String>> = JsonMissing.of(),
@@ -150,36 +201,48 @@ private constructor(
         id,
         name,
         username,
+        affiliatesHighlightedLabel,
         automatedBy,
-        canDm,
+        businessAccountAffiliatesCount,
         communityRole,
         coverPicture,
         createdAt,
+        creatorSubscriptionsCount,
         description,
         favouritesCount,
         followers,
         following,
         hasCustomTimelines,
+        hasGraduatedAccess,
+        hasHiddenSubscriptionsOnProfile,
+        highlightsInfo,
+        identityVerification,
         isAutomated,
         isBlueVerified,
+        isProfileTranslatable,
         isTranslator,
         isVerified,
         location,
         mediaCount,
+        parodyCommentaryFanLabel,
         pinnedTweetIds,
         possiblySensitive,
         profileBio,
         profileBannerUrl,
+        profileDescriptionLanguage,
+        profileImageShape,
+        profileInterstitialType,
         profilePicture,
+        profileSortEnabled,
+        profileTranslatorType,
         protected_,
         statusesCount,
+        superFollowEligible,
         unavailable,
         unavailableReason,
         url,
         verified,
         verifiedType,
-        viewerFollowedBy,
-        viewerFollowing,
         withheldInCountries,
         mutableMapOf(),
     )
@@ -189,36 +252,48 @@ private constructor(
             .id(id)
             .name(name)
             .username(username)
+            .affiliatesHighlightedLabel(affiliatesHighlightedLabel)
             .automatedBy(automatedBy)
-            .canDm(canDm)
+            .businessAccountAffiliatesCount(businessAccountAffiliatesCount)
             .communityRole(communityRole)
             .coverPicture(coverPicture)
             .createdAt(createdAt)
+            .creatorSubscriptionsCount(creatorSubscriptionsCount)
             .description(description)
             .favouritesCount(favouritesCount)
             .followers(followers)
             .following(following)
             .hasCustomTimelines(hasCustomTimelines)
+            .hasGraduatedAccess(hasGraduatedAccess)
+            .hasHiddenSubscriptionsOnProfile(hasHiddenSubscriptionsOnProfile)
+            .highlightsInfo(highlightsInfo)
+            .identityVerification(identityVerification)
             .isAutomated(isAutomated)
             .isBlueVerified(isBlueVerified)
+            .isProfileTranslatable(isProfileTranslatable)
             .isTranslator(isTranslator)
             .isVerified(isVerified)
             .location(location)
             .mediaCount(mediaCount)
+            .parodyCommentaryFanLabel(parodyCommentaryFanLabel)
             .pinnedTweetIds(pinnedTweetIds)
             .possiblySensitive(possiblySensitive)
             .profileBio(profileBio)
             .profileBannerUrl(profileBannerUrl)
+            .profileDescriptionLanguage(profileDescriptionLanguage)
+            .profileImageShape(profileImageShape)
+            .profileInterstitialType(profileInterstitialType)
             .profilePicture(profilePicture)
+            .profileSortEnabled(profileSortEnabled)
+            .profileTranslatorType(profileTranslatorType)
             .protected_(protected_)
             .statusesCount(statusesCount)
+            .superFollowEligible(superFollowEligible)
             .unavailable(unavailable)
             .unavailableReason(unavailableReason)
             .url(url)
             .verified(verified)
             .verifiedType(verifiedType)
-            .viewerFollowedBy(viewerFollowedBy)
-            .viewerFollowing(viewerFollowing)
             .withheldInCountries(withheldInCountries)
             .build()
 
@@ -241,6 +316,15 @@ private constructor(
     fun username(): String = username.getRequired("username")
 
     /**
+     * Organization affiliation label shown on an X profile.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun affiliatesHighlightedLabel(): Optional<UserProfile.AffiliatesHighlightedLabel> =
+        affiliatesHighlightedLabel.getOptional("affiliatesHighlightedLabel")
+
+    /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -250,7 +334,8 @@ private constructor(
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
-    fun canDm(): Optional<Boolean> = canDm.getOptional("canDm")
+    fun businessAccountAffiliatesCount(): Optional<Long> =
+        businessAccountAffiliatesCount.getOptional("businessAccountAffiliatesCount")
 
     /**
      * Community role when returned by community member reads
@@ -271,6 +356,13 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun createdAt(): Optional<String> = createdAt.getOptional("createdAt")
+
+    /**
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun creatorSubscriptionsCount(): Optional<Long> =
+        creatorSubscriptionsCount.getOptional("creatorSubscriptionsCount")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -307,6 +399,38 @@ private constructor(
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
+    fun hasGraduatedAccess(): Optional<Boolean> =
+        hasGraduatedAccess.getOptional("hasGraduatedAccess")
+
+    /**
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun hasHiddenSubscriptionsOnProfile(): Optional<Boolean> =
+        hasHiddenSubscriptionsOnProfile.getOptional("hasHiddenSubscriptionsOnProfile")
+
+    /**
+     * Profile highlight availability and count metadata.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun highlightsInfo(): Optional<UserProfile.HighlightsInfo> =
+        highlightsInfo.getOptional("highlightsInfo")
+
+    /**
+     * Identity verification metadata displayed by X.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun identityVerification(): Optional<UserProfile.IdentityVerification> =
+        identityVerification.getOptional("identityVerification")
+
+    /**
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
     fun isAutomated(): Optional<Boolean> = isAutomated.getOptional("isAutomated")
 
     /**
@@ -316,6 +440,13 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun isBlueVerified(): Optional<Boolean> = isBlueVerified.getOptional("isBlueVerified")
+
+    /**
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun isProfileTranslatable(): Optional<Boolean> =
+        isProfileTranslatable.getOptional("isProfileTranslatable")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -342,6 +473,13 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun mediaCount(): Optional<Long> = mediaCount.getOptional("mediaCount")
+
+    /**
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun parodyCommentaryFanLabel(): Optional<String> =
+        parodyCommentaryFanLabel.getOptional("parodyCommentaryFanLabel")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -375,7 +513,41 @@ private constructor(
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
+    fun profileDescriptionLanguage(): Optional<String> =
+        profileDescriptionLanguage.getOptional("profileDescriptionLanguage")
+
+    /**
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun profileImageShape(): Optional<String> = profileImageShape.getOptional("profileImageShape")
+
+    /**
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun profileInterstitialType(): Optional<String> =
+        profileInterstitialType.getOptional("profileInterstitialType")
+
+    /**
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
     fun profilePicture(): Optional<String> = profilePicture.getOptional("profilePicture")
+
+    /**
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun profileSortEnabled(): Optional<Boolean> =
+        profileSortEnabled.getOptional("profileSortEnabled")
+
+    /**
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun profileTranslatorType(): Optional<String> =
+        profileTranslatorType.getOptional("profileTranslatorType")
 
     /**
      * Whether the profile protects its posts
@@ -390,6 +562,13 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun statusesCount(): Optional<Long> = statusesCount.getOptional("statusesCount")
+
+    /**
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun superFollowEligible(): Optional<Boolean> =
+        superFollowEligible.getOptional("superFollowEligible")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -422,22 +601,6 @@ private constructor(
     fun verifiedType(): Optional<String> = verifiedType.getOptional("verifiedType")
 
     /**
-     * Whether this profile follows the authenticated viewer
-     *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun viewerFollowedBy(): Optional<Boolean> = viewerFollowedBy.getOptional("viewerFollowedBy")
-
-    /**
-     * Whether the authenticated viewer follows this profile
-     *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun viewerFollowing(): Optional<Boolean> = viewerFollowing.getOptional("viewerFollowing")
-
-    /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -466,6 +629,17 @@ private constructor(
     @JsonProperty("username") @ExcludeMissing fun _username(): JsonField<String> = username
 
     /**
+     * Returns the raw JSON value of [affiliatesHighlightedLabel].
+     *
+     * Unlike [affiliatesHighlightedLabel], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("affiliatesHighlightedLabel")
+    @ExcludeMissing
+    fun _affiliatesHighlightedLabel(): JsonField<UserProfile.AffiliatesHighlightedLabel> =
+        affiliatesHighlightedLabel
+
+    /**
      * Returns the raw JSON value of [automatedBy].
      *
      * Unlike [automatedBy], this method doesn't throw if the JSON field has an unexpected type.
@@ -473,11 +647,14 @@ private constructor(
     @JsonProperty("automatedBy") @ExcludeMissing fun _automatedBy(): JsonField<String> = automatedBy
 
     /**
-     * Returns the raw JSON value of [canDm].
+     * Returns the raw JSON value of [businessAccountAffiliatesCount].
      *
-     * Unlike [canDm], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [businessAccountAffiliatesCount], this method doesn't throw if the JSON field has an
+     * unexpected type.
      */
-    @JsonProperty("canDm") @ExcludeMissing fun _canDm(): JsonField<Boolean> = canDm
+    @JsonProperty("businessAccountAffiliatesCount")
+    @ExcludeMissing
+    fun _businessAccountAffiliatesCount(): JsonField<Long> = businessAccountAffiliatesCount
 
     /**
      * Returns the raw JSON value of [communityRole].
@@ -503,6 +680,16 @@ private constructor(
      * Unlike [createdAt], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("createdAt") @ExcludeMissing fun _createdAt(): JsonField<String> = createdAt
+
+    /**
+     * Returns the raw JSON value of [creatorSubscriptionsCount].
+     *
+     * Unlike [creatorSubscriptionsCount], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("creatorSubscriptionsCount")
+    @ExcludeMissing
+    fun _creatorSubscriptionsCount(): JsonField<Long> = creatorSubscriptionsCount
 
     /**
      * Returns the raw JSON value of [description].
@@ -545,6 +732,45 @@ private constructor(
     fun _hasCustomTimelines(): JsonField<Boolean> = hasCustomTimelines
 
     /**
+     * Returns the raw JSON value of [hasGraduatedAccess].
+     *
+     * Unlike [hasGraduatedAccess], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("hasGraduatedAccess")
+    @ExcludeMissing
+    fun _hasGraduatedAccess(): JsonField<Boolean> = hasGraduatedAccess
+
+    /**
+     * Returns the raw JSON value of [hasHiddenSubscriptionsOnProfile].
+     *
+     * Unlike [hasHiddenSubscriptionsOnProfile], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("hasHiddenSubscriptionsOnProfile")
+    @ExcludeMissing
+    fun _hasHiddenSubscriptionsOnProfile(): JsonField<Boolean> = hasHiddenSubscriptionsOnProfile
+
+    /**
+     * Returns the raw JSON value of [highlightsInfo].
+     *
+     * Unlike [highlightsInfo], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("highlightsInfo")
+    @ExcludeMissing
+    fun _highlightsInfo(): JsonField<UserProfile.HighlightsInfo> = highlightsInfo
+
+    /**
+     * Returns the raw JSON value of [identityVerification].
+     *
+     * Unlike [identityVerification], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("identityVerification")
+    @ExcludeMissing
+    fun _identityVerification(): JsonField<UserProfile.IdentityVerification> = identityVerification
+
+    /**
      * Returns the raw JSON value of [isAutomated].
      *
      * Unlike [isAutomated], this method doesn't throw if the JSON field has an unexpected type.
@@ -561,6 +787,16 @@ private constructor(
     @JsonProperty("isBlueVerified")
     @ExcludeMissing
     fun _isBlueVerified(): JsonField<Boolean> = isBlueVerified
+
+    /**
+     * Returns the raw JSON value of [isProfileTranslatable].
+     *
+     * Unlike [isProfileTranslatable], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("isProfileTranslatable")
+    @ExcludeMissing
+    fun _isProfileTranslatable(): JsonField<Boolean> = isProfileTranslatable
 
     /**
      * Returns the raw JSON value of [isTranslator].
@@ -591,6 +827,16 @@ private constructor(
      * Unlike [mediaCount], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("mediaCount") @ExcludeMissing fun _mediaCount(): JsonField<Long> = mediaCount
+
+    /**
+     * Returns the raw JSON value of [parodyCommentaryFanLabel].
+     *
+     * Unlike [parodyCommentaryFanLabel], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("parodyCommentaryFanLabel")
+    @ExcludeMissing
+    fun _parodyCommentaryFanLabel(): JsonField<String> = parodyCommentaryFanLabel
 
     /**
      * Returns the raw JSON value of [pinnedTweetIds].
@@ -631,6 +877,36 @@ private constructor(
     fun _profileBannerUrl(): JsonField<String> = profileBannerUrl
 
     /**
+     * Returns the raw JSON value of [profileDescriptionLanguage].
+     *
+     * Unlike [profileDescriptionLanguage], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("profileDescriptionLanguage")
+    @ExcludeMissing
+    fun _profileDescriptionLanguage(): JsonField<String> = profileDescriptionLanguage
+
+    /**
+     * Returns the raw JSON value of [profileImageShape].
+     *
+     * Unlike [profileImageShape], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("profileImageShape")
+    @ExcludeMissing
+    fun _profileImageShape(): JsonField<String> = profileImageShape
+
+    /**
+     * Returns the raw JSON value of [profileInterstitialType].
+     *
+     * Unlike [profileInterstitialType], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("profileInterstitialType")
+    @ExcludeMissing
+    fun _profileInterstitialType(): JsonField<String> = profileInterstitialType
+
+    /**
      * Returns the raw JSON value of [profilePicture].
      *
      * Unlike [profilePicture], this method doesn't throw if the JSON field has an unexpected type.
@@ -638,6 +914,26 @@ private constructor(
     @JsonProperty("profilePicture")
     @ExcludeMissing
     fun _profilePicture(): JsonField<String> = profilePicture
+
+    /**
+     * Returns the raw JSON value of [profileSortEnabled].
+     *
+     * Unlike [profileSortEnabled], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("profileSortEnabled")
+    @ExcludeMissing
+    fun _profileSortEnabled(): JsonField<Boolean> = profileSortEnabled
+
+    /**
+     * Returns the raw JSON value of [profileTranslatorType].
+     *
+     * Unlike [profileTranslatorType], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("profileTranslatorType")
+    @ExcludeMissing
+    fun _profileTranslatorType(): JsonField<String> = profileTranslatorType
 
     /**
      * Returns the raw JSON value of [protected_].
@@ -654,6 +950,16 @@ private constructor(
     @JsonProperty("statusesCount")
     @ExcludeMissing
     fun _statusesCount(): JsonField<Long> = statusesCount
+
+    /**
+     * Returns the raw JSON value of [superFollowEligible].
+     *
+     * Unlike [superFollowEligible], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("superFollowEligible")
+    @ExcludeMissing
+    fun _superFollowEligible(): JsonField<Boolean> = superFollowEligible
 
     /**
      * Returns the raw JSON value of [unavailable].
@@ -698,25 +1004,6 @@ private constructor(
     fun _verifiedType(): JsonField<String> = verifiedType
 
     /**
-     * Returns the raw JSON value of [viewerFollowedBy].
-     *
-     * Unlike [viewerFollowedBy], this method doesn't throw if the JSON field has an unexpected
-     * type.
-     */
-    @JsonProperty("viewerFollowedBy")
-    @ExcludeMissing
-    fun _viewerFollowedBy(): JsonField<Boolean> = viewerFollowedBy
-
-    /**
-     * Returns the raw JSON value of [viewerFollowing].
-     *
-     * Unlike [viewerFollowing], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("viewerFollowing")
-    @ExcludeMissing
-    fun _viewerFollowing(): JsonField<Boolean> = viewerFollowing
-
-    /**
      * Returns the raw JSON value of [withheldInCountries].
      *
      * Unlike [withheldInCountries], this method doesn't throw if the JSON field has an unexpected
@@ -759,36 +1046,50 @@ private constructor(
         private var id: JsonField<String>? = null
         private var name: JsonField<String>? = null
         private var username: JsonField<String>? = null
+        private var affiliatesHighlightedLabel: JsonField<UserProfile.AffiliatesHighlightedLabel> =
+            JsonMissing.of()
         private var automatedBy: JsonField<String> = JsonMissing.of()
-        private var canDm: JsonField<Boolean> = JsonMissing.of()
+        private var businessAccountAffiliatesCount: JsonField<Long> = JsonMissing.of()
         private var communityRole: JsonField<String> = JsonMissing.of()
         private var coverPicture: JsonField<String> = JsonMissing.of()
         private var createdAt: JsonField<String> = JsonMissing.of()
+        private var creatorSubscriptionsCount: JsonField<Long> = JsonMissing.of()
         private var description: JsonField<String> = JsonMissing.of()
         private var favouritesCount: JsonField<Long> = JsonMissing.of()
         private var followers: JsonField<Long> = JsonMissing.of()
         private var following: JsonField<Long> = JsonMissing.of()
         private var hasCustomTimelines: JsonField<Boolean> = JsonMissing.of()
+        private var hasGraduatedAccess: JsonField<Boolean> = JsonMissing.of()
+        private var hasHiddenSubscriptionsOnProfile: JsonField<Boolean> = JsonMissing.of()
+        private var highlightsInfo: JsonField<UserProfile.HighlightsInfo> = JsonMissing.of()
+        private var identityVerification: JsonField<UserProfile.IdentityVerification> =
+            JsonMissing.of()
         private var isAutomated: JsonField<Boolean> = JsonMissing.of()
         private var isBlueVerified: JsonField<Boolean> = JsonMissing.of()
+        private var isProfileTranslatable: JsonField<Boolean> = JsonMissing.of()
         private var isTranslator: JsonField<Boolean> = JsonMissing.of()
         private var isVerified: JsonField<Boolean> = JsonMissing.of()
         private var location: JsonField<String> = JsonMissing.of()
         private var mediaCount: JsonField<Long> = JsonMissing.of()
+        private var parodyCommentaryFanLabel: JsonField<String> = JsonMissing.of()
         private var pinnedTweetIds: JsonField<MutableList<String>>? = null
         private var possiblySensitive: JsonField<Boolean> = JsonMissing.of()
         private var profileBio: JsonField<UserProfile.ProfileBio> = JsonMissing.of()
         private var profileBannerUrl: JsonField<String> = JsonMissing.of()
+        private var profileDescriptionLanguage: JsonField<String> = JsonMissing.of()
+        private var profileImageShape: JsonField<String> = JsonMissing.of()
+        private var profileInterstitialType: JsonField<String> = JsonMissing.of()
         private var profilePicture: JsonField<String> = JsonMissing.of()
+        private var profileSortEnabled: JsonField<Boolean> = JsonMissing.of()
+        private var profileTranslatorType: JsonField<String> = JsonMissing.of()
         private var protected_: JsonField<Boolean> = JsonMissing.of()
         private var statusesCount: JsonField<Long> = JsonMissing.of()
+        private var superFollowEligible: JsonField<Boolean> = JsonMissing.of()
         private var unavailable: JsonField<Boolean> = JsonMissing.of()
         private var unavailableReason: JsonField<String> = JsonMissing.of()
         private var url: JsonField<String> = JsonMissing.of()
         private var verified: JsonField<Boolean> = JsonMissing.of()
         private var verifiedType: JsonField<String> = JsonMissing.of()
-        private var viewerFollowedBy: JsonField<Boolean> = JsonMissing.of()
-        private var viewerFollowing: JsonField<Boolean> = JsonMissing.of()
         private var withheldInCountries: JsonField<MutableList<String>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -797,36 +1098,48 @@ private constructor(
             id = tweetAuthor.id
             name = tweetAuthor.name
             username = tweetAuthor.username
+            affiliatesHighlightedLabel = tweetAuthor.affiliatesHighlightedLabel
             automatedBy = tweetAuthor.automatedBy
-            canDm = tweetAuthor.canDm
+            businessAccountAffiliatesCount = tweetAuthor.businessAccountAffiliatesCount
             communityRole = tweetAuthor.communityRole
             coverPicture = tweetAuthor.coverPicture
             createdAt = tweetAuthor.createdAt
+            creatorSubscriptionsCount = tweetAuthor.creatorSubscriptionsCount
             description = tweetAuthor.description
             favouritesCount = tweetAuthor.favouritesCount
             followers = tweetAuthor.followers
             following = tweetAuthor.following
             hasCustomTimelines = tweetAuthor.hasCustomTimelines
+            hasGraduatedAccess = tweetAuthor.hasGraduatedAccess
+            hasHiddenSubscriptionsOnProfile = tweetAuthor.hasHiddenSubscriptionsOnProfile
+            highlightsInfo = tweetAuthor.highlightsInfo
+            identityVerification = tweetAuthor.identityVerification
             isAutomated = tweetAuthor.isAutomated
             isBlueVerified = tweetAuthor.isBlueVerified
+            isProfileTranslatable = tweetAuthor.isProfileTranslatable
             isTranslator = tweetAuthor.isTranslator
             isVerified = tweetAuthor.isVerified
             location = tweetAuthor.location
             mediaCount = tweetAuthor.mediaCount
+            parodyCommentaryFanLabel = tweetAuthor.parodyCommentaryFanLabel
             pinnedTweetIds = tweetAuthor.pinnedTweetIds.map { it.toMutableList() }
             possiblySensitive = tweetAuthor.possiblySensitive
             profileBio = tweetAuthor.profileBio
             profileBannerUrl = tweetAuthor.profileBannerUrl
+            profileDescriptionLanguage = tweetAuthor.profileDescriptionLanguage
+            profileImageShape = tweetAuthor.profileImageShape
+            profileInterstitialType = tweetAuthor.profileInterstitialType
             profilePicture = tweetAuthor.profilePicture
+            profileSortEnabled = tweetAuthor.profileSortEnabled
+            profileTranslatorType = tweetAuthor.profileTranslatorType
             protected_ = tweetAuthor.protected_
             statusesCount = tweetAuthor.statusesCount
+            superFollowEligible = tweetAuthor.superFollowEligible
             unavailable = tweetAuthor.unavailable
             unavailableReason = tweetAuthor.unavailableReason
             url = tweetAuthor.url
             verified = tweetAuthor.verified
             verifiedType = tweetAuthor.verifiedType
-            viewerFollowedBy = tweetAuthor.viewerFollowedBy
-            viewerFollowing = tweetAuthor.viewerFollowing
             withheldInCountries = tweetAuthor.withheldInCountries.map { it.toMutableList() }
             additionalProperties = tweetAuthor.additionalProperties.toMutableMap()
         }
@@ -861,6 +1174,22 @@ private constructor(
          */
         fun username(username: JsonField<String>) = apply { this.username = username }
 
+        /** Organization affiliation label shown on an X profile. */
+        fun affiliatesHighlightedLabel(
+            affiliatesHighlightedLabel: UserProfile.AffiliatesHighlightedLabel
+        ) = affiliatesHighlightedLabel(JsonField.of(affiliatesHighlightedLabel))
+
+        /**
+         * Sets [Builder.affiliatesHighlightedLabel] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.affiliatesHighlightedLabel] with a well-typed
+         * [UserProfile.AffiliatesHighlightedLabel] value instead. This method is primarily for
+         * setting the field to an undocumented or not yet supported value.
+         */
+        fun affiliatesHighlightedLabel(
+            affiliatesHighlightedLabel: JsonField<UserProfile.AffiliatesHighlightedLabel>
+        ) = apply { this.affiliatesHighlightedLabel = affiliatesHighlightedLabel }
+
         fun automatedBy(automatedBy: String) = automatedBy(JsonField.of(automatedBy))
 
         /**
@@ -872,15 +1201,20 @@ private constructor(
          */
         fun automatedBy(automatedBy: JsonField<String>) = apply { this.automatedBy = automatedBy }
 
-        fun canDm(canDm: Boolean) = canDm(JsonField.of(canDm))
+        fun businessAccountAffiliatesCount(businessAccountAffiliatesCount: Long) =
+            businessAccountAffiliatesCount(JsonField.of(businessAccountAffiliatesCount))
 
         /**
-         * Sets [Builder.canDm] to an arbitrary JSON value.
+         * Sets [Builder.businessAccountAffiliatesCount] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.canDm] with a well-typed [Boolean] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.businessAccountAffiliatesCount] with a well-typed [Long]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
          */
-        fun canDm(canDm: JsonField<Boolean>) = apply { this.canDm = canDm }
+        fun businessAccountAffiliatesCount(businessAccountAffiliatesCount: JsonField<Long>) =
+            apply {
+                this.businessAccountAffiliatesCount = businessAccountAffiliatesCount
+            }
 
         /** Community role when returned by community member reads */
         fun communityRole(communityRole: String) = communityRole(JsonField.of(communityRole))
@@ -919,6 +1253,20 @@ private constructor(
          * value.
          */
         fun createdAt(createdAt: JsonField<String>) = apply { this.createdAt = createdAt }
+
+        fun creatorSubscriptionsCount(creatorSubscriptionsCount: Long) =
+            creatorSubscriptionsCount(JsonField.of(creatorSubscriptionsCount))
+
+        /**
+         * Sets [Builder.creatorSubscriptionsCount] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.creatorSubscriptionsCount] with a well-typed [Long]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun creatorSubscriptionsCount(creatorSubscriptionsCount: JsonField<Long>) = apply {
+            this.creatorSubscriptionsCount = creatorSubscriptionsCount
+        }
 
         fun description(description: String) = description(JsonField.of(description))
 
@@ -978,6 +1326,65 @@ private constructor(
             this.hasCustomTimelines = hasCustomTimelines
         }
 
+        fun hasGraduatedAccess(hasGraduatedAccess: Boolean) =
+            hasGraduatedAccess(JsonField.of(hasGraduatedAccess))
+
+        /**
+         * Sets [Builder.hasGraduatedAccess] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.hasGraduatedAccess] with a well-typed [Boolean] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun hasGraduatedAccess(hasGraduatedAccess: JsonField<Boolean>) = apply {
+            this.hasGraduatedAccess = hasGraduatedAccess
+        }
+
+        fun hasHiddenSubscriptionsOnProfile(hasHiddenSubscriptionsOnProfile: Boolean) =
+            hasHiddenSubscriptionsOnProfile(JsonField.of(hasHiddenSubscriptionsOnProfile))
+
+        /**
+         * Sets [Builder.hasHiddenSubscriptionsOnProfile] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.hasHiddenSubscriptionsOnProfile] with a well-typed
+         * [Boolean] value instead. This method is primarily for setting the field to an
+         * undocumented or not yet supported value.
+         */
+        fun hasHiddenSubscriptionsOnProfile(hasHiddenSubscriptionsOnProfile: JsonField<Boolean>) =
+            apply {
+                this.hasHiddenSubscriptionsOnProfile = hasHiddenSubscriptionsOnProfile
+            }
+
+        /** Profile highlight availability and count metadata. */
+        fun highlightsInfo(highlightsInfo: UserProfile.HighlightsInfo) =
+            highlightsInfo(JsonField.of(highlightsInfo))
+
+        /**
+         * Sets [Builder.highlightsInfo] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.highlightsInfo] with a well-typed
+         * [UserProfile.HighlightsInfo] value instead. This method is primarily for setting the
+         * field to an undocumented or not yet supported value.
+         */
+        fun highlightsInfo(highlightsInfo: JsonField<UserProfile.HighlightsInfo>) = apply {
+            this.highlightsInfo = highlightsInfo
+        }
+
+        /** Identity verification metadata displayed by X. */
+        fun identityVerification(identityVerification: UserProfile.IdentityVerification) =
+            identityVerification(JsonField.of(identityVerification))
+
+        /**
+         * Sets [Builder.identityVerification] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.identityVerification] with a well-typed
+         * [UserProfile.IdentityVerification] value instead. This method is primarily for setting
+         * the field to an undocumented or not yet supported value.
+         */
+        fun identityVerification(
+            identityVerification: JsonField<UserProfile.IdentityVerification>
+        ) = apply { this.identityVerification = identityVerification }
+
         fun isAutomated(isAutomated: Boolean) = isAutomated(JsonField.of(isAutomated))
 
         /**
@@ -1001,6 +1408,20 @@ private constructor(
          */
         fun isBlueVerified(isBlueVerified: JsonField<Boolean>) = apply {
             this.isBlueVerified = isBlueVerified
+        }
+
+        fun isProfileTranslatable(isProfileTranslatable: Boolean) =
+            isProfileTranslatable(JsonField.of(isProfileTranslatable))
+
+        /**
+         * Sets [Builder.isProfileTranslatable] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.isProfileTranslatable] with a well-typed [Boolean] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun isProfileTranslatable(isProfileTranslatable: JsonField<Boolean>) = apply {
+            this.isProfileTranslatable = isProfileTranslatable
         }
 
         fun isTranslator(isTranslator: Boolean) = isTranslator(JsonField.of(isTranslator))
@@ -1047,6 +1468,20 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun mediaCount(mediaCount: JsonField<Long>) = apply { this.mediaCount = mediaCount }
+
+        fun parodyCommentaryFanLabel(parodyCommentaryFanLabel: String) =
+            parodyCommentaryFanLabel(JsonField.of(parodyCommentaryFanLabel))
+
+        /**
+         * Sets [Builder.parodyCommentaryFanLabel] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.parodyCommentaryFanLabel] with a well-typed [String]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun parodyCommentaryFanLabel(parodyCommentaryFanLabel: JsonField<String>) = apply {
+            this.parodyCommentaryFanLabel = parodyCommentaryFanLabel
+        }
 
         fun pinnedTweetIds(pinnedTweetIds: List<String>) =
             pinnedTweetIds(JsonField.of(pinnedTweetIds))
@@ -1117,6 +1552,48 @@ private constructor(
             this.profileBannerUrl = profileBannerUrl
         }
 
+        fun profileDescriptionLanguage(profileDescriptionLanguage: String) =
+            profileDescriptionLanguage(JsonField.of(profileDescriptionLanguage))
+
+        /**
+         * Sets [Builder.profileDescriptionLanguage] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.profileDescriptionLanguage] with a well-typed [String]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun profileDescriptionLanguage(profileDescriptionLanguage: JsonField<String>) = apply {
+            this.profileDescriptionLanguage = profileDescriptionLanguage
+        }
+
+        fun profileImageShape(profileImageShape: String) =
+            profileImageShape(JsonField.of(profileImageShape))
+
+        /**
+         * Sets [Builder.profileImageShape] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.profileImageShape] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun profileImageShape(profileImageShape: JsonField<String>) = apply {
+            this.profileImageShape = profileImageShape
+        }
+
+        fun profileInterstitialType(profileInterstitialType: String) =
+            profileInterstitialType(JsonField.of(profileInterstitialType))
+
+        /**
+         * Sets [Builder.profileInterstitialType] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.profileInterstitialType] with a well-typed [String]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun profileInterstitialType(profileInterstitialType: JsonField<String>) = apply {
+            this.profileInterstitialType = profileInterstitialType
+        }
+
         fun profilePicture(profilePicture: String) = profilePicture(JsonField.of(profilePicture))
 
         /**
@@ -1128,6 +1605,34 @@ private constructor(
          */
         fun profilePicture(profilePicture: JsonField<String>) = apply {
             this.profilePicture = profilePicture
+        }
+
+        fun profileSortEnabled(profileSortEnabled: Boolean) =
+            profileSortEnabled(JsonField.of(profileSortEnabled))
+
+        /**
+         * Sets [Builder.profileSortEnabled] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.profileSortEnabled] with a well-typed [Boolean] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun profileSortEnabled(profileSortEnabled: JsonField<Boolean>) = apply {
+            this.profileSortEnabled = profileSortEnabled
+        }
+
+        fun profileTranslatorType(profileTranslatorType: String) =
+            profileTranslatorType(JsonField.of(profileTranslatorType))
+
+        /**
+         * Sets [Builder.profileTranslatorType] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.profileTranslatorType] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun profileTranslatorType(profileTranslatorType: JsonField<String>) = apply {
+            this.profileTranslatorType = profileTranslatorType
         }
 
         /** Whether the profile protects its posts */
@@ -1153,6 +1658,20 @@ private constructor(
          */
         fun statusesCount(statusesCount: JsonField<Long>) = apply {
             this.statusesCount = statusesCount
+        }
+
+        fun superFollowEligible(superFollowEligible: Boolean) =
+            superFollowEligible(JsonField.of(superFollowEligible))
+
+        /**
+         * Sets [Builder.superFollowEligible] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.superFollowEligible] with a well-typed [Boolean] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun superFollowEligible(superFollowEligible: JsonField<Boolean>) = apply {
+            this.superFollowEligible = superFollowEligible
         }
 
         fun unavailable(unavailable: Boolean) = unavailable(JsonField.of(unavailable))
@@ -1212,36 +1731,6 @@ private constructor(
          */
         fun verifiedType(verifiedType: JsonField<String>) = apply {
             this.verifiedType = verifiedType
-        }
-
-        /** Whether this profile follows the authenticated viewer */
-        fun viewerFollowedBy(viewerFollowedBy: Boolean) =
-            viewerFollowedBy(JsonField.of(viewerFollowedBy))
-
-        /**
-         * Sets [Builder.viewerFollowedBy] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.viewerFollowedBy] with a well-typed [Boolean] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun viewerFollowedBy(viewerFollowedBy: JsonField<Boolean>) = apply {
-            this.viewerFollowedBy = viewerFollowedBy
-        }
-
-        /** Whether the authenticated viewer follows this profile */
-        fun viewerFollowing(viewerFollowing: Boolean) =
-            viewerFollowing(JsonField.of(viewerFollowing))
-
-        /**
-         * Sets [Builder.viewerFollowing] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.viewerFollowing] with a well-typed [Boolean] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun viewerFollowing(viewerFollowing: JsonField<Boolean>) = apply {
-            this.viewerFollowing = viewerFollowing
         }
 
         fun withheldInCountries(withheldInCountries: List<String>) =
@@ -1308,36 +1797,48 @@ private constructor(
                 checkRequired("id", id),
                 checkRequired("name", name),
                 checkRequired("username", username),
+                affiliatesHighlightedLabel,
                 automatedBy,
-                canDm,
+                businessAccountAffiliatesCount,
                 communityRole,
                 coverPicture,
                 createdAt,
+                creatorSubscriptionsCount,
                 description,
                 favouritesCount,
                 followers,
                 following,
                 hasCustomTimelines,
+                hasGraduatedAccess,
+                hasHiddenSubscriptionsOnProfile,
+                highlightsInfo,
+                identityVerification,
                 isAutomated,
                 isBlueVerified,
+                isProfileTranslatable,
                 isTranslator,
                 isVerified,
                 location,
                 mediaCount,
+                parodyCommentaryFanLabel,
                 (pinnedTweetIds ?: JsonMissing.of()).map { it.toImmutable() },
                 possiblySensitive,
                 profileBio,
                 profileBannerUrl,
+                profileDescriptionLanguage,
+                profileImageShape,
+                profileInterstitialType,
                 profilePicture,
+                profileSortEnabled,
+                profileTranslatorType,
                 protected_,
                 statusesCount,
+                superFollowEligible,
                 unavailable,
                 unavailableReason,
                 url,
                 verified,
                 verifiedType,
-                viewerFollowedBy,
-                viewerFollowing,
                 (withheldInCountries ?: JsonMissing.of()).map { it.toImmutable() },
                 additionalProperties.toMutableMap(),
             )
@@ -1361,36 +1862,48 @@ private constructor(
         id()
         name()
         username()
+        affiliatesHighlightedLabel().ifPresent { it.validate() }
         automatedBy()
-        canDm()
+        businessAccountAffiliatesCount()
         communityRole()
         coverPicture()
         createdAt()
+        creatorSubscriptionsCount()
         description()
         favouritesCount()
         followers()
         following()
         hasCustomTimelines()
+        hasGraduatedAccess()
+        hasHiddenSubscriptionsOnProfile()
+        highlightsInfo().ifPresent { it.validate() }
+        identityVerification().ifPresent { it.validate() }
         isAutomated()
         isBlueVerified()
+        isProfileTranslatable()
         isTranslator()
         isVerified()
         location()
         mediaCount()
+        parodyCommentaryFanLabel()
         pinnedTweetIds()
         possiblySensitive()
         profileBio().ifPresent { it.validate() }
         profileBannerUrl()
+        profileDescriptionLanguage()
+        profileImageShape()
+        profileInterstitialType()
         profilePicture()
+        profileSortEnabled()
+        profileTranslatorType()
         protected_()
         statusesCount()
+        superFollowEligible()
         unavailable()
         unavailableReason()
         url()
         verified()
         verifiedType()
-        viewerFollowedBy()
-        viewerFollowing()
         withheldInCountries()
         validated = true
     }
@@ -1413,36 +1926,48 @@ private constructor(
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             (if (username.asKnown().isPresent) 1 else 0) +
+            (affiliatesHighlightedLabel.asKnown().getOrNull()?.validity() ?: 0) +
             (if (automatedBy.asKnown().isPresent) 1 else 0) +
-            (if (canDm.asKnown().isPresent) 1 else 0) +
+            (if (businessAccountAffiliatesCount.asKnown().isPresent) 1 else 0) +
             (if (communityRole.asKnown().isPresent) 1 else 0) +
             (if (coverPicture.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
+            (if (creatorSubscriptionsCount.asKnown().isPresent) 1 else 0) +
             (if (description.asKnown().isPresent) 1 else 0) +
             (if (favouritesCount.asKnown().isPresent) 1 else 0) +
             (if (followers.asKnown().isPresent) 1 else 0) +
             (if (following.asKnown().isPresent) 1 else 0) +
             (if (hasCustomTimelines.asKnown().isPresent) 1 else 0) +
+            (if (hasGraduatedAccess.asKnown().isPresent) 1 else 0) +
+            (if (hasHiddenSubscriptionsOnProfile.asKnown().isPresent) 1 else 0) +
+            (highlightsInfo.asKnown().getOrNull()?.validity() ?: 0) +
+            (identityVerification.asKnown().getOrNull()?.validity() ?: 0) +
             (if (isAutomated.asKnown().isPresent) 1 else 0) +
             (if (isBlueVerified.asKnown().isPresent) 1 else 0) +
+            (if (isProfileTranslatable.asKnown().isPresent) 1 else 0) +
             (if (isTranslator.asKnown().isPresent) 1 else 0) +
             (if (isVerified.asKnown().isPresent) 1 else 0) +
             (if (location.asKnown().isPresent) 1 else 0) +
             (if (mediaCount.asKnown().isPresent) 1 else 0) +
+            (if (parodyCommentaryFanLabel.asKnown().isPresent) 1 else 0) +
             (pinnedTweetIds.asKnown().getOrNull()?.size ?: 0) +
             (if (possiblySensitive.asKnown().isPresent) 1 else 0) +
             (profileBio.asKnown().getOrNull()?.validity() ?: 0) +
             (if (profileBannerUrl.asKnown().isPresent) 1 else 0) +
+            (if (profileDescriptionLanguage.asKnown().isPresent) 1 else 0) +
+            (if (profileImageShape.asKnown().isPresent) 1 else 0) +
+            (if (profileInterstitialType.asKnown().isPresent) 1 else 0) +
             (if (profilePicture.asKnown().isPresent) 1 else 0) +
+            (if (profileSortEnabled.asKnown().isPresent) 1 else 0) +
+            (if (profileTranslatorType.asKnown().isPresent) 1 else 0) +
             (if (protected_.asKnown().isPresent) 1 else 0) +
             (if (statusesCount.asKnown().isPresent) 1 else 0) +
+            (if (superFollowEligible.asKnown().isPresent) 1 else 0) +
             (if (unavailable.asKnown().isPresent) 1 else 0) +
             (if (unavailableReason.asKnown().isPresent) 1 else 0) +
             (if (url.asKnown().isPresent) 1 else 0) +
             (if (verified.asKnown().isPresent) 1 else 0) +
             (if (verifiedType.asKnown().isPresent) 1 else 0) +
-            (if (viewerFollowedBy.asKnown().isPresent) 1 else 0) +
-            (if (viewerFollowing.asKnown().isPresent) 1 else 0) +
             (withheldInCountries.asKnown().getOrNull()?.size ?: 0)
 
     override fun equals(other: Any?): Boolean {
@@ -1454,36 +1979,48 @@ private constructor(
             id == other.id &&
             name == other.name &&
             username == other.username &&
+            affiliatesHighlightedLabel == other.affiliatesHighlightedLabel &&
             automatedBy == other.automatedBy &&
-            canDm == other.canDm &&
+            businessAccountAffiliatesCount == other.businessAccountAffiliatesCount &&
             communityRole == other.communityRole &&
             coverPicture == other.coverPicture &&
             createdAt == other.createdAt &&
+            creatorSubscriptionsCount == other.creatorSubscriptionsCount &&
             description == other.description &&
             favouritesCount == other.favouritesCount &&
             followers == other.followers &&
             following == other.following &&
             hasCustomTimelines == other.hasCustomTimelines &&
+            hasGraduatedAccess == other.hasGraduatedAccess &&
+            hasHiddenSubscriptionsOnProfile == other.hasHiddenSubscriptionsOnProfile &&
+            highlightsInfo == other.highlightsInfo &&
+            identityVerification == other.identityVerification &&
             isAutomated == other.isAutomated &&
             isBlueVerified == other.isBlueVerified &&
+            isProfileTranslatable == other.isProfileTranslatable &&
             isTranslator == other.isTranslator &&
             isVerified == other.isVerified &&
             location == other.location &&
             mediaCount == other.mediaCount &&
+            parodyCommentaryFanLabel == other.parodyCommentaryFanLabel &&
             pinnedTweetIds == other.pinnedTweetIds &&
             possiblySensitive == other.possiblySensitive &&
             profileBio == other.profileBio &&
             profileBannerUrl == other.profileBannerUrl &&
+            profileDescriptionLanguage == other.profileDescriptionLanguage &&
+            profileImageShape == other.profileImageShape &&
+            profileInterstitialType == other.profileInterstitialType &&
             profilePicture == other.profilePicture &&
+            profileSortEnabled == other.profileSortEnabled &&
+            profileTranslatorType == other.profileTranslatorType &&
             protected_ == other.protected_ &&
             statusesCount == other.statusesCount &&
+            superFollowEligible == other.superFollowEligible &&
             unavailable == other.unavailable &&
             unavailableReason == other.unavailableReason &&
             url == other.url &&
             verified == other.verified &&
             verifiedType == other.verifiedType &&
-            viewerFollowedBy == other.viewerFollowedBy &&
-            viewerFollowing == other.viewerFollowing &&
             withheldInCountries == other.withheldInCountries &&
             additionalProperties == other.additionalProperties
     }
@@ -1493,36 +2030,48 @@ private constructor(
             id,
             name,
             username,
+            affiliatesHighlightedLabel,
             automatedBy,
-            canDm,
+            businessAccountAffiliatesCount,
             communityRole,
             coverPicture,
             createdAt,
+            creatorSubscriptionsCount,
             description,
             favouritesCount,
             followers,
             following,
             hasCustomTimelines,
+            hasGraduatedAccess,
+            hasHiddenSubscriptionsOnProfile,
+            highlightsInfo,
+            identityVerification,
             isAutomated,
             isBlueVerified,
+            isProfileTranslatable,
             isTranslator,
             isVerified,
             location,
             mediaCount,
+            parodyCommentaryFanLabel,
             pinnedTweetIds,
             possiblySensitive,
             profileBio,
             profileBannerUrl,
+            profileDescriptionLanguage,
+            profileImageShape,
+            profileInterstitialType,
             profilePicture,
+            profileSortEnabled,
+            profileTranslatorType,
             protected_,
             statusesCount,
+            superFollowEligible,
             unavailable,
             unavailableReason,
             url,
             verified,
             verifiedType,
-            viewerFollowedBy,
-            viewerFollowing,
             withheldInCountries,
             additionalProperties,
         )
@@ -1531,5 +2080,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "TweetAuthor{id=$id, name=$name, username=$username, automatedBy=$automatedBy, canDm=$canDm, communityRole=$communityRole, coverPicture=$coverPicture, createdAt=$createdAt, description=$description, favouritesCount=$favouritesCount, followers=$followers, following=$following, hasCustomTimelines=$hasCustomTimelines, isAutomated=$isAutomated, isBlueVerified=$isBlueVerified, isTranslator=$isTranslator, isVerified=$isVerified, location=$location, mediaCount=$mediaCount, pinnedTweetIds=$pinnedTweetIds, possiblySensitive=$possiblySensitive, profileBio=$profileBio, profileBannerUrl=$profileBannerUrl, profilePicture=$profilePicture, protected_=$protected_, statusesCount=$statusesCount, unavailable=$unavailable, unavailableReason=$unavailableReason, url=$url, verified=$verified, verifiedType=$verifiedType, viewerFollowedBy=$viewerFollowedBy, viewerFollowing=$viewerFollowing, withheldInCountries=$withheldInCountries, additionalProperties=$additionalProperties}"
+        "TweetAuthor{id=$id, name=$name, username=$username, affiliatesHighlightedLabel=$affiliatesHighlightedLabel, automatedBy=$automatedBy, businessAccountAffiliatesCount=$businessAccountAffiliatesCount, communityRole=$communityRole, coverPicture=$coverPicture, createdAt=$createdAt, creatorSubscriptionsCount=$creatorSubscriptionsCount, description=$description, favouritesCount=$favouritesCount, followers=$followers, following=$following, hasCustomTimelines=$hasCustomTimelines, hasGraduatedAccess=$hasGraduatedAccess, hasHiddenSubscriptionsOnProfile=$hasHiddenSubscriptionsOnProfile, highlightsInfo=$highlightsInfo, identityVerification=$identityVerification, isAutomated=$isAutomated, isBlueVerified=$isBlueVerified, isProfileTranslatable=$isProfileTranslatable, isTranslator=$isTranslator, isVerified=$isVerified, location=$location, mediaCount=$mediaCount, parodyCommentaryFanLabel=$parodyCommentaryFanLabel, pinnedTweetIds=$pinnedTweetIds, possiblySensitive=$possiblySensitive, profileBio=$profileBio, profileBannerUrl=$profileBannerUrl, profileDescriptionLanguage=$profileDescriptionLanguage, profileImageShape=$profileImageShape, profileInterstitialType=$profileInterstitialType, profilePicture=$profilePicture, profileSortEnabled=$profileSortEnabled, profileTranslatorType=$profileTranslatorType, protected_=$protected_, statusesCount=$statusesCount, superFollowEligible=$superFollowEligible, unavailable=$unavailable, unavailableReason=$unavailableReason, url=$url, verified=$verified, verifiedType=$verifiedType, withheldInCountries=$withheldInCountries, additionalProperties=$additionalProperties}"
 }

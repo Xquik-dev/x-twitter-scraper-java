@@ -15,12 +15,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.core.BaseDeserializer
 import com.x_twitter_scraper.api.core.BaseSerializer
-import com.x_twitter_scraper.api.core.Enum
 import com.x_twitter_scraper.api.core.ExcludeMissing
 import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
-import com.x_twitter_scraper.api.core.allMaxBy
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.getOrThrow
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
@@ -35,58 +33,50 @@ import kotlin.jvm.optionals.getOrNull
 @JsonSerialize(using = AccountConnectionAttemptRetrieveResponse.Serializer::class)
 class AccountConnectionAttemptRetrieveResponse
 private constructor(
-    private val xAccountConnectionAttemptPending: XAccountConnectionAttemptPending? = null,
-    private val xAccountConnectionAttemptSuccess: XAccountConnectionAttemptSuccess? = null,
-    private val xAccountConnectionAttemptFailed: XAccountConnectionAttemptFailed? = null,
-    private val xAccountConnectionChallenge: XAccountConnectionChallenge? = null,
+    private val pending: Pending? = null,
+    private val success: Success? = null,
+    private val failed: Failed? = null,
+    private val requiresEmailCode: RequiresEmailCode? = null,
     private val _json: JsonValue? = null,
 ) {
 
     /** The connection is still in progress. */
-    fun xAccountConnectionAttemptPending(): Optional<XAccountConnectionAttemptPending> =
-        Optional.ofNullable(xAccountConnectionAttemptPending)
+    fun pending(): Optional<Pending> = Optional.ofNullable(pending)
 
     /** The account connected successfully. */
-    fun xAccountConnectionAttemptSuccess(): Optional<XAccountConnectionAttemptSuccess> =
-        Optional.ofNullable(xAccountConnectionAttemptSuccess)
+    fun success(): Optional<Success> = Optional.ofNullable(success)
 
     /** The connection reached a final failure. */
-    fun xAccountConnectionAttemptFailed(): Optional<XAccountConnectionAttemptFailed> =
-        Optional.ofNullable(xAccountConnectionAttemptFailed)
+    fun failed(): Optional<Failed> = Optional.ofNullable(failed)
 
     /**
      * Resumable account connection challenge. Submit the email code to finish the same connection
      * attempt.
      */
-    fun xAccountConnectionChallenge(): Optional<XAccountConnectionChallenge> =
-        Optional.ofNullable(xAccountConnectionChallenge)
+    fun requiresEmailCode(): Optional<RequiresEmailCode> = Optional.ofNullable(requiresEmailCode)
 
-    fun isXAccountConnectionAttemptPending(): Boolean = xAccountConnectionAttemptPending != null
+    fun isPending(): Boolean = pending != null
 
-    fun isXAccountConnectionAttemptSuccess(): Boolean = xAccountConnectionAttemptSuccess != null
+    fun isSuccess(): Boolean = success != null
 
-    fun isXAccountConnectionAttemptFailed(): Boolean = xAccountConnectionAttemptFailed != null
+    fun isFailed(): Boolean = failed != null
 
-    fun isXAccountConnectionChallenge(): Boolean = xAccountConnectionChallenge != null
+    fun isRequiresEmailCode(): Boolean = requiresEmailCode != null
 
     /** The connection is still in progress. */
-    fun asXAccountConnectionAttemptPending(): XAccountConnectionAttemptPending =
-        xAccountConnectionAttemptPending.getOrThrow("xAccountConnectionAttemptPending")
+    fun asPending(): Pending = pending.getOrThrow("pending")
 
     /** The account connected successfully. */
-    fun asXAccountConnectionAttemptSuccess(): XAccountConnectionAttemptSuccess =
-        xAccountConnectionAttemptSuccess.getOrThrow("xAccountConnectionAttemptSuccess")
+    fun asSuccess(): Success = success.getOrThrow("success")
 
     /** The connection reached a final failure. */
-    fun asXAccountConnectionAttemptFailed(): XAccountConnectionAttemptFailed =
-        xAccountConnectionAttemptFailed.getOrThrow("xAccountConnectionAttemptFailed")
+    fun asFailed(): Failed = failed.getOrThrow("failed")
 
     /**
      * Resumable account connection challenge. Submit the email code to finish the same connection
      * attempt.
      */
-    fun asXAccountConnectionChallenge(): XAccountConnectionChallenge =
-        xAccountConnectionChallenge.getOrThrow("xAccountConnectionChallenge")
+    fun asRequiresEmailCode(): RequiresEmailCode = requiresEmailCode.getOrThrow("requiresEmailCode")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -102,8 +92,8 @@ private constructor(
      *
      * Optional<String> result = accountConnectionAttemptRetrieveResponse.accept(new AccountConnectionAttemptRetrieveResponse.Visitor<Optional<String>>() {
      *     @Override
-     *     public Optional<String> visitXAccountConnectionAttemptPending(XAccountConnectionAttemptPending xAccountConnectionAttemptPending) {
-     *         return Optional.of(xAccountConnectionAttemptPending.toString());
+     *     public Optional<String> visitPending(Pending pending) {
+     *         return Optional.of(pending.toString());
      *     }
      *
      *     // ...
@@ -121,14 +111,10 @@ private constructor(
      */
     fun <T> accept(visitor: Visitor<T>): T =
         when {
-            xAccountConnectionAttemptPending != null ->
-                visitor.visitXAccountConnectionAttemptPending(xAccountConnectionAttemptPending)
-            xAccountConnectionAttemptSuccess != null ->
-                visitor.visitXAccountConnectionAttemptSuccess(xAccountConnectionAttemptSuccess)
-            xAccountConnectionAttemptFailed != null ->
-                visitor.visitXAccountConnectionAttemptFailed(xAccountConnectionAttemptFailed)
-            xAccountConnectionChallenge != null ->
-                visitor.visitXAccountConnectionChallenge(xAccountConnectionChallenge)
+            pending != null -> visitor.visitPending(pending)
+            success != null -> visitor.visitSuccess(success)
+            failed != null -> visitor.visitFailed(failed)
+            requiresEmailCode != null -> visitor.visitRequiresEmailCode(requiresEmailCode)
             else -> visitor.unknown(_json)
         }
 
@@ -149,28 +135,20 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
-                override fun visitXAccountConnectionAttemptPending(
-                    xAccountConnectionAttemptPending: XAccountConnectionAttemptPending
-                ) {
-                    xAccountConnectionAttemptPending.validate()
+                override fun visitPending(pending: Pending) {
+                    pending.validate()
                 }
 
-                override fun visitXAccountConnectionAttemptSuccess(
-                    xAccountConnectionAttemptSuccess: XAccountConnectionAttemptSuccess
-                ) {
-                    xAccountConnectionAttemptSuccess.validate()
+                override fun visitSuccess(success: Success) {
+                    success.validate()
                 }
 
-                override fun visitXAccountConnectionAttemptFailed(
-                    xAccountConnectionAttemptFailed: XAccountConnectionAttemptFailed
-                ) {
-                    xAccountConnectionAttemptFailed.validate()
+                override fun visitFailed(failed: Failed) {
+                    failed.validate()
                 }
 
-                override fun visitXAccountConnectionChallenge(
-                    xAccountConnectionChallenge: XAccountConnectionChallenge
-                ) {
-                    xAccountConnectionChallenge.validate()
+                override fun visitRequiresEmailCode(requiresEmailCode: RequiresEmailCode) {
+                    requiresEmailCode.validate()
                 }
             }
         )
@@ -194,21 +172,14 @@ private constructor(
     internal fun validity(): Int =
         accept(
             object : Visitor<Int> {
-                override fun visitXAccountConnectionAttemptPending(
-                    xAccountConnectionAttemptPending: XAccountConnectionAttemptPending
-                ) = xAccountConnectionAttemptPending.validity()
+                override fun visitPending(pending: Pending) = pending.validity()
 
-                override fun visitXAccountConnectionAttemptSuccess(
-                    xAccountConnectionAttemptSuccess: XAccountConnectionAttemptSuccess
-                ) = xAccountConnectionAttemptSuccess.validity()
+                override fun visitSuccess(success: Success) = success.validity()
 
-                override fun visitXAccountConnectionAttemptFailed(
-                    xAccountConnectionAttemptFailed: XAccountConnectionAttemptFailed
-                ) = xAccountConnectionAttemptFailed.validity()
+                override fun visitFailed(failed: Failed) = failed.validity()
 
-                override fun visitXAccountConnectionChallenge(
-                    xAccountConnectionChallenge: XAccountConnectionChallenge
-                ) = xAccountConnectionChallenge.validity()
+                override fun visitRequiresEmailCode(requiresEmailCode: RequiresEmailCode) =
+                    requiresEmailCode.validity()
 
                 override fun unknown(json: JsonValue?) = 0
             }
@@ -220,30 +191,21 @@ private constructor(
         }
 
         return other is AccountConnectionAttemptRetrieveResponse &&
-            xAccountConnectionAttemptPending == other.xAccountConnectionAttemptPending &&
-            xAccountConnectionAttemptSuccess == other.xAccountConnectionAttemptSuccess &&
-            xAccountConnectionAttemptFailed == other.xAccountConnectionAttemptFailed &&
-            xAccountConnectionChallenge == other.xAccountConnectionChallenge
+            pending == other.pending &&
+            success == other.success &&
+            failed == other.failed &&
+            requiresEmailCode == other.requiresEmailCode
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(
-            xAccountConnectionAttemptPending,
-            xAccountConnectionAttemptSuccess,
-            xAccountConnectionAttemptFailed,
-            xAccountConnectionChallenge,
-        )
+    override fun hashCode(): Int = Objects.hash(pending, success, failed, requiresEmailCode)
 
     override fun toString(): String =
         when {
-            xAccountConnectionAttemptPending != null ->
-                "AccountConnectionAttemptRetrieveResponse{xAccountConnectionAttemptPending=$xAccountConnectionAttemptPending}"
-            xAccountConnectionAttemptSuccess != null ->
-                "AccountConnectionAttemptRetrieveResponse{xAccountConnectionAttemptSuccess=$xAccountConnectionAttemptSuccess}"
-            xAccountConnectionAttemptFailed != null ->
-                "AccountConnectionAttemptRetrieveResponse{xAccountConnectionAttemptFailed=$xAccountConnectionAttemptFailed}"
-            xAccountConnectionChallenge != null ->
-                "AccountConnectionAttemptRetrieveResponse{xAccountConnectionChallenge=$xAccountConnectionChallenge}"
+            pending != null -> "AccountConnectionAttemptRetrieveResponse{pending=$pending}"
+            success != null -> "AccountConnectionAttemptRetrieveResponse{success=$success}"
+            failed != null -> "AccountConnectionAttemptRetrieveResponse{failed=$failed}"
+            requiresEmailCode != null ->
+                "AccountConnectionAttemptRetrieveResponse{requiresEmailCode=$requiresEmailCode}"
             _json != null -> "AccountConnectionAttemptRetrieveResponse{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid AccountConnectionAttemptRetrieveResponse")
         }
@@ -252,42 +214,25 @@ private constructor(
 
         /** The connection is still in progress. */
         @JvmStatic
-        fun ofXAccountConnectionAttemptPending(
-            xAccountConnectionAttemptPending: XAccountConnectionAttemptPending
-        ) =
-            AccountConnectionAttemptRetrieveResponse(
-                xAccountConnectionAttemptPending = xAccountConnectionAttemptPending
-            )
+        fun ofPending(pending: Pending) =
+            AccountConnectionAttemptRetrieveResponse(pending = pending)
 
         /** The account connected successfully. */
         @JvmStatic
-        fun ofXAccountConnectionAttemptSuccess(
-            xAccountConnectionAttemptSuccess: XAccountConnectionAttemptSuccess
-        ) =
-            AccountConnectionAttemptRetrieveResponse(
-                xAccountConnectionAttemptSuccess = xAccountConnectionAttemptSuccess
-            )
+        fun ofSuccess(success: Success) =
+            AccountConnectionAttemptRetrieveResponse(success = success)
 
         /** The connection reached a final failure. */
         @JvmStatic
-        fun ofXAccountConnectionAttemptFailed(
-            xAccountConnectionAttemptFailed: XAccountConnectionAttemptFailed
-        ) =
-            AccountConnectionAttemptRetrieveResponse(
-                xAccountConnectionAttemptFailed = xAccountConnectionAttemptFailed
-            )
+        fun ofFailed(failed: Failed) = AccountConnectionAttemptRetrieveResponse(failed = failed)
 
         /**
          * Resumable account connection challenge. Submit the email code to finish the same
          * connection attempt.
          */
         @JvmStatic
-        fun ofXAccountConnectionChallenge(
-            xAccountConnectionChallenge: XAccountConnectionChallenge
-        ) =
-            AccountConnectionAttemptRetrieveResponse(
-                xAccountConnectionChallenge = xAccountConnectionChallenge
-            )
+        fun ofRequiresEmailCode(requiresEmailCode: RequiresEmailCode) =
+            AccountConnectionAttemptRetrieveResponse(requiresEmailCode = requiresEmailCode)
     }
 
     /**
@@ -297,27 +242,19 @@ private constructor(
     interface Visitor<out T> {
 
         /** The connection is still in progress. */
-        fun visitXAccountConnectionAttemptPending(
-            xAccountConnectionAttemptPending: XAccountConnectionAttemptPending
-        ): T
+        fun visitPending(pending: Pending): T
 
         /** The account connected successfully. */
-        fun visitXAccountConnectionAttemptSuccess(
-            xAccountConnectionAttemptSuccess: XAccountConnectionAttemptSuccess
-        ): T
+        fun visitSuccess(success: Success): T
 
         /** The connection reached a final failure. */
-        fun visitXAccountConnectionAttemptFailed(
-            xAccountConnectionAttemptFailed: XAccountConnectionAttemptFailed
-        ): T
+        fun visitFailed(failed: Failed): T
 
         /**
          * Resumable account connection challenge. Submit the email code to finish the same
          * connection attempt.
          */
-        fun visitXAccountConnectionChallenge(
-            xAccountConnectionChallenge: XAccountConnectionChallenge
-        ): T
+        fun visitRequiresEmailCode(requiresEmailCode: RequiresEmailCode): T
 
         /**
          * Maps an unknown variant of [AccountConnectionAttemptRetrieveResponse] to a value of type
@@ -346,49 +283,35 @@ private constructor(
             node: JsonNode
         ): AccountConnectionAttemptRetrieveResponse {
             val json = JsonValue.fromJsonNode(node)
+            val status = json.asObject().getOrNull()?.get("status")?.asString()?.getOrNull()
 
-            val bestMatches =
-                sequenceOf(
-                        tryDeserialize(node, jacksonTypeRef<XAccountConnectionAttemptPending>())
-                            ?.let {
-                                AccountConnectionAttemptRetrieveResponse(
-                                    xAccountConnectionAttemptPending = it,
-                                    _json = json,
-                                )
-                            },
-                        tryDeserialize(node, jacksonTypeRef<XAccountConnectionAttemptSuccess>())
-                            ?.let {
-                                AccountConnectionAttemptRetrieveResponse(
-                                    xAccountConnectionAttemptSuccess = it,
-                                    _json = json,
-                                )
-                            },
-                        tryDeserialize(node, jacksonTypeRef<XAccountConnectionAttemptFailed>())
-                            ?.let {
-                                AccountConnectionAttemptRetrieveResponse(
-                                    xAccountConnectionAttemptFailed = it,
-                                    _json = json,
-                                )
-                            },
-                        tryDeserialize(node, jacksonTypeRef<XAccountConnectionChallenge>())?.let {
-                            AccountConnectionAttemptRetrieveResponse(
-                                xAccountConnectionChallenge = it,
-                                _json = json,
-                            )
-                        },
-                    )
-                    .filterNotNull()
-                    .allMaxBy { it.validity() }
-                    .toList()
-            return when (bestMatches.size) {
-                // This can happen if what we're deserializing is completely incompatible with all
-                // the possible variants (e.g. deserializing from boolean).
-                0 -> AccountConnectionAttemptRetrieveResponse(_json = json)
-                1 -> bestMatches.single()
-                // If there's more than one match with the highest validity, then use the first
-                // completely valid match, or simply the first match if none are completely valid.
-                else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
+            when (status) {
+                "pending" -> {
+                    return tryDeserialize(node, jacksonTypeRef<Pending>())?.let {
+                        AccountConnectionAttemptRetrieveResponse(pending = it, _json = json)
+                    } ?: AccountConnectionAttemptRetrieveResponse(_json = json)
+                }
+                "success" -> {
+                    return tryDeserialize(node, jacksonTypeRef<Success>())?.let {
+                        AccountConnectionAttemptRetrieveResponse(success = it, _json = json)
+                    } ?: AccountConnectionAttemptRetrieveResponse(_json = json)
+                }
+                "failed" -> {
+                    return tryDeserialize(node, jacksonTypeRef<Failed>())?.let {
+                        AccountConnectionAttemptRetrieveResponse(failed = it, _json = json)
+                    } ?: AccountConnectionAttemptRetrieveResponse(_json = json)
+                }
+                "requires_email_code" -> {
+                    return tryDeserialize(node, jacksonTypeRef<RequiresEmailCode>())?.let {
+                        AccountConnectionAttemptRetrieveResponse(
+                            requiresEmailCode = it,
+                            _json = json,
+                        )
+                    } ?: AccountConnectionAttemptRetrieveResponse(_json = json)
+                }
             }
+
+            return AccountConnectionAttemptRetrieveResponse(_json = json)
         }
     }
 
@@ -403,14 +326,10 @@ private constructor(
             provider: SerializerProvider,
         ) {
             when {
-                value.xAccountConnectionAttemptPending != null ->
-                    generator.writeObject(value.xAccountConnectionAttemptPending)
-                value.xAccountConnectionAttemptSuccess != null ->
-                    generator.writeObject(value.xAccountConnectionAttemptSuccess)
-                value.xAccountConnectionAttemptFailed != null ->
-                    generator.writeObject(value.xAccountConnectionAttemptFailed)
-                value.xAccountConnectionChallenge != null ->
-                    generator.writeObject(value.xAccountConnectionChallenge)
+                value.pending != null -> generator.writeObject(value.pending)
+                value.success != null -> generator.writeObject(value.success)
+                value.failed != null -> generator.writeObject(value.failed)
+                value.requiresEmailCode != null -> generator.writeObject(value.requiresEmailCode)
                 value._json != null -> generator.writeObject(value._json)
                 else ->
                     throw IllegalStateException("Invalid AccountConnectionAttemptRetrieveResponse")
@@ -419,7 +338,7 @@ private constructor(
     }
 
     /** The connection is still in progress. */
-    class XAccountConnectionAttemptPending
+    class Pending
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val id: JsonField<String>,
@@ -506,8 +425,7 @@ private constructor(
         companion object {
 
             /**
-             * Returns a mutable builder for constructing an instance of
-             * [XAccountConnectionAttemptPending].
+             * Returns a mutable builder for constructing an instance of [Pending].
              *
              * The following fields are required:
              * ```java
@@ -518,7 +436,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [XAccountConnectionAttemptPending]. */
+        /** A builder for [Pending]. */
         class Builder internal constructor() {
 
             private var id: JsonField<String>? = null
@@ -528,15 +446,13 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(xAccountConnectionAttemptPending: XAccountConnectionAttemptPending) =
-                apply {
-                    id = xAccountConnectionAttemptPending.id
-                    object_ = xAccountConnectionAttemptPending.object_
-                    pollAfterMs = xAccountConnectionAttemptPending.pollAfterMs
-                    status = xAccountConnectionAttemptPending.status
-                    additionalProperties =
-                        xAccountConnectionAttemptPending.additionalProperties.toMutableMap()
-                }
+            internal fun from(pending: Pending) = apply {
+                id = pending.id
+                object_ = pending.object_
+                pollAfterMs = pending.pollAfterMs
+                status = pending.status
+                additionalProperties = pending.additionalProperties.toMutableMap()
+            }
 
             fun id(id: String) = id(JsonField.of(id))
 
@@ -608,7 +524,7 @@ private constructor(
             }
 
             /**
-             * Returns an immutable instance of [XAccountConnectionAttemptPending].
+             * Returns an immutable instance of [Pending].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
              *
@@ -620,8 +536,8 @@ private constructor(
              *
              * @throws IllegalStateException if any required field is unset.
              */
-            fun build(): XAccountConnectionAttemptPending =
-                XAccountConnectionAttemptPending(
+            fun build(): Pending =
+                Pending(
                     checkRequired("id", id),
                     object_,
                     checkRequired("pollAfterMs", pollAfterMs),
@@ -641,7 +557,7 @@ private constructor(
          * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
          *   match its expected type.
          */
-        fun validate(): XAccountConnectionAttemptPending = apply {
+        fun validate(): Pending = apply {
             if (validated) {
                 return@apply
             }
@@ -687,7 +603,7 @@ private constructor(
                 return true
             }
 
-            return other is XAccountConnectionAttemptPending &&
+            return other is Pending &&
                 id == other.id &&
                 object_ == other.object_ &&
                 pollAfterMs == other.pollAfterMs &&
@@ -702,11 +618,11 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "XAccountConnectionAttemptPending{id=$id, object_=$object_, pollAfterMs=$pollAfterMs, status=$status, additionalProperties=$additionalProperties}"
+            "Pending{id=$id, object_=$object_, pollAfterMs=$pollAfterMs, status=$status, additionalProperties=$additionalProperties}"
     }
 
     /** The account connected successfully. */
-    class XAccountConnectionAttemptSuccess
+    class Success
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val id: JsonField<String>,
@@ -773,8 +689,7 @@ private constructor(
         companion object {
 
             /**
-             * Returns a mutable builder for constructing an instance of
-             * [XAccountConnectionAttemptSuccess].
+             * Returns a mutable builder for constructing an instance of [Success].
              *
              * The following fields are required:
              * ```java
@@ -784,7 +699,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [XAccountConnectionAttemptSuccess]. */
+        /** A builder for [Success]. */
         class Builder internal constructor() {
 
             private var id: JsonField<String>? = null
@@ -793,14 +708,12 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(xAccountConnectionAttemptSuccess: XAccountConnectionAttemptSuccess) =
-                apply {
-                    id = xAccountConnectionAttemptSuccess.id
-                    object_ = xAccountConnectionAttemptSuccess.object_
-                    status = xAccountConnectionAttemptSuccess.status
-                    additionalProperties =
-                        xAccountConnectionAttemptSuccess.additionalProperties.toMutableMap()
-                }
+            internal fun from(success: Success) = apply {
+                id = success.id
+                object_ = success.object_
+                status = success.status
+                additionalProperties = success.additionalProperties.toMutableMap()
+            }
 
             fun id(id: String) = id(JsonField.of(id))
 
@@ -861,7 +774,7 @@ private constructor(
             }
 
             /**
-             * Returns an immutable instance of [XAccountConnectionAttemptSuccess].
+             * Returns an immutable instance of [Success].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
              *
@@ -872,8 +785,8 @@ private constructor(
              *
              * @throws IllegalStateException if any required field is unset.
              */
-            fun build(): XAccountConnectionAttemptSuccess =
-                XAccountConnectionAttemptSuccess(
+            fun build(): Success =
+                Success(
                     checkRequired("id", id),
                     object_,
                     status,
@@ -892,7 +805,7 @@ private constructor(
          * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
          *   match its expected type.
          */
-        fun validate(): XAccountConnectionAttemptSuccess = apply {
+        fun validate(): Success = apply {
             if (validated) {
                 return@apply
             }
@@ -936,7 +849,7 @@ private constructor(
                 return true
             }
 
-            return other is XAccountConnectionAttemptSuccess &&
+            return other is Success &&
                 id == other.id &&
                 object_ == other.object_ &&
                 status == other.status &&
@@ -950,11 +863,11 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "XAccountConnectionAttemptSuccess{id=$id, object_=$object_, status=$status, additionalProperties=$additionalProperties}"
+            "Success{id=$id, object_=$object_, status=$status, additionalProperties=$additionalProperties}"
     }
 
     /** The connection reached a final failure. */
-    class XAccountConnectionAttemptFailed
+    class Failed
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val id: JsonField<String>,
@@ -1070,8 +983,7 @@ private constructor(
         companion object {
 
             /**
-             * Returns a mutable builder for constructing an instance of
-             * [XAccountConnectionAttemptFailed].
+             * Returns a mutable builder for constructing an instance of [Failed].
              *
              * The following fields are required:
              * ```java
@@ -1083,7 +995,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [XAccountConnectionAttemptFailed]. */
+        /** A builder for [Failed]. */
         class Builder internal constructor() {
 
             private var id: JsonField<String>? = null
@@ -1095,17 +1007,15 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(xAccountConnectionAttemptFailed: XAccountConnectionAttemptFailed) =
-                apply {
-                    id = xAccountConnectionAttemptFailed.id
-                    error = xAccountConnectionAttemptFailed.error
-                    object_ = xAccountConnectionAttemptFailed.object_
-                    retryable = xAccountConnectionAttemptFailed.retryable
-                    status = xAccountConnectionAttemptFailed.status
-                    reason = xAccountConnectionAttemptFailed.reason
-                    additionalProperties =
-                        xAccountConnectionAttemptFailed.additionalProperties.toMutableMap()
-                }
+            internal fun from(failed: Failed) = apply {
+                id = failed.id
+                error = failed.error
+                object_ = failed.object_
+                retryable = failed.retryable
+                status = failed.status
+                reason = failed.reason
+                additionalProperties = failed.additionalProperties.toMutableMap()
+            }
 
             fun id(id: String) = id(JsonField.of(id))
 
@@ -1199,7 +1109,7 @@ private constructor(
             }
 
             /**
-             * Returns an immutable instance of [XAccountConnectionAttemptFailed].
+             * Returns an immutable instance of [Failed].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
              *
@@ -1212,8 +1122,8 @@ private constructor(
              *
              * @throws IllegalStateException if any required field is unset.
              */
-            fun build(): XAccountConnectionAttemptFailed =
-                XAccountConnectionAttemptFailed(
+            fun build(): Failed =
+                Failed(
                     checkRequired("id", id),
                     checkRequired("error", error),
                     object_,
@@ -1235,7 +1145,7 @@ private constructor(
          * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
          *   match its expected type.
          */
-        fun validate(): XAccountConnectionAttemptFailed = apply {
+        fun validate(): Failed = apply {
             if (validated) {
                 return@apply
             }
@@ -1285,7 +1195,7 @@ private constructor(
                 return true
             }
 
-            return other is XAccountConnectionAttemptFailed &&
+            return other is Failed &&
                 id == other.id &&
                 error == other.error &&
                 object_ == other.object_ &&
@@ -1302,21 +1212,21 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "XAccountConnectionAttemptFailed{id=$id, error=$error, object_=$object_, retryable=$retryable, status=$status, reason=$reason, additionalProperties=$additionalProperties}"
+            "Failed{id=$id, error=$error, object_=$object_, retryable=$retryable, status=$status, reason=$reason, additionalProperties=$additionalProperties}"
     }
 
     /**
      * Resumable account connection challenge. Submit the email code to finish the same connection
      * attempt.
      */
-    class XAccountConnectionChallenge
+    class RequiresEmailCode
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val id: JsonField<String>,
         private val expiresAt: JsonField<OffsetDateTime>,
         private val message: JsonField<String>,
-        private val object_: JsonField<Object>,
-        private val status: JsonField<Status>,
+        private val object_: JsonValue,
+        private val status: JsonValue,
         private val username: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -1328,8 +1238,8 @@ private constructor(
             @ExcludeMissing
             expiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
             @JsonProperty("message") @ExcludeMissing message: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("object") @ExcludeMissing object_: JsonField<Object> = JsonMissing.of(),
-            @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of(),
+            @JsonProperty("object") @ExcludeMissing object_: JsonValue = JsonMissing.of(),
+            @JsonProperty("status") @ExcludeMissing status: JsonValue = JsonMissing.of(),
             @JsonProperty("username") @ExcludeMissing username: JsonField<String> = JsonMissing.of(),
         ) : this(id, expiresAt, message, object_, status, username, mutableMapOf())
 
@@ -1355,18 +1265,26 @@ private constructor(
         fun message(): String = message.getRequired("message")
 
         /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         * Expected to always return the following:
+         * ```java
+         * JsonValue.from("x_account_connection_challenge")
+         * ```
+         *
+         * However, this method can be useful for debugging and logging (e.g. if the server
+         * responded with an unexpected value).
          */
-        fun object_(): Object = object_.getRequired("object")
+        @JsonProperty("object") @ExcludeMissing fun _object_(): JsonValue = object_
 
         /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         * Expected to always return the following:
+         * ```java
+         * JsonValue.from("requires_email_code")
+         * ```
+         *
+         * However, this method can be useful for debugging and logging (e.g. if the server
+         * responded with an unexpected value).
          */
-        fun status(): Status = status.getRequired("status")
+        @JsonProperty("status") @ExcludeMissing fun _status(): JsonValue = status
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
@@ -1399,20 +1317,6 @@ private constructor(
         @JsonProperty("message") @ExcludeMissing fun _message(): JsonField<String> = message
 
         /**
-         * Returns the raw JSON value of [object_].
-         *
-         * Unlike [object_], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("object") @ExcludeMissing fun _object_(): JsonField<Object> = object_
-
-        /**
-         * Returns the raw JSON value of [status].
-         *
-         * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<Status> = status
-
-        /**
          * Returns the raw JSON value of [username].
          *
          * Unlike [username], this method doesn't throw if the JSON field has an unexpected type.
@@ -1434,43 +1338,39 @@ private constructor(
         companion object {
 
             /**
-             * Returns a mutable builder for constructing an instance of
-             * [XAccountConnectionChallenge].
+             * Returns a mutable builder for constructing an instance of [RequiresEmailCode].
              *
              * The following fields are required:
              * ```java
              * .id()
              * .expiresAt()
              * .message()
-             * .object_()
-             * .status()
              * .username()
              * ```
              */
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [XAccountConnectionChallenge]. */
+        /** A builder for [RequiresEmailCode]. */
         class Builder internal constructor() {
 
             private var id: JsonField<String>? = null
             private var expiresAt: JsonField<OffsetDateTime>? = null
             private var message: JsonField<String>? = null
-            private var object_: JsonField<Object>? = null
-            private var status: JsonField<Status>? = null
+            private var object_: JsonValue = JsonValue.from("x_account_connection_challenge")
+            private var status: JsonValue = JsonValue.from("requires_email_code")
             private var username: JsonField<String>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(xAccountConnectionChallenge: XAccountConnectionChallenge) = apply {
-                id = xAccountConnectionChallenge.id
-                expiresAt = xAccountConnectionChallenge.expiresAt
-                message = xAccountConnectionChallenge.message
-                object_ = xAccountConnectionChallenge.object_
-                status = xAccountConnectionChallenge.status
-                username = xAccountConnectionChallenge.username
-                additionalProperties =
-                    xAccountConnectionChallenge.additionalProperties.toMutableMap()
+            internal fun from(requiresEmailCode: RequiresEmailCode) = apply {
+                id = requiresEmailCode.id
+                expiresAt = requiresEmailCode.expiresAt
+                message = requiresEmailCode.message
+                object_ = requiresEmailCode.object_
+                status = requiresEmailCode.status
+                username = requiresEmailCode.username
+                additionalProperties = requiresEmailCode.additionalProperties.toMutableMap()
             }
 
             fun id(id: String) = id(JsonField.of(id))
@@ -1508,27 +1408,33 @@ private constructor(
              */
             fun message(message: JsonField<String>) = apply { this.message = message }
 
-            fun object_(object_: Object) = object_(JsonField.of(object_))
-
             /**
-             * Sets [Builder.object_] to an arbitrary JSON value.
+             * Sets the field to an arbitrary JSON value.
              *
-             * You should usually call [Builder.object_] with a well-typed [Object] value instead.
+             * It is usually unnecessary to call this method because the field defaults to the
+             * following:
+             * ```java
+             * JsonValue.from("x_account_connection_challenge")
+             * ```
+             *
              * This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun object_(object_: JsonField<Object>) = apply { this.object_ = object_ }
-
-            fun status(status: Status) = status(JsonField.of(status))
+            fun object_(object_: JsonValue) = apply { this.object_ = object_ }
 
             /**
-             * Sets [Builder.status] to an arbitrary JSON value.
+             * Sets the field to an arbitrary JSON value.
              *
-             * You should usually call [Builder.status] with a well-typed [Status] value instead.
+             * It is usually unnecessary to call this method because the field defaults to the
+             * following:
+             * ```java
+             * JsonValue.from("requires_email_code")
+             * ```
+             *
              * This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun status(status: JsonField<Status>) = apply { this.status = status }
+            fun status(status: JsonValue) = apply { this.status = status }
 
             fun username(username: String) = username(JsonField.of(username))
 
@@ -1561,7 +1467,7 @@ private constructor(
             }
 
             /**
-             * Returns an immutable instance of [XAccountConnectionChallenge].
+             * Returns an immutable instance of [RequiresEmailCode].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
              *
@@ -1570,20 +1476,18 @@ private constructor(
              * .id()
              * .expiresAt()
              * .message()
-             * .object_()
-             * .status()
              * .username()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
              */
-            fun build(): XAccountConnectionChallenge =
-                XAccountConnectionChallenge(
+            fun build(): RequiresEmailCode =
+                RequiresEmailCode(
                     checkRequired("id", id),
                     checkRequired("expiresAt", expiresAt),
                     checkRequired("message", message),
-                    checkRequired("object_", object_),
-                    checkRequired("status", status),
+                    object_,
+                    status,
                     checkRequired("username", username),
                     additionalProperties.toMutableMap(),
                 )
@@ -1600,7 +1504,7 @@ private constructor(
          * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
          *   match its expected type.
          */
-        fun validate(): XAccountConnectionChallenge = apply {
+        fun validate(): RequiresEmailCode = apply {
             if (validated) {
                 return@apply
             }
@@ -1608,8 +1512,16 @@ private constructor(
             id()
             expiresAt()
             message()
-            object_().validate()
-            status().validate()
+            _object_().let {
+                if (it != JsonValue.from("x_account_connection_challenge")) {
+                    throw XTwitterScraperInvalidDataException("'object_' is invalid, received $it")
+                }
+            }
+            _status().let {
+                if (it != JsonValue.from("requires_email_code")) {
+                    throw XTwitterScraperInvalidDataException("'status' is invalid, received $it")
+                }
+            }
             username()
             validated = true
         }
@@ -1633,282 +1545,18 @@ private constructor(
             (if (id.asKnown().isPresent) 1 else 0) +
                 (if (expiresAt.asKnown().isPresent) 1 else 0) +
                 (if (message.asKnown().isPresent) 1 else 0) +
-                (object_.asKnown().getOrNull()?.validity() ?: 0) +
-                (status.asKnown().getOrNull()?.validity() ?: 0) +
+                object_.let {
+                    if (it == JsonValue.from("x_account_connection_challenge")) 1 else 0
+                } +
+                status.let { if (it == JsonValue.from("requires_email_code")) 1 else 0 } +
                 (if (username.asKnown().isPresent) 1 else 0)
-
-        class Object @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-            companion object {
-
-                @JvmField val X_ACCOUNT_CONNECTION_CHALLENGE = of("x_account_connection_challenge")
-
-                @JvmStatic fun of(value: String) = Object(JsonField.of(value))
-            }
-
-            /** An enum containing [Object]'s known values. */
-            enum class Known {
-                X_ACCOUNT_CONNECTION_CHALLENGE
-            }
-
-            /**
-             * An enum containing [Object]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [Object] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                X_ACCOUNT_CONNECTION_CHALLENGE,
-                /**
-                 * An enum member indicating that [Object] was instantiated with an unknown value.
-                 */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    X_ACCOUNT_CONNECTION_CHALLENGE -> Value.X_ACCOUNT_CONNECTION_CHALLENGE
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
-             *   known member.
-             */
-            fun known(): Known =
-                when (this) {
-                    X_ACCOUNT_CONNECTION_CHALLENGE -> Known.X_ACCOUNT_CONNECTION_CHALLENGE
-                    else -> throw XTwitterScraperInvalidDataException("Unknown Object: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
-             *
-             * @throws XTwitterScraperInvalidDataException if this class instance's value does not
-             *   have the expected primitive type.
-             */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    XTwitterScraperInvalidDataException("Value is not a String")
-                }
-
-            private var validated: Boolean = false
-
-            /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
-             *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
-             *
-             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
-             *   match its expected type.
-             */
-            fun validate(): Object = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: XTwitterScraperInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is Object && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
-
-        class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-            companion object {
-
-                @JvmField val REQUIRES_EMAIL_CODE = of("requires_email_code")
-
-                @JvmStatic fun of(value: String) = Status(JsonField.of(value))
-            }
-
-            /** An enum containing [Status]'s known values. */
-            enum class Known {
-                REQUIRES_EMAIL_CODE
-            }
-
-            /**
-             * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [Status] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                REQUIRES_EMAIL_CODE,
-                /**
-                 * An enum member indicating that [Status] was instantiated with an unknown value.
-                 */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    REQUIRES_EMAIL_CODE -> Value.REQUIRES_EMAIL_CODE
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
-             *   known member.
-             */
-            fun known(): Known =
-                when (this) {
-                    REQUIRES_EMAIL_CODE -> Known.REQUIRES_EMAIL_CODE
-                    else -> throw XTwitterScraperInvalidDataException("Unknown Status: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
-             *
-             * @throws XTwitterScraperInvalidDataException if this class instance's value does not
-             *   have the expected primitive type.
-             */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    XTwitterScraperInvalidDataException("Value is not a String")
-                }
-
-            private var validated: Boolean = false
-
-            /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
-             *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
-             *
-             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
-             *   match its expected type.
-             */
-            fun validate(): Status = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: XTwitterScraperInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is Status && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
             }
 
-            return other is XAccountConnectionChallenge &&
+            return other is RequiresEmailCode &&
                 id == other.id &&
                 expiresAt == other.expiresAt &&
                 message == other.message &&
@@ -1925,6 +1573,6 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "XAccountConnectionChallenge{id=$id, expiresAt=$expiresAt, message=$message, object_=$object_, status=$status, username=$username, additionalProperties=$additionalProperties}"
+            "RequiresEmailCode{id=$id, expiresAt=$expiresAt, message=$message, object_=$object_, status=$status, username=$username, additionalProperties=$additionalProperties}"
     }
 }

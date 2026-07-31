@@ -17,7 +17,6 @@ internal class AccountReauthResponseTest {
                 .id("42")
                 .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .health(AccountReauthResponse.Health.HEALTHY)
-                .status("active")
                 .xUserId("9876543210")
                 .xUsername("elonmusk")
                 .build()
@@ -26,7 +25,6 @@ internal class AccountReauthResponseTest {
         assertThat(accountReauthResponse.createdAt())
             .isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
         assertThat(accountReauthResponse.health()).isEqualTo(AccountReauthResponse.Health.HEALTHY)
-        assertThat(accountReauthResponse.status()).isEqualTo("active")
         assertThat(accountReauthResponse.xUserId()).isEqualTo("9876543210")
         assertThat(accountReauthResponse.xUsername()).isEqualTo("elonmusk")
     }
@@ -39,7 +37,6 @@ internal class AccountReauthResponseTest {
                 .id("42")
                 .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .health(AccountReauthResponse.Health.HEALTHY)
-                .status("active")
                 .xUserId("9876543210")
                 .xUsername("elonmusk")
                 .build()

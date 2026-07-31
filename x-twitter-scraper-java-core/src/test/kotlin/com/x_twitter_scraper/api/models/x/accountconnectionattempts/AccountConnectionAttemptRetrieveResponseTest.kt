@@ -16,33 +16,28 @@ import org.junit.jupiter.params.provider.EnumSource
 internal class AccountConnectionAttemptRetrieveResponseTest {
 
     @Test
-    fun ofXAccountConnectionAttemptPending() {
-        val xAccountConnectionAttemptPending =
-            AccountConnectionAttemptRetrieveResponse.XAccountConnectionAttemptPending.builder()
+    fun ofPending() {
+        val pending =
+            AccountConnectionAttemptRetrieveResponse.Pending.builder()
                 .id("xatt_0123456789abcdef0123456789abcdef")
                 .pollAfterMs(3000L)
                 .build()
 
         val accountConnectionAttemptRetrieveResponse =
-            AccountConnectionAttemptRetrieveResponse.ofXAccountConnectionAttemptPending(
-                xAccountConnectionAttemptPending
-            )
+            AccountConnectionAttemptRetrieveResponse.ofPending(pending)
 
-        assertThat(accountConnectionAttemptRetrieveResponse.xAccountConnectionAttemptPending())
-            .contains(xAccountConnectionAttemptPending)
-        assertThat(accountConnectionAttemptRetrieveResponse.xAccountConnectionAttemptSuccess())
-            .isEmpty
-        assertThat(accountConnectionAttemptRetrieveResponse.xAccountConnectionAttemptFailed())
-            .isEmpty
-        assertThat(accountConnectionAttemptRetrieveResponse.xAccountConnectionChallenge()).isEmpty
+        assertThat(accountConnectionAttemptRetrieveResponse.pending()).contains(pending)
+        assertThat(accountConnectionAttemptRetrieveResponse.success()).isEmpty
+        assertThat(accountConnectionAttemptRetrieveResponse.failed()).isEmpty
+        assertThat(accountConnectionAttemptRetrieveResponse.requiresEmailCode()).isEmpty
     }
 
     @Test
-    fun ofXAccountConnectionAttemptPendingRoundtrip() {
+    fun ofPendingRoundtrip() {
         val jsonMapper = jsonMapper()
         val accountConnectionAttemptRetrieveResponse =
-            AccountConnectionAttemptRetrieveResponse.ofXAccountConnectionAttemptPending(
-                AccountConnectionAttemptRetrieveResponse.XAccountConnectionAttemptPending.builder()
+            AccountConnectionAttemptRetrieveResponse.ofPending(
+                AccountConnectionAttemptRetrieveResponse.Pending.builder()
                     .id("xatt_0123456789abcdef0123456789abcdef")
                     .pollAfterMs(3000L)
                     .build()
@@ -59,32 +54,27 @@ internal class AccountConnectionAttemptRetrieveResponseTest {
     }
 
     @Test
-    fun ofXAccountConnectionAttemptSuccess() {
-        val xAccountConnectionAttemptSuccess =
-            AccountConnectionAttemptRetrieveResponse.XAccountConnectionAttemptSuccess.builder()
+    fun ofSuccess() {
+        val success =
+            AccountConnectionAttemptRetrieveResponse.Success.builder()
                 .id("xatt_0123456789abcdef0123456789abcdef")
                 .build()
 
         val accountConnectionAttemptRetrieveResponse =
-            AccountConnectionAttemptRetrieveResponse.ofXAccountConnectionAttemptSuccess(
-                xAccountConnectionAttemptSuccess
-            )
+            AccountConnectionAttemptRetrieveResponse.ofSuccess(success)
 
-        assertThat(accountConnectionAttemptRetrieveResponse.xAccountConnectionAttemptPending())
-            .isEmpty
-        assertThat(accountConnectionAttemptRetrieveResponse.xAccountConnectionAttemptSuccess())
-            .contains(xAccountConnectionAttemptSuccess)
-        assertThat(accountConnectionAttemptRetrieveResponse.xAccountConnectionAttemptFailed())
-            .isEmpty
-        assertThat(accountConnectionAttemptRetrieveResponse.xAccountConnectionChallenge()).isEmpty
+        assertThat(accountConnectionAttemptRetrieveResponse.pending()).isEmpty
+        assertThat(accountConnectionAttemptRetrieveResponse.success()).contains(success)
+        assertThat(accountConnectionAttemptRetrieveResponse.failed()).isEmpty
+        assertThat(accountConnectionAttemptRetrieveResponse.requiresEmailCode()).isEmpty
     }
 
     @Test
-    fun ofXAccountConnectionAttemptSuccessRoundtrip() {
+    fun ofSuccessRoundtrip() {
         val jsonMapper = jsonMapper()
         val accountConnectionAttemptRetrieveResponse =
-            AccountConnectionAttemptRetrieveResponse.ofXAccountConnectionAttemptSuccess(
-                AccountConnectionAttemptRetrieveResponse.XAccountConnectionAttemptSuccess.builder()
+            AccountConnectionAttemptRetrieveResponse.ofSuccess(
+                AccountConnectionAttemptRetrieveResponse.Success.builder()
                     .id("xatt_0123456789abcdef0123456789abcdef")
                     .build()
             )
@@ -100,9 +90,9 @@ internal class AccountConnectionAttemptRetrieveResponseTest {
     }
 
     @Test
-    fun ofXAccountConnectionAttemptFailed() {
-        val xAccountConnectionAttemptFailed =
-            AccountConnectionAttemptRetrieveResponse.XAccountConnectionAttemptFailed.builder()
+    fun ofFailed() {
+        val failed =
+            AccountConnectionAttemptRetrieveResponse.Failed.builder()
                 .id("xatt_0123456789abcdef0123456789abcdef")
                 .error("service_unavailable")
                 .retryable(true)
@@ -110,25 +100,20 @@ internal class AccountConnectionAttemptRetrieveResponseTest {
                 .build()
 
         val accountConnectionAttemptRetrieveResponse =
-            AccountConnectionAttemptRetrieveResponse.ofXAccountConnectionAttemptFailed(
-                xAccountConnectionAttemptFailed
-            )
+            AccountConnectionAttemptRetrieveResponse.ofFailed(failed)
 
-        assertThat(accountConnectionAttemptRetrieveResponse.xAccountConnectionAttemptPending())
-            .isEmpty
-        assertThat(accountConnectionAttemptRetrieveResponse.xAccountConnectionAttemptSuccess())
-            .isEmpty
-        assertThat(accountConnectionAttemptRetrieveResponse.xAccountConnectionAttemptFailed())
-            .contains(xAccountConnectionAttemptFailed)
-        assertThat(accountConnectionAttemptRetrieveResponse.xAccountConnectionChallenge()).isEmpty
+        assertThat(accountConnectionAttemptRetrieveResponse.pending()).isEmpty
+        assertThat(accountConnectionAttemptRetrieveResponse.success()).isEmpty
+        assertThat(accountConnectionAttemptRetrieveResponse.failed()).contains(failed)
+        assertThat(accountConnectionAttemptRetrieveResponse.requiresEmailCode()).isEmpty
     }
 
     @Test
-    fun ofXAccountConnectionAttemptFailedRoundtrip() {
+    fun ofFailedRoundtrip() {
         val jsonMapper = jsonMapper()
         val accountConnectionAttemptRetrieveResponse =
-            AccountConnectionAttemptRetrieveResponse.ofXAccountConnectionAttemptFailed(
-                AccountConnectionAttemptRetrieveResponse.XAccountConnectionAttemptFailed.builder()
+            AccountConnectionAttemptRetrieveResponse.ofFailed(
+                AccountConnectionAttemptRetrieveResponse.Failed.builder()
                     .id("xatt_0123456789abcdef0123456789abcdef")
                     .error("service_unavailable")
                     .retryable(true)
@@ -147,55 +132,34 @@ internal class AccountConnectionAttemptRetrieveResponseTest {
     }
 
     @Test
-    fun ofXAccountConnectionChallenge() {
-        val xAccountConnectionChallenge =
-            AccountConnectionAttemptRetrieveResponse.XAccountConnectionChallenge.builder()
+    fun ofRequiresEmailCode() {
+        val requiresEmailCode =
+            AccountConnectionAttemptRetrieveResponse.RequiresEmailCode.builder()
                 .id("xch_8vGd8Y9JvH6dV0xA")
                 .expiresAt(OffsetDateTime.parse("2026-05-08T12:10:00Z"))
                 .message("Enter the email verification code to continue.")
-                .object_(
-                    AccountConnectionAttemptRetrieveResponse.XAccountConnectionChallenge.Object
-                        .X_ACCOUNT_CONNECTION_CHALLENGE
-                )
-                .status(
-                    AccountConnectionAttemptRetrieveResponse.XAccountConnectionChallenge.Status
-                        .REQUIRES_EMAIL_CODE
-                )
                 .username("elonmusk")
                 .build()
 
         val accountConnectionAttemptRetrieveResponse =
-            AccountConnectionAttemptRetrieveResponse.ofXAccountConnectionChallenge(
-                xAccountConnectionChallenge
-            )
+            AccountConnectionAttemptRetrieveResponse.ofRequiresEmailCode(requiresEmailCode)
 
-        assertThat(accountConnectionAttemptRetrieveResponse.xAccountConnectionAttemptPending())
-            .isEmpty
-        assertThat(accountConnectionAttemptRetrieveResponse.xAccountConnectionAttemptSuccess())
-            .isEmpty
-        assertThat(accountConnectionAttemptRetrieveResponse.xAccountConnectionAttemptFailed())
-            .isEmpty
-        assertThat(accountConnectionAttemptRetrieveResponse.xAccountConnectionChallenge())
-            .contains(xAccountConnectionChallenge)
+        assertThat(accountConnectionAttemptRetrieveResponse.pending()).isEmpty
+        assertThat(accountConnectionAttemptRetrieveResponse.success()).isEmpty
+        assertThat(accountConnectionAttemptRetrieveResponse.failed()).isEmpty
+        assertThat(accountConnectionAttemptRetrieveResponse.requiresEmailCode())
+            .contains(requiresEmailCode)
     }
 
     @Test
-    fun ofXAccountConnectionChallengeRoundtrip() {
+    fun ofRequiresEmailCodeRoundtrip() {
         val jsonMapper = jsonMapper()
         val accountConnectionAttemptRetrieveResponse =
-            AccountConnectionAttemptRetrieveResponse.ofXAccountConnectionChallenge(
-                AccountConnectionAttemptRetrieveResponse.XAccountConnectionChallenge.builder()
+            AccountConnectionAttemptRetrieveResponse.ofRequiresEmailCode(
+                AccountConnectionAttemptRetrieveResponse.RequiresEmailCode.builder()
                     .id("xch_8vGd8Y9JvH6dV0xA")
                     .expiresAt(OffsetDateTime.parse("2026-05-08T12:10:00Z"))
                     .message("Enter the email verification code to continue.")
-                    .object_(
-                        AccountConnectionAttemptRetrieveResponse.XAccountConnectionChallenge.Object
-                            .X_ACCOUNT_CONNECTION_CHALLENGE
-                    )
-                    .status(
-                        AccountConnectionAttemptRetrieveResponse.XAccountConnectionChallenge.Status
-                            .REQUIRES_EMAIL_CODE
-                    )
                     .username("elonmusk")
                     .build()
             )

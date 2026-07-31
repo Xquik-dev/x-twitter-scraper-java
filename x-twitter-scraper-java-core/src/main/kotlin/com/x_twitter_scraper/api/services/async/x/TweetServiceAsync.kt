@@ -14,6 +14,7 @@ import com.x_twitter_scraper.api.models.x.tweets.TweetDeleteResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetFavoritersParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetQuotesParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetRepliesParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetGetRepliesResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetRetweetersParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetThreadParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetListParams
@@ -194,12 +195,12 @@ interface TweetServiceAsync {
         getQuotes(id, TweetGetQuotesParams.none(), requestOptions)
 
     /**
-     * Returns visible replies. For an unfiltered first page, Xquik compares a terminal page with
-     * the post's reported reply count. If the page is visibly incomplete, the endpoint returns 424
-     * `replies_incomplete` instead of presenting partial coverage as complete. Use tweet search
-     * with a `conversation_id:{id}` query as the broader fallback.
+     * Returns direct replies. Complete mode merges available timeline views, supported rankings,
+     * every forward cursor module, labeled hidden-content branches, exact-parent time partitions
+     * scaled to the reported reply count, and search. It separates nested replies and returns 424
+     * below 80% coverage.
      */
-    fun getReplies(id: String): CompletableFuture<PaginatedTweets> =
+    fun getReplies(id: String): CompletableFuture<TweetGetRepliesResponse> =
         getReplies(id, TweetGetRepliesParams.none())
 
     /** @see getReplies */
@@ -207,27 +208,30 @@ interface TweetServiceAsync {
         id: String,
         params: TweetGetRepliesParams = TweetGetRepliesParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedTweets> =
+    ): CompletableFuture<TweetGetRepliesResponse> =
         getReplies(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see getReplies */
     fun getReplies(
         id: String,
         params: TweetGetRepliesParams = TweetGetRepliesParams.none(),
-    ): CompletableFuture<PaginatedTweets> = getReplies(id, params, RequestOptions.none())
+    ): CompletableFuture<TweetGetRepliesResponse> = getReplies(id, params, RequestOptions.none())
 
     /** @see getReplies */
     fun getReplies(
         params: TweetGetRepliesParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedTweets>
+    ): CompletableFuture<TweetGetRepliesResponse>
 
     /** @see getReplies */
-    fun getReplies(params: TweetGetRepliesParams): CompletableFuture<PaginatedTweets> =
+    fun getReplies(params: TweetGetRepliesParams): CompletableFuture<TweetGetRepliesResponse> =
         getReplies(params, RequestOptions.none())
 
     /** @see getReplies */
-    fun getReplies(id: String, requestOptions: RequestOptions): CompletableFuture<PaginatedTweets> =
+    fun getReplies(
+        id: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<TweetGetRepliesResponse> =
         getReplies(id, TweetGetRepliesParams.none(), requestOptions)
 
     /** List users who retweeted a tweet */
@@ -510,7 +514,7 @@ interface TweetServiceAsync {
          * Returns a raw HTTP response for `get /x/tweets/{id}/replies`, but is otherwise the same
          * as [TweetServiceAsync.getReplies].
          */
-        fun getReplies(id: String): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        fun getReplies(id: String): CompletableFuture<HttpResponseFor<TweetGetRepliesResponse>> =
             getReplies(id, TweetGetRepliesParams.none())
 
         /** @see getReplies */
@@ -518,33 +522,33 @@ interface TweetServiceAsync {
             id: String,
             params: TweetGetRepliesParams = TweetGetRepliesParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetRepliesResponse>> =
             getReplies(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see getReplies */
         fun getReplies(
             id: String,
             params: TweetGetRepliesParams = TweetGetRepliesParams.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetRepliesResponse>> =
             getReplies(id, params, RequestOptions.none())
 
         /** @see getReplies */
         fun getReplies(
             params: TweetGetRepliesParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>>
+        ): CompletableFuture<HttpResponseFor<TweetGetRepliesResponse>>
 
         /** @see getReplies */
         fun getReplies(
             params: TweetGetRepliesParams
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetRepliesResponse>> =
             getReplies(params, RequestOptions.none())
 
         /** @see getReplies */
         fun getReplies(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        ): CompletableFuture<HttpResponseFor<TweetGetRepliesResponse>> =
             getReplies(id, TweetGetRepliesParams.none(), requestOptions)
 
         /**

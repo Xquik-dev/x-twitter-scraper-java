@@ -5,7 +5,6 @@ package com.x_twitter_scraper.api.models.support.tickets
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.core.jsonMapper
 import java.time.OffsetDateTime
-import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -33,18 +32,18 @@ internal class TicketRetrieveResponseTest {
                         )
                         .body("I am unable to connect my X account.")
                         .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
-                        .sender("user")
+                        .sender(TicketRetrieveResponse.Message.Sender.USER)
                         .build()
                 )
                 .publicId("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
-                .status("open")
+                .status(TicketRetrieveResponse.Status.OPEN)
                 .subject("Cannot connect X account")
                 .updatedAt(OffsetDateTime.parse("2025-01-16T09:30:00Z"))
                 .build()
 
         assertThat(ticketRetrieveResponse.createdAt())
-            .contains(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
-        assertThat(ticketRetrieveResponse.messages().getOrNull())
+            .isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
+        assertThat(ticketRetrieveResponse.messages())
             .containsExactly(
                 TicketRetrieveResponse.Message.builder()
                     .addAttachment(
@@ -62,14 +61,14 @@ internal class TicketRetrieveResponseTest {
                     )
                     .body("I am unable to connect my X account.")
                     .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
-                    .sender("user")
+                    .sender(TicketRetrieveResponse.Message.Sender.USER)
                     .build()
             )
-        assertThat(ticketRetrieveResponse.publicId()).contains("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
-        assertThat(ticketRetrieveResponse.status()).contains("open")
-        assertThat(ticketRetrieveResponse.subject()).contains("Cannot connect X account")
+        assertThat(ticketRetrieveResponse.publicId()).isEqualTo("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
+        assertThat(ticketRetrieveResponse.status()).isEqualTo(TicketRetrieveResponse.Status.OPEN)
+        assertThat(ticketRetrieveResponse.subject()).isEqualTo("Cannot connect X account")
         assertThat(ticketRetrieveResponse.updatedAt())
-            .contains(OffsetDateTime.parse("2025-01-16T09:30:00Z"))
+            .isEqualTo(OffsetDateTime.parse("2025-01-16T09:30:00Z"))
     }
 
     @Test
@@ -95,11 +94,11 @@ internal class TicketRetrieveResponseTest {
                         )
                         .body("I am unable to connect my X account.")
                         .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
-                        .sender("user")
+                        .sender(TicketRetrieveResponse.Message.Sender.USER)
                         .build()
                 )
                 .publicId("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
-                .status("open")
+                .status(TicketRetrieveResponse.Status.OPEN)
                 .subject("Cannot connect X account")
                 .updatedAt(OffsetDateTime.parse("2025-01-16T09:30:00Z"))
                 .build()
