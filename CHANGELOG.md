@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.8.0 (2026-07-31)
+
+Full Changelog: [v0.7.1...v0.8.0](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.7.1...v0.8.0)
+
+### Features
+
+* **api:** align reply extraction contracts ([#30](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/30)) ([7702591](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/7702591c9b20cabdef63849eb98419cec0ef356a))
+
 ## 0.7.1 (2026-07-30)
 
 Full Changelog: [v0.7.0...v0.7.1](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.7.0...v0.7.1)
