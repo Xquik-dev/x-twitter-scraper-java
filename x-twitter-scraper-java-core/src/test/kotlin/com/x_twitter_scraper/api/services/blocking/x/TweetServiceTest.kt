@@ -176,7 +176,7 @@ internal class TweetServiceTest {
                 .build()
         val tweetService = client.x().tweets()
 
-        val paginatedTweets =
+        val response =
             tweetService.getReplies(
                 TweetGetRepliesParams.builder()
                     .id("id")
@@ -190,12 +190,14 @@ internal class TweetServiceTest {
                     .hashtags("hashtags")
                     .inReplyToTweetId("inReplyToTweetId")
                     .language("language")
+                    .limit(1L)
                     .mediaType(TweetGetRepliesParams.MediaType.IMAGES)
                     .mentioning("mentioning")
                     .minFaves(0L)
                     .minQuotes(0L)
                     .minReplies(0L)
                     .minRetweets(0L)
+                    .mode(TweetGetRepliesParams.Mode.COMPLETE)
                     .pageSize(1L)
                     .quotes(TweetGetRepliesParams.Quotes.INCLUDE)
                     .quotesOfTweetId("quotesOfTweetId")
@@ -212,7 +214,7 @@ internal class TweetServiceTest {
                     .build()
             )
 
-        kotlin.test.assertNotNull(paginatedTweets)
+        kotlin.test.assertNotNull(response)
     }
 
     @Test

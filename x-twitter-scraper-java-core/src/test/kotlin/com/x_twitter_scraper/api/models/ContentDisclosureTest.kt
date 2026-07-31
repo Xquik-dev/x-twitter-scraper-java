@@ -20,7 +20,6 @@ internal class ContentDisclosureTest {
                 .advertising(ContentDisclosure.Advertising.builder().isPaidPromotion(true).build())
                 .aiGenerated(
                     ContentDisclosure.AiGenerated.builder()
-                        .canEdit(true)
                         .detectionSource("UserDeclared")
                         .hasAiGeneratedMedia(true)
                         .build()
@@ -32,7 +31,6 @@ internal class ContentDisclosureTest {
         assertThat(contentDisclosure.aiGenerated())
             .contains(
                 ContentDisclosure.AiGenerated.builder()
-                    .canEdit(true)
                     .detectionSource("UserDeclared")
                     .hasAiGeneratedMedia(true)
                     .build()
@@ -47,7 +45,6 @@ internal class ContentDisclosureTest {
                 .advertising(ContentDisclosure.Advertising.builder().isPaidPromotion(true).build())
                 .aiGenerated(
                     ContentDisclosure.AiGenerated.builder()
-                        .canEdit(true)
                         .detectionSource("UserDeclared")
                         .hasAiGeneratedMedia(true)
                         .build()

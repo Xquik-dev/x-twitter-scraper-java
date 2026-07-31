@@ -19,10 +19,10 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Returns visible replies. For an unfiltered first page, Xquik compares a terminal page with the
- * post's reported reply count. If the page is visibly incomplete, the endpoint returns 424
- * `replies_incomplete` instead of presenting partial coverage as complete. Use tweet search with a
- * `conversation_id:{id}` query as the broader fallback.
+ * Returns direct replies. Complete mode merges available timeline views, supported rankings, every
+ * forward cursor module, labeled hidden-content branches, exact-parent time partitions scaled to
+ * the reported reply count, and search. It separates nested replies and returns 424 below 80%
+ * coverage.
  */
 class TweetGetRepliesParams
 private constructor(
@@ -37,12 +37,14 @@ private constructor(
     private val hashtags: String?,
     private val inReplyToTweetId: String?,
     private val language: String?,
+    private val limit: Long?,
     private val mediaType: MediaType?,
     private val mentioning: String?,
     private val minFaves: Long?,
     private val minQuotes: Long?,
     private val minReplies: Long?,
     private val minRetweets: Long?,
+    private val mode: Mode?,
     private val pageSize: Long?,
     private val quotes: Quotes?,
     private val quotesOfTweetId: String?,
@@ -92,6 +94,12 @@ private constructor(
     /** Language code filter, e.g. en or tr. */
     fun language(): Optional<String> = Optional.ofNullable(language)
 
+    /**
+     * With mode=complete, maximum combined direct and nested reply rows (1-25000). Without complete
+     * mode, this is the deprecated pageSize alias and uses the normal 1-100 page range.
+     */
+    fun limit(): Optional<Long> = Optional.ofNullable(limit)
+
     /** Filter by media type. */
     fun mediaType(): Optional<MediaType> = Optional.ofNullable(mediaType)
 
@@ -111,10 +119,14 @@ private constructor(
     fun minRetweets(): Optional<Long> = Optional.ofNullable(minRetweets)
 
     /**
-     * Maximum items requested from this page (1-100, default 20). The response can contain fewer
-     * items because the source returned fewer, filters removed items, or remaining credits cover
-     * fewer results. Keep requesting next_cursor while has_next_page is true, even when a page is
-     * empty. The deprecated limit and count aliases remain accepted.
+     * Set complete for maximum-coverage collection. Complete mode accepts only limit. Remove
+     * cursor, pageSize, count, time ranges, and tweet filters.
+     */
+    fun mode(): Optional<Mode> = Optional.ofNullable(mode)
+
+    /**
+     * Maximum page items (1-100, default 20). Source, filters, or credits can reduce results.
+     * Continue while has_next_page is true. Deprecated limit and count aliases remain accepted.
      */
     fun pageSize(): Optional<Long> = Optional.ofNullable(pageSize)
 
@@ -184,12 +196,14 @@ private constructor(
         private var hashtags: String? = null
         private var inReplyToTweetId: String? = null
         private var language: String? = null
+        private var limit: Long? = null
         private var mediaType: MediaType? = null
         private var mentioning: String? = null
         private var minFaves: Long? = null
         private var minQuotes: Long? = null
         private var minReplies: Long? = null
         private var minRetweets: Long? = null
+        private var mode: Mode? = null
         private var pageSize: Long? = null
         private var quotes: Quotes? = null
         private var quotesOfTweetId: String? = null
@@ -219,12 +233,14 @@ private constructor(
             hashtags = tweetGetRepliesParams.hashtags
             inReplyToTweetId = tweetGetRepliesParams.inReplyToTweetId
             language = tweetGetRepliesParams.language
+            limit = tweetGetRepliesParams.limit
             mediaType = tweetGetRepliesParams.mediaType
             mentioning = tweetGetRepliesParams.mentioning
             minFaves = tweetGetRepliesParams.minFaves
             minQuotes = tweetGetRepliesParams.minQuotes
             minReplies = tweetGetRepliesParams.minReplies
             minRetweets = tweetGetRepliesParams.minRetweets
+            mode = tweetGetRepliesParams.mode
             pageSize = tweetGetRepliesParams.pageSize
             quotes = tweetGetRepliesParams.quotes
             quotesOfTweetId = tweetGetRepliesParams.quotesOfTweetId
@@ -313,6 +329,23 @@ private constructor(
         /** Alias for calling [Builder.language] with `language.orElse(null)`. */
         fun language(language: Optional<String>) = language(language.getOrNull())
 
+        /**
+         * With mode=complete, maximum combined direct and nested reply rows (1-25000). Without
+         * complete mode, this is the deprecated pageSize alias and uses the normal 1-100 page
+         * range.
+         */
+        fun limit(limit: Long?) = apply { this.limit = limit }
+
+        /**
+         * Alias for [Builder.limit].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun limit(limit: Long) = limit(limit as Long?)
+
+        /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
+        fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
+
         /** Filter by media type. */
         fun mediaType(mediaType: MediaType?) = apply { this.mediaType = mediaType }
 
@@ -378,10 +411,17 @@ private constructor(
         fun minRetweets(minRetweets: Optional<Long>) = minRetweets(minRetweets.getOrNull())
 
         /**
-         * Maximum items requested from this page (1-100, default 20). The response can contain
-         * fewer items because the source returned fewer, filters removed items, or remaining
-         * credits cover fewer results. Keep requesting next_cursor while has_next_page is true,
-         * even when a page is empty. The deprecated limit and count aliases remain accepted.
+         * Set complete for maximum-coverage collection. Complete mode accepts only limit. Remove
+         * cursor, pageSize, count, time ranges, and tweet filters.
+         */
+        fun mode(mode: Mode?) = apply { this.mode = mode }
+
+        /** Alias for calling [Builder.mode] with `mode.orElse(null)`. */
+        fun mode(mode: Optional<Mode>) = mode(mode.getOrNull())
+
+        /**
+         * Maximum page items (1-100, default 20). Source, filters, or credits can reduce results.
+         * Continue while has_next_page is true. Deprecated limit and count aliases remain accepted.
          */
         fun pageSize(pageSize: Long?) = apply { this.pageSize = pageSize }
 
@@ -596,12 +636,14 @@ private constructor(
                 hashtags,
                 inReplyToTweetId,
                 language,
+                limit,
                 mediaType,
                 mentioning,
                 minFaves,
                 minQuotes,
                 minReplies,
                 minRetweets,
+                mode,
                 pageSize,
                 quotes,
                 quotesOfTweetId,
@@ -641,12 +683,14 @@ private constructor(
                 hashtags?.let { put("hashtags", it) }
                 inReplyToTweetId?.let { put("inReplyToTweetId", it) }
                 language?.let { put("language", it) }
+                limit?.let { put("limit", it.toString()) }
                 mediaType?.let { put("mediaType", it.toString()) }
                 mentioning?.let { put("mentioning", it) }
                 minFaves?.let { put("minFaves", it.toString()) }
                 minQuotes?.let { put("minQuotes", it.toString()) }
                 minReplies?.let { put("minReplies", it.toString()) }
                 minRetweets?.let { put("minRetweets", it.toString()) }
+                mode?.let { put("mode", it.toString()) }
                 pageSize?.let { put("pageSize", it.toString()) }
                 quotes?.let { put("quotes", it.toString()) }
                 quotesOfTweetId?.let { put("quotesOfTweetId", it) }
@@ -820,6 +864,140 @@ private constructor(
             }
 
             return other is MediaType && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
+    /**
+     * Set complete for maximum-coverage collection. Complete mode accepts only limit. Remove
+     * cursor, pageSize, count, time ranges, and tweet filters.
+     */
+    class Mode @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val COMPLETE = of("complete")
+
+            @JvmStatic fun of(value: String) = Mode(JsonField.of(value))
+        }
+
+        /** An enum containing [Mode]'s known values. */
+        enum class Known {
+            COMPLETE
+        }
+
+        /**
+         * An enum containing [Mode]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Mode] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            COMPLETE,
+            /** An enum member indicating that [Mode] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                COMPLETE -> Value.COMPLETE
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
+         */
+        fun known(): Known =
+            when (this) {
+                COMPLETE -> Known.COMPLETE
+                else -> throw XTwitterScraperInvalidDataException("Unknown Mode: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): Mode = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Mode && value == other.value
         }
 
         override fun hashCode() = value.hashCode()
@@ -1273,12 +1451,14 @@ private constructor(
             hashtags == other.hashtags &&
             inReplyToTweetId == other.inReplyToTweetId &&
             language == other.language &&
+            limit == other.limit &&
             mediaType == other.mediaType &&
             mentioning == other.mentioning &&
             minFaves == other.minFaves &&
             minQuotes == other.minQuotes &&
             minReplies == other.minReplies &&
             minRetweets == other.minRetweets &&
+            mode == other.mode &&
             pageSize == other.pageSize &&
             quotes == other.quotes &&
             quotesOfTweetId == other.quotesOfTweetId &&
@@ -1309,12 +1489,14 @@ private constructor(
             hashtags,
             inReplyToTweetId,
             language,
+            limit,
             mediaType,
             mentioning,
             minFaves,
             minQuotes,
             minReplies,
             minRetweets,
+            mode,
             pageSize,
             quotes,
             quotesOfTweetId,
@@ -1333,5 +1515,5 @@ private constructor(
         )
 
     override fun toString() =
-        "TweetGetRepliesParams{id=$id, anyWords=$anyWords, cashtags=$cashtags, conversationId=$conversationId, cursor=$cursor, exactPhrase=$exactPhrase, excludeWords=$excludeWords, fromUser=$fromUser, hashtags=$hashtags, inReplyToTweetId=$inReplyToTweetId, language=$language, mediaType=$mediaType, mentioning=$mentioning, minFaves=$minFaves, minQuotes=$minQuotes, minReplies=$minReplies, minRetweets=$minRetweets, pageSize=$pageSize, quotes=$quotes, quotesOfTweetId=$quotesOfTweetId, replies=$replies, retweets=$retweets, retweetsOfTweetId=$retweetsOfTweetId, sinceDate=$sinceDate, sinceTime=$sinceTime, toUser=$toUser, untilDate=$untilDate, untilTime=$untilTime, url=$url, verifiedOnly=$verifiedOnly, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "TweetGetRepliesParams{id=$id, anyWords=$anyWords, cashtags=$cashtags, conversationId=$conversationId, cursor=$cursor, exactPhrase=$exactPhrase, excludeWords=$excludeWords, fromUser=$fromUser, hashtags=$hashtags, inReplyToTweetId=$inReplyToTweetId, language=$language, limit=$limit, mediaType=$mediaType, mentioning=$mentioning, minFaves=$minFaves, minQuotes=$minQuotes, minReplies=$minReplies, minRetweets=$minRetweets, mode=$mode, pageSize=$pageSize, quotes=$quotes, quotesOfTweetId=$quotesOfTweetId, replies=$replies, retweets=$retweets, retweetsOfTweetId=$retweetsOfTweetId, sinceDate=$sinceDate, sinceTime=$sinceTime, toUser=$toUser, untilDate=$untilDate, untilTime=$untilTime, url=$url, verifiedOnly=$verifiedOnly, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

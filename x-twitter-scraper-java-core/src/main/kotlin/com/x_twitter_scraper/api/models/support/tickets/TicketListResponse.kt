@@ -10,17 +10,18 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.x_twitter_scraper.api.core.Enum
 import com.x_twitter_scraper.api.core.ExcludeMissing
 import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.checkKnown
+import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
-import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class TicketListResponse
@@ -36,10 +37,10 @@ private constructor(
     ) : this(tickets, mutableMapOf())
 
     /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun tickets(): Optional<List<Ticket>> = tickets.getOptional("tickets")
+    fun tickets(): List<Ticket> = tickets.getRequired("tickets")
 
     /**
      * Returns the raw JSON value of [tickets].
@@ -62,7 +63,14 @@ private constructor(
 
     companion object {
 
-        /** Returns a mutable builder for constructing an instance of [TicketListResponse]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [TicketListResponse].
+         *
+         * The following fields are required:
+         * ```java
+         * .tickets()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -126,10 +134,17 @@ private constructor(
          * Returns an immutable instance of [TicketListResponse].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .tickets()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): TicketListResponse =
             TicketListResponse(
-                (tickets ?: JsonMissing.of()).map { it.toImmutable() },
+                checkRequired("tickets", tickets).map { it.toImmutable() },
                 additionalProperties.toMutableMap(),
             )
     }
@@ -149,7 +164,7 @@ private constructor(
             return@apply
         }
 
-        tickets().ifPresent { it.forEach { it.validate() } }
+        tickets().forEach { it.validate() }
         validated = true
     }
 
@@ -175,7 +190,7 @@ private constructor(
         private val createdAt: JsonField<OffsetDateTime>,
         private val messageCount: JsonField<Long>,
         private val publicId: JsonField<String>,
-        private val status: JsonField<String>,
+        private val status: JsonField<Status>,
         private val subject: JsonField<String>,
         private val updatedAt: JsonField<OffsetDateTime>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -192,7 +207,7 @@ private constructor(
             @JsonProperty("publicId")
             @ExcludeMissing
             publicId: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("status") @ExcludeMissing status: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of(),
             @JsonProperty("subject") @ExcludeMissing subject: JsonField<String> = JsonMissing.of(),
             @JsonProperty("updatedAt")
             @ExcludeMissing
@@ -200,40 +215,46 @@ private constructor(
         ) : this(createdAt, messageCount, publicId, status, subject, updatedAt, mutableMapOf())
 
         /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
          */
-        fun createdAt(): Optional<OffsetDateTime> = createdAt.getOptional("createdAt")
+        fun createdAt(): OffsetDateTime = createdAt.getRequired("createdAt")
 
         /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
          */
-        fun messageCount(): Optional<Long> = messageCount.getOptional("messageCount")
+        fun messageCount(): Long = messageCount.getRequired("messageCount")
 
         /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
          */
-        fun publicId(): Optional<String> = publicId.getOptional("publicId")
+        fun publicId(): String = publicId.getRequired("publicId")
 
         /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
          */
-        fun status(): Optional<String> = status.getOptional("status")
+        fun status(): Status = status.getRequired("status")
 
         /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
          */
-        fun subject(): Optional<String> = subject.getOptional("subject")
+        fun subject(): String = subject.getRequired("subject")
 
         /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+         *   value).
          */
-        fun updatedAt(): Optional<OffsetDateTime> = updatedAt.getOptional("updatedAt")
+        fun updatedAt(): OffsetDateTime = updatedAt.getRequired("updatedAt")
 
         /**
          * Returns the raw JSON value of [createdAt].
@@ -266,7 +287,7 @@ private constructor(
          *
          * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<String> = status
+        @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<Status> = status
 
         /**
          * Returns the raw JSON value of [subject].
@@ -298,19 +319,31 @@ private constructor(
 
         companion object {
 
-            /** Returns a mutable builder for constructing an instance of [Ticket]. */
+            /**
+             * Returns a mutable builder for constructing an instance of [Ticket].
+             *
+             * The following fields are required:
+             * ```java
+             * .createdAt()
+             * .messageCount()
+             * .publicId()
+             * .status()
+             * .subject()
+             * .updatedAt()
+             * ```
+             */
             @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [Ticket]. */
         class Builder internal constructor() {
 
-            private var createdAt: JsonField<OffsetDateTime> = JsonMissing.of()
-            private var messageCount: JsonField<Long> = JsonMissing.of()
-            private var publicId: JsonField<String> = JsonMissing.of()
-            private var status: JsonField<String> = JsonMissing.of()
-            private var subject: JsonField<String> = JsonMissing.of()
-            private var updatedAt: JsonField<OffsetDateTime> = JsonMissing.of()
+            private var createdAt: JsonField<OffsetDateTime>? = null
+            private var messageCount: JsonField<Long>? = null
+            private var publicId: JsonField<String>? = null
+            private var status: JsonField<Status>? = null
+            private var subject: JsonField<String>? = null
+            private var updatedAt: JsonField<OffsetDateTime>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -361,16 +394,16 @@ private constructor(
              */
             fun publicId(publicId: JsonField<String>) = apply { this.publicId = publicId }
 
-            fun status(status: String) = status(JsonField.of(status))
+            fun status(status: Status) = status(JsonField.of(status))
 
             /**
              * Sets [Builder.status] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.status] with a well-typed [String] value instead.
+             * You should usually call [Builder.status] with a well-typed [Status] value instead.
              * This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun status(status: JsonField<String>) = apply { this.status = status }
+            fun status(status: JsonField<Status>) = apply { this.status = status }
 
             fun subject(subject: String) = subject(JsonField.of(subject))
 
@@ -419,15 +452,27 @@ private constructor(
              * Returns an immutable instance of [Ticket].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .createdAt()
+             * .messageCount()
+             * .publicId()
+             * .status()
+             * .subject()
+             * .updatedAt()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
              */
             fun build(): Ticket =
                 Ticket(
-                    createdAt,
-                    messageCount,
-                    publicId,
-                    status,
-                    subject,
-                    updatedAt,
+                    checkRequired("createdAt", createdAt),
+                    checkRequired("messageCount", messageCount),
+                    checkRequired("publicId", publicId),
+                    checkRequired("status", status),
+                    checkRequired("subject", subject),
+                    checkRequired("updatedAt", updatedAt),
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -451,7 +496,7 @@ private constructor(
             createdAt()
             messageCount()
             publicId()
-            status()
+            status().validate()
             subject()
             updatedAt()
             validated = true
@@ -476,9 +521,160 @@ private constructor(
             (if (createdAt.asKnown().isPresent) 1 else 0) +
                 (if (messageCount.asKnown().isPresent) 1 else 0) +
                 (if (publicId.asKnown().isPresent) 1 else 0) +
-                (if (status.asKnown().isPresent) 1 else 0) +
+                (status.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (subject.asKnown().isPresent) 1 else 0) +
                 (if (updatedAt.asKnown().isPresent) 1 else 0)
+
+        class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+            /**
+             * Returns this class instance's raw value.
+             *
+             * This is usually only useful if this instance was deserialized from data that doesn't
+             * match any known member, and you want to know that value. For example, if the SDK is
+             * on an older version than the API, then the API may respond with new members that the
+             * SDK is unaware of.
+             */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val OPEN = of("open")
+
+                @JvmField val IN_PROGRESS = of("in_progress")
+
+                @JvmField val RESOLVED = of("resolved")
+
+                @JvmField val CLOSED = of("closed")
+
+                @JvmStatic fun of(value: String) = Status(JsonField.of(value))
+            }
+
+            /** An enum containing [Status]'s known values. */
+            enum class Known {
+                OPEN,
+                IN_PROGRESS,
+                RESOLVED,
+                CLOSED,
+            }
+
+            /**
+             * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [Status] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                OPEN,
+                IN_PROGRESS,
+                RESOLVED,
+                CLOSED,
+                /**
+                 * An enum member indicating that [Status] was instantiated with an unknown value.
+                 */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             *
+             * Use the [known] method instead if you're certain the value is always known or if you
+             * want to throw for the unknown case.
+             */
+            fun value(): Value =
+                when (this) {
+                    OPEN -> Value.OPEN
+                    IN_PROGRESS -> Value.IN_PROGRESS
+                    RESOLVED -> Value.RESOLVED
+                    CLOSED -> Value.CLOSED
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * Use the [value] method instead if you're uncertain the value is always known and
+             * don't want to throw for the unknown case.
+             *
+             * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+             *   known member.
+             */
+            fun known(): Known =
+                when (this) {
+                    OPEN -> Known.OPEN
+                    IN_PROGRESS -> Known.IN_PROGRESS
+                    RESOLVED -> Known.RESOLVED
+                    CLOSED -> Known.CLOSED
+                    else -> throw XTwitterScraperInvalidDataException("Unknown Status: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * This differs from the [toString] method because that method is primarily for
+             * debugging and generally doesn't throw.
+             *
+             * @throws XTwitterScraperInvalidDataException if this class instance's value does not
+             *   have the expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    XTwitterScraperInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
+             */
+            fun validate(): Status = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: XTwitterScraperInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Status && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

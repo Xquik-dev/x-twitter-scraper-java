@@ -184,14 +184,12 @@ private constructor(
         private val creator: JsonField<Creator>,
         private val description: JsonField<String>,
         private val invitesPolicy: JsonField<String>,
-        private val isMember: JsonField<Boolean>,
         private val isNsfw: JsonField<Boolean>,
         private val joinPolicy: JsonField<String>,
         private val memberCount: JsonField<Long>,
         private val moderatorCount: JsonField<Long>,
         private val name: JsonField<String>,
         private val primaryTopic: JsonField<PrimaryTopic>,
-        private val role: JsonField<String>,
         private val rules: JsonField<List<Rule>>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -212,9 +210,6 @@ private constructor(
             @JsonProperty("invites_policy")
             @ExcludeMissing
             invitesPolicy: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("is_member")
-            @ExcludeMissing
-            isMember: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("is_nsfw") @ExcludeMissing isNsfw: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("join_policy")
             @ExcludeMissing
@@ -229,7 +224,6 @@ private constructor(
             @JsonProperty("primary_topic")
             @ExcludeMissing
             primaryTopic: JsonField<PrimaryTopic> = JsonMissing.of(),
-            @JsonProperty("role") @ExcludeMissing role: JsonField<String> = JsonMissing.of(),
             @JsonProperty("rules") @ExcludeMissing rules: JsonField<List<Rule>> = JsonMissing.of(),
         ) : this(
             id,
@@ -238,14 +232,12 @@ private constructor(
             creator,
             description,
             invitesPolicy,
-            isMember,
             isNsfw,
             joinPolicy,
             memberCount,
             moderatorCount,
             name,
             primaryTopic,
-            role,
             rules,
             mutableMapOf(),
         )
@@ -298,14 +290,6 @@ private constructor(
         fun invitesPolicy(): Optional<String> = invitesPolicy.getOptional("invites_policy")
 
         /**
-         * Whether the authenticated viewer is a member
-         *
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
-        fun isMember(): Optional<Boolean> = isMember.getOptional("is_member")
-
-        /**
          * Whether the community is marked sensitive
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
@@ -352,14 +336,6 @@ private constructor(
          *   (e.g. if the server responded with an unexpected value).
          */
         fun primaryTopic(): Optional<PrimaryTopic> = primaryTopic.getOptional("primary_topic")
-
-        /**
-         * Authenticated viewer's community role
-         *
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
-        fun role(): Optional<String> = role.getOptional("role")
 
         /**
          * Community rules
@@ -417,13 +393,6 @@ private constructor(
         fun _invitesPolicy(): JsonField<String> = invitesPolicy
 
         /**
-         * Returns the raw JSON value of [isMember].
-         *
-         * Unlike [isMember], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("is_member") @ExcludeMissing fun _isMember(): JsonField<Boolean> = isMember
-
-        /**
          * Returns the raw JSON value of [isNsfw].
          *
          * Unlike [isNsfw], this method doesn't throw if the JSON field has an unexpected type.
@@ -476,13 +445,6 @@ private constructor(
         fun _primaryTopic(): JsonField<PrimaryTopic> = primaryTopic
 
         /**
-         * Returns the raw JSON value of [role].
-         *
-         * Unlike [role], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("role") @ExcludeMissing fun _role(): JsonField<String> = role
-
-        /**
          * Returns the raw JSON value of [rules].
          *
          * Unlike [rules], this method doesn't throw if the JSON field has an unexpected type.
@@ -523,14 +485,12 @@ private constructor(
             private var creator: JsonField<Creator> = JsonMissing.of()
             private var description: JsonField<String> = JsonMissing.of()
             private var invitesPolicy: JsonField<String> = JsonMissing.of()
-            private var isMember: JsonField<Boolean> = JsonMissing.of()
             private var isNsfw: JsonField<Boolean> = JsonMissing.of()
             private var joinPolicy: JsonField<String> = JsonMissing.of()
             private var memberCount: JsonField<Long> = JsonMissing.of()
             private var moderatorCount: JsonField<Long> = JsonMissing.of()
             private var name: JsonField<String> = JsonMissing.of()
             private var primaryTopic: JsonField<PrimaryTopic> = JsonMissing.of()
-            private var role: JsonField<String> = JsonMissing.of()
             private var rules: JsonField<MutableList<Rule>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -542,14 +502,12 @@ private constructor(
                 creator = community.creator
                 description = community.description
                 invitesPolicy = community.invitesPolicy
-                isMember = community.isMember
                 isNsfw = community.isNsfw
                 joinPolicy = community.joinPolicy
                 memberCount = community.memberCount
                 moderatorCount = community.moderatorCount
                 name = community.name
                 primaryTopic = community.primaryTopic
-                role = community.role
                 rules = community.rules.map { it.toMutableList() }
                 additionalProperties = community.additionalProperties.toMutableMap()
             }
@@ -629,18 +587,6 @@ private constructor(
                 this.invitesPolicy = invitesPolicy
             }
 
-            /** Whether the authenticated viewer is a member */
-            fun isMember(isMember: Boolean) = isMember(JsonField.of(isMember))
-
-            /**
-             * Sets [Builder.isMember] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.isMember] with a well-typed [Boolean] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun isMember(isMember: JsonField<Boolean>) = apply { this.isMember = isMember }
-
             /** Whether the community is marked sensitive */
             fun isNsfw(isNsfw: Boolean) = isNsfw(JsonField.of(isNsfw))
 
@@ -717,18 +663,6 @@ private constructor(
                 this.primaryTopic = primaryTopic
             }
 
-            /** Authenticated viewer's community role */
-            fun role(role: String) = role(JsonField.of(role))
-
-            /**
-             * Sets [Builder.role] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.role] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun role(role: JsonField<String>) = apply { this.role = role }
-
             /** Community rules */
             fun rules(rules: List<Rule>) = rules(JsonField.of(rules))
 
@@ -794,14 +728,12 @@ private constructor(
                     creator,
                     description,
                     invitesPolicy,
-                    isMember,
                     isNsfw,
                     joinPolicy,
                     memberCount,
                     moderatorCount,
                     name,
                     primaryTopic,
-                    role,
                     (rules ?: JsonMissing.of()).map { it.toImmutable() },
                     additionalProperties.toMutableMap(),
                 )
@@ -829,14 +761,12 @@ private constructor(
             creator().ifPresent { it.validate() }
             description()
             invitesPolicy()
-            isMember()
             isNsfw()
             joinPolicy()
             memberCount()
             moderatorCount()
             name()
             primaryTopic().ifPresent { it.validate() }
-            role()
             rules().ifPresent { it.forEach { it.validate() } }
             validated = true
         }
@@ -863,14 +793,12 @@ private constructor(
                 (creator.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (description.asKnown().isPresent) 1 else 0) +
                 (if (invitesPolicy.asKnown().isPresent) 1 else 0) +
-                (if (isMember.asKnown().isPresent) 1 else 0) +
                 (if (isNsfw.asKnown().isPresent) 1 else 0) +
                 (if (joinPolicy.asKnown().isPresent) 1 else 0) +
                 (if (memberCount.asKnown().isPresent) 1 else 0) +
                 (if (moderatorCount.asKnown().isPresent) 1 else 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
                 (primaryTopic.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (role.asKnown().isPresent) 1 else 0) +
                 (rules.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 
         class Creator
@@ -1576,14 +1504,12 @@ private constructor(
                 creator == other.creator &&
                 description == other.description &&
                 invitesPolicy == other.invitesPolicy &&
-                isMember == other.isMember &&
                 isNsfw == other.isNsfw &&
                 joinPolicy == other.joinPolicy &&
                 memberCount == other.memberCount &&
                 moderatorCount == other.moderatorCount &&
                 name == other.name &&
                 primaryTopic == other.primaryTopic &&
-                role == other.role &&
                 rules == other.rules &&
                 additionalProperties == other.additionalProperties
         }
@@ -1596,14 +1522,12 @@ private constructor(
                 creator,
                 description,
                 invitesPolicy,
-                isMember,
                 isNsfw,
                 joinPolicy,
                 memberCount,
                 moderatorCount,
                 name,
                 primaryTopic,
-                role,
                 rules,
                 additionalProperties,
             )
@@ -1612,7 +1536,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Community{id=$id, bannerUrl=$bannerUrl, createdAt=$createdAt, creator=$creator, description=$description, invitesPolicy=$invitesPolicy, isMember=$isMember, isNsfw=$isNsfw, joinPolicy=$joinPolicy, memberCount=$memberCount, moderatorCount=$moderatorCount, name=$name, primaryTopic=$primaryTopic, role=$role, rules=$rules, additionalProperties=$additionalProperties}"
+            "Community{id=$id, bannerUrl=$bannerUrl, createdAt=$createdAt, creator=$creator, description=$description, invitesPolicy=$invitesPolicy, isNsfw=$isNsfw, joinPolicy=$joinPolicy, memberCount=$memberCount, moderatorCount=$moderatorCount, name=$name, primaryTopic=$primaryTopic, rules=$rules, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

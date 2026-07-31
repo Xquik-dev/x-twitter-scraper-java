@@ -253,8 +253,11 @@ private constructor(
     private constructor(
         private val name: JsonField<String>,
         private val description: JsonField<String>,
+        private val promotedContent: JsonField<String>,
         private val query: JsonField<String>,
         private val rank: JsonField<Long>,
+        private val tweetVolume: JsonField<Long>,
+        private val url: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -264,9 +267,16 @@ private constructor(
             @JsonProperty("description")
             @ExcludeMissing
             description: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("promotedContent")
+            @ExcludeMissing
+            promotedContent: JsonField<String> = JsonMissing.of(),
             @JsonProperty("query") @ExcludeMissing query: JsonField<String> = JsonMissing.of(),
             @JsonProperty("rank") @ExcludeMissing rank: JsonField<Long> = JsonMissing.of(),
-        ) : this(name, description, query, rank, mutableMapOf())
+            @JsonProperty("tweetVolume")
+            @ExcludeMissing
+            tweetVolume: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
+        ) : this(name, description, promotedContent, query, rank, tweetVolume, url, mutableMapOf())
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
@@ -282,6 +292,14 @@ private constructor(
         fun description(): Optional<String> = description.getOptional("description")
 
         /**
+         * Promotion identifier from X. Null for organic trends.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun promotedContent(): Optional<String> = promotedContent.getOptional("promotedContent")
+
+        /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
          *   (e.g. if the server responded with an unexpected value).
          */
@@ -292,6 +310,22 @@ private constructor(
          *   (e.g. if the server responded with an unexpected value).
          */
         fun rank(): Optional<Long> = rank.getOptional("rank")
+
+        /**
+         * Approximate public post volume when X supplies it.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun tweetVolume(): Optional<Long> = tweetVolume.getOptional("tweetVolume")
+
+        /**
+         * X search URL for the trend.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun url(): Optional<String> = url.getOptional("url")
 
         /**
          * Returns the raw JSON value of [name].
@@ -310,6 +344,16 @@ private constructor(
         fun _description(): JsonField<String> = description
 
         /**
+         * Returns the raw JSON value of [promotedContent].
+         *
+         * Unlike [promotedContent], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("promotedContent")
+        @ExcludeMissing
+        fun _promotedContent(): JsonField<String> = promotedContent
+
+        /**
          * Returns the raw JSON value of [query].
          *
          * Unlike [query], this method doesn't throw if the JSON field has an unexpected type.
@@ -322,6 +366,22 @@ private constructor(
          * Unlike [rank], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("rank") @ExcludeMissing fun _rank(): JsonField<Long> = rank
+
+        /**
+         * Returns the raw JSON value of [tweetVolume].
+         *
+         * Unlike [tweetVolume], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("tweetVolume")
+        @ExcludeMissing
+        fun _tweetVolume(): JsonField<Long> = tweetVolume
+
+        /**
+         * Returns the raw JSON value of [url].
+         *
+         * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -353,16 +413,22 @@ private constructor(
 
             private var name: JsonField<String>? = null
             private var description: JsonField<String> = JsonMissing.of()
+            private var promotedContent: JsonField<String> = JsonMissing.of()
             private var query: JsonField<String> = JsonMissing.of()
             private var rank: JsonField<Long> = JsonMissing.of()
+            private var tweetVolume: JsonField<Long> = JsonMissing.of()
+            private var url: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(trend: Trend) = apply {
                 name = trend.name
                 description = trend.description
+                promotedContent = trend.promotedContent
                 query = trend.query
                 rank = trend.rank
+                tweetVolume = trend.tweetVolume
+                url = trend.url
                 additionalProperties = trend.additionalProperties.toMutableMap()
             }
 
@@ -390,6 +456,25 @@ private constructor(
                 this.description = description
             }
 
+            /** Promotion identifier from X. Null for organic trends. */
+            fun promotedContent(promotedContent: String?) =
+                promotedContent(JsonField.ofNullable(promotedContent))
+
+            /** Alias for calling [Builder.promotedContent] with `promotedContent.orElse(null)`. */
+            fun promotedContent(promotedContent: Optional<String>) =
+                promotedContent(promotedContent.getOrNull())
+
+            /**
+             * Sets [Builder.promotedContent] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.promotedContent] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun promotedContent(promotedContent: JsonField<String>) = apply {
+                this.promotedContent = promotedContent
+            }
+
             fun query(query: String) = query(JsonField.of(query))
 
             /**
@@ -411,6 +496,40 @@ private constructor(
              * value.
              */
             fun rank(rank: JsonField<Long>) = apply { this.rank = rank }
+
+            /** Approximate public post volume when X supplies it. */
+            fun tweetVolume(tweetVolume: Long?) = tweetVolume(JsonField.ofNullable(tweetVolume))
+
+            /**
+             * Alias for [Builder.tweetVolume].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun tweetVolume(tweetVolume: Long) = tweetVolume(tweetVolume as Long?)
+
+            /** Alias for calling [Builder.tweetVolume] with `tweetVolume.orElse(null)`. */
+            fun tweetVolume(tweetVolume: Optional<Long>) = tweetVolume(tweetVolume.getOrNull())
+
+            /**
+             * Sets [Builder.tweetVolume] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.tweetVolume] with a well-typed [Long] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun tweetVolume(tweetVolume: JsonField<Long>) = apply { this.tweetVolume = tweetVolume }
+
+            /** X search URL for the trend. */
+            fun url(url: String) = url(JsonField.of(url))
+
+            /**
+             * Sets [Builder.url] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.url] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun url(url: JsonField<String>) = apply { this.url = url }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -447,8 +566,11 @@ private constructor(
                 Trend(
                     checkRequired("name", name),
                     description,
+                    promotedContent,
                     query,
                     rank,
+                    tweetVolume,
+                    url,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -471,8 +593,11 @@ private constructor(
 
             name()
             description()
+            promotedContent()
             query()
             rank()
+            tweetVolume()
+            url()
             validated = true
         }
 
@@ -494,8 +619,11 @@ private constructor(
         internal fun validity(): Int =
             (if (name.asKnown().isPresent) 1 else 0) +
                 (if (description.asKnown().isPresent) 1 else 0) +
+                (if (promotedContent.asKnown().isPresent) 1 else 0) +
                 (if (query.asKnown().isPresent) 1 else 0) +
-                (if (rank.asKnown().isPresent) 1 else 0)
+                (if (rank.asKnown().isPresent) 1 else 0) +
+                (if (tweetVolume.asKnown().isPresent) 1 else 0) +
+                (if (url.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -505,19 +633,31 @@ private constructor(
             return other is Trend &&
                 name == other.name &&
                 description == other.description &&
+                promotedContent == other.promotedContent &&
                 query == other.query &&
                 rank == other.rank &&
+                tweetVolume == other.tweetVolume &&
+                url == other.url &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(name, description, query, rank, additionalProperties)
+            Objects.hash(
+                name,
+                description,
+                promotedContent,
+                query,
+                rank,
+                tweetVolume,
+                url,
+                additionalProperties,
+            )
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Trend{name=$name, description=$description, query=$query, rank=$rank, additionalProperties=$additionalProperties}"
+            "Trend{name=$name, description=$description, promotedContent=$promotedContent, query=$query, rank=$rank, tweetVolume=$tweetVolume, url=$url, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

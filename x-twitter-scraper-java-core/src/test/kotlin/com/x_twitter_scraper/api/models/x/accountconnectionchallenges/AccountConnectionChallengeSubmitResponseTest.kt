@@ -21,7 +21,6 @@ internal class AccountConnectionChallengeSubmitResponseTest {
                 .id("42")
                 .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .health(AccountConnectionChallengeSubmitResponse.Health.HEALTHY)
-                .status("active")
                 .xUserId("9876543210")
                 .xUsername("elonmusk")
                 .build()
@@ -31,7 +30,6 @@ internal class AccountConnectionChallengeSubmitResponseTest {
             .isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
         assertThat(accountConnectionChallengeSubmitResponse.health())
             .isEqualTo(AccountConnectionChallengeSubmitResponse.Health.HEALTHY)
-        assertThat(accountConnectionChallengeSubmitResponse.status()).isEqualTo("active")
         assertThat(accountConnectionChallengeSubmitResponse.xUserId()).isEqualTo("9876543210")
         assertThat(accountConnectionChallengeSubmitResponse.xUsername()).isEqualTo("elonmusk")
     }
@@ -44,7 +42,6 @@ internal class AccountConnectionChallengeSubmitResponseTest {
                 .id("42")
                 .createdAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .health(AccountConnectionChallengeSubmitResponse.Health.HEALTHY)
-                .status("active")
                 .xUserId("9876543210")
                 .xUsername("elonmusk")
                 .build()
