@@ -19,6 +19,9 @@ module="x-twitter-scraper-java"
 artifact="$module-$version.jar"
 base_url="https://repo.maven.apache.org/maven2/com/xquik/api/$module/$version"
 expected_fingerprint="6965E561C0ACEE32060AB961D2037E4157E62A59"
+verification_timeout_minutes=20
+retry_delay_seconds=15
+max_attempts=$((verification_timeout_minutes * 60 / retry_delay_seconds))
 verification_workspace="$(
     mktemp -d "/tmp/xquik-java-verify.XXXXXX"
 )"
@@ -26,7 +29,7 @@ verification_gnupg="$verification_workspace/gnupg"
 trap 'rm -rf -- "$verification_workspace"' EXIT
 mkdir -m 700 "$verification_gnupg"
 
-for ((attempt = 1; attempt <= 40; attempt++)); do
+for ((attempt = 1; attempt <= max_attempts; attempt++)); do
     if curl \
         --fail \
         --location \
@@ -47,11 +50,11 @@ for ((attempt = 1; attempt <= 40; attempt++)); do
             --output "$verification_workspace/$artifact.asc"; then
         break
     fi
-    if (( attempt == 40 )); then
-        echo "Maven Central did not publish $artifact within 10 minutes." >&2
+    if (( attempt == max_attempts )); then
+        echo "Maven Central did not publish $artifact within $verification_timeout_minutes minutes." >&2
         exit 1
     fi
-    sleep 15
+    sleep "$retry_delay_seconds"
 done
 
 GNUPGHOME="$verification_gnupg" gpg \
