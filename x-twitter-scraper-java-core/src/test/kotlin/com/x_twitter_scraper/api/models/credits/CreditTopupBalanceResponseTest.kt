@@ -18,15 +18,19 @@ internal class CreditTopupBalanceResponseTest {
         val creditTopupBalanceResponse =
             CreditTopupBalanceResponse.builder()
                 .redirectUrl(
-                    "https://xquik.com/api/v1/credits/topup/redirect?session_id=cs_test_123"
+                    "https://xquik.com/api/v1/credits/topup/redirect?session_id=checkout_example"
                 )
-                .url("https://xquik.com/api/v1/credits/topup/redirect?session_id=cs_test_123")
+                .url("https://xquik.com/api/v1/credits/topup/redirect?session_id=checkout_example")
                 .build()
 
         assertThat(creditTopupBalanceResponse.redirectUrl())
-            .isEqualTo("https://xquik.com/api/v1/credits/topup/redirect?session_id=cs_test_123")
+            .isEqualTo(
+                "https://xquik.com/api/v1/credits/topup/redirect?session_id=checkout_example"
+            )
         assertThat(creditTopupBalanceResponse.url())
-            .isEqualTo("https://xquik.com/api/v1/credits/topup/redirect?session_id=cs_test_123")
+            .isEqualTo(
+                "https://xquik.com/api/v1/credits/topup/redirect?session_id=checkout_example"
+            )
     }
 
     @Test
@@ -35,9 +39,9 @@ internal class CreditTopupBalanceResponseTest {
         val creditTopupBalanceResponse =
             CreditTopupBalanceResponse.builder()
                 .redirectUrl(
-                    "https://xquik.com/api/v1/credits/topup/redirect?session_id=cs_test_123"
+                    "https://xquik.com/api/v1/credits/topup/redirect?session_id=checkout_example"
                 )
-                .url("https://xquik.com/api/v1/credits/topup/redirect?session_id=cs_test_123")
+                .url("https://xquik.com/api/v1/credits/topup/redirect?session_id=checkout_example")
                 .build()
 
         val roundtrippedCreditTopupBalanceResponse =
