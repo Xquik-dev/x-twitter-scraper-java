@@ -30,7 +30,7 @@ private constructor(
     private val credentialNotice: JsonValue,
     private val credits: JsonField<String>,
     private val expiresAt: JsonField<OffsetDateTime>,
-    private val instructions: JsonValue,
+    private val instructions: JsonField<String>,
     private val pollAfterSeconds: JsonValue,
     private val purchaseId: JsonField<String>,
     private val requiresUserInteraction: JsonValue,
@@ -62,7 +62,9 @@ private constructor(
         @JsonProperty("expires_at")
         @ExcludeMissing
         expiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-        @JsonProperty("instructions") @ExcludeMissing instructions: JsonValue = JsonMissing.of(),
+        @JsonProperty("instructions")
+        @ExcludeMissing
+        instructions: JsonField<String> = JsonMissing.of(),
         @JsonProperty("poll_after_seconds")
         @ExcludeMissing
         pollAfterSeconds: JsonValue = JsonMissing.of(),
@@ -131,7 +133,7 @@ private constructor(
     fun authorization(): Authorization = authorization.getRequired("authorization")
 
     /**
-     * Raw Stripe-hosted checkout URL for user interaction.
+     * Hosted checkout URL for user interaction.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -168,15 +170,12 @@ private constructor(
     fun expiresAt(): OffsetDateTime = expiresAt.getRequired("expires_at")
 
     /**
-     * Expected to always return the following:
-     * ```java
-     * JsonValue.from("Give checkout_url to the user. They must complete payment on Stripe. Never submit payment for them. After payment, poll status_url every poll_after_seconds until latest_purchase.status is no longer pending.")
-     * ```
+     * Hosted checkout and status polling instructions.
      *
-     * However, this method can be useful for debugging and logging (e.g. if the server responded
-     * with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    @JsonProperty("instructions") @ExcludeMissing fun _instructions(): JsonValue = instructions
+    fun instructions(): String = instructions.getRequired("instructions")
 
     /**
      * Wait at least this long before polling status_url.
@@ -284,6 +283,15 @@ private constructor(
     fun _expiresAt(): JsonField<OffsetDateTime> = expiresAt
 
     /**
+     * Returns the raw JSON value of [instructions].
+     *
+     * Unlike [instructions], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("instructions")
+    @ExcludeMissing
+    fun _instructions(): JsonField<String> = instructions
+
+    /**
      * Returns the raw JSON value of [purchaseId].
      *
      * Unlike [purchaseId], this method doesn't throw if the JSON field has an unexpected type.
@@ -329,6 +337,7 @@ private constructor(
          * .checkoutUrl()
          * .credits()
          * .expiresAt()
+         * .instructions()
          * .purchaseId()
          * .status()
          * .walletId()
@@ -351,10 +360,7 @@ private constructor(
             )
         private var credits: JsonField<String>? = null
         private var expiresAt: JsonField<OffsetDateTime>? = null
-        private var instructions: JsonValue =
-            JsonValue.from(
-                "Give checkout_url to the user. They must complete payment on Stripe. Never submit payment for them. After payment, poll status_url every poll_after_seconds until latest_purchase.status is no longer pending."
-            )
+        private var instructions: JsonField<String>? = null
         private var pollAfterSeconds: JsonValue = JsonValue.from(2)
         private var purchaseId: JsonField<String>? = null
         private var requiresUserInteraction: JsonValue = JsonValue.from(true)
@@ -439,7 +445,7 @@ private constructor(
             this.authorization = authorization
         }
 
-        /** Raw Stripe-hosted checkout URL for user interaction. */
+        /** Hosted checkout URL for user interaction. */
         fun checkoutUrl(checkoutUrl: String) = checkoutUrl(JsonField.of(checkoutUrl))
 
         /**
@@ -490,19 +496,19 @@ private constructor(
          */
         fun expiresAt(expiresAt: JsonField<OffsetDateTime>) = apply { this.expiresAt = expiresAt }
 
+        /** Hosted checkout and status polling instructions. */
+        fun instructions(instructions: String) = instructions(JsonField.of(instructions))
+
         /**
-         * Sets the field to an arbitrary JSON value.
+         * Sets [Builder.instructions] to an arbitrary JSON value.
          *
-         * It is usually unnecessary to call this method because the field defaults to the
-         * following:
-         * ```java
-         * JsonValue.from("Give checkout_url to the user. They must complete payment on Stripe. Never submit payment for them. After payment, poll status_url every poll_after_seconds until latest_purchase.status is no longer pending.")
-         * ```
-         *
+         * You should usually call [Builder.instructions] with a well-typed [String] value instead.
          * This method is primarily for setting the field to an undocumented or not yet supported
          * value.
          */
-        fun instructions(instructions: JsonValue) = apply { this.instructions = instructions }
+        fun instructions(instructions: JsonField<String>) = apply {
+            this.instructions = instructions
+        }
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -613,6 +619,7 @@ private constructor(
          * .checkoutUrl()
          * .credits()
          * .expiresAt()
+         * .instructions()
          * .purchaseId()
          * .status()
          * .walletId()
@@ -630,7 +637,7 @@ private constructor(
                 credentialNotice,
                 checkRequired("credits", credits),
                 checkRequired("expiresAt", expiresAt),
-                instructions,
+                checkRequired("instructions", instructions),
                 pollAfterSeconds,
                 checkRequired("purchaseId", purchaseId),
                 requiresUserInteraction,
@@ -681,16 +688,7 @@ private constructor(
         }
         credits()
         expiresAt()
-        _instructions().let {
-            if (
-                it !=
-                    JsonValue.from(
-                        "Give checkout_url to the user. They must complete payment on Stripe. Never submit payment for them. After payment, poll status_url every poll_after_seconds until latest_purchase.status is no longer pending."
-                    )
-            ) {
-                throw XTwitterScraperInvalidDataException("'instructions' is invalid, received $it")
-            }
-        }
+        instructions()
         _pollAfterSeconds().let {
             if (it != JsonValue.from(2)) {
                 throw XTwitterScraperInvalidDataException(
@@ -748,16 +746,7 @@ private constructor(
             } +
             (if (credits.asKnown().isPresent) 1 else 0) +
             (if (expiresAt.asKnown().isPresent) 1 else 0) +
-            instructions.let {
-                if (
-                    it ==
-                        JsonValue.from(
-                            "Give checkout_url to the user. They must complete payment on Stripe. Never submit payment for them. After payment, poll status_url every poll_after_seconds until latest_purchase.status is no longer pending."
-                        )
-                )
-                    1
-                else 0
-            } +
+            (if (instructions.asKnown().isPresent) 1 else 0) +
             pollAfterSeconds.let { if (it == JsonValue.from(2)) 1 else 0 } +
             (if (purchaseId.asKnown().isPresent) 1 else 0) +
             requiresUserInteraction.let { if (it == JsonValue.from(true)) 1 else 0 } +

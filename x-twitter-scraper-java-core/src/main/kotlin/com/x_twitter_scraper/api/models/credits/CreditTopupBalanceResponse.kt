@@ -32,7 +32,7 @@ private constructor(
     ) : this(redirectUrl, url, mutableMapOf())
 
     /**
-     * Stable first-party Xquik redirect URL for the active Stripe Checkout session.
+     * Stable Xquik redirect URL for the active checkout.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -40,8 +40,8 @@ private constructor(
     fun redirectUrl(): String = redirectUrl.getRequired("redirect_url")
 
     /**
-     * Same stable first-party Xquik redirect URL as redirect_url. The response never exposes a raw
-     * Stripe Checkout URL.
+     * Same stable Xquik redirect URL as redirect_url. The response never exposes the hosted
+     * checkout URL.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -104,7 +104,7 @@ private constructor(
             additionalProperties = creditTopupBalanceResponse.additionalProperties.toMutableMap()
         }
 
-        /** Stable first-party Xquik redirect URL for the active Stripe Checkout session. */
+        /** Stable Xquik redirect URL for the active checkout. */
         fun redirectUrl(redirectUrl: String) = redirectUrl(JsonField.of(redirectUrl))
 
         /**
@@ -117,8 +117,8 @@ private constructor(
         fun redirectUrl(redirectUrl: JsonField<String>) = apply { this.redirectUrl = redirectUrl }
 
         /**
-         * Same stable first-party Xquik redirect URL as redirect_url. The response never exposes a
-         * raw Stripe Checkout URL.
+         * Same stable Xquik redirect URL as redirect_url. The response never exposes the hosted
+         * checkout URL.
          */
         fun url(url: String) = url(JsonField.of(url))
 
