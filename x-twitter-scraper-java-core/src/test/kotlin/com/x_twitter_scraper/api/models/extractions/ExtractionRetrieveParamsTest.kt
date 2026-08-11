@@ -10,7 +10,15 @@ internal class ExtractionRetrieveParamsTest {
 
     @Test
     fun create() {
-        ExtractionRetrieveParams.builder().id("id").cursor("cursor").limit(1L).build()
+        ExtractionRetrieveParams.builder()
+            .id("id")
+            .cursor("cursor")
+            .fieldStyle(ExtractionRetrieveParams.FieldStyle.SOURCE)
+            .includeRaw(true)
+            .limit(1L)
+            .outputMode(ExtractionRetrieveParams.OutputMode.COMPACT)
+            .outputPreset(ExtractionRetrieveParams.OutputPreset.NESTED)
+            .build()
     }
 
     @Test
@@ -24,12 +32,30 @@ internal class ExtractionRetrieveParamsTest {
 
     @Test
     fun queryParams() {
-        val params = ExtractionRetrieveParams.builder().id("id").cursor("cursor").limit(1L).build()
+        val params =
+            ExtractionRetrieveParams.builder()
+                .id("id")
+                .cursor("cursor")
+                .fieldStyle(ExtractionRetrieveParams.FieldStyle.SOURCE)
+                .includeRaw(true)
+                .limit(1L)
+                .outputMode(ExtractionRetrieveParams.OutputMode.COMPACT)
+                .outputPreset(ExtractionRetrieveParams.OutputPreset.NESTED)
+                .build()
 
         val queryParams = params._queryParams()
 
         assertThat(queryParams)
-            .isEqualTo(QueryParams.builder().put("cursor", "cursor").put("limit", "1").build())
+            .isEqualTo(
+                QueryParams.builder()
+                    .put("cursor", "cursor")
+                    .put("fieldStyle", "source")
+                    .put("includeRaw", "true")
+                    .put("limit", "1")
+                    .put("outputMode", "compact")
+                    .put("outputPreset", "nested")
+                    .build()
+            )
     }
 
     @Test

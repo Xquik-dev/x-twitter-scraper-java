@@ -15,17 +15,21 @@ class EventListParams
 private constructor(
     private val cursor: String?,
     private val eventType: EventType?,
+    private val keywordMonitorId: String?,
     private val limit: Long?,
     private val monitorId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** Cursor for keyset pagination from prior response next_cursor */
+    /** Previous nextCursor. */
     fun cursor(): Optional<String> = Optional.ofNullable(cursor)
 
     /** Filter events by type */
     fun eventType(): Optional<EventType> = Optional.ofNullable(eventType)
+
+    /** Keyword monitor ID. */
+    fun keywordMonitorId(): Optional<String> = Optional.ofNullable(keywordMonitorId)
 
     /**
      * Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the
@@ -34,7 +38,7 @@ private constructor(
      */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
-    /** Filter events by monitor ID */
+    /** Account monitor ID. */
     fun monitorId(): Optional<String> = Optional.ofNullable(monitorId)
 
     /** Additional headers to send with the request. */
@@ -58,6 +62,7 @@ private constructor(
 
         private var cursor: String? = null
         private var eventType: EventType? = null
+        private var keywordMonitorId: String? = null
         private var limit: Long? = null
         private var monitorId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -67,13 +72,14 @@ private constructor(
         internal fun from(eventListParams: EventListParams) = apply {
             cursor = eventListParams.cursor
             eventType = eventListParams.eventType
+            keywordMonitorId = eventListParams.keywordMonitorId
             limit = eventListParams.limit
             monitorId = eventListParams.monitorId
             additionalHeaders = eventListParams.additionalHeaders.toBuilder()
             additionalQueryParams = eventListParams.additionalQueryParams.toBuilder()
         }
 
-        /** Cursor for keyset pagination from prior response next_cursor */
+        /** Previous nextCursor. */
         fun cursor(cursor: String?) = apply { this.cursor = cursor }
 
         /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
@@ -84,6 +90,15 @@ private constructor(
 
         /** Alias for calling [Builder.eventType] with `eventType.orElse(null)`. */
         fun eventType(eventType: Optional<EventType>) = eventType(eventType.getOrNull())
+
+        /** Keyword monitor ID. */
+        fun keywordMonitorId(keywordMonitorId: String?) = apply {
+            this.keywordMonitorId = keywordMonitorId
+        }
+
+        /** Alias for calling [Builder.keywordMonitorId] with `keywordMonitorId.orElse(null)`. */
+        fun keywordMonitorId(keywordMonitorId: Optional<String>) =
+            keywordMonitorId(keywordMonitorId.getOrNull())
 
         /**
          * Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the
@@ -102,7 +117,7 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
 
-        /** Filter events by monitor ID */
+        /** Account monitor ID. */
         fun monitorId(monitorId: String?) = apply { this.monitorId = monitorId }
 
         /** Alias for calling [Builder.monitorId] with `monitorId.orElse(null)`. */
@@ -215,6 +230,7 @@ private constructor(
             EventListParams(
                 cursor,
                 eventType,
+                keywordMonitorId,
                 limit,
                 monitorId,
                 additionalHeaders.build(),
@@ -229,6 +245,7 @@ private constructor(
             .apply {
                 cursor?.let { put("cursor", it) }
                 eventType?.let { put("eventType", it.toString()) }
+                keywordMonitorId?.let { put("keywordMonitorId", it) }
                 limit?.let { put("limit", it.toString()) }
                 monitorId?.let { put("monitorId", it) }
                 putAll(additionalQueryParams)
@@ -243,6 +260,7 @@ private constructor(
         return other is EventListParams &&
             cursor == other.cursor &&
             eventType == other.eventType &&
+            keywordMonitorId == other.keywordMonitorId &&
             limit == other.limit &&
             monitorId == other.monitorId &&
             additionalHeaders == other.additionalHeaders &&
@@ -250,8 +268,16 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(cursor, eventType, limit, monitorId, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            cursor,
+            eventType,
+            keywordMonitorId,
+            limit,
+            monitorId,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "EventListParams{cursor=$cursor, eventType=$eventType, limit=$limit, monitorId=$monitorId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "EventListParams{cursor=$cursor, eventType=$eventType, keywordMonitorId=$keywordMonitorId, limit=$limit, monitorId=$monitorId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

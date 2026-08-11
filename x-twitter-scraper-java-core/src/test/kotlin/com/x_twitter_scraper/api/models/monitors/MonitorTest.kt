@@ -23,6 +23,8 @@ internal class MonitorTest {
                 .nextBillingAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .username("elonmusk")
                 .xUserId("9876543210")
+                .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .pausedReason(Monitor.PausedReason.X_USER_NOT_FOUND)
                 .build()
 
         assertThat(monitor.id()).isEqualTo("42")
@@ -32,6 +34,8 @@ internal class MonitorTest {
         assertThat(monitor.nextBillingAt()).isEqualTo(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
         assertThat(monitor.username()).isEqualTo("elonmusk")
         assertThat(monitor.xUserId()).isEqualTo("9876543210")
+        assertThat(monitor.pausedAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(monitor.pausedReason()).contains(Monitor.PausedReason.X_USER_NOT_FOUND)
     }
 
     @Test
@@ -47,6 +51,8 @@ internal class MonitorTest {
                 .nextBillingAt(OffsetDateTime.parse("2025-01-15T12:00:00Z"))
                 .username("elonmusk")
                 .xUserId("9876543210")
+                .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .pausedReason(Monitor.PausedReason.X_USER_NOT_FOUND)
                 .build()
 
         val roundtrippedMonitor =

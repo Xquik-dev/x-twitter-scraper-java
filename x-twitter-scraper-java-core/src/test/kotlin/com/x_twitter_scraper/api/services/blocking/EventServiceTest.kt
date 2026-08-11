@@ -40,6 +40,7 @@ internal class EventServiceTest {
                 EventListParams.builder()
                     .cursor("cursor")
                     .eventType(EventType.TWEET_NEW)
+                    .keywordMonitorId("keywordMonitorId")
                     .limit(1L)
                     .monitorId("monitorId")
                     .build()

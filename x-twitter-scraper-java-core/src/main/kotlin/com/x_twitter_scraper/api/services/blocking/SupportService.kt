@@ -3,6 +3,7 @@
 package com.x_twitter_scraper.api.services.blocking
 
 import com.x_twitter_scraper.api.core.ClientOptions
+import com.x_twitter_scraper.api.services.blocking.support.AttachmentService
 import com.x_twitter_scraper.api.services.blocking.support.TicketService
 import java.util.function.Consumer
 
@@ -21,6 +22,9 @@ interface SupportService {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): SupportService
 
     /** Support ticket management */
+    fun attachments(): AttachmentService
+
+    /** Support ticket management */
     fun tickets(): TicketService
 
     /** A view of [SupportService] that provides access to raw HTTP responses for each method. */
@@ -32,6 +36,9 @@ interface SupportService {
          * The original service is not modified.
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): SupportService.WithRawResponse
+
+        /** Support ticket management */
+        fun attachments(): AttachmentService.WithRawResponse
 
         /** Support ticket management */
         fun tickets(): TicketService.WithRawResponse
