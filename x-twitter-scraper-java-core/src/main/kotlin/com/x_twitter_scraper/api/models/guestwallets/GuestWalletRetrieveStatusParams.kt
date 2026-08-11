@@ -12,9 +12,9 @@ import com.x_twitter_scraper.api.core.http.QueryParams
 import java.util.Objects
 
 /**
- * Poll after Stripe payment. Use usable to decide whether paid reads can run. An active wallet can
- * remain usable while a top-up is pending. A new wallet becomes usable only after verified webhook
- * fulfillment. Send the guest key as Authorization: Bearer.
+ * Poll after payment. Use usable to decide whether paid reads can run. An active wallet can remain
+ * usable while a top-up is pending. A new wallet becomes usable only after payment is verified.
+ * Send the guest key as Authorization: Bearer.
  */
 class GuestWalletRetrieveStatusParams
 private constructor(

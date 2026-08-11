@@ -14,7 +14,24 @@ internal class CommunityRetrieveModeratorsParamsTest {
 
     @Test
     fun create() {
-        CommunityRetrieveModeratorsParams.builder().id("id").cursor("cursor").build()
+        CommunityRetrieveModeratorsParams.builder()
+            .id("id")
+            .bioContains("bioContains")
+            .cursor("cursor")
+            .hasLocation(true)
+            .hasWebsite(true)
+            .locationContains("locationContains")
+            .maxFollowers(0L)
+            .maxFollowing(0L)
+            .maxStatuses(0L)
+            .minAccountAgeDays(0L)
+            .minFollowers(0L)
+            .minFollowing(0L)
+            .minStatuses(0L)
+            .usernameContains("usernameContains")
+            .verifiedOnly(true)
+            .verifiedType("verifiedType")
+            .build()
     }
 
     @Test
@@ -28,11 +45,48 @@ internal class CommunityRetrieveModeratorsParamsTest {
 
     @Test
     fun queryParams() {
-        val params = CommunityRetrieveModeratorsParams.builder().id("id").cursor("cursor").build()
+        val params =
+            CommunityRetrieveModeratorsParams.builder()
+                .id("id")
+                .bioContains("bioContains")
+                .cursor("cursor")
+                .hasLocation(true)
+                .hasWebsite(true)
+                .locationContains("locationContains")
+                .maxFollowers(0L)
+                .maxFollowing(0L)
+                .maxStatuses(0L)
+                .minAccountAgeDays(0L)
+                .minFollowers(0L)
+                .minFollowing(0L)
+                .minStatuses(0L)
+                .usernameContains("usernameContains")
+                .verifiedOnly(true)
+                .verifiedType("verifiedType")
+                .build()
 
         val queryParams = params._queryParams()
 
-        assertThat(queryParams).isEqualTo(QueryParams.builder().put("cursor", "cursor").build())
+        assertThat(queryParams)
+            .isEqualTo(
+                QueryParams.builder()
+                    .put("bioContains", "bioContains")
+                    .put("cursor", "cursor")
+                    .put("hasLocation", "true")
+                    .put("hasWebsite", "true")
+                    .put("locationContains", "locationContains")
+                    .put("maxFollowers", "0")
+                    .put("maxFollowing", "0")
+                    .put("maxStatuses", "0")
+                    .put("minAccountAgeDays", "0")
+                    .put("minFollowers", "0")
+                    .put("minFollowing", "0")
+                    .put("minStatuses", "0")
+                    .put("usernameContains", "usernameContains")
+                    .put("verifiedOnly", "true")
+                    .put("verifiedType", "verifiedType")
+                    .build()
+            )
     }
 
     @Test

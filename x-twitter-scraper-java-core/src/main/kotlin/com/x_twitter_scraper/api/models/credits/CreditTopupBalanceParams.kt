@@ -24,8 +24,8 @@ import java.util.Objects
 import java.util.Optional
 
 /**
- * Create a Stripe Checkout session only after the user confirms. The request never completes
- * payment or adds credits by itself.
+ * Create a hosted checkout only after the user confirms. The request never completes payment or
+ * adds credits.
  */
 class CreditTopupBalanceParams
 private constructor(

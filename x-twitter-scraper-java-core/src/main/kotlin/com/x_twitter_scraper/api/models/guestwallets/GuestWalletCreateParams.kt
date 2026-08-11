@@ -23,10 +23,8 @@ import java.util.Collections
 import java.util.Objects
 
 /**
- * Create a one-use Stripe-hosted checkout after the user explicitly confirms a $10-$250 USD amount.
- * This request creates no charge by itself. The user opens checkout_url on Stripe. This endpoint
- * returns the paid-read API key without requiring an Xquik account, email, dashboard, or Xquik web
- * page. An idempotent replay returns the same key.
+ * Create a one-use hosted checkout after the user confirms $10-$250 USD. The request creates no
+ * charge. It returns a paid-read API key without an Xquik account. Replays return the same key.
  */
 class GuestWalletCreateParams
 private constructor(
