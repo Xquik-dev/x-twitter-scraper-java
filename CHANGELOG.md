@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.9.0](https://github.com/stainless-sdks/x-twitter-scraper-java/compare/v0.8.4...v0.9.0) (2026-08-11)
+
+
+### Features
+
+* **api:** api update ([d9ec682](https://github.com/stainless-sdks/x-twitter-scraper-java/commit/d9ec6821d543fce1a888f4d0582c3ec24f3c0564))
+* **api:** api update ([aa06dd7](https://github.com/stainless-sdks/x-twitter-scraper-java/commit/aa06dd748fa884ccfa058fe5ed576d97fae978ef))
+* **api:** update generated API surface ([9aa7a46](https://github.com/stainless-sdks/x-twitter-scraper-java/commit/9aa7a469545701d567c0a74e5ad7eea123c333f1))
+
 ## 0.8.4 (2026-08-11)
 
 Full Changelog: [v0.8.3...v0.8.4](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.8.3...v0.8.4)
