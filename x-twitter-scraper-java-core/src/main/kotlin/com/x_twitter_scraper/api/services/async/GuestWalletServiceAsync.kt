@@ -35,7 +35,8 @@ interface GuestWalletServiceAsync {
 
     /**
      * Create a one-use hosted checkout after the user confirms $10-$250 USD. The request creates no
-     * charge. It returns a paid-read API key without an Xquik account. Replays return the same key.
+     * charge. It returns a paid-read API key without an Xquik account. Idempotent replays return
+     * the same key.
      */
     fun create(params: GuestWalletCreateParams): CompletableFuture<GuestWalletCreateResponse> =
         create(params, RequestOptions.none())
