@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.8.3 (2026-08-11)
+
+Full Changelog: [v0.8.2...v0.8.3](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.8.2...v0.8.3)
+
+### Chores
+
+* **deps:** bump github/codeql-action/upload-sarif from 4.37.2 to 4.37.6 ([#46](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/46)) ([d1614e9](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/d1614e9d52d5fb6d78cbd7178ceaf7a54d924816))
+
 ## 0.8.2 (2026-08-04)
 
 Full Changelog: [v0.8.1...v0.8.2](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.8.1...v0.8.2)
