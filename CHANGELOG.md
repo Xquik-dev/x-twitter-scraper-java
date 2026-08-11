@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.1](https://github.com/stainless-sdks/x-twitter-scraper-java/compare/v0.9.0...v0.9.1) (2026-08-11)
+
+### Features
+
+* **api:** api update ([e75a791](https://github.com/stainless-sdks/x-twitter-scraper-java/commit/e75a7919e8ff8da00ddf41ae4111e0f560c6e54a))
+* **api:** clarify idempotent guest checkout replays ([60ae884](https://github.com/stainless-sdks/x-twitter-scraper-java/commit/60ae88467fd1d10f2c33a7f2a6575e3dd6087ff8))
+
 ## [0.9.0](https://github.com/stainless-sdks/x-twitter-scraper-java/compare/v0.8.4...v0.9.0) (2026-08-11)
 
 
