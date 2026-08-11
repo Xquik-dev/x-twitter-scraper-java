@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.8.4 (2026-08-11)
+
+Full Changelog: [v0.8.3...v0.8.4](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.8.3...v0.8.4)
+
+### Chores
+
+* **deps:** bump actions/setup-java from 5.6.0 to 5.7.0 ([#49](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/49)) ([ca9c316](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/ca9c316f84afa298a5df6e5c06da2acf1da64541))
+
 ## 0.8.3 (2026-08-11)
 
 Full Changelog: [v0.8.2...v0.8.3](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.8.2...v0.8.3)
