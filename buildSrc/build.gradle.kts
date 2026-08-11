@@ -35,7 +35,7 @@ configurations.configureEach {
         "com.fasterxml.jackson.core:jackson-databind:2.22.1",
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.22.1",
         "com.fasterxml.jackson.module:jackson-module-kotlin:2.22.1",
-        "com.github.jknack:handlebars:4.5.3",
+        "com.github.jknack:handlebars:4.5.4",
         "com.google.guava:guava:33.6.0-jre",
         "com.jayway.jsonpath:json-path:3.0.0",
         "commons-fileupload:commons-fileupload:1.6.0",
@@ -44,9 +44,9 @@ configurations.configureEach {
         "org.apache.commons:commons-lang3:3.20.0",
         "org.apache.logging.log4j:log4j-api:2.26.1",
         "org.apache.logging.log4j:log4j-core:2.26.1",
-        "org.xmlunit:xmlunit-core:2.12.0",
-        "org.xmlunit:xmlunit-legacy:2.12.0",
-        "org.xmlunit:xmlunit-placeholders:2.12.0",
+        "org.xmlunit:xmlunit-core:2.13.0",
+        "org.xmlunit:xmlunit-legacy:2.13.0",
+        "org.xmlunit:xmlunit-placeholders:2.13.0",
     )
 }
 
