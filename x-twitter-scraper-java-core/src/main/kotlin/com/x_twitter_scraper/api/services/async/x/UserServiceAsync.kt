@@ -17,8 +17,10 @@ import com.x_twitter_scraper.api.models.x.users.UserRemoveFollowerResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveBatchParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveBatchResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowersParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowersResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowersYouKnowParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowingParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowingResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveLikesParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveMediaParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveMentionsParams
@@ -27,6 +29,7 @@ import com.x_twitter_scraper.api.models.x.users.UserRetrieveRepliesParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveSearchParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveTweetsParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveVerifiedFollowersParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveVerifiedFollowersResponse
 import com.x_twitter_scraper.api.services.async.x.users.FollowServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -117,7 +120,7 @@ interface UserServiceAsync {
     ): CompletableFuture<UserRetrieveBatchResponse>
 
     /** List followers of a user */
-    fun retrieveFollowers(id: String): CompletableFuture<PaginatedUsers> =
+    fun retrieveFollowers(id: String): CompletableFuture<UserRetrieveFollowersResponse> =
         retrieveFollowers(id, UserRetrieveFollowersParams.none())
 
     /** @see retrieveFollowers */
@@ -125,30 +128,33 @@ interface UserServiceAsync {
         id: String,
         params: UserRetrieveFollowersParams = UserRetrieveFollowersParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedUsers> =
+    ): CompletableFuture<UserRetrieveFollowersResponse> =
         retrieveFollowers(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveFollowers */
     fun retrieveFollowers(
         id: String,
         params: UserRetrieveFollowersParams = UserRetrieveFollowersParams.none(),
-    ): CompletableFuture<PaginatedUsers> = retrieveFollowers(id, params, RequestOptions.none())
+    ): CompletableFuture<UserRetrieveFollowersResponse> =
+        retrieveFollowers(id, params, RequestOptions.none())
 
     /** @see retrieveFollowers */
     fun retrieveFollowers(
         params: UserRetrieveFollowersParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedUsers>
+    ): CompletableFuture<UserRetrieveFollowersResponse>
 
     /** @see retrieveFollowers */
-    fun retrieveFollowers(params: UserRetrieveFollowersParams): CompletableFuture<PaginatedUsers> =
+    fun retrieveFollowers(
+        params: UserRetrieveFollowersParams
+    ): CompletableFuture<UserRetrieveFollowersResponse> =
         retrieveFollowers(params, RequestOptions.none())
 
     /** @see retrieveFollowers */
     fun retrieveFollowers(
         id: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<PaginatedUsers> =
+    ): CompletableFuture<UserRetrieveFollowersResponse> =
         retrieveFollowers(id, UserRetrieveFollowersParams.none(), requestOptions)
 
     /** List mutual followers between you and a user */
@@ -189,7 +195,7 @@ interface UserServiceAsync {
         retrieveFollowersYouKnow(id, UserRetrieveFollowersYouKnowParams.none(), requestOptions)
 
     /** List accounts a user follows */
-    fun retrieveFollowing(id: String): CompletableFuture<PaginatedUsers> =
+    fun retrieveFollowing(id: String): CompletableFuture<UserRetrieveFollowingResponse> =
         retrieveFollowing(id, UserRetrieveFollowingParams.none())
 
     /** @see retrieveFollowing */
@@ -197,30 +203,33 @@ interface UserServiceAsync {
         id: String,
         params: UserRetrieveFollowingParams = UserRetrieveFollowingParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedUsers> =
+    ): CompletableFuture<UserRetrieveFollowingResponse> =
         retrieveFollowing(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveFollowing */
     fun retrieveFollowing(
         id: String,
         params: UserRetrieveFollowingParams = UserRetrieveFollowingParams.none(),
-    ): CompletableFuture<PaginatedUsers> = retrieveFollowing(id, params, RequestOptions.none())
+    ): CompletableFuture<UserRetrieveFollowingResponse> =
+        retrieveFollowing(id, params, RequestOptions.none())
 
     /** @see retrieveFollowing */
     fun retrieveFollowing(
         params: UserRetrieveFollowingParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedUsers>
+    ): CompletableFuture<UserRetrieveFollowingResponse>
 
     /** @see retrieveFollowing */
-    fun retrieveFollowing(params: UserRetrieveFollowingParams): CompletableFuture<PaginatedUsers> =
+    fun retrieveFollowing(
+        params: UserRetrieveFollowingParams
+    ): CompletableFuture<UserRetrieveFollowingResponse> =
         retrieveFollowing(params, RequestOptions.none())
 
     /** @see retrieveFollowing */
     fun retrieveFollowing(
         id: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<PaginatedUsers> =
+    ): CompletableFuture<UserRetrieveFollowingResponse> =
         retrieveFollowing(id, UserRetrieveFollowingParams.none(), requestOptions)
 
     /** List tweets liked by a user */
@@ -328,7 +337,10 @@ interface UserServiceAsync {
     ): CompletableFuture<PaginatedTweets> =
         retrieveMentions(id, UserRetrieveMentionsParams.none(), requestOptions)
 
-    /** Returns the user's timeline with replies included by default. */
+    /**
+     * Returns target-authored posts and replies. Omit mode for automatic maximum coverage. Pass
+     * next_cursor unchanged. Unprefixed cursors stay legacy. Excludes other-author context.
+     */
     fun retrieveReplies(id: String): CompletableFuture<PaginatedTweets> =
         retrieveReplies(id, UserRetrieveRepliesParams.none())
 
@@ -373,7 +385,10 @@ interface UserServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<PaginatedUsers>
 
-    /** List recent tweets posted by a user */
+    /**
+     * Omit mode for automatic maximum coverage. Pass next_cursor unchanged. Unprefixed cursors use
+     * legacy pagination. Shape and billing stay the same.
+     */
     fun retrieveTweets(id: String): CompletableFuture<PaginatedTweets> =
         retrieveTweets(id, UserRetrieveTweetsParams.none())
 
@@ -409,7 +424,9 @@ interface UserServiceAsync {
         retrieveTweets(id, UserRetrieveTweetsParams.none(), requestOptions)
 
     /** List verified followers of a user */
-    fun retrieveVerifiedFollowers(id: String): CompletableFuture<PaginatedUsers> =
+    fun retrieveVerifiedFollowers(
+        id: String
+    ): CompletableFuture<UserRetrieveVerifiedFollowersResponse> =
         retrieveVerifiedFollowers(id, UserRetrieveVerifiedFollowersParams.none())
 
     /** @see retrieveVerifiedFollowers */
@@ -417,32 +434,33 @@ interface UserServiceAsync {
         id: String,
         params: UserRetrieveVerifiedFollowersParams = UserRetrieveVerifiedFollowersParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedUsers> =
+    ): CompletableFuture<UserRetrieveVerifiedFollowersResponse> =
         retrieveVerifiedFollowers(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveVerifiedFollowers */
     fun retrieveVerifiedFollowers(
         id: String,
         params: UserRetrieveVerifiedFollowersParams = UserRetrieveVerifiedFollowersParams.none(),
-    ): CompletableFuture<PaginatedUsers> =
+    ): CompletableFuture<UserRetrieveVerifiedFollowersResponse> =
         retrieveVerifiedFollowers(id, params, RequestOptions.none())
 
     /** @see retrieveVerifiedFollowers */
     fun retrieveVerifiedFollowers(
         params: UserRetrieveVerifiedFollowersParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedUsers>
+    ): CompletableFuture<UserRetrieveVerifiedFollowersResponse>
 
     /** @see retrieveVerifiedFollowers */
     fun retrieveVerifiedFollowers(
         params: UserRetrieveVerifiedFollowersParams
-    ): CompletableFuture<PaginatedUsers> = retrieveVerifiedFollowers(params, RequestOptions.none())
+    ): CompletableFuture<UserRetrieveVerifiedFollowersResponse> =
+        retrieveVerifiedFollowers(params, RequestOptions.none())
 
     /** @see retrieveVerifiedFollowers */
     fun retrieveVerifiedFollowers(
         id: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<PaginatedUsers> =
+    ): CompletableFuture<UserRetrieveVerifiedFollowersResponse> =
         retrieveVerifiedFollowers(id, UserRetrieveVerifiedFollowersParams.none(), requestOptions)
 
     /** A view of [UserServiceAsync] that provides access to raw HTTP responses for each method. */
@@ -546,7 +564,9 @@ interface UserServiceAsync {
          * Returns a raw HTTP response for `get /x/users/{id}/followers`, but is otherwise the same
          * as [UserServiceAsync.retrieveFollowers].
          */
-        fun retrieveFollowers(id: String): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        fun retrieveFollowers(
+            id: String
+        ): CompletableFuture<HttpResponseFor<UserRetrieveFollowersResponse>> =
             retrieveFollowers(id, UserRetrieveFollowersParams.none())
 
         /** @see retrieveFollowers */
@@ -554,33 +574,33 @@ interface UserServiceAsync {
             id: String,
             params: UserRetrieveFollowersParams = UserRetrieveFollowersParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<UserRetrieveFollowersResponse>> =
             retrieveFollowers(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieveFollowers */
         fun retrieveFollowers(
             id: String,
             params: UserRetrieveFollowersParams = UserRetrieveFollowersParams.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<UserRetrieveFollowersResponse>> =
             retrieveFollowers(id, params, RequestOptions.none())
 
         /** @see retrieveFollowers */
         fun retrieveFollowers(
             params: UserRetrieveFollowersParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>>
+        ): CompletableFuture<HttpResponseFor<UserRetrieveFollowersResponse>>
 
         /** @see retrieveFollowers */
         fun retrieveFollowers(
             params: UserRetrieveFollowersParams
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<UserRetrieveFollowersResponse>> =
             retrieveFollowers(params, RequestOptions.none())
 
         /** @see retrieveFollowers */
         fun retrieveFollowers(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<UserRetrieveFollowersResponse>> =
             retrieveFollowers(id, UserRetrieveFollowersParams.none(), requestOptions)
 
         /**
@@ -630,7 +650,9 @@ interface UserServiceAsync {
          * Returns a raw HTTP response for `get /x/users/{id}/following`, but is otherwise the same
          * as [UserServiceAsync.retrieveFollowing].
          */
-        fun retrieveFollowing(id: String): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        fun retrieveFollowing(
+            id: String
+        ): CompletableFuture<HttpResponseFor<UserRetrieveFollowingResponse>> =
             retrieveFollowing(id, UserRetrieveFollowingParams.none())
 
         /** @see retrieveFollowing */
@@ -638,33 +660,33 @@ interface UserServiceAsync {
             id: String,
             params: UserRetrieveFollowingParams = UserRetrieveFollowingParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<UserRetrieveFollowingResponse>> =
             retrieveFollowing(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieveFollowing */
         fun retrieveFollowing(
             id: String,
             params: UserRetrieveFollowingParams = UserRetrieveFollowingParams.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<UserRetrieveFollowingResponse>> =
             retrieveFollowing(id, params, RequestOptions.none())
 
         /** @see retrieveFollowing */
         fun retrieveFollowing(
             params: UserRetrieveFollowingParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>>
+        ): CompletableFuture<HttpResponseFor<UserRetrieveFollowingResponse>>
 
         /** @see retrieveFollowing */
         fun retrieveFollowing(
             params: UserRetrieveFollowingParams
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<UserRetrieveFollowingResponse>> =
             retrieveFollowing(params, RequestOptions.none())
 
         /** @see retrieveFollowing */
         fun retrieveFollowing(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<UserRetrieveFollowingResponse>> =
             retrieveFollowing(id, UserRetrieveFollowingParams.none(), requestOptions)
 
         /**
@@ -893,7 +915,7 @@ interface UserServiceAsync {
          */
         fun retrieveVerifiedFollowers(
             id: String
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<UserRetrieveVerifiedFollowersResponse>> =
             retrieveVerifiedFollowers(id, UserRetrieveVerifiedFollowersParams.none())
 
         /** @see retrieveVerifiedFollowers */
@@ -902,7 +924,7 @@ interface UserServiceAsync {
             params: UserRetrieveVerifiedFollowersParams =
                 UserRetrieveVerifiedFollowersParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<UserRetrieveVerifiedFollowersResponse>> =
             retrieveVerifiedFollowers(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieveVerifiedFollowers */
@@ -910,26 +932,26 @@ interface UserServiceAsync {
             id: String,
             params: UserRetrieveVerifiedFollowersParams =
                 UserRetrieveVerifiedFollowersParams.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<UserRetrieveVerifiedFollowersResponse>> =
             retrieveVerifiedFollowers(id, params, RequestOptions.none())
 
         /** @see retrieveVerifiedFollowers */
         fun retrieveVerifiedFollowers(
             params: UserRetrieveVerifiedFollowersParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>>
+        ): CompletableFuture<HttpResponseFor<UserRetrieveVerifiedFollowersResponse>>
 
         /** @see retrieveVerifiedFollowers */
         fun retrieveVerifiedFollowers(
             params: UserRetrieveVerifiedFollowersParams
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<UserRetrieveVerifiedFollowersResponse>> =
             retrieveVerifiedFollowers(params, RequestOptions.none())
 
         /** @see retrieveVerifiedFollowers */
         fun retrieveVerifiedFollowers(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
+        ): CompletableFuture<HttpResponseFor<UserRetrieveVerifiedFollowersResponse>> =
             retrieveVerifiedFollowers(
                 id,
                 UserRetrieveVerifiedFollowersParams.none(),

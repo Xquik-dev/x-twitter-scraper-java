@@ -136,15 +136,15 @@ System properties override environment variables.
 ## Search Posts
 
 ```java
-import com.x_twitter_scraper.api.models.PaginatedTweets;
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams;
+import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse;
 
 TweetSearchParams params = TweetSearchParams.builder()
     .q("from:elonmusk")
     .limit(10L)
     .build();
 
-PaginatedTweets result = client.x().tweets().search(params);
+TweetSearchResponse result = client.x().tweets().search(params);
 ```
 
 Close the client when your application stops:
@@ -160,7 +160,7 @@ Call `async()` to receive `CompletableFuture` results:
 ```java
 import java.util.concurrent.CompletableFuture;
 
-CompletableFuture<PaginatedTweets> result =
+CompletableFuture<TweetSearchResponse> result =
     client.async().x().tweets().search(params);
 ```
 

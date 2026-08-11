@@ -26,6 +26,7 @@ import com.x_twitter_scraper.api.models.x.tweets.TweetListParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetRetrieveParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetRetrieveResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse
 import com.x_twitter_scraper.api.services.blocking.x.tweets.LikeService
 import com.x_twitter_scraper.api.services.blocking.x.tweets.RetweetService
 import java.util.function.Consumer
@@ -186,10 +187,9 @@ interface TweetService {
         getQuotes(id, TweetGetQuotesParams.none(), requestOptions)
 
     /**
-     * Returns direct replies. Complete mode merges available timeline views, supported rankings,
-     * every forward cursor module, labeled hidden-content branches, exact-parent time partitions
-     * scaled to the reported reply count, and search. It separates nested replies and returns 424
-     * below 80% coverage.
+     * Returns direct replies. Omit mode for automatic maximum coverage with resumable pagination.
+     * Complete mode returns nested replies, diagnostics, and 424 when direct coverage stays below
+     * 80%.
      */
     fun getReplies(id: String): TweetGetRepliesResponse =
         getReplies(id, TweetGetRepliesParams.none())
@@ -282,14 +282,15 @@ interface TweetService {
     fun getThread(id: String, requestOptions: RequestOptions): PaginatedTweets =
         getThread(id, TweetGetThreadParams.none(), requestOptions)
 
-    /** Search tweets by query, Tweet ID, X status URL, or account date window */
-    fun search(params: TweetSearchParams): PaginatedTweets = search(params, RequestOptions.none())
+    /** No-mode search maximizes coverage. */
+    fun search(params: TweetSearchParams): TweetSearchResponse =
+        search(params, RequestOptions.none())
 
     /** @see search */
     fun search(
         params: TweetSearchParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): PaginatedTweets
+    ): TweetSearchResponse
 
     /** A view of [TweetService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -635,7 +636,7 @@ interface TweetService {
          * [TweetService.search].
          */
         @MustBeClosed
-        fun search(params: TweetSearchParams): HttpResponseFor<PaginatedTweets> =
+        fun search(params: TweetSearchParams): HttpResponseFor<TweetSearchResponse> =
             search(params, RequestOptions.none())
 
         /** @see search */
@@ -643,6 +644,6 @@ interface TweetService {
         fun search(
             params: TweetSearchParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<PaginatedTweets>
+        ): HttpResponseFor<TweetSearchResponse>
     }
 }

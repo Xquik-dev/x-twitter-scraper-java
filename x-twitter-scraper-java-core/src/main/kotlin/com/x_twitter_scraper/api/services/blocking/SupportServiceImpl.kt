@@ -7,6 +7,8 @@
 package com.x_twitter_scraper.api.services.blocking
 
 import com.x_twitter_scraper.api.core.ClientOptions
+import com.x_twitter_scraper.api.services.blocking.support.AttachmentService
+import com.x_twitter_scraper.api.services.blocking.support.AttachmentServiceImpl
 import com.x_twitter_scraper.api.services.blocking.support.TicketService
 import com.x_twitter_scraper.api.services.blocking.support.TicketServiceImpl
 import java.util.function.Consumer
@@ -18,6 +20,8 @@ class SupportServiceImpl internal constructor(private val clientOptions: ClientO
         WithRawResponseImpl(clientOptions)
     }
 
+    private val attachments: AttachmentService by lazy { AttachmentServiceImpl(clientOptions) }
+
     private val tickets: TicketService by lazy { TicketServiceImpl(clientOptions) }
 
     override fun withRawResponse(): SupportService.WithRawResponse = withRawResponse
@@ -26,10 +30,17 @@ class SupportServiceImpl internal constructor(private val clientOptions: ClientO
         SupportServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     /** Support ticket management */
+    override fun attachments(): AttachmentService = attachments
+
+    /** Support ticket management */
     override fun tickets(): TicketService = tickets
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         SupportService.WithRawResponse {
+
+        private val attachments: AttachmentService.WithRawResponse by lazy {
+            AttachmentServiceImpl.WithRawResponseImpl(clientOptions)
+        }
 
         private val tickets: TicketService.WithRawResponse by lazy {
             TicketServiceImpl.WithRawResponseImpl(clientOptions)
@@ -41,6 +52,9 @@ class SupportServiceImpl internal constructor(private val clientOptions: ClientO
             SupportServiceImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        /** Support ticket management */
+        override fun attachments(): AttachmentService.WithRawResponse = attachments
 
         /** Support ticket management */
         override fun tickets(): TicketService.WithRawResponse = tickets
