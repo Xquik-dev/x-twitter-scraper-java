@@ -44,9 +44,9 @@ configurations.configureEach {
         "org.apache.commons:commons-lang3:3.20.0",
         "org.apache.logging.log4j:log4j-api:2.26.1",
         "org.apache.logging.log4j:log4j-core:2.26.1",
-        "org.xmlunit:xmlunit-core:2.12.0",
-        "org.xmlunit:xmlunit-legacy:2.12.0",
-        "org.xmlunit:xmlunit-placeholders:2.12.0",
+        "org.xmlunit:xmlunit-core:2.13.0",
+        "org.xmlunit:xmlunit-legacy:2.13.0",
+        "org.xmlunit:xmlunit-placeholders:2.13.0",
     )
 }
 
