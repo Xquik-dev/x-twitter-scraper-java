@@ -189,7 +189,7 @@ internal class GeneratedModelContractTest {
             assertThat(validityOf(knownValue)).isEqualTo(1)
             assertThat(reconstructed).isEqualTo(knownValue)
             assertThat(reconstructed.hashCode()).isEqualTo(knownValue.hashCode())
-            assertThat(knownValue.toString()).isNotBlank()
+            assertThat(knownValue.toString()).isEqualTo(wireValue.toString())
         }
 
         if (knownValues.size > 1) {
@@ -231,6 +231,13 @@ internal class GeneratedModelContractTest {
     ): Any =
         when (wireType) {
             String::class.java -> UNKNOWN_ENUM_VALUE
+            Boolean::class.javaPrimitiveType,
+            Boolean::class.javaObjectType ->
+                listOf(false, true).firstOrNull { candidate ->
+                    knownValues.none {
+                        (rawValue.invoke(it) as JsonField<*>).asBoolean().orElse(null) == candidate
+                    }
+                } ?: error("Boolean enum has no unknown wire value")
             Long::class.javaPrimitiveType,
             Long::class.javaObjectType ->
                 knownValues
@@ -532,8 +539,32 @@ internal class GeneratedModelContractTest {
         if (hasBuilder(modelClass)) {
             populatedModel(modelClass, ancestors)
         } else {
-            defaultModelValue(modelClass)
+            factoryModelValue(modelClass, ancestors) ?: defaultModelValue(modelClass)
         }
+
+    private fun factoryModelValue(modelClass: Class<*>, ancestors: Set<Class<*>>): Any? {
+        val factories =
+            modelClass.methods
+                .filter { method ->
+                    method.name.startsWith("of") &&
+                        method.parameterCount == 1 &&
+                        modelClass.isAssignableFrom(method.returnType)
+                }
+                .sortedBy { method -> method.name }
+        val factoryAncestors = ancestors + modelClass
+
+        return factories.firstNotNullOfOrNull { factory ->
+            if (referencesAncestor(factory.genericParameterTypes.single(), factoryAncestors)) {
+                return@firstNotNullOfOrNull null
+            }
+
+            val argument =
+                sampleValue(factory.genericParameterTypes.single()) { nestedModel ->
+                    validModelValue(nestedModel, factoryAncestors)
+                } ?: return@firstNotNullOfOrNull null
+            runCatching { factory.invoke(null, argument) }.getOrNull()
+        }
+    }
 
     private fun defaultModelValue(modelClass: Class<*>): Any? {
         val deserialized = runCatching { MAPPER.readValue("{}", modelClass) }.getOrNull()

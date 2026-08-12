@@ -17,13 +17,20 @@ internal class ExtractionRunResponseTest {
     fun create() {
         val extractionRunResponse =
             ExtractionRunResponse.builder()
-                .id("a1b2c3d4-e5f6-7890-abcd-ef1234567890")
-                .toolType(ExtractionRunResponse.ToolType.FOLLOWER_EXPLORER)
+                .allowed(true)
+                .creditsAvailable("creditsAvailable")
+                .creditsRequired("creditsRequired")
+                .estimatedResults(0L)
+                .source("source")
+                .resolvedXUserId("resolvedXUserId")
                 .build()
 
-        assertThat(extractionRunResponse.id()).isEqualTo("a1b2c3d4-e5f6-7890-abcd-ef1234567890")
-        assertThat(extractionRunResponse.toolType())
-            .isEqualTo(ExtractionRunResponse.ToolType.FOLLOWER_EXPLORER)
+        assertThat(extractionRunResponse.allowed()).isEqualTo(true)
+        assertThat(extractionRunResponse.creditsAvailable()).isEqualTo("creditsAvailable")
+        assertThat(extractionRunResponse.creditsRequired()).isEqualTo("creditsRequired")
+        assertThat(extractionRunResponse.estimatedResults()).isEqualTo(0L)
+        assertThat(extractionRunResponse.source()).isEqualTo("source")
+        assertThat(extractionRunResponse.resolvedXUserId()).contains("resolvedXUserId")
     }
 
     @Test
@@ -31,8 +38,12 @@ internal class ExtractionRunResponseTest {
         val jsonMapper = jsonMapper()
         val extractionRunResponse =
             ExtractionRunResponse.builder()
-                .id("a1b2c3d4-e5f6-7890-abcd-ef1234567890")
-                .toolType(ExtractionRunResponse.ToolType.FOLLOWER_EXPLORER)
+                .allowed(true)
+                .creditsAvailable("creditsAvailable")
+                .creditsRequired("creditsRequired")
+                .estimatedResults(0L)
+                .source("source")
+                .resolvedXUserId("resolvedXUserId")
                 .build()
 
         val roundtrippedExtractionRunResponse =

@@ -23,8 +23,8 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Reply rows. Complete mode also returns nested replies and coverage diagnostics. Keep nested
- * replies separate from direct coverage.
+ * Direct reply rows. No-mode requests use resumable automatic coverage. Complete mode also returns
+ * nested replies and coverage diagnostics. Keep nested replies separate from direct coverage.
  */
 class TweetGetRepliesResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)

@@ -15,8 +15,8 @@ Use it as a typed X API or Twitter API alternative.
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.xquik.api/x-twitter-scraper-java)](https://central.sonatype.com/artifact/com.xquik.api/x-twitter-scraper-java/0.8.4)
-[![Javadocs](https://javadoc.io/badge2/com.xquik.api/x-twitter-scraper-java/0.8.4/javadoc.svg)](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java/0.8.4)
+[![Maven Central](https://img.shields.io/maven-central/v/com.xquik.api/x-twitter-scraper-java)](https://central.sonatype.com/artifact/com.xquik.api/x-twitter-scraper-java/0.10.0)
+[![Javadocs](https://javadoc.io/badge2/com.xquik.api/x-twitter-scraper-java/0.10.0/javadoc.svg)](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java/0.10.0)
 
 <!-- x-release-please-end -->
 
@@ -64,7 +64,7 @@ Use [API reference](https://docs.xquik.com/api-reference/overview) for request c
 Gradle:
 
 ```kotlin
-implementation("com.xquik.api:x-twitter-scraper-java:0.8.4")
+implementation("com.xquik.api:x-twitter-scraper-java:0.10.0")
 ```
 
 Maven:
@@ -73,7 +73,7 @@ Maven:
 <dependency>
   <groupId>com.xquik.api</groupId>
   <artifactId>x-twitter-scraper-java</artifactId>
-  <version>0.8.4</version>
+  <version>0.10.0</version>
 </dependency>
 ```
 
@@ -136,15 +136,15 @@ System properties override environment variables.
 ## Search Posts
 
 ```java
-import com.x_twitter_scraper.api.models.PaginatedTweets;
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams;
+import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse;
 
 TweetSearchParams params = TweetSearchParams.builder()
     .q("from:elonmusk")
     .limit(10L)
     .build();
 
-PaginatedTweets result = client.x().tweets().search(params);
+TweetSearchResponse result = client.x().tweets().search(params);
 ```
 
 Close the client when your application stops:
@@ -160,7 +160,7 @@ Call `async()` to receive `CompletableFuture` results:
 ```java
 import java.util.concurrent.CompletableFuture;
 
-CompletableFuture<PaginatedTweets> result =
+CompletableFuture<TweetSearchResponse> result =
     client.async().x().tweets().search(params);
 ```
 

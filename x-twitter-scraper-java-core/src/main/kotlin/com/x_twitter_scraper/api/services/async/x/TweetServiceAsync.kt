@@ -25,6 +25,7 @@ import com.x_twitter_scraper.api.models.x.tweets.TweetListParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetRetrieveParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetRetrieveResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse
 import com.x_twitter_scraper.api.services.async.x.tweets.LikeServiceAsync
 import com.x_twitter_scraper.api.services.async.x.tweets.RetweetServiceAsync
 import java.util.concurrent.CompletableFuture
@@ -199,10 +200,9 @@ interface TweetServiceAsync {
         getQuotes(id, TweetGetQuotesParams.none(), requestOptions)
 
     /**
-     * Returns direct replies. Complete mode merges available timeline views, supported rankings,
-     * every forward cursor module, labeled hidden-content branches, exact-parent time partitions
-     * scaled to the reported reply count, and search. It separates nested replies and returns 424
-     * below 80% coverage.
+     * Returns direct replies. Omit mode for automatic maximum coverage with resumable pagination.
+     * Complete mode returns nested replies, diagnostics, and 424 when direct coverage stays below
+     * 80%.
      */
     fun getReplies(id: String): CompletableFuture<TweetGetRepliesResponse> =
         getReplies(id, TweetGetRepliesParams.none())
@@ -305,15 +305,18 @@ interface TweetServiceAsync {
     fun getThread(id: String, requestOptions: RequestOptions): CompletableFuture<PaginatedTweets> =
         getThread(id, TweetGetThreadParams.none(), requestOptions)
 
-    /** Search tweets by query, Tweet ID, X status URL, or account date window */
-    fun search(params: TweetSearchParams): CompletableFuture<PaginatedTweets> =
+    /**
+     * No-mode search maximizes coverage. New cursorless `Latest` sessions return rows newest-first
+     * across cursor pages. Existing cursors preserve their established ordering.
+     */
+    fun search(params: TweetSearchParams): CompletableFuture<TweetSearchResponse> =
         search(params, RequestOptions.none())
 
     /** @see search */
     fun search(
         params: TweetSearchParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PaginatedTweets>
+    ): CompletableFuture<TweetSearchResponse>
 
     /** A view of [TweetServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -641,13 +644,15 @@ interface TweetServiceAsync {
          * Returns a raw HTTP response for `get /x/tweets/search`, but is otherwise the same as
          * [TweetServiceAsync.search].
          */
-        fun search(params: TweetSearchParams): CompletableFuture<HttpResponseFor<PaginatedTweets>> =
+        fun search(
+            params: TweetSearchParams
+        ): CompletableFuture<HttpResponseFor<TweetSearchResponse>> =
             search(params, RequestOptions.none())
 
         /** @see search */
         fun search(
             params: TweetSearchParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PaginatedTweets>>
+        ): CompletableFuture<HttpResponseFor<TweetSearchResponse>>
     }
 }
