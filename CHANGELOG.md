@@ -1,5 +1,62 @@
 # Changelog
 
+## 0.10.0 (2026-08-12)
+
+Full Changelog: [v0.9.1...v0.10.0](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.9.1...v0.10.0)
+
+### Features
+
+* add OpenSSF Gold quality gates ([f0fb44d](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/f0fb44d9b07c3c612ff9b005a694e6f838081f3a))
+* **api:** align reply extraction contracts ([#30](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/30)) ([7702591](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/7702591c9b20cabdef63849eb98419cec0ef356a))
+* **api:** api update ([e75a791](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/e75a7919e8ff8da00ddf41ae4111e0f560c6e54a))
+* **api:** api update ([d9ec682](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/d9ec6821d543fce1a888f4d0582c3ec24f3c0564))
+* **api:** api update ([aa06dd7](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/aa06dd748fa884ccfa058fe5ed576d97fae978ef))
+* **api:** api update ([30c1879](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/30c1879055bd1a7fb925a8dc674fbbd932c29f9f))
+* **api:** api update ([5e2cc73](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/5e2cc73283addfe9ac177efb47623c0f51dedf8e))
+* **api:** api update ([6022295](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/6022295c6a25bd0b0797c85ae96304cc3eeb2103))
+* **api:** api update ([d4c753a](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/d4c753ab0a9ee134dc567e576dac2892407e7e29))
+* **api:** api update ([785b4f7](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/785b4f7e00571e41ccd6b1a53ffca6d75ab6f58f))
+* **api:** api update ([a261d36](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/a261d36ba03b9eb2969ca9758694f969bf374ec7))
+* **api:** sync public contracts ([ddda594](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/ddda594ba95292a599c2d3352e3130d63ddf6a74))
+
+
+### Bug Fixes
+
+* align SLF4J test provider ([e760ae0](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/e760ae0bc9ff0ecb402e6f989c319908d1282875))
+* escape ampersand in OpenAPI summaries for C# XML docs ([fb78c9a](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/fb78c9aea1252be7535e3b5efcc5f916805831d4))
+* **release:** allow Maven publication propagation ([#32](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/32)) ([efd0ddc](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/efd0ddc053c497054b01d765e7c1fbbddf5d6106))
+* remove unused async lock helper ([bf2e7a9](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/bf2e7a9d5bbfd1b53ce9bf34386a6fe0194ba73c))
+* trust verified Gradle metadata ([e0e3e87](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/e0e3e8783d7b3077af70647d8e5f67565da4bc3f))
+
+
+### Chores
+
+* add Context7 refresh workflow ([ce2a6d7](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/ce2a6d7bbf0b3818343823564632b9663deef0ef))
+* add FUNDING.yml pointing to xquik.com ([b8a37d9](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/b8a37d9d5eff62c825d045e7549cbbd97b8e044a))
+* **deps:** bump actions/setup-java from 5.6.0 to 5.7.0 ([#49](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/49)) ([ca9c316](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/ca9c316f84afa298a5df6e5c06da2acf1da64541))
+* **deps:** bump github/codeql-action/analyze from 4.37.1 to 4.37.2 ([#22](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/22)) ([d307843](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/d3078435464e3144075d865d972e38d5bbd59482))
+* **deps:** bump github/codeql-action/upload-sarif ([#23](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/23)) ([977ccd8](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/977ccd80c70faa598845c08f1a776ea48d198a51))
+* **deps:** bump github/codeql-action/upload-sarif from 4.37.2 to 4.37.6 ([#46](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/46)) ([d1614e9](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/d1614e9d52d5fb6d78cbd7178ceaf7a54d924816))
+* **deps:** bump org.apache.logging.log4j:log4j-api ([#20](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/20)) ([13ec838](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/13ec8385e24b81e280f66f6897398b1385c8aec6))
+* **internal:** codegen related update ([9ff57d2](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/9ff57d291ace852b3fcea07c5db1444dd7ec5115))
+* merge main into release branch ([cb52b50](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/cb52b508a62ee885b19897c8b4661c6f0609601d))
+* neutralize coverage source classification ([0089073](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/0089073842fc8fe912ae99232b163a3be11313de))
+* preserve coverage gates with SPDX headers ([873219a](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/873219ac82c57fdceb4fef37c8393d447a03781f))
+* quiet Gradle cache cleanup warnings ([6b77330](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/6b77330a7fdf7e9c8ea84dee354e57e613564be3))
+* sync OpenAPI spec ([c225ad8](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/c225ad8eb377c71093ce3f9b5292257ce191ed3a))
+* update Gradle actions for Node 24 ([9c8a3a0](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/9c8a3a0da540d688aac6f5d9b128962c1d222876))
+* wire production_repo for all targets ([1a3de89](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/1a3de8994dc023e9602bc359a0f5067f03082e9a))
+
+
+### Documentation
+
+* add Contributor Covenant 2.1 Code of Conduct ([#2192](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/2192)) ([afb97b0](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/afb97b0d326a8ff3602f871cd12daa63c7a3d847))
+* add DeepWiki badge ([3b366af](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/3b366af5ff33de6e029885af3c7fedbf7c0a6b9a))
+* clarify repository discovery ([e6c115b](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/e6c115b50205ce8720f5d30c7cfdf48f780537b3))
+* correct Java test evidence count ([6e6a171](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/6e6a171d428896d32833fa94e5860c68ad7e2739))
+* map common X data tasks ([#12](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/12)) ([f3438ea](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/f3438ea480f091967958c158a10fc7722d6298fd))
+* mark Maven publication pending ([2aad6f6](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/2aad6f6d7208d90eaffbb483677cd50a34f55559))
+
 ## [0.9.1](https://github.com/stainless-sdks/x-twitter-scraper-java/compare/v0.9.0...v0.9.1) (2026-08-11)
 
 ### Features
