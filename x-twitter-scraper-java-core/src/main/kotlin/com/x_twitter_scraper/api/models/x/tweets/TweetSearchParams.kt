@@ -15,7 +15,10 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** No-mode search maximizes coverage. */
+/**
+ * No-mode search maximizes coverage. New cursorless `Latest` sessions return rows newest-first
+ * across cursor pages. Existing cursors preserve their established ordering.
+ */
 class TweetSearchParams
 private constructor(
     private val q: String,
@@ -167,7 +170,7 @@ private constructor(
     /** Minimum bookmark count threshold. */
     fun minBookmarks(): Optional<Long> = Optional.ofNullable(minBookmarks)
 
-    /** Minimum likes threshold. */
+    /** Minimum likes threshold. minLikes is also accepted. */
     fun minFaves(): Optional<Long> = Optional.ofNullable(minFaves)
 
     /** Minimum quote count threshold. */
@@ -634,7 +637,7 @@ private constructor(
         /** Alias for calling [Builder.minBookmarks] with `minBookmarks.orElse(null)`. */
         fun minBookmarks(minBookmarks: Optional<Long>) = minBookmarks(minBookmarks.getOrNull())
 
-        /** Minimum likes threshold. */
+        /** Minimum likes threshold. minLikes is also accepted. */
         fun minFaves(minFaves: Long?) = apply { this.minFaves = minFaves }
 
         /**

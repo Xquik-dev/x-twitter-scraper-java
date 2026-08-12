@@ -301,7 +301,10 @@ interface TweetServiceAsync {
     fun getThread(id: String, requestOptions: RequestOptions): CompletableFuture<PaginatedTweets> =
         getThread(id, TweetGetThreadParams.none(), requestOptions)
 
-    /** No-mode search maximizes coverage. */
+    /**
+     * No-mode search maximizes coverage. New cursorless `Latest` sessions return rows newest-first
+     * across cursor pages. Existing cursors preserve their established ordering.
+     */
     fun search(params: TweetSearchParams): CompletableFuture<TweetSearchResponse> =
         search(params, RequestOptions.none())
 

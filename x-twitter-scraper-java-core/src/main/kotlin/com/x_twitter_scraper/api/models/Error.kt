@@ -670,17 +670,28 @@ private constructor(
 
                 @JvmField val INVALID_COMMUNITY_ID = of("invalid_community_id")
 
+                @JvmField
+                val INVALID_COMPLETE_REPLIES_REQUEST = of("invalid_complete_replies_request")
+
                 @JvmField val INVALID_COVERAGE_CURSOR = of("invalid_coverage_cursor")
+
+                @JvmField val INVALID_COVERAGE_REQUEST = of("invalid_coverage_request")
 
                 @JvmField val INVALID_IDEMPOTENCY_KEY = of("invalid_idempotency_key")
 
                 @JvmField val INVALID_LIST_ID = of("invalid_list_id")
 
+                @JvmField val INVALID_OUTPUT_OPTIONS = of("invalid_output_options")
+
                 @JvmField val INVALID_PAYMENT_AMOUNT = of("invalid_payment_amount")
 
                 @JvmField val INVALID_RANGE = of("invalid_range")
 
+                @JvmField val INVALID_REPLY_OPTIONS = of("invalid_reply_options")
+
                 @JvmField val LOGIN_RATE_LIMITED = of("login_rate_limited")
+
+                @JvmField val LOGIN_SERVICE_UNAVAILABLE = of("login_service_unavailable")
 
                 @JvmField val MISSING_IDEMPOTENCY_KEY = of("missing_idempotency_key")
 
@@ -701,6 +712,8 @@ private constructor(
                 @JvmField val SUPPORT_REQUEST_RATE_LIMIT = of("support_request_rate_limit")
 
                 @JvmField val TOO_MANY_IDS = of("too_many_ids")
+
+                @JvmField val TOO_MANY_TWEETS = of("too_many_tweets")
 
                 @JvmField val UNKNOWN_FIELD = of("unknown_field")
 
@@ -825,12 +838,17 @@ private constructor(
                 IDEMPOTENCY_CONFLICT,
                 IDEMPOTENCY_KEY_CONFLICT,
                 INVALID_COMMUNITY_ID,
+                INVALID_COMPLETE_REPLIES_REQUEST,
                 INVALID_COVERAGE_CURSOR,
+                INVALID_COVERAGE_REQUEST,
                 INVALID_IDEMPOTENCY_KEY,
                 INVALID_LIST_ID,
+                INVALID_OUTPUT_OPTIONS,
                 INVALID_PAYMENT_AMOUNT,
                 INVALID_RANGE,
+                INVALID_REPLY_OPTIONS,
                 LOGIN_RATE_LIMITED,
+                LOGIN_SERVICE_UNAVAILABLE,
                 MISSING_IDEMPOTENCY_KEY,
                 MISSING_IDS,
                 NO_CACHED_STYLE,
@@ -841,6 +859,7 @@ private constructor(
                 SUPPORT_MEDIA_RATE_LIMIT,
                 SUPPORT_REQUEST_RATE_LIMIT,
                 TOO_MANY_IDS,
+                TOO_MANY_TWEETS,
                 UNKNOWN_FIELD,
                 UNSUPPORTED_MEDIA_TYPE,
                 WEBHOOK_INACTIVE,
@@ -940,12 +959,17 @@ private constructor(
                 IDEMPOTENCY_CONFLICT,
                 IDEMPOTENCY_KEY_CONFLICT,
                 INVALID_COMMUNITY_ID,
+                INVALID_COMPLETE_REPLIES_REQUEST,
                 INVALID_COVERAGE_CURSOR,
+                INVALID_COVERAGE_REQUEST,
                 INVALID_IDEMPOTENCY_KEY,
                 INVALID_LIST_ID,
+                INVALID_OUTPUT_OPTIONS,
                 INVALID_PAYMENT_AMOUNT,
                 INVALID_RANGE,
+                INVALID_REPLY_OPTIONS,
                 LOGIN_RATE_LIMITED,
+                LOGIN_SERVICE_UNAVAILABLE,
                 MISSING_IDEMPOTENCY_KEY,
                 MISSING_IDS,
                 NO_CACHED_STYLE,
@@ -956,6 +980,7 @@ private constructor(
                 SUPPORT_MEDIA_RATE_LIMIT,
                 SUPPORT_REQUEST_RATE_LIMIT,
                 TOO_MANY_IDS,
+                TOO_MANY_TWEETS,
                 UNKNOWN_FIELD,
                 UNSUPPORTED_MEDIA_TYPE,
                 WEBHOOK_INACTIVE,
@@ -1059,12 +1084,17 @@ private constructor(
                     IDEMPOTENCY_CONFLICT -> Value.IDEMPOTENCY_CONFLICT
                     IDEMPOTENCY_KEY_CONFLICT -> Value.IDEMPOTENCY_KEY_CONFLICT
                     INVALID_COMMUNITY_ID -> Value.INVALID_COMMUNITY_ID
+                    INVALID_COMPLETE_REPLIES_REQUEST -> Value.INVALID_COMPLETE_REPLIES_REQUEST
                     INVALID_COVERAGE_CURSOR -> Value.INVALID_COVERAGE_CURSOR
+                    INVALID_COVERAGE_REQUEST -> Value.INVALID_COVERAGE_REQUEST
                     INVALID_IDEMPOTENCY_KEY -> Value.INVALID_IDEMPOTENCY_KEY
                     INVALID_LIST_ID -> Value.INVALID_LIST_ID
+                    INVALID_OUTPUT_OPTIONS -> Value.INVALID_OUTPUT_OPTIONS
                     INVALID_PAYMENT_AMOUNT -> Value.INVALID_PAYMENT_AMOUNT
                     INVALID_RANGE -> Value.INVALID_RANGE
+                    INVALID_REPLY_OPTIONS -> Value.INVALID_REPLY_OPTIONS
                     LOGIN_RATE_LIMITED -> Value.LOGIN_RATE_LIMITED
+                    LOGIN_SERVICE_UNAVAILABLE -> Value.LOGIN_SERVICE_UNAVAILABLE
                     MISSING_IDEMPOTENCY_KEY -> Value.MISSING_IDEMPOTENCY_KEY
                     MISSING_IDS -> Value.MISSING_IDS
                     NO_CACHED_STYLE -> Value.NO_CACHED_STYLE
@@ -1075,6 +1105,7 @@ private constructor(
                     SUPPORT_MEDIA_RATE_LIMIT -> Value.SUPPORT_MEDIA_RATE_LIMIT
                     SUPPORT_REQUEST_RATE_LIMIT -> Value.SUPPORT_REQUEST_RATE_LIMIT
                     TOO_MANY_IDS -> Value.TOO_MANY_IDS
+                    TOO_MANY_TWEETS -> Value.TOO_MANY_TWEETS
                     UNKNOWN_FIELD -> Value.UNKNOWN_FIELD
                     UNSUPPORTED_MEDIA_TYPE -> Value.UNSUPPORTED_MEDIA_TYPE
                     WEBHOOK_INACTIVE -> Value.WEBHOOK_INACTIVE
@@ -1176,12 +1207,17 @@ private constructor(
                     IDEMPOTENCY_CONFLICT -> Known.IDEMPOTENCY_CONFLICT
                     IDEMPOTENCY_KEY_CONFLICT -> Known.IDEMPOTENCY_KEY_CONFLICT
                     INVALID_COMMUNITY_ID -> Known.INVALID_COMMUNITY_ID
+                    INVALID_COMPLETE_REPLIES_REQUEST -> Known.INVALID_COMPLETE_REPLIES_REQUEST
                     INVALID_COVERAGE_CURSOR -> Known.INVALID_COVERAGE_CURSOR
+                    INVALID_COVERAGE_REQUEST -> Known.INVALID_COVERAGE_REQUEST
                     INVALID_IDEMPOTENCY_KEY -> Known.INVALID_IDEMPOTENCY_KEY
                     INVALID_LIST_ID -> Known.INVALID_LIST_ID
+                    INVALID_OUTPUT_OPTIONS -> Known.INVALID_OUTPUT_OPTIONS
                     INVALID_PAYMENT_AMOUNT -> Known.INVALID_PAYMENT_AMOUNT
                     INVALID_RANGE -> Known.INVALID_RANGE
+                    INVALID_REPLY_OPTIONS -> Known.INVALID_REPLY_OPTIONS
                     LOGIN_RATE_LIMITED -> Known.LOGIN_RATE_LIMITED
+                    LOGIN_SERVICE_UNAVAILABLE -> Known.LOGIN_SERVICE_UNAVAILABLE
                     MISSING_IDEMPOTENCY_KEY -> Known.MISSING_IDEMPOTENCY_KEY
                     MISSING_IDS -> Known.MISSING_IDS
                     NO_CACHED_STYLE -> Known.NO_CACHED_STYLE
@@ -1192,6 +1228,7 @@ private constructor(
                     SUPPORT_MEDIA_RATE_LIMIT -> Known.SUPPORT_MEDIA_RATE_LIMIT
                     SUPPORT_REQUEST_RATE_LIMIT -> Known.SUPPORT_REQUEST_RATE_LIMIT
                     TOO_MANY_IDS -> Known.TOO_MANY_IDS
+                    TOO_MANY_TWEETS -> Known.TOO_MANY_TWEETS
                     UNKNOWN_FIELD -> Known.UNKNOWN_FIELD
                     UNSUPPORTED_MEDIA_TYPE -> Known.UNSUPPORTED_MEDIA_TYPE
                     WEBHOOK_INACTIVE -> Known.WEBHOOK_INACTIVE
@@ -1643,17 +1680,28 @@ private constructor(
 
                     @JvmField val INVALID_COMMUNITY_ID = of("invalid_community_id")
 
+                    @JvmField
+                    val INVALID_COMPLETE_REPLIES_REQUEST = of("invalid_complete_replies_request")
+
                     @JvmField val INVALID_COVERAGE_CURSOR = of("invalid_coverage_cursor")
+
+                    @JvmField val INVALID_COVERAGE_REQUEST = of("invalid_coverage_request")
 
                     @JvmField val INVALID_IDEMPOTENCY_KEY = of("invalid_idempotency_key")
 
                     @JvmField val INVALID_LIST_ID = of("invalid_list_id")
 
+                    @JvmField val INVALID_OUTPUT_OPTIONS = of("invalid_output_options")
+
                     @JvmField val INVALID_PAYMENT_AMOUNT = of("invalid_payment_amount")
 
                     @JvmField val INVALID_RANGE = of("invalid_range")
 
+                    @JvmField val INVALID_REPLY_OPTIONS = of("invalid_reply_options")
+
                     @JvmField val LOGIN_RATE_LIMITED = of("login_rate_limited")
+
+                    @JvmField val LOGIN_SERVICE_UNAVAILABLE = of("login_service_unavailable")
 
                     @JvmField val MISSING_IDEMPOTENCY_KEY = of("missing_idempotency_key")
 
@@ -1674,6 +1722,8 @@ private constructor(
                     @JvmField val SUPPORT_REQUEST_RATE_LIMIT = of("support_request_rate_limit")
 
                     @JvmField val TOO_MANY_IDS = of("too_many_ids")
+
+                    @JvmField val TOO_MANY_TWEETS = of("too_many_tweets")
 
                     @JvmField val UNKNOWN_FIELD = of("unknown_field")
 
@@ -1798,12 +1848,17 @@ private constructor(
                     IDEMPOTENCY_CONFLICT,
                     IDEMPOTENCY_KEY_CONFLICT,
                     INVALID_COMMUNITY_ID,
+                    INVALID_COMPLETE_REPLIES_REQUEST,
                     INVALID_COVERAGE_CURSOR,
+                    INVALID_COVERAGE_REQUEST,
                     INVALID_IDEMPOTENCY_KEY,
                     INVALID_LIST_ID,
+                    INVALID_OUTPUT_OPTIONS,
                     INVALID_PAYMENT_AMOUNT,
                     INVALID_RANGE,
+                    INVALID_REPLY_OPTIONS,
                     LOGIN_RATE_LIMITED,
+                    LOGIN_SERVICE_UNAVAILABLE,
                     MISSING_IDEMPOTENCY_KEY,
                     MISSING_IDS,
                     NO_CACHED_STYLE,
@@ -1814,6 +1869,7 @@ private constructor(
                     SUPPORT_MEDIA_RATE_LIMIT,
                     SUPPORT_REQUEST_RATE_LIMIT,
                     TOO_MANY_IDS,
+                    TOO_MANY_TWEETS,
                     UNKNOWN_FIELD,
                     UNSUPPORTED_MEDIA_TYPE,
                     WEBHOOK_INACTIVE,
@@ -1913,12 +1969,17 @@ private constructor(
                     IDEMPOTENCY_CONFLICT,
                     IDEMPOTENCY_KEY_CONFLICT,
                     INVALID_COMMUNITY_ID,
+                    INVALID_COMPLETE_REPLIES_REQUEST,
                     INVALID_COVERAGE_CURSOR,
+                    INVALID_COVERAGE_REQUEST,
                     INVALID_IDEMPOTENCY_KEY,
                     INVALID_LIST_ID,
+                    INVALID_OUTPUT_OPTIONS,
                     INVALID_PAYMENT_AMOUNT,
                     INVALID_RANGE,
+                    INVALID_REPLY_OPTIONS,
                     LOGIN_RATE_LIMITED,
+                    LOGIN_SERVICE_UNAVAILABLE,
                     MISSING_IDEMPOTENCY_KEY,
                     MISSING_IDS,
                     NO_CACHED_STYLE,
@@ -1929,6 +1990,7 @@ private constructor(
                     SUPPORT_MEDIA_RATE_LIMIT,
                     SUPPORT_REQUEST_RATE_LIMIT,
                     TOO_MANY_IDS,
+                    TOO_MANY_TWEETS,
                     UNKNOWN_FIELD,
                     UNSUPPORTED_MEDIA_TYPE,
                     WEBHOOK_INACTIVE,
@@ -2031,12 +2093,17 @@ private constructor(
                         IDEMPOTENCY_CONFLICT -> Value.IDEMPOTENCY_CONFLICT
                         IDEMPOTENCY_KEY_CONFLICT -> Value.IDEMPOTENCY_KEY_CONFLICT
                         INVALID_COMMUNITY_ID -> Value.INVALID_COMMUNITY_ID
+                        INVALID_COMPLETE_REPLIES_REQUEST -> Value.INVALID_COMPLETE_REPLIES_REQUEST
                         INVALID_COVERAGE_CURSOR -> Value.INVALID_COVERAGE_CURSOR
+                        INVALID_COVERAGE_REQUEST -> Value.INVALID_COVERAGE_REQUEST
                         INVALID_IDEMPOTENCY_KEY -> Value.INVALID_IDEMPOTENCY_KEY
                         INVALID_LIST_ID -> Value.INVALID_LIST_ID
+                        INVALID_OUTPUT_OPTIONS -> Value.INVALID_OUTPUT_OPTIONS
                         INVALID_PAYMENT_AMOUNT -> Value.INVALID_PAYMENT_AMOUNT
                         INVALID_RANGE -> Value.INVALID_RANGE
+                        INVALID_REPLY_OPTIONS -> Value.INVALID_REPLY_OPTIONS
                         LOGIN_RATE_LIMITED -> Value.LOGIN_RATE_LIMITED
+                        LOGIN_SERVICE_UNAVAILABLE -> Value.LOGIN_SERVICE_UNAVAILABLE
                         MISSING_IDEMPOTENCY_KEY -> Value.MISSING_IDEMPOTENCY_KEY
                         MISSING_IDS -> Value.MISSING_IDS
                         NO_CACHED_STYLE -> Value.NO_CACHED_STYLE
@@ -2047,6 +2114,7 @@ private constructor(
                         SUPPORT_MEDIA_RATE_LIMIT -> Value.SUPPORT_MEDIA_RATE_LIMIT
                         SUPPORT_REQUEST_RATE_LIMIT -> Value.SUPPORT_REQUEST_RATE_LIMIT
                         TOO_MANY_IDS -> Value.TOO_MANY_IDS
+                        TOO_MANY_TWEETS -> Value.TOO_MANY_TWEETS
                         UNKNOWN_FIELD -> Value.UNKNOWN_FIELD
                         UNSUPPORTED_MEDIA_TYPE -> Value.UNSUPPORTED_MEDIA_TYPE
                         WEBHOOK_INACTIVE -> Value.WEBHOOK_INACTIVE
@@ -2148,12 +2216,17 @@ private constructor(
                         IDEMPOTENCY_CONFLICT -> Known.IDEMPOTENCY_CONFLICT
                         IDEMPOTENCY_KEY_CONFLICT -> Known.IDEMPOTENCY_KEY_CONFLICT
                         INVALID_COMMUNITY_ID -> Known.INVALID_COMMUNITY_ID
+                        INVALID_COMPLETE_REPLIES_REQUEST -> Known.INVALID_COMPLETE_REPLIES_REQUEST
                         INVALID_COVERAGE_CURSOR -> Known.INVALID_COVERAGE_CURSOR
+                        INVALID_COVERAGE_REQUEST -> Known.INVALID_COVERAGE_REQUEST
                         INVALID_IDEMPOTENCY_KEY -> Known.INVALID_IDEMPOTENCY_KEY
                         INVALID_LIST_ID -> Known.INVALID_LIST_ID
+                        INVALID_OUTPUT_OPTIONS -> Known.INVALID_OUTPUT_OPTIONS
                         INVALID_PAYMENT_AMOUNT -> Known.INVALID_PAYMENT_AMOUNT
                         INVALID_RANGE -> Known.INVALID_RANGE
+                        INVALID_REPLY_OPTIONS -> Known.INVALID_REPLY_OPTIONS
                         LOGIN_RATE_LIMITED -> Known.LOGIN_RATE_LIMITED
+                        LOGIN_SERVICE_UNAVAILABLE -> Known.LOGIN_SERVICE_UNAVAILABLE
                         MISSING_IDEMPOTENCY_KEY -> Known.MISSING_IDEMPOTENCY_KEY
                         MISSING_IDS -> Known.MISSING_IDS
                         NO_CACHED_STYLE -> Known.NO_CACHED_STYLE
@@ -2164,6 +2237,7 @@ private constructor(
                         SUPPORT_MEDIA_RATE_LIMIT -> Known.SUPPORT_MEDIA_RATE_LIMIT
                         SUPPORT_REQUEST_RATE_LIMIT -> Known.SUPPORT_REQUEST_RATE_LIMIT
                         TOO_MANY_IDS -> Known.TOO_MANY_IDS
+                        TOO_MANY_TWEETS -> Known.TOO_MANY_TWEETS
                         UNKNOWN_FIELD -> Known.UNKNOWN_FIELD
                         UNSUPPORTED_MEDIA_TYPE -> Known.UNSUPPORTED_MEDIA_TYPE
                         WEBHOOK_INACTIVE -> Known.WEBHOOK_INACTIVE
