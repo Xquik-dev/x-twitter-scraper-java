@@ -142,7 +142,7 @@ private constructor(
     /** Minimum bookmark count threshold. */
     fun minBookmarks(): Optional<Long> = Optional.ofNullable(minBookmarks)
 
-    /** Minimum likes threshold. */
+    /** Minimum likes threshold. minLikes is also accepted. */
     fun minFaves(): Optional<Long> = Optional.ofNullable(minFaves)
 
     /** Minimum quote count threshold. */
@@ -541,7 +541,7 @@ private constructor(
         /** Alias for calling [Builder.minBookmarks] with `minBookmarks.orElse(null)`. */
         fun minBookmarks(minBookmarks: Optional<Long>) = minBookmarks(minBookmarks.getOrNull())
 
-        /** Minimum likes threshold. */
+        /** Minimum likes threshold. minLikes is also accepted. */
         fun minFaves(minFaves: Long?) = apply { this.minFaves = minFaves }
 
         /**
