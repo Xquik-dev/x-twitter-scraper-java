@@ -42,13 +42,13 @@ dependencies {
     testImplementation("org.wiremock:wiremock-jetty12:3.13.2")
     testImplementation("org.assertj:assertj-core:3.27.7")
     testImplementation("com.code-intelligence:jazzer-junit:0.30.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.14.3")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.14.3")
-    testImplementation("org.junit.platform:junit-platform-launcher:1.14.3")
-    testImplementation("org.junit-pioneer:junit-pioneer:1.9.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:6.1.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:6.1.3")
+    testImplementation("org.junit.platform:junit-platform-launcher:6.1.3")
+    testImplementation("org.junit-pioneer:junit-pioneer:2.3.0")
     testImplementation("org.mockito:mockito-core:5.23.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.23.0")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:6.3.0")
     testRuntimeOnly("org.slf4j:slf4j-nop:2.0.17")
 }
 

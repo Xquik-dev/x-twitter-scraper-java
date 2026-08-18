@@ -58,6 +58,9 @@ allprojects {
             "org.apache.commons:commons-lang3:3.20.0",
             "org.apache.logging.log4j:log4j-api:2.26.1",
             "org.apache.logging.log4j:log4j-core:2.26.1",
+            "org.apache.httpcomponents.client5:httpclient5:5.6.4",
+            "org.apache.httpcomponents.core5:httpcore5:5.4.3",
+            "org.apache.httpcomponents.core5:httpcore5-h2:5.4.3",
             "org.jsoup:jsoup:1.23.1",
             "org.xmlunit:xmlunit-core:2.13.0",
             "org.xmlunit:xmlunit-legacy:2.13.0",
@@ -82,11 +85,17 @@ val coverageExecutionData =
     fileTree(rootDir) {
         include("x-twitter-scraper-java*/build/jacoco/test.exec")
     }
+val coverageProjects =
+    subprojects.filterNot { it.name == "x-twitter-scraper-java-proguard-test" }
 val allCoverageClasses =
-    fileTree(rootDir) {
-        include("x-twitter-scraper-java*/build/classes/java/main/**/*.class")
-        include("x-twitter-scraper-java*/build/classes/kotlin/main/**/*.class")
-    }
+    files(
+        coverageProjects.flatMap { project ->
+            listOf(
+                project.layout.buildDirectory.dir("classes/java/main"),
+                project.layout.buildDirectory.dir("classes/kotlin/main"),
+            )
+        }
+    )
 val generatedSourceHeaderPrefix = "// File generated from our OpenAPI spec"
 val generatedSourceHeaderLineLimit = 12
 val maintainedGeneratedSources =
@@ -94,7 +103,7 @@ val maintainedGeneratedSources =
         "x-twitter-scraper-java-core/src/main/kotlin/com/x_twitter_scraper/api/core/http/RetryingHttpClient.kt"
     )
 val generatedCoverageExclusions =
-    subprojects.associateWith { project ->
+    coverageProjects.associateWith { project ->
         listOf("src/main/java", "src/main/kotlin").flatMap { sourcePath ->
             val sourceRoot = project.file(sourcePath)
             if (!sourceRoot.isDirectory) {
@@ -124,7 +133,7 @@ val generatedCoverageExclusions =
     }
 val maintainedCoverageClasses =
     files(
-        subprojects.flatMap { project ->
+        coverageProjects.flatMap { project ->
             val exclusions = generatedCoverageExclusions.getValue(project)
             listOf(
                 project.fileTree(project.layout.buildDirectory.dir("classes/java/main")) {
@@ -138,7 +147,7 @@ val maintainedCoverageClasses =
     )
 val coverageSources =
     files(
-        subprojects.flatMap { project ->
+        coverageProjects.flatMap { project ->
             listOf(
                 project.layout.projectDirectory.dir("src/main/java"),
                 project.layout.projectDirectory.dir("src/main/kotlin"),
@@ -146,9 +155,7 @@ val coverageSources =
         }
     )
 val testTasks =
-    subprojects
-        .filterNot { it.name == "x-twitter-scraper-java-proguard-test" }
-        .map { "${it.path}:test" }
+    coverageProjects.map { "${it.path}:test" }
 
 val coverageReport =
     tasks.register<JacocoReport>("coverageReport") {
