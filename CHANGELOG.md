@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.1 (2026-08-18)
+
+Full Changelog: [v0.10.0...v0.10.1](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.10.0...v0.10.1)
+
+### Build System
+
+* update Gradle and patch SDK dependency vulnerabilities ([#52](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/52)) ([861e280](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/861e28075f2b4ccda3f085e56ac3f36bbaac92b3))
+
 ## 0.10.0 (2026-08-12)
 
 Full Changelog: [v0.8.4...v0.10.0](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.8.4...v0.10.0)
