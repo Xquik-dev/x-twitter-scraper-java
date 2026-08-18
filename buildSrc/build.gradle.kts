@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 buildscript {
     configurations.classpath {
-        resolutionStrategy.force("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.20-RC")
+        resolutionStrategy.force("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.20-Beta2")
     }
 }
 
@@ -59,6 +59,6 @@ configurations.configureEach {
 
 dependencies {
     implementation("org.jetbrains.dokka:dokka-gradle-plugin:2.2.0")
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.20-RC")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.20-Beta2")
     implementation("com.vanniktech:gradle-maven-publish-plugin:0.37.0")
 }
