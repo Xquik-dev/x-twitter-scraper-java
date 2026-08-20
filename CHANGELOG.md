@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.3 (2026-08-21)
+
+Full Changelog: [v0.10.2...v0.10.3](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.10.2...v0.10.3)
+
+### Documentation
+
+* tighten Java setup and API guidance
+
 ## 0.10.2 (2026-08-20)
 
 Full Changelog: [v0.10.1...v0.10.2](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.10.1...v0.10.2)
