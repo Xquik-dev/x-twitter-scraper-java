@@ -4,14 +4,10 @@
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13735/badge)](https://www.bestpractices.dev/projects/13735)
 
 Use the Xquik Java SDK for Twitter search, timelines, profiles & followers.
-
 Manage media, webhooks & X automation with typed Java methods.
-
 It provides a Twitter API alternative through documented Xquik REST routes.
 
-[API reference](https://docs.xquik.com/api-reference/overview) ·
-[Authentication](https://xquik.com/auth.md) ·
-[Javadocs](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java)
+[API Reference](https://docs.xquik.com/api-reference/overview) | [Authentication](https://xquik.com/auth.md) | [Javadocs](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java)
 
 <!-- x-release-please-start-version -->
 
@@ -52,8 +48,6 @@ Map each task to its REST route and Java service.
 | Send media or update a profile | `POST /x/media`, `PATCH /x/profile` | `client.x().media()`, `client.x().profile()` |
 | Manage connected X accounts | `GET /x/accounts`, `POST /x/accounts` | `client.x().accounts()` |
 
-Use [Javadocs](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java) for methods and the [API reference](https://docs.xquik.com/api-reference/overview) for contracts.
-
 ## Install
 
 <!-- x-release-please-start-version -->
@@ -78,9 +72,7 @@ Maven:
 
 ## Verify Maven Signatures
 
-Every Maven Central file has a detached OpenPGP signature.
-
-Set `VERSION` to the release version. Then verify the main artifact:
+Every Maven Central file has a detached OpenPGP signature. Set `VERSION`, then verify the artifact:
 
 ```sh
 version=VERSION
@@ -173,8 +165,7 @@ XTwitterScraperClient client = XTwitterScraperOkHttpClient.builder()
     .build();
 ```
 
-Xquik may still return a successful HTTP response with a structured API error.
-Handle the documented error code from the response body.
+Xquik may return a successful HTTP response with a structured API error. Handle its documented code.
 
 ## Read Raw Responses
 
