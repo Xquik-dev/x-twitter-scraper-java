@@ -15,8 +15,8 @@ It provides a Twitter API alternative through documented Xquik REST routes.
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.xquik.api/x-twitter-scraper-java)](https://central.sonatype.com/artifact/com.xquik.api/x-twitter-scraper-java/0.10.1)
-[![Javadocs](https://javadoc.io/badge2/com.xquik.api/x-twitter-scraper-java/0.10.1/javadoc.svg)](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java/0.10.1)
+[![Maven Central](https://img.shields.io/maven-central/v/com.xquik.api/x-twitter-scraper-java)](https://central.sonatype.com/artifact/com.xquik.api/x-twitter-scraper-java/0.10.2)
+[![Javadocs](https://javadoc.io/badge2/com.xquik.api/x-twitter-scraper-java/0.10.2/javadoc.svg)](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java/0.10.2)
 
 <!-- x-release-please-end -->
 
@@ -61,7 +61,7 @@ Use [Javadocs](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java) for 
 Gradle:
 
 ```kotlin
-implementation("com.xquik.api:x-twitter-scraper-java:0.10.1")
+implementation("com.xquik.api:x-twitter-scraper-java:0.10.2")
 ```
 
 Maven:
@@ -70,7 +70,7 @@ Maven:
 <dependency>
   <groupId>com.xquik.api</groupId>
   <artifactId>x-twitter-scraper-java</artifactId>
-  <version>0.10.1</version>
+  <version>0.10.2</version>
 </dependency>
 ```
 

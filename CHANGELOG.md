@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.2 (2026-08-20)
+
+Full Changelog: [v0.10.1...v0.10.2](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.10.1...v0.10.2)
+
+### Documentation
+
+* refine public Java SDK text ([#54](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/54)) ([84135cf](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/84135cffafb041380a56c23cfba830d8b9d504fd))
+
 ## 0.10.1 (2026-08-18)
 
 Full Changelog: [v0.10.0...v0.10.1](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.10.0...v0.10.1)
