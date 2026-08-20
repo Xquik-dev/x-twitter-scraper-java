@@ -10,8 +10,8 @@ Use typed Java methods for media, webhooks & X automation.
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.xquik.api/x-twitter-scraper-java)](https://central.sonatype.com/artifact/com.xquik.api/x-twitter-scraper-java/0.10.3)
-[![Javadocs](https://javadoc.io/badge2/com.xquik.api/x-twitter-scraper-java-core/0.10.3/javadoc.svg)](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java-core/0.10.3)
+[![Maven Central](https://img.shields.io/maven-central/v/com.xquik.api/x-twitter-scraper-java)](https://central.sonatype.com/artifact/com.xquik.api/x-twitter-scraper-java/0.11.0)
+[![Javadocs](https://javadoc.io/badge2/com.xquik.api/x-twitter-scraper-java-core/0.11.0/javadoc.svg)](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java-core/0.11.0)
 
 <!-- x-release-please-end -->
 
@@ -52,7 +52,7 @@ Use synchronous calls or `client.async()` for `CompletableFuture` pipelines.
 Gradle:
 
 ```kotlin
-implementation("com.xquik.api:x-twitter-scraper-java:0.10.3")
+implementation("com.xquik.api:x-twitter-scraper-java:0.11.0")
 ```
 
 Maven:
@@ -61,7 +61,7 @@ Maven:
 <dependency>
   <groupId>com.xquik.api</groupId>
   <artifactId>x-twitter-scraper-java</artifactId>
-  <version>0.10.3</version>
+  <version>0.11.0</version>
 </dependency>
 ```
 
