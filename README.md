@@ -4,19 +4,15 @@
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13735/badge)](https://www.bestpractices.dev/projects/13735)
 
 Use the Xquik Java SDK for Twitter search, timelines, profiles & followers.
-
 Manage media, webhooks & X automation with typed Java methods.
-
 It provides a Twitter API alternative through documented Xquik REST routes.
 
-[API reference](https://docs.xquik.com/api-reference/overview) ·
-[Authentication](https://xquik.com/auth.md) ·
-[Javadocs](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java)
+[API Reference](https://docs.xquik.com/api-reference/overview) | [Authentication](https://xquik.com/auth.md) | [Javadocs](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java)
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.xquik.api/x-twitter-scraper-java)](https://central.sonatype.com/artifact/com.xquik.api/x-twitter-scraper-java/0.10.1)
-[![Javadocs](https://javadoc.io/badge2/com.xquik.api/x-twitter-scraper-java/0.10.1/javadoc.svg)](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java/0.10.1)
+[![Maven Central](https://img.shields.io/maven-central/v/com.xquik.api/x-twitter-scraper-java)](https://central.sonatype.com/artifact/com.xquik.api/x-twitter-scraper-java/0.10.2)
+[![Javadocs](https://javadoc.io/badge2/com.xquik.api/x-twitter-scraper-java/0.10.2/javadoc.svg)](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java/0.10.2)
 
 <!-- x-release-please-end -->
 
@@ -52,8 +48,6 @@ Map each task to its REST route and Java service.
 | Send media or update a profile | `POST /x/media`, `PATCH /x/profile` | `client.x().media()`, `client.x().profile()` |
 | Manage connected X accounts | `GET /x/accounts`, `POST /x/accounts` | `client.x().accounts()` |
 
-Use [Javadocs](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java) for methods and the [API reference](https://docs.xquik.com/api-reference/overview) for contracts.
-
 ## Install
 
 <!-- x-release-please-start-version -->
@@ -61,7 +55,7 @@ Use [Javadocs](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java) for 
 Gradle:
 
 ```kotlin
-implementation("com.xquik.api:x-twitter-scraper-java:0.10.1")
+implementation("com.xquik.api:x-twitter-scraper-java:0.10.2")
 ```
 
 Maven:
@@ -70,7 +64,7 @@ Maven:
 <dependency>
   <groupId>com.xquik.api</groupId>
   <artifactId>x-twitter-scraper-java</artifactId>
-  <version>0.10.1</version>
+  <version>0.10.2</version>
 </dependency>
 ```
 
@@ -78,9 +72,7 @@ Maven:
 
 ## Verify Maven Signatures
 
-Every Maven Central file has a detached OpenPGP signature.
-
-Set `VERSION` to the release version. Then verify the main artifact:
+Every Maven Central file has a detached OpenPGP signature. Set `VERSION`, then verify the artifact:
 
 ```sh
 version=VERSION
@@ -173,8 +165,7 @@ XTwitterScraperClient client = XTwitterScraperOkHttpClient.builder()
     .build();
 ```
 
-Xquik may still return a successful HTTP response with a structured API error.
-Handle the documented error code from the response body.
+Xquik may return a successful HTTP response with a structured API error. Handle its documented code.
 
 ## Read Raw Responses
 
