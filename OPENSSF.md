@@ -23,7 +23,7 @@ No OpenSSF-defined ineligibility applies.
 | Governance | Public roles, decisions, releases, and continuity policy |
 | Security reporting | Private reporting, response targets, boundaries, and threat model |
 | Runtime compatibility | Java 8 bytecode with JDK 26 tests |
-| Functional tests | 1,342 tests across 316 suites with no skips |
+| Functional tests | 1,418 tests across 329 suites with no skips |
 | Line coverage | `./scripts/coverage` enforces 90% |
 | Branch coverage | `./scripts/coverage` enforces 80% |
 | Static analysis | Compiler checks, formatting checks, and CodeQL |
@@ -36,17 +36,17 @@ No OpenSSF-defined ineligibility applies.
 | CI | Pull requests and pushes run pinned, least-privilege workflows |
 | Two-factor authentication | The Xquik-dev organization requires 2FA |
 
-The maintained-source gate covers 1,194 of 1,319 executable lines.
+The maintained-source gate covers 1,198 of 1,319 executable lines.
 
-That result is 90.52% line coverage.
+That result is 90.83% line coverage.
 
-It covers 420 of 520 branches, or 80.77%.
+It covers 424 of 520 branches, or 81.54%.
 
 The raw report keeps untouched generated-source coverage visible.
 
-It covers 37,702 of 91,257 generated-inclusive lines, or 41.31%.
+It covers 104,652 of 110,632 generated-inclusive lines, or 94.59%.
 
-It covers 5,220 of 23,952 generated-inclusive branches, or 21.79%.
+It covers 27,560 of 30,010 generated-inclusive branches, or 91.84%.
 
 Exclusions use the repository-owned, provider-neutral generated-source header prefix.
 
@@ -93,7 +93,7 @@ Do not claim Gold while any mandatory criterion remains unmet.
 | Human security review | No completed review exists within 5 years | Commission and publish a scoped review |
 | Generated code coverage | Gold does not explicitly exempt generated code | Confirm applicability or raise generated-inclusive coverage |
 
-This remediation pull request needs a different human reviewer.
+Gold eligibility still requires review by a different human.
 
 ## Maintenance
 
