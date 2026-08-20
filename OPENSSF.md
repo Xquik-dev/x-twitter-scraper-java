@@ -8,11 +8,7 @@ Assessment date: 2026-07-24.
 
 ## Eligibility
 
-This public Java SDK is active and released.
-
-It is eligible for the OpenSSF Best Practices badge.
-
-No OpenSSF-defined ineligibility applies.
+This active, public Java SDK qualifies for the OpenSSF Best Practices badge.
 
 ## Verified Technical Controls
 
@@ -36,17 +32,11 @@ No OpenSSF-defined ineligibility applies.
 | CI | Pull requests and pushes run pinned, least-privilege workflows |
 | Two-factor authentication | The Xquik-dev organization requires 2FA |
 
-The maintained-source gate covers 1,198 of 1,319 executable lines.
-
-That result is 90.83% line coverage.
+The maintained-source gate covers 1,198 of 1,319 executable lines (90.83%).
 
 It covers 424 of 520 branches, or 81.54%.
 
-The raw report keeps untouched generated-source coverage visible.
-
-It covers 104,652 of 110,632 generated-inclusive lines, or 94.59%.
-
-It covers 27,560 of 30,010 generated-inclusive branches, or 91.84%.
+The raw report covers 104,652 of 110,632 generated-inclusive lines (94.59%) and 27,560 of 30,010 branches (91.84%).
 
 Exclusions use the repository-owned, provider-neutral generated-source header prefix.
 
@@ -68,7 +58,7 @@ The license report covers 100 resolved runtime and test components.
 
 Jazzer completed 3,544,654 retry-header iterations during this assessment.
 
-Maven Central published `v0.5.2` from the exact release tag.
+Maven Central published `v0.10.2` from the exact release tag.
 
 All 15 public files verify with this OpenPGP fingerprint:
 
@@ -76,7 +66,7 @@ All 15 public files verify with this OpenPGP fingerprint:
 
 The root JAR SHA-256 is:
 
-`87a9b770f16b32d016fac4220a5ec626d32871e692d9b7bc8d261be8e0a58e89`
+`7c0ba8741e41eae3c13f5d47e91e100668862b1ae03f57832bfa513e9e5b2393`
 
 ## Outstanding Gold Blockers
 
