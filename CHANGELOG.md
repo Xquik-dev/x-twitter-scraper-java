@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.4 (2026-08-24)
+
+Full Changelog: [v0.10.3...v0.10.4](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.10.3...v0.10.4)
+
+### Documentation
+
+* enforce source LOC reduction ([#58](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/58)) ([155e892](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/155e892719405a2568000a2e49e05a9014f23000))
+
 ## 0.10.3 (2026-08-21)
 
 Full Changelog: [v0.10.2...v0.10.3](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.10.2...v0.10.3)
