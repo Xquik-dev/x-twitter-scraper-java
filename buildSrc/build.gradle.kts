@@ -40,7 +40,7 @@ configurations.configureEach {
         "com.fasterxml.jackson.core:jackson-core:2.22.1",
         "com.fasterxml.jackson.core:jackson-databind:2.22.1",
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.22.1",
-        "com.fasterxml.jackson.module:jackson-module-kotlin:2.22.1",
+        "com.fasterxml.jackson.module:jackson-module-kotlin:2.22.2",
         "com.github.jknack:handlebars:4.5.4",
         "com.google.guava:guava:33.6.0-jre",
         "com.jayway.jsonpath:json-path:3.0.0",
