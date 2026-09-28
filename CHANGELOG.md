@@ -74,7 +74,7 @@ Full Changelog: [v0.8.4...v0.10.0](https://github.com/Xquik-dev/x-twitter-scrape
 
 ### Documentation
 
-* add Contributor Covenant 2.1 Code of Conduct ([#2192](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/2192)) ([afb97b0](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/afb97b0d326a8ff3602f871cd12daa63c7a3d847))
+* add Contributor Covenant 2.1 Code of Conduct ([afb97b0](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/afb97b0d326a8ff3602f871cd12daa63c7a3d847))
 * add DeepWiki badge ([3b366af](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/3b366af5ff33de6e029885af3c7fedbf7c0a6b9a))
 * clarify repository discovery ([e6c115b](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/e6c115b50205ce8720f5d30c7cfdf48f780537b3))
 * correct Java test evidence count ([6e6a171](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/6e6a171d428896d32833fa94e5860c68ad7e2739))
@@ -245,7 +245,7 @@ Full Changelog: [v0.4.1...v0.5.0](https://github.com/Xquik-dev/x-twitter-scraper
 
 ### Documentation
 
-* add Contributor Covenant 2.1 Code of Conduct ([#2192](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/2192)) ([afb97b0](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/afb97b0d326a8ff3602f871cd12daa63c7a3d847))
+* add Contributor Covenant 2.1 Code of Conduct ([afb97b0](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/afb97b0d326a8ff3602f871cd12daa63c7a3d847))
 * add DeepWiki badge ([3b366af](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/3b366af5ff33de6e029885af3c7fedbf7c0a6b9a))
 * mark Maven publication pending ([2aad6f6](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/2aad6f6d7208d90eaffbb483677cd50a34f55559))
 
@@ -285,7 +285,7 @@ Full Changelog: [v0.3.0...v0.4.0](https://github.com/Xquik-dev/x-twitter-scraper
 
 ### Documentation
 
-* add Contributor Covenant 2.1 Code of Conduct ([#2192](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/2192)) ([afb97b0](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/afb97b0d326a8ff3602f871cd12daa63c7a3d847))
+* add Contributor Covenant 2.1 Code of Conduct ([afb97b0](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/afb97b0d326a8ff3602f871cd12daa63c7a3d847))
 
 ## 0.3.0 (2026-04-08)
 
