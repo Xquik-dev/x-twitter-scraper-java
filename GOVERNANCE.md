@@ -50,6 +50,8 @@ Release automation prepares version and changelog updates.
 
 Maintainers verify tests, security gates, and release metadata.
 
+Maintainers publish from a maintained local machine with `bin/release-local`.
+
 Release tags must reference the reviewed default-branch commit.
 
 Published Maven artifacts must remain reproducible.

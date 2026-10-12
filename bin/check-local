@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+
+# SPDX-FileCopyrightText: 2026 Xquik contributors
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# Runs every repository check in order and stops at the first failure.
+
+set -euo pipefail
+
+cd -- "$(dirname -- "$0")/.."
+
+fail() {
+    printf '%s\n' "$1" >&2
+    exit 1
+}
+
+run_check() {
+    local name="$1"
+    local advice="$2"
+    shift 2
+    printf '==> %s\n' "$name"
+    if ! "$@"; then
+        fail "Check failed: $name. $advice"
+    fi
+}
+
+jdks_ready() {
+    local java_bin="java"
+    if [[ -n "${JAVA_HOME:-}" ]]; then
+        java_bin="$JAVA_HOME/bin/java"
+    fi
+    "$java_bin" -version >/dev/null 2>&1 &&
+        [[ -f "${SHRINKER_JAVA_HOME:-}/release" ]] &&
+        grep -q '^JAVA_VERSION="25' "$SHRINKER_JAVA_HOME/release"
+}
+
+fuzz_retry_headers() {
+    JAZZER_FUZZ=1 ./gradlew \
+        :x-twitter-scraper-java-core:test \
+        --tests '*RetryAfterFuzzTest' \
+        --no-build-cache \
+        --no-configuration-cache
+}
+
+run_check "JDK setup" \
+    "Set JAVA_HOME to JDK 26 and SHRINKER_JAVA_HOME to JDK 25." \
+    jdks_ready
+
+run_check "Java and Kotlin formatting" \
+    "Run ./scripts/format, then rerun bin/check-local." \
+    ./scripts/lint
+
+command -v shellcheck >/dev/null 2>&1 ||
+    fail "Check failed: shell scripts. Install shellcheck, then rerun bin/check-local."
+run_check "Shell scripts" \
+    "Fix the ShellCheck findings above." \
+    shellcheck bin/* scripts/*
+
+if command -v reuse >/dev/null 2>&1; then
+    run_check "Repository licensing" \
+        "Add SPDX license details for the files listed above." \
+        reuse lint
+else
+    printf '==> Skipping repository licensing because reuse is not installed\n'
+fi
+
+run_check "Build" \
+    "Fix the compiler errors above." \
+    ./scripts/build
+
+run_check "Tests" \
+    "Fix the failing or skipped tests above." \
+    ./scripts/test
+
+run_check "Coverage" \
+    "Add tests until maintained code has 90% line and 80% branch coverage." \
+    ./scripts/coverage
+
+run_check "Retry header fuzzing" \
+    "Fix the retry delay bug in the fuzz finding above." \
+    fuzz_retry_headers
+
+run_check "Dependency audit" \
+    "Upgrade or replace the dependencies flagged above." \
+    ./scripts/audit
+
+run_check "Reproducible Maven artifacts" \
+    "Remove the build input that differs between the 2 builds above." \
+    ./scripts/check-reproducible
+
+printf 'All local checks passed.\n'

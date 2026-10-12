@@ -42,7 +42,7 @@ Security-sensitive areas include:
 - Response parsing and error handling
 - Generated and maintained runtime code
 - Dependencies, build inputs, and published Maven artifacts
-- CI, release metadata, and documentation examples
+- Local check and release scripts, release metadata, and documentation examples
 
 Service availability and upstream platform behavior remain outside this repository.
 

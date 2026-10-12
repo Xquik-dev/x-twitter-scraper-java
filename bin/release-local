@@ -1,0 +1,181 @@
+#!/usr/bin/env bash
+
+# SPDX-FileCopyrightText: 2026 Xquik contributors
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# Publishes the version in build.gradle.kts to Maven Central from the
+# maintained macOS release machine, then pushes its tag and GitHub release.
+
+set -euo pipefail
+# Keep credentials out of trace output, even under bash -x.
+set +o xtrace
+
+cd -- "$(dirname -- "$0")/.."
+
+readonly repo="Xquik-dev/x-twitter-scraper-java"
+readonly module="x-twitter-scraper-java"
+readonly central_url="https://repo.maven.apache.org/maven2/com/xquik/api/$module"
+readonly sonatype_service="xquik-sonatype-central-token"
+readonly signing_password_service="xquik-maven-gpg-signing-password"
+readonly signing_key_id="D2037E4157E62A59"
+
+step() {
+    printf '==> %s\n' "$1"
+}
+
+fail() {
+    printf '%s\n' "$1" >&2
+    exit 1
+}
+
+publish_to_central() {
+    local central_username central_password signing_password signing_key
+    central_username="$(
+        security find-generic-password -s "$sonatype_service" |
+            sed -n 's/^ *"acct"<blob>="\(.*\)"$/\1/p'
+    )" || fail "Could not read Keychain item $sonatype_service."
+    [[ -n "$central_username" ]] ||
+        fail "Keychain item $sonatype_service needs the token username as its account."
+    central_password="$(security find-generic-password -s "$sonatype_service" -w)" ||
+        fail "Could not read the password of Keychain item $sonatype_service."
+    signing_password="$(security find-generic-password -s "$signing_password_service" -w)" ||
+        fail "Could not read the password of Keychain item $signing_password_service."
+    signing_key="$(
+        printf '%s' "$signing_password" |
+            gpg --batch --pinentry-mode loopback --passphrase-fd 0 \
+                --armor --export-secret-keys "$signing_key_id"
+    )" || fail "Could not export signing key $signing_key_id. Check its passphrase in Keychain."
+
+    ORG_GRADLE_PROJECT_mavenCentralUsername="$central_username" \
+        ORG_GRADLE_PROJECT_mavenCentralPassword="$central_password" \
+        ORG_GRADLE_PROJECT_signingInMemoryKey="$signing_key" \
+        ORG_GRADLE_PROJECT_signingInMemoryKeyId="${signing_key_id: -8}" \
+        ORG_GRADLE_PROJECT_signingInMemoryKeyPassword="$signing_password" \
+        ./gradlew publishAndReleaseToMavenCentral \
+        --no-build-cache \
+        --no-configuration-cache \
+        --no-daemon ||
+        fail "The Maven Central upload failed. Fix the errors above, then rerun."
+}
+
+step "Checking release tools"
+for tool in curl gh git gpg security; do
+    command -v "$tool" >/dev/null 2>&1 ||
+        fail "$tool is missing. Run this on the macOS release machine with $tool installed."
+done
+gh auth status --hostname github.com >/dev/null 2>&1 ||
+    fail "GitHub CLI is signed out. Run gh auth login, then rerun."
+
+step "Checking that main is clean and matches origin/main"
+[[ "$(git symbolic-ref --quiet --short HEAD || true)" == "main" ]] ||
+    fail "Switch to main before releasing."
+[[ -z "$(git status --porcelain)" ]] ||
+    fail "Commit or remove local changes before releasing."
+git fetch --quiet origin main ||
+    fail "Could not fetch origin. Check your network, then rerun."
+[[ "$(git rev-parse HEAD)" == "$(git rev-parse origin/main)" ]] ||
+    fail "Run git pull --ff-only so main matches origin/main, then rerun."
+
+step "Reading the version from build.gradle.kts"
+version="$(awk -F '"' '/^ *version = "/ { print $2; exit }' build.gradle.kts)"
+[[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-+][0-9A-Za-z.+-]+)?$ ]] ||
+    fail "build.gradle.kts has no valid version. Fix it, then rerun."
+readonly version
+readonly tag="v$version"
+
+step "Checking that tag $tag is new on origin"
+remote_tag="$(git ls-remote --tags origin "refs/tags/$tag")" ||
+    fail "Could not read tags from origin. Check your network, then rerun."
+[[ -z "$remote_tag" ]] ||
+    fail "Tag $tag already exists on origin. Bump the version, then rerun."
+
+step "Reading the $version release notes from CHANGELOG.md"
+release_notes="$(
+    awk -v version="$version" '
+        /^## / {
+            if (found) exit
+            found = $0 == "## " version ||
+                index($0, "## " version " ") == 1 ||
+                index($0, "## [" version "]") == 1
+        }
+        found
+    ' CHANGELOG.md
+)"
+[[ -n "$release_notes" ]] ||
+    fail "CHANGELOG.md has no section for $version. Add one, then rerun."
+readonly release_notes
+
+step "Checking Maven Central for $version"
+central_status="$(
+    curl \
+        --connect-timeout 10 \
+        --location \
+        --max-time 30 \
+        --output /dev/null \
+        --proto '=https' \
+        --show-error \
+        --silent \
+        --tlsv1.2 \
+        --write-out '%{http_code}' \
+        "$central_url/$version/$module-$version.pom"
+)" || fail "Could not reach Maven Central. Check your network, then rerun."
+case "$central_status" in
+    200) already_published=true ;;
+    404) already_published=false ;;
+    *) fail "Maven Central returned HTTP $central_status. Retry later." ;;
+esac
+readonly already_published
+
+if [[ "$already_published" == false ]]; then
+    step "Checking the Keychain items and the signing key"
+    security find-generic-password -s "$sonatype_service" >/dev/null 2>&1 ||
+        fail "Keychain item $sonatype_service is missing. The owner must add it: security add-generic-password -s $sonatype_service -a <token username> -w"
+    security find-generic-password -s "$signing_password_service" >/dev/null 2>&1 ||
+        fail "Keychain item $signing_password_service is missing. The owner must add the signing key passphrase there."
+    gpg --batch --list-secret-keys "$signing_key_id" >/dev/null 2>&1 ||
+        fail "Signing key $signing_key_id is missing from the local GPG keyring. Import it, then rerun."
+fi
+
+step "Running bin/check-local"
+bin/check-local ||
+    fail "Local checks failed. Fix them before releasing."
+
+step "Auditing dependencies for known vulnerabilities"
+./scripts/audit ||
+    fail "The dependency audit failed. Upgrade the flagged dependencies before releasing."
+
+step "Building the Maven artifacts"
+./gradlew publishAllPublicationsToLocalFileSystemRepository \
+    -PpublishLocal \
+    --no-build-cache \
+    --no-configuration-cache \
+    --no-daemon ||
+    fail "The Maven build failed. Fix the errors above, then rerun."
+
+if [[ "$already_published" == true ]]; then
+    step "Skipping the upload because Maven Central already has $version"
+else
+    step "Uploading $version to Maven Central"
+    publish_to_central
+fi
+
+step "Verifying the Maven Central signature for $tag"
+bin/verify-release-signature "$tag" ||
+    fail "The published signature did not verify. Do not tag this release."
+
+step "Creating and pushing tag $tag"
+git tag --annotate "$tag" --message "$tag" ||
+    fail "Could not create tag $tag. Delete a stale local tag with git tag -d $tag, then rerun."
+git push origin "refs/tags/$tag" ||
+    fail "Could not push tag $tag. Check your GitHub access, then rerun."
+
+step "Creating GitHub release $tag"
+gh release create "$tag" \
+    --repo "$repo" \
+    --title "$tag" \
+    --notes "$release_notes" \
+    --verify-tag ||
+    fail "Could not create GitHub release $tag. Run gh release create $tag --repo $repo --verify-tag."
+
+printf 'Released %s to Maven Central and GitHub.\n' "$tag"

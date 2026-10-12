@@ -6,7 +6,9 @@ Follow the shared [Xquik contribution policy][contribution-policy].
 
 ## Set Up
 
-Install JDK 26, JDK 25, `curl`, `tar`, and `unzip`.
+Install JDK 26, JDK 25, `curl`, `tar`, `unzip`, and `shellcheck`.
+
+Install `reuse` to run the licensing check.
 
 Use JDK 26 as `JAVA_HOME`.
 
@@ -47,15 +49,27 @@ Run focused tests while editing.
 Run every gate before requesting review:
 
 ```sh
-./scripts/lint
-./scripts/test
-./scripts/coverage
-OSV_SCANNER_BIN=/path/to/osv-scanner ./scripts/audit
-reuse lint
-./scripts/check-reproducible
+bin/check-local
 ```
 
-The audit script downloads a verified OSV Scanner when needed.
+It runs these checks in order and stops at the first failure:
+
+1. JDK setup
+2. Java and Kotlin formatting (`./scripts/lint`)
+3. ShellCheck on `bin/` and `scripts/`
+4. REUSE licensing (`reuse lint`), skipped when `reuse` is not installed
+5. Build (`./scripts/build`)
+6. Tests without skips (`./scripts/test`)
+7. Coverage (`./scripts/coverage`)
+8. 30 seconds of Jazzer fuzzing on retry headers
+9. Dependency licenses and vulnerabilities (`./scripts/audit`)
+10. Reproducible Maven artifacts (`./scripts/check-reproducible`)
+
+The failure line names the check and the next step.
+
+The audit downloads a verified OSV Scanner unless `OSV_SCANNER_BIN` names one.
+
+GitHub Actions does not run these checks. Run them before you push.
 
 Maintained-source line coverage must remain at least 90%.
 
@@ -84,9 +98,23 @@ Follow [SECURITY.md](SECURITY.md) for private reporting.
 
 ## Releases
 
-Publish an immutable `v*` release after its commit reaches `main`.
+Maintainers release from a maintained macOS machine with `bin/release-local`.
 
-Verify the tag, changelog, audit, licensing, and reproducible artifacts.
+GitHub Actions does not publish packages.
+
+The script refuses unless `main` is clean and matches `origin/main`.
+
+It refuses a version whose `v*` tag already exists.
+
+It runs `bin/check-local` and the dependency audit, then builds the artifacts.
+
+It signs and uploads them to Maven Central, unless Central already has that version.
+
+It reads the Central token and signing passphrase from the macOS Keychain.
+
+It verifies the published signature, then pushes the tag.
+
+It creates the GitHub release from the version's `CHANGELOG.md` section.
 
 [contribution-policy]: https://github.com/Xquik-dev/.github/blob/main/CONTRIBUTING.md
 [good-first-issues]: https://github.com/Xquik-dev/x-twitter-scraper-java/labels/good%20first%20issue

@@ -22,14 +22,15 @@ This active, public Java SDK qualifies for the OpenSSF Best Practices badge.
 | Functional tests | 1,418 tests across 329 suites with no skips |
 | Line coverage | `./scripts/coverage` enforces 90% |
 | Branch coverage | `./scripts/coverage` enforces 80% |
-| Static analysis | Compiler checks, formatting checks, and CodeQL |
+| Static analysis | Compiler checks, formatting checks, and ShellCheck |
 | Dynamic analysis | Jazzer fuzzes untrusted retry headers for 30 seconds |
 | Dependency integrity | Lockfiles and SHA-256 verification metadata |
-| Dependency review | Dependabot, OSV Scanner, and an explicit license policy |
-| Licensing gate | Pinned REUSE action checks every repository file |
+| Dependency review | OSV Scanner and an explicit license policy |
+| Licensing gate | `reuse lint` checks every repository file |
 | Reproducibility | 2 isolated builds produce 15 byte-identical Maven artifacts |
 | Release integrity | Maven Central provides OpenPGP signatures for all 15 artifacts |
-| CI | Pull requests and pushes run pinned, least-privilege workflows |
+| Local gates | `bin/check-local` runs every gate before review and release |
+| Release process | `bin/release-local` publishes from a maintained local machine |
 | Two-factor authentication | The Xquik-dev organization requires 2FA |
 
 The maintained-source gate covers 1,198 of 1,319 executable lines (90.83%).
@@ -87,15 +88,10 @@ Gold eligibility still requires review by a different human.
 
 ## Maintenance
 
-Run these evidence commands before releases:
+Run every evidence check before releases:
 
 ```sh
-./scripts/lint
-./scripts/test
-./scripts/coverage
-./scripts/audit
-reuse lint
-./scripts/check-reproducible
+bin/check-local
 ```
 
 Reassess the register before every major release.
