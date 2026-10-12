@@ -67,6 +67,12 @@ It runs these checks in order and stops at the first failure:
 
 The failure line names the check and the next step.
 
+It posts the result as the `xquik-local-checks` commit status on GitHub.
+
+It posts only for a clean tree whose commit is already pushed.
+
+Pass `--no-status` to skip the status.
+
 The audit downloads a verified OSV Scanner unless `OSV_SCANNER_BIN` names one.
 
 GitHub Actions does not run these checks. Run them before you push.
