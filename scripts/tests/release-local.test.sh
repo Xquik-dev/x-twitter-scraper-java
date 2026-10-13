@@ -43,7 +43,7 @@ x-twitter-scraper-java-9.9.9.module
 x-twitter-scraper-java-9.9.9.pom
 Listed 1 module of com.xquik.api at 9.9.9."
 readonly local_build="publishAllPublicationsToLocalFileSystemRepository -PpublishLocal --no-build-cache --no-configuration-cache --no-daemon"
-readonly upload="publishAndReleaseToMavenCentral --no-build-cache --no-configuration-cache --no-daemon"
+readonly upload="publishAndReleaseToMavenCentral -Pkotlin.compiler.execution.strategy=in-process --no-build-cache --no-configuration-cache --no-daemon"
 readonly release="release create v9.9.9 --repo Xquik-dev/x-twitter-scraper-java --title v9.9.9 --notes-file NOTES --verify-tag --latest"
 readonly release_tags="refs/tags/v9.9.9
 refs/tags/v9.9.9^{}"
