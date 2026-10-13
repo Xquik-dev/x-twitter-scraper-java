@@ -57,6 +57,7 @@ Then it runs lint, shellcheck, the script tests, REUSE, build, tests, coverage, 
 It stops at the first failure and says what to fix.
 REUSE 6.2.0 runs through `uvx` on every run.
 CodeQL and REUSE are required, and any finding fails the run.
+A file that CodeQL reads only in part, or skips, fails it too.
 CodeQL traces a Gradle build of a copy of the source files, so your working tree and its checksum metadata stay unchanged.
 The run fails when a check changed or added files in a clean working tree.
 
