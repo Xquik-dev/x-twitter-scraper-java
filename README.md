@@ -4,8 +4,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.xquik.api/x-twitter-scraper-java)](https://central.sonatype.com/artifact/com.xquik.api/x-twitter-scraper-java/0.10.3)
-[![Javadocs](https://javadoc.io/badge2/com.xquik.api/x-twitter-scraper-java-core/0.10.3/javadoc.svg)](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java-core/0.10.3)
+[![Maven Central](https://img.shields.io/maven-central/v/com.xquik.api/x-twitter-scraper-java)](https://central.sonatype.com/artifact/com.xquik.api/x-twitter-scraper-java/0.10.4)
+[![Javadocs](https://javadoc.io/badge2/com.xquik.api/x-twitter-scraper-java-core/0.10.4/javadoc.svg)](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java-core/0.10.4)
 
 <!-- x-release-please-end -->
 
@@ -63,7 +63,7 @@ Call REST directly when a Maven dependency does not fit.
 Add the Gradle dependency.
 
 ```kotlin
-implementation("com.xquik.api:x-twitter-scraper-java:0.10.3")
+implementation("com.xquik.api:x-twitter-scraper-java:0.10.4")
 ```
 
 Or add the Maven dependency.
@@ -72,7 +72,7 @@ Or add the Maven dependency.
 <dependency>
   <groupId>com.xquik.api</groupId>
   <artifactId>x-twitter-scraper-java</artifactId>
-  <version>0.10.3</version>
+  <version>0.10.4</version>
 </dependency>
 ```
 

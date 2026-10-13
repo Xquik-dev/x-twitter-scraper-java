@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.10.4 (2026-10-13)
+
+[Full changelog from v0.10.3 to v0.10.4](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.10.3...v0.10.4)
+
+### Security
+
+* Update jackson-core & jackson-databind from 2.22.1 to 2.22.3, which fixes 7 advisories, 5 high & 2 moderate.
+* The jackson-core fixes are GHSA-7hhh-6rmp-j9qf & GHSA-p6pp-m3f8-5c89.
+* The jackson-databind fixes are GHSA-cxp5-3px4-pw24, GHSA-q4xh-88c3-wmh7, GHSA-wv8q-qhhj-9h54, GHSA-gx83-3vf8-gh7j & GHSA-wjgm-6hv5-3cvf.
+* The SDK's own JSON handling does not use the affected features. Your application gets the same Jackson version through the SDK, so update if it parses untrusted JSON with Jackson.
+
+### Documentation
+
+* The README title is now "X API & Twitter API Java SDK by Xquik".
+* The README says near the top what Xquik is, how it bills and that it is not affiliated with X Corp.
+* Doc comments use the current price. An active monitor costs 30 credits per hour.
+
+### Chores
+
+* The prefix of the idempotency key that the client can generate is now `xquik-java-retry-`. The client never sends that key by default, so no request changes.
+
 ## 0.10.3 (2026-08-21)
 
 Full Changelog: [v0.10.2...v0.10.3](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.10.2...v0.10.3)
