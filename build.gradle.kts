@@ -50,7 +50,7 @@ allprojects {
             "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.22.3",
             "com.fasterxml.jackson.module:jackson-module-kotlin:2.22.3",
             "com.github.jknack:handlebars:4.5.4",
-            "com.google.guava:guava:33.6.0-jre",
+            "com.google.guava:guava:33.7.2-jre",
             "com.jayway.jsonpath:json-path:3.0.0",
             "commons-fileupload:commons-fileupload:1.6.0",
             "commons-io:commons-io:2.22.0",
