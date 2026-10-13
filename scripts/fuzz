@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# SPDX-FileCopyrightText: 2026 Xquik contributors
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# Fuzzes the retry header parser with Jazzer for 30 seconds.
+
+set -euo pipefail
+
+cd -- "$(dirname -- "$0")/.."
+
+echo "==> Fuzzing untrusted retry headers"
+JAZZER_FUZZ=1 ./gradlew \
+    :x-twitter-scraper-java-core:test \
+    --tests '*RetryAfterFuzzTest' \
+    --no-build-cache \
+    --no-configuration-cache \
+    "$@"

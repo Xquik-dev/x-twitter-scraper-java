@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec by Stainless.
+// File generated from our OpenAPI spec.
 
 package com.x_twitter_scraper.api.core.http
 
@@ -148,7 +148,7 @@ private constructor(
     private fun setRetryCountHeader(request: HttpRequest, retries: Int): HttpRequest =
         request.toBuilder().replaceHeaders("X-Stainless-Retry-Count", retries.toString()).build()
 
-    private fun idempotencyKey(): String = "stainless-java-retry-${UUID.randomUUID()}"
+    private fun idempotencyKey(): String = "xquik-java-retry-${UUID.randomUUID()}"
 
     private fun maybeAddIdempotencyHeader(request: HttpRequest): HttpRequest {
         if (idempotencyHeader == null || request.headers.names().contains(idempotencyHeader)) {

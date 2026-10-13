@@ -35,7 +35,7 @@ Fix timing depends on severity, exploitability, and release safety.
 
 ## Scope
 
-Security-sensitive areas include:
+Security-sensitive areas include the following.
 
 - API key and OAuth token handling
 - Request construction, redirects, retries, and uploads
@@ -66,7 +66,7 @@ Coordinate public disclosure with the maintainers.
 
 Maintainers may use a private advisory and request a CVE.
 
-Validated fixes require tests, independent review, and a patched release.
+Validated fixes require tests, the maintainer's review, and a patched release.
 
 The advisory or changelog records affected and fixed versions.
 

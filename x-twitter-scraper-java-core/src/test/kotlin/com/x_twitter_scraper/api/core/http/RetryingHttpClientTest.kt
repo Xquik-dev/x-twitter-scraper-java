@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec by Stainless.
+// File generated from our OpenAPI spec.
 
 package com.x_twitter_scraper.api.core.http
 
@@ -133,7 +133,7 @@ internal class RetryingHttpClientTest {
     fun execute_withIdempotencyHeader(async: Boolean) {
         stubFor(
             post(urlPathEqualTo("/something"))
-                .withHeader("X-Some-Header", matching("stainless-java-retry-.+"))
+                .withHeader("X-Some-Header", matching("xquik-java-retry-.+"))
                 .willReturn(ok())
         )
         val sleeper = RecordingSleeper()

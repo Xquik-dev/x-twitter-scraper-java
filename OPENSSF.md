@@ -4,7 +4,7 @@ This register tracks the Gold assessment for this repository.
 
 The official entry is [bestpractices.dev project 13735][badge].
 
-Assessment date: 2026-07-24.
+The assessment date is 2026-07-24.
 
 ## Eligibility
 
@@ -15,21 +15,22 @@ This active, public Java SDK qualifies for the OpenSSF Best Practices badge.
 | Area | Evidence |
 | --- | --- |
 | License | Apache-2.0 and REUSE 3.3 metadata |
-| Contribution process | DCO sign-off and independent review rules |
+| Contribution process | DCO sign-off and `bin/check-local` before every merge |
 | Governance | Public roles, decisions, releases, and continuity policy |
 | Security reporting | Private reporting, response targets, boundaries, and threat model |
 | Runtime compatibility | Java 8 bytecode with JDK 26 tests |
 | Functional tests | 1,418 tests across 329 suites with no skips |
 | Line coverage | `./scripts/coverage` enforces 90% |
 | Branch coverage | `./scripts/coverage` enforces 80% |
-| Static analysis | Compiler checks, formatting checks, and ShellCheck |
+| Static analysis | Compiler checks, formatting checks, ShellCheck, and local CodeQL security-extended queries |
 | Dynamic analysis | Jazzer fuzzes untrusted retry headers for 30 seconds |
 | Dependency integrity | Lockfiles and SHA-256 verification metadata |
-| Dependency review | OSV Scanner and an explicit license policy |
-| Licensing gate | `reuse lint` checks every repository file |
+| Dependency review | OSV Scanner at every severity, reviewed exceptions, and an explicit license policy |
+| Licensing gate | REUSE 6.2.0 checks every repository file on every run |
 | Reproducibility | 2 isolated builds produce 15 byte-identical Maven artifacts |
 | Release integrity | Maven Central provides OpenPGP signatures for all 15 artifacts |
-| Local gates | `bin/check-local` runs every gate before review and release |
+| Local gates | `bin/check-local` runs every gate before review, merge, and release |
+| Script tests | 51 tests run the check, audit, CodeQL, signature, and release scripts with fake commands |
 | Release process | `bin/release-local` publishes from a maintained local machine |
 | Two-factor authentication | The Xquik-dev organization requires 2FA |
 
@@ -61,11 +62,11 @@ Jazzer completed 3,544,654 retry-header iterations during this assessment.
 
 Maven Central published `v0.10.2` from the exact release tag.
 
-All 15 public files verify with this OpenPGP fingerprint:
+All 15 public files verify with this OpenPGP fingerprint.
 
 `6965 E561 C0AC EE32 060A B961 D203 7E41 57E6 2A59`
 
-The root JAR SHA-256 is:
+The root JAR SHA-256 follows.
 
 `7c0ba8741e41eae3c13f5d47e91e100668862b1ae03f57832bfa513e9e5b2393`
 
@@ -88,11 +89,13 @@ Gold eligibility still requires review by a different human.
 
 ## Maintenance
 
-Run every evidence check before releases:
+Run every evidence check before releases.
 
 ```sh
 bin/check-local
 ```
+
+`bin/release-local` runs the same checks before it publishes.
 
 Reassess the register before every major release.
 

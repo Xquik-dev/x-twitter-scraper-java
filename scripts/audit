@@ -4,12 +4,49 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+# Checks dependency licenses, then scans every locked dependency with OSV
+# Scanner. Severity never excuses a finding. A finding in a dependency that a
+# published module ships at runtime always blocks. A development-only finding
+# blocks when a fixed version exists. Without a fix, it passes only while
+# audit-exceptions.json lists it with a recheck date that is still ahead.
+
 set -euo pipefail
 
 cd -- "$(dirname -- "$0")/.."
 
+readonly exceptions_file="audit-exceptions.json"
+published_lockfiles=(
+    x-twitter-scraper-java/gradle.lockfile
+    x-twitter-scraper-java-client-okhttp/gradle.lockfile
+    x-twitter-scraper-java-core/gradle.lockfile
+)
+readonly published_lockfiles
+
+fail() {
+    printf '%s\n' "$1" >&2
+    exit 1
+}
+
+command -v jq >/dev/null 2>&1 || fail "jq is not installed. Install it, then rerun."
+
 audit_workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-java-audit.XXXXXX")"
 trap 'rm -rf -- "$audit_workspace"' EXIT
+
+today="$(date -u +%Y-%m-%d)"
+latest_recheck="$(jq -nr 'now + 30 * 86400 | strftime("%Y-%m-%d")')"
+readonly today latest_recheck
+
+echo "==> Checking $exceptions_file"
+jq -e --arg latest "$latest_recheck" '
+    type == "array" and all(.[];
+        (.advisory | type == "string" and length > 0) and
+        (.path | type == "string" and length > 0) and
+        (.reason == "build-time only" or
+            .reason == "peer dependency provided by the host") and
+        (.recheck | type == "string" and test("^[0-9]{4}-[0-9]{2}-[0-9]{2}$")) and
+        .recheck <= $latest)
+' "$exceptions_file" >/dev/null ||
+    fail "$exceptions_file is invalid. Each entry needs an advisory, a path, an allowed reason and a recheck date no later than $latest_recheck."
 
 echo "==> Checking dependency licenses"
 ./gradlew checkLicense \
@@ -19,10 +56,8 @@ echo "==> Checking dependency licenses"
 
 if [[ -n "${OSV_SCANNER_BIN:-}" ]]; then
     scanner="$OSV_SCANNER_BIN"
-    if [[ ! -x "$scanner" ]]; then
-        printf 'OSV_SCANNER_BIN is not executable: %s\n' "$scanner" >&2
-        exit 1
-    fi
+    [[ -x "$scanner" ]] ||
+        fail "OSV_SCANNER_BIN names $scanner, which is not executable. Fix the path, then rerun."
 else
     osv_version="2.4.0"
     platform="$(uname -s)-$(uname -m)"
@@ -36,8 +71,7 @@ else
             scanner_checksum="15314940c10d26af9c6649f150b8a47c1262e8fc7e17b1d1029b0e479e8ed8a0"
             ;;
         *)
-            printf 'Unsupported OSV Scanner platform: %s\n' "$platform" >&2
-            exit 1
+            fail "OSV Scanner has no pinned build for $platform. Set OSV_SCANNER_BIN to a local scanner, then rerun."
             ;;
     esac
 
@@ -60,14 +94,91 @@ else
     else
         actual_checksum="$(shasum -a 256 "$scanner" | awk '{print $1}')"
     fi
-    if [[ "$actual_checksum" != "$scanner_checksum" ]]; then
-        echo "OSV Scanner checksum verification failed." >&2
-        exit 1
-    fi
+    [[ "$actual_checksum" == "$scanner_checksum" ]] ||
+        fail "The OSV Scanner download does not match its pinned checksum. Retry, and report it if it repeats."
     chmod +x "$scanner"
 fi
 
+# Succeeds when a published module ships this exact version at runtime.
+is_runtime_dependency() {
+    awk -F= -v coordinate="$1:$2" '
+        $1 == coordinate {
+            count = split($2, configurations, ",")
+            for (i = 1; i <= count; i++) {
+                if (configurations[i] == "runtimeClasspath") found = 1
+            }
+        }
+        END { exit !found }
+    ' "${published_lockfiles[@]}"
+}
+
+# Prints the recheck date of the exception that lists this finding.
+exception_recheck() {
+    jq -r --arg package "$1" --arg ids "$2" '
+        ($ids | split(",")) as $id_list
+        | [.[]
+            | select(.advisory | IN($id_list[]))
+            | select((.path | split(">") | last | gsub("^\\s+|\\s+$"; "")) == $package)
+            | .recheck]
+        | first // empty
+    ' "$exceptions_file"
+}
+
 echo "==> Auditing locked dependencies"
-"$scanner" scan source --recursive .
+osv_report="$audit_workspace/osv.json"
+scan_status=0
+"$scanner" scan source --recursive --format json . >"$osv_report" || scan_status=$?
+case "$scan_status" in
+    0 | 1) ;;
+    *) fail "OSV Scanner failed with exit code $scan_status. Fix the error above, then rerun." ;;
+esac
+
+findings="$audit_workspace/findings.tsv"
+jq -r '
+    .results[]?.packages[]? as $entry
+    | $entry.groups[]?
+    | ((.ids + (.aliases // [])) | unique) as $ids
+    | ([$entry.vulnerabilities[]?
+        | select(.id | IN($ids[]))
+        | .affected[]?
+        | select(.package.name == $entry.package.name)
+        | .ranges[]?
+        | select(.type != "GIT")
+        | .events[]?
+        | select(has("fixed"))] | length > 0) as $fixed
+    | [$entry.package.name, $entry.package.version, ($ids | join(",")), ($fixed | tostring)]
+    | @tsv
+' "$osv_report" | sort -u >"$findings"
+
+if [[ "$scan_status" == 1 && ! -s "$findings" ]]; then
+    fail "OSV Scanner reported findings in a format this script cannot read. Update scripts/audit."
+fi
+
+blocked=0
+while IFS=$'\t' read -r package version ids fixed; do
+    finding="$package $version ($ids)"
+    if is_runtime_dependency "$package" "$version"; then
+        printf '%s blocks because a published module ships it at runtime. Upgrade it.\n' "$finding"
+        blocked=$((blocked + 1))
+    elif [[ "$fixed" == true ]]; then
+        printf '%s blocks because a fixed version exists. Upgrade it.\n' "$finding"
+        blocked=$((blocked + 1))
+    else
+        recheck="$(exception_recheck "$package" "$ids")"
+        if [[ -z "$recheck" ]]; then
+            printf '%s blocks because %s does not list it.\n' "$finding" "$exceptions_file"
+            blocked=$((blocked + 1))
+        elif [[ ! "$today" < "$recheck" ]]; then
+            printf '%s blocks because its recheck date %s has come. Review it again.\n' "$finding" "$recheck"
+            blocked=$((blocked + 1))
+        else
+            printf '%s passes until %s. It has no fix and no published module ships it.\n' "$finding" "$recheck"
+        fi
+    fi
+done <"$findings"
+
+if ((blocked > 0)); then
+    fail "The audit blocked $blocked findings. Upgrade the packages above."
+fi
 
 echo "Dependency licenses and vulnerabilities passed policy."
