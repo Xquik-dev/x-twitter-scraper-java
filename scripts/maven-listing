@@ -1,0 +1,141 @@
+#!/usr/bin/env bash
+
+# SPDX-FileCopyrightText: 2026 Xquik contributors
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# Prints what a release would upload from a local Maven repository folder.
+# For each module it prints the coordinates, the listing fields of the POM and
+# the files. It fails when a module lacks a field or a file that Maven Central
+# requires.
+#
+# Run scripts/maven-listing <repository folder> <group> <version>.
+
+set -euo pipefail
+
+if [[ $# -ne 3 ]]; then
+    echo "Run scripts/maven-listing <repository folder> <group> <version>." >&2
+    exit 2
+fi
+
+readonly repository_dir="$1"
+readonly group="$2"
+readonly version="$3"
+readonly group_dir="$repository_dir/${group//.//}"
+
+fail() {
+    echo "$1" >&2
+    exit 1
+}
+
+# Prints the text of the first POM element at this path, such as scm/url.
+pom_text() {
+    local pom="$1" path="/*[local-name()='project']" segment
+    local -a segments
+    IFS=/ read -r -a segments <<<"$2"
+    for segment in "${segments[@]}"; do
+        path="$path/*[local-name()='$segment']"
+    done
+    xmllint --xpath "normalize-space(($path)[1])" "$pom"
+}
+
+# Prints a required POM field, or stops when the POM lacks it.
+required_text() {
+    local value
+    value="$(pom_text "$1" "$2")"
+    [[ -n "$value" ]] ||
+        fail "$(basename -- "$1") has no $2. Maven Central requires it. Set it in the publish plugin under buildSrc, then rerun."
+    printf '%s' "$value"
+}
+
+print_field() {
+    printf '%-13s %s\n' "$1" "$2"
+}
+
+# Prints a count with the singular or the plural word that fits it.
+count_of() {
+    if (($1 == 1)); then
+        printf '%s %s' "$1" "$2"
+    else
+        printf '%s %s' "$1" "$3"
+    fi
+}
+
+list_module() {
+    local module_dir="$1"
+    local artifact pom pom_group pom_artifact pom_version coordinates file entries
+    local name description url license license_url developer developer_email scm_url scm_link
+    local -a files=()
+    artifact="$(basename -- "$(dirname -- "$module_dir")")"
+    pom="$module_dir/$artifact-$version.pom"
+    [[ -f "$pom" ]] || fail "$artifact has no POM for $version. Check the build output, then rerun."
+
+    # Each field is read in its own assignment, so a missing field stops the run.
+    pom_group="$(required_text "$pom" groupId)"
+    pom_artifact="$(required_text "$pom" artifactId)"
+    pom_version="$(required_text "$pom" version)"
+    coordinates="$pom_group:$pom_artifact:$pom_version"
+    [[ "$coordinates" == "$group:$artifact:$version" ]] ||
+        fail "The POM of $artifact names $coordinates, not $group:$artifact:$version. Fix the coordinates, then rerun."
+    name="$(required_text "$pom" name)"
+    description="$(required_text "$pom" description)"
+    url="$(required_text "$pom" url)"
+    license="$(required_text "$pom" licenses/license/name)"
+    license_url="$(required_text "$pom" licenses/license/url)"
+    developer="$(required_text "$pom" developers/developer/name)"
+    developer_email="$(required_text "$pom" developers/developer/email)"
+    scm_url="$(required_text "$pom" scm/url)"
+    scm_link="$(required_text "$pom" scm/connection)"
+
+    echo "==> Reading the Maven Central listing of $coordinates"
+    print_field "Group" "$group"
+    print_field "Artifact" "$artifact"
+    print_field "Version" "$version"
+    print_field "Name" "$name"
+    print_field "Description" "$description"
+    print_field "URL" "$url"
+    print_field "License" "$license"
+    print_field "License URL" "$license_url"
+    print_field "Developers" "$developer <$developer_email>"
+    print_field "SCM URL" "$scm_url"
+    print_field "SCM link" "$scm_link"
+
+    for file in "$artifact-$version.jar" "$artifact-$version-sources.jar" "$artifact-$version-javadoc.jar"; do
+        [[ -f "$module_dir/$file" ]] ||
+            fail "$artifact has no $file. Maven Central requires it. Check the build output, then rerun."
+    done
+    while IFS= read -r file; do
+        files+=("$file")
+    done < <(
+        find "$module_dir" -maxdepth 1 -type f \
+            ! -name '*.md5' ! -name '*.sha1' ! -name '*.sha256' ! -name '*.sha512' ! -name '*.asc' |
+            sed 's#.*/##' | LC_ALL=C sort
+    )
+    echo "$coordinates uploads $(count_of "${#files[@]}" file files), each with checksums and an OpenPGP signature."
+    for file in "${files[@]}"; do
+        if [[ "$file" == *.jar ]]; then
+            entries="$(unzip -Z1 "$module_dir/$file" | wc -l | tr -d '[:space:]')"
+            echo "$file holds $(count_of "$entries" entry entries)"
+        else
+            echo "$file"
+        fi
+    done
+}
+
+command -v xmllint >/dev/null 2>&1 ||
+    fail "xmllint is not installed. Install libxml2, then rerun."
+command -v unzip >/dev/null 2>&1 ||
+    fail "unzip is not installed. Install it, then rerun."
+
+module_dirs=()
+while IFS= read -r module_dir; do
+    module_dirs+=("$module_dir")
+done < <(find "$group_dir" -mindepth 2 -maxdepth 2 -type d -name "$version" 2>/dev/null | LC_ALL=C sort)
+if ((${#module_dirs[@]} == 0)); then
+    fail "$repository_dir holds no $group module at $version. Check the build output, then rerun."
+fi
+
+for module_dir in "${module_dirs[@]}"; do
+    list_module "$module_dir"
+done
+echo "Listed $(count_of "${#module_dirs[@]}" module modules) of $group at $version."

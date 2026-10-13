@@ -35,14 +35,14 @@ Fix timing depends on severity, exploitability, and release safety.
 
 ## Scope
 
-Security-sensitive areas include:
+Security-sensitive areas include the following.
 
 - API key and OAuth token handling
 - Request construction, redirects, retries, and uploads
 - Response parsing and error handling
 - Generated and maintained runtime code
 - Dependencies, build inputs, and published Maven artifacts
-- CI, release metadata, and documentation examples
+- Local check and release scripts, release metadata, and documentation examples
 
 Service availability and upstream platform behavior remain outside this repository.
 
@@ -66,7 +66,7 @@ Coordinate public disclosure with the maintainers.
 
 Maintainers may use a private advisory and request a CVE.
 
-Validated fixes require tests, independent review, and a patched release.
+Validated fixes require tests, the maintainer's review, and a patched release.
 
 The advisory or changelog records affected and fixed versions.
 

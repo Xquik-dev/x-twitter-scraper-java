@@ -28,7 +28,7 @@ buildscript {
 
 dependencies {
     testImplementation(project(":x-twitter-scraper-java"))
-    testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.22.1")
+    testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.22.3")
     testRuntimeOnly("org.codehaus.mojo:animal-sniffer-annotations:1.27")
     testRuntimeOnly("org.conscrypt:conscrypt-openjdk-uber:2.6.1")
     testRuntimeOnly("org.graalvm.sdk:nativeimage:25.1.3")

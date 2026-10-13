@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec by Stainless.
+// File generated from our OpenAPI spec.
 
 package com.x_twitter_scraper.api.models.x.profile
 
