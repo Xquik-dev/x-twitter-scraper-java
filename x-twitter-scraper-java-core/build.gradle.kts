@@ -55,3 +55,17 @@ dependencies {
 tasks.withType<Test>().configureEach {
     jvmArgs("-javaagent:${mockitoAgent.asPath}")
 }
+
+// Jazzer replays its generated corpus, the ignored .cifuzz-corpus folder in the
+// working directory, whenever a coverage agent runs, and JaCoCo is one. Outside a
+// fuzz campaign the tests run in an empty folder, so every machine replays only
+// the inputs committed under src/test/resources.
+val fuzzing = providers.environmentVariable("JAZZER_FUZZ").map { it.isNotEmpty() }.orElse(false)
+tasks.named<Test>("test") {
+    inputs.property("jazzerFuzz", fuzzing)
+    if (!fuzzing.get()) {
+        val regressionDirectory = layout.buildDirectory.dir("regression-tests").get().asFile
+        workingDir = regressionDirectory
+        doFirst { regressionDirectory.mkdirs() }
+    }
+}

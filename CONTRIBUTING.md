@@ -103,6 +103,8 @@ The raw report keeps generated-source coverage visible.
 Skipped tests are forbidden.
 
 Add regression tests for every corrected defect.
+The tests replay only fuzz inputs committed under `src/test/resources`, never the ignored `.cifuzz-corpus` folder, and never reuse a cached test result.
+When fuzzing finds a failure, Jazzer saves the input in `RetryAfterFuzzTestInputs` next to the test. Commit it with the fix as a regression input.
 
 Service tests accept literal loopback traffic only.
 
