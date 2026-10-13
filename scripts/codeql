@@ -8,7 +8,8 @@
 # the source files. CodeQL traces a Gradle build, and that build rewrites the
 # checksum metadata and replaces the build output. A scan of the working tree
 # would leave it changed, and a release build after the checks would start
-# from files nobody reviewed. Any result fails the run.
+# from files nobody reviewed. Any result fails the run, and so does any file
+# that CodeQL could not read.
 
 set -euo pipefail
 
@@ -18,13 +19,26 @@ cd -- "$(dirname -- "$0")/.."
 # copy builds with the newest stable Kotlin plugin.
 readonly prerelease_kotlin="2.4.20-Beta2"
 readonly stable_kotlin="2.4.10"
-readonly query_suite="codeql/java-queries:codeql-suites/java-security-extended.qls"
+# The CLI and the query pack are pinned, so a new CodeQL release cannot change
+# the scan without a change here.
+readonly codeql_version="2.27.2"
+readonly query_suite="codeql/java-queries@1.11.12:codeql-suites/java-security-extended.qls"
+
+found_version="$(codeql version --format=terse)"
+if [[ "$found_version" != "$codeql_version" ]]; then
+    echo "CodeQL $found_version found, but this check pins $codeql_version. Install CodeQL $codeql_version from https://github.com/github/codeql-cli-binaries/releases/tag/v$codeql_version, then rerun." >&2
+    exit 1
+fi
 
 codeql_workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-java-codeql.XXXXXX")"
 trap 'rm -rf -- "$codeql_workspace"' EXIT
 readonly source_root="$codeql_workspace/source"
 readonly database="$codeql_workspace/database"
-readonly results="$codeql_workspace/results.csv"
+readonly results="$codeql_workspace/results.sarif"
+# CodeQL goes on after it fails to read a file and scans only the code it
+# could read. These diagnostic queries of the suite name each such file. A
+# warning names a source file that CodeQL skipped, such as one that uses Lombok.
+readonly extraction_diagnostics='["java/diagnostics/extraction-errors","java/diagnostics/extraction-warnings"]'
 
 echo "==> Copying the source files for CodeQL"
 mkdir -p -- "$source_root"
@@ -63,12 +77,33 @@ fi
 echo "==> Running the CodeQL security-extended queries"
 codeql database analyze "$database" "$query_suite" \
     --download \
-    --format=csv \
+    --format=sarif-latest \
     --output="$results" \
     --threads=0
 
-if [[ -s "$results" ]]; then
-    cat -- "$results"
+# The report lists every diagnostic query that ran, so a suite without these
+# diagnostics cannot pass.
+missing="$(jq -r --argjson ids "$extraction_diagnostics" \
+    '$ids - [.runs[].tool["driver"].notifications[]?.id] | join(" and ")' "$results")"
+if [[ -n "$missing" ]]; then
+    echo "The CodeQL scan lacks $missing, so it cannot show that it read every file. Make the suite in scripts/codeql run each missing diagnostic query." >&2
+    exit 1
+fi
+# CodeQL names each file by its path in the copy, which the message shortens
+# to the path from the copy's root.
+unread="$(jq -r --argjson ids "$extraction_diagnostics" \
+    '.runs[].invocations[]?.toolExecutionNotifications[]? | select(.descriptor.id as $id | $ids | index($id)) | .message.text' "$results" |
+    sed -E "s#[^ ]*/${codeql_workspace##*/}/source/##g")"
+if [[ -n "$unread" ]]; then
+    printf '%s\n' "$unread" >&2
+    echo "CodeQL could not read the Java or Kotlin code named above, so the scan is incomplete. Fix that code so it compiles, then rerun." >&2
+    exit 1
+fi
+
+result_count="$(jq '[.runs[].results[]] | length' "$results")"
+if ((result_count > 0)); then
+    jq -r '.runs[].results[] | .locations[0].physicalLocation as $where
+        | "\(.ruleId) at \($where.artifactLocation.uri):\($where.region.startLine). \(.message.text)"' "$results"
     echo "CodeQL found the results above. Fix each one." >&2
     exit 1
 fi
