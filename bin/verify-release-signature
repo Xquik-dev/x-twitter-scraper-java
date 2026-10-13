@@ -76,6 +76,10 @@ if ! grep -Fq "[GNUPG:] VALIDSIG $expected_fingerprint " <<<"$signature_status";
     exit 1
 fi
 
-digest="$(sha256sum "$verification_workspace/$artifact" | awk '{print $1}')"
+if command -v sha256sum >/dev/null 2>&1; then
+    digest="$(sha256sum "$verification_workspace/$artifact" | awk '{print $1}')"
+else
+    digest="$(shasum -a 256 "$verification_workspace/$artifact" | awk '{print $1}')"
+fi
 printf 'Verified %s with fingerprint %s and SHA-256 %s.\n' \
     "$artifact" "$expected_fingerprint" "$digest"

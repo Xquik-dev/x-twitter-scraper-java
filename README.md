@@ -1,28 +1,39 @@
-# Xquik Java SDK: Twitter Search, Followers & X Automation
+# X API & Twitter API Java SDK by Xquik
 
-[![CI](https://github.com/Xquik-dev/x-twitter-scraper-java/actions/workflows/ci.yml/badge.svg)](https://github.com/Xquik-dev/x-twitter-scraper-java/actions/workflows/ci.yml)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13735/badge)](https://www.bestpractices.dev/projects/13735)
-
-Search Twitter, read timelines, fetch profiles & export followers with Xquik.
-Use typed Java methods for media, webhooks & X automation.
-
-[API Reference](https://docs.xquik.com/api-reference/overview) | [Authentication](https://xquik.com/auth.md) | [Javadocs](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java-core)
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.xquik.api/x-twitter-scraper-java)](https://central.sonatype.com/artifact/com.xquik.api/x-twitter-scraper-java/0.10.3)
-[![Javadocs](https://javadoc.io/badge2/com.xquik.api/x-twitter-scraper-java-core/0.10.3/javadoc.svg)](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java-core/0.10.3)
+[![Maven Central](https://img.shields.io/maven-central/v/com.xquik.api/x-twitter-scraper-java)](https://central.sonatype.com/artifact/com.xquik.api/x-twitter-scraper-java/0.10.4)
+[![Javadocs](https://javadoc.io/badge2/com.xquik.api/x-twitter-scraper-java-core/0.10.4/javadoc.svg)](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java-core/0.10.4)
 
 <!-- x-release-please-end -->
 
-## Java Client
+Use this X API & Twitter API SDK to work with X from Java.
+It works as a Twitter scraper & tweet scraper for search, profiles & followers.
+Scrape Twitter timelines, lists, communities & trends into typed Java models.
+Manage media, webhooks, monitors & X automation with sync & async clients.
+It provides a Twitter API alternative through documented Xquik REST routes.
 
+Xquik is the world's fastest and cheapest X Twitter scraper service with the most complete X data.
+Xquik charges only for delivered, unique, filter-matching results and never pads rows.
+
+> Xquik is an independent third-party service. Not affiliated with X Corp.
+> "Twitter" and "X" are trademarks of X Corp.
+
+[API Reference](https://docs.xquik.com/api-reference/overview) | [Authentication](https://xquik.com/auth.md) | [Javadocs](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java-core)
+
+## Java client or REST
+
+The typed Maven Central package calls the documented Xquik REST API.
+It does not call or emulate the official X API.
 Use this SDK for Java services with builders and typed models.
 Use synchronous calls or `client.async()` for `CompletableFuture` pipelines.
+Call REST directly when a Maven dependency does not fit.
 
-## Common Twitter & X Tasks
+## Common Twitter & X tasks
 
-| Task | REST Route | Java Service |
+| Task | REST route | Java service |
 | --- | --- | --- |
 | Run an advanced Twitter search | `GET /x/tweets/search` | `client.x().tweets()` |
 | Retrieve tweets, threads, replies, or quotes | `GET /x/tweets/{id}`, `GET /x/tweets/{id}/thread` | `client.x().tweets()` |
@@ -49,27 +60,27 @@ Use synchronous calls or `client.async()` for `CompletableFuture` pipelines.
 
 <!-- x-release-please-start-version -->
 
-Gradle:
+Add the Gradle dependency.
 
 ```kotlin
-implementation("com.xquik.api:x-twitter-scraper-java:0.10.3")
+implementation("com.xquik.api:x-twitter-scraper-java:0.10.4")
 ```
 
-Maven:
+Or add the Maven dependency.
 
 ```xml
 <dependency>
   <groupId>com.xquik.api</groupId>
   <artifactId>x-twitter-scraper-java</artifactId>
-  <version>0.10.3</version>
+  <version>0.10.4</version>
 </dependency>
 ```
 
 <!-- x-release-please-end -->
 
-## Verify Maven Signatures
+## Verify Maven signatures
 
-Every Maven Central file has a detached OpenPGP signature. Set `VERSION`, then verify the artifact:
+Every Maven Central file has a detached OpenPGP signature. Set `VERSION`, then verify the artifact.
 
 ```sh
 version=VERSION
@@ -85,7 +96,7 @@ Confirm fingerprint `6965 E561 C0AC EE32 060A B961 D203 7E41 57E6 2A59`.
 
 ## Authenticate
 
-Create an API key in the Xquik dashboard. Then set:
+Create an API key in the Xquik dashboard. Then set it in your shell.
 
 ```bash
 export X_TWITTER_SCRAPER_API_KEY="your-api-key"
@@ -93,7 +104,7 @@ export X_TWITTER_SCRAPER_API_KEY="your-api-key"
 
 OAuth users can set `X_TWITTER_SCRAPER_BEARER_TOKEN` instead.
 
-Create one client and reuse it:
+Create 1 client and reuse it.
 
 ```java
 import com.x_twitter_scraper.api.client.XTwitterScraperClient;
@@ -102,7 +113,7 @@ import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient;
 XTwitterScraperClient client = XTwitterScraperOkHttpClient.fromEnv();
 ```
 
-Pass credentials directly when needed:
+Pass credentials directly when needed.
 
 ```java
 XTwitterScraperClient client = XTwitterScraperOkHttpClient.builder()
@@ -110,9 +121,9 @@ XTwitterScraperClient client = XTwitterScraperOkHttpClient.builder()
     .build();
 ```
 
-Supported client settings:
+The client reads these settings.
 
-| Setting | System Property | Environment Variable | Default |
+| Setting | System property | Environment variable | Default |
 | --- | --- | --- | --- |
 | API key | `xtwitterscraper.apiKey` | `X_TWITTER_SCRAPER_API_KEY` | None |
 | OAuth token | `xtwitterscraper.bearerToken` | `X_TWITTER_SCRAPER_BEARER_TOKEN` | None |
@@ -120,7 +131,7 @@ Supported client settings:
 
 System properties override environment variables.
 
-## Search Tweets
+## Search tweets
 
 ```java
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams;
@@ -134,15 +145,15 @@ TweetSearchParams params = TweetSearchParams.builder()
 TweetSearchResponse result = client.x().tweets().search(params);
 ```
 
-Close the client when your application stops:
+Close the client when your application stops.
 
 ```java
 client.close();
 ```
 
-## Use Async Calls
+## Use async calls
 
-Call `async()` to receive `CompletableFuture` results:
+Call `async()` to receive `CompletableFuture` results.
 
 ```java
 import java.util.concurrent.CompletableFuture;
@@ -151,9 +162,9 @@ CompletableFuture<TweetSearchResponse> result =
     client.async().x().tweets().search(params);
 ```
 
-## Configure Retries
+## Configure retries
 
-The client retries eligible failures twice by default.
+The client retries eligible failures 2 times by default.
 
 ```java
 XTwitterScraperClient client = XTwitterScraperOkHttpClient.builder()
@@ -164,9 +175,9 @@ XTwitterScraperClient client = XTwitterScraperOkHttpClient.builder()
 
 Successful HTTP responses can contain structured API errors. Handle documented codes.
 
-## Read Raw Responses
+## Read raw responses
 
-Use `withRawResponse()` when you need headers or status codes:
+Use `withRawResponse()` when you need headers or status codes.
 
 ```java
 import com.x_twitter_scraper.api.core.http.HttpResponseFor;
@@ -183,12 +194,12 @@ Binary endpoints return `HttpResponse`. Close each response after reading it.
 
 ## Support
 
-- API questions: [docs.xquik.com](https://docs.xquik.com)
-- Security reports: [SECURITY.md](SECURITY.md)
-- SDK defects: [GitHub Issues](https://github.com/Xquik-dev/x-twitter-scraper-java/issues)
-- Contributions: [CONTRIBUTING.md](CONTRIBUTING.md)
-- Governance: [GOVERNANCE.md](GOVERNANCE.md)
-- OpenSSF evidence: [OPENSSF.md](OPENSSF.md)
+- [API questions at docs.xquik.com](https://docs.xquik.com)
+- [Security reports in SECURITY.md](SECURITY.md)
+- [SDK defects in GitHub Issues](https://github.com/Xquik-dev/x-twitter-scraper-java/issues)
+- [Contributions in CONTRIBUTING.md](CONTRIBUTING.md)
+- [Governance in GOVERNANCE.md](GOVERNANCE.md)
+- [OpenSSF evidence and current limitations in OPENSSF.md](OPENSSF.md)
 
 ## License
 

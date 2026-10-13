@@ -46,10 +46,10 @@ configure<MavenPublishBaseExtension> {
     )
 
     pom {
-        name.set("Xquik Java SDK")
+        name.set("X API & Twitter API Java SDK by Xquik")
         description.set(
-            "Java SDK for Twitter search, followers, webhooks & X automation through Xquik. " +
-                "Not affiliated with X Corp. \"Twitter\" and \"X\" are trademarks of X Corp."
+            "X API & Twitter API SDK for Java. Scrape Twitter search, profiles & followers " +
+                "as a Twitter scraper & tweet scraper. Not affiliated with X Corp."
         )
         url.set("https://xquik.com")
 

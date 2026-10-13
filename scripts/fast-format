@@ -9,7 +9,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 if [ $# -eq 0 ]; then
-    echo "Usage: $0 <file-with-paths> [additional-formatter-args...]"
+    echo "Run $0 <file-with-paths> [additional-formatter-args...]."
     echo "Provide one file path per line."
     exit 1
 fi
@@ -17,7 +17,7 @@ fi
 FILE_LIST="$1"
 
 if [ ! -f "$FILE_LIST" ]; then
-    echo "File list not found: $FILE_LIST. Check the path."
+    echo "File list $FILE_LIST was not found. Check the path."
     exit 1
 fi
 

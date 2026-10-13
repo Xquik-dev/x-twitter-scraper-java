@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec by Stainless.
+// File generated from our OpenAPI spec.
 
 package com.x_twitter_scraper.api.models.monitors.keywords
 
@@ -28,7 +28,7 @@ import kotlin.jvm.optionals.getOrNull
 
 /**
  * Creates a keyword monitor. Keyword monitors are unlimited. Active monitors check every 1 second
- * and cost 21 credits per hour. Events and webhook deliveries are included. Creation requires
+ * and cost 30 credits per hour. Events and webhook deliveries are included. Creation requires
  * available credits for the first hourly charge.
  */
 class KeywordCreateParams

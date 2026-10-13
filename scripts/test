@@ -41,7 +41,7 @@ if (( report_count == 0 || test_count == 0 )); then
     exit 1
 fi
 
-printf 'Verified %d tests across %d suites: %d failures, %d errors, %d skipped.\n' \
+printf 'Verified %d tests across %d suites with %d failures, %d errors and %d skipped.\n' \
     "$test_count" "$report_count" "$failure_count" "$error_count" "$skipped_count"
 
 if (( failure_count != 0 || error_count != 0 || skipped_count != 0 )); then

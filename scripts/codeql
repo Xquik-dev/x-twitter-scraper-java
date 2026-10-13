@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+
+# SPDX-FileCopyrightText: 2026 Xquik contributors
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# Runs the CodeQL security-extended queries for Java and Kotlin on a copy of
+# the source files. CodeQL traces a Gradle build, and that build rewrites the
+# checksum metadata and replaces the build output. A scan of the working tree
+# would leave it changed, and a release build after the checks would start
+# from files nobody reviewed. Any result fails the run.
+
+set -euo pipefail
+
+cd -- "$(dirname -- "$0")/.."
+
+# The CodeQL extractor refuses a Kotlin compiler that is a pre-release, so the
+# copy builds with the newest stable Kotlin plugin.
+readonly prerelease_kotlin="2.4.20-Beta2"
+readonly stable_kotlin="2.4.10"
+readonly query_suite="codeql/java-queries:codeql-suites/java-security-extended.qls"
+
+codeql_workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-java-codeql.XXXXXX")"
+trap 'rm -rf -- "$codeql_workspace"' EXIT
+readonly source_root="$codeql_workspace/source"
+readonly database="$codeql_workspace/database"
+readonly results="$codeql_workspace/results.csv"
+
+echo "==> Copying the source files for CodeQL"
+mkdir -p -- "$source_root"
+git ls-files --cached --others --exclude-standard -z |
+    tar --null -T - -cf - |
+    tar -xf - -C "$source_root"
+(
+    cd -- "$source_root"
+    perl -pi -e "s/\\Q$prerelease_kotlin\\E/$stable_kotlin/g" \
+        buildSrc/build.gradle.kts ./*/gradle.lockfile
+)
+
+# Kotlin compiles inside the traced Gradle process. A Kotlin daemon that an
+# earlier build left running would compile outside the trace, and CodeQL would
+# see no Kotlin code.
+echo "==> Building the CodeQL database"
+codeql database create "$database" \
+    --language=java-kotlin \
+    --source-root="$source_root" \
+    --threads=0 \
+    --command="./gradlew clean classes --write-verification-metadata sha256 --no-daemon --no-build-cache --no-configuration-cache -Pkotlin.compiler.execution.strategy=in-process"
+
+source_count="$(
+    find "$source_root" -path '*/src/main/*' -type f \( -name '*.kt' -o -name '*.java' \) |
+        wc -l | tr -d '[:space:]'
+)"
+scanned_count="$(
+    unzip -Z1 "$database/src.zip" |
+        grep -c -E '/src/main/.*\.(kt|java)$' || true
+)"
+if ((source_count == 0 || scanned_count < source_count)); then
+    echo "CodeQL scanned $scanned_count of $source_count Java and Kotlin source files. Fix the build above so it compiles every file." >&2
+    exit 1
+fi
+
+echo "==> Running the CodeQL security-extended queries"
+codeql database analyze "$database" "$query_suite" \
+    --download \
+    --format=csv \
+    --output="$results" \
+    --threads=0
+
+if [[ -s "$results" ]]; then
+    cat -- "$results"
+    echo "CodeQL found the results above. Fix each one." >&2
+    exit 1
+fi
+
+echo "CodeQL scanned $scanned_count of $source_count Java and Kotlin source files and found no results."
