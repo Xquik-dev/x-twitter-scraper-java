@@ -9,7 +9,9 @@ set -euo pipefail
 cd -- "$(dirname -- "$0")/.."
 
 echo "==> Running tests"
-./gradlew test "$@"
+# A test result from the build cache could come from another tree, so the tests
+# always run here.
+./gradlew test --no-build-cache --rerun "$@"
 
 test_count=0
 skipped_count=0
