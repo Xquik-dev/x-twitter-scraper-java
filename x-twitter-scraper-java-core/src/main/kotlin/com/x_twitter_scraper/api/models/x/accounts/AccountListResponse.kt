@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.x.accounts
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -38,7 +36,7 @@ private constructor(
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun accounts(): List<XAccount> = accounts.getRequired("accounts")
 
@@ -88,13 +86,7 @@ private constructor(
 
         fun accounts(accounts: List<XAccount>) = accounts(JsonField.of(accounts))
 
-        /**
-         * Sets [Builder.accounts] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.accounts] with a well-typed `List<XAccount>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.accounts] to an arbitrary JSON value. */
         fun accounts(accounts: JsonField<List<XAccount>>) = apply {
             this.accounts = accounts.map { it.toMutableList() }
         }
@@ -176,11 +168,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int = (accounts.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 

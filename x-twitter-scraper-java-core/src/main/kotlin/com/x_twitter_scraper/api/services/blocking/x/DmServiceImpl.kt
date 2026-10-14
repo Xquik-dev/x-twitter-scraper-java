@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.blocking.x
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -41,12 +39,9 @@ class DmServiceImpl internal constructor(private val clientOptions: ClientOption
     override fun retrieveHistory(
         params: DmRetrieveHistoryParams,
         requestOptions: RequestOptions,
-    ): DmRetrieveHistoryResponse =
-        // get /x/dm/{userId}/history
-        withRawResponse().retrieveHistory(params, requestOptions).parse()
+    ): DmRetrieveHistoryResponse = withRawResponse().retrieveHistory(params, requestOptions).parse()
 
     override fun send(params: DmSendParams, requestOptions: RequestOptions): DmSendResponse =
-        // post /x/dm/{userId}
         withRawResponse().send(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -69,8 +64,6 @@ class DmServiceImpl internal constructor(private val clientOptions: ClientOption
             params: DmRetrieveHistoryParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<DmRetrieveHistoryResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("userId", params.userId().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -99,8 +92,6 @@ class DmServiceImpl internal constructor(private val clientOptions: ClientOption
             params: DmSendParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<DmSendResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("userId", params.userId().getOrNull())
             val request =
                 HttpRequest.builder()

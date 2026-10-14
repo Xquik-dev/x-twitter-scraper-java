@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.blocking.x.tweets
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -43,16 +41,12 @@ class RetweetServiceImpl internal constructor(private val clientOptions: ClientO
     override fun create(
         params: RetweetCreateParams,
         requestOptions: RequestOptions,
-    ): RetweetCreateResponse =
-        // post /x/tweets/{id}/retweet
-        withRawResponse().create(params, requestOptions).parse()
+    ): RetweetCreateResponse = withRawResponse().create(params, requestOptions).parse()
 
     override fun delete(
         params: RetweetDeleteParams,
         requestOptions: RequestOptions,
-    ): RetweetDeleteResponse =
-        // delete /x/tweets/{id}/retweet
-        withRawResponse().delete(params, requestOptions).parse()
+    ): RetweetDeleteResponse = withRawResponse().delete(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         RetweetService.WithRawResponse {
@@ -74,8 +68,6 @@ class RetweetServiceImpl internal constructor(private val clientOptions: ClientO
             params: RetweetCreateParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<RetweetCreateResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -105,8 +97,6 @@ class RetweetServiceImpl internal constructor(private val clientOptions: ClientO
             params: RetweetDeleteParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<RetweetDeleteResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

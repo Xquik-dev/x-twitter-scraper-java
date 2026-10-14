@@ -4,25 +4,15 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Runs the CodeQL security-extended queries for Java and Kotlin on a copy of
-# the source files. CodeQL traces a Gradle build, and that build rewrites the
-# checksum metadata and replaces the build output. A scan of the working tree
-# would leave it changed, and a release build after the checks would start
-# from files nobody reviewed. Any result fails the run, and so does any file
-# that CodeQL could not read.
-
 set -euo pipefail
 
 cd -- "$(dirname -- "$0")/.."
 
-# The CodeQL extractor refuses a Kotlin compiler that is a pre-release, so the
-# copy builds with the newest stable Kotlin plugin.
 readonly prerelease_kotlin="2.4.20-Beta2"
 readonly stable_kotlin="2.4.10"
-# The CLI and the query pack are pinned, so a new CodeQL release cannot change
-# the scan without a change here.
 readonly codeql_version="2.27.2"
 readonly query_suite="codeql/java-queries@1.11.12:codeql-suites/java-security-extended.qls"
+readonly comment_queries="codeql/no-code-comments"
 
 found_version="$(codeql version --format=terse)"
 if [[ "$found_version" != "$codeql_version" ]]; then
@@ -35,9 +25,6 @@ trap 'rm -rf -- "$codeql_workspace"' EXIT
 readonly source_root="$codeql_workspace/source"
 readonly database="$codeql_workspace/database"
 readonly results="$codeql_workspace/results.sarif"
-# CodeQL goes on after it fails to read a file and scans only the code it
-# could read. These diagnostic queries of the suite name each such file. A
-# warning names a source file that CodeQL skipped, such as one that uses Lombok.
 readonly extraction_diagnostics='["java/diagnostics/extraction-errors","java/diagnostics/extraction-warnings"]'
 
 echo "==> Copying the source files for CodeQL"
@@ -51,9 +38,6 @@ git ls-files --cached --others --exclude-standard -z |
         buildSrc/build.gradle.kts ./*/gradle.lockfile
 )
 
-# Kotlin compiles inside the traced Gradle process. A Kotlin daemon that an
-# earlier build left running would compile outside the trace, and CodeQL would
-# see no Kotlin code.
 echo "==> Building the CodeQL database"
 codeql database create "$database" \
     --language=java-kotlin \
@@ -74,23 +58,22 @@ if ((source_count == 0 || scanned_count < source_count)); then
     exit 1
 fi
 
-echo "==> Running the CodeQL security-extended queries"
-codeql database analyze "$database" "$query_suite" \
+echo "==> Installing the libraries of the comment queries"
+codeql pack install "$comment_queries"
+
+echo "==> Running the CodeQL security-extended and comment queries"
+codeql database analyze "$database" "$query_suite" "$comment_queries" \
     --download \
     --format=sarif-latest \
     --output="$results" \
     --threads=0
 
-# The report lists every diagnostic query that ran, so a suite without these
-# diagnostics cannot pass.
 missing="$(jq -r --argjson ids "$extraction_diagnostics" \
     '$ids - [.runs[].tool["driver"].notifications[]?.id] | join(" and ")' "$results")"
 if [[ -n "$missing" ]]; then
     echo "The CodeQL scan lacks $missing, so it cannot show that it read every file. Make the suite in scripts/codeql run each missing diagnostic query." >&2
     exit 1
 fi
-# CodeQL names each file by its path in the copy, which the message shortens
-# to the path from the copy's root.
 unread="$(jq -r --argjson ids "$extraction_diagnostics" \
     '.runs[].invocations[]?.toolExecutionNotifications[]? | select(.descriptor.id as $id | $ids | index($id)) | .message.text' "$results" |
     sed -E "s#[^ ]*/${codeql_workspace##*/}/source/##g")"

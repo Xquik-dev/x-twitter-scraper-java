@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.credits
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -63,14 +61,14 @@ private constructor(
      * Configured dollar amount for each automatic top-up.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun autoTopupAmountDollars(): Double =
         autoTopupAmountDollars.getRequired("auto_topup_amount_dollars")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun autoTopupEnabled(): Boolean = autoTopupEnabled.getRequired("auto_topup_enabled")
 
@@ -79,7 +77,7 @@ private constructor(
      * string.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun autoTopupThreshold(): String = autoTopupThreshold.getRequired("auto_topup_threshold")
 
@@ -88,7 +86,7 @@ private constructor(
      * Number.MAX_SAFE_INTEGER.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun balance(): String = balance.getRequired("balance")
 
@@ -96,7 +94,7 @@ private constructor(
      * Lifetime purchased credits as a bigint string.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun lifetimePurchased(): String = lifetimePurchased.getRequired("lifetime_purchased")
 
@@ -104,7 +102,7 @@ private constructor(
      * Lifetime consumed credits as a bigint string.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun lifetimeUsed(): String = lifetimeUsed.getRequired("lifetime_used")
 
@@ -221,13 +219,7 @@ private constructor(
         fun autoTopupAmountDollars(autoTopupAmountDollars: Double) =
             autoTopupAmountDollars(JsonField.of(autoTopupAmountDollars))
 
-        /**
-         * Sets [Builder.autoTopupAmountDollars] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.autoTopupAmountDollars] with a well-typed [Double] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.autoTopupAmountDollars] to an arbitrary JSON value. */
         fun autoTopupAmountDollars(autoTopupAmountDollars: JsonField<Double>) = apply {
             this.autoTopupAmountDollars = autoTopupAmountDollars
         }
@@ -235,13 +227,7 @@ private constructor(
         fun autoTopupEnabled(autoTopupEnabled: Boolean) =
             autoTopupEnabled(JsonField.of(autoTopupEnabled))
 
-        /**
-         * Sets [Builder.autoTopupEnabled] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.autoTopupEnabled] with a well-typed [Boolean] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.autoTopupEnabled] to an arbitrary JSON value. */
         fun autoTopupEnabled(autoTopupEnabled: JsonField<Boolean>) = apply {
             this.autoTopupEnabled = autoTopupEnabled
         }
@@ -253,13 +239,7 @@ private constructor(
         fun autoTopupThreshold(autoTopupThreshold: String) =
             autoTopupThreshold(JsonField.of(autoTopupThreshold))
 
-        /**
-         * Sets [Builder.autoTopupThreshold] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.autoTopupThreshold] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.autoTopupThreshold] to an arbitrary JSON value. */
         fun autoTopupThreshold(autoTopupThreshold: JsonField<String>) = apply {
             this.autoTopupThreshold = autoTopupThreshold
         }
@@ -270,25 +250,14 @@ private constructor(
          */
         fun balance(balance: String) = balance(JsonField.of(balance))
 
-        /**
-         * Sets [Builder.balance] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.balance] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.balance] to an arbitrary JSON value. */
         fun balance(balance: JsonField<String>) = apply { this.balance = balance }
 
         /** Lifetime purchased credits as a bigint string. */
         fun lifetimePurchased(lifetimePurchased: String) =
             lifetimePurchased(JsonField.of(lifetimePurchased))
 
-        /**
-         * Sets [Builder.lifetimePurchased] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.lifetimePurchased] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.lifetimePurchased] to an arbitrary JSON value. */
         fun lifetimePurchased(lifetimePurchased: JsonField<String>) = apply {
             this.lifetimePurchased = lifetimePurchased
         }
@@ -296,13 +265,7 @@ private constructor(
         /** Lifetime consumed credits as a bigint string. */
         fun lifetimeUsed(lifetimeUsed: String) = lifetimeUsed(JsonField.of(lifetimeUsed))
 
-        /**
-         * Sets [Builder.lifetimeUsed] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.lifetimeUsed] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.lifetimeUsed] to an arbitrary JSON value. */
         fun lifetimeUsed(lifetimeUsed: JsonField<String>) = apply {
             this.lifetimeUsed = lifetimeUsed
         }
@@ -387,11 +350,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (if (autoTopupAmountDollars.asKnown().isPresent) 1 else 0) +

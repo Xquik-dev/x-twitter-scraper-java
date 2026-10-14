@@ -183,12 +183,11 @@ internal constructor(@JvmSynthetic internal val okHttpClient: okhttp3.OkHttpClie
         fun build(): OkHttpClient =
             OkHttpClient(
                 okhttp3.OkHttpClient.Builder()
-                    // `RetryingHttpClient` handles retries if the user enabled them.
                     .retryOnConnectionFailure(false)
-                    // Never forward SDK credentials through an automatic redirect.
                     .followRedirects(false)
                     .followSslRedirects(false)
                     // Bound numeric retry delays before OkHttp parses them as 32-bit integers.
+                    // https://github.com/square/okhttp/blob/parent-5.5.0/okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/http/RetryAndFollowUpInterceptor.kt#L344-L345
                     .addNetworkInterceptor { chain ->
                         chain.proceed(chain.request()).withBoundedRetryAfter()
                     }
@@ -243,8 +242,6 @@ internal constructor(@JvmSynthetic internal val okHttpClient: okhttp3.OkHttpClie
                     }
                     .build()
                     .apply {
-                        // We usually make all our requests to the same host so it makes sense to
-                        // raise the per-host limit to the overall limit.
                         dispatcher.maxRequestsPerHost = dispatcher.maxRequests
                     }
             )
@@ -280,7 +277,6 @@ private fun HttpRequest.toRequest(client: okhttp3.OkHttpClient?): Request {
     return builder.build()
 }
 
-/** `OkHttpClient` always requires a request body for some methods. */
 private fun requiresBody(method: HttpMethod): Boolean =
     when (method) {
         HttpMethod.POST,

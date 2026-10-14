@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.blocking
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -39,7 +37,6 @@ class RadarServiceImpl internal constructor(private val clientOptions: ClientOpt
         params: RadarRetrieveTrendingTopicsParams,
         requestOptions: RequestOptions,
     ): RadarRetrieveTrendingTopicsResponse =
-        // get /radar
         withRawResponse().retrieveTrendingTopics(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :

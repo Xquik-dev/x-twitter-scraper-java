@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.x.profile
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -38,37 +36,31 @@ private constructor(
      * X account (@username or ID) to update profile
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun account(): String = body.account()
 
     /**
      * Bio description
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun description(): Optional<String> = body.description()
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun location(): Optional<String> = body.location()
 
     /**
      * Display name
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun name(): Optional<String> = body.name()
 
     /**
      * Website URL
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun url(): Optional<String> = body.url()
 
@@ -149,73 +141,36 @@ private constructor(
 
         fun idempotencyKey(idempotencyKey: String) = apply { this.idempotencyKey = idempotencyKey }
 
-        /**
-         * Sets the entire request body.
-         *
-         * This is generally only useful if you are already constructing the body separately.
-         * Otherwise, it's more convenient to use the top-level setters instead:
-         * - [account]
-         * - [description]
-         * - [location]
-         * - [name]
-         * - [url]
-         * - etc.
-         */
+        /** Sets the entire request body. */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
         /** X account (@username or ID) to update profile */
         fun account(account: String) = apply { body.account(account) }
 
-        /**
-         * Sets [Builder.account] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.account] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.account] to an arbitrary JSON value. */
         fun account(account: JsonField<String>) = apply { body.account(account) }
 
         /** Bio description */
         fun description(description: String) = apply { body.description(description) }
 
-        /**
-         * Sets [Builder.description] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.description] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.description] to an arbitrary JSON value. */
         fun description(description: JsonField<String>) = apply { body.description(description) }
 
         fun location(location: String) = apply { body.location(location) }
 
-        /**
-         * Sets [Builder.location] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.location] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.location] to an arbitrary JSON value. */
         fun location(location: JsonField<String>) = apply { body.location(location) }
 
         /** Display name */
         fun name(name: String) = apply { body.name(name) }
 
-        /**
-         * Sets [Builder.name] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.name] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.name] to an arbitrary JSON value. */
         fun name(name: JsonField<String>) = apply { body.name(name) }
 
         /** Website URL */
         fun url(url: String) = apply { body.url(url) }
 
-        /**
-         * Sets [Builder.url] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.url] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.url] to an arbitrary JSON value. */
         fun url(url: JsonField<String>) = apply { body.url(url) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
@@ -397,38 +352,31 @@ private constructor(
          * X account (@username or ID) to update profile
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun account(): String = account.getRequired("account")
 
         /**
          * Bio description
          *
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
         fun description(): Optional<String> = description.getOptional("description")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun location(): Optional<String> = location.getOptional("location")
 
         /**
          * Display name
          *
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
         fun name(): Optional<String> = name.getOptional("name")
 
         /**
          * Website URL
          *
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
         fun url(): Optional<String> = url.getOptional("url")
 
@@ -517,62 +465,32 @@ private constructor(
             /** X account (@username or ID) to update profile */
             fun account(account: String) = account(JsonField.of(account))
 
-            /**
-             * Sets [Builder.account] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.account] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.account] to an arbitrary JSON value. */
             fun account(account: JsonField<String>) = apply { this.account = account }
 
             /** Bio description */
             fun description(description: String) = description(JsonField.of(description))
 
-            /**
-             * Sets [Builder.description] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.description] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.description] to an arbitrary JSON value. */
             fun description(description: JsonField<String>) = apply {
                 this.description = description
             }
 
             fun location(location: String) = location(JsonField.of(location))
 
-            /**
-             * Sets [Builder.location] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.location] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.location] to an arbitrary JSON value. */
             fun location(location: JsonField<String>) = apply { this.location = location }
 
             /** Display name */
             fun name(name: String) = name(JsonField.of(name))
 
-            /**
-             * Sets [Builder.name] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.name] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.name] to an arbitrary JSON value. */
             fun name(name: JsonField<String>) = apply { this.name = name }
 
             /** Website URL */
             fun url(url: String) = url(JsonField.of(url))
 
-            /**
-             * Sets [Builder.url] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.url] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.url] to an arbitrary JSON value. */
             fun url(url: JsonField<String>) = apply { this.url = url }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -649,12 +567,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int =
             (if (account.asKnown().isPresent) 1 else 0) +

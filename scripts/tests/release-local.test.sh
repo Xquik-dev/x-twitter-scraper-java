@@ -4,18 +4,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Runs bin/release-local in a throwaway repository whose origin is a local
-# bare repository. Stubs stand in for the checks, Gradle and the signature
-# check. Fake commands stand in for curl, the GitHub CLI, gpg and the macOS
-# Keychain, so no test can reach Maven Central, GitHub or a real secret.
-
 set -euo pipefail
 
 # shellcheck source=scripts/tests/support.sh
 source "$(dirname -- "${BASH_SOURCE[0]}")/support.sh"
 
-# Values that only the fakes hold. A release must never print them or pass
-# them as an argument.
 readonly token_username="not-a-real-token-username"
 readonly token_password="not-a-real-token-password"
 readonly signing_passphrase="not-a-real-passphrase"
@@ -48,7 +41,6 @@ readonly release="release create v9.9.9 --repo Xquik-dev/x-twitter-scraper-java 
 readonly release_tags="refs/tags/v9.9.9
 refs/tags/v9.9.9^{}"
 
-# Writes the files that the Gradle stub publishes into the local repository.
 write_maven_fixture() {
     local module_dir="$sandbox/maven-fixture/com/xquik/api/x-twitter-scraper-java/9.9.9"
     local name="x-twitter-scraper-java-9.9.9"
@@ -93,32 +85,24 @@ EOF
     )
 }
 
-# Builds a repository on main that matches its origin, with stand-ins for
-# every step that would leave the machine.
 prepare_release() {
     copy_file bin/release-local
     copy_file scripts/maven-listing
     stub bin/check-local <<'EOF'
 #!/bin/sh
-# Stands in for bin/check-local.
 echo "ran" >>"$FAKE_LOGS/check-local"
 EOF
     stub scripts/audit <<'EOF'
 #!/bin/sh
-# Stands in for scripts/audit.
 echo "ran" >>"$FAKE_LOGS/audit"
 EOF
     stub bin/verify-release-signature <<'EOF'
 #!/bin/sh
-# Stands in for the signature check. It fails when FAKE_SIGNATURE_FAILS is set.
 echo "$*" >>"$FAKE_LOGS/verify-release-signature"
 [ -z "${FAKE_SIGNATURE_FAILS:-}" ]
 EOF
     stub gradlew <<'EOF'
 #!/bin/sh
-# Stands in for Gradle. It records its arguments. The local build copies the
-# fixture files into the local repository. The upload records the secrets it
-# finds in the environment, as the Maven publish plugin reads them.
 echo "$*" >>"$FAKE_LOGS/gradlew"
 case "$1" in
     publishAllPublicationsToLocalFileSystemRepository)
@@ -162,16 +146,12 @@ build/
 EOF
     fake curl <<'EOF'
 #!/bin/sh
-# Stands in for curl. It answers the Maven Central lookup with the HTTP
-# status that FAKE_CENTRAL_STATUS names.
 for argument in "$@"; do url="$argument"; done
 echo "$url" >>"$FAKE_LOGS/curl"
 printf '%s' "${FAKE_CENTRAL_STATUS:-404}"
 EOF
     fake security <<EOF
 #!/bin/sh
-# Stands in for the macOS Keychain. It holds the token under the service
-# "example-token" and the passphrase under the service "example-signing".
 echo "\$*" >>"\$FAKE_LOGS/security"
 case "\$*" in
     "find-generic-password -s example-token") echo '    "acct"<blob>="$token_username"' ;;
@@ -183,8 +163,6 @@ esac
 EOF
     fake gpg <<EOF
 #!/bin/sh
-# Stands in for gpg. It holds 1 signing key. An export records the
-# passphrase it reads from standard input and prints the key.
 echo "\$*" >>"\$FAKE_LOGS/gpg"
 case "\$*" in
     *--export-secret-keys*)
@@ -196,8 +174,6 @@ esac
 EOF
     fake gh <<'EOF'
 #!/bin/sh
-# Stands in for the GitHub CLI. It is signed in. It records each release
-# call and keeps a copy of the notes.
 [ "$1" = "release" ] || exit 0
 line=""
 previous=""
@@ -227,7 +203,6 @@ assert_nothing_released() {
     assert_equal "" "$(log_of gh)" "the GitHub release calls"
 }
 
-# Fails when a secret shows in the output or in an argument of any command.
 assert_no_secret_leaked() {
     local secret
     for secret in "$token_username" "$token_password" "$signing_passphrase" "$signing_key"; do

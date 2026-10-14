@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.x
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -47,19 +45,19 @@ private constructor(
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun hasNextPage(): Boolean = hasNextPage.getRequired("has_next_page")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun nextCursor(): String = nextCursor.getRequired("next_cursor")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun notifications(): List<Notification> = notifications.getRequired("notifications")
 
@@ -133,36 +131,18 @@ private constructor(
 
         fun hasNextPage(hasNextPage: Boolean) = hasNextPage(JsonField.of(hasNextPage))
 
-        /**
-         * Sets [Builder.hasNextPage] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.hasNextPage] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.hasNextPage] to an arbitrary JSON value. */
         fun hasNextPage(hasNextPage: JsonField<Boolean>) = apply { this.hasNextPage = hasNextPage }
 
         fun nextCursor(nextCursor: String) = nextCursor(JsonField.of(nextCursor))
 
-        /**
-         * Sets [Builder.nextCursor] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.nextCursor] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.nextCursor] to an arbitrary JSON value. */
         fun nextCursor(nextCursor: JsonField<String>) = apply { this.nextCursor = nextCursor }
 
         fun notifications(notifications: List<Notification>) =
             notifications(JsonField.of(notifications))
 
-        /**
-         * Sets [Builder.notifications] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.notifications] with a well-typed `List<Notification>`
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
-         */
+        /** Sets [Builder.notifications] to an arbitrary JSON value. */
         fun notifications(notifications: JsonField<List<Notification>>) = apply {
             this.notifications = notifications.map { it.toMutableList() }
         }
@@ -250,11 +230,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (if (hasNextPage.asKnown().isPresent) 1 else 0) +
@@ -283,27 +258,17 @@ private constructor(
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun id(): String = id.getRequired("id")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun message(): Optional<String> = message.getOptional("message")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun timestamp(): Optional<String> = timestamp.getOptional("timestamp")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun type(): Optional<String> = type.getOptional("type")
 
         /**
@@ -379,46 +344,22 @@ private constructor(
 
             fun id(id: String) = id(JsonField.of(id))
 
-            /**
-             * Sets [Builder.id] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.id] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.id] to an arbitrary JSON value. */
             fun id(id: JsonField<String>) = apply { this.id = id }
 
             fun message(message: String) = message(JsonField.of(message))
 
-            /**
-             * Sets [Builder.message] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.message] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.message] to an arbitrary JSON value. */
             fun message(message: JsonField<String>) = apply { this.message = message }
 
             fun timestamp(timestamp: String) = timestamp(JsonField.of(timestamp))
 
-            /**
-             * Sets [Builder.timestamp] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.timestamp] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.timestamp] to an arbitrary JSON value. */
             fun timestamp(timestamp: JsonField<String>) = apply { this.timestamp = timestamp }
 
             fun type(type: String) = type(JsonField.of(type))
 
-            /**
-             * Sets [Builder.type] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.type] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.type] to an arbitrary JSON value. */
             fun type(type: JsonField<String>) = apply { this.type = type }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -493,12 +434,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int =
             (if (id.asKnown().isPresent) 1 else 0) +

@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.blocking.x
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -44,23 +42,17 @@ class ProfileServiceImpl internal constructor(private val clientOptions: ClientO
     override fun update(
         params: ProfileUpdateParams,
         requestOptions: RequestOptions,
-    ): ProfileUpdateResponse =
-        // patch /x/profile
-        withRawResponse().update(params, requestOptions).parse()
+    ): ProfileUpdateResponse = withRawResponse().update(params, requestOptions).parse()
 
     override fun updateAvatar(
         params: ProfileUpdateAvatarParams,
         requestOptions: RequestOptions,
-    ): ProfileUpdateAvatarResponse =
-        // patch /x/profile/avatar
-        withRawResponse().updateAvatar(params, requestOptions).parse()
+    ): ProfileUpdateAvatarResponse = withRawResponse().updateAvatar(params, requestOptions).parse()
 
     override fun updateBanner(
         params: ProfileUpdateBannerParams,
         requestOptions: RequestOptions,
-    ): ProfileUpdateBannerResponse =
-        // patch /x/profile/banner
-        withRawResponse().updateBanner(params, requestOptions).parse()
+    ): ProfileUpdateBannerResponse = withRawResponse().updateBanner(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         ProfileService.WithRawResponse {

@@ -10,7 +10,6 @@ interface StreamResponse<T> : AutoCloseable {
 
     fun stream(): Stream<T>
 
-    /** Overridden from [AutoCloseable] to not have a checked exception in its signature. */
     override fun close()
 }
 

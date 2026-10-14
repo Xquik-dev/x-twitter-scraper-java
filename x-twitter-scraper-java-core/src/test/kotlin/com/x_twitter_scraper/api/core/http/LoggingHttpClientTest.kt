@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.core.http
 
 import com.x_twitter_scraper.api.core.LogLevel
@@ -931,7 +929,6 @@ internal class LoggingHttpClientTest {
                 request: HttpRequest,
                 requestOptions: RequestOptions,
             ): HttpResponse {
-                // Consume the request body if present to trigger logging.
                 request.body?.let {
                     val out = ByteArrayOutputStream()
                     it.writeTo(out)

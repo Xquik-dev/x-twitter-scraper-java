@@ -43,9 +43,7 @@ internal object LoopbackTestServer {
                     createContext("/") { exchange ->
                         exchange.requestBody.use { input ->
                             val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
-                            while (input.read(buffer) != -1) {
-                                // Drain the local test request before replying.
-                            }
+                            while (input.read(buffer) != -1) {}
                         }
 
                         val responseBody =

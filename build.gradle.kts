@@ -75,7 +75,6 @@ allprojects {
 }
 
 subprojects {
-    // These are populated with dependencies by `buildSrc` scripts.
     tasks.register("format") {
         group = "Verification"
         description = "Formats all source files."

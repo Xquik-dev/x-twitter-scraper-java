@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.support.tickets
 
 import com.x_twitter_scraper.api.core.MultipartField
@@ -32,7 +30,6 @@ internal class TicketReplyParamsTest {
                 .build()
 
         assertThat(params._pathParam(0)).isEqualTo("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
-        // out-of-bound path param
         assertThat(params._pathParam(1)).isEqualTo("")
     }
 
@@ -77,8 +74,6 @@ internal class TicketReplyParamsTest {
 
         assertThat(body.filterValues { !it.value.isNull() })
             .usingRecursiveComparison()
-            // TODO(AssertJ): Replace this and the `mapValues` below with:
-            // https://github.com/assertj/assertj/issues/3165
             .withEqualsForType(
                 { a, b -> a.readBytes() contentEquals b.readBytes() },
                 InputStream::class.java,
@@ -103,8 +98,6 @@ internal class TicketReplyParamsTest {
 
         assertThat(body.filterValues { !it.value.isNull() })
             .usingRecursiveComparison()
-            // TODO(AssertJ): Replace this and the `mapValues` below with:
-            // https://github.com/assertj/assertj/issues/3165
             .withEqualsForType(
                 { a, b -> a.readBytes() contentEquals b.readBytes() },
                 InputStream::class.java,

@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.blocking.x
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -38,9 +36,7 @@ class FollowerServiceImpl internal constructor(private val clientOptions: Client
     override fun check(
         params: FollowerCheckParams,
         requestOptions: RequestOptions,
-    ): FollowerCheckResponse =
-        // get /x/followers/check
-        withRawResponse().check(params, requestOptions).parse()
+    ): FollowerCheckResponse = withRawResponse().check(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         FollowerService.WithRawResponse {

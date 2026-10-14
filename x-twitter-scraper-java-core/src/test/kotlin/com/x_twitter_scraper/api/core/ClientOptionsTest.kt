@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.core
 
 import com.x_twitter_scraper.api.core.http.HttpClient
@@ -43,13 +41,11 @@ internal class ClientOptionsTest {
                 .build()
         verify(httpClient, never()).close()
 
-        // Overwrite the `clientOptions` variable so that the original `ClientOptions` is GC'd.
         clientOptions = clientOptions.toBuilder().build()
         System.gc()
         Thread.sleep(100)
 
         verify(httpClient, never()).close()
-        // This exists so that `clientOptions` is still reachable.
         assertThat(clientOptions).isEqualTo(clientOptions)
     }
 }

@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -41,7 +39,6 @@ class SubscribeServiceAsyncImpl internal constructor(private val clientOptions: 
         params: SubscribeCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<SubscribeCreateResponse> =
-        // post /subscribe
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :

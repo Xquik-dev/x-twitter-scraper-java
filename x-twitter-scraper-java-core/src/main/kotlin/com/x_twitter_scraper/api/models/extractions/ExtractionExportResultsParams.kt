@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.extractions
 
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -192,11 +190,7 @@ private constructor(
             this.hasDescription = hasDescription
         }
 
-        /**
-         * Alias for [Builder.hasDescription].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.hasDescription]. */
         fun hasDescription(hasDescription: Boolean) = hasDescription(hasDescription as Boolean?)
 
         /** Alias for calling [Builder.hasDescription] with `hasDescription.orElse(null)`. */
@@ -206,11 +200,7 @@ private constructor(
         /** Require a non-empty location. */
         fun hasLocation(hasLocation: Boolean?) = apply { this.hasLocation = hasLocation }
 
-        /**
-         * Alias for [Builder.hasLocation].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.hasLocation]. */
         fun hasLocation(hasLocation: Boolean) = hasLocation(hasLocation as Boolean?)
 
         /** Alias for calling [Builder.hasLocation] with `hasLocation.orElse(null)`. */
@@ -219,11 +209,7 @@ private constructor(
         /** Require media. */
         fun hasMedia(hasMedia: Boolean?) = apply { this.hasMedia = hasMedia }
 
-        /**
-         * Alias for [Builder.hasMedia].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.hasMedia]. */
         fun hasMedia(hasMedia: Boolean) = hasMedia(hasMedia as Boolean?)
 
         /** Alias for calling [Builder.hasMedia] with `hasMedia.orElse(null)`. */
@@ -238,11 +224,7 @@ private constructor(
         /** Maximum follower count. */
         fun maxFollowers(maxFollowers: Long?) = apply { this.maxFollowers = maxFollowers }
 
-        /**
-         * Alias for [Builder.maxFollowers].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.maxFollowers]. */
         fun maxFollowers(maxFollowers: Long) = maxFollowers(maxFollowers as Long?)
 
         /** Alias for calling [Builder.maxFollowers] with `maxFollowers.orElse(null)`. */
@@ -251,11 +233,7 @@ private constructor(
         /** Maximum following count. */
         fun maxFollowing(maxFollowing: Long?) = apply { this.maxFollowing = maxFollowing }
 
-        /**
-         * Alias for [Builder.maxFollowing].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.maxFollowing]. */
         fun maxFollowing(maxFollowing: Long) = maxFollowing(maxFollowing as Long?)
 
         /** Alias for calling [Builder.maxFollowing] with `maxFollowing.orElse(null)`. */
@@ -264,11 +242,7 @@ private constructor(
         /** Maximum post count. */
         fun maxPosts(maxPosts: Long?) = apply { this.maxPosts = maxPosts }
 
-        /**
-         * Alias for [Builder.maxPosts].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.maxPosts]. */
         fun maxPosts(maxPosts: Long) = maxPosts(maxPosts as Long?)
 
         /** Alias for calling [Builder.maxPosts] with `maxPosts.orElse(null)`. */
@@ -277,11 +251,7 @@ private constructor(
         /** Minimum follower count. */
         fun minFollowers(minFollowers: Long?) = apply { this.minFollowers = minFollowers }
 
-        /**
-         * Alias for [Builder.minFollowers].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.minFollowers]. */
         fun minFollowers(minFollowers: Long) = minFollowers(minFollowers as Long?)
 
         /** Alias for calling [Builder.minFollowers] with `minFollowers.orElse(null)`. */
@@ -290,11 +260,7 @@ private constructor(
         /** Minimum following count. */
         fun minFollowing(minFollowing: Long?) = apply { this.minFollowing = minFollowing }
 
-        /**
-         * Alias for [Builder.minFollowing].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.minFollowing]. */
         fun minFollowing(minFollowing: Long) = minFollowing(minFollowing as Long?)
 
         /** Alias for calling [Builder.minFollowing] with `minFollowing.orElse(null)`. */
@@ -303,11 +269,7 @@ private constructor(
         /** Minimum like count. */
         fun minLikes(minLikes: Long?) = apply { this.minLikes = minLikes }
 
-        /**
-         * Alias for [Builder.minLikes].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.minLikes]. */
         fun minLikes(minLikes: Long) = minLikes(minLikes as Long?)
 
         /** Alias for calling [Builder.minLikes] with `minLikes.orElse(null)`. */
@@ -316,11 +278,7 @@ private constructor(
         /** Minimum post count. */
         fun minPosts(minPosts: Long?) = apply { this.minPosts = minPosts }
 
-        /**
-         * Alias for [Builder.minPosts].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.minPosts]. */
         fun minPosts(minPosts: Long) = minPosts(minPosts as Long?)
 
         /** Alias for calling [Builder.minPosts] with `minPosts.orElse(null)`. */
@@ -329,11 +287,7 @@ private constructor(
         /** Minimum reply count. */
         fun minReplies(minReplies: Long?) = apply { this.minReplies = minReplies }
 
-        /**
-         * Alias for [Builder.minReplies].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.minReplies]. */
         fun minReplies(minReplies: Long) = minReplies(minReplies as Long?)
 
         /** Alias for calling [Builder.minReplies] with `minReplies.orElse(null)`. */
@@ -342,11 +296,7 @@ private constructor(
         /** Minimum repost count. */
         fun minRetweets(minRetweets: Long?) = apply { this.minRetweets = minRetweets }
 
-        /**
-         * Alias for [Builder.minRetweets].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.minRetweets]. */
         fun minRetweets(minRetweets: Long) = minRetweets(minRetweets as Long?)
 
         /** Alias for calling [Builder.minRetweets] with `minRetweets.orElse(null)`. */
@@ -355,11 +305,7 @@ private constructor(
         /** Minimum view count. */
         fun minViews(minViews: Long?) = apply { this.minViews = minViews }
 
-        /**
-         * Alias for [Builder.minViews].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.minViews]. */
         fun minViews(minViews: Long) = minViews(minViews as Long?)
 
         /** Alias for calling [Builder.minViews] with `minViews.orElse(null)`. */
@@ -386,11 +332,7 @@ private constructor(
         /** Filter by verified status. */
         fun verified(verified: Boolean?) = apply { this.verified = verified }
 
-        /**
-         * Alias for [Builder.verified].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.verified]. */
         fun verified(verified: Boolean) = verified(verified as Boolean?)
 
         /** Alias for calling [Builder.verified] with `verified.orElse(null)`. */
@@ -570,14 +512,7 @@ private constructor(
     /** Export file format */
     class Format @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
+        /** Returns this class instance's raw value. */
         @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
 
         companion object {
@@ -634,9 +569,6 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
          * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
          */
         fun value(): Value =
             when (this) {
@@ -652,9 +584,6 @@ private constructor(
 
         /**
          * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
          *
          * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
          *   known member.
@@ -673,9 +602,6 @@ private constructor(
 
         /**
          * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
          *
          * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
          *   the expected primitive type.
@@ -713,12 +639,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {

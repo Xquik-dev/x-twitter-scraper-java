@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.x.bookmarks
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -46,7 +44,7 @@ private constructor(
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun folders(): List<Folder> = folders.getRequired("folders")
 
@@ -54,7 +52,7 @@ private constructor(
      * Always false for the current bookmark folder route
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun hasNextPage(): Boolean = hasNextPage.getRequired("has_next_page")
 
@@ -62,7 +60,7 @@ private constructor(
      * Always empty for the current bookmark folder route
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun nextCursor(): String = nextCursor.getRequired("next_cursor")
 
@@ -137,13 +135,7 @@ private constructor(
 
         fun folders(folders: List<Folder>) = folders(JsonField.of(folders))
 
-        /**
-         * Sets [Builder.folders] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.folders] with a well-typed `List<Folder>` value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.folders] to an arbitrary JSON value. */
         fun folders(folders: JsonField<List<Folder>>) = apply {
             this.folders = folders.map { it.toMutableList() }
         }
@@ -163,25 +155,13 @@ private constructor(
         /** Always false for the current bookmark folder route */
         fun hasNextPage(hasNextPage: Boolean) = hasNextPage(JsonField.of(hasNextPage))
 
-        /**
-         * Sets [Builder.hasNextPage] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.hasNextPage] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.hasNextPage] to an arbitrary JSON value. */
         fun hasNextPage(hasNextPage: JsonField<Boolean>) = apply { this.hasNextPage = hasNextPage }
 
         /** Always empty for the current bookmark folder route */
         fun nextCursor(nextCursor: String) = nextCursor(JsonField.of(nextCursor))
 
-        /**
-         * Sets [Builder.nextCursor] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.nextCursor] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.nextCursor] to an arbitrary JSON value. */
         fun nextCursor(nextCursor: JsonField<String>) = apply { this.nextCursor = nextCursor }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -255,11 +235,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (folders.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
@@ -282,15 +257,13 @@ private constructor(
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun id(): String = id.getRequired("id")
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun name(): String = name.getRequired("name")
 
@@ -350,24 +323,12 @@ private constructor(
 
             fun id(id: String) = id(JsonField.of(id))
 
-            /**
-             * Sets [Builder.id] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.id] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.id] to an arbitrary JSON value. */
             fun id(id: JsonField<String>) = apply { this.id = id }
 
             fun name(name: String) = name(JsonField.of(name))
 
-            /**
-             * Sets [Builder.name] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.name] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.name] to an arbitrary JSON value. */
             fun name(name: JsonField<String>) = apply { this.name = name }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -439,12 +400,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int =
             (if (id.asKnown().isPresent) 1 else 0) + (if (name.asKnown().isPresent) 1 else 0)

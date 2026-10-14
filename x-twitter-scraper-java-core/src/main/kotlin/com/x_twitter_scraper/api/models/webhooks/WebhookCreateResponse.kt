@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.webhooks
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -50,13 +48,13 @@ private constructor(
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun id(): String = id.getRequired("id")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun createdAt(): OffsetDateTime = createdAt.getRequired("createdAt")
 
@@ -64,7 +62,7 @@ private constructor(
      * Array of event types to subscribe to.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun eventTypes(): List<EventType> = eventTypes.getRequired("eventTypes")
 
@@ -72,13 +70,13 @@ private constructor(
      * Plaintext HMAC signing secret returned only at creation.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun secret(): String = secret.getRequired("secret")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun url(): String = url.getRequired("url")
 
@@ -172,35 +170,18 @@ private constructor(
 
         fun id(id: String) = id(JsonField.of(id))
 
-        /**
-         * Sets [Builder.id] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.id] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.id] to an arbitrary JSON value. */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
-        /**
-         * Sets [Builder.createdAt] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.createdAt] to an arbitrary JSON value. */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
         /** Array of event types to subscribe to. */
         fun eventTypes(eventTypes: List<EventType>) = eventTypes(JsonField.of(eventTypes))
 
-        /**
-         * Sets [Builder.eventTypes] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.eventTypes] with a well-typed `List<EventType>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.eventTypes] to an arbitrary JSON value. */
         fun eventTypes(eventTypes: JsonField<List<EventType>>) = apply {
             this.eventTypes = eventTypes.map { it.toMutableList() }
         }
@@ -220,22 +201,12 @@ private constructor(
         /** Plaintext HMAC signing secret returned only at creation. */
         fun secret(secret: String) = secret(JsonField.of(secret))
 
-        /**
-         * Sets [Builder.secret] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.secret] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.secret] to an arbitrary JSON value. */
         fun secret(secret: JsonField<String>) = apply { this.secret = secret }
 
         fun url(url: String) = url(JsonField.of(url))
 
-        /**
-         * Sets [Builder.url] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.url] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.url] to an arbitrary JSON value. */
         fun url(url: JsonField<String>) = apply { this.url = url }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -315,11 +286,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +

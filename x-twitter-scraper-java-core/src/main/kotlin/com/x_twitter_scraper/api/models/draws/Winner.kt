@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.draws
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -42,25 +40,25 @@ private constructor(
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun authorUsername(): String = authorUsername.getRequired("authorUsername")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun isBackup(): Boolean = isBackup.getRequired("isBackup")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun position(): Long = position.getRequired("position")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun tweetId(): String = tweetId.getRequired("tweetId")
 
@@ -142,46 +140,24 @@ private constructor(
 
         fun authorUsername(authorUsername: String) = authorUsername(JsonField.of(authorUsername))
 
-        /**
-         * Sets [Builder.authorUsername] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.authorUsername] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.authorUsername] to an arbitrary JSON value. */
         fun authorUsername(authorUsername: JsonField<String>) = apply {
             this.authorUsername = authorUsername
         }
 
         fun isBackup(isBackup: Boolean) = isBackup(JsonField.of(isBackup))
 
-        /**
-         * Sets [Builder.isBackup] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.isBackup] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.isBackup] to an arbitrary JSON value. */
         fun isBackup(isBackup: JsonField<Boolean>) = apply { this.isBackup = isBackup }
 
         fun position(position: Long) = position(JsonField.of(position))
 
-        /**
-         * Sets [Builder.position] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.position] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.position] to an arbitrary JSON value. */
         fun position(position: JsonField<Long>) = apply { this.position = position }
 
         fun tweetId(tweetId: String) = tweetId(JsonField.of(tweetId))
 
-        /**
-         * Sets [Builder.tweetId] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.tweetId] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.tweetId] to an arbitrary JSON value. */
         fun tweetId(tweetId: JsonField<String>) = apply { this.tweetId = tweetId }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -258,11 +234,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (if (authorUsername.asKnown().isPresent) 1 else 0) +

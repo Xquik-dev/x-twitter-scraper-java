@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.blocking.monitors
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -49,37 +47,27 @@ class KeywordServiceImpl internal constructor(private val clientOptions: ClientO
     override fun create(
         params: KeywordCreateParams,
         requestOptions: RequestOptions,
-    ): KeywordCreateResponse =
-        // post /monitors/keywords
-        withRawResponse().create(params, requestOptions).parse()
+    ): KeywordCreateResponse = withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: KeywordRetrieveParams,
         requestOptions: RequestOptions,
-    ): KeywordRetrieveResponse =
-        // get /monitors/keywords/{id}
-        withRawResponse().retrieve(params, requestOptions).parse()
+    ): KeywordRetrieveResponse = withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: KeywordUpdateParams,
         requestOptions: RequestOptions,
-    ): KeywordUpdateResponse =
-        // patch /monitors/keywords/{id}
-        withRawResponse().update(params, requestOptions).parse()
+    ): KeywordUpdateResponse = withRawResponse().update(params, requestOptions).parse()
 
     override fun list(
         params: KeywordListParams,
         requestOptions: RequestOptions,
-    ): KeywordListResponse =
-        // get /monitors/keywords
-        withRawResponse().list(params, requestOptions).parse()
+    ): KeywordListResponse = withRawResponse().list(params, requestOptions).parse()
 
     override fun deactivate(
         params: KeywordDeactivateParams,
         requestOptions: RequestOptions,
-    ): KeywordDeactivateResponse =
-        // delete /monitors/keywords/{id}
-        withRawResponse().deactivate(params, requestOptions).parse()
+    ): KeywordDeactivateResponse = withRawResponse().deactivate(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         KeywordService.WithRawResponse {
@@ -129,8 +117,6 @@ class KeywordServiceImpl internal constructor(private val clientOptions: ClientO
             params: KeywordRetrieveParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<KeywordRetrieveResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -159,8 +145,6 @@ class KeywordServiceImpl internal constructor(private val clientOptions: ClientO
             params: KeywordUpdateParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<KeywordUpdateResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -217,8 +201,6 @@ class KeywordServiceImpl internal constructor(private val clientOptions: ClientO
             params: KeywordDeactivateParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<KeywordDeactivateResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

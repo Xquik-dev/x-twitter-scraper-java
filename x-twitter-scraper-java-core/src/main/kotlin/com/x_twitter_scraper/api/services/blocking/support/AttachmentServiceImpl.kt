@@ -1,5 +1,3 @@
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.blocking.support
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -32,9 +30,7 @@ class AttachmentServiceImpl internal constructor(private val clientOptions: Clie
     override fun download(
         params: AttachmentDownloadParams,
         requestOptions: RequestOptions,
-    ): HttpResponse =
-        // get /support/attachments/{id}
-        withRawResponse().download(params, requestOptions)
+    ): HttpResponse = withRawResponse().download(params, requestOptions)
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         AttachmentService.WithRawResponse {
@@ -53,8 +49,6 @@ class AttachmentServiceImpl internal constructor(private val clientOptions: Clie
             params: AttachmentDownloadParams,
             requestOptions: RequestOptions,
         ): HttpResponse {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

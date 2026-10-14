@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.support.tickets
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -39,7 +37,7 @@ private constructor(
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun body(): String = body.body()
 
@@ -102,23 +100,12 @@ private constructor(
         fun idempotencyKey(idempotencyKey: Optional<String>) =
             idempotencyKey(idempotencyKey.getOrNull())
 
-        /**
-         * Sets the entire request body.
-         *
-         * This is generally only useful if you are already constructing the body separately.
-         * Otherwise, it's more convenient to use the top-level setters instead:
-         * - [body]
-         */
+        /** Sets the entire request body. */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
         fun body(body: String) = apply { this.body.body(body) }
 
-        /**
-         * Sets [Builder.body] to an arbitrary multipart value.
-         *
-         * You should usually call [Builder.body] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.body] to an arbitrary multipart value. */
         fun body(body: MultipartField<String>) = apply { this.body.body(body) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
@@ -289,8 +276,7 @@ private constructor(
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun body(): String = body.value.getRequired("body")
 
@@ -340,13 +326,7 @@ private constructor(
 
             fun body(body: String) = body(MultipartField.of(body))
 
-            /**
-             * Sets [Builder.body] to an arbitrary multipart value.
-             *
-             * You should usually call [Builder.body] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.body] to an arbitrary multipart value. */
             fun body(body: MultipartField<String>) = apply { this.body = body }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -48,29 +46,24 @@ class DraftServiceAsyncImpl internal constructor(private val clientOptions: Clie
         params: DraftCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<DraftDetail> =
-        // post /drafts
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieve(
         params: DraftRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<DraftDetail> =
-        // get /drafts/{id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
     override fun list(
         params: DraftListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<DraftListResponse> =
-        // get /drafts
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
     override fun delete(
         params: DraftDeleteParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<Void?> =
-        // delete /drafts/{id}
-        withRawResponse().delete(params, requestOptions).thenAccept {}
+    ): CompletableFuture<Void?> = withRawResponse().delete(params, requestOptions).thenAccept {}
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         DraftServiceAsync.WithRawResponse {
@@ -123,8 +116,6 @@ class DraftServiceAsyncImpl internal constructor(private val clientOptions: Clie
             params: DraftRetrieveParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<DraftDetail>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -185,8 +176,6 @@ class DraftServiceAsyncImpl internal constructor(private val clientOptions: Clie
             params: DraftDeleteParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

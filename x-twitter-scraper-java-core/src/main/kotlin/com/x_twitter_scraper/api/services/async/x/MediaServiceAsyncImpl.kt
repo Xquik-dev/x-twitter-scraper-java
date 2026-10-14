@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async.x
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -43,14 +41,12 @@ class MediaServiceAsyncImpl internal constructor(private val clientOptions: Clie
         params: MediaDownloadParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<MediaDownloadResponse> =
-        // post /x/media/download
         withRawResponse().download(params, requestOptions).thenApply { it.parse() }
 
     override fun upload(
         params: MediaUploadParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<MediaUploadResponse> =
-        // post /x/media
         withRawResponse().upload(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :

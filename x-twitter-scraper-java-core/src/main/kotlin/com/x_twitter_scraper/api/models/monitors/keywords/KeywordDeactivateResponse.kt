@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.monitors.keywords
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -34,9 +32,6 @@ private constructor(
      * ```java
      * JsonValue.from(true)
      * ```
-     *
-     * However, this method can be useful for debugging and logging (e.g. if the server responded
-     * with an unexpected value).
      */
     @JsonProperty("success") @ExcludeMissing fun _success(): JsonValue = success
 
@@ -75,14 +70,10 @@ private constructor(
         /**
          * Sets the field to an arbitrary JSON value.
          *
-         * It is usually unnecessary to call this method because the field defaults to the
-         * following:
+         * Defaults to the following:
          * ```java
          * JsonValue.from(true)
          * ```
-         *
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
          */
         fun success(success: JsonValue) = apply { this.success = success }
 
@@ -145,11 +136,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int = success.let { if (it == JsonValue.from(true)) 1 else 0 }
 

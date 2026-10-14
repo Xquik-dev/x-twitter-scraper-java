@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.webhooks
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -38,7 +36,7 @@ private constructor(
      * Array of event types to subscribe to.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun eventTypes(): List<EventType> = body.eventTypes()
 
@@ -46,7 +44,7 @@ private constructor(
      * HTTPS URL
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun url(): String = body.url()
 
@@ -102,26 +100,13 @@ private constructor(
             additionalQueryParams = webhookCreateParams.additionalQueryParams.toBuilder()
         }
 
-        /**
-         * Sets the entire request body.
-         *
-         * This is generally only useful if you are already constructing the body separately.
-         * Otherwise, it's more convenient to use the top-level setters instead:
-         * - [eventTypes]
-         * - [url]
-         */
+        /** Sets the entire request body. */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
         /** Array of event types to subscribe to. */
         fun eventTypes(eventTypes: List<EventType>) = apply { body.eventTypes(eventTypes) }
 
-        /**
-         * Sets [Builder.eventTypes] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.eventTypes] with a well-typed `List<EventType>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.eventTypes] to an arbitrary JSON value. */
         fun eventTypes(eventTypes: JsonField<List<EventType>>) = apply {
             body.eventTypes(eventTypes)
         }
@@ -136,12 +121,7 @@ private constructor(
         /** HTTPS URL */
         fun url(url: String) = apply { body.url(url) }
 
-        /**
-         * Sets [Builder.url] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.url] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.url] to an arbitrary JSON value. */
         fun url(url: JsonField<String>) = apply { body.url(url) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
@@ -308,8 +288,7 @@ private constructor(
          * Array of event types to subscribe to.
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun eventTypes(): List<EventType> = eventTypes.getRequired("eventTypes")
 
@@ -317,8 +296,7 @@ private constructor(
          * HTTPS URL
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun url(): String = url.getRequired("url")
 
@@ -381,13 +359,7 @@ private constructor(
             /** Array of event types to subscribe to. */
             fun eventTypes(eventTypes: List<EventType>) = eventTypes(JsonField.of(eventTypes))
 
-            /**
-             * Sets [Builder.eventTypes] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.eventTypes] with a well-typed `List<EventType>`
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
-             */
+            /** Sets [Builder.eventTypes] to an arbitrary JSON value. */
             fun eventTypes(eventTypes: JsonField<List<EventType>>) = apply {
                 this.eventTypes = eventTypes.map { it.toMutableList() }
             }
@@ -407,13 +379,7 @@ private constructor(
             /** HTTPS URL */
             fun url(url: String) = url(JsonField.of(url))
 
-            /**
-             * Sets [Builder.url] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.url] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.url] to an arbitrary JSON value. */
             fun url(url: JsonField<String>) = apply { this.url = url }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -485,12 +451,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int =
             (eventTypes.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +

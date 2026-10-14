@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async.support
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -52,35 +50,30 @@ class TicketServiceAsyncImpl internal constructor(private val clientOptions: Cli
         params: TicketCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<TicketCreateResponse> =
-        // post /support/tickets
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieve(
         params: TicketRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<TicketRetrieveResponse> =
-        // get /support/tickets/{id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
     override fun update(
         params: TicketUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<TicketUpdateResponse> =
-        // patch /support/tickets/{id}
         withRawResponse().update(params, requestOptions).thenApply { it.parse() }
 
     override fun list(
         params: TicketListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<TicketListResponse> =
-        // get /support/tickets
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
     override fun reply(
         params: TicketReplyParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<TicketReplyResponse> =
-        // post /support/tickets/{id}/messages
         withRawResponse().reply(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -134,8 +127,6 @@ class TicketServiceAsyncImpl internal constructor(private val clientOptions: Cli
             params: TicketRetrieveParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<TicketRetrieveResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -167,8 +158,6 @@ class TicketServiceAsyncImpl internal constructor(private val clientOptions: Cli
             params: TicketUpdateParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<TicketUpdateResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -231,8 +220,6 @@ class TicketServiceAsyncImpl internal constructor(private val clientOptions: Cli
             params: TicketReplyParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<TicketReplyResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

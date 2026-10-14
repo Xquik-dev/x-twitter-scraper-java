@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async.monitors
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -51,35 +49,30 @@ class KeywordServiceAsyncImpl internal constructor(private val clientOptions: Cl
         params: KeywordCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<KeywordCreateResponse> =
-        // post /monitors/keywords
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieve(
         params: KeywordRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<KeywordRetrieveResponse> =
-        // get /monitors/keywords/{id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
     override fun update(
         params: KeywordUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<KeywordUpdateResponse> =
-        // patch /monitors/keywords/{id}
         withRawResponse().update(params, requestOptions).thenApply { it.parse() }
 
     override fun list(
         params: KeywordListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<KeywordListResponse> =
-        // get /monitors/keywords
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
     override fun deactivate(
         params: KeywordDeactivateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<KeywordDeactivateResponse> =
-        // delete /monitors/keywords/{id}
         withRawResponse().deactivate(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -133,8 +126,6 @@ class KeywordServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: KeywordRetrieveParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<KeywordRetrieveResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -166,8 +157,6 @@ class KeywordServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: KeywordUpdateParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<KeywordUpdateResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -230,8 +219,6 @@ class KeywordServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: KeywordDeactivateParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<KeywordDeactivateResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

@@ -13,9 +13,9 @@ import java.util.Optional
 /**
  * Provides credentials when an HTTP proxy responds with `407 Proxy Authentication Required`.
  *
- * Implementations inspect the 407 [response] (typically its `Proxy-Authenticate` header) and return
- * the request to retry with a `Proxy-Authorization` header set, or [Optional.empty] to abandon
- * authentication and surface the 407 to the caller.
+ * Implementations inspect the 407 [response] and return the request to retry with a
+ * `Proxy-Authorization` header set, or [Optional.empty] to abandon authentication and surface the
+ * 407 to the caller.
  *
  * Implementations must be thread-safe; they may be invoked concurrently from multiple HTTP calls.
  */
@@ -26,8 +26,7 @@ fun interface ProxyAuthenticator {
      *   yet established
      * @param request the request that produced [response]
      * @param response the 407 challenge response
-     * @return the retry request to send (typically [request] with a `Proxy-Authorization` header
-     *   added), or [Optional.empty] to abandon authentication
+     * @return the retry request to send, or [Optional.empty] to abandon authentication
      */
     fun authenticate(
         proxy: Proxy,

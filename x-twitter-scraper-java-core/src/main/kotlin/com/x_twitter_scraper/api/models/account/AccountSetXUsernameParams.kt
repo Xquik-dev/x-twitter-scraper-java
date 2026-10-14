@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.account
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -34,7 +32,7 @@ private constructor(
      * X username without @
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun username(): String = body.username()
 
@@ -82,24 +80,13 @@ private constructor(
             additionalQueryParams = accountSetXUsernameParams.additionalQueryParams.toBuilder()
         }
 
-        /**
-         * Sets the entire request body.
-         *
-         * This is generally only useful if you are already constructing the body separately.
-         * Otherwise, it's more convenient to use the top-level setters instead:
-         * - [username]
-         */
+        /** Sets the entire request body. */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
         /** X username without @ */
         fun username(username: String) = apply { body.username(username) }
 
-        /**
-         * Sets [Builder.username] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.username] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.username] to an arbitrary JSON value. */
         fun username(username: JsonField<String>) = apply { body.username(username) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
@@ -261,8 +248,7 @@ private constructor(
          * X username without @
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun username(): String = username.getRequired("username")
 
@@ -313,13 +299,7 @@ private constructor(
             /** X username without @ */
             fun username(username: String) = username(JsonField.of(username))
 
-            /**
-             * Sets [Builder.username] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.username] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.username] to an arbitrary JSON value. */
             fun username(username: JsonField<String>) = apply { this.username = username }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -385,12 +365,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic internal fun validity(): Int = (if (username.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {

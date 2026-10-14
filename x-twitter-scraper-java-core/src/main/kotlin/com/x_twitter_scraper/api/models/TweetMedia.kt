@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -121,13 +119,13 @@ private constructor(
      * Media preview URL
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun mediaUrl(): String = mediaUrl.getRequired("mediaUrl")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun type(): Type = type.getRequired("type")
 
@@ -135,47 +133,42 @@ private constructor(
      * X media link from the tweet
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun url(): String = url.getRequired("url")
 
     /**
      * X media entity ID.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun id(): Optional<String> = id.getOptional("id")
 
     /**
      * Whether X permits direct media download.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun allowDownload(): Optional<Boolean> = allowDownload.getOptional("allowDownload")
 
     /**
      * Accessibility text supplied for the media.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun altText(): Optional<String> = altText.getOptional("altText")
 
     /**
      * Video aspect ratio as width and height.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun aspectRatio(): Optional<List<Long>> = aspectRatio.getOptional("aspectRatio")
 
     /**
      * Media availability state reported by X.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun availabilityStatus(): Optional<String> =
         availabilityStatus.getOptional("availabilityStatus")
@@ -183,96 +176,84 @@ private constructor(
     /**
      * Display-friendly media URL reported by X.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun displayUrl(): Optional<String> = displayUrl.getOptional("displayUrl")
 
     /**
      * Video duration in milliseconds.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun durationMillis(): Optional<Long> = durationMillis.getOptional("durationMillis")
 
     /**
      * Expanded X media URL.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun expandedUrl(): Optional<String> = expandedUrl.getOptional("expandedUrl")
 
     /**
      * Face-aware crop rectangles grouped by media size.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun faceRects(): Optional<FaceRects> = faceRects.getOptional("faceRects")
 
     /**
      * Suggested image crops reported by X.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun focusRects(): Optional<List<FocusRect>> = focusRects.getOptional("focusRects")
 
     /**
      * Original media height.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun height(): Optional<Long> = height.getOptional("height")
 
     /**
      * Media entity offsets in the tweet text.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun indices(): Optional<List<Long>> = indices.getOptional("indices")
 
     /**
      * Stable X media key.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun mediaKey(): Optional<String> = mediaKey.getOptional("mediaKey")
 
     /**
      * Whether X reports the media as monetizable.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun monetizable(): Optional<Boolean> = monetizable.getOptional("monetizable")
 
     /**
      * Named media renditions and resize modes.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun sizes(): Optional<Sizes> = sizes.getOptional("sizes")
 
     /**
      * Available video encodings, ordered as returned
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun videoVariants(): Optional<List<VideoVariant>> = videoVariants.getOptional("videoVariants")
 
     /**
      * Original media width.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun width(): Optional<Long> = width.getOptional("width")
 
@@ -511,56 +492,30 @@ private constructor(
         /** Media preview URL */
         fun mediaUrl(mediaUrl: String) = mediaUrl(JsonField.of(mediaUrl))
 
-        /**
-         * Sets [Builder.mediaUrl] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.mediaUrl] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.mediaUrl] to an arbitrary JSON value. */
         fun mediaUrl(mediaUrl: JsonField<String>) = apply { this.mediaUrl = mediaUrl }
 
         fun type(type: Type) = type(JsonField.of(type))
 
-        /**
-         * Sets [Builder.type] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.type] with a well-typed [Type] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.type] to an arbitrary JSON value. */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
         /** X media link from the tweet */
         fun url(url: String) = url(JsonField.of(url))
 
-        /**
-         * Sets [Builder.url] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.url] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.url] to an arbitrary JSON value. */
         fun url(url: JsonField<String>) = apply { this.url = url }
 
         /** X media entity ID. */
         fun id(id: String) = id(JsonField.of(id))
 
-        /**
-         * Sets [Builder.id] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.id] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.id] to an arbitrary JSON value. */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
         /** Whether X permits direct media download. */
         fun allowDownload(allowDownload: Boolean) = allowDownload(JsonField.of(allowDownload))
 
-        /**
-         * Sets [Builder.allowDownload] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.allowDownload] with a well-typed [Boolean] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.allowDownload] to an arbitrary JSON value. */
         fun allowDownload(allowDownload: JsonField<Boolean>) = apply {
             this.allowDownload = allowDownload
         }
@@ -568,24 +523,13 @@ private constructor(
         /** Accessibility text supplied for the media. */
         fun altText(altText: String) = altText(JsonField.of(altText))
 
-        /**
-         * Sets [Builder.altText] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.altText] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.altText] to an arbitrary JSON value. */
         fun altText(altText: JsonField<String>) = apply { this.altText = altText }
 
         /** Video aspect ratio as width and height. */
         fun aspectRatio(aspectRatio: List<Long>) = aspectRatio(JsonField.of(aspectRatio))
 
-        /**
-         * Sets [Builder.aspectRatio] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.aspectRatio] with a well-typed `List<Long>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.aspectRatio] to an arbitrary JSON value. */
         fun aspectRatio(aspectRatio: JsonField<List<Long>>) = apply {
             this.aspectRatio = aspectRatio.map { it.toMutableList() }
         }
@@ -606,13 +550,7 @@ private constructor(
         fun availabilityStatus(availabilityStatus: String) =
             availabilityStatus(JsonField.of(availabilityStatus))
 
-        /**
-         * Sets [Builder.availabilityStatus] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.availabilityStatus] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.availabilityStatus] to an arbitrary JSON value. */
         fun availabilityStatus(availabilityStatus: JsonField<String>) = apply {
             this.availabilityStatus = availabilityStatus
         }
@@ -620,25 +558,13 @@ private constructor(
         /** Display-friendly media URL reported by X. */
         fun displayUrl(displayUrl: String) = displayUrl(JsonField.of(displayUrl))
 
-        /**
-         * Sets [Builder.displayUrl] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.displayUrl] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.displayUrl] to an arbitrary JSON value. */
         fun displayUrl(displayUrl: JsonField<String>) = apply { this.displayUrl = displayUrl }
 
         /** Video duration in milliseconds. */
         fun durationMillis(durationMillis: Long) = durationMillis(JsonField.of(durationMillis))
 
-        /**
-         * Sets [Builder.durationMillis] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.durationMillis] with a well-typed [Long] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.durationMillis] to an arbitrary JSON value. */
         fun durationMillis(durationMillis: JsonField<Long>) = apply {
             this.durationMillis = durationMillis
         }
@@ -646,37 +572,19 @@ private constructor(
         /** Expanded X media URL. */
         fun expandedUrl(expandedUrl: String) = expandedUrl(JsonField.of(expandedUrl))
 
-        /**
-         * Sets [Builder.expandedUrl] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.expandedUrl] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.expandedUrl] to an arbitrary JSON value. */
         fun expandedUrl(expandedUrl: JsonField<String>) = apply { this.expandedUrl = expandedUrl }
 
         /** Face-aware crop rectangles grouped by media size. */
         fun faceRects(faceRects: FaceRects) = faceRects(JsonField.of(faceRects))
 
-        /**
-         * Sets [Builder.faceRects] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.faceRects] with a well-typed [FaceRects] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.faceRects] to an arbitrary JSON value. */
         fun faceRects(faceRects: JsonField<FaceRects>) = apply { this.faceRects = faceRects }
 
         /** Suggested image crops reported by X. */
         fun focusRects(focusRects: List<FocusRect>) = focusRects(JsonField.of(focusRects))
 
-        /**
-         * Sets [Builder.focusRects] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.focusRects] with a well-typed `List<FocusRect>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.focusRects] to an arbitrary JSON value. */
         fun focusRects(focusRects: JsonField<List<FocusRect>>) = apply {
             this.focusRects = focusRects.map { it.toMutableList() }
         }
@@ -696,24 +604,13 @@ private constructor(
         /** Original media height. */
         fun height(height: Long) = height(JsonField.of(height))
 
-        /**
-         * Sets [Builder.height] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.height] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.height] to an arbitrary JSON value. */
         fun height(height: JsonField<Long>) = apply { this.height = height }
 
         /** Media entity offsets in the tweet text. */
         fun indices(indices: List<Long>) = indices(JsonField.of(indices))
 
-        /**
-         * Sets [Builder.indices] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.indices] with a well-typed `List<Long>` value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.indices] to an arbitrary JSON value. */
         fun indices(indices: JsonField<List<Long>>) = apply {
             this.indices = indices.map { it.toMutableList() }
         }
@@ -733,48 +630,26 @@ private constructor(
         /** Stable X media key. */
         fun mediaKey(mediaKey: String) = mediaKey(JsonField.of(mediaKey))
 
-        /**
-         * Sets [Builder.mediaKey] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.mediaKey] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.mediaKey] to an arbitrary JSON value. */
         fun mediaKey(mediaKey: JsonField<String>) = apply { this.mediaKey = mediaKey }
 
         /** Whether X reports the media as monetizable. */
         fun monetizable(monetizable: Boolean) = monetizable(JsonField.of(monetizable))
 
-        /**
-         * Sets [Builder.monetizable] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.monetizable] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.monetizable] to an arbitrary JSON value. */
         fun monetizable(monetizable: JsonField<Boolean>) = apply { this.monetizable = monetizable }
 
         /** Named media renditions and resize modes. */
         fun sizes(sizes: Sizes) = sizes(JsonField.of(sizes))
 
-        /**
-         * Sets [Builder.sizes] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.sizes] with a well-typed [Sizes] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.sizes] to an arbitrary JSON value. */
         fun sizes(sizes: JsonField<Sizes>) = apply { this.sizes = sizes }
 
         /** Available video encodings, ordered as returned */
         fun videoVariants(videoVariants: List<VideoVariant>) =
             videoVariants(JsonField.of(videoVariants))
 
-        /**
-         * Sets [Builder.videoVariants] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.videoVariants] with a well-typed `List<VideoVariant>`
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
-         */
+        /** Sets [Builder.videoVariants] to an arbitrary JSON value. */
         fun videoVariants(videoVariants: JsonField<List<VideoVariant>>) = apply {
             this.videoVariants = videoVariants.map { it.toMutableList() }
         }
@@ -794,12 +669,7 @@ private constructor(
         /** Original media width. */
         fun width(width: Long) = width(JsonField.of(width))
 
-        /**
-         * Sets [Builder.width] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.width] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.width] to an arbitrary JSON value. */
         fun width(width: JsonField<Long>) = apply { this.width = width }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -907,11 +777,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (if (mediaUrl.asKnown().isPresent) 1 else 0) +
@@ -937,14 +802,7 @@ private constructor(
 
     class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
+        /** Returns this class instance's raw value. */
         @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
 
         companion object {
@@ -985,9 +843,6 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
          * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
          */
         fun value(): Value =
             when (this) {
@@ -999,9 +854,6 @@ private constructor(
 
         /**
          * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
          *
          * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
          *   known member.
@@ -1016,9 +868,6 @@ private constructor(
 
         /**
          * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
          *
          * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
          *   the expected primitive type.
@@ -1056,12 +905,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {
@@ -1161,12 +1004,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int = additionalProperties.count { (_, value) ->
             !value.isNull() && !value.isMissing()
@@ -1207,29 +1044,25 @@ private constructor(
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun h(): Long = h.getRequired("h")
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun w(): Long = w.getRequired("w")
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun x(): Long = x.getRequired("x")
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun y(): Long = y.getRequired("y")
 
@@ -1309,46 +1142,22 @@ private constructor(
 
             fun h(h: Long) = h(JsonField.of(h))
 
-            /**
-             * Sets [Builder.h] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.h] with a well-typed [Long] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.h] to an arbitrary JSON value. */
             fun h(h: JsonField<Long>) = apply { this.h = h }
 
             fun w(w: Long) = w(JsonField.of(w))
 
-            /**
-             * Sets [Builder.w] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.w] with a well-typed [Long] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.w] to an arbitrary JSON value. */
             fun w(w: JsonField<Long>) = apply { this.w = w }
 
             fun x(x: Long) = x(JsonField.of(x))
 
-            /**
-             * Sets [Builder.x] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.x] with a well-typed [Long] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.x] to an arbitrary JSON value. */
             fun x(x: JsonField<Long>) = apply { this.x = x }
 
             fun y(y: Long) = y(JsonField.of(y))
 
-            /**
-             * Sets [Builder.y] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.y] with a well-typed [Long] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.y] to an arbitrary JSON value. */
             fun y(y: JsonField<Long>) = apply { this.y = y }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -1426,12 +1235,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int =
             (if (h.asKnown().isPresent) 1 else 0) +
@@ -1544,12 +1347,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int = additionalProperties.count { (_, value) ->
             !value.isNull() && !value.isMissing()
@@ -1590,22 +1387,17 @@ private constructor(
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun contentType(): String = contentType.getRequired("contentType")
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun url(): String = url.getRequired("url")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun bitrate(): Optional<Long> = bitrate.getOptional("bitrate")
 
         /**
@@ -1675,37 +1467,19 @@ private constructor(
 
             fun contentType(contentType: String) = contentType(JsonField.of(contentType))
 
-            /**
-             * Sets [Builder.contentType] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.contentType] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.contentType] to an arbitrary JSON value. */
             fun contentType(contentType: JsonField<String>) = apply {
                 this.contentType = contentType
             }
 
             fun url(url: String) = url(JsonField.of(url))
 
-            /**
-             * Sets [Builder.url] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.url] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.url] to an arbitrary JSON value. */
             fun url(url: JsonField<String>) = apply { this.url = url }
 
             fun bitrate(bitrate: Long) = bitrate(JsonField.of(bitrate))
 
-            /**
-             * Sets [Builder.bitrate] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.bitrate] with a well-typed [Long] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.bitrate] to an arbitrary JSON value. */
             fun bitrate(bitrate: JsonField<Long>) = apply { this.bitrate = bitrate }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -1779,12 +1553,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int =
             (if (contentType.asKnown().isPresent) 1 else 0) +

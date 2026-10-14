@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.blocking
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -136,30 +134,23 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
     override fun getArticle(
         params: XGetArticleParams,
         requestOptions: RequestOptions,
-    ): XGetArticleResponse =
-        // get /x/articles/{tweetId}
-        withRawResponse().getArticle(params, requestOptions).parse()
+    ): XGetArticleResponse = withRawResponse().getArticle(params, requestOptions).parse()
 
     override fun getHomeTimeline(
         params: XGetHomeTimelineParams,
         requestOptions: RequestOptions,
-    ): PaginatedTweets =
-        // get /x/timeline
-        withRawResponse().getHomeTimeline(params, requestOptions).parse()
+    ): PaginatedTweets = withRawResponse().getHomeTimeline(params, requestOptions).parse()
 
     override fun getNotifications(
         params: XGetNotificationsParams,
         requestOptions: RequestOptions,
     ): XGetNotificationsResponse =
-        // get /x/notifications
         withRawResponse().getNotifications(params, requestOptions).parse()
 
     override fun getTrends(
         params: XGetTrendsParams,
         requestOptions: RequestOptions,
-    ): XGetTrendsResponse =
-        // get /x/trends
-        withRawResponse().getTrends(params, requestOptions).parse()
+    ): XGetTrendsResponse = withRawResponse().getTrends(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         XService.WithRawResponse {
@@ -271,8 +262,6 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
             params: XGetArticleParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<XGetArticleResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("tweetId", params.tweetId().getOrNull())
             val request =
                 HttpRequest.builder()

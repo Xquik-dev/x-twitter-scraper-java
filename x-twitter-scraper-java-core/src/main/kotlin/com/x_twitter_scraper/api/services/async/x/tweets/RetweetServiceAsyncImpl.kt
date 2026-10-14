@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async.x.tweets
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -45,14 +43,12 @@ class RetweetServiceAsyncImpl internal constructor(private val clientOptions: Cl
         params: RetweetCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<RetweetCreateResponse> =
-        // post /x/tweets/{id}/retweet
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     override fun delete(
         params: RetweetDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<RetweetDeleteResponse> =
-        // delete /x/tweets/{id}/retweet
         withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -75,8 +71,6 @@ class RetweetServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: RetweetCreateParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<RetweetCreateResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -109,8 +103,6 @@ class RetweetServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: RetweetDeleteParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<RetweetDeleteResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

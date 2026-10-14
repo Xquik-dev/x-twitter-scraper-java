@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.webhooks
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -38,7 +36,7 @@ private constructor(
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun webhooks(): List<Webhook> = webhooks.getRequired("webhooks")
 
@@ -88,13 +86,7 @@ private constructor(
 
         fun webhooks(webhooks: List<Webhook>) = webhooks(JsonField.of(webhooks))
 
-        /**
-         * Sets [Builder.webhooks] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.webhooks] with a well-typed `List<Webhook>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.webhooks] to an arbitrary JSON value. */
         fun webhooks(webhooks: JsonField<List<Webhook>>) = apply {
             this.webhooks = webhooks.map { it.toMutableList() }
         }
@@ -176,11 +168,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int = (webhooks.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 

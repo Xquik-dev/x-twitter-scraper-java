@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.draws
 
 import com.x_twitter_scraper.api.core.http.QueryParams
@@ -30,7 +28,6 @@ internal class DrawExportParamsTest {
                 .build()
 
         assertThat(params._pathParam(0)).isEqualTo("f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345")
-        // out-of-bound path param
         assertThat(params._pathParam(1)).isEqualTo("")
     }
 

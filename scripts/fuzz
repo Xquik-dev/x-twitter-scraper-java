@@ -4,14 +4,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Fuzzes the retry header parser with Jazzer for 30 seconds.
-
 set -euo pipefail
 
 cd -- "$(dirname -- "$0")/.."
 
-# Jazzer saves an input that fails into this folder, where the tests replay it.
-# Commit it with the fix as a regression input.
 mkdir -p x-twitter-scraper-java-core/src/test/resources/com/x_twitter_scraper/api/core/http/RetryAfterFuzzTestInputs
 
 echo "==> Fuzzing untrusted retry headers"

@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.x.users
 
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -369,11 +367,7 @@ private constructor(
             this.blueVerifiedOnly = blueVerifiedOnly
         }
 
-        /**
-         * Alias for [Builder.blueVerifiedOnly].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.blueVerifiedOnly]. */
         fun blueVerifiedOnly(blueVerifiedOnly: Boolean) =
             blueVerifiedOnly(blueVerifiedOnly as Boolean?)
 
@@ -461,11 +455,7 @@ private constructor(
         /** Maximum likes threshold. maxLikes is also accepted. */
         fun maxFaves(maxFaves: Long?) = apply { this.maxFaves = maxFaves }
 
-        /**
-         * Alias for [Builder.maxFaves].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.maxFaves]. */
         fun maxFaves(maxFaves: Long) = maxFaves(maxFaves as Long?)
 
         /** Alias for calling [Builder.maxFaves] with `maxFaves.orElse(null)`. */
@@ -480,11 +470,7 @@ private constructor(
         /** Maximum quotes threshold. */
         fun maxQuotes(maxQuotes: Long?) = apply { this.maxQuotes = maxQuotes }
 
-        /**
-         * Alias for [Builder.maxQuotes].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.maxQuotes]. */
         fun maxQuotes(maxQuotes: Long) = maxQuotes(maxQuotes as Long?)
 
         /** Alias for calling [Builder.maxQuotes] with `maxQuotes.orElse(null)`. */
@@ -493,11 +479,7 @@ private constructor(
         /** Maximum replies threshold. */
         fun maxReplies(maxReplies: Long?) = apply { this.maxReplies = maxReplies }
 
-        /**
-         * Alias for [Builder.maxReplies].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.maxReplies]. */
         fun maxReplies(maxReplies: Long) = maxReplies(maxReplies as Long?)
 
         /** Alias for calling [Builder.maxReplies] with `maxReplies.orElse(null)`. */
@@ -506,11 +488,7 @@ private constructor(
         /** Maximum retweets threshold. */
         fun maxRetweets(maxRetweets: Long?) = apply { this.maxRetweets = maxRetweets }
 
-        /**
-         * Alias for [Builder.maxRetweets].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.maxRetweets]. */
         fun maxRetweets(maxRetweets: Long) = maxRetweets(maxRetweets as Long?)
 
         /** Alias for calling [Builder.maxRetweets] with `maxRetweets.orElse(null)`. */
@@ -531,11 +509,7 @@ private constructor(
         /** Minimum bookmark count threshold. */
         fun minBookmarks(minBookmarks: Long?) = apply { this.minBookmarks = minBookmarks }
 
-        /**
-         * Alias for [Builder.minBookmarks].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.minBookmarks]. */
         fun minBookmarks(minBookmarks: Long) = minBookmarks(minBookmarks as Long?)
 
         /** Alias for calling [Builder.minBookmarks] with `minBookmarks.orElse(null)`. */
@@ -544,11 +518,7 @@ private constructor(
         /** Minimum likes threshold. minLikes is also accepted. */
         fun minFaves(minFaves: Long?) = apply { this.minFaves = minFaves }
 
-        /**
-         * Alias for [Builder.minFaves].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.minFaves]. */
         fun minFaves(minFaves: Long) = minFaves(minFaves as Long?)
 
         /** Alias for calling [Builder.minFaves] with `minFaves.orElse(null)`. */
@@ -557,11 +527,7 @@ private constructor(
         /** Minimum quote count threshold. */
         fun minQuotes(minQuotes: Long?) = apply { this.minQuotes = minQuotes }
 
-        /**
-         * Alias for [Builder.minQuotes].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.minQuotes]. */
         fun minQuotes(minQuotes: Long) = minQuotes(minQuotes as Long?)
 
         /** Alias for calling [Builder.minQuotes] with `minQuotes.orElse(null)`. */
@@ -570,11 +536,7 @@ private constructor(
         /** Minimum replies threshold. */
         fun minReplies(minReplies: Long?) = apply { this.minReplies = minReplies }
 
-        /**
-         * Alias for [Builder.minReplies].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.minReplies]. */
         fun minReplies(minReplies: Long) = minReplies(minReplies as Long?)
 
         /** Alias for calling [Builder.minReplies] with `minReplies.orElse(null)`. */
@@ -583,11 +545,7 @@ private constructor(
         /** Minimum retweets threshold. */
         fun minRetweets(minRetweets: Long?) = apply { this.minRetweets = minRetweets }
 
-        /**
-         * Alias for [Builder.minRetweets].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.minRetweets]. */
         fun minRetweets(minRetweets: Long) = minRetweets(minRetweets as Long?)
 
         /** Alias for calling [Builder.minRetweets] with `minRetweets.orElse(null)`. */
@@ -596,11 +554,7 @@ private constructor(
         /** Minimum view count threshold. */
         fun minViews(minViews: Long?) = apply { this.minViews = minViews }
 
-        /**
-         * Alias for [Builder.minViews].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.minViews]. */
         fun minViews(minViews: Long) = minViews(minViews as Long?)
 
         /** Alias for calling [Builder.minViews] with `minViews.orElse(null)`. */
@@ -611,11 +565,7 @@ private constructor(
             this.nativeRetweets = nativeRetweets
         }
 
-        /**
-         * Alias for [Builder.nativeRetweets].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.nativeRetweets]. */
         fun nativeRetweets(nativeRetweets: Boolean) = nativeRetweets(nativeRetweets as Boolean?)
 
         /** Alias for calling [Builder.nativeRetweets] with `nativeRetweets.orElse(null)`. */
@@ -631,11 +581,7 @@ private constructor(
         /** Only return news results. */
         fun news(news: Boolean?) = apply { this.news = news }
 
-        /**
-         * Alias for [Builder.news].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.news]. */
         fun news(news: Boolean) = news(news as Boolean?)
 
         /** Alias for calling [Builder.news] with `news.orElse(null)`. */
@@ -647,11 +593,7 @@ private constructor(
          */
         fun pageSize(pageSize: Long?) = apply { this.pageSize = pageSize }
 
-        /**
-         * Alias for [Builder.pageSize].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.pageSize]. */
         fun pageSize(pageSize: Long) = pageSize(pageSize as Long?)
 
         /** Alias for calling [Builder.pageSize] with `pageSize.orElse(null)`. */
@@ -696,11 +638,7 @@ private constructor(
         /** Enable the safe-search filter. */
         fun safe(safe: Boolean?) = apply { this.safe = safe }
 
-        /**
-         * Alias for [Builder.safe].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.safe]. */
         fun safe(safe: Boolean) = safe(safe as Boolean?)
 
         /** Alias for calling [Builder.safe] with `safe.orElse(null)`. */
@@ -757,11 +695,7 @@ private constructor(
         /** Only return tweets from verified authors. */
         fun verifiedOnly(verifiedOnly: Boolean?) = apply { this.verifiedOnly = verifiedOnly }
 
-        /**
-         * Alias for [Builder.verifiedOnly].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.verifiedOnly]. */
         fun verifiedOnly(verifiedOnly: Boolean) = verifiedOnly(verifiedOnly as Boolean?)
 
         /** Alias for calling [Builder.verifiedOnly] with `verifiedOnly.orElse(null)`. */
@@ -1004,14 +938,7 @@ private constructor(
     /** Filter by media type. */
     class MediaType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
+        /** Returns this class instance's raw value. */
         @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
 
         companion object {
@@ -1066,9 +993,6 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
          * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
          */
         fun value(): Value =
             when (this) {
@@ -1083,9 +1007,6 @@ private constructor(
 
         /**
          * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
          *
          * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
          *   known member.
@@ -1103,9 +1024,6 @@ private constructor(
 
         /**
          * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
          *
          * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
          *   the expected primitive type.
@@ -1143,12 +1061,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {
@@ -1167,14 +1079,7 @@ private constructor(
     /** Quote mode. */
     class Quotes @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
+        /** Returns this class instance's raw value. */
         @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
 
         companion object {
@@ -1215,9 +1120,6 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
          * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
          */
         fun value(): Value =
             when (this) {
@@ -1229,9 +1131,6 @@ private constructor(
 
         /**
          * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
          *
          * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
          *   known member.
@@ -1246,9 +1145,6 @@ private constructor(
 
         /**
          * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
          *
          * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
          *   the expected primitive type.
@@ -1286,12 +1182,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {
@@ -1310,14 +1200,7 @@ private constructor(
     /** Reply mode. */
     class Replies @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
+        /** Returns this class instance's raw value. */
         @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
 
         companion object {
@@ -1358,9 +1241,6 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
          * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
          */
         fun value(): Value =
             when (this) {
@@ -1372,9 +1252,6 @@ private constructor(
 
         /**
          * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
          *
          * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
          *   known member.
@@ -1389,9 +1266,6 @@ private constructor(
 
         /**
          * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
          *
          * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
          *   the expected primitive type.
@@ -1429,12 +1303,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {
@@ -1453,14 +1321,7 @@ private constructor(
     /** Retweet mode. */
     class Retweets @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
+        /** Returns this class instance's raw value. */
         @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
 
         companion object {
@@ -1501,9 +1362,6 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
          * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
          */
         fun value(): Value =
             when (this) {
@@ -1515,9 +1373,6 @@ private constructor(
 
         /**
          * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
          *
          * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
          *   known member.
@@ -1532,9 +1387,6 @@ private constructor(
 
         /**
          * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
          *
          * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
          *   the expected primitive type.
@@ -1572,12 +1424,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {

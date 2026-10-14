@@ -4,12 +4,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Checks dependency licenses, then scans every locked dependency with OSV
-# Scanner. Severity never excuses a finding. A finding in a dependency that a
-# published module ships at runtime always blocks. A development-only finding
-# blocks when a fixed version exists. Without a fix, it passes only while
-# audit-exceptions.json lists it with a recheck date that is still ahead.
-
 set -euo pipefail
 
 cd -- "$(dirname -- "$0")/.."
@@ -99,7 +93,6 @@ else
     chmod +x "$scanner"
 fi
 
-# Succeeds when a published module ships this exact version at runtime.
 is_runtime_dependency() {
     awk -F= -v coordinate="$1:$2" '
         $1 == coordinate {
@@ -112,7 +105,6 @@ is_runtime_dependency() {
     ' "${published_lockfiles[@]}"
 }
 
-# Prints the recheck date of the exception that lists this finding.
 exception_recheck() {
     jq -r --arg package "$1" --arg ids "$2" '
         ($ids | split(",")) as $id_list

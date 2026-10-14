@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async.x.users
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -45,14 +43,12 @@ class FollowServiceAsyncImpl internal constructor(private val clientOptions: Cli
         params: FollowCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<FollowCreateResponse> =
-        // post /x/users/{id}/follow
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     override fun deleteAll(
         params: FollowDeleteAllParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<FollowDeleteAllResponse> =
-        // delete /x/users/{id}/follow
         withRawResponse().deleteAll(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -75,8 +71,6 @@ class FollowServiceAsyncImpl internal constructor(private val clientOptions: Cli
             params: FollowCreateParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<FollowCreateResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -109,8 +103,6 @@ class FollowServiceAsyncImpl internal constructor(private val clientOptions: Cli
             params: FollowDeleteAllParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<FollowDeleteAllResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

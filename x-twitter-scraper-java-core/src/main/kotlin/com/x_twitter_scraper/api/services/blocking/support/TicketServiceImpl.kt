@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.blocking.support
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -50,37 +48,27 @@ class TicketServiceImpl internal constructor(private val clientOptions: ClientOp
     override fun create(
         params: TicketCreateParams,
         requestOptions: RequestOptions,
-    ): TicketCreateResponse =
-        // post /support/tickets
-        withRawResponse().create(params, requestOptions).parse()
+    ): TicketCreateResponse = withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: TicketRetrieveParams,
         requestOptions: RequestOptions,
-    ): TicketRetrieveResponse =
-        // get /support/tickets/{id}
-        withRawResponse().retrieve(params, requestOptions).parse()
+    ): TicketRetrieveResponse = withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(
         params: TicketUpdateParams,
         requestOptions: RequestOptions,
-    ): TicketUpdateResponse =
-        // patch /support/tickets/{id}
-        withRawResponse().update(params, requestOptions).parse()
+    ): TicketUpdateResponse = withRawResponse().update(params, requestOptions).parse()
 
     override fun list(
         params: TicketListParams,
         requestOptions: RequestOptions,
-    ): TicketListResponse =
-        // get /support/tickets
-        withRawResponse().list(params, requestOptions).parse()
+    ): TicketListResponse = withRawResponse().list(params, requestOptions).parse()
 
     override fun reply(
         params: TicketReplyParams,
         requestOptions: RequestOptions,
-    ): TicketReplyResponse =
-        // post /support/tickets/{id}/messages
-        withRawResponse().reply(params, requestOptions).parse()
+    ): TicketReplyResponse = withRawResponse().reply(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         TicketService.WithRawResponse {
@@ -130,8 +118,6 @@ class TicketServiceImpl internal constructor(private val clientOptions: ClientOp
             params: TicketRetrieveParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<TicketRetrieveResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -160,8 +146,6 @@ class TicketServiceImpl internal constructor(private val clientOptions: ClientOp
             params: TicketUpdateParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<TicketUpdateResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -218,8 +202,6 @@ class TicketServiceImpl internal constructor(private val clientOptions: ClientOp
             params: TicketReplyParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<TicketReplyResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

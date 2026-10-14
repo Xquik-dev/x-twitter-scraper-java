@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.x.profile
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -36,7 +34,7 @@ private constructor(
      * X account (@username or ID) receiving banner from URL
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun account(): String = body.account()
 
@@ -44,7 +42,7 @@ private constructor(
      * HTTPS URL to the banner image to download
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun url(): String = body.url()
 
@@ -105,36 +103,19 @@ private constructor(
 
         fun idempotencyKey(idempotencyKey: String) = apply { this.idempotencyKey = idempotencyKey }
 
-        /**
-         * Sets the entire request body.
-         *
-         * This is generally only useful if you are already constructing the body separately.
-         * Otherwise, it's more convenient to use the top-level setters instead:
-         * - [account]
-         * - [url]
-         */
+        /** Sets the entire request body. */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
         /** X account (@username or ID) receiving banner from URL */
         fun account(account: String) = apply { body.account(account) }
 
-        /**
-         * Sets [Builder.account] to an arbitrary multipart value.
-         *
-         * You should usually call [Builder.account] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.account] to an arbitrary multipart value. */
         fun account(account: MultipartField<String>) = apply { body.account(account) }
 
         /** HTTPS URL to the banner image to download */
         fun url(url: String) = apply { body.url(url) }
 
-        /**
-         * Sets [Builder.url] to an arbitrary multipart value.
-         *
-         * You should usually call [Builder.url] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.url] to an arbitrary multipart value. */
         fun url(url: MultipartField<String>) = apply { body.url(url) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
@@ -303,8 +284,7 @@ private constructor(
          * X account (@username or ID) receiving banner from URL
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun account(): String = account.value.getRequired("account")
 
@@ -312,8 +292,7 @@ private constructor(
          * HTTPS URL to the banner image to download
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun url(): String = url.value.getRequired("url")
 
@@ -375,25 +354,13 @@ private constructor(
             /** X account (@username or ID) receiving banner from URL */
             fun account(account: String) = account(MultipartField.of(account))
 
-            /**
-             * Sets [Builder.account] to an arbitrary multipart value.
-             *
-             * You should usually call [Builder.account] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.account] to an arbitrary multipart value. */
             fun account(account: MultipartField<String>) = apply { this.account = account }
 
             /** HTTPS URL to the banner image to download */
             fun url(url: String) = url(MultipartField.of(url))
 
-            /**
-             * Sets [Builder.url] to an arbitrary multipart value.
-             *
-             * You should usually call [Builder.url] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.url] to an arbitrary multipart value. */
             fun url(url: MultipartField<String>) = apply { this.url = url }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {

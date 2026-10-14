@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async.x
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -65,42 +63,36 @@ class CommunityServiceAsyncImpl internal constructor(private val clientOptions: 
         params: CommunityCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<CommunityCreateResponse> =
-        // post /x/communities
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     override fun delete(
         params: CommunityDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<CommunityDeleteResponse> =
-        // delete /x/communities/{id}
         withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveInfo(
         params: CommunityRetrieveInfoParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<CommunityRetrieveInfoResponse> =
-        // get /x/communities/{id}/info
         withRawResponse().retrieveInfo(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveMembers(
         params: CommunityRetrieveMembersParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PaginatedUsers> =
-        // get /x/communities/{id}/members
         withRawResponse().retrieveMembers(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveModerators(
         params: CommunityRetrieveModeratorsParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PaginatedUsers> =
-        // get /x/communities/{id}/moderators
         withRawResponse().retrieveModerators(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveSearch(
         params: CommunityRetrieveSearchParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PaginatedTweets> =
-        // get /x/communities/search
         withRawResponse().retrieveSearch(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -168,8 +160,6 @@ class CommunityServiceAsyncImpl internal constructor(private val clientOptions: 
             params: CommunityDeleteParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<CommunityDeleteResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -202,8 +192,6 @@ class CommunityServiceAsyncImpl internal constructor(private val clientOptions: 
             params: CommunityRetrieveInfoParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<CommunityRetrieveInfoResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -235,8 +223,6 @@ class CommunityServiceAsyncImpl internal constructor(private val clientOptions: 
             params: CommunityRetrieveMembersParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<PaginatedUsers>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -268,8 +254,6 @@ class CommunityServiceAsyncImpl internal constructor(private val clientOptions: 
             params: CommunityRetrieveModeratorsParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<PaginatedUsers>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.x.accounts
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -35,7 +33,7 @@ private constructor(
      * Number of accounts cleared
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun cleared(): Long = cleared.getRequired("cleared")
 
@@ -86,12 +84,7 @@ private constructor(
         /** Number of accounts cleared */
         fun cleared(cleared: Long) = cleared(JsonField.of(cleared))
 
-        /**
-         * Sets [Builder.cleared] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.cleared] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.cleared] to an arbitrary JSON value. */
         fun cleared(cleared: JsonField<Long>) = apply { this.cleared = cleared }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -159,11 +152,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic internal fun validity(): Int = (if (cleared.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {

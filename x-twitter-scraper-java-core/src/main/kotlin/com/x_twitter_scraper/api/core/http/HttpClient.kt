@@ -25,6 +25,5 @@ interface HttpClient : AutoCloseable {
     fun executeAsync(request: HttpRequest): CompletableFuture<HttpResponse> =
         executeAsync(request, RequestOptions.none())
 
-    /** Overridden from [AutoCloseable] to not have a checked exception in its signature. */
     override fun close()
 }

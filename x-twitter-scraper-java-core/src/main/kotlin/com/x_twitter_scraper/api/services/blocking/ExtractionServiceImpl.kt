@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.blocking
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -48,37 +46,28 @@ class ExtractionServiceImpl internal constructor(private val clientOptions: Clie
     override fun retrieve(
         params: ExtractionRetrieveParams,
         requestOptions: RequestOptions,
-    ): ExtractionRetrieveResponse =
-        // get /extractions/{id}
-        withRawResponse().retrieve(params, requestOptions).parse()
+    ): ExtractionRetrieveResponse = withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun list(
         params: ExtractionListParams,
         requestOptions: RequestOptions,
-    ): ExtractionListResponse =
-        // get /extractions
-        withRawResponse().list(params, requestOptions).parse()
+    ): ExtractionListResponse = withRawResponse().list(params, requestOptions).parse()
 
     override fun estimateCost(
         params: ExtractionEstimateCostParams,
         requestOptions: RequestOptions,
     ): ExtractionEstimateCostResponse =
-        // post /extractions/estimate
         withRawResponse().estimateCost(params, requestOptions).parse()
 
     override fun exportResults(
         params: ExtractionExportResultsParams,
         requestOptions: RequestOptions,
-    ): HttpResponse =
-        // get /extractions/{id}/export
-        withRawResponse().exportResults(params, requestOptions)
+    ): HttpResponse = withRawResponse().exportResults(params, requestOptions)
 
     override fun run(
         params: ExtractionRunParams,
         requestOptions: RequestOptions,
-    ): ExtractionRunResponse =
-        // post /extractions
-        withRawResponse().run(params, requestOptions).parse()
+    ): ExtractionRunResponse = withRawResponse().run(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         ExtractionService.WithRawResponse {
@@ -100,8 +89,6 @@ class ExtractionServiceImpl internal constructor(private val clientOptions: Clie
             params: ExtractionRetrieveParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<ExtractionRetrieveResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -182,8 +169,6 @@ class ExtractionServiceImpl internal constructor(private val clientOptions: Clie
             params: ExtractionExportResultsParams,
             requestOptions: RequestOptions,
         ): HttpResponse {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

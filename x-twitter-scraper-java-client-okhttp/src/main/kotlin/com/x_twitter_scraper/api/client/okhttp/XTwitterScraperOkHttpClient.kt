@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.client.okhttp
 
 import com.fasterxml.jackson.databind.json.JsonMapper
@@ -109,11 +107,7 @@ class XTwitterScraperOkHttpClient private constructor() {
             this.maxIdleConnections = maxIdleConnections
         }
 
-        /**
-         * Alias for [Builder.maxIdleConnections].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.maxIdleConnections]. */
         fun maxIdleConnections(maxIdleConnections: Int) =
             maxIdleConnections(maxIdleConnections as Int?)
 
@@ -143,9 +137,7 @@ class XTwitterScraperOkHttpClient private constructor() {
          *
          * If this is set, then [trustManager] must also be set.
          *
-         * If unset, then the system default is used. Most applications should not call this method,
-         * and instead use the system default. The default include special optimizations that can be
-         * lost if the implementation is modified.
+         * If unset, then the system default is used.
          */
         fun sslSocketFactory(sslSocketFactory: SSLSocketFactory?) = apply {
             this.sslSocketFactory = sslSocketFactory
@@ -160,9 +152,7 @@ class XTwitterScraperOkHttpClient private constructor() {
          *
          * If this is set, then [sslSocketFactory] must also be set.
          *
-         * If unset, then the system default is used. Most applications should not call this method,
-         * and instead use the system default. The default include special optimizations that can be
-         * lost if the implementation is modified.
+         * If unset, then the system default is used.
          */
         fun trustManager(trustManager: X509TrustManager?) = apply {
             this.trustManager = trustManager
@@ -190,8 +180,8 @@ class XTwitterScraperOkHttpClient private constructor() {
          * Whether to throw an exception if any of the Jackson versions detected at runtime are
          * incompatible with the SDK's minimum supported Jackson version (2.13.4).
          *
-         * Defaults to true. Use extreme caution when disabling this option. There is no guarantee
-         * that the SDK will work correctly when using an incompatible Jackson version.
+         * Defaults to true. There is no guarantee that the SDK will work correctly when using an
+         * incompatible Jackson version.
          */
         fun checkJacksonVersionCompatibility(checkJacksonVersionCompatibility: Boolean) = apply {
             clientOptions.checkJacksonVersionCompatibility(checkJacksonVersionCompatibility)
@@ -200,15 +190,12 @@ class XTwitterScraperOkHttpClient private constructor() {
         /**
          * The Jackson JSON mapper to use for serializing and deserializing JSON.
          *
-         * Defaults to [com.x_twitter_scraper.api.core.jsonMapper]. The default is usually
-         * sufficient and rarely needs to be overridden.
+         * Defaults to [com.x_twitter_scraper.api.core.jsonMapper].
          */
         fun jsonMapper(jsonMapper: JsonMapper) = apply { clientOptions.jsonMapper(jsonMapper) }
 
         /**
          * The interface to use for delaying execution, like during retries.
-         *
-         * This is primarily useful for using fake delays in tests.
          *
          * Defaults to real execution delays.
          *
@@ -218,8 +205,6 @@ class XTwitterScraperOkHttpClient private constructor() {
 
         /**
          * The clock to use for operations that require timing, like retries.
-         *
-         * This is primarily useful for using a fake clock in tests.
          *
          * Defaults to [Clock.systemUTC].
          */
@@ -260,8 +245,6 @@ class XTwitterScraperOkHttpClient private constructor() {
          * Sets the maximum time allowed for a complete HTTP call, not including retries.
          *
          * See [Timeout.request] for more details.
-         *
-         * For fine-grained control, pass a [Timeout] object.
          */
         fun timeout(timeout: Duration) = apply { clientOptions.timeout(timeout) }
 
@@ -270,7 +253,7 @@ class XTwitterScraperOkHttpClient private constructor() {
          * between requests.
          *
          * Only the following error types are retried:
-         * - Connection errors (for example, due to a network connectivity problem)
+         * - Connection errors
          * - 408 Request Timeout
          * - 409 Conflict
          * - 429 Rate Limit

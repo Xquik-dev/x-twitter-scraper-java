@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -42,16 +40,10 @@ private constructor(
         aiGenerated: JsonField<AiGenerated> = JsonMissing.of(),
     ) : this(advertising, aiGenerated, mutableMapOf())
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun advertising(): Optional<Advertising> = advertising.getOptional("advertising")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun aiGenerated(): Optional<AiGenerated> = aiGenerated.getOptional("aiGenerated")
 
     /**
@@ -106,26 +98,14 @@ private constructor(
 
         fun advertising(advertising: Advertising) = advertising(JsonField.of(advertising))
 
-        /**
-         * Sets [Builder.advertising] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.advertising] with a well-typed [Advertising] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.advertising] to an arbitrary JSON value. */
         fun advertising(advertising: JsonField<Advertising>) = apply {
             this.advertising = advertising
         }
 
         fun aiGenerated(aiGenerated: AiGenerated) = aiGenerated(JsonField.of(aiGenerated))
 
-        /**
-         * Sets [Builder.aiGenerated] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.aiGenerated] with a well-typed [AiGenerated] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.aiGenerated] to an arbitrary JSON value. */
         fun aiGenerated(aiGenerated: JsonField<AiGenerated>) = apply {
             this.aiGenerated = aiGenerated
         }
@@ -186,11 +166,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (advertising.asKnown().getOrNull()?.validity() ?: 0) +
@@ -213,8 +188,7 @@ private constructor(
         /**
          * True when X labels the tweet as paid promotion content.
          *
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
         fun isPaidPromotion(): Optional<Boolean> = isPaidPromotion.getOptional("isPaidPromotion")
 
@@ -262,13 +236,7 @@ private constructor(
             fun isPaidPromotion(isPaidPromotion: Boolean) =
                 isPaidPromotion(JsonField.of(isPaidPromotion))
 
-            /**
-             * Sets [Builder.isPaidPromotion] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.isPaidPromotion] with a well-typed [Boolean] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.isPaidPromotion] to an arbitrary JSON value. */
             fun isPaidPromotion(isPaidPromotion: JsonField<Boolean>) = apply {
                 this.isPaidPromotion = isPaidPromotion
             }
@@ -329,12 +297,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int = (if (isPaidPromotion.asKnown().isPresent) 1 else 0)
 
@@ -377,16 +339,14 @@ private constructor(
         /**
          * Source of the AI-generated media disclosure.
          *
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
         fun detectionSource(): Optional<String> = detectionSource.getOptional("detectionSource")
 
         /**
          * True when X labels the tweet as containing AI-generated media.
          *
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
         fun hasAiGeneratedMedia(): Optional<Boolean> =
             hasAiGeneratedMedia.getOptional("hasAiGeneratedMedia")
@@ -447,13 +407,7 @@ private constructor(
             fun detectionSource(detectionSource: String) =
                 detectionSource(JsonField.of(detectionSource))
 
-            /**
-             * Sets [Builder.detectionSource] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.detectionSource] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.detectionSource] to an arbitrary JSON value. */
             fun detectionSource(detectionSource: JsonField<String>) = apply {
                 this.detectionSource = detectionSource
             }
@@ -462,13 +416,7 @@ private constructor(
             fun hasAiGeneratedMedia(hasAiGeneratedMedia: Boolean) =
                 hasAiGeneratedMedia(JsonField.of(hasAiGeneratedMedia))
 
-            /**
-             * Sets [Builder.hasAiGeneratedMedia] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.hasAiGeneratedMedia] with a well-typed [Boolean]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
-             */
+            /** Sets [Builder.hasAiGeneratedMedia] to an arbitrary JSON value. */
             fun hasAiGeneratedMedia(hasAiGeneratedMedia: JsonField<Boolean>) = apply {
                 this.hasAiGeneratedMedia = hasAiGeneratedMedia
             }
@@ -534,12 +482,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int =
             (if (detectionSource.asKnown().isPresent) 1 else 0) +

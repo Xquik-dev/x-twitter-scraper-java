@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -45,21 +43,18 @@ class AccountServiceAsyncImpl internal constructor(private val clientOptions: Cl
         params: AccountRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<AccountRetrieveResponse> =
-        // get /account
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
     override fun setXUsername(
         params: AccountSetXUsernameParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<AccountSetXUsernameResponse> =
-        // put /account/x-identity
         withRawResponse().setXUsername(params, requestOptions).thenApply { it.parse() }
 
     override fun updateLocale(
         params: AccountUpdateLocaleParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<AccountUpdateLocaleResponse> =
-        // patch /account
         withRawResponse().updateLocale(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :

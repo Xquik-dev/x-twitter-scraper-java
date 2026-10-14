@@ -4,10 +4,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Runs bin/verify-release-signature, the first step of a release after the
-# upload. Fake commands stand in for curl, gpg and sleep, so no test reaches
-# Maven Central or a key server, and no test waits.
-
 set -euo pipefail
 
 # shellcheck source=scripts/tests/support.sh
@@ -20,8 +16,6 @@ prepare_verification() {
     copy_file bin/verify-release-signature
     fake curl <<'EOF_FAKE'
 #!/bin/sh
-# Stands in for curl. It writes a small file for each download, or fails
-# every download when FAKE_CENTRAL_MISSING is set.
 previous=""
 for argument in "$@"; do
     case "$argument" in https://*) url="$argument" ;; esac
@@ -34,9 +28,6 @@ echo "not a real artifact" >"$output"
 EOF_FAKE
     fake gpg <<'EOF_FAKE'
 #!/bin/sh
-# Stands in for gpg. It records each call with the keyring folder it was
-# given. A verification reports a valid signature by the key whose
-# fingerprint FAKE_SIGNER names.
 workspace="${GNUPGHOME%/gnupg}"
 echo "$* with GNUPGHOME=${GNUPGHOME:-unset}" | sed "s#$workspace#WORKSPACE#g" >>"$FAKE_LOGS/gpg"
 case "$*" in
@@ -45,7 +36,6 @@ esac
 EOF_FAKE
     fake sleep <<'EOF_FAKE'
 #!/bin/sh
-# Stands in for sleep, so a retry does not wait.
 echo "$*" >>"$FAKE_LOGS/sleep"
 EOF_FAKE
     run_env=("FAKE_SIGNER=$fingerprint")

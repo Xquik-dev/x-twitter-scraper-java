@@ -57,12 +57,7 @@ sealed class JsonField<out T : Any> {
      *
      * This is the opposite of [asUnknown].
      */
-    fun asKnown():
-        Optional<
-            // Safe because `Optional` is effectively covariant, but Kotlin doesn't know that.
-            @UnsafeVariance
-            T
-        > = Optional.ofNullable((this as? KnownValue)?.value)
+    fun asKnown(): Optional<@UnsafeVariance T> = Optional.ofNullable((this as? KnownValue)?.value)
 
     /**
      * Returns an [Optional] containing this field's arbitrary [JsonValue], meaning it mismatches
@@ -129,8 +124,6 @@ sealed class JsonField<out T : Any> {
                         try {
                             JsonValue.from(it)
                         } catch (e: IllegalArgumentException) {
-                            // The known value is a list, but not all values are convertible to
-                            // `JsonValue`.
                             return Optional.empty()
                         }
                     }
@@ -159,8 +152,6 @@ sealed class JsonField<out T : Any> {
                                 try {
                                     JsonValue.from(value)
                                 } catch (e: IllegalArgumentException) {
-                                    // The known value is a map, but not all items are convertible
-                                    // to `JsonValue`.
                                     return Optional.empty()
                                 }
 
@@ -181,13 +172,7 @@ sealed class JsonField<out T : Any> {
         }
 
     @JvmSynthetic
-    internal fun getOptional(
-        name: String
-    ): Optional<
-        // Safe because `Optional` is effectively covariant, but Kotlin doesn't know that.
-        @UnsafeVariance
-        T
-    > =
+    internal fun getOptional(name: String): Optional<@UnsafeVariance T> =
         when (this) {
             is KnownValue -> Optional.of(value)
             is JsonMissing,
@@ -324,35 +309,6 @@ sealed class JsonValue : JsonField<Nothing>() {
 
         /**
          * Converts the given [value] to a [JsonValue].
-         *
-         * This method works best on primitive types, [List] values, [Map] values, and nested
-         * combinations of these. For example:
-         * ```java
-         * // Create primitive JSON values
-         * JsonValue nullValue = JsonValue.from(null);
-         * JsonValue booleanValue = JsonValue.from(true);
-         * JsonValue numberValue = JsonValue.from(42);
-         * JsonValue stringValue = JsonValue.from("Hello World!");
-         *
-         * // Create a JSON array value equivalent to `["Hello", "World"]`
-         * JsonValue arrayValue = JsonValue.from(List.of("Hello", "World"));
-         *
-         * // Create a JSON object value equivalent to `{ "a": 1, "b": 2 }`
-         * JsonValue objectValue = JsonValue.from(Map.of(
-         *   "a", 1,
-         *   "b", 2
-         * ));
-         *
-         * // Create an arbitrarily nested JSON equivalent to:
-         * // {
-         * //   "a": [1, 2],
-         * //   "b": [3, 4]
-         * // }
-         * JsonValue complexValue = JsonValue.from(Map.of(
-         *   "a", List.of(1, 2),
-         *   "b", List.of(3, 4)
-         * ));
-         * ```
          *
          * @throws IllegalArgumentException if [value] is not JSON serializable.
          */

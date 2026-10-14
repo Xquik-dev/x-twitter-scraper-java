@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.draws
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -50,7 +48,7 @@ private constructor(
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun id(): String = id.getRequired("id")
 
@@ -59,13 +57,13 @@ private constructor(
      * than the source tweet's full reply count.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun totalEntries(): Long = totalEntries.getRequired("totalEntries")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun tweetId(): String = tweetId.getRequired("tweetId")
 
@@ -74,13 +72,13 @@ private constructor(
      * every valid reply on the source tweet when credits cap inspection.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun validEntries(): Long = validEntries.getRequired("validEntries")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun winners(): List<Winner> = winners.getRequired("winners")
 
@@ -174,12 +172,7 @@ private constructor(
 
         fun id(id: String) = id(JsonField.of(id))
 
-        /**
-         * Sets [Builder.id] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.id] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.id] to an arbitrary JSON value. */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
         /**
@@ -188,23 +181,12 @@ private constructor(
          */
         fun totalEntries(totalEntries: Long) = totalEntries(JsonField.of(totalEntries))
 
-        /**
-         * Sets [Builder.totalEntries] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.totalEntries] with a well-typed [Long] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.totalEntries] to an arbitrary JSON value. */
         fun totalEntries(totalEntries: JsonField<Long>) = apply { this.totalEntries = totalEntries }
 
         fun tweetId(tweetId: String) = tweetId(JsonField.of(tweetId))
 
-        /**
-         * Sets [Builder.tweetId] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.tweetId] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.tweetId] to an arbitrary JSON value. */
         fun tweetId(tweetId: JsonField<String>) = apply { this.tweetId = tweetId }
 
         /**
@@ -213,24 +195,12 @@ private constructor(
          */
         fun validEntries(validEntries: Long) = validEntries(JsonField.of(validEntries))
 
-        /**
-         * Sets [Builder.validEntries] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.validEntries] with a well-typed [Long] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.validEntries] to an arbitrary JSON value. */
         fun validEntries(validEntries: JsonField<Long>) = apply { this.validEntries = validEntries }
 
         fun winners(winners: List<Winner>) = winners(JsonField.of(winners))
 
-        /**
-         * Sets [Builder.winners] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.winners] with a well-typed `List<Winner>` value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.winners] to an arbitrary JSON value. */
         fun winners(winners: JsonField<List<Winner>>) = apply {
             this.winners = winners.map { it.toMutableList() }
         }
@@ -324,11 +294,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +

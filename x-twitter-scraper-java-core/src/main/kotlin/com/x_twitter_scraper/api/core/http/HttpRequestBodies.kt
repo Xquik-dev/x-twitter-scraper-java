@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 @file:JvmName("HttpRequestBodies")
 
 package com.x_twitter_scraper.api.core.http
@@ -23,8 +21,6 @@ import kotlin.jvm.optionals.getOrNull
 @JvmSynthetic
 internal inline fun <reified T> json(jsonMapper: JsonMapper, value: T): HttpRequestBody =
     object : HttpRequestBody {
-        // A plain Lazy field, not `by lazy`. CodeQL cannot read a delegated property in an
-        // anonymous object of a generic function, so it would scan this file only in part.
         private val lazyBytes: Lazy<ByteArray> = lazy { jsonMapper.writeValueAsBytes(value) }
 
         private val bytes: ByteArray
@@ -52,8 +48,6 @@ internal fun multipartFormData(
                 val knownValue = field.value.asKnown().getOrNull()
                 val parts =
                     if (knownValue is InputStream) {
-                        // Read directly from the `InputStream` instead of reading it all
-                        // into memory due to the `jsonMapper` serialization below.
                         sequenceOf(name to knownValue)
                     } else {
                         val node = jsonMapper.valueToTree<JsonNode>(field.value)
@@ -157,7 +151,6 @@ private constructor(private val boundary: String, private val parts: List<Part>)
     private val boundaryBytes: ByteArray = boundary.toByteArray()
     private val contentType = "multipart/form-data; boundary=$boundary"
 
-    // This must remain in sync with `contentLength`.
     override fun writeTo(outputStream: OutputStream) {
         parts.forEach { part ->
             outputStream.write(DASHDASH)
@@ -185,7 +178,6 @@ private constructor(private val boundary: String, private val parts: List<Part>)
 
     override fun contentType(): String = contentType
 
-    // This must remain in sync with `writeTo`.
     override fun contentLength(): Long {
         var byteCount = 0L
 

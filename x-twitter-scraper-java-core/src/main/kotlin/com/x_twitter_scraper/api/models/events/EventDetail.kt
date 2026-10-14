@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.events
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -76,7 +74,7 @@ private constructor(
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun id(): String = id.getRequired("id")
 
@@ -84,7 +82,7 @@ private constructor(
      * Event payload - shape varies by event type (JSON)
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun data(): Data = data.getRequired("data")
 
@@ -92,7 +90,7 @@ private constructor(
      * Monitor ID associated with this detailed event payload.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun monitorId(): String = monitorId.getRequired("monitorId")
 
@@ -100,13 +98,13 @@ private constructor(
      * Source monitor type for this detailed event.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun monitorType(): MonitorType = monitorType.getRequired("monitorType")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun occurredAt(): OffsetDateTime = occurredAt.getRequired("occurredAt")
 
@@ -114,38 +112,32 @@ private constructor(
      * Type of monitor event fired when account activity occurs.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun type(): EventType = type.getRequired("type")
 
     /**
      * Keyword monitor ID included on detailed keyword events.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun keywordMonitorId(): Optional<String> = keywordMonitorId.getOptional("keywordMonitorId")
 
     /**
      * Keyword query for this detailed monitor event.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun query(): Optional<String> = query.getOptional("query")
 
     /**
      * Account username for this detailed monitor event.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun username(): Optional<String> = username.getOptional("username")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun xEventId(): Optional<String> = xEventId.getOptional("xEventId")
 
     /**
@@ -287,60 +279,32 @@ private constructor(
 
         fun id(id: String) = id(JsonField.of(id))
 
-        /**
-         * Sets [Builder.id] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.id] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.id] to an arbitrary JSON value. */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
         /** Event payload - shape varies by event type (JSON) */
         fun data(data: Data) = data(JsonField.of(data))
 
-        /**
-         * Sets [Builder.data] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.data] with a well-typed [Data] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.data] to an arbitrary JSON value. */
         fun data(data: JsonField<Data>) = apply { this.data = data }
 
         /** Monitor ID associated with this detailed event payload. */
         fun monitorId(monitorId: String) = monitorId(JsonField.of(monitorId))
 
-        /**
-         * Sets [Builder.monitorId] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.monitorId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.monitorId] to an arbitrary JSON value. */
         fun monitorId(monitorId: JsonField<String>) = apply { this.monitorId = monitorId }
 
         /** Source monitor type for this detailed event. */
         fun monitorType(monitorType: MonitorType) = monitorType(JsonField.of(monitorType))
 
-        /**
-         * Sets [Builder.monitorType] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.monitorType] with a well-typed [MonitorType] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.monitorType] to an arbitrary JSON value. */
         fun monitorType(monitorType: JsonField<MonitorType>) = apply {
             this.monitorType = monitorType
         }
 
         fun occurredAt(occurredAt: OffsetDateTime) = occurredAt(JsonField.of(occurredAt))
 
-        /**
-         * Sets [Builder.occurredAt] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.occurredAt] with a well-typed [OffsetDateTime] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.occurredAt] to an arbitrary JSON value. */
         fun occurredAt(occurredAt: JsonField<OffsetDateTime>) = apply {
             this.occurredAt = occurredAt
         }
@@ -348,25 +312,14 @@ private constructor(
         /** Type of monitor event fired when account activity occurs. */
         fun type(type: EventType) = type(JsonField.of(type))
 
-        /**
-         * Sets [Builder.type] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.type] with a well-typed [EventType] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.type] to an arbitrary JSON value. */
         fun type(type: JsonField<EventType>) = apply { this.type = type }
 
         /** Keyword monitor ID included on detailed keyword events. */
         fun keywordMonitorId(keywordMonitorId: String) =
             keywordMonitorId(JsonField.of(keywordMonitorId))
 
-        /**
-         * Sets [Builder.keywordMonitorId] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.keywordMonitorId] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.keywordMonitorId] to an arbitrary JSON value. */
         fun keywordMonitorId(keywordMonitorId: JsonField<String>) = apply {
             this.keywordMonitorId = keywordMonitorId
         }
@@ -374,33 +327,18 @@ private constructor(
         /** Keyword query for this detailed monitor event. */
         fun query(query: String) = query(JsonField.of(query))
 
-        /**
-         * Sets [Builder.query] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.query] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.query] to an arbitrary JSON value. */
         fun query(query: JsonField<String>) = apply { this.query = query }
 
         /** Account username for this detailed monitor event. */
         fun username(username: String) = username(JsonField.of(username))
 
-        /**
-         * Sets [Builder.username] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.username] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.username] to an arbitrary JSON value. */
         fun username(username: JsonField<String>) = apply { this.username = username }
 
         fun xEventId(xEventId: String) = xEventId(JsonField.of(xEventId))
 
-        /**
-         * Sets [Builder.xEventId] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.xEventId] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.xEventId] to an arbitrary JSON value. */
         fun xEventId(xEventId: JsonField<String>) = apply { this.xEventId = xEventId }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -491,11 +429,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
@@ -593,12 +526,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int = additionalProperties.count { (_, value) ->
             !value.isNull() && !value.isMissing()
@@ -623,14 +550,7 @@ private constructor(
     class MonitorType @JsonCreator private constructor(private val value: JsonField<String>) :
         Enum {
 
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
+        /** Returns this class instance's raw value. */
         @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
 
         companion object {
@@ -669,9 +589,6 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
          * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
          */
         fun value(): Value =
             when (this) {
@@ -682,9 +599,6 @@ private constructor(
 
         /**
          * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
          *
          * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
          *   known member.
@@ -698,9 +612,6 @@ private constructor(
 
         /**
          * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
          *
          * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
          *   the expected primitive type.
@@ -738,12 +649,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {

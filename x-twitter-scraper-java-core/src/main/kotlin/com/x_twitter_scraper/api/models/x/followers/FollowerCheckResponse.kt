@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.x.followers
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -47,25 +45,25 @@ private constructor(
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun isFollowedBy(): Boolean = isFollowedBy.getRequired("isFollowedBy")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun isFollowing(): Boolean = isFollowing.getRequired("isFollowing")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun sourceUsername(): String = sourceUsername.getRequired("sourceUsername")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun targetUsername(): String = targetUsername.getRequired("targetUsername")
 
@@ -153,50 +151,26 @@ private constructor(
 
         fun isFollowedBy(isFollowedBy: Boolean) = isFollowedBy(JsonField.of(isFollowedBy))
 
-        /**
-         * Sets [Builder.isFollowedBy] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.isFollowedBy] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.isFollowedBy] to an arbitrary JSON value. */
         fun isFollowedBy(isFollowedBy: JsonField<Boolean>) = apply {
             this.isFollowedBy = isFollowedBy
         }
 
         fun isFollowing(isFollowing: Boolean) = isFollowing(JsonField.of(isFollowing))
 
-        /**
-         * Sets [Builder.isFollowing] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.isFollowing] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.isFollowing] to an arbitrary JSON value. */
         fun isFollowing(isFollowing: JsonField<Boolean>) = apply { this.isFollowing = isFollowing }
 
         fun sourceUsername(sourceUsername: String) = sourceUsername(JsonField.of(sourceUsername))
 
-        /**
-         * Sets [Builder.sourceUsername] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.sourceUsername] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.sourceUsername] to an arbitrary JSON value. */
         fun sourceUsername(sourceUsername: JsonField<String>) = apply {
             this.sourceUsername = sourceUsername
         }
 
         fun targetUsername(targetUsername: String) = targetUsername(JsonField.of(targetUsername))
 
-        /**
-         * Sets [Builder.targetUsername] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.targetUsername] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.targetUsername] to an arbitrary JSON value. */
         fun targetUsername(targetUsername: JsonField<String>) = apply {
             this.targetUsername = targetUsername
         }
@@ -275,11 +249,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (if (isFollowedBy.asKnown().isPresent) 1 else 0) +

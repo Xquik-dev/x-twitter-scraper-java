@@ -26,7 +26,6 @@ if ! command -v ktfmt &> /dev/null; then
     exit 1
 fi
 
-# Process Kotlin files
 kt_files=$(grep -E '\.kt$' "$FILE_LIST" | grep -v './buildSrc/build/' || true)
 
 if [[ -n "$kt_files" ]]; then
@@ -35,7 +34,3 @@ if [[ -n "$kt_files" ]]; then
 else
     echo "No Kotlin files found. Nothing to format."
 fi
-
-# TODO(mbudayr): support palantir-java-format
-# Process Java files
-# grep -E '\.java$' "$FILE_LIST" | grep -v './buildSrc/build/' | tr '\n' '\0' | xargs -0 -r palantir-java-format --palantir --replace "$@"

@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.blocking
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -39,9 +37,7 @@ class SubscribeServiceImpl internal constructor(private val clientOptions: Clien
     override fun create(
         params: SubscribeCreateParams,
         requestOptions: RequestOptions,
-    ): SubscribeCreateResponse =
-        // post /subscribe
-        withRawResponse().create(params, requestOptions).parse()
+    ): SubscribeCreateResponse = withRawResponse().create(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         SubscribeService.WithRawResponse {

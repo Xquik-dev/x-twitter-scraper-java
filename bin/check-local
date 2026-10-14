@@ -4,13 +4,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Runs every repository check in order and stops at the first failure.
-# CodeQL and REUSE are required. REUSE runs at a pinned version through uv.
-# Posts the xquik-local-checks commit status for a clean, pushed HEAD with the
-# gh login of whoever runs it. On the release machine, that is the owner's
-# login. The success text lists only the checks that ran and passed.
-# Pass --no-status to skip the status.
-
 set -euo pipefail
 
 cd -- "$(dirname -- "$0")/.."
@@ -71,8 +64,6 @@ pass_check() {
     passed_checks+=("$check_label")
 }
 
-# Succeeds when JAVA_HOME, or java on PATH, is JDK 26 and SHRINKER_JAVA_HOME
-# is JDK 25.
 jdks_ready() {
     local java_bin="java"
     if [[ -n "${JAVA_HOME:-}" ]]; then
