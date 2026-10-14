@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -194,81 +192,77 @@ private constructor(
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun id(): String = id.getRequired("id")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun bookmarkCount(): Long = bookmarkCount.getRequired("bookmarkCount")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun likeCount(): Long = likeCount.getRequired("likeCount")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun quoteCount(): Long = quoteCount.getRequired("quoteCount")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun replyCount(): Long = replyCount.getRequired("replyCount")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun retweetCount(): Long = retweetCount.getRequired("retweetCount")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun text(): String = text.getRequired("text")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun viewCount(): Long = viewCount.getRequired("viewCount")
 
     /**
      * Article metadata attached to a tweet.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun article(): Optional<Article> = article.getOptional("article")
 
     /**
      * X user profile with bio, follower counts, and verification status.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun author(): Optional<UserProfile> = author.getOptional("author")
 
     /**
      * Public card metadata attached to a tweet.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun card(): Optional<Card> = card.getOptional("card")
 
     /**
      * Community Note presentation metadata returned by X.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun communityNote(): Optional<CommunityNote> = communityNote.getOptional("communityNote")
 
@@ -276,131 +270,81 @@ private constructor(
      * Content disclosure metadata shown by X when a tweet is labeled as paid partnership content or
      * AI-generated media.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun contentDisclosure(): Optional<ContentDisclosure> =
         contentDisclosure.getOptional("contentDisclosure")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun conversationId(): Optional<String> = conversationId.getOptional("conversationId")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun createdAt(): Optional<String> = createdAt.getOptional("createdAt")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun displayTextRange(): Optional<List<Long>> = displayTextRange.getOptional("displayTextRange")
 
     /**
      * Edit history metadata returned by X.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun edit(): Optional<Edit> = edit.getOptional("edit")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun entities(): Optional<Entities> = entities.getOptional("entities")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun inReplyToId(): Optional<String> = inReplyToId.getOptional("inReplyToId")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun inReplyToUserId(): Optional<String> = inReplyToUserId.getOptional("inReplyToUserId")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun inReplyToUsername(): Optional<String> = inReplyToUsername.getOptional("inReplyToUsername")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun isLimitedReply(): Optional<Boolean> = isLimitedReply.getOptional("isLimitedReply")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun isNoteTweet(): Optional<Boolean> = isNoteTweet.getOptional("isNoteTweet")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun isQuoteStatus(): Optional<Boolean> = isQuoteStatus.getOptional("isQuoteStatus")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun isReply(): Optional<Boolean> = isReply.getOptional("isReply")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun isTranslatable(): Optional<Boolean> = isTranslatable.getOptional("isTranslatable")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun lang(): Optional<String> = lang.getOptional("lang")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun media(): Optional<List<TweetMedia>> = media.getOptional("media")
 
     /**
      * Complete Note Tweet content and rich-text metadata.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun noteTweet(): Optional<NoteTweet> = noteTweet.getOptional("noteTweet")
 
     /**
      * Public place metadata attached to a tweet.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun place(): Optional<Place> = place.getOptional("place")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun possiblySensitive(): Optional<Boolean> = possiblySensitive.getOptional("possiblySensitive")
 
     /**
      * Engagement counts retained from a prior tweet edit.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun previousCounts(): Optional<PreviousCounts> = previousCounts.getOptional("previousCounts")
 
@@ -409,8 +353,7 @@ private constructor(
      * zero metric can mean X did not report the count. Author, media, and conversation fields
      * appear when available.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun quotedTweet(): Optional<EmbeddedTweet> = quotedTweet.getOptional("quoted_tweet")
 
@@ -419,33 +362,20 @@ private constructor(
      * zero metric can mean X did not report the count. Author, media, and conversation fields
      * appear when available.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun retweetedTweet(): Optional<EmbeddedTweet> = retweetedTweet.getOptional("retweeted_tweet")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun source(): Optional<String> = source.getOptional("source")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun type(): Optional<String> = type.getOptional("type")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun url(): Optional<String> = url.getOptional("url")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun viewState(): Optional<String> = viewState.getOptional("viewState")
 
     /**
@@ -870,132 +800,68 @@ private constructor(
 
         fun id(id: String) = id(JsonField.of(id))
 
-        /**
-         * Sets [Builder.id] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.id] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.id] to an arbitrary JSON value. */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
         fun bookmarkCount(bookmarkCount: Long) = bookmarkCount(JsonField.of(bookmarkCount))
 
-        /**
-         * Sets [Builder.bookmarkCount] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.bookmarkCount] with a well-typed [Long] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.bookmarkCount] to an arbitrary JSON value. */
         fun bookmarkCount(bookmarkCount: JsonField<Long>) = apply {
             this.bookmarkCount = bookmarkCount
         }
 
         fun likeCount(likeCount: Long) = likeCount(JsonField.of(likeCount))
 
-        /**
-         * Sets [Builder.likeCount] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.likeCount] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.likeCount] to an arbitrary JSON value. */
         fun likeCount(likeCount: JsonField<Long>) = apply { this.likeCount = likeCount }
 
         fun quoteCount(quoteCount: Long) = quoteCount(JsonField.of(quoteCount))
 
-        /**
-         * Sets [Builder.quoteCount] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.quoteCount] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.quoteCount] to an arbitrary JSON value. */
         fun quoteCount(quoteCount: JsonField<Long>) = apply { this.quoteCount = quoteCount }
 
         fun replyCount(replyCount: Long) = replyCount(JsonField.of(replyCount))
 
-        /**
-         * Sets [Builder.replyCount] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.replyCount] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.replyCount] to an arbitrary JSON value. */
         fun replyCount(replyCount: JsonField<Long>) = apply { this.replyCount = replyCount }
 
         fun retweetCount(retweetCount: Long) = retweetCount(JsonField.of(retweetCount))
 
-        /**
-         * Sets [Builder.retweetCount] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.retweetCount] with a well-typed [Long] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.retweetCount] to an arbitrary JSON value. */
         fun retweetCount(retweetCount: JsonField<Long>) = apply { this.retweetCount = retweetCount }
 
         fun text(text: String) = text(JsonField.of(text))
 
-        /**
-         * Sets [Builder.text] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.text] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.text] to an arbitrary JSON value. */
         fun text(text: JsonField<String>) = apply { this.text = text }
 
         fun viewCount(viewCount: Long) = viewCount(JsonField.of(viewCount))
 
-        /**
-         * Sets [Builder.viewCount] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.viewCount] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.viewCount] to an arbitrary JSON value. */
         fun viewCount(viewCount: JsonField<Long>) = apply { this.viewCount = viewCount }
 
         /** Article metadata attached to a tweet. */
         fun article(article: Article) = article(JsonField.of(article))
 
-        /**
-         * Sets [Builder.article] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.article] with a well-typed [Article] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.article] to an arbitrary JSON value. */
         fun article(article: JsonField<Article>) = apply { this.article = article }
 
         /** X user profile with bio, follower counts, and verification status. */
         fun author(author: UserProfile) = author(JsonField.of(author))
 
-        /**
-         * Sets [Builder.author] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.author] with a well-typed [UserProfile] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.author] to an arbitrary JSON value. */
         fun author(author: JsonField<UserProfile>) = apply { this.author = author }
 
         /** Public card metadata attached to a tweet. */
         fun card(card: Card) = card(JsonField.of(card))
 
-        /**
-         * Sets [Builder.card] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.card] with a well-typed [Card] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.card] to an arbitrary JSON value. */
         fun card(card: JsonField<Card>) = apply { this.card = card }
 
         /** Community Note presentation metadata returned by X. */
         fun communityNote(communityNote: CommunityNote) = communityNote(JsonField.of(communityNote))
 
-        /**
-         * Sets [Builder.communityNote] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.communityNote] with a well-typed [CommunityNote] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.communityNote] to an arbitrary JSON value. */
         fun communityNote(communityNote: JsonField<CommunityNote>) = apply {
             this.communityNote = communityNote
         }
@@ -1007,51 +873,27 @@ private constructor(
         fun contentDisclosure(contentDisclosure: ContentDisclosure) =
             contentDisclosure(JsonField.of(contentDisclosure))
 
-        /**
-         * Sets [Builder.contentDisclosure] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.contentDisclosure] with a well-typed [ContentDisclosure]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
-         */
+        /** Sets [Builder.contentDisclosure] to an arbitrary JSON value. */
         fun contentDisclosure(contentDisclosure: JsonField<ContentDisclosure>) = apply {
             this.contentDisclosure = contentDisclosure
         }
 
         fun conversationId(conversationId: String) = conversationId(JsonField.of(conversationId))
 
-        /**
-         * Sets [Builder.conversationId] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.conversationId] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.conversationId] to an arbitrary JSON value. */
         fun conversationId(conversationId: JsonField<String>) = apply {
             this.conversationId = conversationId
         }
 
         fun createdAt(createdAt: String) = createdAt(JsonField.of(createdAt))
 
-        /**
-         * Sets [Builder.createdAt] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.createdAt] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.createdAt] to an arbitrary JSON value. */
         fun createdAt(createdAt: JsonField<String>) = apply { this.createdAt = createdAt }
 
         fun displayTextRange(displayTextRange: List<Long>) =
             displayTextRange(JsonField.of(displayTextRange))
 
-        /**
-         * Sets [Builder.displayTextRange] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.displayTextRange] with a well-typed `List<Long>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.displayTextRange] to an arbitrary JSON value. */
         fun displayTextRange(displayTextRange: JsonField<List<Long>>) = apply {
             this.displayTextRange = displayTextRange.map { it.toMutableList() }
         }
@@ -1071,46 +913,23 @@ private constructor(
         /** Edit history metadata returned by X. */
         fun edit(edit: Edit) = edit(JsonField.of(edit))
 
-        /**
-         * Sets [Builder.edit] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.edit] with a well-typed [Edit] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.edit] to an arbitrary JSON value. */
         fun edit(edit: JsonField<Edit>) = apply { this.edit = edit }
 
         fun entities(entities: Entities) = entities(JsonField.of(entities))
 
-        /**
-         * Sets [Builder.entities] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.entities] with a well-typed [Entities] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.entities] to an arbitrary JSON value. */
         fun entities(entities: JsonField<Entities>) = apply { this.entities = entities }
 
         fun inReplyToId(inReplyToId: String) = inReplyToId(JsonField.of(inReplyToId))
 
-        /**
-         * Sets [Builder.inReplyToId] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.inReplyToId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.inReplyToId] to an arbitrary JSON value. */
         fun inReplyToId(inReplyToId: JsonField<String>) = apply { this.inReplyToId = inReplyToId }
 
         fun inReplyToUserId(inReplyToUserId: String) =
             inReplyToUserId(JsonField.of(inReplyToUserId))
 
-        /**
-         * Sets [Builder.inReplyToUserId] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.inReplyToUserId] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.inReplyToUserId] to an arbitrary JSON value. */
         fun inReplyToUserId(inReplyToUserId: JsonField<String>) = apply {
             this.inReplyToUserId = inReplyToUserId
         }
@@ -1118,96 +937,50 @@ private constructor(
         fun inReplyToUsername(inReplyToUsername: String) =
             inReplyToUsername(JsonField.of(inReplyToUsername))
 
-        /**
-         * Sets [Builder.inReplyToUsername] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.inReplyToUsername] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.inReplyToUsername] to an arbitrary JSON value. */
         fun inReplyToUsername(inReplyToUsername: JsonField<String>) = apply {
             this.inReplyToUsername = inReplyToUsername
         }
 
         fun isLimitedReply(isLimitedReply: Boolean) = isLimitedReply(JsonField.of(isLimitedReply))
 
-        /**
-         * Sets [Builder.isLimitedReply] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.isLimitedReply] with a well-typed [Boolean] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.isLimitedReply] to an arbitrary JSON value. */
         fun isLimitedReply(isLimitedReply: JsonField<Boolean>) = apply {
             this.isLimitedReply = isLimitedReply
         }
 
         fun isNoteTweet(isNoteTweet: Boolean) = isNoteTweet(JsonField.of(isNoteTweet))
 
-        /**
-         * Sets [Builder.isNoteTweet] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.isNoteTweet] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.isNoteTweet] to an arbitrary JSON value. */
         fun isNoteTweet(isNoteTweet: JsonField<Boolean>) = apply { this.isNoteTweet = isNoteTweet }
 
         fun isQuoteStatus(isQuoteStatus: Boolean) = isQuoteStatus(JsonField.of(isQuoteStatus))
 
-        /**
-         * Sets [Builder.isQuoteStatus] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.isQuoteStatus] with a well-typed [Boolean] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.isQuoteStatus] to an arbitrary JSON value. */
         fun isQuoteStatus(isQuoteStatus: JsonField<Boolean>) = apply {
             this.isQuoteStatus = isQuoteStatus
         }
 
         fun isReply(isReply: Boolean) = isReply(JsonField.of(isReply))
 
-        /**
-         * Sets [Builder.isReply] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.isReply] with a well-typed [Boolean] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.isReply] to an arbitrary JSON value. */
         fun isReply(isReply: JsonField<Boolean>) = apply { this.isReply = isReply }
 
         fun isTranslatable(isTranslatable: Boolean) = isTranslatable(JsonField.of(isTranslatable))
 
-        /**
-         * Sets [Builder.isTranslatable] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.isTranslatable] with a well-typed [Boolean] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.isTranslatable] to an arbitrary JSON value. */
         fun isTranslatable(isTranslatable: JsonField<Boolean>) = apply {
             this.isTranslatable = isTranslatable
         }
 
         fun lang(lang: String) = lang(JsonField.of(lang))
 
-        /**
-         * Sets [Builder.lang] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.lang] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.lang] to an arbitrary JSON value. */
         fun lang(lang: JsonField<String>) = apply { this.lang = lang }
 
         fun media(media: List<TweetMedia>) = media(JsonField.of(media))
 
-        /**
-         * Sets [Builder.media] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.media] with a well-typed `List<TweetMedia>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.media] to an arbitrary JSON value. */
         fun media(media: JsonField<List<TweetMedia>>) = apply {
             this.media = media.map { it.toMutableList() }
         }
@@ -1227,36 +1000,19 @@ private constructor(
         /** Complete Note Tweet content and rich-text metadata. */
         fun noteTweet(noteTweet: NoteTweet) = noteTweet(JsonField.of(noteTweet))
 
-        /**
-         * Sets [Builder.noteTweet] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.noteTweet] with a well-typed [NoteTweet] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.noteTweet] to an arbitrary JSON value. */
         fun noteTweet(noteTweet: JsonField<NoteTweet>) = apply { this.noteTweet = noteTweet }
 
         /** Public place metadata attached to a tweet. */
         fun place(place: Place) = place(JsonField.of(place))
 
-        /**
-         * Sets [Builder.place] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.place] with a well-typed [Place] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.place] to an arbitrary JSON value. */
         fun place(place: JsonField<Place>) = apply { this.place = place }
 
         fun possiblySensitive(possiblySensitive: Boolean) =
             possiblySensitive(JsonField.of(possiblySensitive))
 
-        /**
-         * Sets [Builder.possiblySensitive] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.possiblySensitive] with a well-typed [Boolean] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.possiblySensitive] to an arbitrary JSON value. */
         fun possiblySensitive(possiblySensitive: JsonField<Boolean>) = apply {
             this.possiblySensitive = possiblySensitive
         }
@@ -1265,13 +1021,7 @@ private constructor(
         fun previousCounts(previousCounts: PreviousCounts) =
             previousCounts(JsonField.of(previousCounts))
 
-        /**
-         * Sets [Builder.previousCounts] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.previousCounts] with a well-typed [PreviousCounts] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.previousCounts] to an arbitrary JSON value. */
         fun previousCounts(previousCounts: JsonField<PreviousCounts>) = apply {
             this.previousCounts = previousCounts
         }
@@ -1283,13 +1033,7 @@ private constructor(
          */
         fun quotedTweet(quotedTweet: EmbeddedTweet) = quotedTweet(JsonField.of(quotedTweet))
 
-        /**
-         * Sets [Builder.quotedTweet] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.quotedTweet] with a well-typed [EmbeddedTweet] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.quotedTweet] to an arbitrary JSON value. */
         fun quotedTweet(quotedTweet: JsonField<EmbeddedTweet>) = apply {
             this.quotedTweet = quotedTweet
         }
@@ -1302,56 +1046,29 @@ private constructor(
         fun retweetedTweet(retweetedTweet: EmbeddedTweet) =
             retweetedTweet(JsonField.of(retweetedTweet))
 
-        /**
-         * Sets [Builder.retweetedTweet] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.retweetedTweet] with a well-typed [EmbeddedTweet] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.retweetedTweet] to an arbitrary JSON value. */
         fun retweetedTweet(retweetedTweet: JsonField<EmbeddedTweet>) = apply {
             this.retweetedTweet = retweetedTweet
         }
 
         fun source(source: String) = source(JsonField.of(source))
 
-        /**
-         * Sets [Builder.source] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.source] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.source] to an arbitrary JSON value. */
         fun source(source: JsonField<String>) = apply { this.source = source }
 
         fun type(type: String) = type(JsonField.of(type))
 
-        /**
-         * Sets [Builder.type] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.type] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.type] to an arbitrary JSON value. */
         fun type(type: JsonField<String>) = apply { this.type = type }
 
         fun url(url: String) = url(JsonField.of(url))
 
-        /**
-         * Sets [Builder.url] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.url] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.url] to an arbitrary JSON value. */
         fun url(url: JsonField<String>) = apply { this.url = url }
 
         fun viewState(viewState: String) = viewState(JsonField.of(viewState))
 
-        /**
-         * Sets [Builder.viewState] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.viewState] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.viewState] to an arbitrary JSON value. */
         fun viewState(viewState: JsonField<String>) = apply { this.viewState = viewState }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -1500,11 +1217,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
@@ -1569,28 +1281,16 @@ private constructor(
             @JsonProperty("title") @ExcludeMissing title: JsonField<String> = JsonMissing.of(),
         ) : this(id, coverMediaUrl, previewText, title, mutableMapOf())
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun id(): Optional<String> = id.getOptional("id")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun coverMediaUrl(): Optional<String> = coverMediaUrl.getOptional("coverMediaUrl")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun previewText(): Optional<String> = previewText.getOptional("previewText")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun title(): Optional<String> = title.getOptional("title")
 
         /**
@@ -1664,50 +1364,26 @@ private constructor(
 
             fun id(id: String) = id(JsonField.of(id))
 
-            /**
-             * Sets [Builder.id] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.id] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.id] to an arbitrary JSON value. */
             fun id(id: JsonField<String>) = apply { this.id = id }
 
             fun coverMediaUrl(coverMediaUrl: String) = coverMediaUrl(JsonField.of(coverMediaUrl))
 
-            /**
-             * Sets [Builder.coverMediaUrl] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.coverMediaUrl] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.coverMediaUrl] to an arbitrary JSON value. */
             fun coverMediaUrl(coverMediaUrl: JsonField<String>) = apply {
                 this.coverMediaUrl = coverMediaUrl
             }
 
             fun previewText(previewText: String) = previewText(JsonField.of(previewText))
 
-            /**
-             * Sets [Builder.previewText] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.previewText] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.previewText] to an arbitrary JSON value. */
             fun previewText(previewText: JsonField<String>) = apply {
                 this.previewText = previewText
             }
 
             fun title(title: String) = title(JsonField.of(title))
 
-            /**
-             * Sets [Builder.title] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.title] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.title] to an arbitrary JSON value. */
             fun title(title: JsonField<String>) = apply { this.title = title }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -1769,12 +1445,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int =
             (if (id.asKnown().isPresent) 1 else 0) +
@@ -1826,28 +1496,16 @@ private constructor(
             @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
         ) : this(id, bindingValues, name, url, mutableMapOf())
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun id(): Optional<String> = id.getOptional("id")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun bindingValues(): Optional<BindingValues> = bindingValues.getOptional("bindingValues")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun name(): Optional<String> = name.getOptional("name")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun url(): Optional<String> = url.getOptional("url")
 
         /**
@@ -1919,49 +1577,25 @@ private constructor(
 
             fun id(id: String) = id(JsonField.of(id))
 
-            /**
-             * Sets [Builder.id] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.id] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.id] to an arbitrary JSON value. */
             fun id(id: JsonField<String>) = apply { this.id = id }
 
             fun bindingValues(bindingValues: BindingValues) =
                 bindingValues(JsonField.of(bindingValues))
 
-            /**
-             * Sets [Builder.bindingValues] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.bindingValues] with a well-typed [BindingValues]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
-             */
+            /** Sets [Builder.bindingValues] to an arbitrary JSON value. */
             fun bindingValues(bindingValues: JsonField<BindingValues>) = apply {
                 this.bindingValues = bindingValues
             }
 
             fun name(name: String) = name(JsonField.of(name))
 
-            /**
-             * Sets [Builder.name] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.name] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.name] to an arbitrary JSON value. */
             fun name(name: JsonField<String>) = apply { this.name = name }
 
             fun url(url: String) = url(JsonField.of(url))
 
-            /**
-             * Sets [Builder.url] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.url] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.url] to an arbitrary JSON value. */
             fun url(url: JsonField<String>) = apply { this.url = url }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -2023,12 +1657,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int =
             (if (id.asKnown().isPresent) 1 else 0) +
@@ -2123,12 +1751,6 @@ private constructor(
                     false
                 }
 
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
             @JvmSynthetic
             internal fun validity(): Int = additionalProperties.count { (_, value) ->
                 !value.isNull() && !value.isMissing()
@@ -2214,46 +1836,25 @@ private constructor(
             mutableMapOf(),
         )
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun id(): Optional<String> = id.getOptional("id")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun destinationUrl(): Optional<String> = destinationUrl.getOptional("destinationUrl")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun footer(): Optional<String> = footer.getOptional("footer")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun shortTitle(): Optional<String> = shortTitle.getOptional("shortTitle")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun subtitle(): Optional<String> = subtitle.getOptional("subtitle")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun title(): Optional<String> = title.getOptional("title")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun visualStyle(): Optional<String> = visualStyle.getOptional("visualStyle")
 
         /**
@@ -2356,82 +1957,40 @@ private constructor(
 
             fun id(id: String) = id(JsonField.of(id))
 
-            /**
-             * Sets [Builder.id] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.id] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.id] to an arbitrary JSON value. */
             fun id(id: JsonField<String>) = apply { this.id = id }
 
             fun destinationUrl(destinationUrl: String) =
                 destinationUrl(JsonField.of(destinationUrl))
 
-            /**
-             * Sets [Builder.destinationUrl] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.destinationUrl] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.destinationUrl] to an arbitrary JSON value. */
             fun destinationUrl(destinationUrl: JsonField<String>) = apply {
                 this.destinationUrl = destinationUrl
             }
 
             fun footer(footer: String) = footer(JsonField.of(footer))
 
-            /**
-             * Sets [Builder.footer] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.footer] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.footer] to an arbitrary JSON value. */
             fun footer(footer: JsonField<String>) = apply { this.footer = footer }
 
             fun shortTitle(shortTitle: String) = shortTitle(JsonField.of(shortTitle))
 
-            /**
-             * Sets [Builder.shortTitle] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.shortTitle] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.shortTitle] to an arbitrary JSON value. */
             fun shortTitle(shortTitle: JsonField<String>) = apply { this.shortTitle = shortTitle }
 
             fun subtitle(subtitle: String) = subtitle(JsonField.of(subtitle))
 
-            /**
-             * Sets [Builder.subtitle] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.subtitle] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.subtitle] to an arbitrary JSON value. */
             fun subtitle(subtitle: JsonField<String>) = apply { this.subtitle = subtitle }
 
             fun title(title: String) = title(JsonField.of(title))
 
-            /**
-             * Sets [Builder.title] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.title] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.title] to an arbitrary JSON value. */
             fun title(title: JsonField<String>) = apply { this.title = title }
 
             fun visualStyle(visualStyle: String) = visualStyle(JsonField.of(visualStyle))
 
-            /**
-             * Sets [Builder.visualStyle] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.visualStyle] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.visualStyle] to an arbitrary JSON value. */
             fun visualStyle(visualStyle: JsonField<String>) = apply {
                 this.visualStyle = visualStyle
             }
@@ -2507,12 +2066,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int =
             (if (id.asKnown().isPresent) 1 else 0) +
@@ -2577,17 +2130,11 @@ private constructor(
             editTweetIds: JsonField<List<String>> = JsonMissing.of(),
         ) : this(editableUntilMsecs, editTweetIds, mutableMapOf())
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun editableUntilMsecs(): Optional<String> =
             editableUntilMsecs.getOptional("editableUntilMsecs")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun editTweetIds(): Optional<List<String>> = editTweetIds.getOptional("editTweetIds")
 
         /**
@@ -2645,26 +2192,14 @@ private constructor(
             fun editableUntilMsecs(editableUntilMsecs: String) =
                 editableUntilMsecs(JsonField.of(editableUntilMsecs))
 
-            /**
-             * Sets [Builder.editableUntilMsecs] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.editableUntilMsecs] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.editableUntilMsecs] to an arbitrary JSON value. */
             fun editableUntilMsecs(editableUntilMsecs: JsonField<String>) = apply {
                 this.editableUntilMsecs = editableUntilMsecs
             }
 
             fun editTweetIds(editTweetIds: List<String>) = editTweetIds(JsonField.of(editTweetIds))
 
-            /**
-             * Sets [Builder.editTweetIds] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.editTweetIds] with a well-typed `List<String>` value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.editTweetIds] to an arbitrary JSON value. */
             fun editTweetIds(editTweetIds: JsonField<List<String>>) = apply {
                 this.editTweetIds = editTweetIds.map { it.toMutableList() }
             }
@@ -2742,12 +2277,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int =
             (if (editableUntilMsecs.asKnown().isPresent) 1 else 0) +
@@ -2857,12 +2386,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int = additionalProperties.count { (_, value) ->
             !value.isNull() && !value.isMissing()
@@ -2912,33 +2435,20 @@ private constructor(
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun text(): String = text.getRequired("text")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun id(): Optional<String> = id.getOptional("id")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun entities(): Optional<Entities> = entities.getOptional("entities")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun isExpandable(): Optional<Boolean> = isExpandable.getOptional("isExpandable")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun richtextTags(): Optional<List<RichtextTag>> = richtextTags.getOptional("richtextTags")
 
         /**
@@ -3029,46 +2539,22 @@ private constructor(
 
             fun text(text: String) = text(JsonField.of(text))
 
-            /**
-             * Sets [Builder.text] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.text] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.text] to an arbitrary JSON value. */
             fun text(text: JsonField<String>) = apply { this.text = text }
 
             fun id(id: String) = id(JsonField.of(id))
 
-            /**
-             * Sets [Builder.id] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.id] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.id] to an arbitrary JSON value. */
             fun id(id: JsonField<String>) = apply { this.id = id }
 
             fun entities(entities: Entities) = entities(JsonField.of(entities))
 
-            /**
-             * Sets [Builder.entities] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.entities] with a well-typed [Entities] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.entities] to an arbitrary JSON value. */
             fun entities(entities: JsonField<Entities>) = apply { this.entities = entities }
 
             fun isExpandable(isExpandable: Boolean) = isExpandable(JsonField.of(isExpandable))
 
-            /**
-             * Sets [Builder.isExpandable] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.isExpandable] with a well-typed [Boolean] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.isExpandable] to an arbitrary JSON value. */
             fun isExpandable(isExpandable: JsonField<Boolean>) = apply {
                 this.isExpandable = isExpandable
             }
@@ -3076,13 +2562,7 @@ private constructor(
             fun richtextTags(richtextTags: List<RichtextTag>) =
                 richtextTags(JsonField.of(richtextTags))
 
-            /**
-             * Sets [Builder.richtextTags] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.richtextTags] with a well-typed `List<RichtextTag>`
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
-             */
+            /** Sets [Builder.richtextTags] to an arbitrary JSON value. */
             fun richtextTags(richtextTags: JsonField<List<RichtextTag>>) = apply {
                 this.richtextTags = richtextTags.map { it.toMutableList() }
             }
@@ -3173,12 +2653,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int =
             (if (text.asKnown().isPresent) 1 else 0) +
@@ -3274,12 +2748,6 @@ private constructor(
                     false
                 }
 
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
             @JvmSynthetic
             internal fun validity(): Int = additionalProperties.count { (_, value) ->
                 !value.isNull() && !value.isMissing()
@@ -3324,22 +2792,19 @@ private constructor(
 
             /**
              * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-             *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
+             *   or is unexpectedly missing or null.
              */
             fun fromIndex(): Long = fromIndex.getRequired("fromIndex")
 
             /**
              * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-             *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
+             *   or is unexpectedly missing or null.
              */
             fun toIndex(): Long = toIndex.getRequired("toIndex")
 
             /**
              * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-             *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
+             *   or is unexpectedly missing or null.
              */
             fun types(): List<String> = types.getRequired("types")
 
@@ -3410,35 +2875,17 @@ private constructor(
 
                 fun fromIndex(fromIndex: Long) = fromIndex(JsonField.of(fromIndex))
 
-                /**
-                 * Sets [Builder.fromIndex] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.fromIndex] with a well-typed [Long] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
-                 */
+                /** Sets [Builder.fromIndex] to an arbitrary JSON value. */
                 fun fromIndex(fromIndex: JsonField<Long>) = apply { this.fromIndex = fromIndex }
 
                 fun toIndex(toIndex: Long) = toIndex(JsonField.of(toIndex))
 
-                /**
-                 * Sets [Builder.toIndex] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.toIndex] with a well-typed [Long] value instead.
-                 * This method is primarily for setting the field to an undocumented or not yet
-                 * supported value.
-                 */
+                /** Sets [Builder.toIndex] to an arbitrary JSON value. */
                 fun toIndex(toIndex: JsonField<Long>) = apply { this.toIndex = toIndex }
 
                 fun types(types: List<String>) = types(JsonField.of(types))
 
-                /**
-                 * Sets [Builder.types] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.types] with a well-typed `List<String>` value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
-                 */
+                /** Sets [Builder.types] to an arbitrary JSON value. */
                 fun types(types: JsonField<List<String>>) = apply {
                     this.types = types.map { it.toMutableList() }
                 }
@@ -3531,12 +2978,6 @@ private constructor(
                     false
                 }
 
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (fromIndex.asKnown().isPresent) 1 else 0) +
@@ -3634,52 +3075,28 @@ private constructor(
             mutableMapOf(),
         )
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun id(): Optional<String> = id.getOptional("id")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun boundingBox(): Optional<BoundingBox> = boundingBox.getOptional("boundingBox")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun country(): Optional<String> = country.getOptional("country")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun countryCode(): Optional<String> = countryCode.getOptional("countryCode")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun fullName(): Optional<String> = fullName.getOptional("fullName")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun name(): Optional<String> = name.getOptional("name")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun placeType(): Optional<String> = placeType.getOptional("placeType")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun url(): Optional<String> = url.getOptional("url")
 
         /**
@@ -3788,94 +3205,46 @@ private constructor(
 
             fun id(id: String) = id(JsonField.of(id))
 
-            /**
-             * Sets [Builder.id] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.id] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.id] to an arbitrary JSON value. */
             fun id(id: JsonField<String>) = apply { this.id = id }
 
             fun boundingBox(boundingBox: BoundingBox) = boundingBox(JsonField.of(boundingBox))
 
-            /**
-             * Sets [Builder.boundingBox] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.boundingBox] with a well-typed [BoundingBox] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.boundingBox] to an arbitrary JSON value. */
             fun boundingBox(boundingBox: JsonField<BoundingBox>) = apply {
                 this.boundingBox = boundingBox
             }
 
             fun country(country: String) = country(JsonField.of(country))
 
-            /**
-             * Sets [Builder.country] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.country] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.country] to an arbitrary JSON value. */
             fun country(country: JsonField<String>) = apply { this.country = country }
 
             fun countryCode(countryCode: String) = countryCode(JsonField.of(countryCode))
 
-            /**
-             * Sets [Builder.countryCode] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.countryCode] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.countryCode] to an arbitrary JSON value. */
             fun countryCode(countryCode: JsonField<String>) = apply {
                 this.countryCode = countryCode
             }
 
             fun fullName(fullName: String) = fullName(JsonField.of(fullName))
 
-            /**
-             * Sets [Builder.fullName] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.fullName] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.fullName] to an arbitrary JSON value. */
             fun fullName(fullName: JsonField<String>) = apply { this.fullName = fullName }
 
             fun name(name: String) = name(JsonField.of(name))
 
-            /**
-             * Sets [Builder.name] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.name] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.name] to an arbitrary JSON value. */
             fun name(name: JsonField<String>) = apply { this.name = name }
 
             fun placeType(placeType: String) = placeType(JsonField.of(placeType))
 
-            /**
-             * Sets [Builder.placeType] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.placeType] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.placeType] to an arbitrary JSON value. */
             fun placeType(placeType: JsonField<String>) = apply { this.placeType = placeType }
 
             fun url(url: String) = url(JsonField.of(url))
 
-            /**
-             * Sets [Builder.url] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.url] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.url] to an arbitrary JSON value. */
             fun url(url: JsonField<String>) = apply { this.url = url }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -3951,12 +3320,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int =
             (if (id.asKnown().isPresent) 1 else 0) +
@@ -4055,12 +3418,6 @@ private constructor(
                     false
                 }
 
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
             @JvmSynthetic
             internal fun validity(): Int = additionalProperties.count { (_, value) ->
                 !value.isNull() && !value.isMissing()
@@ -4149,34 +3506,19 @@ private constructor(
             retweetCount: JsonField<Long> = JsonMissing.of(),
         ) : this(bookmarkCount, likeCount, quoteCount, replyCount, retweetCount, mutableMapOf())
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun bookmarkCount(): Optional<Long> = bookmarkCount.getOptional("bookmarkCount")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun likeCount(): Optional<Long> = likeCount.getOptional("likeCount")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun quoteCount(): Optional<Long> = quoteCount.getOptional("quoteCount")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun replyCount(): Optional<Long> = replyCount.getOptional("replyCount")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun retweetCount(): Optional<Long> = retweetCount.getOptional("retweetCount")
 
         /**
@@ -4260,59 +3602,29 @@ private constructor(
 
             fun bookmarkCount(bookmarkCount: Long) = bookmarkCount(JsonField.of(bookmarkCount))
 
-            /**
-             * Sets [Builder.bookmarkCount] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.bookmarkCount] with a well-typed [Long] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.bookmarkCount] to an arbitrary JSON value. */
             fun bookmarkCount(bookmarkCount: JsonField<Long>) = apply {
                 this.bookmarkCount = bookmarkCount
             }
 
             fun likeCount(likeCount: Long) = likeCount(JsonField.of(likeCount))
 
-            /**
-             * Sets [Builder.likeCount] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.likeCount] with a well-typed [Long] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.likeCount] to an arbitrary JSON value. */
             fun likeCount(likeCount: JsonField<Long>) = apply { this.likeCount = likeCount }
 
             fun quoteCount(quoteCount: Long) = quoteCount(JsonField.of(quoteCount))
 
-            /**
-             * Sets [Builder.quoteCount] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.quoteCount] with a well-typed [Long] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.quoteCount] to an arbitrary JSON value. */
             fun quoteCount(quoteCount: JsonField<Long>) = apply { this.quoteCount = quoteCount }
 
             fun replyCount(replyCount: Long) = replyCount(JsonField.of(replyCount))
 
-            /**
-             * Sets [Builder.replyCount] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.replyCount] with a well-typed [Long] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.replyCount] to an arbitrary JSON value. */
             fun replyCount(replyCount: JsonField<Long>) = apply { this.replyCount = replyCount }
 
             fun retweetCount(retweetCount: Long) = retweetCount(JsonField.of(retweetCount))
 
-            /**
-             * Sets [Builder.retweetCount] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.retweetCount] with a well-typed [Long] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.retweetCount] to an arbitrary JSON value. */
             fun retweetCount(retweetCount: JsonField<Long>) = apply {
                 this.retweetCount = retweetCount
             }
@@ -4384,12 +3696,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int =
             (if (bookmarkCount.asKnown().isPresent) 1 else 0) +

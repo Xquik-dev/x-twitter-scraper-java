@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.blocking
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -51,39 +49,30 @@ class StyleServiceImpl internal constructor(private val clientOptions: ClientOpt
     override fun retrieve(
         params: StyleRetrieveParams,
         requestOptions: RequestOptions,
-    ): StyleProfile =
-        // get /styles/{id}
-        withRawResponse().retrieve(params, requestOptions).parse()
+    ): StyleProfile = withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(params: StyleUpdateParams, requestOptions: RequestOptions): StyleProfile =
-        // put /styles/{id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(params: StyleListParams, requestOptions: RequestOptions): StyleListResponse =
-        // get /styles
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(params: StyleDeleteParams, requestOptions: RequestOptions) {
-        // delete /styles/{id}
         withRawResponse().delete(params, requestOptions)
     }
 
     override fun analyze(params: StyleAnalyzeParams, requestOptions: RequestOptions): StyleProfile =
-        // post /styles
         withRawResponse().analyze(params, requestOptions).parse()
 
     override fun compare(
         params: StyleCompareParams,
         requestOptions: RequestOptions,
-    ): StyleCompareResponse =
-        // get /styles/compare
-        withRawResponse().compare(params, requestOptions).parse()
+    ): StyleCompareResponse = withRawResponse().compare(params, requestOptions).parse()
 
     override fun getPerformance(
         params: StyleGetPerformanceParams,
         requestOptions: RequestOptions,
     ): StyleGetPerformanceResponse =
-        // get /styles/{id}/performance
         withRawResponse().getPerformance(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -106,8 +95,6 @@ class StyleServiceImpl internal constructor(private val clientOptions: ClientOpt
             params: StyleRetrieveParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<StyleProfile> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -136,8 +123,6 @@ class StyleServiceImpl internal constructor(private val clientOptions: ClientOpt
             params: StyleUpdateParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<StyleProfile> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -193,8 +178,6 @@ class StyleServiceImpl internal constructor(private val clientOptions: ClientOpt
             params: StyleDeleteParams,
             requestOptions: RequestOptions,
         ): HttpResponse {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -273,8 +256,6 @@ class StyleServiceImpl internal constructor(private val clientOptions: ClientOpt
             params: StyleGetPerformanceParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<StyleGetPerformanceResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -44,14 +42,12 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
         params: EventRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<EventDetail> =
-        // get /events/{id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
     override fun list(
         params: EventListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<EventListResponse> =
-        // get /events
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -74,8 +70,6 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
             params: EventRetrieveParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<EventDetail>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

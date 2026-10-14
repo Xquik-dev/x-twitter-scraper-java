@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.blocking
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -44,22 +42,17 @@ class DraftServiceImpl internal constructor(private val clientOptions: ClientOpt
         DraftServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun create(params: DraftCreateParams, requestOptions: RequestOptions): DraftDetail =
-        // post /drafts
         withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: DraftRetrieveParams,
         requestOptions: RequestOptions,
-    ): DraftDetail =
-        // get /drafts/{id}
-        withRawResponse().retrieve(params, requestOptions).parse()
+    ): DraftDetail = withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun list(params: DraftListParams, requestOptions: RequestOptions): DraftListResponse =
-        // get /drafts
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(params: DraftDeleteParams, requestOptions: RequestOptions) {
-        // delete /drafts/{id}
         withRawResponse().delete(params, requestOptions)
     }
 
@@ -111,8 +104,6 @@ class DraftServiceImpl internal constructor(private val clientOptions: ClientOpt
             params: DraftRetrieveParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<DraftDetail> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -167,8 +158,6 @@ class DraftServiceImpl internal constructor(private val clientOptions: ClientOpt
             params: DraftDeleteParams,
             requestOptions: RequestOptions,
         ): HttpResponse {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

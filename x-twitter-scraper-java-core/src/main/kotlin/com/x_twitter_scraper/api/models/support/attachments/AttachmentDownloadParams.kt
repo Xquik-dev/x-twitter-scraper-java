@@ -1,5 +1,3 @@
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.support.attachments
 
 import com.x_twitter_scraper.api.core.Params

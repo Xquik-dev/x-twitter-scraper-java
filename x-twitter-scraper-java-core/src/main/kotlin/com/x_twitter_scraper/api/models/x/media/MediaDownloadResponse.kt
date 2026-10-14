@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.x.media
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -43,34 +41,19 @@ private constructor(
         @JsonProperty("tweetId") @ExcludeMissing tweetId: JsonField<String> = JsonMissing.of(),
     ) : this(cacheHit, galleryUrl, totalMedia, totalTweets, tweetId, mutableMapOf())
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun cacheHit(): Optional<Boolean> = cacheHit.getOptional("cacheHit")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun galleryUrl(): Optional<String> = galleryUrl.getOptional("galleryUrl")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun totalMedia(): Optional<Long> = totalMedia.getOptional("totalMedia")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun totalTweets(): Optional<Long> = totalTweets.getOptional("totalTweets")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun tweetId(): Optional<String> = tweetId.getOptional("tweetId")
 
     /**
@@ -148,55 +131,27 @@ private constructor(
 
         fun cacheHit(cacheHit: Boolean) = cacheHit(JsonField.of(cacheHit))
 
-        /**
-         * Sets [Builder.cacheHit] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.cacheHit] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.cacheHit] to an arbitrary JSON value. */
         fun cacheHit(cacheHit: JsonField<Boolean>) = apply { this.cacheHit = cacheHit }
 
         fun galleryUrl(galleryUrl: String) = galleryUrl(JsonField.of(galleryUrl))
 
-        /**
-         * Sets [Builder.galleryUrl] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.galleryUrl] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.galleryUrl] to an arbitrary JSON value. */
         fun galleryUrl(galleryUrl: JsonField<String>) = apply { this.galleryUrl = galleryUrl }
 
         fun totalMedia(totalMedia: Long) = totalMedia(JsonField.of(totalMedia))
 
-        /**
-         * Sets [Builder.totalMedia] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.totalMedia] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.totalMedia] to an arbitrary JSON value. */
         fun totalMedia(totalMedia: JsonField<Long>) = apply { this.totalMedia = totalMedia }
 
         fun totalTweets(totalTweets: Long) = totalTweets(JsonField.of(totalTweets))
 
-        /**
-         * Sets [Builder.totalTweets] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.totalTweets] with a well-typed [Long] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.totalTweets] to an arbitrary JSON value. */
         fun totalTweets(totalTweets: JsonField<Long>) = apply { this.totalTweets = totalTweets }
 
         fun tweetId(tweetId: String) = tweetId(JsonField.of(tweetId))
 
-        /**
-         * Sets [Builder.tweetId] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.tweetId] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.tweetId] to an arbitrary JSON value. */
         fun tweetId(tweetId: JsonField<String>) = apply { this.tweetId = tweetId }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -265,11 +220,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (if (cacheHit.asKnown().isPresent) 1 else 0) +

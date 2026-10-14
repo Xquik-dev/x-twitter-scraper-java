@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.blocking.x.communities
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -42,16 +40,12 @@ class JoinServiceImpl internal constructor(private val clientOptions: ClientOpti
     override fun create(
         params: JoinCreateParams,
         requestOptions: RequestOptions,
-    ): JoinCreateResponse =
-        // post /x/communities/{id}/join
-        withRawResponse().create(params, requestOptions).parse()
+    ): JoinCreateResponse = withRawResponse().create(params, requestOptions).parse()
 
     override fun deleteAll(
         params: JoinDeleteAllParams,
         requestOptions: RequestOptions,
-    ): JoinDeleteAllResponse =
-        // delete /x/communities/{id}/join
-        withRawResponse().deleteAll(params, requestOptions).parse()
+    ): JoinDeleteAllResponse = withRawResponse().deleteAll(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         JoinService.WithRawResponse {
@@ -73,8 +67,6 @@ class JoinServiceImpl internal constructor(private val clientOptions: ClientOpti
             params: JoinCreateParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<JoinCreateResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -104,8 +96,6 @@ class JoinServiceImpl internal constructor(private val clientOptions: ClientOpti
             params: JoinDeleteAllParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<JoinDeleteAllResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

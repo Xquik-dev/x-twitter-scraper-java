@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.webhooks
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -38,20 +36,17 @@ private constructor(
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun statusCode(): Long = statusCode.getRequired("statusCode")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun success(): Boolean = success.getRequired("success")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun error(): Optional<String> = error.getOptional("error")
 
     /**
@@ -119,32 +114,17 @@ private constructor(
 
         fun statusCode(statusCode: Long) = statusCode(JsonField.of(statusCode))
 
-        /**
-         * Sets [Builder.statusCode] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.statusCode] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.statusCode] to an arbitrary JSON value. */
         fun statusCode(statusCode: JsonField<Long>) = apply { this.statusCode = statusCode }
 
         fun success(success: Boolean) = success(JsonField.of(success))
 
-        /**
-         * Sets [Builder.success] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.success] with a well-typed [Boolean] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.success] to an arbitrary JSON value. */
         fun success(success: JsonField<Boolean>) = apply { this.success = success }
 
         fun error(error: String) = error(JsonField.of(error))
 
-        /**
-         * Sets [Builder.error] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.error] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.error] to an arbitrary JSON value. */
         fun error(error: JsonField<String>) = apply { this.error = error }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -217,11 +197,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (if (statusCode.asKnown().isPresent) 1 else 0) +

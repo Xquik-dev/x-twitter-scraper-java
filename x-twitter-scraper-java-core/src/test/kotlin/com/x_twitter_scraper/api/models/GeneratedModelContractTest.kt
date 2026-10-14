@@ -42,7 +42,6 @@ import kotlin.io.path.relativeTo
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-/** Enforces shared contracts across every generated model discovered on the test classpath. */
 internal class GeneratedModelContractTest {
 
     @Test

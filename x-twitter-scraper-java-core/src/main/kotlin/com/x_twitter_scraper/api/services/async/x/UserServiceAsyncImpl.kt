@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async.x
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -68,91 +66,78 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
         params: UserRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<UserProfile> =
-        // get /x/users/{id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
     override fun removeFollower(
         params: UserRemoveFollowerParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<UserRemoveFollowerResponse> =
-        // post /x/users/{id}/remove-follower
         withRawResponse().removeFollower(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveBatch(
         params: UserRetrieveBatchParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<UserRetrieveBatchResponse> =
-        // get /x/users/batch
         withRawResponse().retrieveBatch(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveFollowers(
         params: UserRetrieveFollowersParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<UserRetrieveFollowersResponse> =
-        // get /x/users/{id}/followers
         withRawResponse().retrieveFollowers(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveFollowersYouKnow(
         params: UserRetrieveFollowersYouKnowParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PaginatedUsers> =
-        // get /x/users/{id}/followers-you-know
         withRawResponse().retrieveFollowersYouKnow(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveFollowing(
         params: UserRetrieveFollowingParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<UserRetrieveFollowingResponse> =
-        // get /x/users/{id}/following
         withRawResponse().retrieveFollowing(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveLikes(
         params: UserRetrieveLikesParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PaginatedTweets> =
-        // get /x/users/{id}/likes
         withRawResponse().retrieveLikes(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveMedia(
         params: UserRetrieveMediaParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PaginatedTweets> =
-        // get /x/users/{id}/media
         withRawResponse().retrieveMedia(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveMentions(
         params: UserRetrieveMentionsParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PaginatedTweets> =
-        // get /x/users/{id}/mentions
         withRawResponse().retrieveMentions(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveReplies(
         params: UserRetrieveRepliesParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PaginatedTweets> =
-        // get /x/users/{id}/replies
         withRawResponse().retrieveReplies(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveSearch(
         params: UserRetrieveSearchParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PaginatedUsers> =
-        // get /x/users/search
         withRawResponse().retrieveSearch(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveTweets(
         params: UserRetrieveTweetsParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PaginatedTweets> =
-        // get /x/users/{id}/tweets
         withRawResponse().retrieveTweets(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveVerifiedFollowers(
         params: UserRetrieveVerifiedFollowersParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<UserRetrieveVerifiedFollowersResponse> =
-        // get /x/users/{id}/verified-followers
         withRawResponse().retrieveVerifiedFollowers(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -182,8 +167,6 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
             params: UserRetrieveParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<UserProfile>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -215,8 +198,6 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
             params: UserRemoveFollowerParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<UserRemoveFollowerResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -279,8 +260,6 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
             params: UserRetrieveFollowersParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<UserRetrieveFollowersResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -312,8 +291,6 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
             params: UserRetrieveFollowersYouKnowParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<PaginatedUsers>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -345,8 +322,6 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
             params: UserRetrieveFollowingParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<UserRetrieveFollowingResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -378,8 +353,6 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
             params: UserRetrieveLikesParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<PaginatedTweets>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -411,8 +384,6 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
             params: UserRetrieveMediaParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<PaginatedTweets>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -444,8 +415,6 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
             params: UserRetrieveMentionsParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<PaginatedTweets>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -477,8 +446,6 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
             params: UserRetrieveRepliesParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<PaginatedTweets>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -540,8 +507,6 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
             params: UserRetrieveTweetsParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<PaginatedTweets>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -574,8 +539,6 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
             params: UserRetrieveVerifiedFollowersParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<UserRetrieveVerifiedFollowersResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

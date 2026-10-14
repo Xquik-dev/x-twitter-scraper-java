@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.drafts
 
 import com.x_twitter_scraper.api.core.Params
@@ -77,11 +75,7 @@ private constructor(
          */
         fun limit(limit: Long?) = apply { this.limit = limit }
 
-        /**
-         * Alias for [Builder.limit].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.limit]. */
         fun limit(limit: Long) = limit(limit as Long?)
 
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */

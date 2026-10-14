@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.x.users
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -85,9 +83,6 @@ private constructor(
      * ```java
      * JsonValue.from(false)
      * ```
-     *
-     * However, this method can be useful for debugging and logging (e.g. if the server responded
-     * with an unexpected value).
      */
     @JsonProperty("has_next_page") @ExcludeMissing fun _hasNextPage(): JsonValue = hasNextPage
 
@@ -95,7 +90,7 @@ private constructor(
      * Empty because batch lookups never paginate.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun nextCursor(): String = nextCursor.getRequired("next_cursor")
 
@@ -103,7 +98,7 @@ private constructor(
      * Number of requested IDs included in the lookup.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun processedCount(): Long = processedCount.getRequired("processed_count")
 
@@ -111,7 +106,7 @@ private constructor(
      * Number of unique IDs requested.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun requestedCount(): Long = requestedCount.getRequired("requested_count")
 
@@ -119,7 +114,7 @@ private constructor(
      * Number of user profiles returned and charged.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun returnedCount(): Long = returnedCount.getRequired("returned_count")
 
@@ -127,7 +122,7 @@ private constructor(
      * Processed IDs with no returned profile, in first-seen request order.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun unavailableIds(): List<String> = unavailableIds.getRequired("unavailable_ids")
 
@@ -136,13 +131,13 @@ private constructor(
      * adding credits.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun unprocessedIds(): List<String> = unprocessedIds.getRequired("unprocessed_ids")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun users(): List<UserProfile> = users.getRequired("users")
 
@@ -265,39 +260,23 @@ private constructor(
         /**
          * Sets the field to an arbitrary JSON value.
          *
-         * It is usually unnecessary to call this method because the field defaults to the
-         * following:
+         * Defaults to the following:
          * ```java
          * JsonValue.from(false)
          * ```
-         *
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
          */
         fun hasNextPage(hasNextPage: JsonValue) = apply { this.hasNextPage = hasNextPage }
 
         /** Empty because batch lookups never paginate. */
         fun nextCursor(nextCursor: String) = nextCursor(JsonField.of(nextCursor))
 
-        /**
-         * Sets [Builder.nextCursor] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.nextCursor] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.nextCursor] to an arbitrary JSON value. */
         fun nextCursor(nextCursor: JsonField<String>) = apply { this.nextCursor = nextCursor }
 
         /** Number of requested IDs included in the lookup. */
         fun processedCount(processedCount: Long) = processedCount(JsonField.of(processedCount))
 
-        /**
-         * Sets [Builder.processedCount] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.processedCount] with a well-typed [Long] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.processedCount] to an arbitrary JSON value. */
         fun processedCount(processedCount: JsonField<Long>) = apply {
             this.processedCount = processedCount
         }
@@ -305,13 +284,7 @@ private constructor(
         /** Number of unique IDs requested. */
         fun requestedCount(requestedCount: Long) = requestedCount(JsonField.of(requestedCount))
 
-        /**
-         * Sets [Builder.requestedCount] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.requestedCount] with a well-typed [Long] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.requestedCount] to an arbitrary JSON value. */
         fun requestedCount(requestedCount: JsonField<Long>) = apply {
             this.requestedCount = requestedCount
         }
@@ -319,13 +292,7 @@ private constructor(
         /** Number of user profiles returned and charged. */
         fun returnedCount(returnedCount: Long) = returnedCount(JsonField.of(returnedCount))
 
-        /**
-         * Sets [Builder.returnedCount] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.returnedCount] with a well-typed [Long] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.returnedCount] to an arbitrary JSON value. */
         fun returnedCount(returnedCount: JsonField<Long>) = apply {
             this.returnedCount = returnedCount
         }
@@ -334,13 +301,7 @@ private constructor(
         fun unavailableIds(unavailableIds: List<String>) =
             unavailableIds(JsonField.of(unavailableIds))
 
-        /**
-         * Sets [Builder.unavailableIds] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.unavailableIds] with a well-typed `List<String>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.unavailableIds] to an arbitrary JSON value. */
         fun unavailableIds(unavailableIds: JsonField<List<String>>) = apply {
             this.unavailableIds = unavailableIds.map { it.toMutableList() }
         }
@@ -364,13 +325,7 @@ private constructor(
         fun unprocessedIds(unprocessedIds: List<String>) =
             unprocessedIds(JsonField.of(unprocessedIds))
 
-        /**
-         * Sets [Builder.unprocessedIds] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.unprocessedIds] with a well-typed `List<String>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.unprocessedIds] to an arbitrary JSON value. */
         fun unprocessedIds(unprocessedIds: JsonField<List<String>>) = apply {
             this.unprocessedIds = unprocessedIds.map { it.toMutableList() }
         }
@@ -389,13 +344,7 @@ private constructor(
 
         fun users(users: List<UserProfile>) = users(JsonField.of(users))
 
-        /**
-         * Sets [Builder.users] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.users] with a well-typed `List<UserProfile>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.users] to an arbitrary JSON value. */
         fun users(users: JsonField<List<UserProfile>>) = apply {
             this.users = users.map { it.toMutableList() }
         }
@@ -499,11 +448,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         hasNextPage.let { if (it == JsonValue.from(false)) 1 else 0 } +

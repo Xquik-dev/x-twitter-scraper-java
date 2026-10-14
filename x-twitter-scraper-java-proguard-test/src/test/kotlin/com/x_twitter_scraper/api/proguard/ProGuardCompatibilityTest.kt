@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.xquik.consumer.proguard
 
 import com.fasterxml.jackson.core.type.TypeReference
@@ -37,7 +35,6 @@ internal class ProGuardCompatibilityTest {
 
         @JvmStatic
         fun main(args: Array<String>) {
-            // To debug that we're using the right JAR.
             val jarPath = this::class.java.getProtectionDomain().codeSource.location
             println("JAR being used: $jarPath")
 

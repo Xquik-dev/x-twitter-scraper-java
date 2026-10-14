@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -53,49 +51,41 @@ class StyleServiceAsyncImpl internal constructor(private val clientOptions: Clie
         params: StyleRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<StyleProfile> =
-        // get /styles/{id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
     override fun update(
         params: StyleUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<StyleProfile> =
-        // put /styles/{id}
         withRawResponse().update(params, requestOptions).thenApply { it.parse() }
 
     override fun list(
         params: StyleListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<StyleListResponse> =
-        // get /styles
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
     override fun delete(
         params: StyleDeleteParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<Void?> =
-        // delete /styles/{id}
-        withRawResponse().delete(params, requestOptions).thenAccept {}
+    ): CompletableFuture<Void?> = withRawResponse().delete(params, requestOptions).thenAccept {}
 
     override fun analyze(
         params: StyleAnalyzeParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<StyleProfile> =
-        // post /styles
         withRawResponse().analyze(params, requestOptions).thenApply { it.parse() }
 
     override fun compare(
         params: StyleCompareParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<StyleCompareResponse> =
-        // get /styles/compare
         withRawResponse().compare(params, requestOptions).thenApply { it.parse() }
 
     override fun getPerformance(
         params: StyleGetPerformanceParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<StyleGetPerformanceResponse> =
-        // get /styles/{id}/performance
         withRawResponse().getPerformance(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -118,8 +108,6 @@ class StyleServiceAsyncImpl internal constructor(private val clientOptions: Clie
             params: StyleRetrieveParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<StyleProfile>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -151,8 +139,6 @@ class StyleServiceAsyncImpl internal constructor(private val clientOptions: Clie
             params: StyleUpdateParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<StyleProfile>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -214,8 +200,6 @@ class StyleServiceAsyncImpl internal constructor(private val clientOptions: Clie
             params: StyleDeleteParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -303,8 +287,6 @@ class StyleServiceAsyncImpl internal constructor(private val clientOptions: Clie
             params: StyleGetPerformanceParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<StyleGetPerformanceResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

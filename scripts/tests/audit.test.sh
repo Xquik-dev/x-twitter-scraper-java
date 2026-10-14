@@ -4,10 +4,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Runs scripts/audit in a throwaway repository. A stub stands in for the
-# Gradle license check and a fake stands in for OSV Scanner. The fake prints
-# a report in the shape that OSV Scanner 2.5.1 wrote for this repository.
-
 set -euo pipefail
 
 # shellcheck source=scripts/tests/support.sh
@@ -17,18 +13,14 @@ readonly runtime_package="com.example:shipped"
 readonly development_package="com.example:build-tool"
 readonly advisory="GHSA-aaaa-bbbb-cccc"
 
-# Prints the date that lies this many days after today.
 day_from_today() {
     jq -nr --argjson days "$1" 'now + $days * 86400 | strftime("%Y-%m-%d")'
 }
 
-# Builds a repository where a published module ships 1 package at runtime
-# and uses 1 package only for its build.
 prepare_audit() {
     copy_file scripts/audit
     stub gradlew <<'EOF'
 #!/bin/sh
-# Stands in for the Gradle license check. It fails when FAKE_LICENSE_FAILS is set.
 echo "$*" >>"$FAKE_LOGS/gradlew"
 [ -z "${FAKE_LICENSE_FAILS:-}" ]
 EOF
@@ -48,9 +40,6 @@ EOF
 EOF
     cat >"$sandbox/osv-scanner" <<'EOF'
 #!/bin/sh
-# Stands in for OSV Scanner. It reports 1 finding for the package that
-# FAKE_OSV_PACKAGE names, or none when the variable is empty. FAKE_OSV_FIXED
-# names the fixed version, and FAKE_OSV_EXIT overrides the exit code.
 echo "$*" >>"$FAKE_LOGS/osv-scanner"
 if [ -n "${FAKE_OSV_EXIT:-}" ]; then
     echo "The scan broke." >&2
@@ -90,8 +79,6 @@ EOF
     run_env=("OSV_SCANNER_BIN=$sandbox/osv-scanner")
 }
 
-# Makes the fake scanner report 1 finding. Pass the package, its version, the
-# severity score and the fixed version, which may be empty.
 report_finding() {
     run_env+=(
         "FAKE_OSV_PACKAGE=$1"
@@ -102,7 +89,6 @@ report_finding() {
     )
 }
 
-# Lists the finding of a package in audit-exceptions.json with this recheck date.
 list_exception() {
     write_file audit-exceptions.json <<EOF
 [

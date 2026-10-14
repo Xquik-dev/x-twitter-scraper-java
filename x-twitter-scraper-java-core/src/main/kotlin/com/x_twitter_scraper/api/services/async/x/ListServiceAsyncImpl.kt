@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async.x
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -45,21 +43,18 @@ class ListServiceAsyncImpl internal constructor(private val clientOptions: Clien
         params: ListRetrieveFollowersParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PaginatedUsers> =
-        // get /x/lists/{id}/followers
         withRawResponse().retrieveFollowers(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveMembers(
         params: ListRetrieveMembersParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PaginatedUsers> =
-        // get /x/lists/{id}/members
         withRawResponse().retrieveMembers(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveTweets(
         params: ListRetrieveTweetsParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PaginatedTweets> =
-        // get /x/lists/{id}/tweets
         withRawResponse().retrieveTweets(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -82,8 +77,6 @@ class ListServiceAsyncImpl internal constructor(private val clientOptions: Clien
             params: ListRetrieveFollowersParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<PaginatedUsers>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -115,8 +108,6 @@ class ListServiceAsyncImpl internal constructor(private val clientOptions: Clien
             params: ListRetrieveMembersParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<PaginatedUsers>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -148,8 +139,6 @@ class ListServiceAsyncImpl internal constructor(private val clientOptions: Clien
             params: ListRetrieveTweetsParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<PaginatedTweets>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

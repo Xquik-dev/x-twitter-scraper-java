@@ -69,7 +69,6 @@ internal class OkHttpClientTest {
 
         responseFuture.cancel(false)
 
-        // Should have cancelled the underlying call
         assertThat(call.isCanceled()).isTrue()
     }
 

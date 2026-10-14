@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.styles
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -38,7 +36,7 @@ private constructor(
      * Full style profile with sampled tweets used for tone analysis.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun style1(): StyleProfile = style1.getRequired("style1")
 
@@ -46,7 +44,7 @@ private constructor(
      * Full style profile with sampled tweets used for tone analysis.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun style2(): StyleProfile = style2.getRequired("style2")
 
@@ -107,25 +105,13 @@ private constructor(
         /** Full style profile with sampled tweets used for tone analysis. */
         fun style1(style1: StyleProfile) = style1(JsonField.of(style1))
 
-        /**
-         * Sets [Builder.style1] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.style1] with a well-typed [StyleProfile] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.style1] to an arbitrary JSON value. */
         fun style1(style1: JsonField<StyleProfile>) = apply { this.style1 = style1 }
 
         /** Full style profile with sampled tweets used for tone analysis. */
         fun style2(style2: StyleProfile) = style2(JsonField.of(style2))
 
-        /**
-         * Sets [Builder.style2] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.style2] with a well-typed [StyleProfile] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.style2] to an arbitrary JSON value. */
         fun style2(style2: JsonField<StyleProfile>) = apply { this.style2 = style2 }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -196,11 +182,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (style1.asKnown().getOrNull()?.validity() ?: 0) +

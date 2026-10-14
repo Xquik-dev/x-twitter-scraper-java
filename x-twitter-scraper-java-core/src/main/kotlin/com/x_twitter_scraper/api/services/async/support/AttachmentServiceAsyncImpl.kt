@@ -1,5 +1,3 @@
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async.support
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -33,9 +31,7 @@ class AttachmentServiceAsyncImpl internal constructor(private val clientOptions:
     override fun download(
         params: AttachmentDownloadParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<HttpResponse> =
-        // get /support/attachments/{id}
-        withRawResponse().download(params, requestOptions)
+    ): CompletableFuture<HttpResponse> = withRawResponse().download(params, requestOptions)
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         AttachmentServiceAsync.WithRawResponse {
@@ -54,8 +50,6 @@ class AttachmentServiceAsyncImpl internal constructor(private val clientOptions:
             params: AttachmentDownloadParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

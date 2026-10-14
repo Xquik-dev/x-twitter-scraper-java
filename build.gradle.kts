@@ -36,7 +36,7 @@ licenseReport {
 
 allprojects {
     group = "com.xquik.api"
-    version = "0.10.4" // x-release-please-version
+    version = "0.10.4"
 
     dependencyLocking {
         lockAllConfigurations()
@@ -75,7 +75,6 @@ allprojects {
 }
 
 subprojects {
-    // These are populated with dependencies by `buildSrc` scripts.
     tasks.register("format") {
         group = "Verification"
         description = "Formats all source files."

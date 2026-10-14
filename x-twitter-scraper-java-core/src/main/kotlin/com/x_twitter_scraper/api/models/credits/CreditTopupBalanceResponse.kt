@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.credits
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -39,7 +37,7 @@ private constructor(
      * Stable Xquik redirect URL for the active checkout.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun redirectUrl(): String = redirectUrl.getRequired("redirect_url")
 
@@ -48,7 +46,7 @@ private constructor(
      * checkout URL.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun url(): String = url.getRequired("url")
 
@@ -111,13 +109,7 @@ private constructor(
         /** Stable Xquik redirect URL for the active checkout. */
         fun redirectUrl(redirectUrl: String) = redirectUrl(JsonField.of(redirectUrl))
 
-        /**
-         * Sets [Builder.redirectUrl] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.redirectUrl] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.redirectUrl] to an arbitrary JSON value. */
         fun redirectUrl(redirectUrl: JsonField<String>) = apply { this.redirectUrl = redirectUrl }
 
         /**
@@ -126,12 +118,7 @@ private constructor(
          */
         fun url(url: String) = url(JsonField.of(url))
 
-        /**
-         * Sets [Builder.url] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.url] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.url] to an arbitrary JSON value. */
         fun url(url: JsonField<String>) = apply { this.url = url }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -202,11 +189,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (if (redirectUrl.asKnown().isPresent) 1 else 0) + (if (url.asKnown().isPresent) 1 else 0)

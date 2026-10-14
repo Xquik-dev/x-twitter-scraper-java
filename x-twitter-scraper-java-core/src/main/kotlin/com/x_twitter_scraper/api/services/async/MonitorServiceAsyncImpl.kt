@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -57,35 +55,30 @@ class MonitorServiceAsyncImpl internal constructor(private val clientOptions: Cl
         params: MonitorCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<MonitorCreateResponse> =
-        // post /monitors
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieve(
         params: MonitorRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<Monitor> =
-        // get /monitors/{id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
     override fun update(
         params: MonitorUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<Monitor> =
-        // patch /monitors/{id}
         withRawResponse().update(params, requestOptions).thenApply { it.parse() }
 
     override fun list(
         params: MonitorListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<MonitorListResponse> =
-        // get /monitors
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
     override fun deactivate(
         params: MonitorDeactivateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<MonitorDeactivateResponse> =
-        // delete /monitors/{id}
         withRawResponse().deactivate(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -146,8 +139,6 @@ class MonitorServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: MonitorRetrieveParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<Monitor>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -178,8 +169,6 @@ class MonitorServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: MonitorUpdateParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<Monitor>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -242,8 +231,6 @@ class MonitorServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: MonitorDeactivateParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<MonitorDeactivateResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

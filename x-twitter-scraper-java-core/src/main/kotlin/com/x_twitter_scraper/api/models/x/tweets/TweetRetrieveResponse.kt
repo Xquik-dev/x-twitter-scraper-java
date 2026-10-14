@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.x.tweets
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -40,7 +38,7 @@ private constructor(
      * not report the count.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun tweet(): TweetDetail = tweet.getRequired("tweet")
 
@@ -48,8 +46,7 @@ private constructor(
      * Tweet author profile. The lookup route always includes follower count and verification state.
      * Other profile fields appear when available.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun author(): Optional<TweetAuthor> = author.getOptional("author")
 
@@ -112,13 +109,7 @@ private constructor(
          */
         fun tweet(tweet: TweetDetail) = tweet(JsonField.of(tweet))
 
-        /**
-         * Sets [Builder.tweet] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.tweet] with a well-typed [TweetDetail] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.tweet] to an arbitrary JSON value. */
         fun tweet(tweet: JsonField<TweetDetail>) = apply { this.tweet = tweet }
 
         /**
@@ -127,13 +118,7 @@ private constructor(
          */
         fun author(author: TweetAuthor) = author(JsonField.of(author))
 
-        /**
-         * Sets [Builder.author] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.author] with a well-typed [TweetAuthor] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.author] to an arbitrary JSON value. */
         fun author(author: JsonField<TweetAuthor>) = apply { this.author = author }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -203,11 +188,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (tweet.asKnown().getOrNull()?.validity() ?: 0) +

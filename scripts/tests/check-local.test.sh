@@ -4,10 +4,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Runs bin/check-local in a throwaway repository. Stubs stand in for the
-# check scripts. Fake commands stand in for the GitHub CLI, uv, the CodeQL
-# CLI, shellcheck and java, so no test reaches GitHub or runs a real check.
-
 set -euo pipefail
 
 # shellcheck source=scripts/tests/support.sh
@@ -26,51 +22,42 @@ check-reproducible
 codeql"
 readonly passed_line="Passed lint, shellcheck, script tests, REUSE, build, 12 tests, coverage, fuzzing, audit, reproducible artifacts and CodeQL."
 
-# Builds a repository whose checks all pass, on a machine with every tool.
 prepare_checks() {
     local name
     copy_file bin/check-local
     for name in lint test-scripts build coverage fuzz audit check-reproducible codeql; do
         stub "scripts/$name" <<EOF
 #!/usr/bin/env bash
-# Stands in for scripts/$name. It fails when FAKE_FAILING_CHECK names it.
 echo "$name" >>"\$FAKE_LOGS/order"
 [[ "\${FAKE_FAILING_CHECK:-}" != "$name" ]]
 EOF
     done
     stub scripts/test <<'EOF'
 #!/usr/bin/env bash
-# Stands in for scripts/test. It fails when FAKE_FAILING_CHECK names it.
 echo "test" >>"$FAKE_LOGS/order"
 echo "Verified 12 tests across 3 suites with 0 failures, 0 errors and 0 skipped."
 [[ "${FAKE_FAILING_CHECK:-}" != "test" ]]
 EOF
     fake shellcheck <<'EOF'
 #!/bin/sh
-# Stands in for shellcheck. It records the scripts it is asked to check.
 echo "shellcheck" >>"$FAKE_LOGS/order"
 echo "$*" >>"$FAKE_LOGS/shellcheck"
 EOF
     fake uvx <<'EOF'
 #!/bin/sh
-# Stands in for uvx. It records its arguments.
 echo "uvx" >>"$FAKE_LOGS/order"
 echo "$*" >>"$FAKE_LOGS/uvx"
 EOF
     fake codeql <<'EOF'
 #!/bin/sh
-# Stands in for the CodeQL CLI. bin/check-local only checks that it exists.
 exit 0
 EOF
     fake java <<'EOF'
 #!/bin/sh
-# Stands in for java. It reports the version that FAKE_JAVA_VERSION names.
 echo "openjdk version \"${FAKE_JAVA_VERSION:-26.0.1}\" 2026-04-21" >&2
 EOF
     fake gh <<'EOF'
 #!/bin/sh
-# Stands in for the GitHub CLI. It knows every commit unless
-# FAKE_GH_UNKNOWN_COMMIT is set, and records each status it is asked to post.
 case "$*" in
     "api repos/Xquik-dev/x-twitter-scraper-java/commits/"*)
         [ -z "${FAKE_GH_UNKNOWN_COMMIT:-}" ]
@@ -170,7 +157,6 @@ test_a_run_without_uv_stops_even_when_another_reuse_is_installed() {
     remove_tool uvx
     fake reuse <<'EOF'
 #!/bin/sh
-# Stands in for a reuse that is not the pinned one.
 echo "reuse" >>"$FAKE_LOGS/order"
 EOF
 
@@ -247,7 +233,6 @@ test_a_check_that_changes_the_tree_fails_the_run() {
     prepare_checks
     stub scripts/coverage <<'EOF'
 #!/usr/bin/env bash
-# Stands in for a check that leaves a file behind.
 echo "coverage" >>"$FAKE_LOGS/order"
 echo "left behind" >leftover.txt
 EOF

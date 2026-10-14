@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async.x.tweets
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -45,14 +43,12 @@ class LikeServiceAsyncImpl internal constructor(private val clientOptions: Clien
         params: LikeCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<LikeCreateResponse> =
-        // post /x/tweets/{id}/like
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     override fun delete(
         params: LikeDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<LikeDeleteResponse> =
-        // delete /x/tweets/{id}/like
         withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -75,8 +71,6 @@ class LikeServiceAsyncImpl internal constructor(private val clientOptions: Clien
             params: LikeCreateParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<LikeCreateResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -109,8 +103,6 @@ class LikeServiceAsyncImpl internal constructor(private val clientOptions: Clien
             params: LikeDeleteParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<LikeDeleteResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.styles
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -45,25 +43,25 @@ private constructor(
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun fetchedAt(): OffsetDateTime = fetchedAt.getRequired("fetchedAt")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun isOwnAccount(): Boolean = isOwnAccount.getRequired("isOwnAccount")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun tweetCount(): Long = tweetCount.getRequired("tweetCount")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun xUsername(): String = xUsername.getRequired("xUsername")
 
@@ -147,47 +145,24 @@ private constructor(
 
         fun fetchedAt(fetchedAt: OffsetDateTime) = fetchedAt(JsonField.of(fetchedAt))
 
-        /**
-         * Sets [Builder.fetchedAt] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.fetchedAt] with a well-typed [OffsetDateTime] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.fetchedAt] to an arbitrary JSON value. */
         fun fetchedAt(fetchedAt: JsonField<OffsetDateTime>) = apply { this.fetchedAt = fetchedAt }
 
         fun isOwnAccount(isOwnAccount: Boolean) = isOwnAccount(JsonField.of(isOwnAccount))
 
-        /**
-         * Sets [Builder.isOwnAccount] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.isOwnAccount] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.isOwnAccount] to an arbitrary JSON value. */
         fun isOwnAccount(isOwnAccount: JsonField<Boolean>) = apply {
             this.isOwnAccount = isOwnAccount
         }
 
         fun tweetCount(tweetCount: Long) = tweetCount(JsonField.of(tweetCount))
 
-        /**
-         * Sets [Builder.tweetCount] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.tweetCount] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.tweetCount] to an arbitrary JSON value. */
         fun tweetCount(tweetCount: JsonField<Long>) = apply { this.tweetCount = tweetCount }
 
         fun xUsername(xUsername: String) = xUsername(JsonField.of(xUsername))
 
-        /**
-         * Sets [Builder.xUsername] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.xUsername] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.xUsername] to an arbitrary JSON value. */
         fun xUsername(xUsername: JsonField<String>) = apply { this.xUsername = xUsername }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -264,11 +239,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (if (fetchedAt.asKnown().isPresent) 1 else 0) +

@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.blocking.x
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -41,16 +39,12 @@ class MediaServiceImpl internal constructor(private val clientOptions: ClientOpt
     override fun download(
         params: MediaDownloadParams,
         requestOptions: RequestOptions,
-    ): MediaDownloadResponse =
-        // post /x/media/download
-        withRawResponse().download(params, requestOptions).parse()
+    ): MediaDownloadResponse = withRawResponse().download(params, requestOptions).parse()
 
     override fun upload(
         params: MediaUploadParams,
         requestOptions: RequestOptions,
-    ): MediaUploadResponse =
-        // post /x/media
-        withRawResponse().upload(params, requestOptions).parse()
+    ): MediaUploadResponse = withRawResponse().upload(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         MediaService.WithRawResponse {

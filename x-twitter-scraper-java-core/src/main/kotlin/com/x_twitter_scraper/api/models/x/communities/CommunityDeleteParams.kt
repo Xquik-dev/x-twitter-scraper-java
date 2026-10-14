@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.x.communities
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -42,7 +40,7 @@ private constructor(
      * X account (@username or ID) deleting the community
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun account(): String = body.account()
 
@@ -50,7 +48,7 @@ private constructor(
      * Community name for confirmation
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun communityName(): String = body.communityName()
 
@@ -118,37 +116,19 @@ private constructor(
 
         fun idempotencyKey(idempotencyKey: String) = apply { this.idempotencyKey = idempotencyKey }
 
-        /**
-         * Sets the entire request body.
-         *
-         * This is generally only useful if you are already constructing the body separately.
-         * Otherwise, it's more convenient to use the top-level setters instead:
-         * - [account]
-         * - [communityName]
-         */
+        /** Sets the entire request body. */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
         /** X account (@username or ID) deleting the community */
         fun account(account: String) = apply { body.account(account) }
 
-        /**
-         * Sets [Builder.account] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.account] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.account] to an arbitrary JSON value. */
         fun account(account: JsonField<String>) = apply { body.account(account) }
 
         /** Community name for confirmation */
         fun communityName(communityName: String) = apply { body.communityName(communityName) }
 
-        /**
-         * Sets [Builder.communityName] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.communityName] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.communityName] to an arbitrary JSON value. */
         fun communityName(communityName: JsonField<String>) = apply {
             body.communityName(communityName)
         }
@@ -332,8 +312,7 @@ private constructor(
          * X account (@username or ID) deleting the community
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun account(): String = account.getRequired("account")
 
@@ -341,8 +320,7 @@ private constructor(
          * Community name for confirmation
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun communityName(): String = communityName.getRequired("community_name")
 
@@ -406,25 +384,13 @@ private constructor(
             /** X account (@username or ID) deleting the community */
             fun account(account: String) = account(JsonField.of(account))
 
-            /**
-             * Sets [Builder.account] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.account] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.account] to an arbitrary JSON value. */
             fun account(account: JsonField<String>) = apply { this.account = account }
 
             /** Community name for confirmation */
             fun communityName(communityName: String) = communityName(JsonField.of(communityName))
 
-            /**
-             * Sets [Builder.communityName] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.communityName] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.communityName] to an arbitrary JSON value. */
             fun communityName(communityName: JsonField<String>) = apply {
                 this.communityName = communityName
             }
@@ -498,12 +464,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int =
             (if (account.asKnown().isPresent) 1 else 0) +

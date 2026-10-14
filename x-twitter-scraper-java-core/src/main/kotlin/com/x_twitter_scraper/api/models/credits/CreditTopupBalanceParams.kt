@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.credits
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -38,15 +36,14 @@ private constructor(
      * Amount to top up in US dollars. Minimum 10.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun dollars(): Long = body.dollars()
 
     /**
      * Optional checkout locale. Defaults to en.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun locale(): Optional<String> = body.locale()
 
@@ -101,36 +98,19 @@ private constructor(
             additionalQueryParams = creditTopupBalanceParams.additionalQueryParams.toBuilder()
         }
 
-        /**
-         * Sets the entire request body.
-         *
-         * This is generally only useful if you are already constructing the body separately.
-         * Otherwise, it's more convenient to use the top-level setters instead:
-         * - [dollars]
-         * - [locale]
-         */
+        /** Sets the entire request body. */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
         /** Amount to top up in US dollars. Minimum 10. */
         fun dollars(dollars: Long) = apply { body.dollars(dollars) }
 
-        /**
-         * Sets [Builder.dollars] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.dollars] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.dollars] to an arbitrary JSON value. */
         fun dollars(dollars: JsonField<Long>) = apply { body.dollars(dollars) }
 
         /** Optional checkout locale. Defaults to en. */
         fun locale(locale: String) = apply { body.locale(locale) }
 
-        /**
-         * Sets [Builder.locale] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.locale] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.locale] to an arbitrary JSON value. */
         fun locale(locale: JsonField<String>) = apply { body.locale(locale) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
@@ -294,16 +274,14 @@ private constructor(
          * Amount to top up in US dollars. Minimum 10.
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun dollars(): Long = dollars.getRequired("dollars")
 
         /**
          * Optional checkout locale. Defaults to en.
          *
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
         fun locale(): Optional<String> = locale.getOptional("locale")
 
@@ -363,25 +341,13 @@ private constructor(
             /** Amount to top up in US dollars. Minimum 10. */
             fun dollars(dollars: Long) = dollars(JsonField.of(dollars))
 
-            /**
-             * Sets [Builder.dollars] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.dollars] with a well-typed [Long] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.dollars] to an arbitrary JSON value. */
             fun dollars(dollars: JsonField<Long>) = apply { this.dollars = dollars }
 
             /** Optional checkout locale. Defaults to en. */
             fun locale(locale: String) = locale(JsonField.of(locale))
 
-            /**
-             * Sets [Builder.locale] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.locale] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.locale] to an arbitrary JSON value. */
             fun locale(locale: JsonField<String>) = apply { this.locale = locale }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -448,12 +414,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int =
             (if (dollars.asKnown().isPresent) 1 else 0) + (if (locale.asKnown().isPresent) 1 else 0)

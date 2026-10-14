@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.webhooks
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -68,50 +66,41 @@ private constructor(
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun id(): String = id.getRequired("id")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun attempts(): Long = attempts.getRequired("attempts")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun createdAt(): OffsetDateTime = createdAt.getRequired("createdAt")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun status(): String = status.getRequired("status")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun streamEventId(): String = streamEventId.getRequired("streamEventId")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun deliveredAt(): Optional<OffsetDateTime> = deliveredAt.getOptional("deliveredAt")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun lastError(): Optional<String> = lastError.getOptional("lastError")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun lastStatusCode(): Optional<Long> = lastStatusCode.getOptional("lastStatusCode")
 
     /**
@@ -235,91 +224,46 @@ private constructor(
 
         fun id(id: String) = id(JsonField.of(id))
 
-        /**
-         * Sets [Builder.id] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.id] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.id] to an arbitrary JSON value. */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
         fun attempts(attempts: Long) = attempts(JsonField.of(attempts))
 
-        /**
-         * Sets [Builder.attempts] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.attempts] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.attempts] to an arbitrary JSON value. */
         fun attempts(attempts: JsonField<Long>) = apply { this.attempts = attempts }
 
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
-        /**
-         * Sets [Builder.createdAt] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.createdAt] to an arbitrary JSON value. */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
         fun status(status: String) = status(JsonField.of(status))
 
-        /**
-         * Sets [Builder.status] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.status] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.status] to an arbitrary JSON value. */
         fun status(status: JsonField<String>) = apply { this.status = status }
 
         fun streamEventId(streamEventId: String) = streamEventId(JsonField.of(streamEventId))
 
-        /**
-         * Sets [Builder.streamEventId] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.streamEventId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.streamEventId] to an arbitrary JSON value. */
         fun streamEventId(streamEventId: JsonField<String>) = apply {
             this.streamEventId = streamEventId
         }
 
         fun deliveredAt(deliveredAt: OffsetDateTime) = deliveredAt(JsonField.of(deliveredAt))
 
-        /**
-         * Sets [Builder.deliveredAt] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.deliveredAt] with a well-typed [OffsetDateTime] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.deliveredAt] to an arbitrary JSON value. */
         fun deliveredAt(deliveredAt: JsonField<OffsetDateTime>) = apply {
             this.deliveredAt = deliveredAt
         }
 
         fun lastError(lastError: String) = lastError(JsonField.of(lastError))
 
-        /**
-         * Sets [Builder.lastError] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.lastError] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.lastError] to an arbitrary JSON value. */
         fun lastError(lastError: JsonField<String>) = apply { this.lastError = lastError }
 
         fun lastStatusCode(lastStatusCode: Long) = lastStatusCode(JsonField.of(lastStatusCode))
 
-        /**
-         * Sets [Builder.lastStatusCode] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.lastStatusCode] with a well-typed [Long] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.lastStatusCode] to an arbitrary JSON value. */
         fun lastStatusCode(lastStatusCode: JsonField<Long>) = apply {
             this.lastStatusCode = lastStatusCode
         }
@@ -407,11 +351,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +

@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -55,49 +53,42 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
         params: WebhookCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<WebhookCreateResponse> =
-        // post /webhooks
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     override fun update(
         params: WebhookUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<Webhook> =
-        // patch /webhooks/{id}
         withRawResponse().update(params, requestOptions).thenApply { it.parse() }
 
     override fun list(
         params: WebhookListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<WebhookListResponse> =
-        // get /webhooks
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
     override fun deactivate(
         params: WebhookDeactivateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<WebhookDeactivateResponse> =
-        // delete /webhooks/{id}
         withRawResponse().deactivate(params, requestOptions).thenApply { it.parse() }
 
     override fun listDeliveries(
         params: WebhookListDeliveriesParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<WebhookListDeliveriesResponse> =
-        // get /webhooks/{id}/deliveries
         withRawResponse().listDeliveries(params, requestOptions).thenApply { it.parse() }
 
     override fun resume(
         params: WebhookResumeParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<WebhookResumeResponse> =
-        // post /webhooks/{id}/resume
         withRawResponse().resume(params, requestOptions).thenApply { it.parse() }
 
     override fun test(
         params: WebhookTestParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<WebhookTestResponse> =
-        // post /webhooks/{id}/test
         withRawResponse().test(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -150,8 +141,6 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: WebhookUpdateParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<Webhook>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -214,8 +203,6 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: WebhookDeactivateParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<WebhookDeactivateResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -248,8 +235,6 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: WebhookListDeliveriesParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<WebhookListDeliveriesResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -281,8 +266,6 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: WebhookResumeParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<WebhookResumeResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -315,8 +298,6 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: WebhookTestParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<WebhookTestResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

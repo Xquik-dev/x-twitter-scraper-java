@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.styles
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -41,7 +39,7 @@ private constructor(
      * Display label for the style
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun label(): String = body.label()
 
@@ -49,7 +47,7 @@ private constructor(
      * Array of tweet objects
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun tweets(): List<Tweet> = body.tweets()
 
@@ -112,37 +110,19 @@ private constructor(
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
 
-        /**
-         * Sets the entire request body.
-         *
-         * This is generally only useful if you are already constructing the body separately.
-         * Otherwise, it's more convenient to use the top-level setters instead:
-         * - [label]
-         * - [tweets]
-         */
+        /** Sets the entire request body. */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
         /** Display label for the style */
         fun label(label: String) = apply { body.label(label) }
 
-        /**
-         * Sets [Builder.label] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.label] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.label] to an arbitrary JSON value. */
         fun label(label: JsonField<String>) = apply { body.label(label) }
 
         /** Array of tweet objects */
         fun tweets(tweets: List<Tweet>) = apply { body.tweets(tweets) }
 
-        /**
-         * Sets [Builder.tweets] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.tweets] with a well-typed `List<Tweet>` value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.tweets] to an arbitrary JSON value. */
         fun tweets(tweets: JsonField<List<Tweet>>) = apply { body.tweets(tweets) }
 
         /**
@@ -323,8 +303,7 @@ private constructor(
          * Display label for the style
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun label(): String = label.getRequired("label")
 
@@ -332,8 +311,7 @@ private constructor(
          * Array of tweet objects
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun tweets(): List<Tweet> = tweets.getRequired("tweets")
 
@@ -394,25 +372,13 @@ private constructor(
             /** Display label for the style */
             fun label(label: String) = label(JsonField.of(label))
 
-            /**
-             * Sets [Builder.label] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.label] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.label] to an arbitrary JSON value. */
             fun label(label: JsonField<String>) = apply { this.label = label }
 
             /** Array of tweet objects */
             fun tweets(tweets: List<Tweet>) = tweets(JsonField.of(tweets))
 
-            /**
-             * Sets [Builder.tweets] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.tweets] with a well-typed `List<Tweet>` value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.tweets] to an arbitrary JSON value. */
             fun tweets(tweets: JsonField<List<Tweet>>) = apply {
                 this.tweets = tweets.map { it.toMutableList() }
             }
@@ -498,12 +464,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int =
             (if (label.asKnown().isPresent) 1 else 0) +
@@ -542,8 +502,7 @@ private constructor(
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
+         *   is unexpectedly missing or null.
          */
         fun text(): String = text.getRequired("text")
 
@@ -593,13 +552,7 @@ private constructor(
 
             fun text(text: String) = text(JsonField.of(text))
 
-            /**
-             * Sets [Builder.text] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.text] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
+            /** Sets [Builder.text] to an arbitrary JSON value. */
             fun text(text: JsonField<String>) = apply { this.text = text }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -665,12 +618,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic internal fun validity(): Int = (if (text.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {

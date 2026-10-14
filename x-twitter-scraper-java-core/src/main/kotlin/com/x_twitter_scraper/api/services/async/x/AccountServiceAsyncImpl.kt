@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async.x
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -53,42 +51,36 @@ class AccountServiceAsyncImpl internal constructor(private val clientOptions: Cl
         params: AccountCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<AccountCreateResponse> =
-        // post /x/accounts
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieve(
         params: AccountRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<XAccountDetail> =
-        // get /x/accounts/{id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
     override fun list(
         params: AccountListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<AccountListResponse> =
-        // get /x/accounts
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
     override fun delete(
         params: AccountDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<AccountDeleteResponse> =
-        // delete /x/accounts/{id}
         withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
 
     override fun bulkRetry(
         params: AccountBulkRetryParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<AccountBulkRetryResponse> =
-        // post /x/accounts/bulk-retry
         withRawResponse().bulkRetry(params, requestOptions).thenApply { it.parse() }
 
     override fun reauth(
         params: AccountReauthParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<AccountReauthResponse> =
-        // post /x/accounts/{id}/reauth
         withRawResponse().reauth(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -142,8 +134,6 @@ class AccountServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: AccountRetrieveParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<XAccountDetail>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -205,8 +195,6 @@ class AccountServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: AccountDeleteParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<AccountDeleteResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -270,8 +258,6 @@ class AccountServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: AccountReauthParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<AccountReauthResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

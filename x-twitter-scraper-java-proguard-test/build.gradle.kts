@@ -155,6 +155,5 @@ val testR8 = tasks.register<JavaExec>("testR8") {
 tasks.test {
     dependsOn(testProGuard)
     dependsOn(testR8)
-    // We defer to the tests run via the ProGuard JAR.
     enabled = false
 }

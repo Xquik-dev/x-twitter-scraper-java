@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.blocking
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -42,12 +40,9 @@ class EventServiceImpl internal constructor(private val clientOptions: ClientOpt
     override fun retrieve(
         params: EventRetrieveParams,
         requestOptions: RequestOptions,
-    ): EventDetail =
-        // get /events/{id}
-        withRawResponse().retrieve(params, requestOptions).parse()
+    ): EventDetail = withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun list(params: EventListParams, requestOptions: RequestOptions): EventListResponse =
-        // get /events
         withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -70,8 +65,6 @@ class EventServiceImpl internal constructor(private val clientOptions: ClientOpt
             params: EventRetrieveParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<EventDetail> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

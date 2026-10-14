@@ -9,11 +9,6 @@ package com.x_twitter_scraper.api.core
 import com.x_twitter_scraper.api.errors.XTwitterScraperException
 import java.lang.reflect.InvocationTargetException
 
-/**
- * Closes [closeable] when [observed] becomes only phantom reachable.
- *
- * This is a wrapper around a Java 9+ [java.lang.ref.Cleaner], or a no-op in older Java versions.
- */
 @JvmSynthetic
 internal fun closeWhenPhantomReachable(observed: Any, closeable: AutoCloseable) {
     check(observed !== closeable) {
@@ -22,11 +17,6 @@ internal fun closeWhenPhantomReachable(observed: Any, closeable: AutoCloseable) 
     closeWhenPhantomReachable(observed, closeable::close)
 }
 
-/**
- * Calls [close] when [observed] becomes only phantom reachable.
- *
- * This is a wrapper around a Java 9+ [java.lang.ref.Cleaner], or a no-op in older Java versions.
- */
 @JvmSynthetic
 internal fun closeWhenPhantomReachable(observed: Any, close: () -> Unit) {
     closeWhenPhantomReachable?.let { it(observed, close) }
@@ -54,7 +44,6 @@ private val closeWhenPhantomReachable: ((Any, () -> Unit) -> Unit)? by lazy {
             }
         }
     } catch (e: ReflectiveOperationException) {
-        // We're running Java 8, which has no Cleaner.
         null
     }
 }

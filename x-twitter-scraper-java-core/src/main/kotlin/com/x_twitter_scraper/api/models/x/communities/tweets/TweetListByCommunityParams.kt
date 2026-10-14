@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.x.communities.tweets
 
 import com.x_twitter_scraper.api.core.Params
@@ -87,11 +85,7 @@ private constructor(
          */
         fun pageSize(pageSize: Long?) = apply { this.pageSize = pageSize }
 
-        /**
-         * Alias for [Builder.pageSize].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
+        /** Alias for [Builder.pageSize]. */
         fun pageSize(pageSize: Long) = pageSize(pageSize as Long?)
 
         /** Alias for calling [Builder.pageSize] with `pageSize.orElse(null)`. */

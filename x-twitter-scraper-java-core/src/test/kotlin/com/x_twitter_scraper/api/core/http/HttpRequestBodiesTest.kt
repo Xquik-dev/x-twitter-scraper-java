@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.core.http
 
 import com.x_twitter_scraper.api.core.MultipartField
@@ -90,8 +88,6 @@ internal class HttpRequestBodiesTest {
 
     @Test
     fun multipartFormData_serializesInputStream() {
-        // Use `.buffered()` to get a non-ByteArrayInputStream, which hits the non-repeatable code
-        // path.
         val inputStream = "stream content".byteInputStream().buffered()
         val body =
             multipartFormData(
@@ -481,7 +477,6 @@ internal class HttpRequestBodiesTest {
 
     @Test
     fun multipartFormData_serializesByteArrayInputStream() {
-        // ByteArrayInputStream is specifically handled as repeatable with known content length.
         val inputStream = "byte array stream".byteInputStream()
         val body =
             multipartFormData(
@@ -519,8 +514,6 @@ internal class HttpRequestBodiesTest {
 
     @Test
     fun multipartFormData_serializesInputStreamWithFilename() {
-        // Use `.buffered()` to get a non-ByteArrayInputStream, which hits the non-repeatable code
-        // path.
         val inputStream = "file data".byteInputStream().buffered()
         val body =
             multipartFormData(
@@ -606,8 +599,6 @@ internal class HttpRequestBodiesTest {
                             .build(),
                     "stream" to
                         MultipartField.builder<InputStream>()
-                            // Use `.buffered()` to get a non-ByteArrayInputStream, which hits the
-                            // non-repeatable code path.
                             .value("data".byteInputStream().buffered())
                             .contentType("application/octet-stream")
                             .build(),

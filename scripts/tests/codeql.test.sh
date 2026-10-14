@@ -4,10 +4,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Runs scripts/codeql in a throwaway repository. A fake stands in for the
-# CodeQL CLI. Like the real traced build, it writes build output into the
-# folder it scans and stores the source files it compiled in the database.
-
 set -euo pipefail
 
 # shellcheck source=scripts/tests/support.sh
@@ -40,12 +36,6 @@ Stale build output.
 EOF
     fake codeql <<'EOF'
 #!/bin/sh
-# Stands in for the CodeQL CLI. "database create" records what it was asked
-# to scan, leaves build output in the scanned folder and stores the main
-# source files in the database. FAKE_CODEQL_SKIPS_KOTLIN leaves the Kotlin
-# files out, and FAKE_CODEQL_BUILD_FAILS fails the traced build. "database
-# analyze" writes FAKE_CODEQL_REPORT as its SARIF report, or a report in the
-# shape CodeQL 2.27 writes for a scan that read every file and found nothing.
 if [ "$1 $2" = "version --format=terse" ]; then
     echo "${FAKE_CODEQL_VERSION:-2.27.2}"
     exit 0
@@ -54,6 +44,9 @@ command="$1 $2"
 database="$3"
 shift 3
 case "$command" in
+    "pack install")
+        echo "$database" >>"$FAKE_LOGS/codeql-pack-install"
+        ;;
     "database create")
         for argument in "$@"; do
             case "$argument" in
@@ -82,6 +75,7 @@ case "$command" in
         ;;
     "database analyze")
         echo "$1" >>"$FAKE_LOGS/codeql-suite"
+        echo "$2" >>"$FAKE_LOGS/codeql-comment-queries"
         report='{"runs":[{"tool":{"driver":{"name":"CodeQL","notifications":[{"id":"java/diagnostics/extraction-errors"},{"id":"java/diagnostics/extraction-warnings"}]}},"invocations":[{"toolExecutionNotifications":[],"executionSuccessful":true}],"results":[]}]}'
         [ -z "${FAKE_CODEQL_REPORT:-}" ] || report="$FAKE_CODEQL_REPORT"
         report="$(printf '%s' "$report" | sed "s|SOURCE|$(cat "$FAKE_LOGS/codeql-source-root")|g")"
@@ -111,6 +105,8 @@ test_codeql_scans_a_copy_with_stable_kotlin_and_leaves_the_working_tree_alone() 
     assert_ends_with "$run_stdout" "CodeQL scanned 2 of 2 Java and Kotlin source files and found no results." "stdout"
     assert_equal "java-kotlin" "$(log_of codeql-language)" "the scanned language"
     assert_equal "codeql/java-queries@1.11.12:codeql-suites/java-security-extended.qls" "$(log_of codeql-suite)" "the query suite"
+    assert_equal "codeql/no-code-comments" "$(log_of codeql-pack-install)" "the installed comment queries"
+    assert_equal "codeql/no-code-comments" "$(log_of codeql-comment-queries)" "the comment queries"
     assert_equal "./gradlew clean classes --write-verification-metadata sha256 --no-daemon --no-build-cache --no-configuration-cache -Pkotlin.compiler.execution.strategy=in-process" \
         "$(log_of codeql-build)" "the traced build"
     assert_equal 'dependencies {
@@ -146,8 +142,6 @@ test_a_codeql_result_fails_the_run_and_is_printed() {
 
 test_a_file_that_codeql_could_not_read_fails_the_run_and_is_named() {
     prepare_codeql
-    # CodeQL names the file by its absolute path in the scanned copy, which
-    # the fake writes as SOURCE. The script prints it from the copy's root.
     run_env+=('FAKE_CODEQL_REPORT={"runs":[{"tool":{"driver":{"notifications":[{"id":"java/diagnostics/extraction-errors"},{"id":"java/diagnostics/extraction-warnings"}]}},"invocations":[{"toolExecutionNotifications":[{"message":{"text":"Extraction incomplete in file: SOURCE/example-core/src/main/kotlin/Client.kt"},"level":"error","descriptor":{"id":"java/diagnostics/extraction-errors"}}],"executionSuccessful":true}],"results":[]}]}')
 
     run_in_repo scripts/codeql

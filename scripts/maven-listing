@@ -4,13 +4,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Prints what a release would upload from a local Maven repository folder.
-# For each module it prints the coordinates, the listing fields of the POM and
-# the files. It fails when a module lacks a field or a file that Maven Central
-# requires.
-#
-# Run scripts/maven-listing <repository folder> <group> <version>.
-
 set -euo pipefail
 
 if [[ $# -ne 3 ]]; then
@@ -28,7 +21,6 @@ fail() {
     exit 1
 }
 
-# Prints the text of the first POM element at this path, such as scm/url.
 pom_text() {
     local pom="$1" path="/*[local-name()='project']" segment
     local -a segments
@@ -39,7 +31,6 @@ pom_text() {
     xmllint --xpath "normalize-space(($path)[1])" "$pom"
 }
 
-# Prints a required POM field, or stops when the POM lacks it.
 required_text() {
     local value
     value="$(pom_text "$1" "$2")"
@@ -52,7 +43,6 @@ print_field() {
     printf '%-13s %s\n' "$1" "$2"
 }
 
-# Prints a count with the singular or the plural word that fits it.
 count_of() {
     if (($1 == 1)); then
         printf '%s %s' "$1" "$2"
@@ -70,7 +60,6 @@ list_module() {
     pom="$module_dir/$artifact-$version.pom"
     [[ -f "$pom" ]] || fail "$artifact has no POM for $version. Check the build output, then rerun."
 
-    # Each field is read in its own assignment, so a missing field stops the run.
     pom_group="$(required_text "$pom" groupId)"
     pom_artifact="$(required_text "$pom" artifactId)"
     pom_version="$(required_text "$pom" version)"

@@ -124,7 +124,6 @@ private val JSON_MAPPER: JsonMapper =
         .disable(MapperFeature.AUTO_DETECT_SETTERS)
         .build()
 
-/** A serializer that serializes [InputStream] to bytes. */
 private object InputStreamSerializer : BaseSerializer<InputStream>(InputStream::class) {
 
     private fun readResolve(): Any = InputStreamSerializer
@@ -142,9 +141,6 @@ private object InputStreamSerializer : BaseSerializer<InputStream>(InputStream::
     }
 }
 
-/**
- * A deserializer that can deserialize [OffsetDateTime] from datetimes, dates, and zoned datetimes.
- */
 private class LenientOffsetDateTimeDeserializer :
     StdDeserializer<OffsetDateTime>(OffsetDateTime::class.java) {
 

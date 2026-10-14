@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.blocking.x
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -69,69 +67,50 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
     override fun create(
         params: TweetCreateParams,
         requestOptions: RequestOptions,
-    ): TweetCreateResponse =
-        // post /x/tweets
-        withRawResponse().create(params, requestOptions).parse()
+    ): TweetCreateResponse = withRawResponse().create(params, requestOptions).parse()
 
     override fun retrieve(
         params: TweetRetrieveParams,
         requestOptions: RequestOptions,
-    ): TweetRetrieveResponse =
-        // get /x/tweets/{id}
-        withRawResponse().retrieve(params, requestOptions).parse()
+    ): TweetRetrieveResponse = withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun list(params: TweetListParams, requestOptions: RequestOptions): PaginatedTweets =
-        // get /x/tweets
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(
         params: TweetDeleteParams,
         requestOptions: RequestOptions,
-    ): TweetDeleteResponse =
-        // delete /x/tweets/{id}
-        withRawResponse().delete(params, requestOptions).parse()
+    ): TweetDeleteResponse = withRawResponse().delete(params, requestOptions).parse()
 
     override fun getFavoriters(
         params: TweetGetFavoritersParams,
         requestOptions: RequestOptions,
-    ): PaginatedUsers =
-        // get /x/tweets/{id}/favoriters
-        withRawResponse().getFavoriters(params, requestOptions).parse()
+    ): PaginatedUsers = withRawResponse().getFavoriters(params, requestOptions).parse()
 
     override fun getQuotes(
         params: TweetGetQuotesParams,
         requestOptions: RequestOptions,
-    ): PaginatedTweets =
-        // get /x/tweets/{id}/quotes
-        withRawResponse().getQuotes(params, requestOptions).parse()
+    ): PaginatedTweets = withRawResponse().getQuotes(params, requestOptions).parse()
 
     override fun getReplies(
         params: TweetGetRepliesParams,
         requestOptions: RequestOptions,
-    ): TweetGetRepliesResponse =
-        // get /x/tweets/{id}/replies
-        withRawResponse().getReplies(params, requestOptions).parse()
+    ): TweetGetRepliesResponse = withRawResponse().getReplies(params, requestOptions).parse()
 
     override fun getRetweeters(
         params: TweetGetRetweetersParams,
         requestOptions: RequestOptions,
-    ): PaginatedUsers =
-        // get /x/tweets/{id}/retweeters
-        withRawResponse().getRetweeters(params, requestOptions).parse()
+    ): PaginatedUsers = withRawResponse().getRetweeters(params, requestOptions).parse()
 
     override fun getThread(
         params: TweetGetThreadParams,
         requestOptions: RequestOptions,
-    ): PaginatedTweets =
-        // get /x/tweets/{id}/thread
-        withRawResponse().getThread(params, requestOptions).parse()
+    ): PaginatedTweets = withRawResponse().getThread(params, requestOptions).parse()
 
     override fun search(
         params: TweetSearchParams,
         requestOptions: RequestOptions,
-    ): TweetSearchResponse =
-        // get /x/tweets/search
-        withRawResponse().search(params, requestOptions).parse()
+    ): TweetSearchResponse = withRawResponse().search(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         TweetService.WithRawResponse {
@@ -195,8 +174,6 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
             params: TweetRetrieveParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<TweetRetrieveResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -252,8 +229,6 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
             params: TweetDeleteParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<TweetDeleteResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -283,8 +258,6 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
             params: TweetGetFavoritersParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<PaginatedUsers> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -313,8 +286,6 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
             params: TweetGetQuotesParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<PaginatedTweets> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -343,8 +314,6 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
             params: TweetGetRepliesParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<TweetGetRepliesResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -373,8 +342,6 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
             params: TweetGetRetweetersParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<PaginatedUsers> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -403,8 +370,6 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
             params: TweetGetThreadParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<PaginatedTweets> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

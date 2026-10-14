@@ -41,12 +41,7 @@ interface AsyncStreamResponse<T> {
      */
     fun onCompleteFuture(): CompletableFuture<Void?>
 
-    /**
-     * Closes this resource, relinquishing any underlying resources.
-     *
-     * This is purposefully not inherited from [AutoCloseable] because this response should not be
-     * synchronously closed via try-with-resources.
-     */
+    /** Closes this resource, relinquishing any underlying resources. */
     fun close()
 
     /** A class for handling streaming events. */
@@ -76,8 +71,6 @@ internal fun <T> CompletableFuture<StreamResponse<T>>.toAsync(streamHandlerExecu
 
             init {
                 this@toAsync.whenComplete { _, error ->
-                    // If an error occurs from the original future, then we should resolve the
-                    // `onCompleteFuture` even if `subscribe` has not been called.
                     error?.let(onCompleteFuture::completeExceptionally)
                 }
             }
@@ -89,7 +82,6 @@ internal fun <T> CompletableFuture<StreamResponse<T>>.toAsync(streamHandlerExecu
                 handler: Handler<T>,
                 executor: Executor,
             ): AsyncStreamResponse<T> = apply {
-                // TODO(JDK): Use `compareAndExchange` once targeting JDK 9.
                 check(state.compareAndSet(State.NEW, State.SUBSCRIBED)) {
                     if (state.get() == State.SUBSCRIBED) "Cannot subscribe more than once"
                     else "Cannot subscribe after the response is closed"
@@ -98,13 +90,10 @@ internal fun <T> CompletableFuture<StreamResponse<T>>.toAsync(streamHandlerExecu
                 this@toAsync.whenCompleteAsync(
                     { streamResponse, futureError ->
                         if (state.get() == State.CLOSED) {
-                            // Avoid doing any work if `close` was called before the future
-                            // completed.
                             return@whenCompleteAsync
                         }
 
                         if (futureError != null) {
-                            // An error occurred before we started passing chunks to the handler.
                             handler.onComplete(Optional.of(futureError))
                             return@whenCompleteAsync
                         }
@@ -120,9 +109,6 @@ internal fun <T> CompletableFuture<StreamResponse<T>>.toAsync(streamHandlerExecu
                             handler.onComplete(Optional.ofNullable(streamError))
                         } finally {
                             try {
-                                // Notify completion via the `onCompleteFuture` as well. This is in
-                                // a separate `try-finally` block so that we still complete the
-                                // future if `handler.onComplete` throws.
                                 if (streamError == null) {
                                     onCompleteFuture.complete(null)
                                 } else {
@@ -146,9 +132,6 @@ internal fun <T> CompletableFuture<StreamResponse<T>>.toAsync(streamHandlerExecu
                 }
 
                 this@toAsync.whenComplete { streamResponse, error -> streamResponse?.close() }
-                // When the stream is closed, we should always consider it closed. If it closed due
-                // to an error, then we will have already completed the future earlier, and this
-                // will be a no-op.
                 onCompleteFuture.complete(null)
             }
         }

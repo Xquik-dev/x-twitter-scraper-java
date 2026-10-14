@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -143,28 +141,24 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
         params: XGetArticleParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<XGetArticleResponse> =
-        // get /x/articles/{tweetId}
         withRawResponse().getArticle(params, requestOptions).thenApply { it.parse() }
 
     override fun getHomeTimeline(
         params: XGetHomeTimelineParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PaginatedTweets> =
-        // get /x/timeline
         withRawResponse().getHomeTimeline(params, requestOptions).thenApply { it.parse() }
 
     override fun getNotifications(
         params: XGetNotificationsParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<XGetNotificationsResponse> =
-        // get /x/notifications
         withRawResponse().getNotifications(params, requestOptions).thenApply { it.parse() }
 
     override fun getTrends(
         params: XGetTrendsParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<XGetTrendsResponse> =
-        // get /x/trends
         withRawResponse().getTrends(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -277,8 +271,6 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
             params: XGetArticleParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<XGetArticleResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("tweetId", params.tweetId().getOrNull())
             val request =
                 HttpRequest.builder()

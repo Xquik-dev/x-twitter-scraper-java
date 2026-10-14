@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.core.http
 
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
@@ -165,7 +163,6 @@ internal class RetryingHttpClientTest {
         val retryAfterDate = "Wed, 21 Oct 2015 07:28:00 GMT"
         stubFor(
             post(urlPathEqualTo("/something"))
-                // First we fail with a retry after header given as a date
                 .inScenario("foo")
                 .whenScenarioStateIs(Scenario.STARTED)
                 .willReturn(serviceUnavailable().withHeader("Retry-After", retryAfterDate))
@@ -173,7 +170,6 @@ internal class RetryingHttpClientTest {
         )
         stubFor(
             post(urlPathEqualTo("/something"))
-                // Then we fail with a retry after header given as a delay
                 .inScenario("foo")
                 .whenScenarioStateIs("RETRY_AFTER_DATE")
                 .willReturn(serviceUnavailable().withHeader("Retry-After", "1.234"))
@@ -181,14 +177,11 @@ internal class RetryingHttpClientTest {
         )
         stubFor(
             post(urlPathEqualTo("/something"))
-                // Then we return a success
                 .inScenario("foo")
                 .whenScenarioStateIs("RETRY_AFTER_DELAY")
                 .willReturn(ok())
                 .willSetStateTo("COMPLETED")
         )
-        // Fix the clock to 5 seconds before the Retry-After date so the date-based backoff is
-        // deterministic.
         val retryAfterDateTime =
             OffsetDateTime.parse(retryAfterDate, DateTimeFormatter.RFC_1123_DATE_TIME)
         val clock = Clock.fixed(retryAfterDateTime.minusSeconds(5).toInstant(), ZoneOffset.UTC)
@@ -232,14 +225,14 @@ internal class RetryingHttpClientTest {
         val retryAfterDate = "Wed, 21 Oct 2015 07:28:00 GMT"
         stubFor(
             post(urlPathEqualTo("/something"))
-                .inScenario("foo") // first we fail with a retry after header given as a date
+                .inScenario("foo")
                 .whenScenarioStateIs(Scenario.STARTED)
                 .willReturn(serviceUnavailable().withHeader("Retry-After", retryAfterDate))
                 .willSetStateTo("RETRY_AFTER_DATE")
         )
         stubFor(
             post(urlPathEqualTo("/something"))
-                .inScenario("foo") // then we return a success
+                .inScenario("foo")
                 .whenScenarioStateIs("RETRY_AFTER_DATE")
                 .willReturn(ok())
                 .willSetStateTo("COMPLETED")
@@ -283,7 +276,7 @@ internal class RetryingHttpClientTest {
         )
         stubFor(
             post(urlPathEqualTo("/something"))
-                .inScenario("foo") // then we return a success
+                .inScenario("foo")
                 .whenScenarioStateIs("RETRY_AFTER_DELAY")
                 .willReturn(ok())
                 .willSetStateTo("COMPLETED")
@@ -373,7 +366,6 @@ internal class RetryingHttpClientTest {
             postRequestedFor(urlPathEqualTo("/something"))
                 .withHeader("x-stainless-retry-count", equalTo("0")),
         )
-        // Exponential backoff with jitter: 0.5s * jitter where jitter is in [0.75, 1.0].
         assertThat(sleeper.durations).hasSize(1)
         assertThat(sleeper.durations[0]).isBetween(Duration.ofMillis(375), Duration.ofMillis(500))
         assertNoResponseLeaks()
@@ -396,17 +388,11 @@ internal class RetryingHttpClientTest {
                 async,
             )
 
-        // All retries exhausted; the last 503 response is returned.
         assertThat(response.statusCode()).isEqualTo(503)
         verify(4, postRequestedFor(urlPathEqualTo("/something")))
-        // Exponential backoff with jitter: backoff = min(0.5 * 2^(retries-1), 8) * jitter where
-        // jitter is in [0.75, 1.0].
         assertThat(sleeper.durations).hasSize(3)
-        // retries=1: 0.5s * [0.75, 1.0]
         assertThat(sleeper.durations[0]).isBetween(Duration.ofMillis(375), Duration.ofMillis(500))
-        // retries=2: 1s * [0.75, 1.0]
         assertThat(sleeper.durations[1]).isBetween(Duration.ofMillis(750), Duration.ofMillis(1000))
-        // retries=3: 2s * [0.75, 1.0]
         assertThat(sleeper.durations[2]).isBetween(Duration.ofMillis(1500), Duration.ofMillis(2000))
         assertNoResponseLeaks()
     }
@@ -431,9 +417,7 @@ internal class RetryingHttpClientTest {
         assertThat(response.statusCode()).isEqualTo(503)
         verify(7, postRequestedFor(urlPathEqualTo("/something")))
         assertThat(sleeper.durations).hasSize(6)
-        // retries=5: backoff hits the 8s cap * [0.75, 1.0]
         assertThat(sleeper.durations[4]).isBetween(Duration.ofMillis(6000), Duration.ofMillis(8000))
-        // retries=6: still capped at 8s * [0.75, 1.0]
         assertThat(sleeper.durations[5]).isBetween(Duration.ofMillis(6000), Duration.ofMillis(8000))
         assertNoResponseLeaks()
     }
@@ -473,7 +457,6 @@ internal class RetryingHttpClientTest {
             )
 
         assertThat(response.statusCode()).isEqualTo(200)
-        // Retry-After-Ms (50ms) takes priority over Retry-After (2s).
         assertThat(sleeper.durations).containsExactly(Duration.ofMillis(50))
         assertNoResponseLeaks()
     }
@@ -509,7 +492,6 @@ internal class RetryingHttpClientTest {
             )
 
         assertThat(response.statusCode()).isEqualTo(200)
-        // Unparseable Retry-After falls through to exponential backoff.
         assertThat(sleeper.durations).hasSize(1)
         assertThat(sleeper.durations[0]).isBetween(Duration.ofMillis(375), Duration.ofMillis(500))
         assertNoResponseLeaks()
@@ -523,7 +505,5 @@ internal class RetryingHttpClientTest {
     private fun HttpClient.execute(request: HttpRequest, async: Boolean): HttpResponse =
         if (async) executeAsync(request).get() else execute(request)
 
-    // When retrying, all failed responses should be closed. Only the final returned response should
-    // be open.
     private fun assertNoResponseLeaks() = assertThat(openResponseCount).isEqualTo(1)
 }

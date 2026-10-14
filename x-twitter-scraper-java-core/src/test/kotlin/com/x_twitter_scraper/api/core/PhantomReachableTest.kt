@@ -15,8 +15,6 @@ internal class PhantomReachableTest {
         val closeable = AutoCloseable { closed = true }
 
         closeWhenPhantomReachable(
-            // Pass an inline object for the object to observe so that it becomes immediately
-            // unreachable.
             Any(),
             closeable,
         )

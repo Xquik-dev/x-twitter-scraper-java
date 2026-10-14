@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.x.media
 
 import com.x_twitter_scraper.api.core.MultipartField
@@ -51,8 +49,6 @@ internal class MediaUploadParamsTest {
 
         assertThat(body.filterValues { !it.value.isNull() })
             .usingRecursiveComparison()
-            // TODO(AssertJ): Replace this and the `mapValues` below with:
-            // https://github.com/assertj/assertj/issues/3165
             .withEqualsForType(
                 { a, b -> a.readBytes() contentEquals b.readBytes() },
                 InputStream::class.java,

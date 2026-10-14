@@ -15,8 +15,6 @@ interface HttpResponseFor<T> : HttpResponse {
 internal fun <T> HttpResponse.parseable(parse: () -> T): HttpResponseFor<T> =
     object : HttpResponseFor<T> {
 
-        // A plain Lazy field, not `by lazy`. CodeQL cannot read a delegated property in an
-        // anonymous object of a generic function, so it would scan this file only in part.
         private val lazyParsed: Lazy<T> = lazy { parse() }
 
         private val parsed: T

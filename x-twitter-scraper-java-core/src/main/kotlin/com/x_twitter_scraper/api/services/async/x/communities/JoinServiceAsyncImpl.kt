@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async.x.communities
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -45,14 +43,12 @@ class JoinServiceAsyncImpl internal constructor(private val clientOptions: Clien
         params: JoinCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<JoinCreateResponse> =
-        // post /x/communities/{id}/join
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     override fun deleteAll(
         params: JoinDeleteAllParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<JoinDeleteAllResponse> =
-        // delete /x/communities/{id}/join
         withRawResponse().deleteAll(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -75,8 +71,6 @@ class JoinServiceAsyncImpl internal constructor(private val clientOptions: Clien
             params: JoinCreateParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<JoinCreateResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -109,8 +103,6 @@ class JoinServiceAsyncImpl internal constructor(private val clientOptions: Clien
             params: JoinDeleteAllParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<JoinDeleteAllResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

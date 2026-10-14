@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.client
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -52,7 +50,6 @@ class XTwitterScraperClientImpl(private val clientOptions: ClientOptions) : XTwi
                 .putHeader("User-Agent", "${javaClass.simpleName}/Java ${getPackageVersion()}")
                 .build()
 
-    // Pass the original clientOptions so that this client sets its own User-Agent.
     private val async: XTwitterScraperClientAsync by lazy {
         XTwitterScraperClientAsyncImpl(clientOptions)
     }

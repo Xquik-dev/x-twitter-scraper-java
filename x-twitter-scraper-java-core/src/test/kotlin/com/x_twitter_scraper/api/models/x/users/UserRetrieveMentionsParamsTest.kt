@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.x.users
 
 import com.x_twitter_scraper.api.core.http.QueryParams
@@ -73,7 +71,6 @@ internal class UserRetrieveMentionsParamsTest {
         val params = UserRetrieveMentionsParams.builder().id("id").build()
 
         assertThat(params._pathParam(0)).isEqualTo("id")
-        // out-of-bound path param
         assertThat(params._pathParam(1)).isEqualTo("")
     }
 

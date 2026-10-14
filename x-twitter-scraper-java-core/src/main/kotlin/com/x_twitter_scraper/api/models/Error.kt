@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -61,39 +59,35 @@ private constructor(
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun error(): InnerError = error.getRequired("error")
 
     /**
      * Human-readable error guidance.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun message(): Optional<String> = message.getOptional("message")
 
     /**
      * Machine-readable reason for a login cooldown.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun reason(): Optional<String> = reason.getOptional("reason")
 
     /**
      * Seconds until the next permitted request.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun retryAfter(): Optional<Long> = retryAfter.getOptional("retryAfter")
 
     /**
      * Required wait in milliseconds.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun retryAfterMs(): Optional<Long> = retryAfterMs.getOptional("retryAfterMs")
 
@@ -181,13 +175,7 @@ private constructor(
 
         fun error(error: InnerError) = error(JsonField.of(error))
 
-        /**
-         * Sets [Builder.error] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.error] with a well-typed [InnerError] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.error] to an arbitrary JSON value. */
         fun error(error: JsonField<InnerError>) = apply { this.error = error }
 
         /** Alias for calling [error] with `InnerError.ofLegacyErrorCode(legacyErrorCode)`. */
@@ -201,46 +189,25 @@ private constructor(
         /** Human-readable error guidance. */
         fun message(message: String) = message(JsonField.of(message))
 
-        /**
-         * Sets [Builder.message] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.message] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.message] to an arbitrary JSON value. */
         fun message(message: JsonField<String>) = apply { this.message = message }
 
         /** Machine-readable reason for a login cooldown. */
         fun reason(reason: String) = reason(JsonField.of(reason))
 
-        /**
-         * Sets [Builder.reason] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.reason] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.reason] to an arbitrary JSON value. */
         fun reason(reason: JsonField<String>) = apply { this.reason = reason }
 
         /** Seconds until the next permitted request. */
         fun retryAfter(retryAfter: Long) = retryAfter(JsonField.of(retryAfter))
 
-        /**
-         * Sets [Builder.retryAfter] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.retryAfter] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.retryAfter] to an arbitrary JSON value. */
         fun retryAfter(retryAfter: JsonField<Long>) = apply { this.retryAfter = retryAfter }
 
         /** Required wait in milliseconds. */
         fun retryAfterMs(retryAfterMs: Long) = retryAfterMs(JsonField.of(retryAfterMs))
 
-        /**
-         * Sets [Builder.retryAfterMs] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.retryAfterMs] with a well-typed [Long] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.retryAfterMs] to an arbitrary JSON value. */
         fun retryAfterMs(retryAfterMs: JsonField<Long>) = apply { this.retryAfterMs = retryAfterMs }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -316,11 +283,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (error.asKnown().getOrNull()?.validity() ?: 0) +
@@ -354,29 +316,6 @@ private constructor(
 
         /**
          * Maps this instance's current variant to a value of type [T] using the given [visitor].
-         *
-         * Note that this method is _not_ forwards compatible with new variants from the API, unless
-         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
-         * the SDK gracefully, consider overriding [Visitor.unknown]:
-         * ```java
-         * import com.x_twitter_scraper.api.core.JsonValue;
-         * import java.util.Optional;
-         *
-         * Optional<String> result = innerError.accept(new InnerError.Visitor<Optional<String>>() {
-         *     @Override
-         *     public Optional<String> visitLegacyErrorCode(LegacyErrorCode legacyErrorCode) {
-         *         return Optional.of(legacyErrorCode.toString());
-         *     }
-         *
-         *     // ...
-         *
-         *     @Override
-         *     public Optional<String> unknown(JsonValue json) {
-         *         // Or inspect the `json`.
-         *         return Optional.empty();
-         *     }
-         * });
-         * ```
          *
          * @throws XTwitterScraperInvalidDataException if [Visitor.unknown] is not overridden in
          *   [visitor] and the current variant is unknown.
@@ -426,12 +365,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int =
             accept(
@@ -489,9 +422,7 @@ private constructor(
              * Maps an unknown variant of [InnerError] to a value of type [T].
              *
              * An instance of [InnerError] can contain an unknown variant if it was deserialized
-             * from data that doesn't match any known variant. For example, if the SDK is on an
-             * older version than the API, then the API may respond with new variants that the SDK
-             * is unaware of.
+             * from data that doesn't match any known variant.
              *
              * @throws XTwitterScraperInvalidDataException in the default implementation.
              */
@@ -518,13 +449,8 @@ private constructor(
                         .allMaxBy { it.validity() }
                         .toList()
                 return when (bestMatches.size) {
-                    // This can happen if what we're deserializing is completely incompatible with
-                    // all the possible variants (e.g. deserializing from boolean).
                     0 -> InnerError(_json = json)
                     1 -> bestMatches.single()
-                    // If there's more than one match with the highest validity, then use the first
-                    // completely valid match, or simply the first match if none are completely
-                    // valid.
                     else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
                 }
             }
@@ -550,14 +476,7 @@ private constructor(
         @JsonCreator
         private constructor(private val value: JsonField<String>) : Enum {
 
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
+            /** Returns this class instance's raw value. */
             @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
 
             companion object {
@@ -1026,9 +945,6 @@ private constructor(
             /**
              * Returns an enum member corresponding to this class instance's value, or
              * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
              */
             fun value(): Value =
                 when (this) {
@@ -1146,9 +1062,6 @@ private constructor(
 
             /**
              * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
              *
              * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
              *   known member.
@@ -1271,9 +1184,6 @@ private constructor(
             /**
              * Returns this class instance's primitive wire representation.
              *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
-             *
              * @throws XTwitterScraperInvalidDataException if this class instance's value does not
              *   have the expected primitive type.
              */
@@ -1311,12 +1221,6 @@ private constructor(
                     false
                 }
 
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
             @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
             override fun equals(other: Any?): Boolean {
@@ -1352,22 +1256,19 @@ private constructor(
 
             /**
              * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-             *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
+             *   or is unexpectedly missing or null.
              */
             fun code(): Code = code.getRequired("code")
 
             /**
              * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-             *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
+             *   or is unexpectedly missing or null.
              */
             fun message(): String = message.getRequired("message")
 
             /**
              * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-             *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
+             *   or is unexpectedly missing or null.
              */
             fun type(): Type = type.getRequired("type")
 
@@ -1437,35 +1338,17 @@ private constructor(
 
                 fun code(code: Code) = code(JsonField.of(code))
 
-                /**
-                 * Sets [Builder.code] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.code] with a well-typed [Code] value instead.
-                 * This method is primarily for setting the field to an undocumented or not yet
-                 * supported value.
-                 */
+                /** Sets [Builder.code] to an arbitrary JSON value. */
                 fun code(code: JsonField<Code>) = apply { this.code = code }
 
                 fun message(message: String) = message(JsonField.of(message))
 
-                /**
-                 * Sets [Builder.message] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.message] with a well-typed [String] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
-                 */
+                /** Sets [Builder.message] to an arbitrary JSON value. */
                 fun message(message: JsonField<String>) = apply { this.message = message }
 
                 fun type(type: Type) = type(JsonField.of(type))
 
-                /**
-                 * Sets [Builder.type] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.type] with a well-typed [Type] value instead.
-                 * This method is primarily for setting the field to an undocumented or not yet
-                 * supported value.
-                 */
+                /** Sets [Builder.type] to an arbitrary JSON value. */
                 fun type(type: JsonField<Type>) = apply { this.type = type }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -1544,12 +1427,6 @@ private constructor(
                     false
                 }
 
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
             @JvmSynthetic
             internal fun validity(): Int =
                 (code.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1559,14 +1436,7 @@ private constructor(
             class Code @JsonCreator private constructor(private val value: JsonField<String>) :
                 Enum {
 
-                /**
-                 * Returns this class instance's raw value.
-                 *
-                 * This is usually only useful if this instance was deserialized from data that
-                 * doesn't match any known member, and you want to know that value. For example, if
-                 * the SDK is on an older version than the API, then the API may respond with new
-                 * members that the SDK is unaware of.
-                 */
+                /** Returns this class instance's raw value. */
                 @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
 
                 companion object {
@@ -2035,9 +1905,6 @@ private constructor(
                 /**
                  * Returns an enum member corresponding to this class instance's value, or
                  * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                 *
-                 * Use the [known] method instead if you're certain the value is always known or if
-                 * you want to throw for the unknown case.
                  */
                 fun value(): Value =
                     when (this) {
@@ -2155,9 +2022,6 @@ private constructor(
 
                 /**
                  * Returns an enum member corresponding to this class instance's value.
-                 *
-                 * Use the [value] method instead if you're uncertain the value is always known and
-                 * don't want to throw for the unknown case.
                  *
                  * @throws XTwitterScraperInvalidDataException if this class instance's value is a
                  *   not a known member.
@@ -2279,9 +2143,6 @@ private constructor(
                 /**
                  * Returns this class instance's primitive wire representation.
                  *
-                 * This differs from the [toString] method because that method is primarily for
-                 * debugging and generally doesn't throw.
-                 *
                  * @throws XTwitterScraperInvalidDataException if this class instance's value does
                  *   not have the expected primitive type.
                  */
@@ -2319,12 +2180,6 @@ private constructor(
                         false
                     }
 
-                /**
-                 * Returns a score indicating how many valid values are contained in this object
-                 * recursively.
-                 *
-                 * Used for best match union deserialization.
-                 */
                 @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
                 override fun equals(other: Any?): Boolean {
@@ -2343,14 +2198,7 @@ private constructor(
             class Type @JsonCreator private constructor(private val value: JsonField<String>) :
                 Enum {
 
-                /**
-                 * Returns this class instance's raw value.
-                 *
-                 * This is usually only useful if this instance was deserialized from data that
-                 * doesn't match any known member, and you want to know that value. For example, if
-                 * the SDK is on an older version than the API, then the API may respond with new
-                 * members that the SDK is unaware of.
-                 */
+                /** Returns this class instance's raw value. */
                 @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
 
                 companion object {
@@ -2409,9 +2257,6 @@ private constructor(
                 /**
                  * Returns an enum member corresponding to this class instance's value, or
                  * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                 *
-                 * Use the [known] method instead if you're certain the value is always known or if
-                 * you want to throw for the unknown case.
                  */
                 fun value(): Value =
                     when (this) {
@@ -2427,9 +2272,6 @@ private constructor(
 
                 /**
                  * Returns an enum member corresponding to this class instance's value.
-                 *
-                 * Use the [value] method instead if you're uncertain the value is always known and
-                 * don't want to throw for the unknown case.
                  *
                  * @throws XTwitterScraperInvalidDataException if this class instance's value is a
                  *   not a known member.
@@ -2448,9 +2290,6 @@ private constructor(
 
                 /**
                  * Returns this class instance's primitive wire representation.
-                 *
-                 * This differs from the [toString] method because that method is primarily for
-                 * debugging and generally doesn't throw.
                  *
                  * @throws XTwitterScraperInvalidDataException if this class instance's value does
                  *   not have the expected primitive type.
@@ -2489,12 +2328,6 @@ private constructor(
                         false
                     }
 
-                /**
-                 * Returns a score indicating how many valid values are contained in this object
-                 * recursively.
-                 *
-                 * Used for best match union deserialization.
-                 */
                 @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
                 override fun equals(other: Any?): Boolean {

@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.monitors.keywords
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -40,15 +38,11 @@ private constructor(
     /**
      * Array of event types to subscribe to.
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun eventTypes(): Optional<List<EventType>> = body.eventTypes()
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun isActive(): Optional<Boolean> = body.isActive()
 
     /**
@@ -104,26 +98,13 @@ private constructor(
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
 
-        /**
-         * Sets the entire request body.
-         *
-         * This is generally only useful if you are already constructing the body separately.
-         * Otherwise, it's more convenient to use the top-level setters instead:
-         * - [eventTypes]
-         * - [isActive]
-         */
+        /** Sets the entire request body. */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
         /** Array of event types to subscribe to. */
         fun eventTypes(eventTypes: List<EventType>) = apply { body.eventTypes(eventTypes) }
 
-        /**
-         * Sets [Builder.eventTypes] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.eventTypes] with a well-typed `List<EventType>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.eventTypes] to an arbitrary JSON value. */
         fun eventTypes(eventTypes: JsonField<List<EventType>>) = apply {
             body.eventTypes(eventTypes)
         }
@@ -137,13 +118,7 @@ private constructor(
 
         fun isActive(isActive: Boolean) = apply { body.isActive(isActive) }
 
-        /**
-         * Sets [Builder.isActive] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.isActive] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.isActive] to an arbitrary JSON value. */
         fun isActive(isActive: JsonField<Boolean>) = apply { body.isActive(isActive) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
@@ -310,15 +285,11 @@ private constructor(
         /**
          * Array of event types to subscribe to.
          *
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
         fun eventTypes(): Optional<List<EventType>> = eventTypes.getOptional("eventTypes")
 
-        /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun isActive(): Optional<Boolean> = isActive.getOptional("isActive")
 
         /**
@@ -372,13 +343,7 @@ private constructor(
             /** Array of event types to subscribe to. */
             fun eventTypes(eventTypes: List<EventType>) = eventTypes(JsonField.of(eventTypes))
 
-            /**
-             * Sets [Builder.eventTypes] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.eventTypes] with a well-typed `List<EventType>`
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
-             */
+            /** Sets [Builder.eventTypes] to an arbitrary JSON value. */
             fun eventTypes(eventTypes: JsonField<List<EventType>>) = apply {
                 this.eventTypes = eventTypes.map { it.toMutableList() }
             }
@@ -397,13 +362,7 @@ private constructor(
 
             fun isActive(isActive: Boolean) = isActive(JsonField.of(isActive))
 
-            /**
-             * Sets [Builder.isActive] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.isActive] with a well-typed [Boolean] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
+            /** Sets [Builder.isActive] to an arbitrary JSON value. */
             fun isActive(isActive: JsonField<Boolean>) = apply { this.isActive = isActive }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -467,12 +426,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic
         internal fun validity(): Int =
             (eventTypes.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +

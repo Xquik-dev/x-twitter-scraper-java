@@ -60,6 +60,7 @@ tasks.withType<Test>().configureEach {
 // working directory, whenever a coverage agent runs, and JaCoCo is one. Outside a
 // fuzz campaign the tests run in an empty folder, so every machine replays only
 // the inputs committed under src/test/resources.
+// https://github.com/CodeIntelligenceTesting/jazzer/blob/v0.30.0/src/main/java/com/code_intelligence/jazzer/junit/SeedArgumentsProvider.java#L63-L70
 val fuzzing = providers.environmentVariable("JAZZER_FUZZ").map { it.isNotEmpty() }.orElse(false)
 tasks.named<Test>("test") {
     inputs.property("jazzerFuzz", fuzzing)

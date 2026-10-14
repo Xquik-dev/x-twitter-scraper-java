@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.services.async.x
 
 import com.x_twitter_scraper.api.core.ClientOptions
@@ -71,70 +69,60 @@ class TweetServiceAsyncImpl internal constructor(private val clientOptions: Clie
         params: TweetCreateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<TweetCreateResponse> =
-        // post /x/tweets
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieve(
         params: TweetRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<TweetRetrieveResponse> =
-        // get /x/tweets/{id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
     override fun list(
         params: TweetListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PaginatedTweets> =
-        // get /x/tweets
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
     override fun delete(
         params: TweetDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<TweetDeleteResponse> =
-        // delete /x/tweets/{id}
         withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
 
     override fun getFavoriters(
         params: TweetGetFavoritersParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PaginatedUsers> =
-        // get /x/tweets/{id}/favoriters
         withRawResponse().getFavoriters(params, requestOptions).thenApply { it.parse() }
 
     override fun getQuotes(
         params: TweetGetQuotesParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PaginatedTweets> =
-        // get /x/tweets/{id}/quotes
         withRawResponse().getQuotes(params, requestOptions).thenApply { it.parse() }
 
     override fun getReplies(
         params: TweetGetRepliesParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<TweetGetRepliesResponse> =
-        // get /x/tweets/{id}/replies
         withRawResponse().getReplies(params, requestOptions).thenApply { it.parse() }
 
     override fun getRetweeters(
         params: TweetGetRetweetersParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PaginatedUsers> =
-        // get /x/tweets/{id}/retweeters
         withRawResponse().getRetweeters(params, requestOptions).thenApply { it.parse() }
 
     override fun getThread(
         params: TweetGetThreadParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PaginatedTweets> =
-        // get /x/tweets/{id}/thread
         withRawResponse().getThread(params, requestOptions).thenApply { it.parse() }
 
     override fun search(
         params: TweetSearchParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<TweetSearchResponse> =
-        // get /x/tweets/search
         withRawResponse().search(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -202,8 +190,6 @@ class TweetServiceAsyncImpl internal constructor(private val clientOptions: Clie
             params: TweetRetrieveParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<TweetRetrieveResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -265,8 +251,6 @@ class TweetServiceAsyncImpl internal constructor(private val clientOptions: Clie
             params: TweetDeleteParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<TweetDeleteResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -299,8 +283,6 @@ class TweetServiceAsyncImpl internal constructor(private val clientOptions: Clie
             params: TweetGetFavoritersParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<PaginatedUsers>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -332,8 +314,6 @@ class TweetServiceAsyncImpl internal constructor(private val clientOptions: Clie
             params: TweetGetQuotesParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<PaginatedTweets>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -365,8 +345,6 @@ class TweetServiceAsyncImpl internal constructor(private val clientOptions: Clie
             params: TweetGetRepliesParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<TweetGetRepliesResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -398,8 +376,6 @@ class TweetServiceAsyncImpl internal constructor(private val clientOptions: Clie
             params: TweetGetRetweetersParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<PaginatedUsers>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
@@ -431,8 +407,6 @@ class TweetServiceAsyncImpl internal constructor(private val clientOptions: Clie
             params: TweetGetThreadParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<PaginatedTweets>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()

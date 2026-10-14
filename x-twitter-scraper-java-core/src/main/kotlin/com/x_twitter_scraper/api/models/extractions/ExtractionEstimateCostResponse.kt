@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models.extractions
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -62,38 +60,35 @@ private constructor(
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun allowed(): Boolean = allowed.getRequired("allowed")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun creditsAvailable(): String = creditsAvailable.getRequired("creditsAvailable")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun creditsRequired(): String = creditsRequired.getRequired("creditsRequired")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun estimatedResults(): Long = estimatedResults.getRequired("estimatedResults")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun source(): Source = source.getRequired("source")
 
-    /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun resolvedXUserId(): Optional<String> = resolvedXUserId.getOptional("resolvedXUserId")
 
     /**
@@ -203,24 +198,13 @@ private constructor(
 
         fun allowed(allowed: Boolean) = allowed(JsonField.of(allowed))
 
-        /**
-         * Sets [Builder.allowed] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.allowed] with a well-typed [Boolean] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.allowed] to an arbitrary JSON value. */
         fun allowed(allowed: JsonField<Boolean>) = apply { this.allowed = allowed }
 
         fun creditsAvailable(creditsAvailable: String) =
             creditsAvailable(JsonField.of(creditsAvailable))
 
-        /**
-         * Sets [Builder.creditsAvailable] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.creditsAvailable] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.creditsAvailable] to an arbitrary JSON value. */
         fun creditsAvailable(creditsAvailable: JsonField<String>) = apply {
             this.creditsAvailable = creditsAvailable
         }
@@ -228,13 +212,7 @@ private constructor(
         fun creditsRequired(creditsRequired: String) =
             creditsRequired(JsonField.of(creditsRequired))
 
-        /**
-         * Sets [Builder.creditsRequired] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.creditsRequired] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.creditsRequired] to an arbitrary JSON value. */
         fun creditsRequired(creditsRequired: JsonField<String>) = apply {
             this.creditsRequired = creditsRequired
         }
@@ -242,37 +220,20 @@ private constructor(
         fun estimatedResults(estimatedResults: Long) =
             estimatedResults(JsonField.of(estimatedResults))
 
-        /**
-         * Sets [Builder.estimatedResults] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.estimatedResults] with a well-typed [Long] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.estimatedResults] to an arbitrary JSON value. */
         fun estimatedResults(estimatedResults: JsonField<Long>) = apply {
             this.estimatedResults = estimatedResults
         }
 
         fun source(source: Source) = source(JsonField.of(source))
 
-        /**
-         * Sets [Builder.source] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.source] with a well-typed [Source] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
+        /** Sets [Builder.source] to an arbitrary JSON value. */
         fun source(source: JsonField<Source>) = apply { this.source = source }
 
         fun resolvedXUserId(resolvedXUserId: String) =
             resolvedXUserId(JsonField.of(resolvedXUserId))
 
-        /**
-         * Sets [Builder.resolvedXUserId] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.resolvedXUserId] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.resolvedXUserId] to an arbitrary JSON value. */
         fun resolvedXUserId(resolvedXUserId: JsonField<String>) = apply {
             this.resolvedXUserId = resolvedXUserId
         }
@@ -356,11 +317,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (if (allowed.asKnown().isPresent) 1 else 0) +
@@ -372,14 +328,7 @@ private constructor(
 
     class Source @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
+        /** Returns this class instance's raw value. */
         @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
 
         companion object {
@@ -448,9 +397,6 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
          * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
          */
         fun value(): Value =
             when (this) {
@@ -469,9 +415,6 @@ private constructor(
 
         /**
          * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
          *
          * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
          *   known member.
@@ -493,9 +436,6 @@ private constructor(
 
         /**
          * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
          *
          * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
          *   the expected primitive type.
@@ -533,12 +473,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
         @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {

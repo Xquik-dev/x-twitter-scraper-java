@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// File generated from our OpenAPI spec.
-
 package com.x_twitter_scraper.api.models
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -52,19 +50,19 @@ private constructor(
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun hasNextPage(): Boolean = hasNextPage.getRequired("has_next_page")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun nextCursor(): String = nextCursor.getRequired("next_cursor")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     *   unexpectedly missing or null.
      */
     fun tweets(): List<SearchTweet> = tweets.getRequired("tweets")
 
@@ -136,35 +134,17 @@ private constructor(
 
         fun hasNextPage(hasNextPage: Boolean) = hasNextPage(JsonField.of(hasNextPage))
 
-        /**
-         * Sets [Builder.hasNextPage] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.hasNextPage] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.hasNextPage] to an arbitrary JSON value. */
         fun hasNextPage(hasNextPage: JsonField<Boolean>) = apply { this.hasNextPage = hasNextPage }
 
         fun nextCursor(nextCursor: String) = nextCursor(JsonField.of(nextCursor))
 
-        /**
-         * Sets [Builder.nextCursor] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.nextCursor] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
+        /** Sets [Builder.nextCursor] to an arbitrary JSON value. */
         fun nextCursor(nextCursor: JsonField<String>) = apply { this.nextCursor = nextCursor }
 
         fun tweets(tweets: List<SearchTweet>) = tweets(JsonField.of(tweets))
 
-        /**
-         * Sets [Builder.tweets] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.tweets] with a well-typed `List<SearchTweet>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
+        /** Sets [Builder.tweets] to an arbitrary JSON value. */
         fun tweets(tweets: JsonField<List<SearchTweet>>) = apply {
             this.tweets = tweets.map { it.toMutableList() }
         }
@@ -252,11 +232,6 @@ private constructor(
             false
         }
 
-    /**
-     * Returns a score indicating how many valid values are contained in this object recursively.
-     *
-     * Used for best match union deserialization.
-     */
     @JvmSynthetic
     internal fun validity(): Int =
         (if (hasNextPage.asKnown().isPresent) 1 else 0) +

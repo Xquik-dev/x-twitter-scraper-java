@@ -4,19 +4,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Publishes the version in build.gradle.kts to Maven Central, then tags and
-# releases it on GitHub. Run it from a clean main that matches origin/main.
-# Pass --dry-run to run every check, build the Maven artifacts and print what
-# a release would upload, without uploading, tagging or releasing.
-#
-# 2 macOS Keychain items hold the secrets. MAVEN_KEYCHAIN_SERVICE names the
-# service of the Central Portal token. Its account is the token username and
-# its password is the token password. MAVEN_SIGNING_KEYCHAIN_SERVICE names the
-# service of the passphrase for the signing key in the local GPG keyring. Set
-# both on the release machine. A dry run needs neither.
-
 set -euo pipefail
-# Keep secrets out of trace output, even under bash -x.
 set +o xtrace
 
 cd -- "$(dirname -- "$0")/.."
@@ -81,8 +69,6 @@ central_has_version() {
     esac
 }
 
-# Every secret reaches Gradle and gpg through the environment or standard
-# input. An argument would show in the process list.
 upload_to_central() {
     local token_username token_password signing_passphrase signing_key
     token_username="$(
@@ -103,8 +89,6 @@ upload_to_central() {
     [[ -n "$signing_key" ]] ||
         refuse "gpg exported an empty signing key $signing_key_id. Import the key, then rerun."
 
-    # Kotlin compiles inside the Gradle process here. A Kotlin daemon would
-    # inherit the secrets in its environment and outlive the upload.
     ORG_GRADLE_PROJECT_mavenCentralUsername="$token_username" \
         ORG_GRADLE_PROJECT_mavenCentralPassword="$token_password" \
         ORG_GRADLE_PROJECT_signingInMemoryKey="$signing_key" \
