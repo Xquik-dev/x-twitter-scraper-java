@@ -24,16 +24,16 @@ if [[ -n "${OSV_SCANNER_BIN:-}" ]]; then
         exit 1
     fi
 else
-    osv_version="2.4.0"
+    osv_version="2.6.0"
     platform="$(uname -s)-$(uname -m)"
     case "$platform" in
         Darwin-arm64)
             scanner_asset="osv-scanner_darwin_arm64"
-            scanner_checksum="9ca3185ad63e9ab54f7cb90f46a7362be02d80e37f0123d095a54355ea202f5d"
+            scanner_checksum="98c460dcd37de25819babd757d04542045b6243113e209edcd4d89fedb0256b4"
             ;;
         Linux-x86_64)
             scanner_asset="osv-scanner_linux_amd64"
-            scanner_checksum="15314940c10d26af9c6649f150b8a47c1262e8fc7e17b1d1029b0e479e8ed8a0"
+            scanner_checksum="ca69b3d3cd08f889a49dc0a383122f71cc528b83803671df5fd874d97485b108"
             ;;
         *)
             printf 'Unsupported OSV Scanner platform: %s\n' "$platform" >&2

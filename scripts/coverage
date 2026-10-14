@@ -8,5 +8,6 @@ set -euo pipefail
 
 cd -- "$(dirname -- "$0")/.."
 
-echo "==> Measuring aggregate line and branch coverage"
-./gradlew coverage --no-build-cache --no-configuration-cache "$@"
+parent_report="${1:?Pass a fresh full-source parent JaCoCo XML report.}"
+shift
+./gradlew coverage -PcoverageParent="$parent_report" --rerun-tasks --no-build-cache --no-configuration-cache "$@"

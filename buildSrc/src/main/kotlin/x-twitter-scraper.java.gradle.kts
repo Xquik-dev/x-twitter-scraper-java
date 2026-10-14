@@ -73,7 +73,7 @@ configurations.matching { it.name.startsWith("test") }.configureEach {
 
 val palantir = configurations.create("palantir")
 dependencies {
-    palantir("com.palantir.javaformat:palantir-java-format:2.96.0")
+    palantir("com.palantir.javaformat:palantir-java-format:2.101.0")
 }
 
 fun registerPalantir(

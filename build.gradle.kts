@@ -7,7 +7,6 @@ import com.github.jk1.license.filter.SpdxLicenseBundleNormalizer
 import com.github.jk1.license.render.CsvReportRenderer
 import com.github.jk1.license.render.InventoryHtmlReportRenderer
 import com.github.jk1.license.render.ReportRenderer
-import org.gradle.testing.jacoco.tasks.JacocoCoverageVerification
 import org.gradle.testing.jacoco.tasks.JacocoReport
 
 plugins {
@@ -36,37 +35,13 @@ licenseReport {
 
 allprojects {
     group = "com.xquik.api"
-    version = "0.10.3" // x-release-please-version
+    version = "0.10.4" // x-release-please-version
 
     dependencyLocking {
         lockAllConfigurations()
     }
 
-    configurations.configureEach {
-        resolutionStrategy.force(
-            "com.fasterxml.jackson.core:jackson-annotations:2.22",
-            "com.fasterxml.jackson.core:jackson-core:2.22.1",
-            "com.fasterxml.jackson.core:jackson-databind:2.22.1",
-            "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.22.1",
-            "com.fasterxml.jackson.module:jackson-module-kotlin:2.22.1",
-            "com.github.jknack:handlebars:4.5.4",
-            "com.google.guava:guava:33.6.0-jre",
-            "com.jayway.jsonpath:json-path:3.0.0",
-            "commons-fileupload:commons-fileupload:1.6.0",
-            "commons-io:commons-io:2.22.0",
-            "net.minidev:json-smart:2.6.0",
-            "org.apache.commons:commons-lang3:3.20.0",
-            "org.apache.logging.log4j:log4j-api:2.26.1",
-            "org.apache.logging.log4j:log4j-core:2.26.1",
-            "org.apache.httpcomponents.client5:httpclient5:5.6.4",
-            "org.apache.httpcomponents.core5:httpcore5:5.4.3",
-            "org.apache.httpcomponents.core5:httpcore5-h2:5.4.3",
-            "org.jsoup:jsoup:1.23.1",
-            "org.xmlunit:xmlunit-core:2.13.0",
-            "org.xmlunit:xmlunit-legacy:2.13.0",
-            "org.xmlunit:xmlunit-placeholders:2.13.0",
-        )
-    }
+    apply(from = rootProject.file("gradle/dependency-pins.gradle.kts"))
 }
 
 subprojects {
@@ -81,150 +56,50 @@ subprojects {
     }
 }
 
-val coverageExecutionData =
-    fileTree(rootDir) {
-        include("x-twitter-scraper-java*/build/jacoco/test.exec")
+val coverageClasses = files(subprojects.flatMap { project ->
+    listOf("java", "kotlin").map { language ->
+        project.layout.buildDirectory.dir("classes/$language/main")
     }
-val coverageProjects =
-    subprojects.filterNot { it.name == "x-twitter-scraper-java-proguard-test" }
-val allCoverageClasses =
-    files(
-        coverageProjects.flatMap { project ->
-            listOf(
-                project.layout.buildDirectory.dir("classes/java/main"),
-                project.layout.buildDirectory.dir("classes/kotlin/main"),
-            )
-        }
-    )
-val generatedSourceHeaderPrefix = "// File generated from our OpenAPI spec"
-val generatedSourceHeaderLineLimit = 12
-val maintainedGeneratedSources =
-    setOf(
-        "x-twitter-scraper-java-core/src/main/kotlin/com/x_twitter_scraper/api/core/http/RetryingHttpClient.kt"
-    )
-val generatedCoverageExclusions =
-    coverageProjects.associateWith { project ->
-        listOf("src/main/java", "src/main/kotlin").flatMap { sourcePath ->
-            val sourceRoot = project.file(sourcePath)
-            if (!sourceRoot.isDirectory) {
-                emptyList()
-            } else {
-                sourceRoot
-                    .walkTopDown()
-                    .filter { it.isFile && it.extension in setOf("java", "kt") }
-                    .filter { source ->
-                        source.useLines { lines ->
-                            lines
-                                .take(generatedSourceHeaderLineLimit)
-                                .any { it.startsWith(generatedSourceHeaderPrefix) }
-                        } &&
-                            source.relativeTo(rootDir).invariantSeparatorsPath !in
-                                maintainedGeneratedSources
-                    }
-                    .map { source ->
-                        source
-                            .relativeTo(sourceRoot)
-                            .invariantSeparatorsPath
-                            .substringBeforeLast('.') + "*"
-                    }
-                    .toList()
-            }
-        }
+})
+val coverageSources = files(subprojects.flatMap { project ->
+    listOf("java", "kotlin").map { language ->
+        project.layout.projectDirectory.dir("src/main/$language")
     }
-val maintainedCoverageClasses =
-    files(
-        coverageProjects.flatMap { project ->
-            val exclusions = generatedCoverageExclusions.getValue(project)
-            listOf(
-                project.fileTree(project.layout.buildDirectory.dir("classes/java/main")) {
-                    exclude(exclusions)
-                },
-                project.fileTree(project.layout.buildDirectory.dir("classes/kotlin/main")) {
-                    exclude(exclusions)
-                },
-            )
-        }
-    )
-val coverageSources =
-    files(
-        coverageProjects.flatMap { project ->
-            listOf(
-                project.layout.projectDirectory.dir("src/main/java"),
-                project.layout.projectDirectory.dir("src/main/kotlin"),
-            )
-        }
-    )
-val testTasks =
-    coverageProjects.map { "${it.path}:test" }
-
-val coverageReport =
-    tasks.register<JacocoReport>("coverageReport") {
-        group = "Verification"
-        description = "Generates aggregate line and branch coverage."
-        dependsOn(testTasks)
-        executionData(coverageExecutionData)
-        classDirectories.setFrom(maintainedCoverageClasses)
-        sourceDirectories.setFrom(coverageSources)
-        jacocoClasspath = configurations.named("jacocoAnt").get()
-
-        reports {
-            xml.required.set(true)
-            xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/coverage/coverage.xml"))
-            html.required.set(true)
-            html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/coverage/html"))
-            csv.required.set(false)
-        }
+})
+val coverageReport = tasks.register<JacocoReport>("coverageReport") {
+    group = "Verification"
+    description = "Reports instruction, branch, line & method coverage for all SDK classes."
+    dependsOn(subprojects.map { "${it.path}:test" })
+    executionData(fileTree(rootDir) { include("x-twitter-scraper-*/build/jacoco/test.exec") })
+    classDirectories.setFrom(coverageClasses)
+    sourceDirectories.setFrom(coverageSources)
+    jacocoClasspath = configurations.named("jacocoAnt").get()
+    reports {
+        xml.required.set(true)
+        xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/coverage/coverage.xml"))
+        html.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/coverage/html"))
+        csv.required.set(false)
     }
-
-val coverageRawReport =
-    tasks.register<JacocoReport>("coverageRawReport") {
-        group = "Verification"
-        description = "Reports raw coverage, including generated SDK sources."
-        dependsOn(testTasks)
-        executionData(coverageExecutionData)
-        classDirectories.setFrom(allCoverageClasses)
-        sourceDirectories.setFrom(coverageSources)
-        jacocoClasspath = configurations.named("jacocoAnt").get()
-
-        reports {
-            xml.required.set(true)
-            xml.outputLocation.set(
-                layout.buildDirectory.file("reports/jacoco/coverage-raw/coverage.xml")
-            )
-            html.required.set(true)
-            html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/coverage-raw/html"))
-            csv.required.set(false)
-        }
+}
+val coverageRawReport = tasks.register<Copy>("coverageRawReport") {
+    dependsOn(coverageReport)
+    from(coverageReport.flatMap { it.reports.xml.outputLocation })
+    into(layout.buildDirectory.dir("reports/jacoco/coverage-raw"))
+}
+val coverageVerify = tasks.register<Exec>("coverageVerify") {
+    group = "Verification"
+    description = "Compares all native coverage counts with a fresh full-source parent."
+    dependsOn(coverageReport)
+    val parentReport = providers.gradleProperty("coverageParent")
+    doFirst {
+        val parent = parentReport.orNull
+            ?: throw GradleException("Pass -PcoverageParent=/path/to/fresh-parent.xml.")
+        commandLine("go", "run", "scripts/coverage-gate/main.go", parent,
+            coverageReport.get().reports.xml.outputLocation.get().asFile.absolutePath)
     }
-
-val coverageVerify =
-    tasks.register<JacocoCoverageVerification>("coverageVerify") {
-        group = "Verification"
-        description = "Enforces aggregate line and branch coverage."
-        dependsOn(testTasks)
-        executionData(coverageExecutionData)
-        classDirectories.setFrom(maintainedCoverageClasses)
-        sourceDirectories.setFrom(coverageSources)
-        jacocoClasspath = configurations.named("jacocoAnt").get()
-
-        violationRules {
-            rule {
-                limit {
-                    counter = "LINE"
-                    value = "COVEREDRATIO"
-                    minimum = "0.90".toBigDecimal()
-                }
-                limit {
-                    counter = "BRANCH"
-                    value = "COVEREDRATIO"
-                    minimum = "0.80".toBigDecimal()
-                }
-            }
-        }
-    }
-
+}
 tasks.register("coverage") {
     group = "Verification"
-    description = "Generates raw coverage and verifies maintained-source coverage."
-    dependsOn(coverageRawReport, coverageReport, coverageVerify)
+    dependsOn(coverageRawReport, coverageVerify)
 }

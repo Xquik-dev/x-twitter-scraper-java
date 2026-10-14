@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.10.4 (2026-10-02)
+
+Full Changelog: [v0.10.3...v0.10.4](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.10.3...v0.10.4)
+
+### Maintenance
+
+* Update dependencies & build tools.
+* Compare full-source coverage with fresh parent reports.
+
 ## 0.10.3 (2026-08-21)
 
 Full Changelog: [v0.10.2...v0.10.3](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.10.2...v0.10.3)

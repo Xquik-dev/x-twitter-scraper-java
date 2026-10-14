@@ -49,7 +49,7 @@ Run every gate before requesting review:
 ```sh
 ./scripts/lint
 ./scripts/test
-./scripts/coverage
+./scripts/coverage /path/to/fresh-parent.xml
 OSV_SCANNER_BIN=/path/to/osv-scanner ./scripts/audit
 reuse lint
 ./scripts/check-reproducible
@@ -57,11 +57,13 @@ reuse lint
 
 The audit script downloads a verified OSV Scanner when needed.
 
-Maintained-source line coverage must remain at least 90%.
+Coverage records JaCoCo instructions, branches, lines & methods across all SDK sources.
 
-Maintained-source branch coverage must remain at least 80%.
+Each metric must retain its parent ratio or add no uncovered items.
 
-The raw report keeps generated-source coverage visible.
+Regenerate parent & candidate reports with the same tools & settings.
+
+Both reports include generated sources.
 
 Skipped tests are forbidden.
 

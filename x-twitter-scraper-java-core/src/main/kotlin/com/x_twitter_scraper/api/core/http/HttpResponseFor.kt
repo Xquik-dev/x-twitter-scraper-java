@@ -4,8 +4,6 @@
 
 package com.x_twitter_scraper.api.core.http
 
-import java.io.InputStream
-
 interface HttpResponseFor<T> : HttpResponse {
 
     fun parse(): T
@@ -13,17 +11,12 @@ interface HttpResponseFor<T> : HttpResponse {
 
 @JvmSynthetic
 internal fun <T> HttpResponse.parseable(parse: () -> T): HttpResponseFor<T> =
-    object : HttpResponseFor<T> {
+    ParsedHttpResponse(this, parse)
 
-        private val parsed: T by lazy { parse() }
+private class ParsedHttpResponse<T>(response: HttpResponse, parse: () -> T) :
+    HttpResponseFor<T>, HttpResponse by response {
 
-        override fun parse(): T = parsed
+    private val parsed: T by lazy(parse)
 
-        override fun statusCode(): Int = this@parseable.statusCode()
-
-        override fun headers(): Headers = this@parseable.headers()
-
-        override fun body(): InputStream = this@parseable.body()
-
-        override fun close() = this@parseable.close()
-    }
+    override fun parse(): T = parsed
+}

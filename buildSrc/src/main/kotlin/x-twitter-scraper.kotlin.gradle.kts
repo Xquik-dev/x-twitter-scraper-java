@@ -31,7 +31,7 @@ kotlin {
         jvmTarget.set(JvmTarget.JVM_1_8)
         languageVersion.set(KotlinVersion.KOTLIN_2_2)
         apiVersion.set(KotlinVersion.KOTLIN_2_2)
-        coreLibrariesVersion = "2.3.20"
+        coreLibrariesVersion = "2.4.20"
     }
 }
 
