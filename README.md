@@ -21,7 +21,7 @@ Xquik charges only for delivered, unique, filter-matching results and never pads
 > Xquik is an independent third-party service. Not affiliated with X Corp.
 > "Twitter" and "X" are trademarks of X Corp.
 
-[API Reference](https://docs.xquik.com/api-reference/overview) | [Authentication](https://xquik.com/auth.md) | [Javadocs](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java-core)
+[API reference](https://docs.xquik.com/api-reference/overview) | [Authentication](https://xquik.com/auth.md) | [Javadocs](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java-core)
 
 ## Java client or REST
 
@@ -92,7 +92,7 @@ gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 0xD2037E4157E62A59
 gpg --verify "$artifact.asc" "$artifact"
 ```
 
-Confirm fingerprint `6965 E561 C0AC EE32 060A B961 D203 7E41 57E6 2A59`.
+Confirm the fingerprint `6965 E561 C0AC EE32 060A B961 D203 7E41 57E6 2A59`.
 
 ## Authenticate
 
@@ -173,7 +173,7 @@ XTwitterScraperClient client = XTwitterScraperOkHttpClient.builder()
     .build();
 ```
 
-Successful HTTP responses can contain structured API errors. Handle documented codes.
+Successful HTTP responses can contain structured API errors. Handle the documented error codes.
 
 ## Read raw responses
 
