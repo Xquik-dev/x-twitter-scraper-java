@@ -138,7 +138,7 @@ EOF
     write_file build.gradle.kts <<'EOF'
 allprojects {
     group = "com.xquik.api"
-    version = "9.9.9" // x-release-please-version
+    version = "9.9.9"
 }
 EOF
     write_file .release-please-manifest.json <<'EOF'

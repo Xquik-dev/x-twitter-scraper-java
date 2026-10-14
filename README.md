@@ -2,12 +2,8 @@
 
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13735/badge)](https://www.bestpractices.dev/projects/13735)
 
-<!-- x-release-please-start-version -->
-
 [![Maven Central](https://img.shields.io/maven-central/v/com.xquik.api/x-twitter-scraper-java)](https://central.sonatype.com/artifact/com.xquik.api/x-twitter-scraper-java/0.10.4)
 [![Javadocs](https://javadoc.io/badge2/com.xquik.api/x-twitter-scraper-java-core/0.10.4/javadoc.svg)](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java-core/0.10.4)
-
-<!-- x-release-please-end -->
 
 Use this X API & Twitter API SDK to work with X from Java.
 It works as a Twitter scraper & tweet scraper for search, profiles & followers.
@@ -58,8 +54,6 @@ Call REST directly when a Maven dependency does not fit.
 
 ## Install
 
-<!-- x-release-please-start-version -->
-
 Add the Gradle dependency.
 
 ```kotlin
@@ -75,8 +69,6 @@ Or add the Maven dependency.
   <version>0.10.4</version>
 </dependency>
 ```
-
-<!-- x-release-please-end -->
 
 ## Verify Maven signatures
 
