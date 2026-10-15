@@ -9,11 +9,34 @@ import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
 import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /** Look up multiple users by IDs in one call */
 class UserRetrieveBatchParams
 private constructor(
     private val ids: String,
+    private val bioContains: String?,
+    private val blueVerifiedOnly: Boolean?,
+    private val businessEmailOnly: Boolean?,
+    private val emailDomains: String?,
+    private val fields: String?,
+    private val hasEmail: Boolean?,
+    private val hasLocation: Boolean?,
+    private val hasWebsite: Boolean?,
+    private val locationContains: String?,
+    private val maxFollowers: Long?,
+    private val maxFollowing: Long?,
+    private val maxStatuses: Long?,
+    private val minAccountAgeDays: Long?,
+    private val minFollowers: Long?,
+    private val minFollowing: Long?,
+    private val minStatuses: Long?,
+    private val omit: String?,
+    private val usernameContains: String?,
+    private val usernames: String?,
+    private val verifiedOnly: Boolean?,
+    private val verifiedType: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -23,6 +46,87 @@ private constructor(
      * first-seen order.
      */
     fun ids(): String = ids
+
+    /** Match any comma-separated or line-separated bio term, ignoring case. */
+    fun bioContains(): Optional<String> = Optional.ofNullable(bioContains)
+
+    /**
+     * Only return profiles X marks as blue verified. X marks many business & government accounts
+     * blue too. Use verifiedType for 1 badge type.
+     */
+    fun blueVerifiedOnly(): Optional<Boolean> = Optional.ofNullable(blueVerifiedOnly)
+
+    /** Only return profiles that publish an email outside free webmail, such as Gmail. */
+    fun businessEmailOnly(): Optional<Boolean> = Optional.ofNullable(businessEmailOnly)
+
+    /**
+     * Only return profiles with an email at one of these domains. Separate domains with commas.
+     * Subdomains match.
+     */
+    fun emailDomains(): Optional<String> = Optional.ofNullable(emailDomains)
+
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+     * author.username. A list keeps the field in each item. Case & underscores do not matter. A row
+     * that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name
+     * answers 400 unknown_field with the valid names, before any read. The price stays the same. A
+     * required getter throws when you leave its field out, and response validation fails.
+     */
+    fun fields(): Optional<String> = Optional.ofNullable(fields)
+
+    /** Only return profiles that publish an email. */
+    fun hasEmail(): Optional<Boolean> = Optional.ofNullable(hasEmail)
+
+    /** Only return profiles with a location. */
+    fun hasLocation(): Optional<Boolean> = Optional.ofNullable(hasLocation)
+
+    /** Only return profiles with a website. */
+    fun hasWebsite(): Optional<Boolean> = Optional.ofNullable(hasWebsite)
+
+    /** Match a location substring, ignoring case. */
+    fun locationContains(): Optional<String> = Optional.ofNullable(locationContains)
+
+    /** Maximum follower count. A profile without a count passes. */
+    fun maxFollowers(): Optional<Long> = Optional.ofNullable(maxFollowers)
+
+    /** Profiles may follow at most this many accounts. */
+    fun maxFollowing(): Optional<Long> = Optional.ofNullable(maxFollowing)
+
+    /** Maximum post count. maxPosts is also accepted. */
+    fun maxStatuses(): Optional<Long> = Optional.ofNullable(maxStatuses)
+
+    /** Minimum account age in whole days. */
+    fun minAccountAgeDays(): Optional<Long> = Optional.ofNullable(minAccountAgeDays)
+
+    /** Minimum follower count. Profiles the filter drops cost nothing. */
+    fun minFollowers(): Optional<Long> = Optional.ofNullable(minFollowers)
+
+    /** Profiles must follow at least this many accounts. */
+    fun minFollowing(): Optional<Long> = Optional.ofNullable(minFollowing)
+
+    /** Minimum post count. minPosts is also accepted. */
+    fun minStatuses(): Optional<Long> = Optional.ofNullable(minStatuses)
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+     * fields, it drops from the kept fields.
+     */
+    fun omit(): Optional<String> = Optional.ofNullable(omit)
+
+    /** Match a username substring, ignoring case. */
+    fun usernameContains(): Optional<String> = Optional.ofNullable(usernameContains)
+
+    /**
+     * Comma-separated X usernames, with or without @, or profile links such as x.com/nasa (1-100
+     * values), in place of ids. A name in another case is the same account.
+     */
+    fun usernames(): Optional<String> = Optional.ofNullable(usernames)
+
+    /** Only return verified profiles. */
+    fun verifiedOnly(): Optional<Boolean> = Optional.ofNullable(verifiedOnly)
+
+    /** Match the verification type exactly, ignoring case. */
+    fun verifiedType(): Optional<String> = Optional.ofNullable(verifiedType)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -49,12 +153,54 @@ private constructor(
     class Builder internal constructor() {
 
         private var ids: String? = null
+        private var bioContains: String? = null
+        private var blueVerifiedOnly: Boolean? = null
+        private var businessEmailOnly: Boolean? = null
+        private var emailDomains: String? = null
+        private var fields: String? = null
+        private var hasEmail: Boolean? = null
+        private var hasLocation: Boolean? = null
+        private var hasWebsite: Boolean? = null
+        private var locationContains: String? = null
+        private var maxFollowers: Long? = null
+        private var maxFollowing: Long? = null
+        private var maxStatuses: Long? = null
+        private var minAccountAgeDays: Long? = null
+        private var minFollowers: Long? = null
+        private var minFollowing: Long? = null
+        private var minStatuses: Long? = null
+        private var omit: String? = null
+        private var usernameContains: String? = null
+        private var usernames: String? = null
+        private var verifiedOnly: Boolean? = null
+        private var verifiedType: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(userRetrieveBatchParams: UserRetrieveBatchParams) = apply {
             ids = userRetrieveBatchParams.ids
+            bioContains = userRetrieveBatchParams.bioContains
+            blueVerifiedOnly = userRetrieveBatchParams.blueVerifiedOnly
+            businessEmailOnly = userRetrieveBatchParams.businessEmailOnly
+            emailDomains = userRetrieveBatchParams.emailDomains
+            fields = userRetrieveBatchParams.fields
+            hasEmail = userRetrieveBatchParams.hasEmail
+            hasLocation = userRetrieveBatchParams.hasLocation
+            hasWebsite = userRetrieveBatchParams.hasWebsite
+            locationContains = userRetrieveBatchParams.locationContains
+            maxFollowers = userRetrieveBatchParams.maxFollowers
+            maxFollowing = userRetrieveBatchParams.maxFollowing
+            maxStatuses = userRetrieveBatchParams.maxStatuses
+            minAccountAgeDays = userRetrieveBatchParams.minAccountAgeDays
+            minFollowers = userRetrieveBatchParams.minFollowers
+            minFollowing = userRetrieveBatchParams.minFollowing
+            minStatuses = userRetrieveBatchParams.minStatuses
+            omit = userRetrieveBatchParams.omit
+            usernameContains = userRetrieveBatchParams.usernameContains
+            usernames = userRetrieveBatchParams.usernames
+            verifiedOnly = userRetrieveBatchParams.verifiedOnly
+            verifiedType = userRetrieveBatchParams.verifiedType
             additionalHeaders = userRetrieveBatchParams.additionalHeaders.toBuilder()
             additionalQueryParams = userRetrieveBatchParams.additionalQueryParams.toBuilder()
         }
@@ -64,6 +210,208 @@ private constructor(
          * preserving first-seen order.
          */
         fun ids(ids: String) = apply { this.ids = ids }
+
+        /** Match any comma-separated or line-separated bio term, ignoring case. */
+        fun bioContains(bioContains: String?) = apply { this.bioContains = bioContains }
+
+        /** Alias for calling [Builder.bioContains] with `bioContains.orElse(null)`. */
+        fun bioContains(bioContains: Optional<String>) = bioContains(bioContains.getOrNull())
+
+        /**
+         * Only return profiles X marks as blue verified. X marks many business & government
+         * accounts blue too. Use verifiedType for 1 badge type.
+         */
+        fun blueVerifiedOnly(blueVerifiedOnly: Boolean?) = apply {
+            this.blueVerifiedOnly = blueVerifiedOnly
+        }
+
+        /** Alias for [Builder.blueVerifiedOnly]. */
+        fun blueVerifiedOnly(blueVerifiedOnly: Boolean) =
+            blueVerifiedOnly(blueVerifiedOnly as Boolean?)
+
+        /** Alias for calling [Builder.blueVerifiedOnly] with `blueVerifiedOnly.orElse(null)`. */
+        fun blueVerifiedOnly(blueVerifiedOnly: Optional<Boolean>) =
+            blueVerifiedOnly(blueVerifiedOnly.getOrNull())
+
+        /** Only return profiles that publish an email outside free webmail, such as Gmail. */
+        fun businessEmailOnly(businessEmailOnly: Boolean?) = apply {
+            this.businessEmailOnly = businessEmailOnly
+        }
+
+        /** Alias for [Builder.businessEmailOnly]. */
+        fun businessEmailOnly(businessEmailOnly: Boolean) =
+            businessEmailOnly(businessEmailOnly as Boolean?)
+
+        /** Alias for calling [Builder.businessEmailOnly] with `businessEmailOnly.orElse(null)`. */
+        fun businessEmailOnly(businessEmailOnly: Optional<Boolean>) =
+            businessEmailOnly(businessEmailOnly.getOrNull())
+
+        /**
+         * Only return profiles with an email at one of these domains. Separate domains with commas.
+         * Subdomains match.
+         */
+        fun emailDomains(emailDomains: String?) = apply { this.emailDomains = emailDomains }
+
+        /** Alias for calling [Builder.emailDomains] with `emailDomains.orElse(null)`. */
+        fun emailDomains(emailDomains: Optional<String>) = emailDomains(emailDomains.getOrNull())
+
+        /**
+         * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+         * author.username. A list keeps the field in each item. Case & underscores do not matter. A
+         * row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An
+         * unknown name answers 400 unknown_field with the valid names, before any read. The price
+         * stays the same. A required getter throws when you leave its field out, and response
+         * validation fails.
+         */
+        fun fields(fields: String?) = apply { this.fields = fields }
+
+        /** Alias for calling [Builder.fields] with `fields.orElse(null)`. */
+        fun fields(fields: Optional<String>) = fields(fields.getOrNull())
+
+        /** Only return profiles that publish an email. */
+        fun hasEmail(hasEmail: Boolean?) = apply { this.hasEmail = hasEmail }
+
+        /** Alias for [Builder.hasEmail]. */
+        fun hasEmail(hasEmail: Boolean) = hasEmail(hasEmail as Boolean?)
+
+        /** Alias for calling [Builder.hasEmail] with `hasEmail.orElse(null)`. */
+        fun hasEmail(hasEmail: Optional<Boolean>) = hasEmail(hasEmail.getOrNull())
+
+        /** Only return profiles with a location. */
+        fun hasLocation(hasLocation: Boolean?) = apply { this.hasLocation = hasLocation }
+
+        /** Alias for [Builder.hasLocation]. */
+        fun hasLocation(hasLocation: Boolean) = hasLocation(hasLocation as Boolean?)
+
+        /** Alias for calling [Builder.hasLocation] with `hasLocation.orElse(null)`. */
+        fun hasLocation(hasLocation: Optional<Boolean>) = hasLocation(hasLocation.getOrNull())
+
+        /** Only return profiles with a website. */
+        fun hasWebsite(hasWebsite: Boolean?) = apply { this.hasWebsite = hasWebsite }
+
+        /** Alias for [Builder.hasWebsite]. */
+        fun hasWebsite(hasWebsite: Boolean) = hasWebsite(hasWebsite as Boolean?)
+
+        /** Alias for calling [Builder.hasWebsite] with `hasWebsite.orElse(null)`. */
+        fun hasWebsite(hasWebsite: Optional<Boolean>) = hasWebsite(hasWebsite.getOrNull())
+
+        /** Match a location substring, ignoring case. */
+        fun locationContains(locationContains: String?) = apply {
+            this.locationContains = locationContains
+        }
+
+        /** Alias for calling [Builder.locationContains] with `locationContains.orElse(null)`. */
+        fun locationContains(locationContains: Optional<String>) =
+            locationContains(locationContains.getOrNull())
+
+        /** Maximum follower count. A profile without a count passes. */
+        fun maxFollowers(maxFollowers: Long?) = apply { this.maxFollowers = maxFollowers }
+
+        /** Alias for [Builder.maxFollowers]. */
+        fun maxFollowers(maxFollowers: Long) = maxFollowers(maxFollowers as Long?)
+
+        /** Alias for calling [Builder.maxFollowers] with `maxFollowers.orElse(null)`. */
+        fun maxFollowers(maxFollowers: Optional<Long>) = maxFollowers(maxFollowers.getOrNull())
+
+        /** Profiles may follow at most this many accounts. */
+        fun maxFollowing(maxFollowing: Long?) = apply { this.maxFollowing = maxFollowing }
+
+        /** Alias for [Builder.maxFollowing]. */
+        fun maxFollowing(maxFollowing: Long) = maxFollowing(maxFollowing as Long?)
+
+        /** Alias for calling [Builder.maxFollowing] with `maxFollowing.orElse(null)`. */
+        fun maxFollowing(maxFollowing: Optional<Long>) = maxFollowing(maxFollowing.getOrNull())
+
+        /** Maximum post count. maxPosts is also accepted. */
+        fun maxStatuses(maxStatuses: Long?) = apply { this.maxStatuses = maxStatuses }
+
+        /** Alias for [Builder.maxStatuses]. */
+        fun maxStatuses(maxStatuses: Long) = maxStatuses(maxStatuses as Long?)
+
+        /** Alias for calling [Builder.maxStatuses] with `maxStatuses.orElse(null)`. */
+        fun maxStatuses(maxStatuses: Optional<Long>) = maxStatuses(maxStatuses.getOrNull())
+
+        /** Minimum account age in whole days. */
+        fun minAccountAgeDays(minAccountAgeDays: Long?) = apply {
+            this.minAccountAgeDays = minAccountAgeDays
+        }
+
+        /** Alias for [Builder.minAccountAgeDays]. */
+        fun minAccountAgeDays(minAccountAgeDays: Long) =
+            minAccountAgeDays(minAccountAgeDays as Long?)
+
+        /** Alias for calling [Builder.minAccountAgeDays] with `minAccountAgeDays.orElse(null)`. */
+        fun minAccountAgeDays(minAccountAgeDays: Optional<Long>) =
+            minAccountAgeDays(minAccountAgeDays.getOrNull())
+
+        /** Minimum follower count. Profiles the filter drops cost nothing. */
+        fun minFollowers(minFollowers: Long?) = apply { this.minFollowers = minFollowers }
+
+        /** Alias for [Builder.minFollowers]. */
+        fun minFollowers(minFollowers: Long) = minFollowers(minFollowers as Long?)
+
+        /** Alias for calling [Builder.minFollowers] with `minFollowers.orElse(null)`. */
+        fun minFollowers(minFollowers: Optional<Long>) = minFollowers(minFollowers.getOrNull())
+
+        /** Profiles must follow at least this many accounts. */
+        fun minFollowing(minFollowing: Long?) = apply { this.minFollowing = minFollowing }
+
+        /** Alias for [Builder.minFollowing]. */
+        fun minFollowing(minFollowing: Long) = minFollowing(minFollowing as Long?)
+
+        /** Alias for calling [Builder.minFollowing] with `minFollowing.orElse(null)`. */
+        fun minFollowing(minFollowing: Optional<Long>) = minFollowing(minFollowing.getOrNull())
+
+        /** Minimum post count. minPosts is also accepted. */
+        fun minStatuses(minStatuses: Long?) = apply { this.minStatuses = minStatuses }
+
+        /** Alias for [Builder.minStatuses]. */
+        fun minStatuses(minStatuses: Long) = minStatuses(minStatuses as Long?)
+
+        /** Alias for calling [Builder.minStatuses] with `minStatuses.orElse(null)`. */
+        fun minStatuses(minStatuses: Optional<Long>) = minStatuses(minStatuses.getOrNull())
+
+        /**
+         * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+         * fields, it drops from the kept fields.
+         */
+        fun omit(omit: String?) = apply { this.omit = omit }
+
+        /** Alias for calling [Builder.omit] with `omit.orElse(null)`. */
+        fun omit(omit: Optional<String>) = omit(omit.getOrNull())
+
+        /** Match a username substring, ignoring case. */
+        fun usernameContains(usernameContains: String?) = apply {
+            this.usernameContains = usernameContains
+        }
+
+        /** Alias for calling [Builder.usernameContains] with `usernameContains.orElse(null)`. */
+        fun usernameContains(usernameContains: Optional<String>) =
+            usernameContains(usernameContains.getOrNull())
+
+        /**
+         * Comma-separated X usernames, with or without @, or profile links such as x.com/nasa
+         * (1-100 values), in place of ids. A name in another case is the same account.
+         */
+        fun usernames(usernames: String?) = apply { this.usernames = usernames }
+
+        /** Alias for calling [Builder.usernames] with `usernames.orElse(null)`. */
+        fun usernames(usernames: Optional<String>) = usernames(usernames.getOrNull())
+
+        /** Only return verified profiles. */
+        fun verifiedOnly(verifiedOnly: Boolean?) = apply { this.verifiedOnly = verifiedOnly }
+
+        /** Alias for [Builder.verifiedOnly]. */
+        fun verifiedOnly(verifiedOnly: Boolean) = verifiedOnly(verifiedOnly as Boolean?)
+
+        /** Alias for calling [Builder.verifiedOnly] with `verifiedOnly.orElse(null)`. */
+        fun verifiedOnly(verifiedOnly: Optional<Boolean>) = verifiedOnly(verifiedOnly.getOrNull())
+
+        /** Match the verification type exactly, ignoring case. */
+        fun verifiedType(verifiedType: String?) = apply { this.verifiedType = verifiedType }
+
+        /** Alias for calling [Builder.verifiedType] with `verifiedType.orElse(null)`. */
+        fun verifiedType(verifiedType: Optional<String>) = verifiedType(verifiedType.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -178,6 +526,27 @@ private constructor(
         fun build(): UserRetrieveBatchParams =
             UserRetrieveBatchParams(
                 checkRequired("ids", ids),
+                bioContains,
+                blueVerifiedOnly,
+                businessEmailOnly,
+                emailDomains,
+                fields,
+                hasEmail,
+                hasLocation,
+                hasWebsite,
+                locationContains,
+                maxFollowers,
+                maxFollowing,
+                maxStatuses,
+                minAccountAgeDays,
+                minFollowers,
+                minFollowing,
+                minStatuses,
+                omit,
+                usernameContains,
+                usernames,
+                verifiedOnly,
+                verifiedType,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -189,6 +558,27 @@ private constructor(
         QueryParams.builder()
             .apply {
                 put("ids", ids)
+                bioContains?.let { put("bioContains", it) }
+                blueVerifiedOnly?.let { put("blueVerifiedOnly", it.toString()) }
+                businessEmailOnly?.let { put("businessEmailOnly", it.toString()) }
+                emailDomains?.let { put("emailDomains", it) }
+                fields?.let { put("fields", it) }
+                hasEmail?.let { put("hasEmail", it.toString()) }
+                hasLocation?.let { put("hasLocation", it.toString()) }
+                hasWebsite?.let { put("hasWebsite", it.toString()) }
+                locationContains?.let { put("locationContains", it) }
+                maxFollowers?.let { put("maxFollowers", it.toString()) }
+                maxFollowing?.let { put("maxFollowing", it.toString()) }
+                maxStatuses?.let { put("maxStatuses", it.toString()) }
+                minAccountAgeDays?.let { put("minAccountAgeDays", it.toString()) }
+                minFollowers?.let { put("minFollowers", it.toString()) }
+                minFollowing?.let { put("minFollowing", it.toString()) }
+                minStatuses?.let { put("minStatuses", it.toString()) }
+                omit?.let { put("omit", it) }
+                usernameContains?.let { put("usernameContains", it) }
+                usernames?.let { put("usernames", it) }
+                verifiedOnly?.let { put("verifiedOnly", it.toString()) }
+                verifiedType?.let { put("verifiedType", it) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -200,12 +590,59 @@ private constructor(
 
         return other is UserRetrieveBatchParams &&
             ids == other.ids &&
+            bioContains == other.bioContains &&
+            blueVerifiedOnly == other.blueVerifiedOnly &&
+            businessEmailOnly == other.businessEmailOnly &&
+            emailDomains == other.emailDomains &&
+            fields == other.fields &&
+            hasEmail == other.hasEmail &&
+            hasLocation == other.hasLocation &&
+            hasWebsite == other.hasWebsite &&
+            locationContains == other.locationContains &&
+            maxFollowers == other.maxFollowers &&
+            maxFollowing == other.maxFollowing &&
+            maxStatuses == other.maxStatuses &&
+            minAccountAgeDays == other.minAccountAgeDays &&
+            minFollowers == other.minFollowers &&
+            minFollowing == other.minFollowing &&
+            minStatuses == other.minStatuses &&
+            omit == other.omit &&
+            usernameContains == other.usernameContains &&
+            usernames == other.usernames &&
+            verifiedOnly == other.verifiedOnly &&
+            verifiedType == other.verifiedType &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(ids, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(
+            ids,
+            bioContains,
+            blueVerifiedOnly,
+            businessEmailOnly,
+            emailDomains,
+            fields,
+            hasEmail,
+            hasLocation,
+            hasWebsite,
+            locationContains,
+            maxFollowers,
+            maxFollowing,
+            maxStatuses,
+            minAccountAgeDays,
+            minFollowers,
+            minFollowing,
+            minStatuses,
+            omit,
+            usernameContains,
+            usernames,
+            verifiedOnly,
+            verifiedType,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "UserRetrieveBatchParams{ids=$ids, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "UserRetrieveBatchParams{ids=$ids, bioContains=$bioContains, blueVerifiedOnly=$blueVerifiedOnly, businessEmailOnly=$businessEmailOnly, emailDomains=$emailDomains, fields=$fields, hasEmail=$hasEmail, hasLocation=$hasLocation, hasWebsite=$hasWebsite, locationContains=$locationContains, maxFollowers=$maxFollowers, maxFollowing=$maxFollowing, maxStatuses=$maxStatuses, minAccountAgeDays=$minAccountAgeDays, minFollowers=$minFollowers, minFollowing=$minFollowing, minStatuses=$minStatuses, omit=$omit, usernameContains=$usernameContains, usernames=$usernames, verifiedOnly=$verifiedOnly, verifiedType=$verifiedType, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

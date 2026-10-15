@@ -16,6 +16,8 @@
 * `client.events()` gains `stream`, which reads the server-sent event stream as `Event` values. The sync client returns a `StreamResponse` and the async client an `AsyncStreamResponse`. Keep-alive comments never reach the caller.
 * `client.webhooks()` gains `createTelegramLink` and `client.extractions()` gains `cancel`.
 * `ClientOptions` and the OkHttp client builders gain `streamHandlerExecutor`, which runs async stream callbacks.
+* `UserProfile`, `SearchTweet`, `TweetMedia`, `EmbeddedTweet`, `ContentDisclosure`, `PaginatedTweets`, `PaginatedUsers`, `TweetDetail` and `TweetAuthor` gain every field the API spec lists. New fields are optional in the builders.
+* 32 reads, such as `client.x().tweets().retrieve` and `client.x().users().retrieveFollowers`, take `fields` and `omit` and their other missing query params. Their responses gain the fields the spec lists.
 
 ### Chores
 

@@ -46,4 +46,33 @@ internal class FollowerCheckResponseTest {
 
         assertThat(roundtrippedFollowerCheckResponse).isEqualTo(followerCheckResponse)
     }
+
+    @Test
+    fun readsEveryFieldTheSpecDescribes() {
+        val followerCheckResponse =
+            jsonMapper()
+                .readValue(
+                    """
+                    {
+                      "isFollowing": true,
+                      "isFollowedBy": false,
+                      "sourceId": "11348282",
+                      "sourceUsername": "elonmusk",
+                      "targetId": "34743251",
+                      "targetUsername": "spacex"
+                    }
+                    """
+                        .trimIndent(),
+                    jacksonTypeRef<FollowerCheckResponse>(),
+                )
+
+        followerCheckResponse.validate()
+        assertThat(followerCheckResponse.isFollowedBy()).isEqualTo(false)
+        assertThat(followerCheckResponse.isFollowing()).isEqualTo(true)
+        assertThat(followerCheckResponse.sourceUsername()).isEqualTo("elonmusk")
+        assertThat(followerCheckResponse.targetUsername()).isEqualTo("spacex")
+        assertThat(followerCheckResponse.sourceId()).contains("11348282")
+        assertThat(followerCheckResponse.targetId()).contains("34743251")
+        assertThat(followerCheckResponse._additionalProperties()).isEmpty()
+    }
 }

@@ -18,6 +18,7 @@ import com.x_twitter_scraper.api.client.XTwitterScraperClientAsync
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClientAsync
 import com.x_twitter_scraper.api.models.x.XAutocompleteSearchParams
+import com.x_twitter_scraper.api.models.x.XGetArticleParams
 import com.x_twitter_scraper.api.models.x.XGetHashflagsParams
 import com.x_twitter_scraper.api.models.x.XGetNewsStoryVersionsParams
 import com.x_twitter_scraper.api.models.x.XGetTrendLocationsParams
@@ -706,5 +707,158 @@ internal class XServiceSpecExampleTest {
         assertThat(response.total()).isEqualTo(1L)
         assertThat(response.message())
             .contains("X found no place for that text. Try a city or country name.")
+    }
+
+    @Test
+    fun getArticleParsesTheSpecExample() {
+        stubFor(
+            get(urlPathEqualTo("/x/articles/example"))
+                .willReturn(
+                    okJson(
+                        """
+                        {
+                          "article": {
+                            "articleId": "2100651802404544512",
+                            "title": "The Future of AI",
+                            "previewText": "A deep dive into the latest AI trends...",
+                            "coverImageUrl": "https://pbs.twimg.com/media/example.jpg",
+                            "contents": [
+                              {
+                                "type": "paragraph",
+                                "text": "This is the first paragraph of the article.",
+                                "links": [
+                                  {
+                                    "offset": 18,
+                                    "length": 9,
+                                    "url": "https://example.com/paragraph"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "tweet",
+                                "tweetId": "2058951429612875794"
+                              }
+                            ],
+                            "createdAt": "2025-01-15T12:00:00Z",
+                            "metadata": {
+                              "first_published_at_secs": 1736942400
+                            },
+                            "lifecycleState": {
+                              "modified_at_secs": 1736946000
+                            },
+                            "likeCount": 150,
+                            "replyCount": 23,
+                            "quoteCount": 8,
+                            "retweetCount": 40,
+                            "bookmarkCount": 61,
+                            "viewCount": 5000
+                          },
+                          "author": {
+                            "id": "9876543210",
+                            "name": "Elon Musk",
+                            "username": "elonmusk",
+                            "profilePicture": "https://pbs.twimg.com/profile_images/example.jpg"
+                          }
+                        }
+                        """
+                            .trimIndent()
+                    )
+                )
+        )
+        val params =
+            XGetArticleParams.builder()
+                .tweetId("example")
+                .fields("id,text,author.username")
+                .omit("entities,media")
+                .build()
+
+        val response = client.x().getArticle(params)
+        val asyncResponse = asyncClient.x().getArticle(params).get()
+
+        verify(
+            2,
+            getRequestedFor(urlPathEqualTo("/x/articles/example"))
+                .withQueryParam("fields", equalTo("id,text,author.username"))
+                .withQueryParam("omit", equalTo("entities,media")),
+        )
+        assertThat(asyncResponse).isEqualTo(response)
+        assertThat(response.article().articleId()).contains("2100651802404544512")
+        assertThat(response.article().bookmarkCount()).contains(61L)
+        assertThat(response.article().contents().get()).hasSize(2)
+        assertThat(response.article().contents().get()[0].links().get()).hasSize(1)
+        assertThat(response.article().contents().get()[0].links().get()[0].length()).contains(9L)
+        assertThat(response.article().contents().get()[0].links().get()[0].offset()).contains(18L)
+        assertThat(response.article().contents().get()[0].links().get()[0].url())
+            .contains("https://example.com/paragraph")
+        assertThat(response.article().contents().get()[0].links().get()[0]._additionalProperties())
+            .isEmpty()
+        assertThat(response.article().contents().get()[0].text())
+            .contains("This is the first paragraph of the article.")
+        assertThat(response.article().contents().get()[0].type()).contains("paragraph")
+        assertThat(response.article().contents().get()[0]._additionalProperties()).isEmpty()
+        assertThat(response.article().contents().get()[1].tweetId()).contains("2058951429612875794")
+        assertThat(response.article().contents().get()[1].type()).contains("tweet")
+        assertThat(response.article().contents().get()[1]._additionalProperties()).isEmpty()
+        assertThat(response.article().coverImageUrl())
+            .contains("https://pbs.twimg.com/media/example.jpg")
+        assertThat(response.article().createdAt()).contains("2025-01-15T12:00:00Z")
+        assertThat(response.article().likeCount()).contains(150L)
+        assertThat(response.article().previewText())
+            .contains("A deep dive into the latest AI trends...")
+        assertThat(response.article().quoteCount()).contains(8L)
+        assertThat(response.article().replyCount()).contains(23L)
+        assertThat(response.article().retweetCount()).contains(40L)
+        assertThat(response.article().title()).contains("The Future of AI")
+        assertThat(response.article().viewCount()).contains(5000L)
+        assertThat(response.article()._additionalProperties()).isEmpty()
+        assertThat(response.author().get().id()).isEqualTo("9876543210")
+        assertThat(response.author().get().name()).isEqualTo("Elon Musk")
+        assertThat(response.author().get().username()).isEqualTo("elonmusk")
+        assertThat(response.author().get().profilePicture())
+            .contains("https://pbs.twimg.com/profile_images/example.jpg")
+        assertThat(response.author().get()._additionalProperties()).isEmpty()
+        assertThat(response._additionalProperties()).isEmpty()
+        assertThat(response.article().bodyMarkdown()).isEmpty
+        assertThat(response.article().bodyText()).isEmpty
+        assertThat(response.article().contents().get()[0].altText()).isEmpty
+        assertThat(response.article().contents().get()[0].caption()).isEmpty
+        assertThat(response.article().contents().get()[0].durationMs()).isEmpty
+        assertThat(response.article().contents().get()[0].height()).isEmpty
+        assertThat(response.article().contents().get()[0].inlineStyleRanges()).isEmpty
+        assertThat(response.article().contents().get()[0].mediaType()).isEmpty
+        assertThat(response.article().contents().get()[0].previewUrl()).isEmpty
+        assertThat(response.article().contents().get()[0].tweetId()).isEmpty
+        assertThat(response.article().contents().get()[0].url()).isEmpty
+        assertThat(response.article().contents().get()[0].variants()).isEmpty
+        assertThat(response.article().contents().get()[0].width()).isEmpty
+        assertThat(response.article().contents().get()[1].altText()).isEmpty
+        assertThat(response.article().contents().get()[1].caption()).isEmpty
+        assertThat(response.article().contents().get()[1].durationMs()).isEmpty
+        assertThat(response.article().contents().get()[1].height()).isEmpty
+        assertThat(response.article().contents().get()[1].inlineStyleRanges()).isEmpty
+        assertThat(response.article().contents().get()[1].links()).isEmpty
+        assertThat(response.article().contents().get()[1].mediaType()).isEmpty
+        assertThat(response.article().contents().get()[1].previewUrl()).isEmpty
+        assertThat(response.article().contents().get()[1].text()).isEmpty
+        assertThat(response.article().contents().get()[1].url()).isEmpty
+        assertThat(response.article().contents().get()[1].variants()).isEmpty
+        assertThat(response.article().contents().get()[1].width()).isEmpty
+        assertThat(response.article().coverMedia()).isEmpty
+        assertThat(response.article().summaryText()).isEmpty
+        assertThat(response.author().get().createdAt()).isEmpty
+        assertThat(response.author().get().description()).isEmpty
+        assertThat(response.author().get().favouritesCount()).isEmpty
+        assertThat(response.author().get().followersCount()).isEmpty
+        assertThat(response.author().get().followingCount()).isEmpty
+        assertThat(response.author().get().isBlueVerified()).isEmpty
+        assertThat(response.author().get().isTranslator()).isEmpty
+        assertThat(response.author().get().isVerified()).isEmpty
+        assertThat(response.author().get().location()).isEmpty
+        assertThat(response.author().get().mediaCount()).isEmpty
+        assertThat(response.author().get().profileBannerUrl()).isEmpty
+        assertThat(response.author().get().profilePictureOriginal()).isEmpty
+        assertThat(response.author().get().protected_()).isEmpty
+        assertThat(response.author().get().statusesCount()).isEmpty
+        assertThat(response.author().get().url()).isEmpty
     }
 }

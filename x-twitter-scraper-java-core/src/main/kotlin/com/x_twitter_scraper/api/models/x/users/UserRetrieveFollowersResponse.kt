@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
 package com.x_twitter_scraper.api.models.x.users
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -285,6 +289,7 @@ private constructor(
         private val nextCursor: JsonField<String>,
         private val users: JsonField<List<UserProfile>>,
         private val diagnostic: JsonField<Diagnostic>,
+        private val filteredCount: JsonField<Long>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -302,13 +307,17 @@ private constructor(
             @JsonProperty("diagnostic")
             @ExcludeMissing
             diagnostic: JsonField<Diagnostic> = JsonMissing.of(),
-        ) : this(hasNextPage, nextCursor, users, diagnostic, mutableMapOf())
+            @JsonProperty("filtered_count")
+            @ExcludeMissing
+            filteredCount: JsonField<Long> = JsonMissing.of(),
+        ) : this(hasNextPage, nextCursor, users, diagnostic, filteredCount, mutableMapOf())
 
         fun toPaginatedUsers(): PaginatedUsers =
             PaginatedUsers.builder()
                 .hasNextPage(hasNextPage)
                 .nextCursor(nextCursor)
                 .users(users)
+                .filteredCount(filteredCount)
                 .build()
 
         /**
@@ -336,6 +345,9 @@ private constructor(
          *   is unexpectedly missing or null.
          */
         fun diagnostic(): Diagnostic = diagnostic.getRequired("diagnostic")
+
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun filteredCount(): Optional<Long> = filteredCount.getOptional("filtered_count")
 
         /**
          * Returns the raw JSON value of [hasNextPage].
@@ -370,6 +382,16 @@ private constructor(
         @JsonProperty("diagnostic")
         @ExcludeMissing
         fun _diagnostic(): JsonField<Diagnostic> = diagnostic
+
+        /**
+         * Returns the raw JSON value of [filteredCount].
+         *
+         * Unlike [filteredCount], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("filtered_count")
+        @ExcludeMissing
+        fun _filteredCount(): JsonField<Long> = filteredCount
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -406,6 +428,7 @@ private constructor(
             private var nextCursor: JsonField<String>? = null
             private var users: JsonField<MutableList<UserProfile>>? = null
             private var diagnostic: JsonField<Diagnostic>? = null
+            private var filteredCount: JsonField<Long> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -414,6 +437,7 @@ private constructor(
                 nextCursor = userListCoverageResponse.nextCursor
                 users = userListCoverageResponse.users.map { it.toMutableList() }
                 diagnostic = userListCoverageResponse.diagnostic
+                filteredCount = userListCoverageResponse.filteredCount
                 additionalProperties = userListCoverageResponse.additionalProperties.toMutableMap()
             }
 
@@ -456,6 +480,13 @@ private constructor(
                 this.diagnostic = diagnostic
             }
 
+            fun filteredCount(filteredCount: Long) = filteredCount(JsonField.of(filteredCount))
+
+            /** Sets [Builder.filteredCount] to an arbitrary JSON value. */
+            fun filteredCount(filteredCount: JsonField<Long>) = apply {
+                this.filteredCount = filteredCount
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -496,6 +527,7 @@ private constructor(
                     checkRequired("nextCursor", nextCursor),
                     checkRequired("users", users).map { it.toImmutable() },
                     checkRequired("diagnostic", diagnostic),
+                    filteredCount,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -520,6 +552,7 @@ private constructor(
             nextCursor()
             users().forEach { it.validate() }
             diagnostic().validate()
+            filteredCount()
             validated = true
         }
 
@@ -536,7 +569,8 @@ private constructor(
             (if (hasNextPage.asKnown().isPresent) 1 else 0) +
                 (if (nextCursor.asKnown().isPresent) 1 else 0) +
                 (users.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
-                (diagnostic.asKnown().getOrNull()?.validity() ?: 0)
+                (diagnostic.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (filteredCount.asKnown().isPresent) 1 else 0)
 
         /** Coverage evidence across parallel relationship strategies. */
         class Diagnostic
@@ -1931,16 +1965,24 @@ private constructor(
                 nextCursor == other.nextCursor &&
                 users == other.users &&
                 diagnostic == other.diagnostic &&
+                filteredCount == other.filteredCount &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(hasNextPage, nextCursor, users, diagnostic, additionalProperties)
+            Objects.hash(
+                hasNextPage,
+                nextCursor,
+                users,
+                diagnostic,
+                filteredCount,
+                additionalProperties,
+            )
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "UserListCoverageResponse{hasNextPage=$hasNextPage, nextCursor=$nextCursor, users=$users, diagnostic=$diagnostic, additionalProperties=$additionalProperties}"
+            "UserListCoverageResponse{hasNextPage=$hasNextPage, nextCursor=$nextCursor, users=$users, diagnostic=$diagnostic, filteredCount=$filteredCount, additionalProperties=$additionalProperties}"
     }
 }
