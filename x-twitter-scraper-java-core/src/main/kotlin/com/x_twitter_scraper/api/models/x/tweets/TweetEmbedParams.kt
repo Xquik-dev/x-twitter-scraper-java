@@ -7,7 +7,6 @@ package com.x_twitter_scraper.api.models.x.tweets
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.x_twitter_scraper.api.core.Enum
 import com.x_twitter_scraper.api.core.JsonField
-import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.Params
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
