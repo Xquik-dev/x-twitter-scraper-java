@@ -18,13 +18,25 @@ import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepareAsync
 import com.x_twitter_scraper.api.models.PaginatedTweets
+import com.x_twitter_scraper.api.models.x.XAutocompleteSearchParams
+import com.x_twitter_scraper.api.models.x.XAutocompleteSearchResponse
 import com.x_twitter_scraper.api.models.x.XGetArticleParams
 import com.x_twitter_scraper.api.models.x.XGetArticleResponse
+import com.x_twitter_scraper.api.models.x.XGetHashflagsParams
+import com.x_twitter_scraper.api.models.x.XGetHashflagsResponse
 import com.x_twitter_scraper.api.models.x.XGetHomeTimelineParams
+import com.x_twitter_scraper.api.models.x.XGetNewsStoryVersionsParams
+import com.x_twitter_scraper.api.models.x.XGetNewsStoryVersionsResponse
 import com.x_twitter_scraper.api.models.x.XGetNotificationsParams
 import com.x_twitter_scraper.api.models.x.XGetNotificationsResponse
+import com.x_twitter_scraper.api.models.x.XGetTrendLocationsParams
+import com.x_twitter_scraper.api.models.x.XGetTrendLocationsResponse
+import com.x_twitter_scraper.api.models.x.XGetTrendsHistoryParams
+import com.x_twitter_scraper.api.models.x.XGetTrendsHistoryResponse
 import com.x_twitter_scraper.api.models.x.XGetTrendsParams
 import com.x_twitter_scraper.api.models.x.XGetTrendsResponse
+import com.x_twitter_scraper.api.models.x.XSearchPlacesParams
+import com.x_twitter_scraper.api.models.x.XSearchPlacesResponse
 import com.x_twitter_scraper.api.services.async.x.AccountConnectionAttemptServiceAsync
 import com.x_twitter_scraper.api.services.async.x.AccountConnectionAttemptServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.AccountConnectionChallengeServiceAsync
@@ -137,11 +149,23 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
     /** X List followers, members, and tweets */
     override fun lists(): ListServiceAsync = lists
 
+    override fun autocompleteSearch(
+        params: XAutocompleteSearchParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<XAutocompleteSearchResponse> =
+        withRawResponse().autocompleteSearch(params, requestOptions).thenApply { it.parse() }
+
     override fun getArticle(
         params: XGetArticleParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<XGetArticleResponse> =
         withRawResponse().getArticle(params, requestOptions).thenApply { it.parse() }
+
+    override fun getHashflags(
+        params: XGetHashflagsParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<XGetHashflagsResponse> =
+        withRawResponse().getHashflags(params, requestOptions).thenApply { it.parse() }
 
     override fun getHomeTimeline(
         params: XGetHomeTimelineParams,
@@ -149,17 +173,41 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
     ): CompletableFuture<PaginatedTweets> =
         withRawResponse().getHomeTimeline(params, requestOptions).thenApply { it.parse() }
 
+    override fun getNewsStoryVersions(
+        params: XGetNewsStoryVersionsParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<XGetNewsStoryVersionsResponse> =
+        withRawResponse().getNewsStoryVersions(params, requestOptions).thenApply { it.parse() }
+
     override fun getNotifications(
         params: XGetNotificationsParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<XGetNotificationsResponse> =
         withRawResponse().getNotifications(params, requestOptions).thenApply { it.parse() }
 
+    override fun getTrendLocations(
+        params: XGetTrendLocationsParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<XGetTrendLocationsResponse> =
+        withRawResponse().getTrendLocations(params, requestOptions).thenApply { it.parse() }
+
     override fun getTrends(
         params: XGetTrendsParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<XGetTrendsResponse> =
         withRawResponse().getTrends(params, requestOptions).thenApply { it.parse() }
+
+    override fun getTrendsHistory(
+        params: XGetTrendsHistoryParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<XGetTrendsHistoryResponse> =
+        withRawResponse().getTrendsHistory(params, requestOptions).thenApply { it.parse() }
+
+    override fun searchPlaces(
+        params: XSearchPlacesParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<XSearchPlacesResponse> =
+        withRawResponse().searchPlaces(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         XServiceAsync.WithRawResponse {
@@ -264,6 +312,36 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
         /** X List followers, members, and tweets */
         override fun lists(): ListServiceAsync.WithRawResponse = lists
 
+        private val autocompleteSearchHandler: Handler<XAutocompleteSearchResponse> =
+            jsonHandler<XAutocompleteSearchResponse>(clientOptions.jsonMapper)
+
+        override fun autocompleteSearch(
+            params: XAutocompleteSearchParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<XAutocompleteSearchResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "search", "autocomplete")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { autocompleteSearchHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
         private val getArticleHandler: Handler<XGetArticleResponse> =
             jsonHandler<XGetArticleResponse>(clientOptions.jsonMapper)
 
@@ -286,6 +364,36 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
                     errorHandler.handle(response).parseable {
                         response
                             .use { getArticleHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val getHashflagsHandler: Handler<XGetHashflagsResponse> =
+            jsonHandler<XGetHashflagsResponse>(clientOptions.jsonMapper)
+
+        override fun getHashflags(
+            params: XGetHashflagsParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<XGetHashflagsResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "hashflags")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { getHashflagsHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()
@@ -325,6 +433,37 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
                 }
         }
 
+        private val getNewsStoryVersionsHandler: Handler<XGetNewsStoryVersionsResponse> =
+            jsonHandler<XGetNewsStoryVersionsResponse>(clientOptions.jsonMapper)
+
+        override fun getNewsStoryVersions(
+            params: XGetNewsStoryVersionsParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<XGetNewsStoryVersionsResponse>> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "news", params._pathParam(0), "versions")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { getNewsStoryVersionsHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
         private val getNotificationsHandler: Handler<XGetNotificationsResponse> =
             jsonHandler<XGetNotificationsResponse>(clientOptions.jsonMapper)
 
@@ -355,6 +494,36 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
                 }
         }
 
+        private val getTrendLocationsHandler: Handler<XGetTrendLocationsResponse> =
+            jsonHandler<XGetTrendLocationsResponse>(clientOptions.jsonMapper)
+
+        override fun getTrendLocations(
+            params: XGetTrendLocationsParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<XGetTrendLocationsResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "trends", "locations")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { getTrendLocationsHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
         private val getTrendsHandler: Handler<XGetTrendsResponse> =
             jsonHandler<XGetTrendsResponse>(clientOptions.jsonMapper)
 
@@ -376,6 +545,66 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
                     errorHandler.handle(response).parseable {
                         response
                             .use { getTrendsHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val getTrendsHistoryHandler: Handler<XGetTrendsHistoryResponse> =
+            jsonHandler<XGetTrendsHistoryResponse>(clientOptions.jsonMapper)
+
+        override fun getTrendsHistory(
+            params: XGetTrendsHistoryParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<XGetTrendsHistoryResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "trends", "history")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { getTrendsHistoryHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val searchPlacesHandler: Handler<XSearchPlacesResponse> =
+            jsonHandler<XSearchPlacesResponse>(clientOptions.jsonMapper)
+
+        override fun searchPlaces(
+            params: XSearchPlacesParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<XSearchPlacesResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "places", "search")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { searchPlacesHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

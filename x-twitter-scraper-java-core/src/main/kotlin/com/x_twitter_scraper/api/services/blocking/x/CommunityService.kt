@@ -8,18 +8,27 @@ import com.google.errorprone.annotations.MustBeClosed
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
+import com.x_twitter_scraper.api.models.CommunityPage
 import com.x_twitter_scraper.api.models.PaginatedTweets
 import com.x_twitter_scraper.api.models.PaginatedUsers
 import com.x_twitter_scraper.api.models.x.communities.CommunityCreateParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityCreateResponse
 import com.x_twitter_scraper.api.models.x.communities.CommunityDeleteParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityDeleteResponse
+import com.x_twitter_scraper.api.models.x.communities.CommunityFindParams
+import com.x_twitter_scraper.api.models.x.communities.CommunityListPopularParams
+import com.x_twitter_scraper.api.models.x.communities.CommunityListSuggestedParams
+import com.x_twitter_scraper.api.models.x.communities.CommunityListSuggestedResponse
+import com.x_twitter_scraper.api.models.x.communities.CommunityListTopicsParams
+import com.x_twitter_scraper.api.models.x.communities.CommunityListTopicsResponse
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveInfoParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveInfoResponse
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveMembersParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveModeratorsParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveSearchParams
+import com.x_twitter_scraper.api.models.x.communities.CommunitySearchMembersParams
 import com.x_twitter_scraper.api.services.blocking.x.communities.JoinService
+import com.x_twitter_scraper.api.services.blocking.x.communities.MediaService
 import com.x_twitter_scraper.api.services.blocking.x.communities.TweetService
 import java.util.function.Consumer
 
@@ -42,6 +51,9 @@ interface CommunityService {
 
     /** X Community info, members, and tweets */
     fun tweets(): TweetService
+
+    /** Find X Communities & read their info, members, posts & media */
+    fun media(): MediaService
 
     /** Create community */
     fun create(params: CommunityCreateParams): CommunityCreateResponse =
@@ -73,6 +85,84 @@ interface CommunityService {
         params: CommunityDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CommunityDeleteResponse
+
+    /**
+     * Returns the communities X finds for a keyword, in X's order. Each community costs 1 credit.
+     * To search the tweets in Communities, use /x/communities/search.
+     */
+    fun find(params: CommunityFindParams): CommunityPage = find(params, RequestOptions.none())
+
+    /** @see find */
+    fun find(
+        params: CommunityFindParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CommunityPage
+
+    /**
+     * Returns the communities X ranks highest under a topic or subtopic. Name it by topicId or by
+     * topic name from /x/communities/topics. Each community costs 1 credit. A missing or unknown
+     * topic returns invalid_community_topic & lists the topic names.
+     */
+    fun listPopular(): CommunityPage = listPopular(CommunityListPopularParams.none())
+
+    /** @see listPopular */
+    fun listPopular(
+        params: CommunityListPopularParams = CommunityListPopularParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CommunityPage
+
+    /** @see listPopular */
+    fun listPopular(
+        params: CommunityListPopularParams = CommunityListPopularParams.none()
+    ): CommunityPage = listPopular(params, RequestOptions.none())
+
+    /** @see listPopular */
+    fun listPopular(requestOptions: RequestOptions): CommunityPage =
+        listPopular(CommunityListPopularParams.none(), requestOptions)
+
+    /**
+     * Returns the communities X suggests, with their full public fields. X picks them per request,
+     * so 2 calls can differ. If X suggests none, Xquik asks up to 2 more times. An empty list is
+     * free. Each community costs 1 credit.
+     */
+    fun listSuggested(): CommunityListSuggestedResponse =
+        listSuggested(CommunityListSuggestedParams.none())
+
+    /** @see listSuggested */
+    fun listSuggested(
+        params: CommunityListSuggestedParams = CommunityListSuggestedParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CommunityListSuggestedResponse
+
+    /** @see listSuggested */
+    fun listSuggested(
+        params: CommunityListSuggestedParams = CommunityListSuggestedParams.none()
+    ): CommunityListSuggestedResponse = listSuggested(params, RequestOptions.none())
+
+    /** @see listSuggested */
+    fun listSuggested(requestOptions: RequestOptions): CommunityListSuggestedResponse =
+        listSuggested(CommunityListSuggestedParams.none(), requestOptions)
+
+    /**
+     * Returns the community topics with their subtopics. Pass an ID as topicId, or a name as topic,
+     * to /x/communities/popular. Each top-level topic costs 1 credit, its subtopics included.
+     */
+    fun listTopics(): CommunityListTopicsResponse = listTopics(CommunityListTopicsParams.none())
+
+    /** @see listTopics */
+    fun listTopics(
+        params: CommunityListTopicsParams = CommunityListTopicsParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CommunityListTopicsResponse
+
+    /** @see listTopics */
+    fun listTopics(
+        params: CommunityListTopicsParams = CommunityListTopicsParams.none()
+    ): CommunityListTopicsResponse = listTopics(params, RequestOptions.none())
+
+    /** @see listTopics */
+    fun listTopics(requestOptions: RequestOptions): CommunityListTopicsResponse =
+        listTopics(CommunityListTopicsParams.none(), requestOptions)
 
     /** Get community name, description and member count */
     fun retrieveInfo(id: String): CommunityRetrieveInfoResponse =
@@ -178,6 +268,31 @@ interface CommunityService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): PaginatedTweets
 
+    /**
+     * Finds a community's members by name or username, as the search box on X's members page does.
+     * X checks up to 10 accounts that match, & the answer holds the members among them, each with
+     * its role. Each member costs 1 credit. An answer without members is free.
+     */
+    fun searchMembers(id: String, params: CommunitySearchMembersParams): PaginatedUsers =
+        searchMembers(id, params, RequestOptions.none())
+
+    /** @see searchMembers */
+    fun searchMembers(
+        id: String,
+        params: CommunitySearchMembersParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): PaginatedUsers = searchMembers(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see searchMembers */
+    fun searchMembers(params: CommunitySearchMembersParams): PaginatedUsers =
+        searchMembers(params, RequestOptions.none())
+
+    /** @see searchMembers */
+    fun searchMembers(
+        params: CommunitySearchMembersParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): PaginatedUsers
+
     /** A view of [CommunityService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
@@ -193,6 +308,9 @@ interface CommunityService {
 
         /** X Community info, members, and tweets */
         fun tweets(): TweetService.WithRawResponse
+
+        /** Find X Communities & read their info, members, posts & media */
+        fun media(): MediaService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /x/communities`, but is otherwise the same as
@@ -239,6 +357,104 @@ interface CommunityService {
             params: CommunityDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<CommunityDeleteResponse>
+
+        /**
+         * Returns a raw HTTP response for `get /x/communities/find`, but is otherwise the same as
+         * [CommunityService.find].
+         */
+        @MustBeClosed
+        fun find(params: CommunityFindParams): HttpResponseFor<CommunityPage> =
+            find(params, RequestOptions.none())
+
+        /** @see find */
+        @MustBeClosed
+        fun find(
+            params: CommunityFindParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<CommunityPage>
+
+        /**
+         * Returns a raw HTTP response for `get /x/communities/popular`, but is otherwise the same
+         * as [CommunityService.listPopular].
+         */
+        @MustBeClosed
+        fun listPopular(): HttpResponseFor<CommunityPage> =
+            listPopular(CommunityListPopularParams.none())
+
+        /** @see listPopular */
+        @MustBeClosed
+        fun listPopular(
+            params: CommunityListPopularParams = CommunityListPopularParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<CommunityPage>
+
+        /** @see listPopular */
+        @MustBeClosed
+        fun listPopular(
+            params: CommunityListPopularParams = CommunityListPopularParams.none()
+        ): HttpResponseFor<CommunityPage> = listPopular(params, RequestOptions.none())
+
+        /** @see listPopular */
+        @MustBeClosed
+        fun listPopular(requestOptions: RequestOptions): HttpResponseFor<CommunityPage> =
+            listPopular(CommunityListPopularParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /x/communities/suggested`, but is otherwise the same
+         * as [CommunityService.listSuggested].
+         */
+        @MustBeClosed
+        fun listSuggested(): HttpResponseFor<CommunityListSuggestedResponse> =
+            listSuggested(CommunityListSuggestedParams.none())
+
+        /** @see listSuggested */
+        @MustBeClosed
+        fun listSuggested(
+            params: CommunityListSuggestedParams = CommunityListSuggestedParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<CommunityListSuggestedResponse>
+
+        /** @see listSuggested */
+        @MustBeClosed
+        fun listSuggested(
+            params: CommunityListSuggestedParams = CommunityListSuggestedParams.none()
+        ): HttpResponseFor<CommunityListSuggestedResponse> =
+            listSuggested(params, RequestOptions.none())
+
+        /** @see listSuggested */
+        @MustBeClosed
+        fun listSuggested(
+            requestOptions: RequestOptions
+        ): HttpResponseFor<CommunityListSuggestedResponse> =
+            listSuggested(CommunityListSuggestedParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /x/communities/topics`, but is otherwise the same as
+         * [CommunityService.listTopics].
+         */
+        @MustBeClosed
+        fun listTopics(): HttpResponseFor<CommunityListTopicsResponse> =
+            listTopics(CommunityListTopicsParams.none())
+
+        /** @see listTopics */
+        @MustBeClosed
+        fun listTopics(
+            params: CommunityListTopicsParams = CommunityListTopicsParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<CommunityListTopicsResponse>
+
+        /** @see listTopics */
+        @MustBeClosed
+        fun listTopics(
+            params: CommunityListTopicsParams = CommunityListTopicsParams.none()
+        ): HttpResponseFor<CommunityListTopicsResponse> = listTopics(params, RequestOptions.none())
+
+        /** @see listTopics */
+        @MustBeClosed
+        fun listTopics(
+            requestOptions: RequestOptions
+        ): HttpResponseFor<CommunityListTopicsResponse> =
+            listTopics(CommunityListTopicsParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /x/communities/{id}/info`, but is otherwise the same
@@ -392,5 +608,36 @@ interface CommunityService {
             params: CommunityRetrieveSearchParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<PaginatedTweets>
+
+        /**
+         * Returns a raw HTTP response for `get /x/communities/{id}/members/search`, but is
+         * otherwise the same as [CommunityService.searchMembers].
+         */
+        @MustBeClosed
+        fun searchMembers(
+            id: String,
+            params: CommunitySearchMembersParams,
+        ): HttpResponseFor<PaginatedUsers> = searchMembers(id, params, RequestOptions.none())
+
+        /** @see searchMembers */
+        @MustBeClosed
+        fun searchMembers(
+            id: String,
+            params: CommunitySearchMembersParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<PaginatedUsers> =
+            searchMembers(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see searchMembers */
+        @MustBeClosed
+        fun searchMembers(params: CommunitySearchMembersParams): HttpResponseFor<PaginatedUsers> =
+            searchMembers(params, RequestOptions.none())
+
+        /** @see searchMembers */
+        @MustBeClosed
+        fun searchMembers(
+            params: CommunitySearchMembersParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<PaginatedUsers>
     }
 }

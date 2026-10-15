@@ -6,6 +6,10 @@
 
 * `client.x().tweets()` gains `listTop`, `embed`, `getHiddenReplies`, `getInsights`, `getRetweeterIds`, `checkRepost`, `getSubtitles`, `translate` and `resolveLinks`. Each has typed params and a typed response from the current API spec.
 * `client.x().users()` gains `retrieveBatchTweets`, `retrieveAffiliates`, `retrieveArticles`, `retrieveFollowerIds`, `retrieveFollowingIds`, `retrieveHighlights`, `retrieveInsights`, `retrieveListMemberships`, `retrieveLists`, `retrieveLive`, `retrieveSimilar`, `retrieveSubscriptions` and `translateBio`.
+* `client.x().communities()` gains `find`, `listPopular`, `listSuggested`, `listTopics`, `searchMembers` and the `media().list` subresource. The shared `Community`, `CommunityPage` and `CommunityTopic` models describe their results.
+* `client.x().lists()` gains `retrieve` and `retrieveSearch`, and `client.x().dm()` gains `deleteMessage`.
+* `client.x()` gains `autocompleteSearch`, `getHashflags`, `searchPlaces`, `getTrendLocations`, `getTrendsHistory` and `getNewsStoryVersions`.
+* `client.x().getTrends()` takes `at`, `country`, `location`, `fields` and `omit`, and its response gains `capturedAt`, `location` and `requestedAt`.
 
 ### Chores
 

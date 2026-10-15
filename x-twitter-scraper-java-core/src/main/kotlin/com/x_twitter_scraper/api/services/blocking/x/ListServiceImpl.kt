@@ -21,6 +21,10 @@ import com.x_twitter_scraper.api.models.PaginatedTweets
 import com.x_twitter_scraper.api.models.PaginatedUsers
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveFollowersParams
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveMembersParams
+import com.x_twitter_scraper.api.models.x.lists.ListRetrieveParams
+import com.x_twitter_scraper.api.models.x.lists.ListRetrieveResponse
+import com.x_twitter_scraper.api.models.x.lists.ListRetrieveSearchParams
+import com.x_twitter_scraper.api.models.x.lists.ListRetrieveSearchResponse
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveTweetsParams
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -37,6 +41,11 @@ class ListServiceImpl internal constructor(private val clientOptions: ClientOpti
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ListService =
         ListServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
+    override fun retrieve(
+        params: ListRetrieveParams,
+        requestOptions: RequestOptions,
+    ): ListRetrieveResponse = withRawResponse().retrieve(params, requestOptions).parse()
+
     override fun retrieveFollowers(
         params: ListRetrieveFollowersParams,
         requestOptions: RequestOptions,
@@ -46,6 +55,11 @@ class ListServiceImpl internal constructor(private val clientOptions: ClientOpti
         params: ListRetrieveMembersParams,
         requestOptions: RequestOptions,
     ): PaginatedUsers = withRawResponse().retrieveMembers(params, requestOptions).parse()
+
+    override fun retrieveSearch(
+        params: ListRetrieveSearchParams,
+        requestOptions: RequestOptions,
+    ): ListRetrieveSearchResponse = withRawResponse().retrieveSearch(params, requestOptions).parse()
 
     override fun retrieveTweets(
         params: ListRetrieveTweetsParams,
@@ -64,6 +78,34 @@ class ListServiceImpl internal constructor(private val clientOptions: ClientOpti
             ListServiceImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        private val retrieveHandler: Handler<ListRetrieveResponse> =
+            jsonHandler<ListRetrieveResponse>(clientOptions.jsonMapper)
+
+        override fun retrieve(
+            params: ListRetrieveParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<ListRetrieveResponse> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "lists", params._pathParam(0))
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { retrieveHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
 
         private val retrieveFollowersHandler: Handler<PaginatedUsers> =
             jsonHandler<PaginatedUsers>(clientOptions.jsonMapper)
@@ -113,6 +155,33 @@ class ListServiceImpl internal constructor(private val clientOptions: ClientOpti
             return errorHandler.handle(response).parseable {
                 response
                     .use { retrieveMembersHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val retrieveSearchHandler: Handler<ListRetrieveSearchResponse> =
+            jsonHandler<ListRetrieveSearchResponse>(clientOptions.jsonMapper)
+
+        override fun retrieveSearch(
+            params: ListRetrieveSearchParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<ListRetrieveSearchResponse> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "lists", "search")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { retrieveSearchHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()

@@ -18,6 +18,8 @@ import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.json
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepare
+import com.x_twitter_scraper.api.models.x.dm.DmDeleteMessageParams
+import com.x_twitter_scraper.api.models.x.dm.DmDeleteMessageResponse
 import com.x_twitter_scraper.api.models.x.dm.DmRetrieveHistoryParams
 import com.x_twitter_scraper.api.models.x.dm.DmRetrieveHistoryResponse
 import com.x_twitter_scraper.api.models.x.dm.DmSendParams
@@ -35,6 +37,11 @@ class DmServiceImpl internal constructor(private val clientOptions: ClientOption
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): DmService =
         DmServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    override fun deleteMessage(
+        params: DmDeleteMessageParams,
+        requestOptions: RequestOptions,
+    ): DmDeleteMessageResponse = withRawResponse().deleteMessage(params, requestOptions).parse()
 
     override fun retrieveHistory(
         params: DmRetrieveHistoryParams,
@@ -56,6 +63,41 @@ class DmServiceImpl internal constructor(private val clientOptions: ClientOption
             DmServiceImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        private val deleteMessageHandler: Handler<DmDeleteMessageResponse> =
+            jsonHandler<DmDeleteMessageResponse>(clientOptions.jsonMapper)
+
+        override fun deleteMessage(
+            params: DmDeleteMessageParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<DmDeleteMessageResponse> {
+            checkRequired("messageId", params.messageId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.DELETE)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments(
+                        "x",
+                        "dm",
+                        params._pathParam(0),
+                        "messages",
+                        params._pathParam(1),
+                    )
+                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { deleteMessageHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
 
         private val retrieveHistoryHandler: Handler<DmRetrieveHistoryResponse> =
             jsonHandler<DmRetrieveHistoryResponse>(clientOptions.jsonMapper)

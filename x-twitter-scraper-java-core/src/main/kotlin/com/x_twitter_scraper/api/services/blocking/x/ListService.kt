@@ -12,6 +12,10 @@ import com.x_twitter_scraper.api.models.PaginatedTweets
 import com.x_twitter_scraper.api.models.PaginatedUsers
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveFollowersParams
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveMembersParams
+import com.x_twitter_scraper.api.models.x.lists.ListRetrieveParams
+import com.x_twitter_scraper.api.models.x.lists.ListRetrieveResponse
+import com.x_twitter_scraper.api.models.x.lists.ListRetrieveSearchParams
+import com.x_twitter_scraper.api.models.x.lists.ListRetrieveSearchResponse
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveTweetsParams
 import java.util.function.Consumer
 
@@ -29,6 +33,39 @@ interface ListService {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): ListService
+
+    /**
+     * Returns 1 public X List as its page on X shows it. Accepts the List ID or the URL-encoded
+     * List URL, such as x.com/i/lists/4143408. A private List answers 404 list_not_found.
+     */
+    fun retrieve(id: String): ListRetrieveResponse = retrieve(id, ListRetrieveParams.none())
+
+    /** @see retrieve */
+    fun retrieve(
+        id: String,
+        params: ListRetrieveParams = ListRetrieveParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ListRetrieveResponse = retrieve(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see retrieve */
+    fun retrieve(
+        id: String,
+        params: ListRetrieveParams = ListRetrieveParams.none(),
+    ): ListRetrieveResponse = retrieve(id, params, RequestOptions.none())
+
+    /** @see retrieve */
+    fun retrieve(
+        params: ListRetrieveParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ListRetrieveResponse
+
+    /** @see retrieve */
+    fun retrieve(params: ListRetrieveParams): ListRetrieveResponse =
+        retrieve(params, RequestOptions.none())
+
+    /** @see retrieve */
+    fun retrieve(id: String, requestOptions: RequestOptions): ListRetrieveResponse =
+        retrieve(id, ListRetrieveParams.none(), requestOptions)
 
     /** List followers of an X List */
     fun retrieveFollowers(id: String): PaginatedUsers =
@@ -92,6 +129,19 @@ interface ListService {
     fun retrieveMembers(id: String, requestOptions: RequestOptions): PaginatedUsers =
         retrieveMembers(id, ListRetrieveMembersParams.none(), requestOptions)
 
+    /**
+     * Returns 1 page of public Lists with member counts, banners & owner profiles. X may rank the
+     * Lists differently per request. Pass next_cursor as cursor for the next page.
+     */
+    fun retrieveSearch(params: ListRetrieveSearchParams): ListRetrieveSearchResponse =
+        retrieveSearch(params, RequestOptions.none())
+
+    /** @see retrieveSearch */
+    fun retrieveSearch(
+        params: ListRetrieveSearchParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ListRetrieveSearchResponse
+
     /** List tweets from an X List */
     fun retrieveTweets(id: String): PaginatedTweets =
         retrieveTweets(id, ListRetrieveTweetsParams.none())
@@ -132,6 +182,50 @@ interface ListService {
          * The original service is not modified.
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): ListService.WithRawResponse
+
+        /**
+         * Returns a raw HTTP response for `get /x/lists/{id}`, but is otherwise the same as
+         * [ListService.retrieve].
+         */
+        @MustBeClosed
+        fun retrieve(id: String): HttpResponseFor<ListRetrieveResponse> =
+            retrieve(id, ListRetrieveParams.none())
+
+        /** @see retrieve */
+        @MustBeClosed
+        fun retrieve(
+            id: String,
+            params: ListRetrieveParams = ListRetrieveParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ListRetrieveResponse> =
+            retrieve(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see retrieve */
+        @MustBeClosed
+        fun retrieve(
+            id: String,
+            params: ListRetrieveParams = ListRetrieveParams.none(),
+        ): HttpResponseFor<ListRetrieveResponse> = retrieve(id, params, RequestOptions.none())
+
+        /** @see retrieve */
+        @MustBeClosed
+        fun retrieve(
+            params: ListRetrieveParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ListRetrieveResponse>
+
+        /** @see retrieve */
+        @MustBeClosed
+        fun retrieve(params: ListRetrieveParams): HttpResponseFor<ListRetrieveResponse> =
+            retrieve(params, RequestOptions.none())
+
+        /** @see retrieve */
+        @MustBeClosed
+        fun retrieve(
+            id: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<ListRetrieveResponse> =
+            retrieve(id, ListRetrieveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /x/lists/{id}/followers`, but is otherwise the same
@@ -221,6 +315,23 @@ interface ListService {
             requestOptions: RequestOptions,
         ): HttpResponseFor<PaginatedUsers> =
             retrieveMembers(id, ListRetrieveMembersParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /x/lists/search`, but is otherwise the same as
+         * [ListService.retrieveSearch].
+         */
+        @MustBeClosed
+        fun retrieveSearch(
+            params: ListRetrieveSearchParams
+        ): HttpResponseFor<ListRetrieveSearchResponse> =
+            retrieveSearch(params, RequestOptions.none())
+
+        /** @see retrieveSearch */
+        @MustBeClosed
+        fun retrieveSearch(
+            params: ListRetrieveSearchParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ListRetrieveSearchResponse>
 
         /**
          * Returns a raw HTTP response for `get /x/lists/{id}/tweets`, but is otherwise the same as

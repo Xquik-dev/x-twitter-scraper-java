@@ -11,19 +11,68 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get trending hashtags and topics from X by region */
+/**
+ * Returns X's current trends for a place you choose. Pick it by woeid, country or location name.
+ * Without one, trends are worldwide. Add at to read what was trending on Twitter at a past time,
+ * such as yesterday. Xquik keeps a Twitter trends archive from 2026-10-13 02:20 UTC on, with 1 list
+ * per place every 5 minutes. Each request costs 1 credit, however many trends it returns.
+ */
 class XGetTrendsParams
 private constructor(
+    private val at: String?,
     private val count: Long?,
+    private val country: String?,
+    private val fields: String?,
+    private val location: String?,
+    private val omit: String?,
     private val woeid: Long?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
+    /**
+     * A past time, to read what was trending on Twitter then. Takes an ISO 8601 time, a date such
+     * as 2026-10-13, or Unix seconds. A time without a zone reads as UTC. It also takes a span back
+     * from now, as a number & s, m, h or d. So at=24h reads what was trending on Twitter yesterday
+     * at this hour, on every run of a schedule. The answer is the stored list nearest that time,
+     * with its own time in capturedAt. History starts 2026-10-13 02:20 UTC. A time over 24 hours
+     * from every stored list answers 400 at no charge.
+     */
+    fun at(): Optional<String> = Optional.ofNullable(at)
+
     /** Number of trending topics to return (1-50, default 30) */
     fun count(): Optional<Long> = Optional.ofNullable(count)
 
-    /** Region WOEID (1=Worldwide, 23424977=US, 23424975=UK, 23424969=Turkey) */
+    /**
+     * Country to read trends for, by name or 2-letter code, such as Turkey or TR. Case insensitive.
+     */
+    fun country(): Optional<String> = Optional.ofNullable(country)
+
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+     * author.username. A list keeps the field in each item. Case & underscores do not matter. A row
+     * that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name
+     * answers 400 unknown_field with the valid names, before any read. The price stays the same.
+     * SDK row types then hold only the named fields.
+     */
+    fun fields(): Optional<String> = Optional.ofNullable(fields)
+
+    /**
+     * Town or country to read trends for, by name, such as Istanbul. Case insensitive. Add country
+     * when 2 towns share a name. /x/trends/locations lists every name.
+     */
+    fun location(): Optional<String> = Optional.ofNullable(location)
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+     * fields, it drops from the kept fields.
+     */
+    fun omit(): Optional<String> = Optional.ofNullable(omit)
+
+    /**
+     * Region WOEID (1=Worldwide, 23424977=US, 23424975=UK, 23424969=Turkey). Wins over country &
+     * location.
+     */
     fun woeid(): Optional<Long> = Optional.ofNullable(woeid)
 
     /** Additional headers to send with the request. */
@@ -45,18 +94,41 @@ private constructor(
     /** A builder for [XGetTrendsParams]. */
     class Builder internal constructor() {
 
+        private var at: String? = null
         private var count: Long? = null
+        private var country: String? = null
+        private var fields: String? = null
+        private var location: String? = null
+        private var omit: String? = null
         private var woeid: Long? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(xGetTrendsParams: XGetTrendsParams) = apply {
+            at = xGetTrendsParams.at
             count = xGetTrendsParams.count
+            country = xGetTrendsParams.country
+            fields = xGetTrendsParams.fields
+            location = xGetTrendsParams.location
+            omit = xGetTrendsParams.omit
             woeid = xGetTrendsParams.woeid
             additionalHeaders = xGetTrendsParams.additionalHeaders.toBuilder()
             additionalQueryParams = xGetTrendsParams.additionalQueryParams.toBuilder()
         }
+
+        /**
+         * A past time, to read what was trending on Twitter then. Takes an ISO 8601 time, a date
+         * such as 2026-10-13, or Unix seconds. A time without a zone reads as UTC. It also takes a
+         * span back from now, as a number & s, m, h or d. So at=24h reads what was trending on
+         * Twitter yesterday at this hour, on every run of a schedule. The answer is the stored list
+         * nearest that time, with its own time in capturedAt. History starts 2026-10-13 02:20 UTC.
+         * A time over 24 hours from every stored list answers 400 at no charge.
+         */
+        fun at(at: String?) = apply { this.at = at }
+
+        /** Alias for calling [Builder.at] with `at.orElse(null)`. */
+        fun at(at: Optional<String>) = at(at.getOrNull())
 
         /** Number of trending topics to return (1-50, default 30) */
         fun count(count: Long?) = apply { this.count = count }
@@ -67,7 +139,49 @@ private constructor(
         /** Alias for calling [Builder.count] with `count.orElse(null)`. */
         fun count(count: Optional<Long>) = count(count.getOrNull())
 
-        /** Region WOEID (1=Worldwide, 23424977=US, 23424975=UK, 23424969=Turkey) */
+        /**
+         * Country to read trends for, by name or 2-letter code, such as Turkey or TR. Case
+         * insensitive.
+         */
+        fun country(country: String?) = apply { this.country = country }
+
+        /** Alias for calling [Builder.country] with `country.orElse(null)`. */
+        fun country(country: Optional<String>) = country(country.getOrNull())
+
+        /**
+         * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+         * author.username. A list keeps the field in each item. Case & underscores do not matter. A
+         * row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An
+         * unknown name answers 400 unknown_field with the valid names, before any read. The price
+         * stays the same. SDK row types then hold only the named fields.
+         */
+        fun fields(fields: String?) = apply { this.fields = fields }
+
+        /** Alias for calling [Builder.fields] with `fields.orElse(null)`. */
+        fun fields(fields: Optional<String>) = fields(fields.getOrNull())
+
+        /**
+         * Town or country to read trends for, by name, such as Istanbul. Case insensitive. Add
+         * country when 2 towns share a name. /x/trends/locations lists every name.
+         */
+        fun location(location: String?) = apply { this.location = location }
+
+        /** Alias for calling [Builder.location] with `location.orElse(null)`. */
+        fun location(location: Optional<String>) = location(location.getOrNull())
+
+        /**
+         * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+         * fields, it drops from the kept fields.
+         */
+        fun omit(omit: String?) = apply { this.omit = omit }
+
+        /** Alias for calling [Builder.omit] with `omit.orElse(null)`. */
+        fun omit(omit: Optional<String>) = omit(omit.getOrNull())
+
+        /**
+         * Region WOEID (1=Worldwide, 23424977=US, 23424975=UK, 23424969=Turkey). Wins over country
+         * & location.
+         */
         fun woeid(woeid: Long?) = apply { this.woeid = woeid }
 
         /** Alias for [Builder.woeid]. */
@@ -180,7 +294,17 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          */
         fun build(): XGetTrendsParams =
-            XGetTrendsParams(count, woeid, additionalHeaders.build(), additionalQueryParams.build())
+            XGetTrendsParams(
+                at,
+                count,
+                country,
+                fields,
+                location,
+                omit,
+                woeid,
+                additionalHeaders.build(),
+                additionalQueryParams.build(),
+            )
     }
 
     override fun _headers(): Headers = additionalHeaders
@@ -188,7 +312,12 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
+                at?.let { put("at", it) }
                 count?.let { put("count", it.toString()) }
+                country?.let { put("country", it) }
+                fields?.let { put("fields", it) }
+                location?.let { put("location", it) }
+                omit?.let { put("omit", it) }
                 woeid?.let { put("woeid", it.toString()) }
                 putAll(additionalQueryParams)
             }
@@ -200,15 +329,30 @@ private constructor(
         }
 
         return other is XGetTrendsParams &&
+            at == other.at &&
             count == other.count &&
+            country == other.country &&
+            fields == other.fields &&
+            location == other.location &&
+            omit == other.omit &&
             woeid == other.woeid &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(count, woeid, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            at,
+            count,
+            country,
+            fields,
+            location,
+            omit,
+            woeid,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "XGetTrendsParams{count=$count, woeid=$woeid, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "XGetTrendsParams{at=$at, count=$count, country=$country, fields=$fields, location=$location, omit=$omit, woeid=$woeid, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
