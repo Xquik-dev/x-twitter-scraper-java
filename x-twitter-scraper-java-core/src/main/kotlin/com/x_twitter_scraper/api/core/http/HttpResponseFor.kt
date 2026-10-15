@@ -11,9 +11,9 @@ interface HttpResponseFor<T> : HttpResponse {
 
 @JvmSynthetic
 internal fun <T> HttpResponse.parseable(parse: () -> T): HttpResponseFor<T> =
-    ParsedHttpResponse(this, parse)
+    ParseableHttpResponse(this, parse)
 
-private class ParsedHttpResponse<T>(response: HttpResponse, parse: () -> T) :
+private class ParseableHttpResponse<T>(response: HttpResponse, parse: () -> T) :
     HttpResponseFor<T>, HttpResponse by response {
 
     private val parsed: T by lazy(parse)

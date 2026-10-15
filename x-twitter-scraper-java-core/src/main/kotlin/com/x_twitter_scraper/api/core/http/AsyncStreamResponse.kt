@@ -64,78 +64,83 @@ interface AsyncStreamResponse<T> {
 @JvmSynthetic
 internal fun <T> CompletableFuture<StreamResponse<T>>.toAsync(streamHandlerExecutor: Executor) =
     PhantomReachableClosingAsyncStreamResponse(
-        object : AsyncStreamResponse<T> {
-
-            private val onCompleteFuture = CompletableFuture<Void?>()
-            private val state = AtomicReference(State.NEW)
-
-            init {
-                this@toAsync.whenComplete { _, error ->
-                    error?.let(onCompleteFuture::completeExceptionally)
-                }
-            }
-
-            override fun subscribe(handler: Handler<T>): AsyncStreamResponse<T> =
-                subscribe(handler, streamHandlerExecutor)
-
-            override fun subscribe(
-                handler: Handler<T>,
-                executor: Executor,
-            ): AsyncStreamResponse<T> = apply {
-                check(state.compareAndSet(State.NEW, State.SUBSCRIBED)) {
-                    if (state.get() == State.SUBSCRIBED) "Cannot subscribe more than once"
-                    else "Cannot subscribe after the response is closed"
-                }
-
-                this@toAsync.whenCompleteAsync(
-                    { streamResponse, futureError ->
-                        if (state.get() == State.CLOSED) {
-                            return@whenCompleteAsync
-                        }
-
-                        if (futureError != null) {
-                            handler.onComplete(Optional.of(futureError))
-                            return@whenCompleteAsync
-                        }
-
-                        var streamError: Throwable? = null
-                        try {
-                            streamResponse.stream().forEach(handler::onNext)
-                        } catch (e: Throwable) {
-                            streamError = e
-                        }
-
-                        try {
-                            handler.onComplete(Optional.ofNullable(streamError))
-                        } finally {
-                            try {
-                                if (streamError == null) {
-                                    onCompleteFuture.complete(null)
-                                } else {
-                                    onCompleteFuture.completeExceptionally(streamError)
-                                }
-                            } finally {
-                                close()
-                            }
-                        }
-                    },
-                    executor,
-                )
-            }
-
-            override fun onCompleteFuture(): CompletableFuture<Void?> = onCompleteFuture
-
-            override fun close() {
-                val previousState = state.getAndSet(State.CLOSED)
-                if (previousState == State.CLOSED) {
-                    return
-                }
-
-                this@toAsync.whenComplete { streamResponse, error -> streamResponse?.close() }
-                onCompleteFuture.complete(null)
-            }
-        }
+        FutureAsyncStreamResponse(this, streamHandlerExecutor)
     )
+
+private class FutureAsyncStreamResponse<T>(
+    private val streamResponseFuture: CompletableFuture<StreamResponse<T>>,
+    private val streamHandlerExecutor: Executor,
+) : AsyncStreamResponse<T> {
+
+    private val onCompleteFuture = CompletableFuture<Void?>()
+    private val state = AtomicReference(State.NEW)
+
+    init {
+        streamResponseFuture.whenComplete { _, error ->
+            error?.let(onCompleteFuture::completeExceptionally)
+        }
+    }
+
+    override fun subscribe(handler: Handler<T>): AsyncStreamResponse<T> =
+        subscribe(handler, streamHandlerExecutor)
+
+    override fun subscribe(
+        handler: Handler<T>,
+        executor: Executor,
+    ): AsyncStreamResponse<T> = apply {
+        check(state.compareAndSet(State.NEW, State.SUBSCRIBED)) {
+            if (state.get() == State.SUBSCRIBED) "Cannot subscribe more than once"
+            else "Cannot subscribe after the response is closed"
+        }
+
+        streamResponseFuture.whenCompleteAsync(
+            { streamResponse, futureError ->
+                if (state.get() == State.CLOSED) {
+                    return@whenCompleteAsync
+                }
+
+                if (futureError != null) {
+                    handler.onComplete(Optional.of(futureError))
+                    return@whenCompleteAsync
+                }
+
+                var streamError: Throwable? = null
+                try {
+                    streamResponse.stream().forEach(handler::onNext)
+                } catch (e: Throwable) {
+                    streamError = e
+                }
+
+                try {
+                    handler.onComplete(Optional.ofNullable(streamError))
+                } finally {
+                    try {
+                        if (streamError == null) {
+                            onCompleteFuture.complete(null)
+                        } else {
+                            onCompleteFuture.completeExceptionally(streamError)
+                        }
+                    } finally {
+                        close()
+                    }
+                }
+            },
+            executor,
+        )
+    }
+
+    override fun onCompleteFuture(): CompletableFuture<Void?> = onCompleteFuture
+
+    override fun close() {
+        val previousState = state.getAndSet(State.CLOSED)
+        if (previousState == State.CLOSED) {
+            return
+        }
+
+        streamResponseFuture.whenComplete { streamResponse, error -> streamResponse?.close() }
+        onCompleteFuture.complete(null)
+    }
+}
 
 private enum class State {
     NEW,
