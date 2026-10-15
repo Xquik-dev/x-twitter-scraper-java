@@ -8,6 +8,8 @@ import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponse
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
+import com.x_twitter_scraper.api.models.extractions.ExtractionCancelParams
+import com.x_twitter_scraper.api.models.extractions.ExtractionCancelResponse
 import com.x_twitter_scraper.api.models.extractions.ExtractionEstimateCostParams
 import com.x_twitter_scraper.api.models.extractions.ExtractionEstimateCostResponse
 import com.x_twitter_scraper.api.models.extractions.ExtractionExportResultsParams
@@ -87,6 +89,41 @@ interface ExtractionServiceAsync {
     /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<ExtractionListResponse> =
         list(ExtractionListParams.none(), requestOptions)
+
+    /** Cancels an active extraction without charging or saving rows. */
+    fun cancel(id: String): CompletableFuture<ExtractionCancelResponse> =
+        cancel(id, ExtractionCancelParams.none())
+
+    /** @see cancel */
+    fun cancel(
+        id: String,
+        params: ExtractionCancelParams = ExtractionCancelParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<ExtractionCancelResponse> =
+        cancel(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see cancel */
+    fun cancel(
+        id: String,
+        params: ExtractionCancelParams = ExtractionCancelParams.none(),
+    ): CompletableFuture<ExtractionCancelResponse> = cancel(id, params, RequestOptions.none())
+
+    /** @see cancel */
+    fun cancel(
+        params: ExtractionCancelParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<ExtractionCancelResponse>
+
+    /** @see cancel */
+    fun cancel(params: ExtractionCancelParams): CompletableFuture<ExtractionCancelResponse> =
+        cancel(params, RequestOptions.none())
+
+    /** @see cancel */
+    fun cancel(
+        id: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<ExtractionCancelResponse> =
+        cancel(id, ExtractionCancelParams.none(), requestOptions)
 
     /** Estimate extraction cost */
     fun estimateCost(
@@ -214,6 +251,47 @@ interface ExtractionServiceAsync {
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<ExtractionListResponse>> =
             list(ExtractionListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `delete /extractions/{id}`, but is otherwise the same as
+         * [ExtractionServiceAsync.cancel].
+         */
+        fun cancel(id: String): CompletableFuture<HttpResponseFor<ExtractionCancelResponse>> =
+            cancel(id, ExtractionCancelParams.none())
+
+        /** @see cancel */
+        fun cancel(
+            id: String,
+            params: ExtractionCancelParams = ExtractionCancelParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<ExtractionCancelResponse>> =
+            cancel(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see cancel */
+        fun cancel(
+            id: String,
+            params: ExtractionCancelParams = ExtractionCancelParams.none(),
+        ): CompletableFuture<HttpResponseFor<ExtractionCancelResponse>> =
+            cancel(id, params, RequestOptions.none())
+
+        /** @see cancel */
+        fun cancel(
+            params: ExtractionCancelParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<ExtractionCancelResponse>>
+
+        /** @see cancel */
+        fun cancel(
+            params: ExtractionCancelParams
+        ): CompletableFuture<HttpResponseFor<ExtractionCancelResponse>> =
+            cancel(params, RequestOptions.none())
+
+        /** @see cancel */
+        fun cancel(
+            id: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<ExtractionCancelResponse>> =
+            cancel(id, ExtractionCancelParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `post /extractions/estimate`, but is otherwise the same

@@ -11,6 +11,8 @@ import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.models.webhooks.Webhook
 import com.x_twitter_scraper.api.models.webhooks.WebhookCreateParams
 import com.x_twitter_scraper.api.models.webhooks.WebhookCreateResponse
+import com.x_twitter_scraper.api.models.webhooks.WebhookCreateTelegramLinkParams
+import com.x_twitter_scraper.api.models.webhooks.WebhookCreateTelegramLinkResponse
 import com.x_twitter_scraper.api.models.webhooks.WebhookDeactivateParams
 import com.x_twitter_scraper.api.models.webhooks.WebhookDeactivateResponse
 import com.x_twitter_scraper.api.models.webhooks.WebhookListDeliveriesParams
@@ -92,6 +94,32 @@ interface WebhookService {
     /** @see list */
     fun list(requestOptions: RequestOptions): WebhookListResponse =
         list(WebhookListParams.none(), requestOptions)
+
+    /**
+     * Returns a t.me link to @XquikBot that connects a Telegram chat to the account's monitor
+     * events. Opening it & pressing Start connects the chat, which then gets each alert as a
+     * message. Alerts that wait together come as 1 digest. A busy chat gets 5 quick messages, then
+     * 1 every 30 s. Only 1 message a minute rings. The link works once, within 15 minutes. The chat
+     * appears in the webhook list with the URL `telegram:<chat ID>`, with deliveries, retries &
+     * resume as any webhook. In the chat, /stop pauses its alerts. It costs no credits.
+     */
+    fun createTelegramLink(): WebhookCreateTelegramLinkResponse =
+        createTelegramLink(WebhookCreateTelegramLinkParams.none())
+
+    /** @see createTelegramLink */
+    fun createTelegramLink(
+        params: WebhookCreateTelegramLinkParams = WebhookCreateTelegramLinkParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): WebhookCreateTelegramLinkResponse
+
+    /** @see createTelegramLink */
+    fun createTelegramLink(
+        params: WebhookCreateTelegramLinkParams = WebhookCreateTelegramLinkParams.none()
+    ): WebhookCreateTelegramLinkResponse = createTelegramLink(params, RequestOptions.none())
+
+    /** @see createTelegramLink */
+    fun createTelegramLink(requestOptions: RequestOptions): WebhookCreateTelegramLinkResponse =
+        createTelegramLink(WebhookCreateTelegramLinkParams.none(), requestOptions)
 
     /** Deactivate webhook */
     fun deactivate(id: String): WebhookDeactivateResponse =
@@ -303,6 +331,35 @@ interface WebhookService {
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<WebhookListResponse> =
             list(WebhookListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `post /webhooks/telegram`, but is otherwise the same as
+         * [WebhookService.createTelegramLink].
+         */
+        @MustBeClosed
+        fun createTelegramLink(): HttpResponseFor<WebhookCreateTelegramLinkResponse> =
+            createTelegramLink(WebhookCreateTelegramLinkParams.none())
+
+        /** @see createTelegramLink */
+        @MustBeClosed
+        fun createTelegramLink(
+            params: WebhookCreateTelegramLinkParams = WebhookCreateTelegramLinkParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<WebhookCreateTelegramLinkResponse>
+
+        /** @see createTelegramLink */
+        @MustBeClosed
+        fun createTelegramLink(
+            params: WebhookCreateTelegramLinkParams = WebhookCreateTelegramLinkParams.none()
+        ): HttpResponseFor<WebhookCreateTelegramLinkResponse> =
+            createTelegramLink(params, RequestOptions.none())
+
+        /** @see createTelegramLink */
+        @MustBeClosed
+        fun createTelegramLink(
+            requestOptions: RequestOptions
+        ): HttpResponseFor<WebhookCreateTelegramLinkResponse> =
+            createTelegramLink(WebhookCreateTelegramLinkParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `delete /webhooks/{id}`, but is otherwise the same as

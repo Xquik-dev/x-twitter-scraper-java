@@ -77,6 +77,22 @@ internal class ExtractionServiceAsyncTest {
     }
 
     @Test
+    fun cancel() {
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
+        val extractionServiceAsync = client.extractions()
+
+        val responseFuture = extractionServiceAsync.cancel("id")
+
+        val response = responseFuture.get()
+        kotlin.test.assertNotNull(response)
+    }
+
+    @Test
     fun estimateCost() {
         val client =
             XTwitterScraperOkHttpClientAsync.builder()

@@ -31,6 +31,7 @@ import com.x_twitter_scraper.api.models.x.XSearchPlacesResponse
 import com.x_twitter_scraper.api.services.blocking.x.AccountConnectionAttemptService
 import com.x_twitter_scraper.api.services.blocking.x.AccountConnectionChallengeService
 import com.x_twitter_scraper.api.services.blocking.x.AccountService
+import com.x_twitter_scraper.api.services.blocking.x.AnalysisService
 import com.x_twitter_scraper.api.services.blocking.x.BookmarkService
 import com.x_twitter_scraper.api.services.blocking.x.BroadcastService
 import com.x_twitter_scraper.api.services.blocking.x.CommunityNoteService
@@ -63,6 +64,9 @@ interface XService {
 
     /** X write actions (tweets, likes, follows, DMs) */
     fun writeActions(): WriteActionService
+
+    /** AI analysis of posts, at 2 credits per analyzed post */
+    fun analysis(): AnalysisService
 
     fun tweets(): TweetService
 
@@ -344,6 +348,9 @@ interface XService {
 
         /** X write actions (tweets, likes, follows, DMs) */
         fun writeActions(): WriteActionService.WithRawResponse
+
+        /** AI analysis of posts, at 2 credits per analyzed post */
+        fun analysis(): AnalysisService.WithRawResponse
 
         fun tweets(): TweetService.WithRawResponse
 

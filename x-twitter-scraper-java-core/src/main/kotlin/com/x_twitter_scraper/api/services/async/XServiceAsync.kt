@@ -30,6 +30,7 @@ import com.x_twitter_scraper.api.models.x.XSearchPlacesResponse
 import com.x_twitter_scraper.api.services.async.x.AccountConnectionAttemptServiceAsync
 import com.x_twitter_scraper.api.services.async.x.AccountConnectionChallengeServiceAsync
 import com.x_twitter_scraper.api.services.async.x.AccountServiceAsync
+import com.x_twitter_scraper.api.services.async.x.AnalysisServiceAsync
 import com.x_twitter_scraper.api.services.async.x.BookmarkServiceAsync
 import com.x_twitter_scraper.api.services.async.x.BroadcastServiceAsync
 import com.x_twitter_scraper.api.services.async.x.CommunityNoteServiceAsync
@@ -63,6 +64,9 @@ interface XServiceAsync {
 
     /** X write actions (tweets, likes, follows, DMs) */
     fun writeActions(): WriteActionServiceAsync
+
+    /** AI analysis of posts, at 2 credits per analyzed post */
+    fun analysis(): AnalysisServiceAsync
 
     fun tweets(): TweetServiceAsync
 
@@ -365,6 +369,9 @@ interface XServiceAsync {
 
         /** X write actions (tweets, likes, follows, DMs) */
         fun writeActions(): WriteActionServiceAsync.WithRawResponse
+
+        /** AI analysis of posts, at 2 credits per analyzed post */
+        fun analysis(): AnalysisServiceAsync.WithRawResponse
 
         fun tweets(): TweetServiceAsync.WithRawResponse
 

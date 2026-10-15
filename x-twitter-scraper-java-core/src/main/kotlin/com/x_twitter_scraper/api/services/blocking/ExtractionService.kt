@@ -9,6 +9,8 @@ import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponse
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
+import com.x_twitter_scraper.api.models.extractions.ExtractionCancelParams
+import com.x_twitter_scraper.api.models.extractions.ExtractionCancelResponse
 import com.x_twitter_scraper.api.models.extractions.ExtractionEstimateCostParams
 import com.x_twitter_scraper.api.models.extractions.ExtractionEstimateCostResponse
 import com.x_twitter_scraper.api.models.extractions.ExtractionExportResultsParams
@@ -82,6 +84,36 @@ interface ExtractionService {
     /** @see list */
     fun list(requestOptions: RequestOptions): ExtractionListResponse =
         list(ExtractionListParams.none(), requestOptions)
+
+    /** Cancels an active extraction without charging or saving rows. */
+    fun cancel(id: String): ExtractionCancelResponse = cancel(id, ExtractionCancelParams.none())
+
+    /** @see cancel */
+    fun cancel(
+        id: String,
+        params: ExtractionCancelParams = ExtractionCancelParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ExtractionCancelResponse = cancel(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see cancel */
+    fun cancel(
+        id: String,
+        params: ExtractionCancelParams = ExtractionCancelParams.none(),
+    ): ExtractionCancelResponse = cancel(id, params, RequestOptions.none())
+
+    /** @see cancel */
+    fun cancel(
+        params: ExtractionCancelParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ExtractionCancelResponse
+
+    /** @see cancel */
+    fun cancel(params: ExtractionCancelParams): ExtractionCancelResponse =
+        cancel(params, RequestOptions.none())
+
+    /** @see cancel */
+    fun cancel(id: String, requestOptions: RequestOptions): ExtractionCancelResponse =
+        cancel(id, ExtractionCancelParams.none(), requestOptions)
 
     /** Estimate extraction cost */
     fun estimateCost(params: ExtractionEstimateCostParams): ExtractionEstimateCostResponse =
@@ -208,6 +240,50 @@ interface ExtractionService {
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<ExtractionListResponse> =
             list(ExtractionListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `delete /extractions/{id}`, but is otherwise the same as
+         * [ExtractionService.cancel].
+         */
+        @MustBeClosed
+        fun cancel(id: String): HttpResponseFor<ExtractionCancelResponse> =
+            cancel(id, ExtractionCancelParams.none())
+
+        /** @see cancel */
+        @MustBeClosed
+        fun cancel(
+            id: String,
+            params: ExtractionCancelParams = ExtractionCancelParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ExtractionCancelResponse> =
+            cancel(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see cancel */
+        @MustBeClosed
+        fun cancel(
+            id: String,
+            params: ExtractionCancelParams = ExtractionCancelParams.none(),
+        ): HttpResponseFor<ExtractionCancelResponse> = cancel(id, params, RequestOptions.none())
+
+        /** @see cancel */
+        @MustBeClosed
+        fun cancel(
+            params: ExtractionCancelParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ExtractionCancelResponse>
+
+        /** @see cancel */
+        @MustBeClosed
+        fun cancel(params: ExtractionCancelParams): HttpResponseFor<ExtractionCancelResponse> =
+            cancel(params, RequestOptions.none())
+
+        /** @see cancel */
+        @MustBeClosed
+        fun cancel(
+            id: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<ExtractionCancelResponse> =
+            cancel(id, ExtractionCancelParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `post /extractions/estimate`, but is otherwise the same

@@ -18,6 +18,8 @@ import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.json
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepareAsync
+import com.x_twitter_scraper.api.models.extractions.ExtractionCancelParams
+import com.x_twitter_scraper.api.models.extractions.ExtractionCancelResponse
 import com.x_twitter_scraper.api.models.extractions.ExtractionEstimateCostParams
 import com.x_twitter_scraper.api.models.extractions.ExtractionEstimateCostResponse
 import com.x_twitter_scraper.api.models.extractions.ExtractionExportResultsParams
@@ -55,6 +57,12 @@ class ExtractionServiceAsyncImpl internal constructor(private val clientOptions:
         requestOptions: RequestOptions,
     ): CompletableFuture<ExtractionListResponse> =
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+
+    override fun cancel(
+        params: ExtractionCancelParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<ExtractionCancelResponse> =
+        withRawResponse().cancel(params, requestOptions).thenApply { it.parse() }
 
     override fun estimateCost(
         params: ExtractionEstimateCostParams,
@@ -138,6 +146,38 @@ class ExtractionServiceAsyncImpl internal constructor(private val clientOptions:
                     errorHandler.handle(response).parseable {
                         response
                             .use { listHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val cancelHandler: Handler<ExtractionCancelResponse> =
+            jsonHandler<ExtractionCancelResponse>(clientOptions.jsonMapper)
+
+        override fun cancel(
+            params: ExtractionCancelParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<ExtractionCancelResponse>> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.DELETE)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("extractions", params._pathParam(0))
+                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { cancelHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

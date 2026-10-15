@@ -21,6 +21,13 @@ class RequestOptions private constructor(val responseValidation: Boolean?, val t
                 .timeout(clientOptions.timeout)
                 .build()
 
+        @JvmSynthetic
+        internal fun forStream(clientOptions: ClientOptions): RequestOptions =
+            builder()
+                .responseValidation(clientOptions.responseValidation)
+                .timeout(clientOptions.timeout.forStream())
+                .build()
+
         @JvmStatic fun builder() = Builder()
     }
 

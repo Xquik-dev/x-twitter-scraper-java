@@ -10,6 +10,8 @@ import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.models.webhooks.Webhook
 import com.x_twitter_scraper.api.models.webhooks.WebhookCreateParams
 import com.x_twitter_scraper.api.models.webhooks.WebhookCreateResponse
+import com.x_twitter_scraper.api.models.webhooks.WebhookCreateTelegramLinkParams
+import com.x_twitter_scraper.api.models.webhooks.WebhookCreateTelegramLinkResponse
 import com.x_twitter_scraper.api.models.webhooks.WebhookDeactivateParams
 import com.x_twitter_scraper.api.models.webhooks.WebhookDeactivateResponse
 import com.x_twitter_scraper.api.models.webhooks.WebhookListDeliveriesParams
@@ -96,6 +98,35 @@ interface WebhookServiceAsync {
     /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<WebhookListResponse> =
         list(WebhookListParams.none(), requestOptions)
+
+    /**
+     * Returns a t.me link to @XquikBot that connects a Telegram chat to the account's monitor
+     * events. Opening it & pressing Start connects the chat, which then gets each alert as a
+     * message. Alerts that wait together come as 1 digest. A busy chat gets 5 quick messages, then
+     * 1 every 30 s. Only 1 message a minute rings. The link works once, within 15 minutes. The chat
+     * appears in the webhook list with the URL `telegram:<chat ID>`, with deliveries, retries &
+     * resume as any webhook. In the chat, /stop pauses its alerts. It costs no credits.
+     */
+    fun createTelegramLink(): CompletableFuture<WebhookCreateTelegramLinkResponse> =
+        createTelegramLink(WebhookCreateTelegramLinkParams.none())
+
+    /** @see createTelegramLink */
+    fun createTelegramLink(
+        params: WebhookCreateTelegramLinkParams = WebhookCreateTelegramLinkParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<WebhookCreateTelegramLinkResponse>
+
+    /** @see createTelegramLink */
+    fun createTelegramLink(
+        params: WebhookCreateTelegramLinkParams = WebhookCreateTelegramLinkParams.none()
+    ): CompletableFuture<WebhookCreateTelegramLinkResponse> =
+        createTelegramLink(params, RequestOptions.none())
+
+    /** @see createTelegramLink */
+    fun createTelegramLink(
+        requestOptions: RequestOptions
+    ): CompletableFuture<WebhookCreateTelegramLinkResponse> =
+        createTelegramLink(WebhookCreateTelegramLinkParams.none(), requestOptions)
 
     /** Deactivate webhook */
     fun deactivate(id: String): CompletableFuture<WebhookDeactivateResponse> =
@@ -328,6 +359,32 @@ interface WebhookServiceAsync {
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<WebhookListResponse>> =
             list(WebhookListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `post /webhooks/telegram`, but is otherwise the same as
+         * [WebhookServiceAsync.createTelegramLink].
+         */
+        fun createTelegramLink():
+            CompletableFuture<HttpResponseFor<WebhookCreateTelegramLinkResponse>> =
+            createTelegramLink(WebhookCreateTelegramLinkParams.none())
+
+        /** @see createTelegramLink */
+        fun createTelegramLink(
+            params: WebhookCreateTelegramLinkParams = WebhookCreateTelegramLinkParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<WebhookCreateTelegramLinkResponse>>
+
+        /** @see createTelegramLink */
+        fun createTelegramLink(
+            params: WebhookCreateTelegramLinkParams = WebhookCreateTelegramLinkParams.none()
+        ): CompletableFuture<HttpResponseFor<WebhookCreateTelegramLinkResponse>> =
+            createTelegramLink(params, RequestOptions.none())
+
+        /** @see createTelegramLink */
+        fun createTelegramLink(
+            requestOptions: RequestOptions
+        ): CompletableFuture<HttpResponseFor<WebhookCreateTelegramLinkResponse>> =
+            createTelegramLink(WebhookCreateTelegramLinkParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `delete /webhooks/{id}`, but is otherwise the same as
