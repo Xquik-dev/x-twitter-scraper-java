@@ -21,17 +21,17 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.guardsquare:proguard-gradle:7.9.1")
-        classpath("com.android.tools:r8:9.1.31")
+        classpath("com.guardsquare:proguard-gradle:7.10.0")
+        classpath("com.android.tools:r8:9.5.26")
     }
 }
 
 dependencies {
     testImplementation(project(":x-twitter-scraper-java"))
     testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.22.3")
-    testRuntimeOnly("org.codehaus.mojo:animal-sniffer-annotations:1.27")
-    testRuntimeOnly("org.conscrypt:conscrypt-openjdk-uber:2.6.1")
-    testRuntimeOnly("org.graalvm.sdk:nativeimage:25.1.3")
+    testRuntimeOnly("org.codehaus.mojo:animal-sniffer-annotations:1.28")
+    testRuntimeOnly("org.conscrypt:conscrypt-openjdk-uber:2.7.0")
+    testRuntimeOnly("org.graalvm.sdk:nativeimage:25.4.4.1.1")
 }
 
 val runtimeLibraries = configurations.testRuntimeClasspath.get().incoming.artifactView {

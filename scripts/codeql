@@ -8,8 +8,6 @@ set -euo pipefail
 
 cd -- "$(dirname -- "$0")/.."
 
-readonly prerelease_kotlin="2.4.20-Beta2"
-readonly stable_kotlin="2.4.10"
 readonly codeql_version="2.27.2"
 readonly query_suite="codeql/java-queries@1.11.12:codeql-suites/java-security-extended.qls"
 readonly comment_queries="codeql/no-code-comments"
@@ -32,18 +30,13 @@ mkdir -p -- "$source_root"
 git ls-files --cached --others --exclude-standard -z |
     tar --null -T - -cf - |
     tar -xf - -C "$source_root"
-(
-    cd -- "$source_root"
-    perl -pi -e "s/\\Q$prerelease_kotlin\\E/$stable_kotlin/g" \
-        buildSrc/build.gradle.kts ./*/gradle.lockfile
-)
 
 echo "==> Building the CodeQL database"
 codeql database create "$database" \
     --language=java-kotlin \
     --source-root="$source_root" \
     --threads=0 \
-    --command="./gradlew clean classes --write-verification-metadata sha256 --no-daemon --no-build-cache --no-configuration-cache -Pkotlin.compiler.execution.strategy=in-process"
+    --command="./gradlew clean classes --no-daemon --no-build-cache --no-configuration-cache -Pkotlin.compiler.execution.strategy=in-process"
 
 source_count="$(
     find "$source_root" -path '*/src/main/*' -type f \( -name '*.kt' -o -name '*.java' \) |

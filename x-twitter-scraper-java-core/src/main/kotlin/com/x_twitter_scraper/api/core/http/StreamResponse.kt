@@ -15,8 +15,14 @@ interface StreamResponse<T> : AutoCloseable {
 
 @JvmSynthetic
 internal fun <T, R> StreamResponse<T>.map(transform: (T) -> R): StreamResponse<R> =
-    object : StreamResponse<R> {
-        override fun stream(): Stream<R> = this@map.stream().map(transform)
+    MappedStreamResponse(this, transform)
 
-        override fun close() = this@map.close()
-    }
+private class MappedStreamResponse<T, R>(
+    private val response: StreamResponse<T>,
+    private val transform: (T) -> R,
+) : StreamResponse<R> {
+
+    override fun stream(): Stream<R> = response.stream().map(transform)
+
+    override fun close() = response.close()
+}
