@@ -7,6 +7,7 @@ package com.x_twitter_scraper.api.services.async
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClientAsync
 import com.x_twitter_scraper.api.models.EventType
 import com.x_twitter_scraper.api.models.events.EventListParams
+import com.x_twitter_scraper.api.models.events.EventStreamParams
 import org.junit.jupiter.api.Test
 
 internal class EventServiceAsyncTest {
@@ -49,5 +50,25 @@ internal class EventServiceAsyncTest {
 
         val events = eventsFuture.get()
         kotlin.test.assertNotNull(events)
+    }
+
+    @Test
+    fun stream() {
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
+        val eventServiceAsync = client.events()
+
+        val eventStreamResponse =
+            eventServiceAsync.stream(
+                EventStreamParams.builder().lastEventID("Last-Event-ID").build()
+            )
+
+        val onCompleteFuture =
+            eventStreamResponse.subscribe { event -> event.validate() }.onCompleteFuture()
+        onCompleteFuture.get()
     }
 }

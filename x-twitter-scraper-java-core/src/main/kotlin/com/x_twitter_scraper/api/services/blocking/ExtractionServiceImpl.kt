@@ -18,6 +18,8 @@ import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.json
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepare
+import com.x_twitter_scraper.api.models.extractions.ExtractionCancelParams
+import com.x_twitter_scraper.api.models.extractions.ExtractionCancelResponse
 import com.x_twitter_scraper.api.models.extractions.ExtractionEstimateCostParams
 import com.x_twitter_scraper.api.models.extractions.ExtractionEstimateCostResponse
 import com.x_twitter_scraper.api.models.extractions.ExtractionExportResultsParams
@@ -52,6 +54,11 @@ class ExtractionServiceImpl internal constructor(private val clientOptions: Clie
         params: ExtractionListParams,
         requestOptions: RequestOptions,
     ): ExtractionListResponse = withRawResponse().list(params, requestOptions).parse()
+
+    override fun cancel(
+        params: ExtractionCancelParams,
+        requestOptions: RequestOptions,
+    ): ExtractionCancelResponse = withRawResponse().cancel(params, requestOptions).parse()
 
     override fun estimateCost(
         params: ExtractionEstimateCostParams,
@@ -129,6 +136,35 @@ class ExtractionServiceImpl internal constructor(private val clientOptions: Clie
             return errorHandler.handle(response).parseable {
                 response
                     .use { listHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val cancelHandler: Handler<ExtractionCancelResponse> =
+            jsonHandler<ExtractionCancelResponse>(clientOptions.jsonMapper)
+
+        override fun cancel(
+            params: ExtractionCancelParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<ExtractionCancelResponse> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.DELETE)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("extractions", params._pathParam(0))
+                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { cancelHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()

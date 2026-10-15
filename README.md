@@ -84,6 +84,8 @@ Call REST directly when a Maven dependency does not fit.
 | Export large X datasets | `POST /extractions` | `client.extractions()` |
 | Monitor tweet keywords or accounts | `POST /monitors/keywords`, `POST /monitors` | `client.monitors()` |
 | Receive signed event deliveries | `POST /webhooks` | `client.webhooks()` |
+| Stream monitor events as they happen | `GET /events/stream` | `client.events()` |
+| Analyze the sentiment, viral score, or brand mentions of posts | `POST /x/analysis/sentiment`, `POST /x/analysis/brand` | `client.x().analysis()` |
 | Post, like, retweet, or follow | `POST /x/tweets`, `POST /x/users/{id}/follow` | `client.x().tweets()`, `client.x().users()` |
 | Send media or update a profile | `POST /x/media`, `PATCH /x/profile` | `client.x().media()`, `client.x().profile()` |
 | Manage connected X accounts | `GET /x/accounts`, `POST /x/accounts` | `client.x().accounts()` |
@@ -192,6 +194,42 @@ import java.util.concurrent.CompletableFuture;
 CompletableFuture<TweetSearchResponse> result =
     client.async().x().tweets().search(params);
 ```
+
+## Stream events
+
+`client.events().stream()` sends your monitor events as they happen. Close each stream when you finish.
+
+```java
+import com.x_twitter_scraper.api.core.http.StreamResponse;
+import com.x_twitter_scraper.api.models.events.Event;
+
+try (StreamResponse<Event> events = client.events().stream()) {
+    events.stream().forEach(event -> System.out.println(event.type()));
+}
+```
+
+The async client calls your handler on a background thread.
+
+```java
+client.async().events().stream()
+    .subscribe(event -> System.out.println(event.type()))
+    .onCompleteFuture()
+    .join();
+```
+
+A stream lasts up to 30 minutes. Reconnect with the last event ID you got.
+
+```java
+import com.x_twitter_scraper.api.models.events.EventStreamParams;
+
+EventStreamParams params = EventStreamParams.builder()
+    .lastEventID(lastEvent.id())
+    .build();
+
+StreamResponse<Event> events = client.events().stream(params);
+```
+
+The stream first sends every event you missed. The client's request timeout does not end a stream. A stream fails after 1 minute without data. The server sends a keep-alive every 15 seconds.
 
 ## Configure retries
 

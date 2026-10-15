@@ -43,6 +43,8 @@ import com.x_twitter_scraper.api.services.async.x.AccountConnectionChallengeServ
 import com.x_twitter_scraper.api.services.async.x.AccountConnectionChallengeServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.AccountServiceAsync
 import com.x_twitter_scraper.api.services.async.x.AccountServiceAsyncImpl
+import com.x_twitter_scraper.api.services.async.x.AnalysisServiceAsync
+import com.x_twitter_scraper.api.services.async.x.AnalysisServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.BookmarkServiceAsync
 import com.x_twitter_scraper.api.services.async.x.BookmarkServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.BroadcastServiceAsync
@@ -85,6 +87,8 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
     private val writeActions: WriteActionServiceAsync by lazy {
         WriteActionServiceAsyncImpl(clientOptions)
     }
+
+    private val analysis: AnalysisServiceAsync by lazy { AnalysisServiceAsyncImpl(clientOptions) }
 
     private val tweets: TweetServiceAsync by lazy { TweetServiceAsyncImpl(clientOptions) }
 
@@ -135,6 +139,9 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
 
     /** X write actions (tweets, likes, follows, DMs) */
     override fun writeActions(): WriteActionServiceAsync = writeActions
+
+    /** AI analysis of posts, at 2 credits per analyzed post */
+    override fun analysis(): AnalysisServiceAsync = analysis
 
     override fun tweets(): TweetServiceAsync = tweets
 
@@ -251,6 +258,10 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
             WriteActionServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val analysis: AnalysisServiceAsync.WithRawResponse by lazy {
+            AnalysisServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val tweets: TweetServiceAsync.WithRawResponse by lazy {
             TweetServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
@@ -326,6 +337,9 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
 
         /** X write actions (tweets, likes, follows, DMs) */
         override fun writeActions(): WriteActionServiceAsync.WithRawResponse = writeActions
+
+        /** AI analysis of posts, at 2 credits per analyzed post */
+        override fun analysis(): AnalysisServiceAsync.WithRawResponse = analysis
 
         override fun tweets(): TweetServiceAsync.WithRawResponse = tweets
 

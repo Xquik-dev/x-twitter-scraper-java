@@ -5,6 +5,11 @@
 package com.x_twitter_scraper.api.core
 
 import com.x_twitter_scraper.api.core.http.HttpClient
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -47,5 +52,53 @@ internal class ClientOptionsTest {
 
         verify(httpClient, never()).close()
         assertThat(clientOptions).isEqualTo(clientOptions)
+    }
+
+    @Test
+    fun streamHandlerExecutor_defaultsToANamedThreadPoolThatCloseShutsDown() {
+        val clientOptions =
+            ClientOptions.builder().httpClient(httpClient).apiKey("My API Key").build()
+        val threadName =
+            CompletableFuture.supplyAsync(
+                    { Thread.currentThread().name },
+                    clientOptions.streamHandlerExecutor,
+                )
+                .get(10, TimeUnit.SECONDS)
+
+        clientOptions.close()
+
+        assertThat(threadName).startsWith("xquik-stream-handler-thread-")
+        assertThat((clientOptions.streamHandlerExecutor as ExecutorService).isShutdown).isTrue()
+    }
+
+    @Test
+    fun streamHandlerExecutor_usesTheGivenExecutorAndKeepsItOnCopies() {
+        val executor = Executor { it.run() }
+        val clientOptions =
+            ClientOptions.builder()
+                .httpClient(httpClient)
+                .apiKey("My API Key")
+                .streamHandlerExecutor(executor)
+                .build()
+
+        clientOptions.close()
+
+        assertThat(clientOptions.streamHandlerExecutor).isSameAs(executor)
+        assertThat(clientOptions.toBuilder().build().streamHandlerExecutor).isSameAs(executor)
+    }
+
+    @Test
+    fun streamHandlerExecutor_shutsDownAGivenExecutorServiceOnClose() {
+        val executorService = Executors.newSingleThreadExecutor()
+        val clientOptions =
+            ClientOptions.builder()
+                .httpClient(httpClient)
+                .apiKey("My API Key")
+                .streamHandlerExecutor(executorService)
+                .build()
+
+        clientOptions.close()
+
+        assertThat(executorService.isShutdown).isTrue()
     }
 }

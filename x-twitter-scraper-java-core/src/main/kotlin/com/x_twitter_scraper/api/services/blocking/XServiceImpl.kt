@@ -43,6 +43,8 @@ import com.x_twitter_scraper.api.services.blocking.x.AccountConnectionChallengeS
 import com.x_twitter_scraper.api.services.blocking.x.AccountConnectionChallengeServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.AccountService
 import com.x_twitter_scraper.api.services.blocking.x.AccountServiceImpl
+import com.x_twitter_scraper.api.services.blocking.x.AnalysisService
+import com.x_twitter_scraper.api.services.blocking.x.AnalysisServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.BookmarkService
 import com.x_twitter_scraper.api.services.blocking.x.BookmarkServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.BroadcastService
@@ -81,6 +83,8 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
     }
 
     private val writeActions: WriteActionService by lazy { WriteActionServiceImpl(clientOptions) }
+
+    private val analysis: AnalysisService by lazy { AnalysisServiceImpl(clientOptions) }
 
     private val tweets: TweetService by lazy { TweetServiceImpl(clientOptions) }
 
@@ -127,6 +131,9 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
 
     /** X write actions (tweets, likes, follows, DMs) */
     override fun writeActions(): WriteActionService = writeActions
+
+    /** AI analysis of posts, at 2 credits per analyzed post */
+    override fun analysis(): AnalysisService = analysis
 
     override fun tweets(): TweetService = tweets
 
@@ -238,6 +245,10 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
             WriteActionServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val analysis: AnalysisService.WithRawResponse by lazy {
+            AnalysisServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val tweets: TweetService.WithRawResponse by lazy {
             TweetServiceImpl.WithRawResponseImpl(clientOptions)
         }
@@ -313,6 +324,9 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
 
         /** X write actions (tweets, likes, follows, DMs) */
         override fun writeActions(): WriteActionService.WithRawResponse = writeActions
+
+        /** AI analysis of posts, at 2 credits per analyzed post */
+        override fun analysis(): AnalysisService.WithRawResponse = analysis
 
         override fun tweets(): TweetService.WithRawResponse = tweets
 

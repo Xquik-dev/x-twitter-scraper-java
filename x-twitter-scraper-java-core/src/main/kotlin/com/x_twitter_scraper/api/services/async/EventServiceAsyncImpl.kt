@@ -10,17 +10,25 @@ import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.handlers.errorBodyHandler
 import com.x_twitter_scraper.api.core.handlers.errorHandler
 import com.x_twitter_scraper.api.core.handlers.jsonHandler
+import com.x_twitter_scraper.api.core.handlers.mapJson
+import com.x_twitter_scraper.api.core.handlers.sseHandler
+import com.x_twitter_scraper.api.core.http.AsyncStreamResponse
 import com.x_twitter_scraper.api.core.http.HttpMethod
 import com.x_twitter_scraper.api.core.http.HttpRequest
 import com.x_twitter_scraper.api.core.http.HttpResponse
 import com.x_twitter_scraper.api.core.http.HttpResponse.Handler
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
+import com.x_twitter_scraper.api.core.http.StreamResponse
+import com.x_twitter_scraper.api.core.http.map
 import com.x_twitter_scraper.api.core.http.parseable
+import com.x_twitter_scraper.api.core.http.toAsync
 import com.x_twitter_scraper.api.core.prepareAsync
+import com.x_twitter_scraper.api.models.events.Event
 import com.x_twitter_scraper.api.models.events.EventDetail
 import com.x_twitter_scraper.api.models.events.EventListParams
 import com.x_twitter_scraper.api.models.events.EventListResponse
 import com.x_twitter_scraper.api.models.events.EventRetrieveParams
+import com.x_twitter_scraper.api.models.events.EventStreamParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -49,6 +57,15 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
         requestOptions: RequestOptions,
     ): CompletableFuture<EventListResponse> =
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+
+    override fun stream(
+        params: EventStreamParams,
+        requestOptions: RequestOptions,
+    ): AsyncStreamResponse<Event> =
+        withRawResponse()
+            .stream(params, requestOptions)
+            .thenApply { it.parse() }
+            .toAsync(clientOptions.streamHandlerExecutor)
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         EventServiceAsync.WithRawResponse {
@@ -118,6 +135,39 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val streamHandler: Handler<StreamResponse<Event>> =
+            sseHandler(clientOptions.jsonMapper).mapJson<Event>()
+
+        override fun stream(
+            params: EventStreamParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<StreamResponse<Event>>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("events", "stream")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions =
+                requestOptions.applyDefaults(RequestOptions.forStream(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .let { streamHandler.handle(it) }
+                            .let { streamResponse ->
+                                if (requestOptions.responseValidation!!) {
+                                    streamResponse.map { it.validate() }
+                                } else {
+                                    streamResponse
                                 }
                             }
                     }

@@ -5,6 +5,7 @@
 package com.x_twitter_scraper.api.core
 
 import com.fasterxml.jackson.databind.json.JsonMapper
+import com.x_twitter_scraper.api.core.http.AsyncStreamResponse
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.HttpClient
 import com.x_twitter_scraper.api.core.http.LoggingHttpClient
@@ -14,6 +15,11 @@ import com.x_twitter_scraper.api.core.http.RetryingHttpClient
 import java.time.Clock
 import java.time.Duration
 import java.util.Optional
+import java.util.concurrent.Executor
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.ThreadFactory
+import java.util.concurrent.atomic.AtomicLong
 import kotlin.jvm.optionals.getOrNull
 
 /** A class representing the SDK client configuration. */
@@ -40,6 +46,14 @@ private constructor(
      * Defaults to [com.x_twitter_scraper.api.core.jsonMapper].
      */
     @get:JvmName("jsonMapper") val jsonMapper: JsonMapper,
+    /**
+     * The executor to use for running [AsyncStreamResponse.Handler] callbacks.
+     *
+     * Defaults to a dedicated cached thread pool.
+     *
+     * This class takes ownership of the executor and shuts it down, if possible, when closed.
+     */
+    @get:JvmName("streamHandlerExecutor") val streamHandlerExecutor: Executor,
     /**
      * The interface to use for delaying execution, like during retries.
      *
@@ -152,6 +166,7 @@ private constructor(
         private var httpClient: HttpClient? = null
         private var checkJacksonVersionCompatibility: Boolean = true
         private var jsonMapper: JsonMapper = jsonMapper()
+        private var streamHandlerExecutor: Executor? = null
         private var sleeper: Sleeper? = null
         private var clock: Clock = Clock.systemUTC()
         private var baseUrl: String? = null
@@ -169,6 +184,7 @@ private constructor(
             httpClient = clientOptions.originalHttpClient
             checkJacksonVersionCompatibility = clientOptions.checkJacksonVersionCompatibility
             jsonMapper = clientOptions.jsonMapper
+            streamHandlerExecutor = clientOptions.streamHandlerExecutor
             sleeper = clientOptions.sleeper
             clock = clientOptions.clock
             baseUrl = clientOptions.baseUrl
@@ -208,6 +224,20 @@ private constructor(
          * Defaults to [com.x_twitter_scraper.api.core.jsonMapper].
          */
         fun jsonMapper(jsonMapper: JsonMapper) = apply { this.jsonMapper = jsonMapper }
+
+        /**
+         * The executor to use for running [AsyncStreamResponse.Handler] callbacks.
+         *
+         * Defaults to a dedicated cached thread pool.
+         *
+         * This class takes ownership of the executor and shuts it down, if possible, when closed.
+         */
+        fun streamHandlerExecutor(streamHandlerExecutor: Executor) = apply {
+            this.streamHandlerExecutor =
+                if (streamHandlerExecutor is ExecutorService)
+                    PhantomReachableExecutorService(streamHandlerExecutor)
+                else streamHandlerExecutor
+        }
 
         /**
          * The interface to use for delaying execution, like during retries.
@@ -430,6 +460,11 @@ private constructor(
          */
         fun build(): ClientOptions {
             val httpClient = checkRequired("httpClient", httpClient)
+            val streamHandlerExecutor =
+                streamHandlerExecutor
+                    ?: PhantomReachableExecutorService(
+                        Executors.newCachedThreadPool(StreamHandlerThreadFactory())
+                    )
             val sleeper = sleeper ?: PhantomReachableSleeper(DefaultSleeper())
 
             val headers = Headers.builder()
@@ -461,6 +496,7 @@ private constructor(
                     .build(),
                 checkJacksonVersionCompatibility,
                 jsonMapper,
+                streamHandlerExecutor,
                 sleeper,
                 clock,
                 baseUrl,
@@ -479,6 +515,7 @@ private constructor(
     /** Closes these client options, relinquishing any underlying resources. */
     fun close() {
         httpClient.close()
+        (streamHandlerExecutor as? ExecutorService)?.shutdown()
         sleeper.close()
     }
 
@@ -501,4 +538,15 @@ private constructor(
         }
         return headers.build()
     }
+}
+
+private class StreamHandlerThreadFactory : ThreadFactory {
+
+    private val threadFactory: ThreadFactory = Executors.defaultThreadFactory()
+    private val count = AtomicLong(0)
+
+    override fun newThread(runnable: Runnable): Thread =
+        threadFactory.newThread(runnable).also {
+            it.name = "xquik-stream-handler-thread-${count.getAndIncrement()}"
+        }
 }

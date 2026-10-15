@@ -12,6 +12,10 @@
 * `client.x().getTrends()` takes `at`, `country`, `location`, `fields` and `omit`, and its response gains `capturedAt`, `location` and `requestedAt`.
 * `client.x()` gains `jobs()` with `retrieve`, `listLocations` and `search`, and `spaces()` with `retrieve`, `retrieveReplay` and `search`.
 * `client.x()` gains `broadcasts()` with `retrieve`, and `communityNotes()` with `retrieveContributor`, `listContributorNotes` and `listContributorDeletedNotes`.
+* `client.x()` gains the `analysis()` subresource with `sentiment`, `viralScore`, `brand`, `news`, `marketSignals` and `classify`.
+* `client.events()` gains `stream`, which reads the server-sent event stream as `Event` values. The sync client returns a `StreamResponse` and the async client an `AsyncStreamResponse`. Keep-alive comments never reach the caller.
+* `client.webhooks()` gains `createTelegramLink` and `client.extractions()` gains `cancel`.
+* `ClientOptions` and the OkHttp client builders gain `streamHandlerExecutor`, which runs async stream callbacks.
 
 ### Chores
 

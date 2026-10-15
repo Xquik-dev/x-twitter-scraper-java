@@ -143,6 +143,10 @@ private constructor(
     }
 
     @JvmSynthetic
+    internal fun forStream(): Timeout =
+        Timeout(connect, read ?: Duration.ofMinutes(1), write ?: request(), Duration.ZERO)
+
+    @JvmSynthetic
     internal fun assign(target: Timeout): Timeout =
         target
             .toBuilder()
