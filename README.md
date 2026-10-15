@@ -69,6 +69,8 @@ Call REST directly when a Maven dependency does not fit.
 | Scrape an X profile timeline | `GET /x/users/{id}/tweets` | `client.x().users()` |
 | Export X followers | `GET /x/users/{id}/followers` | `client.x().users()` |
 | Export X following accounts | `GET /x/users/{id}/following` | `client.x().users()` |
+| Export follower or following IDs without profiles | `GET /x/users/{id}/follower-ids`, `GET /x/users/{id}/following-ids` | `client.x().users()` |
+| Read a user's lists, highlights, articles, or live status | `GET /x/users/{id}/lists`, `GET /x/users/{id}/highlights`, `GET /x/users/{id}/articles`, `GET /x/users/{id}/live` | `client.x().users()` |
 | Collect verified followers | `GET /x/users/{id}/verified-followers` | `client.x().users()` |
 | Collect mentions, likes, replies, or media | `GET /x/users/{id}/mentions`, `GET /x/users/{id}/likes` | `client.x().users()` |
 | Extract an X home timeline | `GET /x/timeline` | `client.x()` |

@@ -1,0 +1,299 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
+package com.x_twitter_scraper.api.models.x.users
+
+import com.x_twitter_scraper.api.core.Params
+import com.x_twitter_scraper.api.core.http.Headers
+import com.x_twitter_scraper.api.core.http.QueryParams
+import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
+
+/**
+ * Returns the public X Lists the selected user created, in X's order, as the profile's Lists tab
+ * shows them. Each List costs 1 credit. A protected account answers 403.
+ */
+class UserRetrieveListsParams
+private constructor(
+    private val id: String?,
+    private val cursor: String?,
+    private val fields: String?,
+    private val omit: String?,
+    private val pageSize: Long?,
+    private val additionalHeaders: Headers,
+    private val additionalQueryParams: QueryParams,
+) : Params {
+
+    fun id(): Optional<String> = Optional.ofNullable(id)
+
+    /**
+     * Pagination cursor for collection results. Also read as next_cursor, next_token,
+     * pagination_token or continuation_token.
+     */
+    fun cursor(): Optional<String> = Optional.ofNullable(cursor)
+
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+     * author.username. A list keeps the field in each item. Case & underscores do not matter. A row
+     * that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name
+     * answers 400 unknown_field with the valid names, before any read. The price stays the same.
+     * SDK row types then hold only the named fields.
+     */
+    fun fields(): Optional<String> = Optional.ofNullable(fields)
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+     * fields, it drops from the kept fields.
+     */
+    fun omit(): Optional<String> = Optional.ofNullable(omit)
+
+    /**
+     * Items per page (1-100, default 20). Source, filters or credits can return fewer. Follow
+     * next_cursor for more pages. Its aliases are limit, count, max_results, maxItems, max_items &
+     * per_page.
+     */
+    fun pageSize(): Optional<Long> = Optional.ofNullable(pageSize)
+
+    /** Additional headers to send with the request. */
+    fun _additionalHeaders(): Headers = additionalHeaders
+
+    /** Additional query param to send with the request. */
+    fun _additionalQueryParams(): QueryParams = additionalQueryParams
+
+    fun toBuilder() = Builder().from(this)
+
+    companion object {
+
+        @JvmStatic fun none(): UserRetrieveListsParams = builder().build()
+
+        /** Returns a mutable builder for constructing an instance of [UserRetrieveListsParams]. */
+        @JvmStatic fun builder() = Builder()
+    }
+
+    /** A builder for [UserRetrieveListsParams]. */
+    class Builder internal constructor() {
+
+        private var id: String? = null
+        private var cursor: String? = null
+        private var fields: String? = null
+        private var omit: String? = null
+        private var pageSize: Long? = null
+        private var additionalHeaders: Headers.Builder = Headers.builder()
+        private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
+
+        @JvmSynthetic
+        internal fun from(userRetrieveListsParams: UserRetrieveListsParams) = apply {
+            id = userRetrieveListsParams.id
+            cursor = userRetrieveListsParams.cursor
+            fields = userRetrieveListsParams.fields
+            omit = userRetrieveListsParams.omit
+            pageSize = userRetrieveListsParams.pageSize
+            additionalHeaders = userRetrieveListsParams.additionalHeaders.toBuilder()
+            additionalQueryParams = userRetrieveListsParams.additionalQueryParams.toBuilder()
+        }
+
+        fun id(id: String?) = apply { this.id = id }
+
+        /** Alias for calling [Builder.id] with `id.orElse(null)`. */
+        fun id(id: Optional<String>) = id(id.getOrNull())
+
+        /**
+         * Pagination cursor for collection results. Also read as next_cursor, next_token,
+         * pagination_token or continuation_token.
+         */
+        fun cursor(cursor: String?) = apply { this.cursor = cursor }
+
+        /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
+        fun cursor(cursor: Optional<String>) = cursor(cursor.getOrNull())
+
+        /**
+         * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+         * author.username. A list keeps the field in each item. Case & underscores do not matter. A
+         * row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An
+         * unknown name answers 400 unknown_field with the valid names, before any read. The price
+         * stays the same. SDK row types then hold only the named fields.
+         */
+        fun fields(fields: String?) = apply { this.fields = fields }
+
+        /** Alias for calling [Builder.fields] with `fields.orElse(null)`. */
+        fun fields(fields: Optional<String>) = fields(fields.getOrNull())
+
+        /**
+         * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+         * fields, it drops from the kept fields.
+         */
+        fun omit(omit: String?) = apply { this.omit = omit }
+
+        /** Alias for calling [Builder.omit] with `omit.orElse(null)`. */
+        fun omit(omit: Optional<String>) = omit(omit.getOrNull())
+
+        /**
+         * Items per page (1-100, default 20). Source, filters or credits can return fewer. Follow
+         * next_cursor for more pages. Its aliases are limit, count, max_results, maxItems,
+         * max_items & per_page.
+         */
+        fun pageSize(pageSize: Long?) = apply { this.pageSize = pageSize }
+
+        /** Alias for [Builder.pageSize]. */
+        fun pageSize(pageSize: Long) = pageSize(pageSize as Long?)
+
+        /** Alias for calling [Builder.pageSize] with `pageSize.orElse(null)`. */
+        fun pageSize(pageSize: Optional<Long>) = pageSize(pageSize.getOrNull())
+
+        fun additionalHeaders(additionalHeaders: Headers) = apply {
+            this.additionalHeaders.clear()
+            putAllAdditionalHeaders(additionalHeaders)
+        }
+
+        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
+            this.additionalHeaders.clear()
+            putAllAdditionalHeaders(additionalHeaders)
+        }
+
+        fun putAdditionalHeader(name: String, value: String) = apply {
+            additionalHeaders.put(name, value)
+        }
+
+        fun putAdditionalHeaders(name: String, values: Iterable<String>) = apply {
+            additionalHeaders.put(name, values)
+        }
+
+        fun putAllAdditionalHeaders(additionalHeaders: Headers) = apply {
+            this.additionalHeaders.putAll(additionalHeaders)
+        }
+
+        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
+            this.additionalHeaders.putAll(additionalHeaders)
+        }
+
+        fun replaceAdditionalHeaders(name: String, value: String) = apply {
+            additionalHeaders.replace(name, value)
+        }
+
+        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) = apply {
+            additionalHeaders.replace(name, values)
+        }
+
+        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) = apply {
+            this.additionalHeaders.replaceAll(additionalHeaders)
+        }
+
+        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
+            this.additionalHeaders.replaceAll(additionalHeaders)
+        }
+
+        fun removeAdditionalHeaders(name: String) = apply { additionalHeaders.remove(name) }
+
+        fun removeAllAdditionalHeaders(names: Set<String>) = apply {
+            additionalHeaders.removeAll(names)
+        }
+
+        fun additionalQueryParams(additionalQueryParams: QueryParams) = apply {
+            this.additionalQueryParams.clear()
+            putAllAdditionalQueryParams(additionalQueryParams)
+        }
+
+        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) = apply {
+            this.additionalQueryParams.clear()
+            putAllAdditionalQueryParams(additionalQueryParams)
+        }
+
+        fun putAdditionalQueryParam(key: String, value: String) = apply {
+            additionalQueryParams.put(key, value)
+        }
+
+        fun putAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
+            additionalQueryParams.put(key, values)
+        }
+
+        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
+            this.additionalQueryParams.putAll(additionalQueryParams)
+        }
+
+        fun putAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.putAll(additionalQueryParams)
+            }
+
+        fun replaceAdditionalQueryParams(key: String, value: String) = apply {
+            additionalQueryParams.replace(key, value)
+        }
+
+        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
+            additionalQueryParams.replace(key, values)
+        }
+
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
+            this.additionalQueryParams.replaceAll(additionalQueryParams)
+        }
+
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.replaceAll(additionalQueryParams)
+            }
+
+        fun removeAdditionalQueryParams(key: String) = apply { additionalQueryParams.remove(key) }
+
+        fun removeAllAdditionalQueryParams(keys: Set<String>) = apply {
+            additionalQueryParams.removeAll(keys)
+        }
+
+        /**
+         * Returns an immutable instance of [UserRetrieveListsParams].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         */
+        fun build(): UserRetrieveListsParams =
+            UserRetrieveListsParams(
+                id,
+                cursor,
+                fields,
+                omit,
+                pageSize,
+                additionalHeaders.build(),
+                additionalQueryParams.build(),
+            )
+    }
+
+    fun _pathParam(index: Int): String =
+        when (index) {
+            0 -> id ?: ""
+            else -> ""
+        }
+
+    override fun _headers(): Headers = additionalHeaders
+
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                cursor?.let { put("cursor", it) }
+                fields?.let { put("fields", it) }
+                omit?.let { put("omit", it) }
+                pageSize?.let { put("pageSize", it.toString()) }
+                putAll(additionalQueryParams)
+            }
+            .build()
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+
+        return other is UserRetrieveListsParams &&
+            id == other.id &&
+            cursor == other.cursor &&
+            fields == other.fields &&
+            omit == other.omit &&
+            pageSize == other.pageSize &&
+            additionalHeaders == other.additionalHeaders &&
+            additionalQueryParams == other.additionalQueryParams
+    }
+
+    override fun hashCode(): Int =
+        Objects.hash(id, cursor, fields, omit, pageSize, additionalHeaders, additionalQueryParams)
+
+    override fun toString() =
+        "UserRetrieveListsParams{id=$id, cursor=$cursor, fields=$fields, omit=$omit, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+}

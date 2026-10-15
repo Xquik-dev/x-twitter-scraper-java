@@ -23,22 +23,43 @@ import com.x_twitter_scraper.api.models.PaginatedUsers
 import com.x_twitter_scraper.api.models.UserProfile
 import com.x_twitter_scraper.api.models.x.users.UserRemoveFollowerParams
 import com.x_twitter_scraper.api.models.x.users.UserRemoveFollowerResponse
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveAffiliatesParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveArticlesParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveBatchParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveBatchResponse
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveBatchTweetsParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveBatchTweetsResponse
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowerIdsParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowerIdsResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowersParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowersResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowersYouKnowParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowingIdsParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowingIdsResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowingParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowingResponse
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveHighlightsParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveInsightsParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveInsightsResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveLikesParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveListMembershipsParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveListMembershipsResponse
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveListsParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveListsResponse
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveLiveParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveLiveResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveMediaParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveMentionsParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveRepliesParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveSearchParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveSimilarParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveSubscriptionsParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveTweetsParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveVerifiedFollowersParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveVerifiedFollowersResponse
+import com.x_twitter_scraper.api.models.x.users.UserTranslateBioParams
+import com.x_twitter_scraper.api.models.x.users.UserTranslateBioResponse
 import com.x_twitter_scraper.api.services.blocking.x.users.FollowService
 import com.x_twitter_scraper.api.services.blocking.x.users.FollowServiceImpl
 import java.util.function.Consumer
@@ -68,10 +89,32 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
         requestOptions: RequestOptions,
     ): UserRemoveFollowerResponse = withRawResponse().removeFollower(params, requestOptions).parse()
 
+    override fun retrieveAffiliates(
+        params: UserRetrieveAffiliatesParams,
+        requestOptions: RequestOptions,
+    ): PaginatedUsers = withRawResponse().retrieveAffiliates(params, requestOptions).parse()
+
+    override fun retrieveArticles(
+        params: UserRetrieveArticlesParams,
+        requestOptions: RequestOptions,
+    ): PaginatedTweets = withRawResponse().retrieveArticles(params, requestOptions).parse()
+
     override fun retrieveBatch(
         params: UserRetrieveBatchParams,
         requestOptions: RequestOptions,
     ): UserRetrieveBatchResponse = withRawResponse().retrieveBatch(params, requestOptions).parse()
+
+    override fun retrieveBatchTweets(
+        params: UserRetrieveBatchTweetsParams,
+        requestOptions: RequestOptions,
+    ): UserRetrieveBatchTweetsResponse =
+        withRawResponse().retrieveBatchTweets(params, requestOptions).parse()
+
+    override fun retrieveFollowerIds(
+        params: UserRetrieveFollowerIdsParams,
+        requestOptions: RequestOptions,
+    ): UserRetrieveFollowerIdsResponse =
+        withRawResponse().retrieveFollowerIds(params, requestOptions).parse()
 
     override fun retrieveFollowers(
         params: UserRetrieveFollowersParams,
@@ -90,10 +133,43 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
     ): UserRetrieveFollowingResponse =
         withRawResponse().retrieveFollowing(params, requestOptions).parse()
 
+    override fun retrieveFollowingIds(
+        params: UserRetrieveFollowingIdsParams,
+        requestOptions: RequestOptions,
+    ): UserRetrieveFollowingIdsResponse =
+        withRawResponse().retrieveFollowingIds(params, requestOptions).parse()
+
+    override fun retrieveHighlights(
+        params: UserRetrieveHighlightsParams,
+        requestOptions: RequestOptions,
+    ): PaginatedTweets = withRawResponse().retrieveHighlights(params, requestOptions).parse()
+
+    override fun retrieveInsights(
+        params: UserRetrieveInsightsParams,
+        requestOptions: RequestOptions,
+    ): UserRetrieveInsightsResponse =
+        withRawResponse().retrieveInsights(params, requestOptions).parse()
+
     override fun retrieveLikes(
         params: UserRetrieveLikesParams,
         requestOptions: RequestOptions,
     ): PaginatedTweets = withRawResponse().retrieveLikes(params, requestOptions).parse()
+
+    override fun retrieveListMemberships(
+        params: UserRetrieveListMembershipsParams,
+        requestOptions: RequestOptions,
+    ): UserRetrieveListMembershipsResponse =
+        withRawResponse().retrieveListMemberships(params, requestOptions).parse()
+
+    override fun retrieveLists(
+        params: UserRetrieveListsParams,
+        requestOptions: RequestOptions,
+    ): UserRetrieveListsResponse = withRawResponse().retrieveLists(params, requestOptions).parse()
+
+    override fun retrieveLive(
+        params: UserRetrieveLiveParams,
+        requestOptions: RequestOptions,
+    ): UserRetrieveLiveResponse = withRawResponse().retrieveLive(params, requestOptions).parse()
 
     override fun retrieveMedia(
         params: UserRetrieveMediaParams,
@@ -115,6 +191,16 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
         requestOptions: RequestOptions,
     ): PaginatedUsers = withRawResponse().retrieveSearch(params, requestOptions).parse()
 
+    override fun retrieveSimilar(
+        params: UserRetrieveSimilarParams,
+        requestOptions: RequestOptions,
+    ): PaginatedUsers = withRawResponse().retrieveSimilar(params, requestOptions).parse()
+
+    override fun retrieveSubscriptions(
+        params: UserRetrieveSubscriptionsParams,
+        requestOptions: RequestOptions,
+    ): PaginatedUsers = withRawResponse().retrieveSubscriptions(params, requestOptions).parse()
+
     override fun retrieveTweets(
         params: UserRetrieveTweetsParams,
         requestOptions: RequestOptions,
@@ -125,6 +211,11 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
         requestOptions: RequestOptions,
     ): UserRetrieveVerifiedFollowersResponse =
         withRawResponse().retrieveVerifiedFollowers(params, requestOptions).parse()
+
+    override fun translateBio(
+        params: UserTranslateBioParams,
+        requestOptions: RequestOptions,
+    ): UserTranslateBioResponse = withRawResponse().translateBio(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         UserService.WithRawResponse {
@@ -203,6 +294,62 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
             }
         }
 
+        private val retrieveAffiliatesHandler: Handler<PaginatedUsers> =
+            jsonHandler<PaginatedUsers>(clientOptions.jsonMapper)
+
+        override fun retrieveAffiliates(
+            params: UserRetrieveAffiliatesParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<PaginatedUsers> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "users", params._pathParam(0), "affiliates")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { retrieveAffiliatesHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val retrieveArticlesHandler: Handler<PaginatedTweets> =
+            jsonHandler<PaginatedTweets>(clientOptions.jsonMapper)
+
+        override fun retrieveArticles(
+            params: UserRetrieveArticlesParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<PaginatedTweets> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "users", params._pathParam(0), "articles")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { retrieveArticlesHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
         private val retrieveBatchHandler: Handler<UserRetrieveBatchResponse> =
             jsonHandler<UserRetrieveBatchResponse>(clientOptions.jsonMapper)
 
@@ -222,6 +369,61 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
             return errorHandler.handle(response).parseable {
                 response
                     .use { retrieveBatchHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val retrieveBatchTweetsHandler: Handler<UserRetrieveBatchTweetsResponse> =
+            jsonHandler<UserRetrieveBatchTweetsResponse>(clientOptions.jsonMapper)
+
+        override fun retrieveBatchTweets(
+            params: UserRetrieveBatchTweetsParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<UserRetrieveBatchTweetsResponse> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "users", "batch", "tweets")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { retrieveBatchTweetsHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val retrieveFollowerIdsHandler: Handler<UserRetrieveFollowerIdsResponse> =
+            jsonHandler<UserRetrieveFollowerIdsResponse>(clientOptions.jsonMapper)
+
+        override fun retrieveFollowerIds(
+            params: UserRetrieveFollowerIdsParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<UserRetrieveFollowerIdsResponse> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "users", params._pathParam(0), "follower-ids")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { retrieveFollowerIdsHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()
@@ -314,6 +516,90 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
             }
         }
 
+        private val retrieveFollowingIdsHandler: Handler<UserRetrieveFollowingIdsResponse> =
+            jsonHandler<UserRetrieveFollowingIdsResponse>(clientOptions.jsonMapper)
+
+        override fun retrieveFollowingIds(
+            params: UserRetrieveFollowingIdsParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<UserRetrieveFollowingIdsResponse> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "users", params._pathParam(0), "following-ids")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { retrieveFollowingIdsHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val retrieveHighlightsHandler: Handler<PaginatedTweets> =
+            jsonHandler<PaginatedTweets>(clientOptions.jsonMapper)
+
+        override fun retrieveHighlights(
+            params: UserRetrieveHighlightsParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<PaginatedTweets> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "users", params._pathParam(0), "highlights")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { retrieveHighlightsHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val retrieveInsightsHandler: Handler<UserRetrieveInsightsResponse> =
+            jsonHandler<UserRetrieveInsightsResponse>(clientOptions.jsonMapper)
+
+        override fun retrieveInsights(
+            params: UserRetrieveInsightsParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<UserRetrieveInsightsResponse> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "users", params._pathParam(0), "insights")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { retrieveInsightsHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
         private val retrieveLikesHandler: Handler<PaginatedTweets> =
             jsonHandler<PaginatedTweets>(clientOptions.jsonMapper)
 
@@ -334,6 +620,90 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
             return errorHandler.handle(response).parseable {
                 response
                     .use { retrieveLikesHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val retrieveListMembershipsHandler: Handler<UserRetrieveListMembershipsResponse> =
+            jsonHandler<UserRetrieveListMembershipsResponse>(clientOptions.jsonMapper)
+
+        override fun retrieveListMemberships(
+            params: UserRetrieveListMembershipsParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<UserRetrieveListMembershipsResponse> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "users", params._pathParam(0), "list-memberships")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { retrieveListMembershipsHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val retrieveListsHandler: Handler<UserRetrieveListsResponse> =
+            jsonHandler<UserRetrieveListsResponse>(clientOptions.jsonMapper)
+
+        override fun retrieveLists(
+            params: UserRetrieveListsParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<UserRetrieveListsResponse> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "users", params._pathParam(0), "lists")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { retrieveListsHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val retrieveLiveHandler: Handler<UserRetrieveLiveResponse> =
+            jsonHandler<UserRetrieveLiveResponse>(clientOptions.jsonMapper)
+
+        override fun retrieveLive(
+            params: UserRetrieveLiveParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<UserRetrieveLiveResponse> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "users", params._pathParam(0), "live")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { retrieveLiveHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()
@@ -453,6 +823,62 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
             }
         }
 
+        private val retrieveSimilarHandler: Handler<PaginatedUsers> =
+            jsonHandler<PaginatedUsers>(clientOptions.jsonMapper)
+
+        override fun retrieveSimilar(
+            params: UserRetrieveSimilarParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<PaginatedUsers> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "users", params._pathParam(0), "similar")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { retrieveSimilarHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val retrieveSubscriptionsHandler: Handler<PaginatedUsers> =
+            jsonHandler<PaginatedUsers>(clientOptions.jsonMapper)
+
+        override fun retrieveSubscriptions(
+            params: UserRetrieveSubscriptionsParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<PaginatedUsers> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "users", params._pathParam(0), "subscriptions")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { retrieveSubscriptionsHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
         private val retrieveTweetsHandler: Handler<PaginatedTweets> =
             jsonHandler<PaginatedTweets>(clientOptions.jsonMapper)
 
@@ -502,6 +928,34 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
             return errorHandler.handle(response).parseable {
                 response
                     .use { retrieveVerifiedFollowersHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val translateBioHandler: Handler<UserTranslateBioResponse> =
+            jsonHandler<UserTranslateBioResponse>(clientOptions.jsonMapper)
+
+        override fun translateBio(
+            params: UserTranslateBioParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<UserTranslateBioResponse> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "users", params._pathParam(0), "translation")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { translateBioHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()
