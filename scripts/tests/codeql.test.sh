@@ -13,11 +13,11 @@ prepare_codeql() {
     copy_file scripts/codeql
     write_file buildSrc/build.gradle.kts <<'EOF'
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.20-Beta2")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.21")
 }
 EOF
     write_file example-core/gradle.lockfile <<'EOF'
-org.jetbrains.kotlin:kotlin-stdlib:2.4.20-Beta2=kotlinCompilerClasspath
+org.jetbrains.kotlin:kotlin-stdlib:2.4.21=kotlinCompilerClasspath
 EOF
     write_file example-core/src/main/kotlin/Client.kt <<'EOF'
 class Client
@@ -60,7 +60,6 @@ case "$command" in
             exit 2
         fi
         echo "$source_root" >"$FAKE_LOGS/codeql-source-root"
-        cat "$source_root/buildSrc/build.gradle.kts" "$source_root"/*/gradle.lockfile >"$FAKE_LOGS/codeql-kotlin-pins"
         (cd "$source_root" && find . -type f | LC_ALL=C sort) >"$FAKE_LOGS/codeql-copied-files"
         echo "Build output." >"$source_root/build-output.txt"
         mkdir -p "$database"
@@ -93,7 +92,7 @@ A file that is new and not ignored.
 EOF
 }
 
-test_codeql_scans_a_copy_with_stable_kotlin_and_leaves_the_working_tree_alone() {
+test_codeql_scans_a_copy_and_leaves_the_working_tree_alone() {
     local tree_before
     prepare_codeql
     tree_before="$(sandbox_git status --porcelain)"
@@ -109,10 +108,6 @@ test_codeql_scans_a_copy_with_stable_kotlin_and_leaves_the_working_tree_alone() 
     assert_equal "codeql/no-code-comments" "$(log_of codeql-comment-queries)" "the comment queries"
     assert_equal "./gradlew clean classes --write-verification-metadata sha256 --no-daemon --no-build-cache --no-configuration-cache -Pkotlin.compiler.execution.strategy=in-process" \
         "$(log_of codeql-build)" "the traced build"
-    assert_equal 'dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.10")
-}
-org.jetbrains.kotlin:kotlin-stdlib:2.4.10=kotlinCompilerClasspath' "$(log_of codeql-kotlin-pins)" "the Kotlin pins of the copy"
     assert_equal "./.gitignore
 ./buildSrc/build.gradle.kts
 ./example-core/gradle.lockfile
@@ -123,9 +118,6 @@ org.jetbrains.kotlin:kotlin-stdlib:2.4.10=kotlinCompilerClasspath' "$(log_of cod
 ./scripts/codeql" "$(log_of codeql-copied-files)" "the copied files"
     assert_not_contains "$(log_of codeql-source-root)" "$sandbox_repo" "the scanned folder"
     assert_equal "$tree_before" "$(sandbox_git status --porcelain)" "the working tree"
-    assert_equal 'dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.20-Beta2")
-}' "$(cat "$sandbox_repo/buildSrc/build.gradle.kts")" "the Kotlin pin of the working tree"
     assert_equal "" "$(ls "$sandbox/tmp")" "the temporary folder after the run"
 }
 

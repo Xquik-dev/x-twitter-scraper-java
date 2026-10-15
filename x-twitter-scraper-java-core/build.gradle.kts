@@ -21,7 +21,7 @@ configurations.all {
 }
 
 dependencies {
-    mockitoAgent("org.mockito:mockito-core:5.23.0") {
+    mockitoAgent("org.mockito:mockito-core:5.24.0") {
         isTransitive = false
     }
 
@@ -37,8 +37,8 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation(project(":x-twitter-scraper-java-client-okhttp"))
-    testImplementation(enforcedPlatform("org.eclipse.jetty:jetty-bom:12.0.37"))
-    testImplementation(enforcedPlatform("org.eclipse.jetty.ee10:jetty-ee10-bom:12.0.37"))
+    testImplementation(enforcedPlatform("org.eclipse.jetty:jetty-bom:12.1.14"))
+    testImplementation(enforcedPlatform("org.eclipse.jetty.ee10:jetty-ee10-bom:12.1.14"))
     testImplementation("org.wiremock:wiremock-jetty12:3.13.2")
     testImplementation("org.assertj:assertj-core:3.27.7")
     testImplementation("com.code-intelligence:jazzer-junit:0.30.0")
@@ -46,10 +46,10 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params:6.1.3")
     testImplementation("org.junit.platform:junit-platform-launcher:6.1.3")
     testImplementation("org.junit-pioneer:junit-pioneer:2.3.0")
-    testImplementation("org.mockito:mockito-core:5.23.0")
-    testImplementation("org.mockito:mockito-junit-jupiter:5.23.0")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:6.3.0")
-    testRuntimeOnly("org.slf4j:slf4j-nop:2.0.17")
+    testImplementation("org.mockito:mockito-core:5.24.0")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.24.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:6.4.0")
+    testRuntimeOnly("org.slf4j:slf4j-nop:2.0.20")
 }
 
 tasks.withType<Test>().configureEach {
