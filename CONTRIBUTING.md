@@ -71,7 +71,7 @@ CodeQL traces a Gradle build of a copy of the source files, so your working tree
 The run fails when a check changed or added files in a clean working tree.
 
 The dependency audit checks licenses, then scans every lockfile with OSV Scanner.
-It passes each `gradle.lockfile` to the scanner by path and skips build output and hidden folders, such as other worktrees under `.claude/worktrees`.
+It passes the scanner each `gradle.lockfile` and `gradle/verification-metadata.xml` that Git does not ignore, so other worktrees under `.claude/worktrees` stay out.
 It downloads a checksum-verified OSV Scanner unless `OSV_SCANNER_BIN` names one.
 It fails on any finding in a dependency that a published module ships at runtime.
 It also fails on a development-only finding unless `audit-exceptions.json` lists it and no fix exists.
