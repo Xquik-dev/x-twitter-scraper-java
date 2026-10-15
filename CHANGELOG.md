@@ -11,6 +11,10 @@
 * The jackson-databind fixes are GHSA-cxp5-3px4-pw24, GHSA-q4xh-88c3-wmh7, GHSA-wv8q-qhhj-9h54, GHSA-gx83-3vf8-gh7j & GHSA-wjgm-6hv5-3cvf.
 * The SDK's own JSON handling does not use the affected features. Your application gets the same Jackson version through the SDK, so update if it parses untrusted JSON with Jackson.
 
+### Bug fixes
+
+* Reading the generic types of a raw response's class no longer throws `TypeNotPresentException`.
+
 ### Documentation
 
 * The README title is now "X API & Twitter API Java SDK by Xquik".
@@ -20,6 +24,7 @@
 ### Chores
 
 * The prefix of the idempotency key that the client can generate is now `xquik-java-retry-`. The client never sends that key by default, so no request changes.
+* The SDK now depends on kotlin-stdlib 2.3.21, the latest patch of the 2.3 line, instead of 2.3.20.
 
 ## 0.10.3 (2026-08-21)
 
