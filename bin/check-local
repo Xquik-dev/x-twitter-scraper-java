@@ -111,6 +111,10 @@ done
 start_check "JDK setup" "" "Set JAVA_HOME to JDK 26 and SHRINKER_JAVA_HOME to JDK 25, then rerun."
 jdks_ready
 
+start_check "API coverage" "API coverage" "Fix the API coverage lines above, then rerun."
+./scripts/api-coverage
+pass_check
+
 start_check "Java and Kotlin formatting" "lint" "Run ./scripts/format, then rerun."
 ./scripts/lint
 pass_check

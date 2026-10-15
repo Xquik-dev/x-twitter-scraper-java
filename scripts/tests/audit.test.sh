@@ -77,6 +77,7 @@ exit 1
 EOF
     chmod 755 "$sandbox/osv-scanner"
     run_env=("OSV_SCANNER_BIN=$sandbox/osv-scanner")
+    sandbox_git init --quiet --initial-branch=main
 }
 
 report_finding() {
@@ -239,8 +240,46 @@ test_a_report_without_findings_passes_with_an_empty_exceptions_list() {
     assert_equal 0 "$run_status" "the exit code"
     assert_equal "$audit_start
 Dependency licenses and vulnerabilities passed policy." "$run_stdout" "stdout"
-    assert_equal "scan source --recursive --format json ." "$(log_of osv-scanner)" "the scanner call"
+    assert_equal "scan source --no-ignore --format json --lockfile=x-twitter-scraper-java-client-okhttp/gradle.lockfile --lockfile=x-twitter-scraper-java-core/gradle.lockfile --lockfile=x-twitter-scraper-java/gradle.lockfile" \
+        "$(log_of osv-scanner)" "the scanner call"
     assert_equal "checkLicense --no-parallel --no-configuration-cache --no-build-cache" "$(log_of gradlew)" "the Gradle call"
+}
+
+test_the_scan_reads_the_lockfiles_and_checksum_metadata_that_git_does_not_ignore() {
+    prepare_audit
+    write_file .gitignore <<'EOF'
+.claude/worktrees/
+build/
+EOF
+    write_file .claude/worktrees/other/x-twitter-scraper-java-core/gradle.lockfile <<'EOF'
+empty=
+EOF
+    write_file x-twitter-scraper-java-core/build/tmp/gradle.lockfile <<'EOF'
+empty=
+EOF
+    write_file buildSrc/gradle.lockfile <<'EOF'
+empty=
+EOF
+    write_file gradle/verification-metadata.xml <<'EOF'
+<verification-metadata/>
+EOF
+
+    run_in_repo scripts/audit
+
+    assert_equal 0 "$run_status" "the exit code"
+    assert_equal "scan source --no-ignore --format json --lockfile=buildSrc/gradle.lockfile --lockfile=gradle/verification-metadata.xml --lockfile=x-twitter-scraper-java-client-okhttp/gradle.lockfile --lockfile=x-twitter-scraper-java-core/gradle.lockfile --lockfile=x-twitter-scraper-java/gradle.lockfile" \
+        "$(log_of osv-scanner)" "the scanner call"
+}
+
+test_a_checkout_without_lockfiles_stops_before_the_scan() {
+    prepare_audit
+    rm -- "$sandbox_repo"/x-twitter-scraper-java*/gradle.lockfile
+
+    run_in_repo scripts/audit
+
+    assert_equal 1 "$run_status" "the exit code"
+    assert_ends_with "$run_stderr" "Found no gradle.lockfile to audit. Run the audit from a Git checkout of the repository." "stderr"
+    assert_equal "" "$(log_of osv-scanner)" "the scanner calls"
 }
 
 test_a_scanner_error_blocks() {

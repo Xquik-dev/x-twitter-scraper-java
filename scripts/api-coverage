@@ -1,0 +1,295 @@
+#!/usr/bin/env bash
+
+# SPDX-FileCopyrightText: 2026 Xquik contributors
+#
+# SPDX-License-Identifier: Apache-2.0
+
+set -euo pipefail
+
+readonly default_spec="https://xquik.com/openapi.json"
+readonly spec_source="${XQUIK_OPENAPI_SPEC:-$default_spec}"
+case "$spec_source" in
+    http://* | https://*) spec_file="" ;;
+    /*) spec_file="$spec_source" ;;
+    *) spec_file="$PWD/$spec_source" ;;
+esac
+
+cd -- "$(dirname -- "$0")/.."
+
+readonly exclusion_file="excluded-operations.json"
+readonly client_options="x-twitter-scraper-java-core/src/main/kotlin/com/x_twitter_scraper/api/core/ClientOptions.kt"
+readonly services_root="x-twitter-scraper-java-core/src/main/kotlin/com/x_twitter_scraper/api/services"
+readonly http_methods="GET|PUT|POST|DELETE|OPTIONS|HEAD|PATCH|TRACE"
+
+workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-java-api-coverage.XXXXXX")"
+trap 'rm -rf -- "${workspace:?}"' EXIT
+
+exclusions_invalid() {
+    echo "$exclusion_file is not valid. $1." >&2
+    echo "Fix $exclusion_file as each line above says." >&2
+    exit 1
+}
+
+check_exclusions() {
+    local status=0
+    [[ -f "$exclusion_file" ]] || exclusions_invalid "The file does not exist"
+    jq --slurp --raw-output --arg file "$exclusion_file" --arg methods "$http_methods" '
+        def problems:
+            if length != 1 then
+                ["The file must hold exactly 1 JSON array of groups"]
+            elif (.[0] | type) != "array" then
+                ["The file must hold a JSON array of groups"]
+            else
+                [(.[0] | to_entries[] | (.key + 1) as $number | .value
+                    | if type != "object" then
+                        "Group \($number) must be an object with a reason and operations"
+                    else
+                        ((keys - ["reason", "operations"])[] | "Group \($number) has the unknown key \(.)"),
+                        (if (.reason | type) != "string" or (.reason | test("^\\s*$")) then
+                            "Group \($number) needs a non-empty reason"
+                        else empty end),
+                        (if (.operations | type) != "array" or (.operations | length) == 0 then
+                            "Group \($number) needs at least 1 operation"
+                        else
+                            (.operations[]
+                                | select(type != "string" or (test("^(\($methods)) /[^ ]*$") | not))
+                                | "Group \($number) lists \(tojson), which is not an operation such as GET /api/v1/x/trends")
+                        end)
+                    end),
+                (.[0] | [.[] | objects | .operations | arrays | .[] | strings]
+                    | group_by(gsub("\\{[^}]*\\}"; "{}"))
+                    | .[]
+                    | select(length > 1)
+                    | "\(.[0]) appears more than once")]
+            end;
+        problems
+        | if length > 0 then
+            map("\($file) is not valid. \(.).") + ["Fix \($file) as each line above says."]
+            | join("\n") + "\n"
+            | halt_error(1)
+        else empty end
+    ' "$exclusion_file" 2>"$workspace/exclusions.err" || status=$?
+    if ((status == 1)); then
+        cat "$workspace/exclusions.err" >&2
+        exit 1
+    elif ((status != 0)); then
+        exclusions_invalid "The file is not valid JSON"
+    fi
+}
+
+read_base_url() {
+    local base_url
+    base_url="$(sed -n 's/^ *const val PRODUCTION_URL = "\([^"]*\)"$/\1/p' "$client_options" 2>/dev/null)" || true
+    if [[ -z "$base_url" || "$base_url" == *$'\n'* ]]; then
+        echo "Could not read the default base URL from PRODUCTION_URL in $client_options. Keep it as 1 const val with a string literal." >&2
+        exit 1
+    fi
+    printf '%s' "$base_url"
+}
+
+list_sdk_operations() {
+    local impl_files=()
+    while IFS= read -r -d '' file; do
+        impl_files+=("$file")
+    done < <(find "$services_root" -name '*Impl.kt' -print0 | LC_ALL=C sort -z)
+    if ((${#impl_files[@]} == 0)); then
+        echo "Found no service Impl files under $services_root." >&2
+        exit 1
+    fi
+    awk -v methods="$http_methods" '
+        function report(file, line, message) {
+            print file ":" line " " message > "/dev/stderr"
+            failed = 1
+        }
+        function reject(line, message) {
+            report(FILENAME, line, message)
+            broken = 1
+        }
+        function finish_request() {
+            if (in_request && !broken) {
+                if (method == "") {
+                    report(request_file, request_line, "builds a request without a .method(HttpMethod.X) line the check can read.")
+                } else if (segments == "") {
+                    report(request_file, request_line, "builds a request without an .addPathSegments(...) call the check can read.")
+                } else {
+                    print method " " segments
+                }
+            }
+            in_request = 0
+            broken = 0
+        }
+        function parse_segments(arguments,    count, parts, position, part, path) {
+            sub(/^[ \t]*\.addPathSegments\(/, "", arguments)
+            sub(/\)[ \t]*$/, "", arguments)
+            sub(/,[ \t]*$/, "", arguments)
+            count = split(arguments, parts, ",")
+            path = ""
+            for (position = 1; position <= count; position++) {
+                part = parts[position]
+                gsub(/^[ \t]+|[ \t]+$/, "", part)
+                if (part ~ /^"[^"\\{}\/]+"$/) {
+                    path = path "/" substr(part, 2, length(part) - 2)
+                } else if (part ~ /^params\._pathParam\([0-9]+\)$/) {
+                    path = path "/{}"
+                } else {
+                    return ""
+                }
+            }
+            return path
+        }
+        function read_segments(arguments) {
+            segments = parse_segments(arguments)
+            if (segments == "") {
+                reject(segments_line, unreadable_segments)
+            }
+        }
+        BEGIN {
+            method_line = "^[ \t]*\\.method\\(HttpMethod\\.(" methods ")\\)[ \t]*$"
+            unreadable_segments = "has path segments the check cannot read. Use string literals and params._pathParam(N) only."
+        }
+        FNR == 1 {
+            finish_request()
+            collecting = 0
+        }
+        collecting {
+            arguments = arguments $0
+            if ($0 ~ /^[ \t]*\)[ \t]*$/) {
+                collecting = 0
+                read_segments(arguments)
+            }
+            next
+        }
+        /HttpRequest\.builder\(\)/ {
+            finish_request()
+            in_request = 1
+            request_file = FILENAME
+            request_line = FNR
+            method = ""
+            segments = ""
+            next
+        }
+        !in_request {
+            if ($0 ~ /\.method\(|\.addPathSegments\(/) {
+                report(FILENAME, FNR, "sets a request method or path outside an HttpRequest.builder() chain.")
+            }
+            next
+        }
+        /^[ \t]*\.build\(\)[ \t]*$/ {
+            finish_request()
+            next
+        }
+        broken {
+            next
+        }
+        /\.method\(/ {
+            if (method != "") {
+                reject(FNR, "sets a second request method in 1 HttpRequest.builder() chain.")
+            } else if ($0 ~ method_line) {
+                method = $0
+                sub(/^[ \t]*\.method\(HttpMethod\./, "", method)
+                sub(/\)[ \t]*$/, "", method)
+            } else {
+                reject(FNR, "sets a request method the check cannot read. Write .method(HttpMethod.X) on its own line.")
+            }
+            next
+        }
+        /\.addPathSegments\(/ {
+            segments_line = FNR
+            if (segments != "") {
+                reject(FNR, "adds path segments a second time in 1 HttpRequest.builder() chain.")
+            } else if ($0 ~ /^[ \t]*\.addPathSegments\($/) {
+                collecting = 1
+                arguments = $0
+            } else if ($0 ~ /^[ \t]*\.addPathSegments\(.*\)[ \t]*$/) {
+                read_segments($0)
+            } else {
+                reject(FNR, unreadable_segments)
+            }
+            next
+        }
+        END {
+            finish_request()
+            exit failed
+        }
+    ' "${impl_files[@]}"
+}
+
+spec_unreadable() {
+    echo "Could not read the API spec from $spec_source. Check network access, or set XQUIK_OPENAPI_SPEC to a local copy of $default_spec." >&2
+    exit 1
+}
+
+read_spec() {
+    if [[ -z "$spec_file" ]]; then
+        spec_file="$workspace/spec.json"
+        curl --fail --silent --location --max-time 60 --output "$spec_file" -- "$spec_source" 2>/dev/null ||
+            spec_unreadable
+    fi
+    jq -e '(type == "object") and (.paths | type == "object")' "$spec_file" >/dev/null 2>&1 ||
+        spec_unreadable
+}
+
+compare_operations() {
+    jq --raw-output \
+        --arg base_url "$1" \
+        --arg methods "$http_methods" \
+        --arg file "$exclusion_file" \
+        --rawfile sdk "$workspace/sdk.txt" \
+        --slurpfile exclusions "$exclusion_file" '
+        def url_path:
+            sub("^[A-Za-z][A-Za-z0-9+.-]*://[^/]*"; "") | sub("[?#].*$"; "") | sub("/+$"; "");
+        def first_url: if type == "array" and length > 0 then .[0].url // null else null end;
+        def identity: gsub("\\{[^}]*\\}"; "{}");
+        def lookup: map({(.): true}) | add // {};
+        ($methods | ascii_downcase | split("|")) as $method_keys
+        | ($base_url | url_path) as $base_path
+        | ($sdk | split("\n") | map(select(length > 0) | split(" ") | "\(.[0]) \($base_path)\(.[1])" | identity) | lookup)
+            as $sdk_set
+        | [$exclusions[0][].operations[]] as $excluded
+        | ($excluded | map(identity) | lookup) as $excluded_set
+        | (.servers | first_url) as $root
+        | [.paths
+            | to_entries[]
+            | .key as $path
+            | .value as $item
+            | $item
+            | to_entries[]
+            | select(.key as $key | $method_keys | index($key))
+            | ((.value.servers | first_url) // ($item.servers | first_url) // $root // "") as $server
+            | "\(.key | ascii_upcase) \($server | url_path)\($path)" as $operation
+            | {operation: $operation, identity: ($operation | identity), id: (.value.operationId // "")}]
+            as $spec
+        | ($spec | map(.identity) | lookup) as $spec_set
+        | [$spec[]
+            | select(($sdk_set[.identity] or $excluded_set[.identity]) | not)
+            | "\(.operation)\(if .id == "" then "" else " (\(.id))" end) is in the API but not in the SDK."]
+            as $missing
+        | [$excluded[]
+            | identity as $identity
+            | if ($spec_set[$identity] | not) then
+                "\($file) lists \(.), which the API no longer has. Remove it."
+            elif $sdk_set[$identity] then
+                "\($file) lists \(.), which the SDK already implements. Remove it."
+            else empty end]
+            as $stale
+        | ($spec | map(select($sdk_set[.identity])) | length) as $covered
+        | if ($missing + $stale | length) > 0 then
+            $missing + $stale
+            + [if ($missing | length) > 0 then
+                "Add each operation above to the SDK, or list it in \($file) with a reason."
+            else
+                "Fix \($file) as each line above says."
+            end]
+            | join("\n") + "\n"
+            | halt_error(1)
+        else
+            "The SDK covers \($covered) of \($spec | length) API operations, and \($file) lists the other \(($spec | length) - $covered)."
+        end
+    ' "$spec_file"
+}
+
+check_exclusions
+base_url="$(read_base_url)"
+list_sdk_operations >"$workspace/sdk.txt"
+read_spec
+compare_operations "$base_url"
