@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Chores
+
+* `bin/check-local` now fails when the API has an operation that the SDK neither sends nor lists in `excluded-operations.json`. CONTRIBUTING.md explains the check.
+
 ## 0.10.4 (2026-10-13)
 
 [Full changelog from v0.10.3 to v0.10.4](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.10.3...v0.10.4)

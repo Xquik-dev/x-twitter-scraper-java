@@ -62,7 +62,7 @@ bin/check-local
 ```
 
 It checks the tools and both JDKs first.
-Then it runs lint, shellcheck, the script tests, REUSE, build, tests, coverage, 30 seconds of Jazzer fuzzing, the dependency audit, the reproducible artifact check, and CodeQL security-extended queries.
+Then it runs the API coverage check, lint, shellcheck, the script tests, REUSE, build, tests, coverage, 30 seconds of Jazzer fuzzing, the dependency audit, the reproducible artifact check, and CodeQL security-extended queries.
 It stops at the first failure and says what to fix.
 REUSE 6.2.0 runs through `uvx` on every run.
 CodeQL and REUSE are required, and any finding fails the run.
@@ -118,6 +118,43 @@ When fuzzing finds a failure, Jazzer saves the input in `RetryAfterFuzzTestInput
 Service tests accept literal loopback traffic only.
 
 This guard prevents tests from mutating remote services.
+
+## API coverage
+
+`scripts/api-coverage` runs first in `bin/check-local`, so a release cannot ship an SDK that lags the API.
+It compares the operations in the API spec with the requests the SDK sends.
+It reads each request from the service `Impl` files, as the `HttpMethod` and the `addPathSegments` call of each `HttpRequest.builder()` chain.
+It puts the path of `PRODUCTION_URL` in `ClientOptions.kt` before each SDK path.
+An operation is its upper-case method and its absolute path, such as `GET /api/v1/x/trends/history`.
+The absolute path joins the URL path of the operation's server with the spec path.
+Path parameter names do not matter, so `{id}` and `{tweetId}` match.
+
+The check fails when the API has an operation that the SDK neither sends nor excludes.
+Add the operation to the SDK, or list it in `excluded-operations.json` with a reason.
+It also fails when the file lists an operation that the API no longer has or that the SDK already sends.
+Remove that entry.
+SDK operations that the API lacks pass.
+
+`excluded-operations.json` holds a JSON array of groups.
+Each group has a non-empty `reason` and at least 1 operation.
+An operation appears at most once in the file.
+
+```json
+[
+  {
+    "reason": "Searches the Xquik docs at https://xquik.com/ask, outside the SDK base URL https://xquik.com/api/v1.",
+    "operations": ["GET /ask", "POST /ask"]
+  }
+]
+```
+
+The check reads the public spec at https://xquik.com/openapi.json.
+Set `XQUIK_OPENAPI_SPEC` to a local JSON file or another URL to check against that copy.
+A relative file path is read from the folder you run the check in.
+
+```sh
+XQUIK_OPENAPI_SPEC=openapi.json ./scripts/api-coverage
+```
 
 ## Submit changes
 
