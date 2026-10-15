@@ -5,6 +5,7 @@
 ### Chores
 
 * `bin/check-local` now fails when the API has an operation that the SDK neither sends nor lists in `excluded-operations.json`. CONTRIBUTING.md explains the check.
+* The dependency audit passes each `gradle.lockfile` to OSV Scanner by path. It found no lockfiles in a worktree under `.claude/worktrees` before.
 
 ## 0.10.4 (2026-10-13)
 

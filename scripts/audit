@@ -117,9 +117,15 @@ exception_recheck() {
 }
 
 echo "==> Auditing locked dependencies"
+lockfile_arguments=()
+while IFS= read -r -d '' lockfile; do
+    lockfile_arguments+=("--lockfile=$lockfile")
+done < <(find . -name gradle.lockfile -not -path './.*' -not -path '*/build/*' -print0 | LC_ALL=C sort -z)
+((${#lockfile_arguments[@]} > 0)) ||
+    fail "Found no gradle.lockfile to audit. Run the audit from a full checkout of the repository."
 osv_report="$audit_workspace/osv.json"
 scan_status=0
-"$scanner" scan source --recursive --format json . >"$osv_report" || scan_status=$?
+"$scanner" scan source --no-ignore --format json "${lockfile_arguments[@]}" >"$osv_report" || scan_status=$?
 case "$scan_status" in
     0 | 1) ;;
     *) fail "OSV Scanner failed with exit code $scan_status. Fix the error above, then rerun." ;;

@@ -239,8 +239,28 @@ test_a_report_without_findings_passes_with_an_empty_exceptions_list() {
     assert_equal 0 "$run_status" "the exit code"
     assert_equal "$audit_start
 Dependency licenses and vulnerabilities passed policy." "$run_stdout" "stdout"
-    assert_equal "scan source --recursive --format json ." "$(log_of osv-scanner)" "the scanner call"
+    assert_equal "scan source --no-ignore --format json --lockfile=./x-twitter-scraper-java-client-okhttp/gradle.lockfile --lockfile=./x-twitter-scraper-java-core/gradle.lockfile --lockfile=./x-twitter-scraper-java/gradle.lockfile" \
+        "$(log_of osv-scanner)" "the scanner call"
     assert_equal "checkLicense --no-parallel --no-configuration-cache --no-build-cache" "$(log_of gradlew)" "the Gradle call"
+}
+
+test_the_scan_skips_lockfiles_in_hidden_and_build_folders() {
+    prepare_audit
+    write_file .claude/worktrees/other/x-twitter-scraper-java-core/gradle.lockfile <<'EOF'
+empty=
+EOF
+    write_file x-twitter-scraper-java-core/build/tmp/gradle.lockfile <<'EOF'
+empty=
+EOF
+    write_file buildSrc/gradle.lockfile <<'EOF'
+empty=
+EOF
+
+    run_in_repo scripts/audit
+
+    assert_equal 0 "$run_status" "the exit code"
+    assert_equal "scan source --no-ignore --format json --lockfile=./buildSrc/gradle.lockfile --lockfile=./x-twitter-scraper-java-client-okhttp/gradle.lockfile --lockfile=./x-twitter-scraper-java-core/gradle.lockfile --lockfile=./x-twitter-scraper-java/gradle.lockfile" \
+        "$(log_of osv-scanner)" "the scanner call"
 }
 
 test_a_scanner_error_blocks() {
