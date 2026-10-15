@@ -36,7 +36,7 @@ codeql database create "$database" \
     --language=java-kotlin \
     --source-root="$source_root" \
     --threads=0 \
-    --command="./gradlew clean classes --write-verification-metadata sha256 --no-daemon --no-build-cache --no-configuration-cache -Pkotlin.compiler.execution.strategy=in-process"
+    --command="./gradlew clean classes --no-daemon --no-build-cache --no-configuration-cache -Pkotlin.compiler.execution.strategy=in-process"
 
 source_count="$(
     find "$source_root" -path '*/src/main/*' -type f \( -name '*.kt' -o -name '*.java' \) |

@@ -97,7 +97,7 @@ else
 fi
 
 start_check "Required tools" "" "Install the missing tool, then rerun."
-for tool in codeql curl git jq perl shellcheck tar unzip uvx xmllint zip; do
+for tool in codeql curl git jq shellcheck tar unzip uvx xmllint zip; do
     if ! command -v "$tool" >/dev/null 2>&1; then
         case "$tool" in
             codeql) check_hint="Install the CodeQL CLI with brew install --cask codeql, then rerun." ;;

@@ -11,14 +11,6 @@ source "$(dirname -- "${BASH_SOURCE[0]}")/support.sh"
 
 prepare_codeql() {
     copy_file scripts/codeql
-    write_file buildSrc/build.gradle.kts <<'EOF'
-dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.21")
-}
-EOF
-    write_file example-core/gradle.lockfile <<'EOF'
-org.jetbrains.kotlin:kotlin-stdlib:2.4.21=kotlinCompilerClasspath
-EOF
     write_file example-core/src/main/kotlin/Client.kt <<'EOF'
 class Client
 EOF
@@ -106,11 +98,9 @@ test_codeql_scans_a_copy_and_leaves_the_working_tree_alone() {
     assert_equal "codeql/java-queries@1.11.12:codeql-suites/java-security-extended.qls" "$(log_of codeql-suite)" "the query suite"
     assert_equal "codeql/no-code-comments" "$(log_of codeql-pack-install)" "the installed comment queries"
     assert_equal "codeql/no-code-comments" "$(log_of codeql-comment-queries)" "the comment queries"
-    assert_equal "./gradlew clean classes --write-verification-metadata sha256 --no-daemon --no-build-cache --no-configuration-cache -Pkotlin.compiler.execution.strategy=in-process" \
+    assert_equal "./gradlew clean classes --no-daemon --no-build-cache --no-configuration-cache -Pkotlin.compiler.execution.strategy=in-process" \
         "$(log_of codeql-build)" "the traced build"
     assert_equal "./.gitignore
-./buildSrc/build.gradle.kts
-./example-core/gradle.lockfile
 ./example-core/src/main/java/Options.java
 ./example-core/src/main/kotlin/Client.kt
 ./example-core/src/test/kotlin/ClientTest.kt

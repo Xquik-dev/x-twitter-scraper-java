@@ -6,7 +6,7 @@ Follow the shared [Xquik contribution policy][contribution-policy].
 
 ## Set up
 
-Install JDK 26, JDK 25, the CodeQL CLI, `uv`, `shellcheck`, `jq`, `curl`, `perl`, `tar`, `unzip`, `zip`, and `xmllint`.
+Install JDK 26, JDK 25, the CodeQL CLI, `uv`, `shellcheck`, `jq`, `curl`, `tar`, `unzip`, `zip`, and `xmllint`.
 
 On macOS, run `brew install jq shellcheck uv` and `brew install --cask codeql`.
 
@@ -19,6 +19,15 @@ export SHRINKER_JAVA_HOME="/path/to/jdk-25"
 ```
 
 The Gradle wrapper resolves locked, checksum-verified dependencies.
+
+After a dependency change, refresh the lockfiles and checksums.
+
+```sh
+./gradlew dependencies --write-locks --write-verification-metadata sha256
+./gradlew help checkLicense publishAllPublicationsToLocalFileSystemRepository -PpublishLocal --write-verification-metadata sha256
+```
+
+Gradle only adds checksums. Delete the entries of replaced versions from `gradle/verification-metadata.xml` by hand.
 
 Never commit credentials or runtime environment files.
 
