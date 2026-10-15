@@ -20,21 +20,37 @@ import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepare
 import com.x_twitter_scraper.api.models.PaginatedTweets
 import com.x_twitter_scraper.api.models.PaginatedUsers
+import com.x_twitter_scraper.api.models.x.tweets.TweetCheckRepostParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetCheckRepostResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetCreateParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetCreateResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetDeleteParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetDeleteResponse
+import com.x_twitter_scraper.api.models.x.tweets.TweetEmbedParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetEmbedResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetFavoritersParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetGetHiddenRepliesParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetGetInsightsParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetGetInsightsResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetQuotesParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetRepliesParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetRepliesResponse
+import com.x_twitter_scraper.api.models.x.tweets.TweetGetRetweeterIdsParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetGetRetweeterIdsResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetRetweetersParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetGetSubtitlesParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetGetSubtitlesResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetGetThreadParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetListParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetListTopParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetResolveLinksParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetResolveLinksResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetRetrieveParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetRetrieveResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse
+import com.x_twitter_scraper.api.models.x.tweets.TweetTranslateParams
+import com.x_twitter_scraper.api.models.x.tweets.TweetTranslateResponse
 import com.x_twitter_scraper.api.services.blocking.x.tweets.LikeService
 import com.x_twitter_scraper.api.services.blocking.x.tweets.LikeServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.tweets.RetweetService
@@ -82,10 +98,30 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
         requestOptions: RequestOptions,
     ): TweetDeleteResponse = withRawResponse().delete(params, requestOptions).parse()
 
+    override fun checkRepost(
+        params: TweetCheckRepostParams,
+        requestOptions: RequestOptions,
+    ): TweetCheckRepostResponse = withRawResponse().checkRepost(params, requestOptions).parse()
+
+    override fun embed(
+        params: TweetEmbedParams,
+        requestOptions: RequestOptions,
+    ): TweetEmbedResponse = withRawResponse().embed(params, requestOptions).parse()
+
     override fun getFavoriters(
         params: TweetGetFavoritersParams,
         requestOptions: RequestOptions,
     ): PaginatedUsers = withRawResponse().getFavoriters(params, requestOptions).parse()
+
+    override fun getHiddenReplies(
+        params: TweetGetHiddenRepliesParams,
+        requestOptions: RequestOptions,
+    ): PaginatedTweets = withRawResponse().getHiddenReplies(params, requestOptions).parse()
+
+    override fun getInsights(
+        params: TweetGetInsightsParams,
+        requestOptions: RequestOptions,
+    ): TweetGetInsightsResponse = withRawResponse().getInsights(params, requestOptions).parse()
 
     override fun getQuotes(
         params: TweetGetQuotesParams,
@@ -97,20 +133,46 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
         requestOptions: RequestOptions,
     ): TweetGetRepliesResponse = withRawResponse().getReplies(params, requestOptions).parse()
 
+    override fun getRetweeterIds(
+        params: TweetGetRetweeterIdsParams,
+        requestOptions: RequestOptions,
+    ): TweetGetRetweeterIdsResponse =
+        withRawResponse().getRetweeterIds(params, requestOptions).parse()
+
     override fun getRetweeters(
         params: TweetGetRetweetersParams,
         requestOptions: RequestOptions,
     ): PaginatedUsers = withRawResponse().getRetweeters(params, requestOptions).parse()
+
+    override fun getSubtitles(
+        params: TweetGetSubtitlesParams,
+        requestOptions: RequestOptions,
+    ): TweetGetSubtitlesResponse = withRawResponse().getSubtitles(params, requestOptions).parse()
 
     override fun getThread(
         params: TweetGetThreadParams,
         requestOptions: RequestOptions,
     ): PaginatedTweets = withRawResponse().getThread(params, requestOptions).parse()
 
+    override fun listTop(
+        params: TweetListTopParams,
+        requestOptions: RequestOptions,
+    ): PaginatedTweets = withRawResponse().listTop(params, requestOptions).parse()
+
+    override fun resolveLinks(
+        params: TweetResolveLinksParams,
+        requestOptions: RequestOptions,
+    ): TweetResolveLinksResponse = withRawResponse().resolveLinks(params, requestOptions).parse()
+
     override fun search(
         params: TweetSearchParams,
         requestOptions: RequestOptions,
     ): TweetSearchResponse = withRawResponse().search(params, requestOptions).parse()
+
+    override fun translate(
+        params: TweetTranslateParams,
+        requestOptions: RequestOptions,
+    ): TweetTranslateResponse = withRawResponse().translate(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         TweetService.WithRawResponse {
@@ -251,6 +313,62 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
             }
         }
 
+        private val checkRepostHandler: Handler<TweetCheckRepostResponse> =
+            jsonHandler<TweetCheckRepostResponse>(clientOptions.jsonMapper)
+
+        override fun checkRepost(
+            params: TweetCheckRepostParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<TweetCheckRepostResponse> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "tweets", params._pathParam(0), "retweeters", "check")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { checkRepostHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val embedHandler: Handler<TweetEmbedResponse> =
+            jsonHandler<TweetEmbedResponse>(clientOptions.jsonMapper)
+
+        override fun embed(
+            params: TweetEmbedParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<TweetEmbedResponse> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "tweets", params._pathParam(0), "embed")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { embedHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
         private val getFavoritersHandler: Handler<PaginatedUsers> =
             jsonHandler<PaginatedUsers>(clientOptions.jsonMapper)
 
@@ -271,6 +389,62 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
             return errorHandler.handle(response).parseable {
                 response
                     .use { getFavoritersHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val getHiddenRepliesHandler: Handler<PaginatedTweets> =
+            jsonHandler<PaginatedTweets>(clientOptions.jsonMapper)
+
+        override fun getHiddenReplies(
+            params: TweetGetHiddenRepliesParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<PaginatedTweets> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "tweets", params._pathParam(0), "hidden-replies")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { getHiddenRepliesHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val getInsightsHandler: Handler<TweetGetInsightsResponse> =
+            jsonHandler<TweetGetInsightsResponse>(clientOptions.jsonMapper)
+
+        override fun getInsights(
+            params: TweetGetInsightsParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<TweetGetInsightsResponse> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "tweets", params._pathParam(0), "insights")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { getInsightsHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()
@@ -335,6 +509,34 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
             }
         }
 
+        private val getRetweeterIdsHandler: Handler<TweetGetRetweeterIdsResponse> =
+            jsonHandler<TweetGetRetweeterIdsResponse>(clientOptions.jsonMapper)
+
+        override fun getRetweeterIds(
+            params: TweetGetRetweeterIdsParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<TweetGetRetweeterIdsResponse> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "tweets", params._pathParam(0), "retweeter-ids")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { getRetweeterIdsHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
         private val getRetweetersHandler: Handler<PaginatedUsers> =
             jsonHandler<PaginatedUsers>(clientOptions.jsonMapper)
 
@@ -355,6 +557,34 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
             return errorHandler.handle(response).parseable {
                 response
                     .use { getRetweetersHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val getSubtitlesHandler: Handler<TweetGetSubtitlesResponse> =
+            jsonHandler<TweetGetSubtitlesResponse>(clientOptions.jsonMapper)
+
+        override fun getSubtitles(
+            params: TweetGetSubtitlesParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<TweetGetSubtitlesResponse> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "tweets", params._pathParam(0), "subtitles")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { getSubtitlesHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()
@@ -391,6 +621,60 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
             }
         }
 
+        private val listTopHandler: Handler<PaginatedTweets> =
+            jsonHandler<PaginatedTweets>(clientOptions.jsonMapper)
+
+        override fun listTop(
+            params: TweetListTopParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<PaginatedTweets> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "tweets", "top")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { listTopHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val resolveLinksHandler: Handler<TweetResolveLinksResponse> =
+            jsonHandler<TweetResolveLinksResponse>(clientOptions.jsonMapper)
+
+        override fun resolveLinks(
+            params: TweetResolveLinksParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<TweetResolveLinksResponse> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "links", "resolve")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { resolveLinksHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
         private val searchHandler: Handler<TweetSearchResponse> =
             jsonHandler<TweetSearchResponse>(clientOptions.jsonMapper)
 
@@ -410,6 +694,34 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
             return errorHandler.handle(response).parseable {
                 response
                     .use { searchHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val translateHandler: Handler<TweetTranslateResponse> =
+            jsonHandler<TweetTranslateResponse>(clientOptions.jsonMapper)
+
+        override fun translate(
+            params: TweetTranslateParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<TweetTranslateResponse> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "tweets", params._pathParam(0), "translation")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { translateHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()
