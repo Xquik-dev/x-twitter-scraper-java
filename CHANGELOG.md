@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Features
+
+* `client.x().tweets()` gains `listTop`, `embed`, `getHiddenReplies`, `getInsights`, `getRetweeterIds`, `checkRepost`, `getSubtitles`, `translate` and `resolveLinks`. Each has typed params and a typed response from the current API spec.
+
 ### Chores
 
 * `bin/check-local` now fails when the API has an operation that the SDK neither sends nor lists in `excluded-operations.json`. CONTRIBUTING.md explains the check.

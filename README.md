@@ -63,6 +63,8 @@ Call REST directly when a Maven dependency does not fit.
 | --- | --- | --- |
 | Run an advanced Twitter search | `GET /x/tweets/search` | `client.x().tweets()` |
 | Retrieve tweets, threads, replies, or quotes | `GET /x/tweets/{id}`, `GET /x/tweets/{id}/thread` | `client.x().tweets()` |
+| Read tweet insights, translations, subtitles, or embed HTML | `GET /x/tweets/{id}/insights`, `GET /x/tweets/{id}/translation`, `GET /x/tweets/{id}/subtitles`, `GET /x/tweets/{id}/embed` | `client.x().tweets()` |
+| List the top tweets on X | `GET /x/tweets/top` | `client.x().tweets()` |
 | Search X or Twitter users | `GET /x/users/search` | `client.x().users()` |
 | Scrape an X profile timeline | `GET /x/users/{id}/tweets` | `client.x().users()` |
 | Export X followers | `GET /x/users/{id}/followers` | `client.x().users()` |
