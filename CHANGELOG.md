@@ -10,6 +10,8 @@
 * `client.x().lists()` gains `retrieve` and `retrieveSearch`, and `client.x().dm()` gains `deleteMessage`.
 * `client.x()` gains `autocompleteSearch`, `getHashflags`, `searchPlaces`, `getTrendLocations`, `getTrendsHistory` and `getNewsStoryVersions`.
 * `client.x().getTrends()` takes `at`, `country`, `location`, `fields` and `omit`, and its response gains `capturedAt`, `location` and `requestedAt`.
+* `client.x()` gains `jobs()` with `retrieve`, `listLocations` and `search`, and `spaces()` with `retrieve`, `retrieveReplay` and `search`.
+* `client.x()` gains `broadcasts()` with `retrieve`, and `communityNotes()` with `retrieveContributor`, `listContributorNotes` and `listContributorDeletedNotes`.
 
 ### Chores
 

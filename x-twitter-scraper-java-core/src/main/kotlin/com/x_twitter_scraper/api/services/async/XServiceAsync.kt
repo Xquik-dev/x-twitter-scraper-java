@@ -31,12 +31,16 @@ import com.x_twitter_scraper.api.services.async.x.AccountConnectionAttemptServic
 import com.x_twitter_scraper.api.services.async.x.AccountConnectionChallengeServiceAsync
 import com.x_twitter_scraper.api.services.async.x.AccountServiceAsync
 import com.x_twitter_scraper.api.services.async.x.BookmarkServiceAsync
+import com.x_twitter_scraper.api.services.async.x.BroadcastServiceAsync
+import com.x_twitter_scraper.api.services.async.x.CommunityNoteServiceAsync
 import com.x_twitter_scraper.api.services.async.x.CommunityServiceAsync
 import com.x_twitter_scraper.api.services.async.x.DmServiceAsync
 import com.x_twitter_scraper.api.services.async.x.FollowerServiceAsync
+import com.x_twitter_scraper.api.services.async.x.JobServiceAsync
 import com.x_twitter_scraper.api.services.async.x.ListServiceAsync
 import com.x_twitter_scraper.api.services.async.x.MediaServiceAsync
 import com.x_twitter_scraper.api.services.async.x.ProfileServiceAsync
+import com.x_twitter_scraper.api.services.async.x.SpaceServiceAsync
 import com.x_twitter_scraper.api.services.async.x.TweetServiceAsync
 import com.x_twitter_scraper.api.services.async.x.UserServiceAsync
 import com.x_twitter_scraper.api.services.async.x.WriteActionServiceAsync
@@ -67,6 +71,9 @@ interface XServiceAsync {
     /** Look up, search, and explore user profiles and relationships */
     fun followers(): FollowerServiceAsync
 
+    /** Public X job listings, search and details */
+    fun jobs(): JobServiceAsync
+
     fun dm(): DmServiceAsync
 
     fun media(): MediaServiceAsync
@@ -90,6 +97,15 @@ interface XServiceAsync {
 
     /** X List followers, members, and tweets */
     fun lists(): ListServiceAsync
+
+    /** X live video details, watch counts, and broadcaster */
+    fun broadcasts(): BroadcastServiceAsync
+
+    /** Community Notes contributors, their notes, ratings & deleted notes */
+    fun communityNotes(): CommunityNoteServiceAsync
+
+    /** X Space details, host, and speakers */
+    fun spaces(): SpaceServiceAsync
 
     /**
      * Returns the accounts, topics, hashtags & cashtags X suggests while someone types a search. X
@@ -357,6 +373,9 @@ interface XServiceAsync {
         /** Look up, search, and explore user profiles and relationships */
         fun followers(): FollowerServiceAsync.WithRawResponse
 
+        /** Public X job listings, search and details */
+        fun jobs(): JobServiceAsync.WithRawResponse
+
         fun dm(): DmServiceAsync.WithRawResponse
 
         fun media(): MediaServiceAsync.WithRawResponse
@@ -380,6 +399,15 @@ interface XServiceAsync {
 
         /** X List followers, members, and tweets */
         fun lists(): ListServiceAsync.WithRawResponse
+
+        /** X live video details, watch counts, and broadcaster */
+        fun broadcasts(): BroadcastServiceAsync.WithRawResponse
+
+        /** Community Notes contributors, their notes, ratings & deleted notes */
+        fun communityNotes(): CommunityNoteServiceAsync.WithRawResponse
+
+        /** X Space details, host, and speakers */
+        fun spaces(): SpaceServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /x/search/autocomplete`, but is otherwise the same

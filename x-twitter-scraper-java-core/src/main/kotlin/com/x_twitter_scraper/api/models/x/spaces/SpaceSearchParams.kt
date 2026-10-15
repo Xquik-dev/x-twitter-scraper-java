@@ -1,0 +1,481 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
+package com.x_twitter_scraper.api.models.x.spaces
+
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.x_twitter_scraper.api.core.Enum
+import com.x_twitter_scraper.api.core.JsonField
+import com.x_twitter_scraper.api.core.Params
+import com.x_twitter_scraper.api.core.checkRequired
+import com.x_twitter_scraper.api.core.http.Headers
+import com.x_twitter_scraper.api.core.http.QueryParams
+import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
+
+/**
+ * Returns public Spaces each once, as GET /x/spaces/{id} serves them. Latest & Top find the Spaces
+ * that matching posts share, live, scheduled or ended. Live & Upcoming read X's own Spaces search,
+ * in X's order. It finds live or scheduled Spaces by the words in their titles. Costs 1 credit per
+ * Space.
+ */
+class SpaceSearchParams
+private constructor(
+    private val q: String,
+    private val cursor: String?,
+    private val fields: String?,
+    private val omit: String?,
+    private val pageSize: Long?,
+    private val queryType: QueryType?,
+    private val additionalHeaders: Headers,
+    private val additionalQueryParams: QueryParams,
+) : Params {
+
+    /**
+     * Words, hashtags or X search operators, such as from:solana. Latest & Top add filter:spaces.
+     * Live & Upcoming match title words only, without operators. Alias query.
+     */
+    fun q(): String = q
+
+    /**
+     * Pagination cursor for collection results. Also read as next_cursor, next_token,
+     * pagination_token or continuation_token.
+     */
+    fun cursor(): Optional<String> = Optional.ofNullable(cursor)
+
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+     * author.username. A list keeps the field in each item. Case & underscores do not matter. A row
+     * that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name
+     * answers 400 unknown_field with the valid names, before any read. The price stays the same.
+     * SDK row types then hold only the named fields.
+     */
+    fun fields(): Optional<String> = Optional.ofNullable(fields)
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+     * fields, it drops from the kept fields.
+     */
+    fun omit(): Optional<String> = Optional.ofNullable(omit)
+
+    /**
+     * For Latest & Top, the posts a page reads, 20 at a time (1-100, default 20). Posts often share
+     * the same Space, so a page returns fewer Spaces. Send 100 to read a search fastest. For Live &
+     * Upcoming, the most Spaces a page returns. Its aliases are limit, count, max_results,
+     * maxItems, max_items & per_page.
+     */
+    fun pageSize(): Optional<Long> = Optional.ofNullable(pageSize)
+
+    /**
+     * Latest finds Spaces in the newest posts. Top finds them in the most engaging posts. Live
+     * lists Spaces on air now. Upcoming lists scheduled ones, as X's Spaces search does. Any case
+     * works. Aliases result_type, sort_order, type, search_type, product, category & section.
+     */
+    fun queryType(): Optional<QueryType> = Optional.ofNullable(queryType)
+
+    /** Additional headers to send with the request. */
+    fun _additionalHeaders(): Headers = additionalHeaders
+
+    /** Additional query param to send with the request. */
+    fun _additionalQueryParams(): QueryParams = additionalQueryParams
+
+    fun toBuilder() = Builder().from(this)
+
+    companion object {
+
+        /**
+         * Returns a mutable builder for constructing an instance of [SpaceSearchParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .q()
+         * ```
+         */
+        @JvmStatic fun builder() = Builder()
+    }
+
+    /** A builder for [SpaceSearchParams]. */
+    class Builder internal constructor() {
+
+        private var q: String? = null
+        private var cursor: String? = null
+        private var fields: String? = null
+        private var omit: String? = null
+        private var pageSize: Long? = null
+        private var queryType: QueryType? = null
+        private var additionalHeaders: Headers.Builder = Headers.builder()
+        private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
+
+        @JvmSynthetic
+        internal fun from(spaceSearchParams: SpaceSearchParams) = apply {
+            q = spaceSearchParams.q
+            cursor = spaceSearchParams.cursor
+            fields = spaceSearchParams.fields
+            omit = spaceSearchParams.omit
+            pageSize = spaceSearchParams.pageSize
+            queryType = spaceSearchParams.queryType
+            additionalHeaders = spaceSearchParams.additionalHeaders.toBuilder()
+            additionalQueryParams = spaceSearchParams.additionalQueryParams.toBuilder()
+        }
+
+        /**
+         * Words, hashtags or X search operators, such as from:solana. Latest & Top add
+         * filter:spaces. Live & Upcoming match title words only, without operators. Alias query.
+         */
+        fun q(q: String) = apply { this.q = q }
+
+        /**
+         * Pagination cursor for collection results. Also read as next_cursor, next_token,
+         * pagination_token or continuation_token.
+         */
+        fun cursor(cursor: String?) = apply { this.cursor = cursor }
+
+        /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
+        fun cursor(cursor: Optional<String>) = cursor(cursor.getOrNull())
+
+        /**
+         * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+         * author.username. A list keeps the field in each item. Case & underscores do not matter. A
+         * row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An
+         * unknown name answers 400 unknown_field with the valid names, before any read. The price
+         * stays the same. SDK row types then hold only the named fields.
+         */
+        fun fields(fields: String?) = apply { this.fields = fields }
+
+        /** Alias for calling [Builder.fields] with `fields.orElse(null)`. */
+        fun fields(fields: Optional<String>) = fields(fields.getOrNull())
+
+        /**
+         * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+         * fields, it drops from the kept fields.
+         */
+        fun omit(omit: String?) = apply { this.omit = omit }
+
+        /** Alias for calling [Builder.omit] with `omit.orElse(null)`. */
+        fun omit(omit: Optional<String>) = omit(omit.getOrNull())
+
+        /**
+         * For Latest & Top, the posts a page reads, 20 at a time (1-100, default 20). Posts often
+         * share the same Space, so a page returns fewer Spaces. Send 100 to read a search fastest.
+         * For Live & Upcoming, the most Spaces a page returns. Its aliases are limit, count,
+         * max_results, maxItems, max_items & per_page.
+         */
+        fun pageSize(pageSize: Long?) = apply { this.pageSize = pageSize }
+
+        /** Alias for [Builder.pageSize]. */
+        fun pageSize(pageSize: Long) = pageSize(pageSize as Long?)
+
+        /** Alias for calling [Builder.pageSize] with `pageSize.orElse(null)`. */
+        fun pageSize(pageSize: Optional<Long>) = pageSize(pageSize.getOrNull())
+
+        /**
+         * Latest finds Spaces in the newest posts. Top finds them in the most engaging posts. Live
+         * lists Spaces on air now. Upcoming lists scheduled ones, as X's Spaces search does. Any
+         * case works. Aliases result_type, sort_order, type, search_type, product, category &
+         * section.
+         */
+        fun queryType(queryType: QueryType?) = apply { this.queryType = queryType }
+
+        /** Alias for calling [Builder.queryType] with `queryType.orElse(null)`. */
+        fun queryType(queryType: Optional<QueryType>) = queryType(queryType.getOrNull())
+
+        fun additionalHeaders(additionalHeaders: Headers) = apply {
+            this.additionalHeaders.clear()
+            putAllAdditionalHeaders(additionalHeaders)
+        }
+
+        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
+            this.additionalHeaders.clear()
+            putAllAdditionalHeaders(additionalHeaders)
+        }
+
+        fun putAdditionalHeader(name: String, value: String) = apply {
+            additionalHeaders.put(name, value)
+        }
+
+        fun putAdditionalHeaders(name: String, values: Iterable<String>) = apply {
+            additionalHeaders.put(name, values)
+        }
+
+        fun putAllAdditionalHeaders(additionalHeaders: Headers) = apply {
+            this.additionalHeaders.putAll(additionalHeaders)
+        }
+
+        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
+            this.additionalHeaders.putAll(additionalHeaders)
+        }
+
+        fun replaceAdditionalHeaders(name: String, value: String) = apply {
+            additionalHeaders.replace(name, value)
+        }
+
+        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) = apply {
+            additionalHeaders.replace(name, values)
+        }
+
+        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) = apply {
+            this.additionalHeaders.replaceAll(additionalHeaders)
+        }
+
+        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
+            this.additionalHeaders.replaceAll(additionalHeaders)
+        }
+
+        fun removeAdditionalHeaders(name: String) = apply { additionalHeaders.remove(name) }
+
+        fun removeAllAdditionalHeaders(names: Set<String>) = apply {
+            additionalHeaders.removeAll(names)
+        }
+
+        fun additionalQueryParams(additionalQueryParams: QueryParams) = apply {
+            this.additionalQueryParams.clear()
+            putAllAdditionalQueryParams(additionalQueryParams)
+        }
+
+        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) = apply {
+            this.additionalQueryParams.clear()
+            putAllAdditionalQueryParams(additionalQueryParams)
+        }
+
+        fun putAdditionalQueryParam(key: String, value: String) = apply {
+            additionalQueryParams.put(key, value)
+        }
+
+        fun putAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
+            additionalQueryParams.put(key, values)
+        }
+
+        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
+            this.additionalQueryParams.putAll(additionalQueryParams)
+        }
+
+        fun putAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.putAll(additionalQueryParams)
+            }
+
+        fun replaceAdditionalQueryParams(key: String, value: String) = apply {
+            additionalQueryParams.replace(key, value)
+        }
+
+        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
+            additionalQueryParams.replace(key, values)
+        }
+
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
+            this.additionalQueryParams.replaceAll(additionalQueryParams)
+        }
+
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.replaceAll(additionalQueryParams)
+            }
+
+        fun removeAdditionalQueryParams(key: String) = apply { additionalQueryParams.remove(key) }
+
+        fun removeAllAdditionalQueryParams(keys: Set<String>) = apply {
+            additionalQueryParams.removeAll(keys)
+        }
+
+        /**
+         * Returns an immutable instance of [SpaceSearchParams].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .q()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
+        fun build(): SpaceSearchParams =
+            SpaceSearchParams(
+                checkRequired("q", q),
+                cursor,
+                fields,
+                omit,
+                pageSize,
+                queryType,
+                additionalHeaders.build(),
+                additionalQueryParams.build(),
+            )
+    }
+
+    override fun _headers(): Headers = additionalHeaders
+
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                put("q", q)
+                cursor?.let { put("cursor", it) }
+                fields?.let { put("fields", it) }
+                omit?.let { put("omit", it) }
+                pageSize?.let { put("pageSize", it.toString()) }
+                queryType?.let { put("queryType", it.toString()) }
+                putAll(additionalQueryParams)
+            }
+            .build()
+
+    class QueryType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /** Returns this class instance's raw value. */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val LATEST = of("Latest")
+
+            @JvmField val TOP = of("Top")
+
+            @JvmField val LIVE = of("Live")
+
+            @JvmField val UPCOMING = of("Upcoming")
+
+            @JvmStatic fun of(value: String) = QueryType(JsonField.of(value))
+        }
+
+        /** An enum containing [QueryType]'s known values. */
+        enum class Known {
+            LATEST,
+            TOP,
+            LIVE,
+            UPCOMING,
+        }
+
+        /**
+         * An enum containing [QueryType]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [QueryType] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            LATEST,
+            TOP,
+            LIVE,
+            UPCOMING,
+            /**
+             * An enum member indicating that [QueryType] was instantiated with an unknown value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         */
+        fun value(): Value =
+            when (this) {
+                LATEST -> Value.LATEST
+                TOP -> Value.TOP
+                LIVE -> Value.LIVE
+                UPCOMING -> Value.UPCOMING
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
+         */
+        fun known(): Known =
+            when (this) {
+                LATEST -> Known.LATEST
+                TOP -> Known.TOP
+                LIVE -> Known.LIVE
+                UPCOMING -> Known.UPCOMING
+                else -> throw XTwitterScraperInvalidDataException("Unknown QueryType: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): QueryType = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is QueryType && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+
+        return other is SpaceSearchParams &&
+            q == other.q &&
+            cursor == other.cursor &&
+            fields == other.fields &&
+            omit == other.omit &&
+            pageSize == other.pageSize &&
+            queryType == other.queryType &&
+            additionalHeaders == other.additionalHeaders &&
+            additionalQueryParams == other.additionalQueryParams
+    }
+
+    override fun hashCode(): Int =
+        Objects.hash(
+            q,
+            cursor,
+            fields,
+            omit,
+            pageSize,
+            queryType,
+            additionalHeaders,
+            additionalQueryParams,
+        )
+
+    override fun toString() =
+        "SpaceSearchParams{q=$q, cursor=$cursor, fields=$fields, omit=$omit, pageSize=$pageSize, queryType=$queryType, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+}
