@@ -45,18 +45,26 @@ import com.x_twitter_scraper.api.services.async.x.AccountServiceAsync
 import com.x_twitter_scraper.api.services.async.x.AccountServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.BookmarkServiceAsync
 import com.x_twitter_scraper.api.services.async.x.BookmarkServiceAsyncImpl
+import com.x_twitter_scraper.api.services.async.x.BroadcastServiceAsync
+import com.x_twitter_scraper.api.services.async.x.BroadcastServiceAsyncImpl
+import com.x_twitter_scraper.api.services.async.x.CommunityNoteServiceAsync
+import com.x_twitter_scraper.api.services.async.x.CommunityNoteServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.CommunityServiceAsync
 import com.x_twitter_scraper.api.services.async.x.CommunityServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.DmServiceAsync
 import com.x_twitter_scraper.api.services.async.x.DmServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.FollowerServiceAsync
 import com.x_twitter_scraper.api.services.async.x.FollowerServiceAsyncImpl
+import com.x_twitter_scraper.api.services.async.x.JobServiceAsync
+import com.x_twitter_scraper.api.services.async.x.JobServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.ListServiceAsync
 import com.x_twitter_scraper.api.services.async.x.ListServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.MediaServiceAsync
 import com.x_twitter_scraper.api.services.async.x.MediaServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.ProfileServiceAsync
 import com.x_twitter_scraper.api.services.async.x.ProfileServiceAsyncImpl
+import com.x_twitter_scraper.api.services.async.x.SpaceServiceAsync
+import com.x_twitter_scraper.api.services.async.x.SpaceServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.TweetServiceAsync
 import com.x_twitter_scraper.api.services.async.x.TweetServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.UserServiceAsync
@@ -84,6 +92,8 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
 
     private val followers: FollowerServiceAsync by lazy { FollowerServiceAsyncImpl(clientOptions) }
 
+    private val jobs: JobServiceAsync by lazy { JobServiceAsyncImpl(clientOptions) }
+
     private val dm: DmServiceAsync by lazy { DmServiceAsyncImpl(clientOptions) }
 
     private val media: MediaServiceAsync by lazy { MediaServiceAsyncImpl(clientOptions) }
@@ -108,6 +118,16 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
 
     private val lists: ListServiceAsync by lazy { ListServiceAsyncImpl(clientOptions) }
 
+    private val broadcasts: BroadcastServiceAsync by lazy {
+        BroadcastServiceAsyncImpl(clientOptions)
+    }
+
+    private val communityNotes: CommunityNoteServiceAsync by lazy {
+        CommunityNoteServiceAsyncImpl(clientOptions)
+    }
+
+    private val spaces: SpaceServiceAsync by lazy { SpaceServiceAsyncImpl(clientOptions) }
+
     override fun withRawResponse(): XServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): XServiceAsync =
@@ -122,6 +142,9 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
 
     /** Look up, search, and explore user profiles and relationships */
     override fun followers(): FollowerServiceAsync = followers
+
+    /** Public X job listings, search and details */
+    override fun jobs(): JobServiceAsync = jobs
 
     override fun dm(): DmServiceAsync = dm
 
@@ -148,6 +171,15 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
 
     /** X List followers, members, and tweets */
     override fun lists(): ListServiceAsync = lists
+
+    /** X live video details, watch counts, and broadcaster */
+    override fun broadcasts(): BroadcastServiceAsync = broadcasts
+
+    /** Community Notes contributors, their notes, ratings & deleted notes */
+    override fun communityNotes(): CommunityNoteServiceAsync = communityNotes
+
+    /** X Space details, host, and speakers */
+    override fun spaces(): SpaceServiceAsync = spaces
 
     override fun autocompleteSearch(
         params: XAutocompleteSearchParams,
@@ -231,6 +263,10 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
             FollowerServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val jobs: JobServiceAsync.WithRawResponse by lazy {
+            JobServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val dm: DmServiceAsync.WithRawResponse by lazy {
             DmServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
@@ -269,6 +305,18 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
             ListServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val broadcasts: BroadcastServiceAsync.WithRawResponse by lazy {
+            BroadcastServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val communityNotes: CommunityNoteServiceAsync.WithRawResponse by lazy {
+            CommunityNoteServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val spaces: SpaceServiceAsync.WithRawResponse by lazy {
+            SpaceServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): XServiceAsync.WithRawResponse =
@@ -285,6 +333,9 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
 
         /** Look up, search, and explore user profiles and relationships */
         override fun followers(): FollowerServiceAsync.WithRawResponse = followers
+
+        /** Public X job listings, search and details */
+        override fun jobs(): JobServiceAsync.WithRawResponse = jobs
 
         override fun dm(): DmServiceAsync.WithRawResponse = dm
 
@@ -311,6 +362,15 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
 
         /** X List followers, members, and tweets */
         override fun lists(): ListServiceAsync.WithRawResponse = lists
+
+        /** X live video details, watch counts, and broadcaster */
+        override fun broadcasts(): BroadcastServiceAsync.WithRawResponse = broadcasts
+
+        /** Community Notes contributors, their notes, ratings & deleted notes */
+        override fun communityNotes(): CommunityNoteServiceAsync.WithRawResponse = communityNotes
+
+        /** X Space details, host, and speakers */
+        override fun spaces(): SpaceServiceAsync.WithRawResponse = spaces
 
         private val autocompleteSearchHandler: Handler<XAutocompleteSearchResponse> =
             jsonHandler<XAutocompleteSearchResponse>(clientOptions.jsonMapper)

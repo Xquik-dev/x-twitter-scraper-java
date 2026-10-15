@@ -87,6 +87,9 @@ Call REST directly when a Maven dependency does not fit.
 | Post, like, retweet, or follow | `POST /x/tweets`, `POST /x/users/{id}/follow` | `client.x().tweets()`, `client.x().users()` |
 | Send media or update a profile | `POST /x/media`, `PATCH /x/profile` | `client.x().media()`, `client.x().profile()` |
 | Manage connected X accounts | `GET /x/accounts`, `POST /x/accounts` | `client.x().accounts()` |
+| Search X job listings | `GET /x/jobs/search`, `GET /x/jobs/{id}` | `client.x().jobs()` |
+| Read Spaces, replays, and live broadcasts | `GET /x/spaces/search`, `GET /x/spaces/{id}/replay`, `GET /x/broadcasts/{id}` | `client.x().spaces()`, `client.x().broadcasts()` |
+| Read Community Notes contributors and their notes | `GET /x/community-notes/contributors/{alias}/notes` | `client.x().communityNotes()` |
 
 ## Install
 

@@ -32,12 +32,16 @@ import com.x_twitter_scraper.api.services.blocking.x.AccountConnectionAttemptSer
 import com.x_twitter_scraper.api.services.blocking.x.AccountConnectionChallengeService
 import com.x_twitter_scraper.api.services.blocking.x.AccountService
 import com.x_twitter_scraper.api.services.blocking.x.BookmarkService
+import com.x_twitter_scraper.api.services.blocking.x.BroadcastService
+import com.x_twitter_scraper.api.services.blocking.x.CommunityNoteService
 import com.x_twitter_scraper.api.services.blocking.x.CommunityService
 import com.x_twitter_scraper.api.services.blocking.x.DmService
 import com.x_twitter_scraper.api.services.blocking.x.FollowerService
+import com.x_twitter_scraper.api.services.blocking.x.JobService
 import com.x_twitter_scraper.api.services.blocking.x.ListService
 import com.x_twitter_scraper.api.services.blocking.x.MediaService
 import com.x_twitter_scraper.api.services.blocking.x.ProfileService
+import com.x_twitter_scraper.api.services.blocking.x.SpaceService
 import com.x_twitter_scraper.api.services.blocking.x.TweetService
 import com.x_twitter_scraper.api.services.blocking.x.UserService
 import com.x_twitter_scraper.api.services.blocking.x.WriteActionService
@@ -67,6 +71,9 @@ interface XService {
     /** Look up, search, and explore user profiles and relationships */
     fun followers(): FollowerService
 
+    /** Public X job listings, search and details */
+    fun jobs(): JobService
+
     fun dm(): DmService
 
     fun media(): MediaService
@@ -90,6 +97,15 @@ interface XService {
 
     /** X List followers, members, and tweets */
     fun lists(): ListService
+
+    /** X live video details, watch counts, and broadcaster */
+    fun broadcasts(): BroadcastService
+
+    /** Community Notes contributors, their notes, ratings & deleted notes */
+    fun communityNotes(): CommunityNoteService
+
+    /** X Space details, host, and speakers */
+    fun spaces(): SpaceService
 
     /**
      * Returns the accounts, topics, hashtags & cashtags X suggests while someone types a search. X
@@ -336,6 +352,9 @@ interface XService {
         /** Look up, search, and explore user profiles and relationships */
         fun followers(): FollowerService.WithRawResponse
 
+        /** Public X job listings, search and details */
+        fun jobs(): JobService.WithRawResponse
+
         fun dm(): DmService.WithRawResponse
 
         fun media(): MediaService.WithRawResponse
@@ -359,6 +378,15 @@ interface XService {
 
         /** X List followers, members, and tweets */
         fun lists(): ListService.WithRawResponse
+
+        /** X live video details, watch counts, and broadcaster */
+        fun broadcasts(): BroadcastService.WithRawResponse
+
+        /** Community Notes contributors, their notes, ratings & deleted notes */
+        fun communityNotes(): CommunityNoteService.WithRawResponse
+
+        /** X Space details, host, and speakers */
+        fun spaces(): SpaceService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /x/search/autocomplete`, but is otherwise the same

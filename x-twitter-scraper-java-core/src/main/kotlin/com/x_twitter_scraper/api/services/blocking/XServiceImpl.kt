@@ -45,18 +45,26 @@ import com.x_twitter_scraper.api.services.blocking.x.AccountService
 import com.x_twitter_scraper.api.services.blocking.x.AccountServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.BookmarkService
 import com.x_twitter_scraper.api.services.blocking.x.BookmarkServiceImpl
+import com.x_twitter_scraper.api.services.blocking.x.BroadcastService
+import com.x_twitter_scraper.api.services.blocking.x.BroadcastServiceImpl
+import com.x_twitter_scraper.api.services.blocking.x.CommunityNoteService
+import com.x_twitter_scraper.api.services.blocking.x.CommunityNoteServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.CommunityService
 import com.x_twitter_scraper.api.services.blocking.x.CommunityServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.DmService
 import com.x_twitter_scraper.api.services.blocking.x.DmServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.FollowerService
 import com.x_twitter_scraper.api.services.blocking.x.FollowerServiceImpl
+import com.x_twitter_scraper.api.services.blocking.x.JobService
+import com.x_twitter_scraper.api.services.blocking.x.JobServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.ListService
 import com.x_twitter_scraper.api.services.blocking.x.ListServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.MediaService
 import com.x_twitter_scraper.api.services.blocking.x.MediaServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.ProfileService
 import com.x_twitter_scraper.api.services.blocking.x.ProfileServiceImpl
+import com.x_twitter_scraper.api.services.blocking.x.SpaceService
+import com.x_twitter_scraper.api.services.blocking.x.SpaceServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.TweetService
 import com.x_twitter_scraper.api.services.blocking.x.TweetServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.UserService
@@ -80,6 +88,8 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
 
     private val followers: FollowerService by lazy { FollowerServiceImpl(clientOptions) }
 
+    private val jobs: JobService by lazy { JobServiceImpl(clientOptions) }
+
     private val dm: DmService by lazy { DmServiceImpl(clientOptions) }
 
     private val media: MediaService by lazy { MediaServiceImpl(clientOptions) }
@@ -102,6 +112,14 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
 
     private val lists: ListService by lazy { ListServiceImpl(clientOptions) }
 
+    private val broadcasts: BroadcastService by lazy { BroadcastServiceImpl(clientOptions) }
+
+    private val communityNotes: CommunityNoteService by lazy {
+        CommunityNoteServiceImpl(clientOptions)
+    }
+
+    private val spaces: SpaceService by lazy { SpaceServiceImpl(clientOptions) }
+
     override fun withRawResponse(): XService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): XService =
@@ -116,6 +134,9 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
 
     /** Look up, search, and explore user profiles and relationships */
     override fun followers(): FollowerService = followers
+
+    /** Public X job listings, search and details */
+    override fun jobs(): JobService = jobs
 
     override fun dm(): DmService = dm
 
@@ -142,6 +163,15 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
 
     /** X List followers, members, and tweets */
     override fun lists(): ListService = lists
+
+    /** X live video details, watch counts, and broadcaster */
+    override fun broadcasts(): BroadcastService = broadcasts
+
+    /** Community Notes contributors, their notes, ratings & deleted notes */
+    override fun communityNotes(): CommunityNoteService = communityNotes
+
+    /** X Space details, host, and speakers */
+    override fun spaces(): SpaceService = spaces
 
     override fun autocompleteSearch(
         params: XAutocompleteSearchParams,
@@ -220,6 +250,10 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
             FollowerServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val jobs: JobService.WithRawResponse by lazy {
+            JobServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val dm: DmService.WithRawResponse by lazy {
             DmServiceImpl.WithRawResponseImpl(clientOptions)
         }
@@ -258,6 +292,18 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
             ListServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val broadcasts: BroadcastService.WithRawResponse by lazy {
+            BroadcastServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val communityNotes: CommunityNoteService.WithRawResponse by lazy {
+            CommunityNoteServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val spaces: SpaceService.WithRawResponse by lazy {
+            SpaceServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): XService.WithRawResponse =
@@ -274,6 +320,9 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
 
         /** Look up, search, and explore user profiles and relationships */
         override fun followers(): FollowerService.WithRawResponse = followers
+
+        /** Public X job listings, search and details */
+        override fun jobs(): JobService.WithRawResponse = jobs
 
         override fun dm(): DmService.WithRawResponse = dm
 
@@ -300,6 +349,15 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
 
         /** X List followers, members, and tweets */
         override fun lists(): ListService.WithRawResponse = lists
+
+        /** X live video details, watch counts, and broadcaster */
+        override fun broadcasts(): BroadcastService.WithRawResponse = broadcasts
+
+        /** Community Notes contributors, their notes, ratings & deleted notes */
+        override fun communityNotes(): CommunityNoteService.WithRawResponse = communityNotes
+
+        /** X Space details, host, and speakers */
+        override fun spaces(): SpaceService.WithRawResponse = spaces
 
         private val autocompleteSearchHandler: Handler<XAutocompleteSearchResponse> =
             jsonHandler<XAutocompleteSearchResponse>(clientOptions.jsonMapper)
