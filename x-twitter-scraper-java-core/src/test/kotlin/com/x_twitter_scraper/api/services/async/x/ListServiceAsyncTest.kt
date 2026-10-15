@@ -7,10 +7,35 @@ package com.x_twitter_scraper.api.services.async.x
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClientAsync
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveFollowersParams
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveMembersParams
+import com.x_twitter_scraper.api.models.x.lists.ListRetrieveParams
+import com.x_twitter_scraper.api.models.x.lists.ListRetrieveSearchParams
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveTweetsParams
 import org.junit.jupiter.api.Test
 
 internal class ListServiceAsyncTest {
+    @Test
+    fun retrieve() {
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
+        val listServiceAsync = client.x().lists()
+
+        val listFuture =
+            listServiceAsync.retrieve(
+                ListRetrieveParams.builder()
+                    .id("id")
+                    .fields("id,text,author.username")
+                    .omit("entities,media")
+                    .build()
+            )
+
+        val list = listFuture.get()
+        kotlin.test.assertNotNull(list)
+    }
+
     @Test
     fun retrieveFollowers() {
         val client =
@@ -83,6 +108,31 @@ internal class ListServiceAsyncTest {
 
         val paginatedUsers = paginatedUsersFuture.get()
         kotlin.test.assertNotNull(paginatedUsers)
+    }
+
+    @Test
+    fun retrieveSearch() {
+        val client =
+            XTwitterScraperOkHttpClientAsync.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
+        val listServiceAsync = client.x().lists()
+
+        val responseFuture =
+            listServiceAsync.retrieveSearch(
+                ListRetrieveSearchParams.builder()
+                    .q("q")
+                    .cursor("cursor")
+                    .fields("id,text,author.username")
+                    .omit("entities,media")
+                    .pageSize(1L)
+                    .build()
+            )
+
+        val response = responseFuture.get()
+        kotlin.test.assertNotNull(response)
     }
 
     @Test

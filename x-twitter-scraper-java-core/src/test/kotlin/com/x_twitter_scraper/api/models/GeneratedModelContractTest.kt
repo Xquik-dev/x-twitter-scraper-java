@@ -313,8 +313,7 @@ internal class GeneratedModelContractTest {
                 .filter {
                     it.declaringClass == builder.javaClass &&
                         !it.isSynthetic &&
-                        it.returnType == builder.javaClass &&
-                        it.name != "from"
+                        it.returnType == builder.javaClass
                 }
                 .sortedWith(
                     compareBy<Method>(

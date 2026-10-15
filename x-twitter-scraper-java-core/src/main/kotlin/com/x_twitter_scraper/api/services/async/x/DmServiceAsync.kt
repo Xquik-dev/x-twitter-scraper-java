@@ -7,6 +7,8 @@ package com.x_twitter_scraper.api.services.async.x
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
+import com.x_twitter_scraper.api.models.x.dm.DmDeleteMessageParams
+import com.x_twitter_scraper.api.models.x.dm.DmDeleteMessageResponse
 import com.x_twitter_scraper.api.models.x.dm.DmRetrieveHistoryParams
 import com.x_twitter_scraper.api.models.x.dm.DmRetrieveHistoryResponse
 import com.x_twitter_scraper.api.models.x.dm.DmSendParams
@@ -27,6 +29,35 @@ interface DmServiceAsync {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): DmServiceAsync
+
+    /**
+     * Deletes 1 DM from the account's side. The other person keeps it. Success means the account's
+     * conversation no longer shows it. A DM still shown gets 422 `x_dm_not_deleted`, and Xquik
+     * charges nothing.
+     */
+    fun deleteMessage(
+        messageId: String,
+        params: DmDeleteMessageParams,
+    ): CompletableFuture<DmDeleteMessageResponse> =
+        deleteMessage(messageId, params, RequestOptions.none())
+
+    /** @see deleteMessage */
+    fun deleteMessage(
+        messageId: String,
+        params: DmDeleteMessageParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<DmDeleteMessageResponse> =
+        deleteMessage(params.toBuilder().messageId(messageId).build(), requestOptions)
+
+    /** @see deleteMessage */
+    fun deleteMessage(params: DmDeleteMessageParams): CompletableFuture<DmDeleteMessageResponse> =
+        deleteMessage(params, RequestOptions.none())
+
+    /** @see deleteMessage */
+    fun deleteMessage(
+        params: DmDeleteMessageParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<DmDeleteMessageResponse>
 
     /** Get DM conversation history */
     fun retrieveHistory(
@@ -85,6 +116,36 @@ interface DmServiceAsync {
          * The original service is not modified.
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): DmServiceAsync.WithRawResponse
+
+        /**
+         * Returns a raw HTTP response for `delete /x/dm/{userId}/messages/{messageId}`, but is
+         * otherwise the same as [DmServiceAsync.deleteMessage].
+         */
+        fun deleteMessage(
+            messageId: String,
+            params: DmDeleteMessageParams,
+        ): CompletableFuture<HttpResponseFor<DmDeleteMessageResponse>> =
+            deleteMessage(messageId, params, RequestOptions.none())
+
+        /** @see deleteMessage */
+        fun deleteMessage(
+            messageId: String,
+            params: DmDeleteMessageParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<DmDeleteMessageResponse>> =
+            deleteMessage(params.toBuilder().messageId(messageId).build(), requestOptions)
+
+        /** @see deleteMessage */
+        fun deleteMessage(
+            params: DmDeleteMessageParams
+        ): CompletableFuture<HttpResponseFor<DmDeleteMessageResponse>> =
+            deleteMessage(params, RequestOptions.none())
+
+        /** @see deleteMessage */
+        fun deleteMessage(
+            params: DmDeleteMessageParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<DmDeleteMessageResponse>>
 
         /**
          * Returns a raw HTTP response for `get /x/dm/{userId}/history`, but is otherwise the same

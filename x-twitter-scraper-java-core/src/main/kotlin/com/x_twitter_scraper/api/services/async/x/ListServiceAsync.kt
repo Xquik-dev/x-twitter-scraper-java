@@ -11,6 +11,10 @@ import com.x_twitter_scraper.api.models.PaginatedTweets
 import com.x_twitter_scraper.api.models.PaginatedUsers
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveFollowersParams
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveMembersParams
+import com.x_twitter_scraper.api.models.x.lists.ListRetrieveParams
+import com.x_twitter_scraper.api.models.x.lists.ListRetrieveResponse
+import com.x_twitter_scraper.api.models.x.lists.ListRetrieveSearchParams
+import com.x_twitter_scraper.api.models.x.lists.ListRetrieveSearchResponse
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveTweetsParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -29,6 +33,44 @@ interface ListServiceAsync {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): ListServiceAsync
+
+    /**
+     * Returns 1 public X List as its page on X shows it. Accepts the List ID or the URL-encoded
+     * List URL, such as x.com/i/lists/4143408. A private List answers 404 list_not_found.
+     */
+    fun retrieve(id: String): CompletableFuture<ListRetrieveResponse> =
+        retrieve(id, ListRetrieveParams.none())
+
+    /** @see retrieve */
+    fun retrieve(
+        id: String,
+        params: ListRetrieveParams = ListRetrieveParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<ListRetrieveResponse> =
+        retrieve(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see retrieve */
+    fun retrieve(
+        id: String,
+        params: ListRetrieveParams = ListRetrieveParams.none(),
+    ): CompletableFuture<ListRetrieveResponse> = retrieve(id, params, RequestOptions.none())
+
+    /** @see retrieve */
+    fun retrieve(
+        params: ListRetrieveParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<ListRetrieveResponse>
+
+    /** @see retrieve */
+    fun retrieve(params: ListRetrieveParams): CompletableFuture<ListRetrieveResponse> =
+        retrieve(params, RequestOptions.none())
+
+    /** @see retrieve */
+    fun retrieve(
+        id: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<ListRetrieveResponse> =
+        retrieve(id, ListRetrieveParams.none(), requestOptions)
 
     /** List followers of an X List */
     fun retrieveFollowers(id: String): CompletableFuture<PaginatedUsers> =
@@ -100,6 +142,20 @@ interface ListServiceAsync {
     ): CompletableFuture<PaginatedUsers> =
         retrieveMembers(id, ListRetrieveMembersParams.none(), requestOptions)
 
+    /**
+     * Returns 1 page of public Lists with member counts, banners & owner profiles. X may rank the
+     * Lists differently per request. Pass next_cursor as cursor for the next page.
+     */
+    fun retrieveSearch(
+        params: ListRetrieveSearchParams
+    ): CompletableFuture<ListRetrieveSearchResponse> = retrieveSearch(params, RequestOptions.none())
+
+    /** @see retrieveSearch */
+    fun retrieveSearch(
+        params: ListRetrieveSearchParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<ListRetrieveSearchResponse>
+
     /** List tweets from an X List */
     fun retrieveTweets(id: String): CompletableFuture<PaginatedTweets> =
         retrieveTweets(id, ListRetrieveTweetsParams.none())
@@ -144,6 +200,47 @@ interface ListServiceAsync {
          * The original service is not modified.
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): ListServiceAsync.WithRawResponse
+
+        /**
+         * Returns a raw HTTP response for `get /x/lists/{id}`, but is otherwise the same as
+         * [ListServiceAsync.retrieve].
+         */
+        fun retrieve(id: String): CompletableFuture<HttpResponseFor<ListRetrieveResponse>> =
+            retrieve(id, ListRetrieveParams.none())
+
+        /** @see retrieve */
+        fun retrieve(
+            id: String,
+            params: ListRetrieveParams = ListRetrieveParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<ListRetrieveResponse>> =
+            retrieve(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see retrieve */
+        fun retrieve(
+            id: String,
+            params: ListRetrieveParams = ListRetrieveParams.none(),
+        ): CompletableFuture<HttpResponseFor<ListRetrieveResponse>> =
+            retrieve(id, params, RequestOptions.none())
+
+        /** @see retrieve */
+        fun retrieve(
+            params: ListRetrieveParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<ListRetrieveResponse>>
+
+        /** @see retrieve */
+        fun retrieve(
+            params: ListRetrieveParams
+        ): CompletableFuture<HttpResponseFor<ListRetrieveResponse>> =
+            retrieve(params, RequestOptions.none())
+
+        /** @see retrieve */
+        fun retrieve(
+            id: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<ListRetrieveResponse>> =
+            retrieve(id, ListRetrieveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /x/lists/{id}/followers`, but is otherwise the same
@@ -226,6 +323,21 @@ interface ListServiceAsync {
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<PaginatedUsers>> =
             retrieveMembers(id, ListRetrieveMembersParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /x/lists/search`, but is otherwise the same as
+         * [ListServiceAsync.retrieveSearch].
+         */
+        fun retrieveSearch(
+            params: ListRetrieveSearchParams
+        ): CompletableFuture<HttpResponseFor<ListRetrieveSearchResponse>> =
+            retrieveSearch(params, RequestOptions.none())
+
+        /** @see retrieveSearch */
+        fun retrieveSearch(
+            params: ListRetrieveSearchParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<ListRetrieveSearchResponse>>
 
         /**
          * Returns a raw HTTP response for `get /x/lists/{id}/tweets`, but is otherwise the same as

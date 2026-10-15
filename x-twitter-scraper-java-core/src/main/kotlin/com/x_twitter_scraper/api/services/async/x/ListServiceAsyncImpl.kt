@@ -21,6 +21,10 @@ import com.x_twitter_scraper.api.models.PaginatedTweets
 import com.x_twitter_scraper.api.models.PaginatedUsers
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveFollowersParams
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveMembersParams
+import com.x_twitter_scraper.api.models.x.lists.ListRetrieveParams
+import com.x_twitter_scraper.api.models.x.lists.ListRetrieveResponse
+import com.x_twitter_scraper.api.models.x.lists.ListRetrieveSearchParams
+import com.x_twitter_scraper.api.models.x.lists.ListRetrieveSearchResponse
 import com.x_twitter_scraper.api.models.x.lists.ListRetrieveTweetsParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -39,6 +43,12 @@ class ListServiceAsyncImpl internal constructor(private val clientOptions: Clien
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ListServiceAsync =
         ListServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
+    override fun retrieve(
+        params: ListRetrieveParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<ListRetrieveResponse> =
+        withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
+
     override fun retrieveFollowers(
         params: ListRetrieveFollowersParams,
         requestOptions: RequestOptions,
@@ -50,6 +60,12 @@ class ListServiceAsyncImpl internal constructor(private val clientOptions: Clien
         requestOptions: RequestOptions,
     ): CompletableFuture<PaginatedUsers> =
         withRawResponse().retrieveMembers(params, requestOptions).thenApply { it.parse() }
+
+    override fun retrieveSearch(
+        params: ListRetrieveSearchParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<ListRetrieveSearchResponse> =
+        withRawResponse().retrieveSearch(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveTweets(
         params: ListRetrieveTweetsParams,
@@ -69,6 +85,37 @@ class ListServiceAsyncImpl internal constructor(private val clientOptions: Clien
             ListServiceAsyncImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        private val retrieveHandler: Handler<ListRetrieveResponse> =
+            jsonHandler<ListRetrieveResponse>(clientOptions.jsonMapper)
+
+        override fun retrieve(
+            params: ListRetrieveParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<ListRetrieveResponse>> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "lists", params._pathParam(0))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { retrieveHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
 
         private val retrieveFollowersHandler: Handler<PaginatedUsers> =
             jsonHandler<PaginatedUsers>(clientOptions.jsonMapper)
@@ -123,6 +170,36 @@ class ListServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     errorHandler.handle(response).parseable {
                         response
                             .use { retrieveMembersHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val retrieveSearchHandler: Handler<ListRetrieveSearchResponse> =
+            jsonHandler<ListRetrieveSearchResponse>(clientOptions.jsonMapper)
+
+        override fun retrieveSearch(
+            params: ListRetrieveSearchParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<ListRetrieveSearchResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "lists", "search")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { retrieveSearchHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

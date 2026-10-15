@@ -79,6 +79,8 @@ Call REST directly when a Maven dependency does not fit.
 | Read bookmarks and bookmark folders | `GET /x/bookmarks`, `GET /x/bookmarks/folders` | `client.x().bookmarks()` |
 | Read notifications or direct messages | `GET /x/notifications`, `GET /x/dm/{userId}/history` | `client.x()`, `client.x().dm()` |
 | Discover X trends | `GET /x/trends` | `client.x().getTrends()` |
+| Read past trends or the places X offers trends for | `GET /x/trends/history`, `GET /x/trends/locations` | `client.x().getTrendsHistory()`, `client.x().getTrendLocations()` |
+| Find popular or suggested communities | `GET /x/communities/popular`, `GET /x/communities/suggested` | `client.x().communities()` |
 | Export large X datasets | `POST /extractions` | `client.extractions()` |
 | Monitor tweet keywords or accounts | `POST /monitors/keywords`, `POST /monitors` | `client.monitors()` |
 | Receive signed event deliveries | `POST /webhooks` | `client.webhooks()` |

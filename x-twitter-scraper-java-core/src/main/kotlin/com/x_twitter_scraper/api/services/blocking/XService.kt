@@ -9,13 +9,25 @@ import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.models.PaginatedTweets
+import com.x_twitter_scraper.api.models.x.XAutocompleteSearchParams
+import com.x_twitter_scraper.api.models.x.XAutocompleteSearchResponse
 import com.x_twitter_scraper.api.models.x.XGetArticleParams
 import com.x_twitter_scraper.api.models.x.XGetArticleResponse
+import com.x_twitter_scraper.api.models.x.XGetHashflagsParams
+import com.x_twitter_scraper.api.models.x.XGetHashflagsResponse
 import com.x_twitter_scraper.api.models.x.XGetHomeTimelineParams
+import com.x_twitter_scraper.api.models.x.XGetNewsStoryVersionsParams
+import com.x_twitter_scraper.api.models.x.XGetNewsStoryVersionsResponse
 import com.x_twitter_scraper.api.models.x.XGetNotificationsParams
 import com.x_twitter_scraper.api.models.x.XGetNotificationsResponse
+import com.x_twitter_scraper.api.models.x.XGetTrendLocationsParams
+import com.x_twitter_scraper.api.models.x.XGetTrendLocationsResponse
+import com.x_twitter_scraper.api.models.x.XGetTrendsHistoryParams
+import com.x_twitter_scraper.api.models.x.XGetTrendsHistoryResponse
 import com.x_twitter_scraper.api.models.x.XGetTrendsParams
 import com.x_twitter_scraper.api.models.x.XGetTrendsResponse
+import com.x_twitter_scraper.api.models.x.XSearchPlacesParams
+import com.x_twitter_scraper.api.models.x.XSearchPlacesResponse
 import com.x_twitter_scraper.api.services.blocking.x.AccountConnectionAttemptService
 import com.x_twitter_scraper.api.services.blocking.x.AccountConnectionChallengeService
 import com.x_twitter_scraper.api.services.blocking.x.AccountService
@@ -80,6 +92,19 @@ interface XService {
     fun lists(): ListService
 
     /**
+     * Returns the accounts, topics, hashtags & cashtags X suggests while someone types a search. X
+     * may rank them differently per request. Costs 1 credit per suggestion.
+     */
+    fun autocompleteSearch(params: XAutocompleteSearchParams): XAutocompleteSearchResponse =
+        autocompleteSearch(params, RequestOptions.none())
+
+    /** @see autocompleteSearch */
+    fun autocompleteSearch(
+        params: XAutocompleteSearchParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): XAutocompleteSearchResponse
+
+    /**
      * Retrieve the full content of an X Article (long-form post) by numeric tweet ID. Returns
      * article_not_found when the tweet is valid but is not an X Article.
      */
@@ -113,6 +138,27 @@ interface XService {
     fun getArticle(tweetId: String, requestOptions: RequestOptions): XGetArticleResponse =
         getArticle(tweetId, XGetArticleParams.none(), requestOptions)
 
+    /**
+     * Returns X's hashflags, the custom emoji X shows after some hashtags. Lists the ones running
+     * now unless activeOnly is false. Each returned hashflag costs 1 credit.
+     */
+    fun getHashflags(): XGetHashflagsResponse = getHashflags(XGetHashflagsParams.none())
+
+    /** @see getHashflags */
+    fun getHashflags(
+        params: XGetHashflagsParams = XGetHashflagsParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): XGetHashflagsResponse
+
+    /** @see getHashflags */
+    fun getHashflags(
+        params: XGetHashflagsParams = XGetHashflagsParams.none()
+    ): XGetHashflagsResponse = getHashflags(params, RequestOptions.none())
+
+    /** @see getHashflags */
+    fun getHashflags(requestOptions: RequestOptions): XGetHashflagsResponse =
+        getHashflags(XGetHashflagsParams.none(), requestOptions)
+
     /** Get home timeline */
     fun getHomeTimeline(): PaginatedTweets = getHomeTimeline(XGetHomeTimelineParams.none())
 
@@ -130,6 +176,45 @@ interface XService {
     /** @see getHomeTimeline */
     fun getHomeTimeline(requestOptions: RequestOptions): PaginatedTweets =
         getHomeTimeline(XGetHomeTimelineParams.none(), requestOptions)
+
+    /**
+     * Returns each version X wrote of 1 news story, the AI trends x.com shows under Explore & News.
+     * Each version has its time, headline & text, oldest first, so you can see how the story
+     * changed. X lists every version at once. Each request costs 1 credit.
+     */
+    fun getNewsStoryVersions(id: String): XGetNewsStoryVersionsResponse =
+        getNewsStoryVersions(id, XGetNewsStoryVersionsParams.none())
+
+    /** @see getNewsStoryVersions */
+    fun getNewsStoryVersions(
+        id: String,
+        params: XGetNewsStoryVersionsParams = XGetNewsStoryVersionsParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): XGetNewsStoryVersionsResponse =
+        getNewsStoryVersions(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see getNewsStoryVersions */
+    fun getNewsStoryVersions(
+        id: String,
+        params: XGetNewsStoryVersionsParams = XGetNewsStoryVersionsParams.none(),
+    ): XGetNewsStoryVersionsResponse = getNewsStoryVersions(id, params, RequestOptions.none())
+
+    /** @see getNewsStoryVersions */
+    fun getNewsStoryVersions(
+        params: XGetNewsStoryVersionsParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): XGetNewsStoryVersionsResponse
+
+    /** @see getNewsStoryVersions */
+    fun getNewsStoryVersions(params: XGetNewsStoryVersionsParams): XGetNewsStoryVersionsResponse =
+        getNewsStoryVersions(params, RequestOptions.none())
+
+    /** @see getNewsStoryVersions */
+    fun getNewsStoryVersions(
+        id: String,
+        requestOptions: RequestOptions,
+    ): XGetNewsStoryVersionsResponse =
+        getNewsStoryVersions(id, XGetNewsStoryVersionsParams.none(), requestOptions)
 
     /** Get notifications */
     fun getNotifications(): XGetNotificationsResponse =
@@ -150,6 +235,28 @@ interface XService {
     fun getNotifications(requestOptions: RequestOptions): XGetNotificationsResponse =
         getNotifications(XGetNotificationsParams.none(), requestOptions)
 
+    /**
+     * Returns the places X offers trends for. Pass a location's woeid to /x/trends. Each returned
+     * location costs 1 credit.
+     */
+    fun getTrendLocations(): XGetTrendLocationsResponse =
+        getTrendLocations(XGetTrendLocationsParams.none())
+
+    /** @see getTrendLocations */
+    fun getTrendLocations(
+        params: XGetTrendLocationsParams = XGetTrendLocationsParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): XGetTrendLocationsResponse
+
+    /** @see getTrendLocations */
+    fun getTrendLocations(
+        params: XGetTrendLocationsParams = XGetTrendLocationsParams.none()
+    ): XGetTrendLocationsResponse = getTrendLocations(params, RequestOptions.none())
+
+    /** @see getTrendLocations */
+    fun getTrendLocations(requestOptions: RequestOptions): XGetTrendLocationsResponse =
+        getTrendLocations(XGetTrendLocationsParams.none(), requestOptions)
+
     /** Get trending hashtags and topics from X by region */
     fun getTrends(): XGetTrendsResponse = getTrends(XGetTrendsParams.none())
 
@@ -166,6 +273,48 @@ interface XService {
     /** @see getTrends */
     fun getTrends(requestOptions: RequestOptions): XGetTrendsResponse =
         getTrends(XGetTrendsParams.none(), requestOptions)
+
+    /**
+     * Returns the Twitter trends archive of a place, as the lists X showed there over a range of
+     * time. Use it for trending on Twitter yesterday, last week or any day since 2026-10-13 02:20
+     * UTC. Xquik stores 1 list per place every 5 minutes and keeps it for 25 months. Pick the place
+     * by woeid, country or location name, the range with from & to, and the step with every. from &
+     * to take a time or a span back from now, such as 7d, so a schedule can read the last day on
+     * every run. Each step returns the first list stored in it, with its own time. Each returned
+     * list costs 1 credit, so 24 lists cost 24 credits. A step with no stored list returns none and
+     * costs nothing. 1 request returns 24 lists, or up to 100 with limit.
+     */
+    fun getTrendsHistory(): XGetTrendsHistoryResponse =
+        getTrendsHistory(XGetTrendsHistoryParams.none())
+
+    /** @see getTrendsHistory */
+    fun getTrendsHistory(
+        params: XGetTrendsHistoryParams = XGetTrendsHistoryParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): XGetTrendsHistoryResponse
+
+    /** @see getTrendsHistory */
+    fun getTrendsHistory(
+        params: XGetTrendsHistoryParams = XGetTrendsHistoryParams.none()
+    ): XGetTrendsHistoryResponse = getTrendsHistory(params, RequestOptions.none())
+
+    /** @see getTrendsHistory */
+    fun getTrendsHistory(requestOptions: RequestOptions): XGetTrendsHistoryResponse =
+        getTrendsHistory(XGetTrendsHistoryParams.none(), requestOptions)
+
+    /**
+     * Finds places on X by name. Pass a place's id as place to /x/tweets/search to read posts
+     * tagged there. X ranks the places, so their order can differ between requests. Each returned
+     * place costs 1 credit.
+     */
+    fun searchPlaces(params: XSearchPlacesParams): XSearchPlacesResponse =
+        searchPlaces(params, RequestOptions.none())
+
+    /** @see searchPlaces */
+    fun searchPlaces(
+        params: XSearchPlacesParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): XSearchPlacesResponse
 
     /** A view of [XService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -212,6 +361,23 @@ interface XService {
         fun lists(): ListService.WithRawResponse
 
         /**
+         * Returns a raw HTTP response for `get /x/search/autocomplete`, but is otherwise the same
+         * as [XService.autocompleteSearch].
+         */
+        @MustBeClosed
+        fun autocompleteSearch(
+            params: XAutocompleteSearchParams
+        ): HttpResponseFor<XAutocompleteSearchResponse> =
+            autocompleteSearch(params, RequestOptions.none())
+
+        /** @see autocompleteSearch */
+        @MustBeClosed
+        fun autocompleteSearch(
+            params: XAutocompleteSearchParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<XAutocompleteSearchResponse>
+
+        /**
          * Returns a raw HTTP response for `get /x/articles/{tweetId}`, but is otherwise the same as
          * [XService.getArticle].
          */
@@ -256,6 +422,32 @@ interface XService {
             getArticle(tweetId, XGetArticleParams.none(), requestOptions)
 
         /**
+         * Returns a raw HTTP response for `get /x/hashflags`, but is otherwise the same as
+         * [XService.getHashflags].
+         */
+        @MustBeClosed
+        fun getHashflags(): HttpResponseFor<XGetHashflagsResponse> =
+            getHashflags(XGetHashflagsParams.none())
+
+        /** @see getHashflags */
+        @MustBeClosed
+        fun getHashflags(
+            params: XGetHashflagsParams = XGetHashflagsParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<XGetHashflagsResponse>
+
+        /** @see getHashflags */
+        @MustBeClosed
+        fun getHashflags(
+            params: XGetHashflagsParams = XGetHashflagsParams.none()
+        ): HttpResponseFor<XGetHashflagsResponse> = getHashflags(params, RequestOptions.none())
+
+        /** @see getHashflags */
+        @MustBeClosed
+        fun getHashflags(requestOptions: RequestOptions): HttpResponseFor<XGetHashflagsResponse> =
+            getHashflags(XGetHashflagsParams.none(), requestOptions)
+
+        /**
          * Returns a raw HTTP response for `get /x/timeline`, but is otherwise the same as
          * [XService.getHomeTimeline].
          */
@@ -280,6 +472,53 @@ interface XService {
         @MustBeClosed
         fun getHomeTimeline(requestOptions: RequestOptions): HttpResponseFor<PaginatedTweets> =
             getHomeTimeline(XGetHomeTimelineParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /x/news/{id}/versions`, but is otherwise the same as
+         * [XService.getNewsStoryVersions].
+         */
+        @MustBeClosed
+        fun getNewsStoryVersions(id: String): HttpResponseFor<XGetNewsStoryVersionsResponse> =
+            getNewsStoryVersions(id, XGetNewsStoryVersionsParams.none())
+
+        /** @see getNewsStoryVersions */
+        @MustBeClosed
+        fun getNewsStoryVersions(
+            id: String,
+            params: XGetNewsStoryVersionsParams = XGetNewsStoryVersionsParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<XGetNewsStoryVersionsResponse> =
+            getNewsStoryVersions(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see getNewsStoryVersions */
+        @MustBeClosed
+        fun getNewsStoryVersions(
+            id: String,
+            params: XGetNewsStoryVersionsParams = XGetNewsStoryVersionsParams.none(),
+        ): HttpResponseFor<XGetNewsStoryVersionsResponse> =
+            getNewsStoryVersions(id, params, RequestOptions.none())
+
+        /** @see getNewsStoryVersions */
+        @MustBeClosed
+        fun getNewsStoryVersions(
+            params: XGetNewsStoryVersionsParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<XGetNewsStoryVersionsResponse>
+
+        /** @see getNewsStoryVersions */
+        @MustBeClosed
+        fun getNewsStoryVersions(
+            params: XGetNewsStoryVersionsParams
+        ): HttpResponseFor<XGetNewsStoryVersionsResponse> =
+            getNewsStoryVersions(params, RequestOptions.none())
+
+        /** @see getNewsStoryVersions */
+        @MustBeClosed
+        fun getNewsStoryVersions(
+            id: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<XGetNewsStoryVersionsResponse> =
+            getNewsStoryVersions(id, XGetNewsStoryVersionsParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /x/notifications`, but is otherwise the same as
@@ -311,6 +550,35 @@ interface XService {
             getNotifications(XGetNotificationsParams.none(), requestOptions)
 
         /**
+         * Returns a raw HTTP response for `get /x/trends/locations`, but is otherwise the same as
+         * [XService.getTrendLocations].
+         */
+        @MustBeClosed
+        fun getTrendLocations(): HttpResponseFor<XGetTrendLocationsResponse> =
+            getTrendLocations(XGetTrendLocationsParams.none())
+
+        /** @see getTrendLocations */
+        @MustBeClosed
+        fun getTrendLocations(
+            params: XGetTrendLocationsParams = XGetTrendLocationsParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<XGetTrendLocationsResponse>
+
+        /** @see getTrendLocations */
+        @MustBeClosed
+        fun getTrendLocations(
+            params: XGetTrendLocationsParams = XGetTrendLocationsParams.none()
+        ): HttpResponseFor<XGetTrendLocationsResponse> =
+            getTrendLocations(params, RequestOptions.none())
+
+        /** @see getTrendLocations */
+        @MustBeClosed
+        fun getTrendLocations(
+            requestOptions: RequestOptions
+        ): HttpResponseFor<XGetTrendLocationsResponse> =
+            getTrendLocations(XGetTrendLocationsParams.none(), requestOptions)
+
+        /**
          * Returns a raw HTTP response for `get /x/trends`, but is otherwise the same as
          * [XService.getTrends].
          */
@@ -334,5 +602,49 @@ interface XService {
         @MustBeClosed
         fun getTrends(requestOptions: RequestOptions): HttpResponseFor<XGetTrendsResponse> =
             getTrends(XGetTrendsParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /x/trends/history`, but is otherwise the same as
+         * [XService.getTrendsHistory].
+         */
+        @MustBeClosed
+        fun getTrendsHistory(): HttpResponseFor<XGetTrendsHistoryResponse> =
+            getTrendsHistory(XGetTrendsHistoryParams.none())
+
+        /** @see getTrendsHistory */
+        @MustBeClosed
+        fun getTrendsHistory(
+            params: XGetTrendsHistoryParams = XGetTrendsHistoryParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<XGetTrendsHistoryResponse>
+
+        /** @see getTrendsHistory */
+        @MustBeClosed
+        fun getTrendsHistory(
+            params: XGetTrendsHistoryParams = XGetTrendsHistoryParams.none()
+        ): HttpResponseFor<XGetTrendsHistoryResponse> =
+            getTrendsHistory(params, RequestOptions.none())
+
+        /** @see getTrendsHistory */
+        @MustBeClosed
+        fun getTrendsHistory(
+            requestOptions: RequestOptions
+        ): HttpResponseFor<XGetTrendsHistoryResponse> =
+            getTrendsHistory(XGetTrendsHistoryParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /x/places/search`, but is otherwise the same as
+         * [XService.searchPlaces].
+         */
+        @MustBeClosed
+        fun searchPlaces(params: XSearchPlacesParams): HttpResponseFor<XSearchPlacesResponse> =
+            searchPlaces(params, RequestOptions.none())
+
+        /** @see searchPlaces */
+        @MustBeClosed
+        fun searchPlaces(
+            params: XSearchPlacesParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<XSearchPlacesResponse>
     }
 }
