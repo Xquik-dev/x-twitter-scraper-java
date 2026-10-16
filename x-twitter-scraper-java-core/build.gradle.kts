@@ -70,3 +70,11 @@ tasks.named<Test>("test") {
         doFirst { regressionDirectory.mkdirs() }
     }
 }
+
+tasks.register("apiFieldsClasspath") {
+    description = "Prints the classpath that runs the API fields check."
+    group = "verification"
+    val classpath = sourceSets["test"].runtimeClasspath
+    dependsOn("testClasses")
+    doLast { println(classpath.asPath) }
+}
