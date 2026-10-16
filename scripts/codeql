@@ -8,6 +8,9 @@ set -euo pipefail
 
 cd -- "$(dirname -- "$0")/.."
 
+# shellcheck source=scripts/lib/temp-paths.bash
+source scripts/lib/temp-paths.bash
+
 readonly codeql_version="2.27.2"
 readonly query_suite="codeql/java-queries@1.11.12:codeql-suites/java-security-extended.qls"
 readonly comment_queries="codeql/no-code-comments"
@@ -18,8 +21,10 @@ if [[ "$found_version" != "$codeql_version" ]]; then
     exit 1
 fi
 
+trap remove_temp_paths EXIT
+exit_on_signals
 codeql_workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-java-codeql.XXXXXX")"
-trap 'rm -rf -- "$codeql_workspace"' EXIT
+temp_paths+=("$codeql_workspace")
 readonly source_root="$codeql_workspace/source"
 readonly database="$codeql_workspace/database"
 readonly results="$codeql_workspace/results.sarif"

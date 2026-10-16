@@ -109,6 +109,7 @@ EOF
 
 prepare_coverage() {
     copy_file scripts/api-coverage
+    copy_file scripts/lib/temp-paths.bash
     write_client_options "https://xquik.com/api/v1"
     write_tweet_service
     covered_spec
@@ -148,6 +149,7 @@ test_a_missing_operation_fails_with_its_line_and_the_next_step() {
     "/x/trends/locations": {"get": {}},
     "/ask": {"servers": [{"url": "https://xquik.com"}], "get": {}, "post": {}}
   }
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
 }
 EOF
 
