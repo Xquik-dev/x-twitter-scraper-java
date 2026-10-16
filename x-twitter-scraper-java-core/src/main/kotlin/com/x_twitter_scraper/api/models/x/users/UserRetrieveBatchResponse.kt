@@ -19,6 +19,7 @@ import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import com.x_twitter_scraper.api.models.UserProfile
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -29,6 +30,8 @@ import kotlin.jvm.optionals.getOrNull
 class UserRetrieveBatchResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
+    private val failedIds: JsonField<List<String>>,
+    private val filteredCount: JsonField<Long>,
     private val hasNextPage: JsonValue,
     private val nextCursor: JsonField<String>,
     private val processedCount: JsonField<Long>,
@@ -42,6 +45,12 @@ private constructor(
 
     @JsonCreator
     private constructor(
+        @JsonProperty("failed_ids")
+        @ExcludeMissing
+        failedIds: JsonField<List<String>> = JsonMissing.of(),
+        @JsonProperty("filtered_count")
+        @ExcludeMissing
+        filteredCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("has_next_page") @ExcludeMissing hasNextPage: JsonValue = JsonMissing.of(),
         @JsonProperty("next_cursor")
         @ExcludeMissing
@@ -65,6 +74,8 @@ private constructor(
         @ExcludeMissing
         users: JsonField<List<UserProfile>> = JsonMissing.of(),
     ) : this(
+        failedIds,
+        filteredCount,
         hasNextPage,
         nextCursor,
         processedCount,
@@ -77,7 +88,27 @@ private constructor(
     )
 
     /**
+     * Processed IDs that failed to load, in first-seen request order. They cost nothing. Retry
+     * them.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun failedIds(): Optional<List<String>> = failedIds.getOptional("failed_ids")
+
+    /**
+     * Profiles rejected by the requested filters.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun filteredCount(): Optional<Long> = filteredCount.getOptional("filtered_count")
+
+    /**
      * Batch lookups never paginate.
+     *
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from(false)
+     * ```
      *
      * Expected to always return the following:
      * ```java
@@ -140,6 +171,24 @@ private constructor(
      *   unexpectedly missing or null.
      */
     fun users(): List<UserProfile> = users.getRequired("users")
+
+    /**
+     * Returns the raw JSON value of [failedIds].
+     *
+     * Unlike [failedIds], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("failed_ids")
+    @ExcludeMissing
+    fun _failedIds(): JsonField<List<String>> = failedIds
+
+    /**
+     * Returns the raw JSON value of [filteredCount].
+     *
+     * Unlike [filteredCount], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("filtered_count")
+    @ExcludeMissing
+    fun _filteredCount(): JsonField<Long> = filteredCount
 
     /**
      * Returns the raw JSON value of [nextCursor].
@@ -234,6 +283,8 @@ private constructor(
     /** A builder for [UserRetrieveBatchResponse]. */
     class Builder internal constructor() {
 
+        private var failedIds: JsonField<MutableList<String>>? = null
+        private var filteredCount: JsonField<Long> = JsonMissing.of()
         private var hasNextPage: JsonValue = JsonValue.from(false)
         private var nextCursor: JsonField<String>? = null
         private var processedCount: JsonField<Long>? = null
@@ -246,6 +297,8 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(userRetrieveBatchResponse: UserRetrieveBatchResponse) = apply {
+            failedIds = userRetrieveBatchResponse.failedIds.map { it.toMutableList() }
+            filteredCount = userRetrieveBatchResponse.filteredCount
             hasNextPage = userRetrieveBatchResponse.hasNextPage
             nextCursor = userRetrieveBatchResponse.nextCursor
             processedCount = userRetrieveBatchResponse.processedCount
@@ -255,6 +308,37 @@ private constructor(
             unprocessedIds = userRetrieveBatchResponse.unprocessedIds.map { it.toMutableList() }
             users = userRetrieveBatchResponse.users.map { it.toMutableList() }
             additionalProperties = userRetrieveBatchResponse.additionalProperties.toMutableMap()
+        }
+
+        /**
+         * Processed IDs that failed to load, in first-seen request order. They cost nothing. Retry
+         * them.
+         */
+        fun failedIds(failedIds: List<String>) = failedIds(JsonField.of(failedIds))
+
+        /** Sets [Builder.failedIds] to an arbitrary JSON value. */
+        fun failedIds(failedIds: JsonField<List<String>>) = apply {
+            this.failedIds = failedIds.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [String] to [failedIds].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addFailedId(failedId: String) = apply {
+            failedIds =
+                (failedIds ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("failedIds", it).add(failedId)
+                }
+        }
+
+        /** Profiles rejected by the requested filters. */
+        fun filteredCount(filteredCount: Long) = filteredCount(JsonField.of(filteredCount))
+
+        /** Sets [Builder.filteredCount] to an arbitrary JSON value. */
+        fun filteredCount(filteredCount: JsonField<Long>) = apply {
+            this.filteredCount = filteredCount
         }
 
         /**
@@ -398,6 +482,8 @@ private constructor(
          */
         fun build(): UserRetrieveBatchResponse =
             UserRetrieveBatchResponse(
+                (failedIds ?: JsonMissing.of()).map { it.toImmutable() },
+                filteredCount,
                 hasNextPage,
                 checkRequired("nextCursor", nextCursor),
                 checkRequired("processedCount", processedCount),
@@ -425,6 +511,8 @@ private constructor(
             return@apply
         }
 
+        failedIds()
+        filteredCount()
         _hasNextPage().let {
             if (it != JsonValue.from(false)) {
                 throw XTwitterScraperInvalidDataException("'hasNextPage' is invalid, received $it")
@@ -450,7 +538,9 @@ private constructor(
 
     @JvmSynthetic
     internal fun validity(): Int =
-        hasNextPage.let { if (it == JsonValue.from(false)) 1 else 0 } +
+        (failedIds.asKnown().getOrNull()?.size ?: 0) +
+            (if (filteredCount.asKnown().isPresent) 1 else 0) +
+            hasNextPage.let { if (it == JsonValue.from(false)) 1 else 0 } +
             (if (nextCursor.asKnown().isPresent) 1 else 0) +
             (if (processedCount.asKnown().isPresent) 1 else 0) +
             (if (requestedCount.asKnown().isPresent) 1 else 0) +
@@ -465,6 +555,8 @@ private constructor(
         }
 
         return other is UserRetrieveBatchResponse &&
+            failedIds == other.failedIds &&
+            filteredCount == other.filteredCount &&
             hasNextPage == other.hasNextPage &&
             nextCursor == other.nextCursor &&
             processedCount == other.processedCount &&
@@ -478,6 +570,8 @@ private constructor(
 
     private val hashCode: Int by lazy {
         Objects.hash(
+            failedIds,
+            filteredCount,
             hasNextPage,
             nextCursor,
             processedCount,
@@ -493,5 +587,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "UserRetrieveBatchResponse{hasNextPage=$hasNextPage, nextCursor=$nextCursor, processedCount=$processedCount, requestedCount=$requestedCount, returnedCount=$returnedCount, unavailableIds=$unavailableIds, unprocessedIds=$unprocessedIds, users=$users, additionalProperties=$additionalProperties}"
+        "UserRetrieveBatchResponse{failedIds=$failedIds, filteredCount=$filteredCount, hasNextPage=$hasNextPage, nextCursor=$nextCursor, processedCount=$processedCount, requestedCount=$requestedCount, returnedCount=$returnedCount, unavailableIds=$unavailableIds, unprocessedIds=$unprocessedIds, users=$users, additionalProperties=$additionalProperties}"
 }

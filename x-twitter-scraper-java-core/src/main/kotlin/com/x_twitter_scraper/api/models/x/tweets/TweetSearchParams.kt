@@ -35,10 +35,12 @@ private constructor(
     private val exactPhrase: String?,
     private val excludeSource: String?,
     private val excludeWords: String?,
+    private val fields: String?,
     private val fromUser: String?,
     private val geocode: String?,
     private val hashtags: String?,
     private val inReplyToTweetId: String?,
+    private val keywords: String?,
     private val language: String?,
     private val limit: Long?,
     private val listId: String?,
@@ -51,6 +53,7 @@ private constructor(
     private val mentioning: String?,
     private val minBookmarks: Long?,
     private val minFaves: Long?,
+    private val minLikes: Long?,
     private val minQuotes: Long?,
     private val minReplies: Long?,
     private val minRetweets: Long?,
@@ -59,6 +62,7 @@ private constructor(
     private val nativeRetweets: Boolean?,
     private val near: String?,
     private val news: Boolean?,
+    private val omit: String?,
     private val place: String?,
     private val placeCountry: String?,
     private val pointRadius: String?,
@@ -123,6 +127,15 @@ private constructor(
     /** Words or quoted phrases to exclude. Separate with spaces, commas, or lines. */
     fun excludeWords(): Optional<String> = Optional.ofNullable(excludeWords)
 
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+     * author.username. A list keeps the field in each item. Case & underscores do not matter. A row
+     * that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name
+     * answers 400 unknown_field with the valid names, before any read. The price stays the same. A
+     * required getter throws when you leave its field out, and response validation fails.
+     */
+    fun fields(): Optional<String> = Optional.ofNullable(fields)
+
     /** Filter by author username. */
     fun fromUser(): Optional<String> = Optional.ofNullable(fromUser)
 
@@ -134,6 +147,9 @@ private constructor(
 
     /** Only replies to this tweet ID. */
     fun inReplyToTweetId(): Optional<String> = Optional.ofNullable(inReplyToTweetId)
+
+    /** Words the Tweets must match, in X search syntax. */
+    fun keywords(): Optional<String> = Optional.ofNullable(keywords)
 
     /** Language code filter, e.g. en or tr. */
     fun language(): Optional<String> = Optional.ofNullable(language)
@@ -175,6 +191,9 @@ private constructor(
     /** Minimum likes threshold. minLikes is also accepted. */
     fun minFaves(): Optional<Long> = Optional.ofNullable(minFaves)
 
+    /** Minimum likes. Its aliases are minFaves, min_likes & min_faves. */
+    fun minLikes(): Optional<Long> = Optional.ofNullable(minLikes)
+
     /** Minimum quote count threshold. */
     fun minQuotes(): Optional<Long> = Optional.ofNullable(minQuotes)
 
@@ -201,6 +220,12 @@ private constructor(
 
     /** Only return news results. */
     fun news(): Optional<Boolean> = Optional.ofNullable(news)
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+     * fields, it drops from the kept fields.
+     */
+    fun omit(): Optional<String> = Optional.ofNullable(omit)
 
     /** Search within a place ID. */
     fun place(): Optional<String> = Optional.ofNullable(place)
@@ -301,10 +326,12 @@ private constructor(
         private var exactPhrase: String? = null
         private var excludeSource: String? = null
         private var excludeWords: String? = null
+        private var fields: String? = null
         private var fromUser: String? = null
         private var geocode: String? = null
         private var hashtags: String? = null
         private var inReplyToTweetId: String? = null
+        private var keywords: String? = null
         private var language: String? = null
         private var limit: Long? = null
         private var listId: String? = null
@@ -317,6 +344,7 @@ private constructor(
         private var mentioning: String? = null
         private var minBookmarks: Long? = null
         private var minFaves: Long? = null
+        private var minLikes: Long? = null
         private var minQuotes: Long? = null
         private var minReplies: Long? = null
         private var minRetweets: Long? = null
@@ -325,6 +353,7 @@ private constructor(
         private var nativeRetweets: Boolean? = null
         private var near: String? = null
         private var news: Boolean? = null
+        private var omit: String? = null
         private var place: String? = null
         private var placeCountry: String? = null
         private var pointRadius: String? = null
@@ -363,10 +392,12 @@ private constructor(
             exactPhrase = tweetSearchParams.exactPhrase
             excludeSource = tweetSearchParams.excludeSource
             excludeWords = tweetSearchParams.excludeWords
+            fields = tweetSearchParams.fields
             fromUser = tweetSearchParams.fromUser
             geocode = tweetSearchParams.geocode
             hashtags = tweetSearchParams.hashtags
             inReplyToTweetId = tweetSearchParams.inReplyToTweetId
+            keywords = tweetSearchParams.keywords
             language = tweetSearchParams.language
             limit = tweetSearchParams.limit
             listId = tweetSearchParams.listId
@@ -379,6 +410,7 @@ private constructor(
             mentioning = tweetSearchParams.mentioning
             minBookmarks = tweetSearchParams.minBookmarks
             minFaves = tweetSearchParams.minFaves
+            minLikes = tweetSearchParams.minLikes
             minQuotes = tweetSearchParams.minQuotes
             minReplies = tweetSearchParams.minReplies
             minRetweets = tweetSearchParams.minRetweets
@@ -387,6 +419,7 @@ private constructor(
             nativeRetweets = tweetSearchParams.nativeRetweets
             near = tweetSearchParams.near
             news = tweetSearchParams.news
+            omit = tweetSearchParams.omit
             place = tweetSearchParams.place
             placeCountry = tweetSearchParams.placeCountry
             pointRadius = tweetSearchParams.pointRadius
@@ -496,6 +529,19 @@ private constructor(
         /** Alias for calling [Builder.excludeWords] with `excludeWords.orElse(null)`. */
         fun excludeWords(excludeWords: Optional<String>) = excludeWords(excludeWords.getOrNull())
 
+        /**
+         * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+         * author.username. A list keeps the field in each item. Case & underscores do not matter. A
+         * row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An
+         * unknown name answers 400 unknown_field with the valid names, before any read. The price
+         * stays the same. A required getter throws when you leave its field out, and response
+         * validation fails.
+         */
+        fun fields(fields: String?) = apply { this.fields = fields }
+
+        /** Alias for calling [Builder.fields] with `fields.orElse(null)`. */
+        fun fields(fields: Optional<String>) = fields(fields.getOrNull())
+
         /** Filter by author username. */
         fun fromUser(fromUser: String?) = apply { this.fromUser = fromUser }
 
@@ -522,6 +568,12 @@ private constructor(
         /** Alias for calling [Builder.inReplyToTweetId] with `inReplyToTweetId.orElse(null)`. */
         fun inReplyToTweetId(inReplyToTweetId: Optional<String>) =
             inReplyToTweetId(inReplyToTweetId.getOrNull())
+
+        /** Words the Tweets must match, in X search syntax. */
+        fun keywords(keywords: String?) = apply { this.keywords = keywords }
+
+        /** Alias for calling [Builder.keywords] with `keywords.orElse(null)`. */
+        fun keywords(keywords: Optional<String>) = keywords(keywords.getOrNull())
 
         /** Language code filter, e.g. en or tr. */
         fun language(language: String?) = apply { this.language = language }
@@ -620,6 +672,15 @@ private constructor(
         /** Alias for calling [Builder.minFaves] with `minFaves.orElse(null)`. */
         fun minFaves(minFaves: Optional<Long>) = minFaves(minFaves.getOrNull())
 
+        /** Minimum likes. Its aliases are minFaves, min_likes & min_faves. */
+        fun minLikes(minLikes: Long?) = apply { this.minLikes = minLikes }
+
+        /** Alias for [Builder.minLikes]. */
+        fun minLikes(minLikes: Long) = minLikes(minLikes as Long?)
+
+        /** Alias for calling [Builder.minLikes] with `minLikes.orElse(null)`. */
+        fun minLikes(minLikes: Optional<Long>) = minLikes(minLikes.getOrNull())
+
         /** Minimum quote count threshold. */
         fun minQuotes(minQuotes: Long?) = apply { this.minQuotes = minQuotes }
 
@@ -691,6 +752,15 @@ private constructor(
 
         /** Alias for calling [Builder.news] with `news.orElse(null)`. */
         fun news(news: Optional<Boolean>) = news(news.getOrNull())
+
+        /**
+         * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+         * fields, it drops from the kept fields.
+         */
+        fun omit(omit: String?) = apply { this.omit = omit }
+
+        /** Alias for calling [Builder.omit] with `omit.orElse(null)`. */
+        fun omit(omit: Optional<String>) = omit(omit.getOrNull())
 
         /** Search within a place ID. */
         fun place(place: String?) = apply { this.place = place }
@@ -954,10 +1024,12 @@ private constructor(
                 exactPhrase,
                 excludeSource,
                 excludeWords,
+                fields,
                 fromUser,
                 geocode,
                 hashtags,
                 inReplyToTweetId,
+                keywords,
                 language,
                 limit,
                 listId,
@@ -970,6 +1042,7 @@ private constructor(
                 mentioning,
                 minBookmarks,
                 minFaves,
+                minLikes,
                 minQuotes,
                 minReplies,
                 minRetweets,
@@ -978,6 +1051,7 @@ private constructor(
                 nativeRetweets,
                 near,
                 news,
+                omit,
                 place,
                 placeCountry,
                 pointRadius,
@@ -1021,10 +1095,12 @@ private constructor(
                 exactPhrase?.let { put("exactPhrase", it) }
                 excludeSource?.let { put("excludeSource", it) }
                 excludeWords?.let { put("excludeWords", it) }
+                fields?.let { put("fields", it) }
                 fromUser?.let { put("fromUser", it) }
                 geocode?.let { put("geocode", it) }
                 hashtags?.let { put("hashtags", it) }
                 inReplyToTweetId?.let { put("inReplyToTweetId", it) }
+                keywords?.let { put("keywords", it) }
                 language?.let { put("language", it) }
                 limit?.let { put("limit", it.toString()) }
                 listId?.let { put("listId", it) }
@@ -1037,6 +1113,7 @@ private constructor(
                 mentioning?.let { put("mentioning", it) }
                 minBookmarks?.let { put("minBookmarks", it.toString()) }
                 minFaves?.let { put("minFaves", it.toString()) }
+                minLikes?.let { put("minLikes", it.toString()) }
                 minQuotes?.let { put("minQuotes", it.toString()) }
                 minReplies?.let { put("minReplies", it.toString()) }
                 minRetweets?.let { put("minRetweets", it.toString()) }
@@ -1045,6 +1122,7 @@ private constructor(
                 nativeRetweets?.let { put("nativeRetweets", it.toString()) }
                 near?.let { put("near", it) }
                 news?.let { put("news", it.toString()) }
+                omit?.let { put("omit", it) }
                 place?.let { put("place", it) }
                 placeCountry?.let { put("placeCountry", it) }
                 pointRadius?.let { put("pointRadius", it) }
@@ -1827,10 +1905,12 @@ private constructor(
             exactPhrase == other.exactPhrase &&
             excludeSource == other.excludeSource &&
             excludeWords == other.excludeWords &&
+            fields == other.fields &&
             fromUser == other.fromUser &&
             geocode == other.geocode &&
             hashtags == other.hashtags &&
             inReplyToTweetId == other.inReplyToTweetId &&
+            keywords == other.keywords &&
             language == other.language &&
             limit == other.limit &&
             listId == other.listId &&
@@ -1843,6 +1923,7 @@ private constructor(
             mentioning == other.mentioning &&
             minBookmarks == other.minBookmarks &&
             minFaves == other.minFaves &&
+            minLikes == other.minLikes &&
             minQuotes == other.minQuotes &&
             minReplies == other.minReplies &&
             minRetweets == other.minRetweets &&
@@ -1851,6 +1932,7 @@ private constructor(
             nativeRetweets == other.nativeRetweets &&
             near == other.near &&
             news == other.news &&
+            omit == other.omit &&
             place == other.place &&
             placeCountry == other.placeCountry &&
             pointRadius == other.pointRadius &&
@@ -1890,10 +1972,12 @@ private constructor(
             exactPhrase,
             excludeSource,
             excludeWords,
+            fields,
             fromUser,
             geocode,
             hashtags,
             inReplyToTweetId,
+            keywords,
             language,
             limit,
             listId,
@@ -1906,6 +1990,7 @@ private constructor(
             mentioning,
             minBookmarks,
             minFaves,
+            minLikes,
             minQuotes,
             minReplies,
             minRetweets,
@@ -1914,6 +1999,7 @@ private constructor(
             nativeRetweets,
             near,
             news,
+            omit,
             place,
             placeCountry,
             pointRadius,
@@ -1940,5 +2026,5 @@ private constructor(
         )
 
     override fun toString() =
-        "TweetSearchParams{q=$q, advancedQuery=$advancedQuery, anyWords=$anyWords, blueVerifiedOnly=$blueVerifiedOnly, boundingBox=$boundingBox, cardName=$cardName, cashtags=$cashtags, conversationId=$conversationId, cursor=$cursor, exactPhrase=$exactPhrase, excludeSource=$excludeSource, excludeWords=$excludeWords, fromUser=$fromUser, geocode=$geocode, hashtags=$hashtags, inReplyToTweetId=$inReplyToTweetId, language=$language, limit=$limit, listId=$listId, maxFaves=$maxFaves, maxId=$maxId, maxQuotes=$maxQuotes, maxReplies=$maxReplies, maxRetweets=$maxRetweets, mediaType=$mediaType, mentioning=$mentioning, minBookmarks=$minBookmarks, minFaves=$minFaves, minQuotes=$minQuotes, minReplies=$minReplies, minRetweets=$minRetweets, minViews=$minViews, mode=$mode, nativeRetweets=$nativeRetweets, near=$near, news=$news, place=$place, placeCountry=$placeCountry, pointRadius=$pointRadius, queryType=$queryType, quotes=$quotes, quotesOfTweetId=$quotesOfTweetId, replies=$replies, retweets=$retweets, retweetsOfTweetId=$retweetsOfTweetId, safe=$safe, sinceDate=$sinceDate, sinceId=$sinceId, sinceTime=$sinceTime, source=$source, toUser=$toUser, untilDate=$untilDate, untilTime=$untilTime, url=$url, verifiedOnly=$verifiedOnly, within=$within, withinTime=$withinTime, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "TweetSearchParams{q=$q, advancedQuery=$advancedQuery, anyWords=$anyWords, blueVerifiedOnly=$blueVerifiedOnly, boundingBox=$boundingBox, cardName=$cardName, cashtags=$cashtags, conversationId=$conversationId, cursor=$cursor, exactPhrase=$exactPhrase, excludeSource=$excludeSource, excludeWords=$excludeWords, fields=$fields, fromUser=$fromUser, geocode=$geocode, hashtags=$hashtags, inReplyToTweetId=$inReplyToTweetId, keywords=$keywords, language=$language, limit=$limit, listId=$listId, maxFaves=$maxFaves, maxId=$maxId, maxQuotes=$maxQuotes, maxReplies=$maxReplies, maxRetweets=$maxRetweets, mediaType=$mediaType, mentioning=$mentioning, minBookmarks=$minBookmarks, minFaves=$minFaves, minLikes=$minLikes, minQuotes=$minQuotes, minReplies=$minReplies, minRetweets=$minRetweets, minViews=$minViews, mode=$mode, nativeRetweets=$nativeRetweets, near=$near, news=$news, omit=$omit, place=$place, placeCountry=$placeCountry, pointRadius=$pointRadius, queryType=$queryType, quotes=$quotes, quotesOfTweetId=$quotesOfTweetId, replies=$replies, retweets=$retweets, retweetsOfTweetId=$retweetsOfTweetId, safe=$safe, sinceDate=$sinceDate, sinceId=$sinceId, sinceTime=$sinceTime, source=$source, toUser=$toUser, untilDate=$untilDate, untilTime=$untilTime, url=$url, verifiedOnly=$verifiedOnly, within=$within, withinTime=$withinTime, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

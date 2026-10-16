@@ -23,6 +23,7 @@ import kotlin.jvm.optionals.getOrNull
 class TweetGetRepliesParams
 private constructor(
     private val id: String?,
+    private val after: String?,
     private val anyWords: String?,
     private val blueVerifiedOnly: Boolean?,
     private val cardName: String?,
@@ -33,10 +34,12 @@ private constructor(
     private val excludeOriginalAuthor: Boolean?,
     private val excludeSource: String?,
     private val excludeWords: String?,
+    private val fields: String?,
     private val fromUser: String?,
     private val geocode: String?,
     private val hashtags: String?,
     private val hasMediaOnly: Boolean?,
+    private val includeHidden: Boolean?,
     private val includeOriginalPost: Boolean?,
     private val inReplyToTweetId: String?,
     private val language: String?,
@@ -51,6 +54,7 @@ private constructor(
     private val mentioning: String?,
     private val minBookmarks: Long?,
     private val minFaves: Long?,
+    private val minLikes: Long?,
     private val minQuotes: Long?,
     private val minReplies: Long?,
     private val minRetweets: Long?,
@@ -59,6 +63,7 @@ private constructor(
     private val nativeRetweets: Boolean?,
     private val near: String?,
     private val news: Boolean?,
+    private val omit: String?,
     private val pageSize: Long?,
     private val quotes: Quotes?,
     private val quotesOfTweetId: String?,
@@ -84,6 +89,9 @@ private constructor(
 ) : Params {
 
     fun id(): Optional<String> = Optional.ofNullable(id)
+
+    /** Legacy cursor alias. Prefer cursor. */
+    fun after(): Optional<String> = Optional.ofNullable(after)
 
     /** Words or quoted phrases where any one can match. Separate with spaces, commas, or lines. */
     fun anyWords(): Optional<String> = Optional.ofNullable(anyWords)
@@ -118,6 +126,15 @@ private constructor(
     /** Words or quoted phrases to exclude. Separate with spaces, commas, or lines. */
     fun excludeWords(): Optional<String> = Optional.ofNullable(excludeWords)
 
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+     * author.username. A list keeps the field in each item. Case & underscores do not matter. A row
+     * that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name
+     * answers 400 unknown_field with the valid names, before any read. The price stays the same. A
+     * required getter throws when you leave its field out, and response validation fails.
+     */
+    fun fields(): Optional<String> = Optional.ofNullable(fields)
+
     /** Filter by author username. */
     fun fromUser(): Optional<String> = Optional.ofNullable(fromUser)
 
@@ -129,6 +146,13 @@ private constructor(
 
     /** Only return replies containing media. */
     fun hasMediaOnly(): Optional<Boolean> = Optional.ofNullable(hasMediaOnly)
+
+    /**
+     * Complete mode only. Adds the replies the post's author hid, each with hiddenByAuthor true.
+     * They count toward limit like any reply. A paged read answers 400. Get its hidden replies from
+     * GET /x/tweets/{id}/hidden-replies.
+     */
+    fun includeHidden(): Optional<Boolean> = Optional.ofNullable(includeHidden)
 
     /** Include the source post and count it toward limit. */
     fun includeOriginalPost(): Optional<Boolean> = Optional.ofNullable(includeOriginalPost)
@@ -176,6 +200,9 @@ private constructor(
     /** Minimum likes threshold. minLikes is also accepted. */
     fun minFaves(): Optional<Long> = Optional.ofNullable(minFaves)
 
+    /** Minimum likes. Its aliases are minFaves, min_likes & min_faves. */
+    fun minLikes(): Optional<Long> = Optional.ofNullable(minLikes)
+
     /** Minimum quote count threshold. */
     fun minQuotes(): Optional<Long> = Optional.ofNullable(minQuotes)
 
@@ -203,6 +230,12 @@ private constructor(
 
     /** Only return news results. */
     fun news(): Optional<Boolean> = Optional.ofNullable(news)
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+     * fields, it drops from the kept fields.
+     */
+    fun omit(): Optional<String> = Optional.ofNullable(omit)
 
     /**
      * Automatic pages accept 1-300 Tweets. Standard pages keep 1-100. Default 20. Continue while
@@ -287,6 +320,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: String? = null
+        private var after: String? = null
         private var anyWords: String? = null
         private var blueVerifiedOnly: Boolean? = null
         private var cardName: String? = null
@@ -297,10 +331,12 @@ private constructor(
         private var excludeOriginalAuthor: Boolean? = null
         private var excludeSource: String? = null
         private var excludeWords: String? = null
+        private var fields: String? = null
         private var fromUser: String? = null
         private var geocode: String? = null
         private var hashtags: String? = null
         private var hasMediaOnly: Boolean? = null
+        private var includeHidden: Boolean? = null
         private var includeOriginalPost: Boolean? = null
         private var inReplyToTweetId: String? = null
         private var language: String? = null
@@ -315,6 +351,7 @@ private constructor(
         private var mentioning: String? = null
         private var minBookmarks: Long? = null
         private var minFaves: Long? = null
+        private var minLikes: Long? = null
         private var minQuotes: Long? = null
         private var minReplies: Long? = null
         private var minRetweets: Long? = null
@@ -323,6 +360,7 @@ private constructor(
         private var nativeRetweets: Boolean? = null
         private var near: String? = null
         private var news: Boolean? = null
+        private var omit: String? = null
         private var pageSize: Long? = null
         private var quotes: Quotes? = null
         private var quotesOfTweetId: String? = null
@@ -349,6 +387,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(tweetGetRepliesParams: TweetGetRepliesParams) = apply {
             id = tweetGetRepliesParams.id
+            after = tweetGetRepliesParams.after
             anyWords = tweetGetRepliesParams.anyWords
             blueVerifiedOnly = tweetGetRepliesParams.blueVerifiedOnly
             cardName = tweetGetRepliesParams.cardName
@@ -359,10 +398,12 @@ private constructor(
             excludeOriginalAuthor = tweetGetRepliesParams.excludeOriginalAuthor
             excludeSource = tweetGetRepliesParams.excludeSource
             excludeWords = tweetGetRepliesParams.excludeWords
+            fields = tweetGetRepliesParams.fields
             fromUser = tweetGetRepliesParams.fromUser
             geocode = tweetGetRepliesParams.geocode
             hashtags = tweetGetRepliesParams.hashtags
             hasMediaOnly = tweetGetRepliesParams.hasMediaOnly
+            includeHidden = tweetGetRepliesParams.includeHidden
             includeOriginalPost = tweetGetRepliesParams.includeOriginalPost
             inReplyToTweetId = tweetGetRepliesParams.inReplyToTweetId
             language = tweetGetRepliesParams.language
@@ -377,6 +418,7 @@ private constructor(
             mentioning = tweetGetRepliesParams.mentioning
             minBookmarks = tweetGetRepliesParams.minBookmarks
             minFaves = tweetGetRepliesParams.minFaves
+            minLikes = tweetGetRepliesParams.minLikes
             minQuotes = tweetGetRepliesParams.minQuotes
             minReplies = tweetGetRepliesParams.minReplies
             minRetweets = tweetGetRepliesParams.minRetweets
@@ -385,6 +427,7 @@ private constructor(
             nativeRetweets = tweetGetRepliesParams.nativeRetweets
             near = tweetGetRepliesParams.near
             news = tweetGetRepliesParams.news
+            omit = tweetGetRepliesParams.omit
             pageSize = tweetGetRepliesParams.pageSize
             quotes = tweetGetRepliesParams.quotes
             quotesOfTweetId = tweetGetRepliesParams.quotesOfTweetId
@@ -413,6 +456,12 @@ private constructor(
 
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
+
+        /** Legacy cursor alias. Prefer cursor. */
+        fun after(after: String?) = apply { this.after = after }
+
+        /** Alias for calling [Builder.after] with `after.orElse(null)`. */
+        fun after(after: Optional<String>) = after(after.getOrNull())
 
         /**
          * Words or quoted phrases where any one can match. Separate with spaces, commas, or lines.
@@ -498,6 +547,19 @@ private constructor(
         /** Alias for calling [Builder.excludeWords] with `excludeWords.orElse(null)`. */
         fun excludeWords(excludeWords: Optional<String>) = excludeWords(excludeWords.getOrNull())
 
+        /**
+         * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+         * author.username. A list keeps the field in each item. Case & underscores do not matter. A
+         * row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An
+         * unknown name answers 400 unknown_field with the valid names, before any read. The price
+         * stays the same. A required getter throws when you leave its field out, and response
+         * validation fails.
+         */
+        fun fields(fields: String?) = apply { this.fields = fields }
+
+        /** Alias for calling [Builder.fields] with `fields.orElse(null)`. */
+        fun fields(fields: Optional<String>) = fields(fields.getOrNull())
+
         /** Filter by author username. */
         fun fromUser(fromUser: String?) = apply { this.fromUser = fromUser }
 
@@ -524,6 +586,20 @@ private constructor(
 
         /** Alias for calling [Builder.hasMediaOnly] with `hasMediaOnly.orElse(null)`. */
         fun hasMediaOnly(hasMediaOnly: Optional<Boolean>) = hasMediaOnly(hasMediaOnly.getOrNull())
+
+        /**
+         * Complete mode only. Adds the replies the post's author hid, each with hiddenByAuthor
+         * true. They count toward limit like any reply. A paged read answers 400. Get its hidden
+         * replies from GET /x/tweets/{id}/hidden-replies.
+         */
+        fun includeHidden(includeHidden: Boolean?) = apply { this.includeHidden = includeHidden }
+
+        /** Alias for [Builder.includeHidden]. */
+        fun includeHidden(includeHidden: Boolean) = includeHidden(includeHidden as Boolean?)
+
+        /** Alias for calling [Builder.includeHidden] with `includeHidden.orElse(null)`. */
+        fun includeHidden(includeHidden: Optional<Boolean>) =
+            includeHidden(includeHidden.getOrNull())
 
         /** Include the source post and count it toward limit. */
         fun includeOriginalPost(includeOriginalPost: Boolean?) = apply {
@@ -649,6 +725,15 @@ private constructor(
         /** Alias for calling [Builder.minFaves] with `minFaves.orElse(null)`. */
         fun minFaves(minFaves: Optional<Long>) = minFaves(minFaves.getOrNull())
 
+        /** Minimum likes. Its aliases are minFaves, min_likes & min_faves. */
+        fun minLikes(minLikes: Long?) = apply { this.minLikes = minLikes }
+
+        /** Alias for [Builder.minLikes]. */
+        fun minLikes(minLikes: Long) = minLikes(minLikes as Long?)
+
+        /** Alias for calling [Builder.minLikes] with `minLikes.orElse(null)`. */
+        fun minLikes(minLikes: Optional<Long>) = minLikes(minLikes.getOrNull())
+
         /** Minimum quote count threshold. */
         fun minQuotes(minQuotes: Long?) = apply { this.minQuotes = minQuotes }
 
@@ -721,6 +806,15 @@ private constructor(
 
         /** Alias for calling [Builder.news] with `news.orElse(null)`. */
         fun news(news: Optional<Boolean>) = news(news.getOrNull())
+
+        /**
+         * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+         * fields, it drops from the kept fields.
+         */
+        fun omit(omit: String?) = apply { this.omit = omit }
+
+        /** Alias for calling [Builder.omit] with `omit.orElse(null)`. */
+        fun omit(omit: Optional<String>) = omit(omit.getOrNull())
 
         /**
          * Automatic pages accept 1-300 Tweets. Standard pages keep 1-100. Default 20. Continue
@@ -966,6 +1060,7 @@ private constructor(
         fun build(): TweetGetRepliesParams =
             TweetGetRepliesParams(
                 id,
+                after,
                 anyWords,
                 blueVerifiedOnly,
                 cardName,
@@ -976,10 +1071,12 @@ private constructor(
                 excludeOriginalAuthor,
                 excludeSource,
                 excludeWords,
+                fields,
                 fromUser,
                 geocode,
                 hashtags,
                 hasMediaOnly,
+                includeHidden,
                 includeOriginalPost,
                 inReplyToTweetId,
                 language,
@@ -994,6 +1091,7 @@ private constructor(
                 mentioning,
                 minBookmarks,
                 minFaves,
+                minLikes,
                 minQuotes,
                 minReplies,
                 minRetweets,
@@ -1002,6 +1100,7 @@ private constructor(
                 nativeRetweets,
                 near,
                 news,
+                omit,
                 pageSize,
                 quotes,
                 quotesOfTweetId,
@@ -1038,6 +1137,7 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
+                after?.let { put("after", it) }
                 anyWords?.let { put("anyWords", it) }
                 blueVerifiedOnly?.let { put("blueVerifiedOnly", it.toString()) }
                 cardName?.let { put("cardName", it) }
@@ -1048,10 +1148,12 @@ private constructor(
                 excludeOriginalAuthor?.let { put("excludeOriginalAuthor", it.toString()) }
                 excludeSource?.let { put("excludeSource", it) }
                 excludeWords?.let { put("excludeWords", it) }
+                fields?.let { put("fields", it) }
                 fromUser?.let { put("fromUser", it) }
                 geocode?.let { put("geocode", it) }
                 hashtags?.let { put("hashtags", it) }
                 hasMediaOnly?.let { put("hasMediaOnly", it.toString()) }
+                includeHidden?.let { put("includeHidden", it.toString()) }
                 includeOriginalPost?.let { put("includeOriginalPost", it.toString()) }
                 inReplyToTweetId?.let { put("inReplyToTweetId", it) }
                 language?.let { put("language", it) }
@@ -1066,6 +1168,7 @@ private constructor(
                 mentioning?.let { put("mentioning", it) }
                 minBookmarks?.let { put("minBookmarks", it.toString()) }
                 minFaves?.let { put("minFaves", it.toString()) }
+                minLikes?.let { put("minLikes", it.toString()) }
                 minQuotes?.let { put("minQuotes", it.toString()) }
                 minReplies?.let { put("minReplies", it.toString()) }
                 minRetweets?.let { put("minRetweets", it.toString()) }
@@ -1074,6 +1177,7 @@ private constructor(
                 nativeRetweets?.let { put("nativeRetweets", it.toString()) }
                 near?.let { put("near", it) }
                 news?.let { put("news", it.toString()) }
+                omit?.let { put("omit", it) }
                 pageSize?.let { put("pageSize", it.toString()) }
                 quotes?.let { put("quotes", it.toString()) }
                 quotesOfTweetId?.let { put("quotesOfTweetId", it) }
@@ -1976,6 +2080,7 @@ private constructor(
 
         return other is TweetGetRepliesParams &&
             id == other.id &&
+            after == other.after &&
             anyWords == other.anyWords &&
             blueVerifiedOnly == other.blueVerifiedOnly &&
             cardName == other.cardName &&
@@ -1986,10 +2091,12 @@ private constructor(
             excludeOriginalAuthor == other.excludeOriginalAuthor &&
             excludeSource == other.excludeSource &&
             excludeWords == other.excludeWords &&
+            fields == other.fields &&
             fromUser == other.fromUser &&
             geocode == other.geocode &&
             hashtags == other.hashtags &&
             hasMediaOnly == other.hasMediaOnly &&
+            includeHidden == other.includeHidden &&
             includeOriginalPost == other.includeOriginalPost &&
             inReplyToTweetId == other.inReplyToTweetId &&
             language == other.language &&
@@ -2004,6 +2111,7 @@ private constructor(
             mentioning == other.mentioning &&
             minBookmarks == other.minBookmarks &&
             minFaves == other.minFaves &&
+            minLikes == other.minLikes &&
             minQuotes == other.minQuotes &&
             minReplies == other.minReplies &&
             minRetweets == other.minRetweets &&
@@ -2012,6 +2120,7 @@ private constructor(
             nativeRetweets == other.nativeRetweets &&
             near == other.near &&
             news == other.news &&
+            omit == other.omit &&
             pageSize == other.pageSize &&
             quotes == other.quotes &&
             quotesOfTweetId == other.quotesOfTweetId &&
@@ -2039,6 +2148,7 @@ private constructor(
     override fun hashCode(): Int =
         Objects.hash(
             id,
+            after,
             anyWords,
             blueVerifiedOnly,
             cardName,
@@ -2049,10 +2159,12 @@ private constructor(
             excludeOriginalAuthor,
             excludeSource,
             excludeWords,
+            fields,
             fromUser,
             geocode,
             hashtags,
             hasMediaOnly,
+            includeHidden,
             includeOriginalPost,
             inReplyToTweetId,
             language,
@@ -2067,6 +2179,7 @@ private constructor(
             mentioning,
             minBookmarks,
             minFaves,
+            minLikes,
             minQuotes,
             minReplies,
             minRetweets,
@@ -2075,6 +2188,7 @@ private constructor(
             nativeRetweets,
             near,
             news,
+            omit,
             pageSize,
             quotes,
             quotesOfTweetId,
@@ -2100,5 +2214,5 @@ private constructor(
         )
 
     override fun toString() =
-        "TweetGetRepliesParams{id=$id, anyWords=$anyWords, blueVerifiedOnly=$blueVerifiedOnly, cardName=$cardName, cashtags=$cashtags, conversationId=$conversationId, cursor=$cursor, exactPhrase=$exactPhrase, excludeOriginalAuthor=$excludeOriginalAuthor, excludeSource=$excludeSource, excludeWords=$excludeWords, fromUser=$fromUser, geocode=$geocode, hashtags=$hashtags, hasMediaOnly=$hasMediaOnly, includeOriginalPost=$includeOriginalPost, inReplyToTweetId=$inReplyToTweetId, language=$language, limit=$limit, maxDepth=$maxDepth, maxFaves=$maxFaves, maxId=$maxId, maxQuotes=$maxQuotes, maxReplies=$maxReplies, maxRetweets=$maxRetweets, mediaType=$mediaType, mentioning=$mentioning, minBookmarks=$minBookmarks, minFaves=$minFaves, minQuotes=$minQuotes, minReplies=$minReplies, minRetweets=$minRetweets, minViews=$minViews, mode=$mode, nativeRetweets=$nativeRetweets, near=$near, news=$news, pageSize=$pageSize, quotes=$quotes, quotesOfTweetId=$quotesOfTweetId, replies=$replies, retweets=$retweets, retweetsOfTweetId=$retweetsOfTweetId, safe=$safe, scope=$scope, sinceDate=$sinceDate, sinceId=$sinceId, sinceTime=$sinceTime, sort=$sort, source=$source, toUser=$toUser, untilDate=$untilDate, untilTime=$untilTime, url=$url, verifiedOnly=$verifiedOnly, within=$within, withinTime=$withinTime, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "TweetGetRepliesParams{id=$id, after=$after, anyWords=$anyWords, blueVerifiedOnly=$blueVerifiedOnly, cardName=$cardName, cashtags=$cashtags, conversationId=$conversationId, cursor=$cursor, exactPhrase=$exactPhrase, excludeOriginalAuthor=$excludeOriginalAuthor, excludeSource=$excludeSource, excludeWords=$excludeWords, fields=$fields, fromUser=$fromUser, geocode=$geocode, hashtags=$hashtags, hasMediaOnly=$hasMediaOnly, includeHidden=$includeHidden, includeOriginalPost=$includeOriginalPost, inReplyToTweetId=$inReplyToTweetId, language=$language, limit=$limit, maxDepth=$maxDepth, maxFaves=$maxFaves, maxId=$maxId, maxQuotes=$maxQuotes, maxReplies=$maxReplies, maxRetweets=$maxRetweets, mediaType=$mediaType, mentioning=$mentioning, minBookmarks=$minBookmarks, minFaves=$minFaves, minLikes=$minLikes, minQuotes=$minQuotes, minReplies=$minReplies, minRetweets=$minRetweets, minViews=$minViews, mode=$mode, nativeRetweets=$nativeRetweets, near=$near, news=$news, omit=$omit, pageSize=$pageSize, quotes=$quotes, quotesOfTweetId=$quotesOfTweetId, replies=$replies, retweets=$retweets, retweetsOfTweetId=$retweetsOfTweetId, safe=$safe, scope=$scope, sinceDate=$sinceDate, sinceId=$sinceId, sinceTime=$sinceTime, sort=$sort, source=$source, toUser=$toUser, untilDate=$untilDate, untilTime=$untilTime, url=$url, verifiedOnly=$verifiedOnly, within=$within, withinTime=$withinTime, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

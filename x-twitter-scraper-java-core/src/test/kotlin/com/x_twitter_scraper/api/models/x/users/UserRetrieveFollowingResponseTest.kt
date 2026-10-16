@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
 package com.x_twitter_scraper.api.models.x.users
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
@@ -474,5 +478,248 @@ internal class UserRetrieveFollowingResponseTest {
                 userRetrieveFollowingResponse.validate()
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
+    }
+
+    @Test
+    fun readsEveryFieldTheSpecDescribes() {
+        val userRetrieveFollowingResponse =
+            jsonMapper()
+                .readValue(
+                    """
+                    {
+                      "filtered_count": 1595,
+                      "users": [
+                        {
+                          "id": "11348282",
+                          "username": "NASA",
+                          "name": "NASA",
+                          "followers": 92376187,
+                          "accountBasedIn": null,
+                          "following": 115,
+                          "verified": true,
+                          "isBlueVerified": true,
+                          "isVerified": true,
+                          "profilePicture": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB_normal.jpg",
+                          "profilePictureOriginal": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB.jpg",
+                          "coverPicture": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                          "profileBannerUrl": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                          "description": "Making the seemingly impossible, possible. ✨",
+                          "location": "Pale Blue Dot",
+                          "createdAt": "Wed Dec 19 20:20:32 +0000 2007",
+                          "birthdate": {
+                            "day": 1,
+                            "month": 10,
+                            "year": 1958
+                          },
+                          "statusesCount": 74336,
+                          "mediaCount": 28160,
+                          "protected": false,
+                          "url": "http://www.nasa.gov/",
+                          "contactInfo": {
+                            "links": [
+                              {
+                                "url": "http://www.nasa.gov/",
+                                "network": "website",
+                                "source": "url"
+                              }
+                            ]
+                          },
+                          "favouritesCount": 17003,
+                          "possiblySensitive": false,
+                          "verifiedType": "Government",
+                          "profile_bio": {
+                            "description": "Making the seemingly impossible, possible. ✨",
+                            "entities": {
+                              "description": {},
+                              "url": {
+                                "urls": [
+                                  {
+                                    "display_url": "nasa.gov",
+                                    "expanded_url": "http://www.nasa.gov/",
+                                    "indices": [
+                                      0,
+                                      23
+                                    ],
+                                    "url": "https://t.co/9NkQJKAnuU"
+                                  }
+                                ]
+                              }
+                            }
+                          },
+                          "businessAccountAffiliatesCount": 85,
+                          "creatorSubscriptionsCount": 0,
+                          "hasGraduatedAccess": true,
+                          "hasHiddenSubscriptionsOnProfile": false,
+                          "highlightsInfo": {
+                            "canHighlightTweets": true,
+                            "highlightedTweets": "280"
+                          },
+                          "identityVerification": {
+                            "isIdentityVerified": false,
+                            "verifiedSinceMsec": "1249674830941"
+                          },
+                          "isProfileTranslatable": false,
+                          "parodyCommentaryFanLabel": "None",
+                          "profileDescriptionLanguage": "en",
+                          "profileImageShape": "Square",
+                          "profileSortEnabled": true,
+                          "profileTranslatorType": "regular",
+                          "superFollowEligible": false,
+                          "verificationReason": {
+                            "entities": [
+                              {
+                                "fromIndex": 91,
+                                "toIndex": 101,
+                                "url": "https://help.twitter.com/en/rules-and-policies/profile-labels",
+                                "urlType": "ExternalUrl"
+                              }
+                            ],
+                            "text": "This account is verified because it is a government or multilateral organization account.  Learn more"
+                          }
+                        }
+                      ],
+                      "has_next_page": false,
+                      "next_cursor": "",
+                      "diagnostic": {
+                        "complete": false,
+                        "cursorFailureCount": 2003,
+                        "deadlineReached": true,
+                        "duplicateCount": 1576,
+                        "failedStrategyCount": 2085,
+                        "malformedCount": 1572,
+                        "pagesFetched": 1319,
+                        "responseTruncated": false,
+                        "resultLimitReached": true,
+                        "stalledStrategyCount": 2217,
+                        "strategyCount": 1504,
+                        "returnedUsers": 1503,
+                        "strategies": [
+                          {
+                            "duplicateCount": 1576,
+                            "pagesFetched": 1319,
+                            "stopReason": "cursor_failure",
+                            "strategy": 983,
+                            "uniqueAdded": 1229
+                          }
+                        ],
+                        "uniqueUsers": 1293
+                      }
+                    }
+                    """
+                        .trimIndent(),
+                    jacksonTypeRef<UserRetrieveFollowingResponse>(),
+                )
+
+        userRetrieveFollowingResponse.validate()
+        assertThat(userRetrieveFollowingResponse.isListCoverage()).isTrue()
+        assertThat(userRetrieveFollowingResponse.asListCoverage().hasNextPage()).isEqualTo(false)
+        assertThat(userRetrieveFollowingResponse.asListCoverage().nextCursor()).isEqualTo("")
+        assertThat(userRetrieveFollowingResponse.asListCoverage().users()).hasSize(1)
+        assertThat(userRetrieveFollowingResponse.asListCoverage().users()[0].id())
+            .isEqualTo("11348282")
+        assertThat(userRetrieveFollowingResponse.asListCoverage().users()[0].name())
+            .isEqualTo("NASA")
+        assertThat(userRetrieveFollowingResponse.asListCoverage().users()[0].username())
+            .isEqualTo("NASA")
+        assertThat(userRetrieveFollowingResponse.asListCoverage().diagnostic().complete())
+            .isEqualTo(false)
+        assertThat(userRetrieveFollowingResponse.asListCoverage().diagnostic().cursorFailureCount())
+            .isEqualTo(2003L)
+        assertThat(userRetrieveFollowingResponse.asListCoverage().diagnostic().deadlineReached())
+            .isEqualTo(true)
+        assertThat(userRetrieveFollowingResponse.asListCoverage().diagnostic().duplicateCount())
+            .isEqualTo(1576L)
+        assertThat(
+                userRetrieveFollowingResponse.asListCoverage().diagnostic().failedStrategyCount()
+            )
+            .isEqualTo(2085L)
+        assertThat(userRetrieveFollowingResponse.asListCoverage().diagnostic().malformedCount())
+            .isEqualTo(1572L)
+        assertThat(userRetrieveFollowingResponse.asListCoverage().diagnostic().pagesFetched())
+            .isEqualTo(1319L)
+        assertThat(userRetrieveFollowingResponse.asListCoverage().diagnostic().responseTruncated())
+            .isEqualTo(false)
+        assertThat(userRetrieveFollowingResponse.asListCoverage().diagnostic().resultLimitReached())
+            .isEqualTo(true)
+        assertThat(userRetrieveFollowingResponse.asListCoverage().diagnostic().returnedUsers())
+            .isEqualTo(1503L)
+        assertThat(
+                userRetrieveFollowingResponse.asListCoverage().diagnostic().stalledStrategyCount()
+            )
+            .isEqualTo(2217L)
+        assertThat(userRetrieveFollowingResponse.asListCoverage().diagnostic().strategies())
+            .hasSize(1)
+        assertThat(
+                userRetrieveFollowingResponse
+                    .asListCoverage()
+                    .diagnostic()
+                    .strategies()[0]
+                    .duplicateCount()
+            )
+            .isEqualTo(1576L)
+        assertThat(
+                userRetrieveFollowingResponse
+                    .asListCoverage()
+                    .diagnostic()
+                    .strategies()[0]
+                    .pagesFetched()
+            )
+            .isEqualTo(1319L)
+        assertThat(
+                userRetrieveFollowingResponse
+                    .asListCoverage()
+                    .diagnostic()
+                    .strategies()[0]
+                    .stopReason()
+            )
+            .isEqualTo(
+                UserRetrieveFollowingResponse.UserListCoverageResponse.Diagnostic.Strategy
+                    .StopReason
+                    .CURSOR_FAILURE
+            )
+        assertThat(
+                userRetrieveFollowingResponse
+                    .asListCoverage()
+                    .diagnostic()
+                    .strategies()[0]
+                    .strategy()
+            )
+            .isEqualTo(983L)
+        assertThat(
+                userRetrieveFollowingResponse
+                    .asListCoverage()
+                    .diagnostic()
+                    .strategies()[0]
+                    .uniqueAdded()
+            )
+            .isEqualTo(1229L)
+        assertThat(
+                userRetrieveFollowingResponse
+                    .asListCoverage()
+                    .diagnostic()
+                    .strategies()[0]
+                    ._additionalProperties()
+            )
+            .isEmpty()
+        assertThat(userRetrieveFollowingResponse.asListCoverage().diagnostic().strategyCount())
+            .isEqualTo(1504L)
+        assertThat(userRetrieveFollowingResponse.asListCoverage().diagnostic().uniqueUsers())
+            .isEqualTo(1293L)
+        assertThat(
+                userRetrieveFollowingResponse.asListCoverage().diagnostic()._additionalProperties()
+            )
+            .isEmpty()
+        assertThat(userRetrieveFollowingResponse.asListCoverage().filteredCount()).contains(1595L)
+        assertThat(userRetrieveFollowingResponse.asListCoverage()._additionalProperties()).isEmpty()
+        assertThat(userRetrieveFollowingResponse.asListCoverage().toPaginatedUsers()._hasNextPage())
+            .isEqualTo(userRetrieveFollowingResponse.asListCoverage()._hasNextPage())
+        assertThat(userRetrieveFollowingResponse.asListCoverage().toPaginatedUsers()._nextCursor())
+            .isEqualTo(userRetrieveFollowingResponse.asListCoverage()._nextCursor())
+        assertThat(userRetrieveFollowingResponse.asListCoverage().toPaginatedUsers()._users())
+            .isEqualTo(userRetrieveFollowingResponse.asListCoverage()._users())
+        assertThat(
+                userRetrieveFollowingResponse.asListCoverage().toPaginatedUsers()._filteredCount()
+            )
+            .isEqualTo(userRetrieveFollowingResponse.asListCoverage()._filteredCount())
     }
 }

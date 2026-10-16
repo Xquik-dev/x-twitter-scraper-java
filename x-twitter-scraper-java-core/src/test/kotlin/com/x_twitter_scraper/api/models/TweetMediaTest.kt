@@ -160,4 +160,222 @@ internal class TweetMediaTest {
 
         assertThat(roundtrippedTweetMedia).isEqualTo(tweetMedia)
     }
+
+    @Test
+    fun readsEveryFieldTheSpecDescribes() {
+        val tweetMedia =
+            jsonMapper()
+                .readValue(
+                    """
+                    {
+                      "mediaUrl": "mediaUrl-value",
+                      "type": "photo",
+                      "url": "url-value",
+                      "adultContent": false,
+                      "allowDownload": false,
+                      "altText": "altText-value",
+                      "aspectRatio": [
+                        1251
+                      ],
+                      "availabilityReason": "Dmcaed",
+                      "availabilityStatus": "Available",
+                      "description": "description-value",
+                      "displayUrl": "displayUrl-value",
+                      "durationMillis": 1588,
+                      "expandedUrl": "expandedUrl-value",
+                      "embeddable": false,
+                      "faceRects": {},
+                      "focusRects": [
+                        {
+                          "x": 220,
+                          "y": 221,
+                          "w": 219,
+                          "h": 204
+                        }
+                      ],
+                      "grokImageAnnotation": {
+                        "prompt": "prompt-value",
+                        "upsampledPrompt": "upsampledPrompt-value"
+                      },
+                      "grokPostId": "grokPostId-value",
+                      "graphicViolence": false,
+                      "height": 733,
+                      "id": "id-value",
+                      "indices": [
+                        835
+                      ],
+                      "mediaKey": "mediaKey-value",
+                      "monetizable": true,
+                      "otherSensitiveContent": false,
+                      "sizes": {},
+                      "sourceStatusId": "sourceStatusId-value",
+                      "sourceUser": {
+                        "id": "11348282",
+                        "username": "NASA",
+                        "name": "NASA",
+                        "followers": 92376187,
+                        "accountBasedIn": null,
+                        "following": 115,
+                        "verified": true,
+                        "isBlueVerified": true,
+                        "isVerified": true,
+                        "profilePicture": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB_normal.jpg",
+                        "profilePictureOriginal": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB.jpg",
+                        "coverPicture": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                        "profileBannerUrl": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                        "description": "Making the seemingly impossible, possible. ✨",
+                        "location": "Pale Blue Dot",
+                        "createdAt": "Wed Dec 19 20:20:32 +0000 2007",
+                        "birthdate": {
+                          "day": 1,
+                          "month": 10,
+                          "year": 1958
+                        },
+                        "statusesCount": 74336,
+                        "mediaCount": 28160,
+                        "protected": false,
+                        "url": "http://www.nasa.gov/",
+                        "contactInfo": {
+                          "links": [
+                            {
+                              "url": "http://www.nasa.gov/",
+                              "network": "website",
+                              "source": "url"
+                            }
+                          ]
+                        },
+                        "favouritesCount": 17003,
+                        "possiblySensitive": false,
+                        "verifiedType": "Government",
+                        "profile_bio": {
+                          "description": "Making the seemingly impossible, possible. ✨",
+                          "entities": {
+                            "description": {},
+                            "url": {
+                              "urls": [
+                                {
+                                  "display_url": "nasa.gov",
+                                  "expanded_url": "http://www.nasa.gov/",
+                                  "indices": [
+                                    0,
+                                    23
+                                  ],
+                                  "url": "https://t.co/9NkQJKAnuU"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        "businessAccountAffiliatesCount": 85,
+                        "creatorSubscriptionsCount": 0,
+                        "hasGraduatedAccess": true,
+                        "hasHiddenSubscriptionsOnProfile": false,
+                        "highlightsInfo": {
+                          "canHighlightTweets": true,
+                          "highlightedTweets": "280"
+                        },
+                        "identityVerification": {
+                          "isIdentityVerified": false,
+                          "verifiedSinceMsec": "1249674830941"
+                        },
+                        "isProfileTranslatable": false,
+                        "parodyCommentaryFanLabel": "None",
+                        "profileDescriptionLanguage": "en",
+                        "profileImageShape": "Square",
+                        "profileSortEnabled": true,
+                        "profileTranslatorType": "regular",
+                        "superFollowEligible": false,
+                        "verificationReason": {
+                          "entities": [
+                            {
+                              "fromIndex": 91,
+                              "toIndex": 101,
+                              "url": "https://help.twitter.com/en/rules-and-policies/profile-labels",
+                              "urlType": "ExternalUrl"
+                            }
+                          ],
+                          "text": "This account is verified because it is a government or multilateral organization account.  Learn more"
+                        }
+                      },
+                      "sourceUserId": "sourceUserId-value",
+                      "tags": [
+                        {
+                          "name": "name-value",
+                          "screen_name": "screen_name-value",
+                          "type": "type-value",
+                          "user_id": "user_id-value"
+                        }
+                      ],
+                      "title": "title-value",
+                      "videoVariants": [
+                        {
+                          "bitrate": 847,
+                          "contentType": "contentType-value",
+                          "url": "url-value"
+                        }
+                      ],
+                      "watchNowUrl": "watchNowUrl-value",
+                      "visitSiteUrl": "visitSiteUrl-value",
+                      "width": 644
+                    }
+                    """
+                        .trimIndent(),
+                    jacksonTypeRef<TweetMedia>(),
+                )
+
+        tweetMedia.validate()
+        assertThat(tweetMedia.mediaUrl()).isEqualTo("mediaUrl-value")
+        assertThat(tweetMedia.type()).isEqualTo(TweetMedia.Type.PHOTO)
+        assertThat(tweetMedia.url()).isEqualTo("url-value")
+        assertThat(tweetMedia.adultContent()).contains(false)
+        assertThat(tweetMedia.availabilityReason()).contains("Dmcaed")
+        assertThat(tweetMedia.description()).contains("description-value")
+        assertThat(tweetMedia.embeddable()).contains(false)
+        assertThat(tweetMedia.graphicViolence()).contains(false)
+        assertThat(tweetMedia.grokImageAnnotation().get().prompt()).contains("prompt-value")
+        assertThat(tweetMedia.grokImageAnnotation().get().upsampledPrompt())
+            .contains("upsampledPrompt-value")
+        assertThat(tweetMedia.grokImageAnnotation().get()._additionalProperties()).isEmpty()
+        assertThat(tweetMedia.grokPostId()).contains("grokPostId-value")
+        assertThat(tweetMedia.id()).contains("id-value")
+        assertThat(tweetMedia.allowDownload()).contains(false)
+        assertThat(tweetMedia.altText()).contains("altText-value")
+        assertThat(tweetMedia.aspectRatio().get()).containsExactly(1251L)
+        assertThat(tweetMedia.availabilityStatus()).contains("Available")
+        assertThat(tweetMedia.displayUrl()).contains("displayUrl-value")
+        assertThat(tweetMedia.durationMillis()).contains(1588L)
+        assertThat(tweetMedia.expandedUrl()).contains("expandedUrl-value")
+        assertThat(tweetMedia.focusRects().get()).hasSize(1)
+        assertThat(tweetMedia.focusRects().get()[0].h()).isEqualTo(204L)
+        assertThat(tweetMedia.focusRects().get()[0].w()).isEqualTo(219L)
+        assertThat(tweetMedia.focusRects().get()[0].x()).isEqualTo(220L)
+        assertThat(tweetMedia.focusRects().get()[0].y()).isEqualTo(221L)
+        assertThat(tweetMedia.focusRects().get()[0]._additionalProperties()).isEmpty()
+        assertThat(tweetMedia.height()).contains(733L)
+        assertThat(tweetMedia.indices().get()).containsExactly(835L)
+        assertThat(tweetMedia.mediaKey()).contains("mediaKey-value")
+        assertThat(tweetMedia.monetizable()).contains(true)
+        assertThat(tweetMedia.otherSensitiveContent()).contains(false)
+        assertThat(tweetMedia.sourceStatusId()).contains("sourceStatusId-value")
+        assertThat(tweetMedia.sourceUser().get().id()).isEqualTo("11348282")
+        assertThat(tweetMedia.sourceUser().get().name()).isEqualTo("NASA")
+        assertThat(tweetMedia.sourceUser().get().username()).isEqualTo("NASA")
+        assertThat(tweetMedia.sourceUserId()).contains("sourceUserId-value")
+        assertThat(tweetMedia.tags().get()).hasSize(1)
+        assertThat(tweetMedia.tags().get()[0].name()).contains("name-value")
+        assertThat(tweetMedia.tags().get()[0].screenName()).contains("screen_name-value")
+        assertThat(tweetMedia.tags().get()[0].type()).contains("type-value")
+        assertThat(tweetMedia.tags().get()[0].userId()).contains("user_id-value")
+        assertThat(tweetMedia.tags().get()[0]._additionalProperties()).isEmpty()
+        assertThat(tweetMedia.title()).contains("title-value")
+        assertThat(tweetMedia.videoVariants().get()).hasSize(1)
+        assertThat(tweetMedia.videoVariants().get()[0].contentType()).isEqualTo("contentType-value")
+        assertThat(tweetMedia.videoVariants().get()[0].url()).isEqualTo("url-value")
+        assertThat(tweetMedia.videoVariants().get()[0].bitrate()).contains(847L)
+        assertThat(tweetMedia.videoVariants().get()[0]._additionalProperties()).isEmpty()
+        assertThat(tweetMedia.visitSiteUrl()).contains("visitSiteUrl-value")
+        assertThat(tweetMedia.watchNowUrl()).contains("watchNowUrl-value")
+        assertThat(tweetMedia.width()).contains(644L)
+        assertThat(tweetMedia._additionalProperties()).isEmpty()
+    }
 }
