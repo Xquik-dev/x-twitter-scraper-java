@@ -89,26 +89,55 @@ add_origin() {
     sandbox_git push --quiet origin main
 }
 
+repo_command() {
+    cd -- "$sandbox_repo"
+    exec env -i \
+        FAKE_LOGS="$sandbox_logs" \
+        GIT_AUTHOR_EMAIL="tester@example.com" \
+        GIT_AUTHOR_NAME="Script Tester" \
+        GIT_COMMITTER_EMAIL="tester@example.com" \
+        GIT_COMMITTER_NAME="Script Tester" \
+        GIT_CONFIG_GLOBAL=/dev/null \
+        GIT_CONFIG_NOSYSTEM=1 \
+        HOME="$sandbox/home" \
+        PATH="$sandbox_bin:/usr/bin:/bin" \
+        TMPDIR="$sandbox/tmp" \
+        ${run_env[@]+"${run_env[@]}"} \
+        "$@"
+}
+
 run_in_repo() {
     run_status=0
-    (
-        cd -- "$sandbox_repo"
-        env -i \
-            FAKE_LOGS="$sandbox_logs" \
-            GIT_AUTHOR_EMAIL="tester@example.com" \
-            GIT_AUTHOR_NAME="Script Tester" \
-            GIT_COMMITTER_EMAIL="tester@example.com" \
-            GIT_COMMITTER_NAME="Script Tester" \
-            GIT_CONFIG_GLOBAL=/dev/null \
-            GIT_CONFIG_NOSYSTEM=1 \
-            HOME="$sandbox/home" \
-            PATH="$sandbox_bin:/usr/bin:/bin" \
-            TMPDIR="$sandbox/tmp" \
-            ${run_env[@]+"${run_env[@]}"} \
-            "$@"
-    ) >"$sandbox/stdout" 2>"$sandbox/stderr" </dev/null || run_status=$?
+    (repo_command "$@") >"$sandbox/stdout" 2>"$sandbox/stderr" </dev/null || run_status=$?
     run_stdout="$(cat "$sandbox/stdout")"
     run_stderr="$(cat "$sandbox/stderr")"
+}
+
+start_in_repo() {
+    (repo_command "$@") >"$sandbox/stdout" 2>"$sandbox/stderr" </dev/null &
+    run_pid=$!
+}
+
+finish_run() {
+    run_status=0
+    wait "$run_pid" || run_status=$?
+    run_stdout="$(cat "$sandbox/stdout")"
+    run_stderr="$(cat "$sandbox/stderr")"
+}
+
+wait_for_log() {
+    local tries=0
+    until [[ -f "$sandbox_logs/$1" ]]; do
+        tries=$((tries + 1))
+        if ((tries > 300)); then
+            fail_test "The run never wrote the $1 log."
+        fi
+        sleep 0.1
+    done
+}
+
+temp_entries() {
+    ls -A "$sandbox/tmp"
 }
 
 log_of() {

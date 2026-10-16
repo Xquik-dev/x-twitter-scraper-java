@@ -87,6 +87,7 @@ EOF
 
 prepare_release() {
     copy_file bin/release-local
+    copy_file scripts/lib/temp-paths.bash
     copy_file scripts/maven-listing
     stub bin/check-local <<'EOF'
 #!/bin/sh
@@ -341,6 +342,7 @@ test_a_failed_signature_check_after_the_upload_stops_before_the_tag() {
     assert_equal "" "$(origin_tags)" "the tags on origin"
     assert_equal "" "$(log_of gh)" "the GitHub release calls"
     assert_no_secret_leaked
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
 }
 
 test_a_central_error_stops_the_release_before_the_checks() {

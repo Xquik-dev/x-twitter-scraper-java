@@ -19,6 +19,7 @@ day_from_today() {
 
 prepare_audit() {
     copy_file scripts/audit
+    copy_file scripts/lib/temp-paths.bash
     stub gradlew <<'EOF'
 #!/bin/sh
 echo "$*" >>"$FAKE_LOGS/gradlew"
@@ -290,6 +291,7 @@ test_a_scanner_error_blocks() {
 
     assert_equal 1 "$run_status" "the exit code"
     assert_ends_with "$run_stderr" "OSV Scanner failed with exit code 127. Fix the error above, then rerun." "stderr"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
 }
 
 test_a_license_failure_blocks_before_the_scan() {

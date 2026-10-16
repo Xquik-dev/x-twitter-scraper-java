@@ -14,6 +14,7 @@ readonly base_url="https://repo.maven.apache.org/maven2/com/xquik/api/x-twitter-
 
 prepare_verification() {
     copy_file bin/verify-release-signature
+    copy_file scripts/lib/temp-paths.bash
     fake curl <<'EOF_FAKE'
 #!/bin/sh
 previous=""
@@ -69,6 +70,7 @@ test_a_signature_by_another_key_fails() {
     assert_equal 1 "$run_status" "the exit code"
     assert_equal "" "$run_stdout" "stdout"
     assert_equal "The Maven signature does not match the expected Xquik key." "$run_stderr" "stderr"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
 }
 
 test_an_artifact_that_never_appears_fails_after_20_minutes_of_retries() {
