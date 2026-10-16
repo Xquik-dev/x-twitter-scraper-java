@@ -11,6 +11,7 @@ source "$(dirname -- "${BASH_SOURCE[0]}")/support.sh"
 
 prepare_codeql() {
     copy_file scripts/codeql
+    copy_file scripts/lib/temp-paths.bash
     write_file example-core/src/main/kotlin/Client.kt <<'EOF'
 class Client
 EOF
@@ -48,6 +49,9 @@ case "$command" in
             esac
         done
         if [ -n "${FAKE_CODEQL_BUILD_FAILS:-}" ]; then
+            mkdir -p "$database/cache"
+            echo "Read-only cache." >"$database/cache/entry"
+            chmod -R a-w "$database"
             echo "The traced build failed." >&2
             exit 2
         fi
@@ -178,6 +182,7 @@ test_a_failing_traced_build_fails_the_run() {
     assert_equal 2 "$run_status" "the exit code"
     assert_equal "The traced build failed." "$run_stderr" "stderr"
     assert_equal "" "$(log_of codeql-suite)" "the query runs"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
 }
 
 run_tests

@@ -26,10 +26,15 @@ readonly passed_line="Passed API coverage, lint, shellcheck, script tests, REUSE
 prepare_checks() {
     local name
     copy_file bin/check-local
+    copy_file scripts/lib/temp-paths.bash
     for name in api-coverage lint test-scripts build coverage fuzz audit check-reproducible codeql; do
         stub "scripts/$name" <<EOF
 #!/usr/bin/env bash
 echo "$name" >>"\$FAKE_LOGS/order"
+if [[ "\${FAKE_SLOW_CHECK:-}" == "$name" ]]; then
+    touch "\$FAKE_LOGS/slow-check-started"
+    sleep 1
+fi
 [[ "\${FAKE_FAILING_CHECK:-}" != "$name" ]]
 EOF
     done
@@ -111,6 +116,7 @@ EOF
     run_in_repo bin/check-local --no-status
 
     assert_equal 0 "$run_status" "the exit code"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
     assert_equal "--external-sources bin/check-local scripts/api-coverage scripts/audit scripts/build scripts/check-reproducible scripts/codeql scripts/coverage scripts/fuzz scripts/lint scripts/test scripts/test-scripts scripts/tests/sample.test.sh" \
         "$(log_of shellcheck)" "the shellcheck call"
 }
@@ -201,6 +207,30 @@ test_an_api_coverage_failure_stops_the_run_before_the_slow_checks() {
     assert_equal 1 "$run_status" "the exit code"
     assert_equal "Check failed at API coverage. Fix the API coverage lines above, then rerun." "$run_stderr" "stderr"
     assert_equal "api-coverage" "$(log_of order)" "the checks that ran"
+}
+
+test_a_failing_check_removes_its_temp_dir() {
+    prepare_checks
+    run_env+=("FAKE_FAILING_CHECK=lint")
+
+    run_in_repo bin/check-local --no-status
+
+    assert_equal 1 "$run_status" "the exit code"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
+test_a_terminated_run_removes_its_temp_dir_and_exits_143() {
+    prepare_checks
+    run_env+=("FAKE_SLOW_CHECK=lint")
+
+    start_in_repo bin/check-local --no-status
+    wait_for_log slow-check-started
+    kill -TERM "$run_pid"
+    finish_run
+
+    assert_equal 143 "$run_status" "the exit code"
+    assert_equal "Check failed at Java and Kotlin formatting. Run ./scripts/format, then rerun." "$run_stderr" "stderr"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
 }
 
 test_a_failing_check_stops_the_run_and_posts_a_failure_status_that_names_it() {
