@@ -15,6 +15,7 @@ import com.x_twitter_scraper.api.core.http.ProxyAuthenticator
 import com.x_twitter_scraper.api.errors.XTwitterScraperIoException
 import java.io.ByteArrayOutputStream
 import java.io.OutputStream
+import java.net.InetAddress
 import java.net.Proxy
 import java.net.ServerSocket
 import java.security.KeyStore
@@ -56,20 +57,21 @@ internal class OkHttpClientTest {
 
     @Test
     fun executeAsync_whenFutureCancelled_cancelsUnderlyingCall() {
-        stubFor(post(urlPathEqualTo("/something")).willReturn(ok()))
-        val responseFuture =
-            httpClient.executeAsync(
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(baseUrl)
-                    .addPathSegment("something")
-                    .build()
-            )
-        val call = httpClient.okHttpClient.dispatcher.runningCalls().single()
+        ServerSocket(0, 1, InetAddress.getByName("127.0.0.1")).use { silentServer ->
+            val responseFuture =
+                httpClient.executeAsync(
+                    HttpRequest.builder()
+                        .method(HttpMethod.POST)
+                        .baseUrl("http://127.0.0.1:${silentServer.localPort}")
+                        .addPathSegment("something")
+                        .build()
+                )
+            val call = httpClient.okHttpClient.dispatcher.runningCalls().single()
 
-        responseFuture.cancel(false)
+            responseFuture.cancel(false)
 
-        assertThat(call.isCanceled()).isTrue()
+            assertThat(call.isCanceled()).isTrue()
+        }
     }
 
     @Test
