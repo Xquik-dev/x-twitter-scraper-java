@@ -25,7 +25,6 @@ private val differencePattern =
 
 internal fun comparable(operation: String): String = operation.replace(Regex("\\{[^}]*\\}"), "{}")
 
-/** Compares the SDK's request and response fields with the API spec. */
 internal class FieldCheck(private val spec: JsonNode, private val root: File) {
 
     private val mapper = ObjectMapper()

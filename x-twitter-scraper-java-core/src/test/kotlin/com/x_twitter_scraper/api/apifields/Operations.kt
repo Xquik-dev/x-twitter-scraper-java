@@ -21,7 +21,6 @@ import java.lang.reflect.Type
 import java.net.URI
 import java.util.concurrent.CompletableFuture
 
-/** An SDK method and the HTTP request it sends. */
 internal data class SdkMethod(
     val name: String,
     val httpMethod: String,
@@ -45,9 +44,6 @@ private object RecordingHttpClient : HttpClient {
     override fun close() {}
 }
 
-/**
- * Finds each SDK method by calling it with a client that records the request instead of sending it.
- */
 internal object Operations {
 
     fun basePath(): List<String> = segments(URI(ClientOptions.PRODUCTION_URL).path)

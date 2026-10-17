@@ -46,7 +46,6 @@ private val leafClasses: Set<Class<*>> =
 private val requiredMessage = Regex("^`(\\w+)` is required, but was not set$")
 private val alternativeMessage = Regex("^Exactly one of `(\\w+)` or `(\\w+)` must be set$")
 
-/** Reads the JSON shapes of the SDK's compiled model, params, enum and union classes. */
 internal class SdkShapes {
 
     val defs = linkedMapOf<String, Shape>()
@@ -328,7 +327,6 @@ internal class SdkShapes {
         cls.methods.any { it.name == name && it.parameterCount == 0 }
 }
 
-/** 2 distinct sample values for each settable parameter type. */
 internal object Samples {
 
     fun of(type: Type): Pair<Any, Any>? {

@@ -405,8 +405,8 @@ private constructor(
                 attachments(
                     MultipartField.builder<List<InputStream>>()
                         .value(attachments)
-                        .filename("attachment.png")
-                        .contentType("image/png")
+                        .filename("attachment")
+                        .contentType("application/octet-stream")
                         .build()
                 )
 
@@ -425,8 +425,8 @@ private constructor(
                     (this.attachments
                             ?: MultipartField.builder<MutableList<InputStream>>()
                                 .value(mutableListOf())
-                                .filename("attachment.png")
-                                .contentType("image/png")
+                                .filename("attachment")
+                                .contentType("application/octet-stream")
                                 .build())
                         .also {
                             checkKnown("attachments", it).add(attachment)

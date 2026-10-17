@@ -27,6 +27,8 @@
 
 ### Bug fixes
 
+* Ticket creation sends default attachment streams as `application/octet-stream` with a neutral filename so the server can detect their type.
+* Media, avatar and banner uploads detect file types from stream headers and preserve every byte, including MP4 streams for long videos.
 * Follower, following and verified follower response unions select the coverage variant when the response contains `diagnostic`.
 * `XAccount` and `XAccountDetail` drop a timestamp field the API stopped returning.
 

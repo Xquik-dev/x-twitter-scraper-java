@@ -15,6 +15,7 @@ import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateAvatarParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateBannerParams
 import com.x_twitter_scraper.api.services.async.x.MediaServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.ProfileServiceAsyncImpl
+import com.x_twitter_scraper.api.services.blocking.support.TicketServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.MediaServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.ProfileServiceImpl
 import java.io.ByteArrayOutputStream
@@ -34,6 +35,42 @@ internal class HttpRequestBodiesTest {
             .decode(
                 "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aWQAAAABJRU5ErkJggg=="
             )
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun ticketCreate_defaultAttachmentsUseBinaryContentType(addIndividually: Boolean) {
+        val bytes = byteArrayOf(0xff.toByte(), 0xd8.toByte(), 0xff.toByte(), 0, 1)
+        val httpClient = CapturingHttpClient()
+        val options = ClientOptions.builder().httpClient(httpClient).apiKey("test").build()
+        val params =
+            TicketCreateParams.builder()
+                .body("Please help")
+                .subject("Upload issue")
+                .apply {
+                    if (addIndividually) {
+                        addAttachment(bytes.inputStream())
+                        addAttachment(bytes.inputStream())
+                    } else {
+                        attachments(listOf(bytes.inputStream(), bytes.inputStream()))
+                    }
+                }
+                .build()
+                .toBuilder()
+                .build()
+
+        TicketServiceImpl(options).withRawResponse().create(params).close()
+
+        val attachments =
+            multipartParts(checkNotNull(httpClient.request.body)).filter {
+                disposition(it.first)["name"] == "attachments"
+            }
+        assertThat(attachments).hasSize(2)
+        attachments.forEach {
+            assertThat(disposition(it.first)).containsEntry("filename", "attachment")
+            assertThat(it.first["content-type"]).isEqualTo("application/octet-stream")
+            assertThat(it.second.toByteArray(Charsets.ISO_8859_1)).isEqualTo(bytes)
+        }
+    }
 
     @ParameterizedTest
     @ValueSource(booleans = [false, true])
@@ -60,7 +97,9 @@ internal class HttpRequestBodiesTest {
         parts
             .filter { disposition(it.first)["name"] == "attachments" }
             .forEach {
-                assertPngPart(it, "attachments")
+                assertThat(disposition(it.first)).containsEntry("filename", "attachment")
+                assertThat(it.first["content-type"]).isEqualTo("application/octet-stream")
+                assertThat(it.second.toByteArray(Charsets.ISO_8859_1)).isEqualTo(png)
             }
     }
 
@@ -150,6 +189,90 @@ internal class HttpRequestBodiesTest {
             body.writeTo(output)
             assertThat(jsonMapper().readTree(output.toByteArray()))
                 .isEqualTo(jsonMapper().readTree("{\"account\":\"@example\",\"url\":\"$url\"}"))
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "89504e470d0a1a0a00ff01020304, image/png, upload.png",
+        "ffd8ff00ff010203040506070809, image/jpeg, upload.jpg",
+        "47494638376100ff0102030405, image/gif, upload.gif",
+        "47494638396100ff0102030405, image/gif, upload.gif",
+        "52494646000000005745425000ff, image/webp, upload.webp",
+        "00000018667479706176696600ff, image/avif, upload.avif",
+        "00000018667479706176697300ff, image/avif, upload.avif",
+        "000000186674797069736f6d00ff, video/mp4, upload.mp4",
+        "00000018667479706865696300ff, video/mp4, upload.mp4",
+        "000102030405060708090a0b00ff, application/octet-stream, upload",
+        "89504e470d0a1a, application/octet-stream, upload",
+        "000000186674797069736f, application/octet-stream, upload",
+        "'', application/octet-stream, upload",
+    )
+    fun uploadRequests_detectFileContentTypeAndPreserveBytes(
+        hex: String,
+        contentType: String,
+        filename: String,
+    ) {
+        val bytes = hex.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
+        listOf(false, true).forEach { markSupported ->
+            fun stream(): InputStream {
+                if (markSupported) return bytes.inputStream()
+                val input = bytes.inputStream()
+                return object : InputStream() {
+                    override fun read(): Int = input.read()
+
+                    override fun read(buffer: ByteArray, offset: Int, length: Int): Int =
+                        input.read(buffer, offset, minOf(length, 1))
+                }
+            }
+
+            listOf("media", "avatar", "banner").forEach { route ->
+                val httpClient = CapturingHttpClient()
+                val options = ClientOptions.builder().httpClient(httpClient).apiKey("test").build()
+                when (route) {
+                    "media" -> {
+                        val params =
+                            MediaUploadParams.builder()
+                                .account("@example")
+                                .idempotencyKey("test")
+                                .file(stream())
+                                .apply { if (contentType == "video/mp4") isLongVideo(true) }
+                                .build()
+                        MediaServiceImpl(options).withRawResponse().upload(params).close()
+                    }
+                    "avatar" -> {
+                        val params =
+                            ProfileUpdateAvatarParams.builder()
+                                .account("@example")
+                                .idempotencyKey("test")
+                                .file(stream())
+                                .build()
+                        ProfileServiceImpl(options).withRawResponse().updateAvatar(params).close()
+                    }
+                    "banner" -> {
+                        val params =
+                            ProfileUpdateBannerParams.builder()
+                                .account("@example")
+                                .idempotencyKey("test")
+                                .file(stream())
+                                .build()
+                        ProfileServiceImpl(options).withRawResponse().updateBanner(params).close()
+                    }
+                    else -> error("Unknown route $route")
+                }
+
+                val parts = multipartParts(checkNotNull(httpClient.request.body))
+                val part = parts.single { disposition(it.first)["name"] == "file" }
+                assertThat(disposition(part.first)).containsEntry("filename", filename)
+                assertThat(part.first["content-type"]).isEqualTo(contentType)
+                assertThat(part.second.toByteArray(Charsets.ISO_8859_1)).isEqualTo(bytes)
+                if (route == "media" && contentType == "video/mp4") {
+                    val longVideo = parts.single {
+                        disposition(it.first)["name"] == "is_long_video"
+                    }
+                    assertThat(longVideo.second).isEqualTo("true")
+                }
+            }
         }
     }
 

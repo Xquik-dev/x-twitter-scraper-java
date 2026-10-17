@@ -15,6 +15,7 @@ import com.x_twitter_scraper.api.core.Params
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
+import com.x_twitter_scraper.api.core.http.uploadFile
 import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.io.InputStream
@@ -142,9 +143,7 @@ private constructor(
         /** Sets [Builder.url] to an arbitrary multipart value. */
         fun url(url: MultipartField<String>) = apply { body.url(url) }
 
-        /**
-         * PNG image to upload. Use a [MultipartField] to specify another filename or media type.
-         */
+        /** File to upload. Use a [MultipartField] to specify another filename or media type. */
         fun file(file: InputStream) = apply { body.file(file) }
 
         /** Sets [Builder.file] to an arbitrary multipart value. */
@@ -437,18 +436,8 @@ private constructor(
             /** Sets [Builder.url] to an arbitrary multipart value. */
             fun url(url: MultipartField<String>) = apply { this.url = url }
 
-            /**
-             * PNG image to upload. Use a [MultipartField] to specify another filename or media
-             * type.
-             */
-            fun file(file: InputStream) =
-                file(
-                    MultipartField.builder<InputStream>()
-                        .value(file)
-                        .filename("upload.png")
-                        .contentType("image/png")
-                        .build()
-                )
+            /** File to upload. Use a [MultipartField] to specify another filename or media type. */
+            fun file(file: InputStream) = file(uploadFile(file))
 
             /** Sets [Builder.file] to an arbitrary multipart value. */
             fun file(file: MultipartField<InputStream>) = apply { this.file = file }
