@@ -8,6 +8,8 @@ set -euo pipefail
 
 cd -- "$(dirname -- "$0")/.."
 
+source scripts/lib/temp-paths.bash
+
 readonly exceptions_file="audit-exceptions.json"
 published_lockfiles=(
     x-twitter-scraper-java/gradle.lockfile
@@ -23,8 +25,10 @@ fail() {
 
 command -v jq >/dev/null 2>&1 || fail "jq is not installed. Install it, then rerun."
 
-audit_workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-java-audit.XXXXXX")"
-trap 'rm -rf -- "$audit_workspace"' EXIT
+trap remove_temp_paths EXIT
+exit_on_signals
+declare audit_workspace
+temp_path audit_workspace xquik-java-audit
 
 today="$(date -u +%Y-%m-%d)"
 latest_recheck="$(jq -nr 'now + 30 * 86400 | strftime("%Y-%m-%d")')"

@@ -16,13 +16,17 @@ esac
 
 cd -- "$(dirname -- "$0")/.."
 
+source scripts/lib/temp-paths.bash
+
 readonly exclusion_file="excluded-operations.json"
 readonly client_options="x-twitter-scraper-java-core/src/main/kotlin/com/x_twitter_scraper/api/core/ClientOptions.kt"
 readonly services_root="x-twitter-scraper-java-core/src/main/kotlin/com/x_twitter_scraper/api/services"
 readonly http_methods="GET|PUT|POST|DELETE|OPTIONS|HEAD|PATCH|TRACE"
 
-workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-java-api-coverage.XXXXXX")"
-trap 'rm -rf -- "${workspace:?}"' EXIT
+trap remove_temp_paths EXIT
+exit_on_signals
+declare workspace
+temp_path workspace xquik-java-api-coverage
 
 exclusions_invalid() {
     echo "$exclusion_file is not valid. $1." >&2

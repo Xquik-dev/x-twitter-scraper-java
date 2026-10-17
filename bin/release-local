@@ -9,6 +9,8 @@ set +o xtrace
 
 cd -- "$(dirname -- "$0")/.."
 
+source scripts/lib/temp-paths.bash
+
 readonly repository="Xquik-dev/x-twitter-scraper-java"
 readonly group="com.xquik.api"
 readonly module="x-twitter-scraper-java"
@@ -44,8 +46,10 @@ if [[ "$dry_run" == false ]]; then
         refuse "MAVEN_SIGNING_KEYCHAIN_SERVICE is unset or empty. Set it to the Keychain service that holds the signing key passphrase, then run bin/release-local again."
 fi
 
-workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-java-release.XXXXXX")"
-trap 'rm -rf -- "${workspace:?}"' EXIT
+trap remove_temp_paths EXIT
+exit_on_signals
+declare workspace
+temp_path workspace xquik-java-release
 
 central_has_version() {
     local status
