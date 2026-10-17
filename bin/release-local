@@ -49,8 +49,8 @@ fi
 
 trap remove_temp_paths EXIT
 exit_on_signals
-workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-java-release.XXXXXX")"
-temp_paths+=("$workspace")
+declare workspace
+temp_path workspace xquik-java-release
 
 central_has_version() {
     local status

@@ -15,8 +15,7 @@ readonly remote_tools=(codeql curl gh gpg java security shellcheck uvx)
 
 create_sandbox() {
     local tool tool_path
-    sandbox="$(mktemp -d "${TMPDIR:-/tmp}/xquik-java-script-test.XXXXXX")"
-    temp_paths+=("$sandbox")
+    temp_path sandbox xquik-java-script-test
     sandbox="$(cd -- "$sandbox" && pwd -P)"
     sandbox_repo="$sandbox/repo"
     sandbox_bin="$sandbox/bin"

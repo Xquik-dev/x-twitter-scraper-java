@@ -26,8 +26,8 @@ readonly http_methods="GET|PUT|POST|DELETE|OPTIONS|HEAD|PATCH|TRACE"
 
 trap remove_temp_paths EXIT
 exit_on_signals
-workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-java-api-coverage.XXXXXX")"
-temp_paths+=("$workspace")
+declare workspace
+temp_path workspace xquik-java-api-coverage
 
 exclusions_invalid() {
     echo "$exclusion_file is not valid. $1." >&2

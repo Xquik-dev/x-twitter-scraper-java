@@ -23,8 +23,8 @@ fi
 
 trap remove_temp_paths EXIT
 exit_on_signals
-codeql_workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-java-codeql.XXXXXX")"
-temp_paths+=("$codeql_workspace")
+declare codeql_workspace
+temp_path codeql_workspace xquik-java-codeql
 readonly source_root="$codeql_workspace/source"
 readonly database="$codeql_workspace/database"
 readonly results="$codeql_workspace/results.sarif"

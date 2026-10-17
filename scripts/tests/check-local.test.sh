@@ -215,6 +215,76 @@ test_a_failing_check_removes_its_temp_dir() {
     assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
 }
 
+test_a_chmod_failure_still_removes_temp_dirs_and_posts_the_check_failure() {
+    local head
+    prepare_checks
+    head="$(sandbox_git rev-parse HEAD)"
+    run_env+=("FAKE_FAILING_CHECK=lint")
+    fake chmod <<'EOF'
+#!/bin/sh
+echo "Permission denied." >&2
+exit 41
+EOF
+
+    run_in_repo bin/check-local
+
+    assert_equal 1 "$run_status" "the exit code"
+    assert_equal "Check failed at Java and Kotlin formatting. Run ./scripts/format, then rerun." "$run_stderr" "stderr"
+    assert_equal "repos/Xquik-dev/x-twitter-scraper-java/statuses/$head pending Local checks are running.
+repos/Xquik-dev/x-twitter-scraper-java/statuses/$head failure Failed at Java and Kotlin formatting." \
+        "$(log_of gh)" "the posted statuses"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
+test_temp_path_assigns_and_tracks_each_directory() {
+    copy_file scripts/lib/temp-paths.bash
+
+    stub scripts/allocate-temp-paths <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+source scripts/lib/temp-paths.bash
+trap remove_temp_paths EXIT
+temp_path first xquik-java-first
+temp_path second xquik-java-second
+[[ -d "$first" && -d "$second" ]]
+[[ "$first" == "$TMPDIR/xquik-java-first."* ]]
+[[ "$second" == "$TMPDIR/xquik-java-second."* ]]
+[[ "${#temp_paths[@]}" -eq 2 ]]
+[[ "${temp_paths[0]}" == "$first" && "${temp_paths[1]}" == "$second" ]]
+EOF
+
+    run_in_repo scripts/allocate-temp-paths
+
+    assert_equal 0 "$run_status" "the exit code"
+    assert_equal "" "$run_stderr" "stderr"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
+test_a_temp_path_creation_failure_stops_before_the_next_command() {
+    copy_file scripts/lib/temp-paths.bash
+    fake mktemp <<'EOF'
+#!/bin/sh
+echo "Could not create a temporary directory." >&2
+exit 23
+EOF
+
+    stub scripts/allocate-temp-path <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+source scripts/lib/temp-paths.bash
+trap remove_temp_paths EXIT
+temp_path workspace xquik-java-check
+echo ran >"$FAKE_LOGS/after-temp-path"
+EOF
+
+    run_in_repo scripts/allocate-temp-path
+
+    assert_equal 23 "$run_status" "the exit code"
+    assert_equal "Could not create a temporary directory." "$run_stderr" "stderr"
+    assert_equal "" "$(log_of after-temp-path)" "the command after the allocation"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
 test_a_terminated_run_removes_its_temp_dir_and_exits_143() {
     prepare_checks
     stub scripts/lint < <(temp_step xquik-java-check)

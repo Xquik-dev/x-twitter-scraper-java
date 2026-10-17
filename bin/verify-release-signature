@@ -27,8 +27,8 @@ retry_delay_seconds=15
 max_attempts=$((verification_timeout_minutes * 60 / retry_delay_seconds))
 trap remove_temp_paths EXIT
 exit_on_signals
-verification_workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-java-verify.XXXXXX")"
-temp_paths+=("$verification_workspace")
+declare verification_workspace
+temp_path verification_workspace xquik-java-verify
 verification_gnupg="$verification_workspace/gnupg"
 mkdir -m 700 "$verification_gnupg"
 

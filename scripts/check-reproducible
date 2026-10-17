@@ -13,8 +13,8 @@ source scripts/lib/temp-paths.bash
 
 trap remove_temp_paths EXIT
 exit_on_signals
-reproducibility_workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-java-reproducibility.XXXXXX")"
-temp_paths+=("$reproducibility_workspace")
+declare reproducibility_workspace
+temp_path reproducibility_workspace xquik-java-reproducibility
 
 copy_source() {
     local destination="$1"
