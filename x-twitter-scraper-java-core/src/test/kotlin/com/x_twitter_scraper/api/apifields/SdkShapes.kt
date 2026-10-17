@@ -45,6 +45,7 @@ private val leafClasses: Set<Class<*>> =
 
 private val requiredMessage = Regex("^`(\\w+)` is required, but was not set$")
 private val alternativeMessage = Regex("^Exactly one of `(\\w+)` or `(\\w+)` must be set$")
+private val atLeastOneMessage = Regex("^At least one of `(\\w+)` or `(\\w+)` must be set$")
 
 internal class SdkShapes {
 
@@ -174,7 +175,8 @@ internal class SdkShapes {
             null
         } catch (e: InvocationTargetException) {
             val message = e.targetException.message.orEmpty()
-            val alternative = alternativeMessage.matchEntire(message)
+            val alternative =
+                alternativeMessage.matchEntire(message) ?: atLeastOneMessage.matchEntire(message)
             if (alternative != null) {
                 setPlaceholder(builder, alternative.groupValues[1])
                 missingRequired(builder)

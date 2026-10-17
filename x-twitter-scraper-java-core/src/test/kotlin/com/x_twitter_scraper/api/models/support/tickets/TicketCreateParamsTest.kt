@@ -81,14 +81,60 @@ internal class TicketCreateParamsTest {
     }
 
     @Test
-    fun bodyWithoutOptionalFields() {
-        val params = TicketCreateParams.builder().subject("Cannot connect X account").build()
+    fun bodyOrAttachmentsIsRequired() {
+        assertThatIllegalStateException()
+            .isThrownBy {
+                TicketCreateParams.builder().subject("Cannot connect X account").build()
+            }
+            .withMessage("At least one of `body` or `attachments` must be set")
+        assertThatIllegalStateException()
+            .isThrownBy {
+                TicketCreateParams.Body.builder().subject("Cannot connect X account").build()
+            }
+            .withMessage("At least one of `body` or `attachments` must be set")
+    }
 
-        val body = params._body()
+    @Test
+    fun emptyAttachmentsWithoutBody() {
+        assertThatIllegalStateException()
+            .isThrownBy {
+                TicketCreateParams.builder()
+                    .subject("Upload issue")
+                    .attachments(emptyList())
+                    .build()
+            }
+            .withMessage("At least one of `body` or `attachments` must be set")
+        assertThatIllegalStateException()
+            .isThrownBy {
+                TicketCreateParams.Body.builder()
+                    .subject("Upload issue")
+                    .attachments(emptyList())
+                    .build()
+            }
+            .withMessage("At least one of `body` or `attachments` must be set")
+    }
 
-        assertThat(params.body()).isEmpty()
-        assertThat(body)
-            .isEqualTo(mapOf("subject" to MultipartField.of("Cannot connect X account")))
+    @Test
+    fun bodyWithEmptyAttachments() {
+        val params =
+            TicketCreateParams.builder()
+                .subject("Upload issue")
+                .body("Please help")
+                .attachments(emptyList())
+                .build()
+
+        assertThat(params.body()).contains("Please help")
+        assertThat(params.attachments()).hasValue(emptyList())
+    }
+
+    @Test
+    fun bodyBuilderWithBody() {
+        val body =
+            TicketCreateParams.Body.builder().subject("Upload issue").body("Please help").build()
+
+        assertThat(body.body()).contains("Please help")
+        assertThat(body.attachments()).isEmpty()
+        assertThat(body.validate()).isSameAs(body)
     }
 
     @Test
@@ -112,11 +158,14 @@ internal class TicketCreateParamsTest {
                 .attachments(listOf("upload".byteInputStream()))
                 .build()
 
+        val withBody = body.toBuilder().body("Please help").build()
+
         assertThat(body.body()).isEmpty()
         assertThat(body.validate()).isSameAs(body)
         assertThat(body.toBuilder().build()).isEqualTo(body)
         assertThat(TicketCreateParams.builder().body(body).build().body()).isEmpty()
-        assertThat(body.toBuilder().body("Please help").build().body()).contains("Please help")
+        assertThat(withBody.body()).contains("Please help")
+        assertThat(withBody.attachments()).isPresent()
     }
 
     @Test

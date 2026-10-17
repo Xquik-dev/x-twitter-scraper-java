@@ -99,7 +99,10 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [ProfileUpdateBannerParams]. */
+    /**
+     * A builder for [ProfileUpdateBannerParams] with limits of 10 MiB per image and 30 MiB per
+     * request.
+     */
     class Builder internal constructor() {
 
         private var idempotencyKey: String? = null
@@ -370,7 +373,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [Body]. */
+        /** A builder for [Body] with limits of 10 MiB per image and 30 MiB per request. */
         class Builder internal constructor() {
 
             private var account: MultipartField<String>? = null

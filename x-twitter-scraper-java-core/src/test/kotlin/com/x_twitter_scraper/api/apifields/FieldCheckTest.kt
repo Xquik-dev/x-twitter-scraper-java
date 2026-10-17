@@ -4,7 +4,13 @@
 
 package com.x_twitter_scraper.api.apifields
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.x_twitter_scraper.api.core.MultipartField
+import com.x_twitter_scraper.api.core.Params
+import com.x_twitter_scraper.api.core.checkRequired
+import com.x_twitter_scraper.api.core.http.Headers
+import com.x_twitter_scraper.api.core.http.QueryParams
 import com.x_twitter_scraper.api.models.credits.CreditRetrieveBalanceResponse
 import com.x_twitter_scraper.api.models.drafts.DraftCreateParams
 import com.x_twitter_scraper.api.models.support.tickets.TicketCreateParams
@@ -219,6 +225,14 @@ internal class FieldCheckTest {
     }
 
     @Test
+    fun readsRequiredBodyFieldWithTrailingUnderscore() {
+        val shapes = SdkShapes()
+        val body = canon(shapes.params(RequiredBodyParams::class.java).second!!, shapes.defs) as Obj
+
+        assertThat(body.props.getValue("body").required).isTrue()
+    }
+
+    @Test
     fun readsAlternativeUploadInputs() {
         listOf(
                 MediaUploadParams::class.java,
@@ -235,5 +249,46 @@ internal class FieldCheckTest {
                 assertThat(props.getValue("url").required).isFalse()
                 assertThat(props.getValue("file").required).isFalse()
             }
+    }
+
+    internal class RequiredBodyParams private constructor(private val body: Body) : Params {
+
+        fun _body(): Map<String, MultipartField<*>> = mapOf("body" to body._body_())
+
+        override fun _headers(): Headers = Headers.builder().build()
+
+        override fun _queryParams(): QueryParams = QueryParams.builder().build()
+
+        companion object {
+
+            @JvmStatic fun builder() = Builder()
+        }
+
+        class Builder {
+
+            fun build(): RequiredBodyParams =
+                RequiredBodyParams(Body.builder().body("sample").build())
+        }
+
+        class Body private constructor(private val body: MultipartField<String>) {
+
+            fun body(): String = body.value.getRequired("body")
+
+            @JsonProperty("body") fun _body_(): MultipartField<String> = body
+
+            companion object {
+
+                @JvmStatic fun builder() = Builder()
+            }
+
+            class Builder {
+
+                private var body: MultipartField<String>? = null
+
+                fun body(body: String) = apply { this.body = MultipartField.of(body) }
+
+                fun build(): Body = Body(checkRequired("body", body))
+            }
+        }
     }
 }

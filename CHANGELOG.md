@@ -5,6 +5,7 @@
 ### Breaking changes
 
 * `TicketCreateParams.body()` and `TicketReplyParams.body()` now return `Optional<String>` and no longer require a body.
+* Ticket and reply builders now require `body` or non-empty `attachments`.
 * `MediaUploadParams`, `ProfileUpdateAvatarParams` and `ProfileUpdateBannerParams` take exactly 1 of `url` or `file`, so their `url()` getters return `Optional<String>`. Builders that set `url` keep working.
 
 ### Features
@@ -30,6 +31,7 @@
 ### Bug fixes
 
 * Ticket creation sends default attachment streams as `application/octet-stream` with a neutral filename so the server can detect their type.
+* Ticket replies now send attachment filenames so the API keeps the uploads.
 * Media, avatar and banner uploads detect file types from stream headers and preserve every byte, including MP4 streams for long videos.
 * Follower, following and verified follower response unions select the coverage variant when the response contains `diagnostic`.
 * `XAccount` and `XAccountDetail` drop a timestamp field the API stopped returning.
