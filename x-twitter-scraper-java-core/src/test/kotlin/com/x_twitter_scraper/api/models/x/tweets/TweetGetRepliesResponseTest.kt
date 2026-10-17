@@ -5,6 +5,7 @@
 package com.x_twitter_scraper.api.models.x.tweets
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.jsonMapper
 import com.x_twitter_scraper.api.models.ContentDisclosure
@@ -7551,5 +7552,370 @@ internal class TweetGetRepliesResponseTest {
             .isEqualTo(tweetGetRepliesResponse._searchedQuery())
         assertThat(tweetGetRepliesResponse.toPaginatedTweets()._windowComplete())
             .isEqualTo(tweetGetRepliesResponse._windowComplete())
+    }
+
+    @Test
+    fun readsFullyPopulatedEmbeddedRetweetedTweet() {
+        val response =
+            jsonMapper()
+                .readValue(
+                    """
+                    {
+                      "has_next_page": false,
+                      "next_cursor": "",
+                      "tweets": [
+                        {
+                          "id": "2234567890",
+                          "text": "RT @example_user: Just launched!",
+                          "bookmarkCount": 2,
+                          "likeCount": 42,
+                          "quoteCount": 1,
+                          "replyCount": 3,
+                          "retweetCount": 5,
+                          "viewCount": 1500,
+                          "retweeted_tweet": {
+                            "id": "1234567890",
+                            "text": "Just launched!",
+                            "type": "tweet",
+                            "createdAt": "2025-01-15T12:00:00Z",
+                            "url": "https://x.com/example_user/status/1234567890",
+                            "lang": "en",
+                            "isReply": false,
+                            "isLimitedReply": false,
+                            "isNoteTweet": false,
+                            "isPinned": false,
+                            "isQuoteStatus": false,
+                            "isRetweet": false,
+                            "quotedTweetId": "1234567889",
+                            "quotedTweetPermalink": {
+                              "displayUrl": "x.com/example_user/status/1234567889",
+                              "expandedUrl": "https://x.com/example_user/status/1234567889",
+                              "url": "https://t.co/example"
+                            },
+                            "quotedTweetUnavailable": {"reason": "Suspended"},
+                            "retweetedAt": "2026-09-11T20:24:45.000Z",
+                            "inReplyToId": "1234567888",
+                            "inReplyToUserId": "9876543210",
+                            "inReplyToUsername": "example_user",
+                            "conversationId": "1234567888",
+                            "conversationControl": {
+                              "allowedCountryCodes": ["TR"],
+                              "inviteViaMention": true,
+                              "mode": "my_network",
+                              "ownerId": "9876543210",
+                              "ownerUsername": "example_user",
+                              "policy": "by_invitation"
+                            },
+                            "limitedActions": [
+                              {
+                                "action": "Reply",
+                                "prompt": {
+                                  "ctaType": "SeeConversation",
+                                  "headline": "View conversation",
+                                  "metadata": {"value": 1},
+                                  "subtext": "Replies are limited"
+                                }
+                              }
+                            ],
+                            "source": "Twitter Web App",
+                            "displayTextRange": [0, 14],
+                            "textHighlights": [{"startIndex": 5, "endIndex": 13}],
+                            "contentDisclosure": {
+                              "advertising": {"isPaidPromotion": true},
+                              "aiGenerated": {
+                                "detectionSource": "UserDeclared",
+                                "hasAiGeneratedMedia": true
+                              }
+                            },
+                            "article": {
+                              "id": "article-id",
+                              "coverMedia": {"mediaId": "media-id"},
+                              "lifecycleState": {"state": "Published"},
+                              "metadata": {"wordCount": 42},
+                              "title": "Launch",
+                              "previewText": "Just launched!",
+                              "coverMediaUrl": "https://example.com/cover.jpg"
+                            },
+                            "authorUnavailable": {
+                              "reason": "Suspended",
+                              "message": "Account suspended"
+                            },
+                            "unavailableAuthorId": "9876543210",
+                            "card": {
+                              "id": "card-id",
+                              "name": "summary",
+                              "url": "https://example.com",
+                              "bindingValues": {"title": "Launch"},
+                              "platform": {"name": "Web"},
+                              "userReferenceErrors": [
+                                {"message": "User unavailable", "reason": "Suspended"}
+                              ],
+                              "userReferences": [
+                                {"id": "9876543210", "name": "Example", "username": "example_user"}
+                              ]
+                            },
+                            "cashtagAttachments": [
+                              {
+                                "cashtag": "${'$'}TSLA",
+                                "candleSize": "5m",
+                                "timeframe": "1D",
+                                "startTime": "2026-10-09T13:30:00.000Z",
+                                "endTime": "2026-10-09T13:42:08.796Z",
+                                "sizeVariant": 1
+                              }
+                            ],
+                            "communityId": "community-id",
+                            "communityName": "Build in Public",
+                            "communityNote": {
+                              "id": "note-id",
+                              "title": "Context",
+                              "shortTitle": "Note",
+                              "subtitle": "More context",
+                              "footer": "Read more",
+                              "footerIconType": "Info",
+                              "destinationUrl": "https://example.com/context",
+                              "iconType": "Info",
+                              "visualStyle": "Default",
+                              "metadata": {"helpful": true}
+                            },
+                            "hasCommunityNotes": true,
+                            "edit": {
+                              "editableUntilMsecs": "1736942700000",
+                              "editTweetIds": ["1234567890"],
+                              "editsRemaining": 4,
+                              "isEditEligible": true
+                            },
+                            "exclusiveContent": {
+                              "creatorUserName": "example_user",
+                              "subscribeUrl": "https://x.com/example_user/subscribe"
+                            },
+                            "isTranslatable": true,
+                            "grokShareAttachment": {"conversationId": "grok-id"},
+                            "grokTranslatedPost": {"text": "Translated"},
+                            "jetfuelAttachment": {"title": "Launch"},
+                            "noteTweet": {
+                              "id": "note-global-id",
+                              "noteId": "2100306607800229889",
+                              "text": "Just launched!",
+                              "isExpandable": true,
+                              "entities": {"hashtags": [{"text": "launch", "indices": [5, 11]}]},
+                              "inlineMedia": [{"index": 0, "mediaId": "media-id"}],
+                              "richtextTags": [{"fromIndex": 0, "toIndex": 4, "types": ["Bold"]}]
+                            },
+                            "place": {
+                              "id": "place-id",
+                              "boundingBox": {"type": "Polygon", "coordinates": [[[29, 41]]]},
+                              "country": "Türkiye",
+                              "countryCode": "TR",
+                              "fullName": "Istanbul, Türkiye",
+                              "name": "Istanbul",
+                              "placeType": "city",
+                              "url": "https://example.com/place"
+                            },
+                            "coordinates": {"type": "Point", "coordinates": [29, 41]},
+                            "geo": {"type": "Point", "coordinates": [41, 29]},
+                            "postCta": {"text": "Read more"},
+                            "possiblySensitive": false,
+                            "previousCounts": {
+                              "bookmarkCount": 1,
+                              "likeCount": 40,
+                              "quoteCount": 0,
+                              "replyCount": 2,
+                              "retweetCount": 4
+                            },
+                            "reactionContext": {
+                              "reactedToPostId": "1234567889",
+                              "reactedToUser": {
+                                "id": "9876543210",
+                                "name": "Example",
+                                "username": "example_user"
+                              }
+                            },
+                            "sportsContext": {
+                              "gameId": "game-id",
+                              "league": "league-id",
+                              "title": "Final",
+                              "url": "https://example.com/game",
+                              "state": "Live",
+                              "statusText": "Second half",
+                              "scheduledAtMs": "1736942400000",
+                              "competitors": [{"teamId": "team-id", "score": "2"}]
+                            },
+                            "subscriberBadge": {"creatorId": "44196397"},
+                            "tombstone": {
+                              "type": "Notice",
+                              "text": {"text": "Visibility notice", "rtl": false, "entities": []}
+                            },
+                            "interstitial": {
+                              "displayType": "NonCompliant",
+                              "text": {"text": "Public interest notice", "rtl": false, "entities": []}
+                            },
+                            "unmentionedUserIds": ["9876543210"],
+                            "viewState": "Enabled",
+                            "entities": {"hashtags": [{"text": "launch", "indices": [5, 11]}]},
+                            "scopes": {"followers": false},
+                            "media": [
+                              {
+                                "id": "media-id",
+                                "mediaUrl": "https://example.com/image.jpg",
+                                "type": "photo",
+                                "url": "https://t.co/media"
+                              }
+                            ],
+                            "retweetCount": 5,
+                            "replyCount": 3,
+                            "likeCount": 42,
+                            "quoteCount": 1,
+                            "viewCount": 1500,
+                            "bookmarkCount": 2,
+                            "author": {
+                              "id": "9876543210",
+                              "name": "Example",
+                              "username": "example_user",
+                              "followers": 42
+                            },
+                            "parentTweet": {
+                              "id": "1234567888",
+                              "text": "Parent post",
+                              "bookmarkCount": 0,
+                              "likeCount": 0,
+                              "quoteCount": 0,
+                              "replyCount": 0,
+                              "retweetCount": 0,
+                              "viewCount": 0,
+                              "communityName": "Parent community",
+                              "author": {
+                                "id": "9876543210",
+                                "name": "Example",
+                                "username": "example_user"
+                              },
+                              "custom": {"value": 1}
+                            },
+                            "quoted_tweet": {
+                              "id": "1234567887",
+                              "text": "Quoted post",
+                              "bookmarkCount": 0,
+                              "likeCount": 0,
+                              "quoteCount": 0,
+                              "replyCount": 0,
+                              "retweetCount": 0,
+                              "viewCount": 0,
+                              "isPinned": true,
+                              "custom": [1, 2]
+                            },
+                            "retweeted_tweet": {
+                              "id": "1234567886",
+                              "text": "Nested repost",
+                              "bookmarkCount": 0,
+                              "likeCount": 0,
+                              "quoteCount": 0,
+                              "replyCount": 0,
+                              "retweetCount": 0,
+                              "viewCount": 0,
+                              "hasCommunityNotes": true,
+                              "custom": true
+                            }
+                          }
+                        }
+                      ]
+                    }
+                    """
+                        .trimIndent(),
+                    jacksonTypeRef<TweetGetRepliesResponse>(),
+                )
+
+        response.validate()
+        val embeddedTweet = response.tweets().single().retweetedTweet().get()
+        assertThat(embeddedTweet.id()).isEqualTo("1234567890")
+        assertThat(embeddedTweet.text()).isEqualTo("Just launched!")
+        assertThat(embeddedTweet.likeCount()).isEqualTo(42L)
+        assertThat(embeddedTweet.createdAt()).contains("2025-01-15T12:00:00Z")
+        assertThat(embeddedTweet.isPinned()).contains(false)
+        assertThat(embeddedTweet.isRetweet()).contains(false)
+        assertThat(embeddedTweet.communityName()).contains("Build in Public")
+        assertThat(embeddedTweet.hasCommunityNotes()).contains(true)
+        assertThat(embeddedTweet.authorUnavailable().get().reason()).isEqualTo("Suspended")
+        assertThat(embeddedTweet.quotedTweetUnavailable().get().reason()).isEqualTo("Suspended")
+        assertThat(embeddedTweet.quotedTweetPermalink().get().url())
+            .contains("https://t.co/example")
+        assertThat(embeddedTweet.retweetedAt())
+            .contains(OffsetDateTime.parse("2026-09-11T20:24:45.000Z"))
+        assertThat(embeddedTweet.cashtagAttachments().get().single().cashtag()).isEqualTo("\$TSLA")
+        assertThat(embeddedTweet.conversationControl().get().allowedCountryCodes().get())
+            .containsExactly("TR")
+        assertThat(embeddedTweet.coordinates().get().coordinates()).containsExactly(29.0, 41.0)
+        assertThat(embeddedTweet.limitedActions().get().single().action()).contains("Reply")
+        assertThat(embeddedTweet.textHighlights().get().single().startIndex()).isEqualTo(5L)
+        assertThat(embeddedTweet.article().get().coverMedia().get()._additionalProperties())
+            .containsEntry("mediaId", JsonValue.from("media-id"))
+        assertThat(embeddedTweet.card().get().userReferences().get().single().username())
+            .isEqualTo("example_user")
+        assertThat(embeddedTweet.communityNote().get().footerIconType()).contains("Info")
+        assertThat(embeddedTweet.entities().get().hashtags().get().single().text())
+            .isEqualTo("launch")
+        assertThat(embeddedTweet.noteTweet().get().noteId()).contains("2100306607800229889")
+        assertThat(embeddedTweet.noteTweet().get().inlineMedia().get().single().mediaId())
+            .isEqualTo("media-id")
+        assertThat(embeddedTweet.exclusiveContent().get().creatorUserName())
+            .isEqualTo("example_user")
+        assertThat(embeddedTweet.subscriberBadge().get().creatorId()).isEqualTo("44196397")
+        assertThat(embeddedTweet.reactionContext().get().reactedToUser().get().username())
+            .isEqualTo("example_user")
+        assertThat(embeddedTweet.sportsContext().get().gameId()).contains("game-id")
+        assertThat(embeddedTweet.interstitial().get().displayType()).contains("NonCompliant")
+        assertThat(embeddedTweet.unmentionedUserIds().get()).containsExactly("9876543210")
+        assertThat(embeddedTweet.author().get().username()).isEqualTo("example_user")
+        assertThat(embeddedTweet.author().get().followers()).contains(42L)
+        assertThat(embeddedTweet.parentTweet().get().text()).isEqualTo("Parent post")
+        assertThat(embeddedTweet.parentTweet().get().communityName()).contains("Parent community")
+        assertThat(embeddedTweet.parentTweet().get().author().get().username())
+            .isEqualTo("example_user")
+        assertThat(embeddedTweet.parentTweet().get()._additionalProperties())
+            .containsEntry("custom", JsonValue.from(mapOf("value" to 1)))
+        assertThat(embeddedTweet.quotedTweet().get().text()).isEqualTo("Quoted post")
+        assertThat(embeddedTweet.quotedTweet().get().isPinned()).contains(true)
+        assertThat(embeddedTweet._quotedTweet().asKnown().get().text()).isEqualTo("Quoted post")
+        assertThat(embeddedTweet.quotedTweet().get()._additionalProperties())
+            .containsEntry("custom", JsonValue.from(listOf(1, 2)))
+        assertThat(embeddedTweet.retweetedTweet().get().text()).isEqualTo("Nested repost")
+        assertThat(embeddedTweet.retweetedTweet().get().hasCommunityNotes()).contains(true)
+        assertThat(embeddedTweet._retweetedTweet().asKnown().get().text())
+            .isEqualTo("Nested repost")
+        assertThat(embeddedTweet.retweetedTweet().get()._additionalProperties())
+            .containsEntry("custom", JsonValue.from(true))
+        assertThat(embeddedTweet.toBuilder().build()).isEqualTo(embeddedTweet)
+        val nestedTweet =
+            embeddedTweet
+                .toBuilder()
+                .parentTweet(embeddedTweet)
+                .quotedTweet(embeddedTweet)
+                .retweetedTweet(JsonField.of(embeddedTweet))
+                .build()
+        assertThat(nestedTweet.parentTweet()).contains(embeddedTweet)
+        assertThat(nestedTweet.quotedTweet()).contains(embeddedTweet)
+        assertThat(nestedTweet.retweetedTweet()).contains(embeddedTweet)
+        val deeplyNestedTweet =
+            embeddedTweet.toBuilder().parentTweet(JsonField.of(nestedTweet)).build()
+        assertThat(deeplyNestedTweet.parentTweet().get().quotedTweet().get().text())
+            .isEqualTo("Just launched!")
+        assertThat(
+                deeplyNestedTweet
+                    .parentTweet()
+                    .get()
+                    .retweetedTweet()
+                    .get()
+                    .parentTweet()
+                    .get()
+                    .communityName()
+            )
+            .contains("Parent community")
+        assertThat(
+                jsonMapper()
+                    .readValue(
+                        jsonMapper().writeValueAsString(response),
+                        jacksonTypeRef<TweetGetRepliesResponse>(),
+                    )
+            )
+            .isEqualTo(response)
     }
 }

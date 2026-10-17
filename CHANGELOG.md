@@ -8,6 +8,7 @@
 
 ### Features
 
+* Embedded parent, quoted and retweeted posts carry every tweet field and the author.
 * `UserProfile.IdentityVerification` gains optional `overrideVerifiedYear` for the verification start year X displays on profiles and user objects in tweets.
 * `client.x().tweets()` gains `listTop`, `embed`, `getHiddenReplies`, `getInsights`, `getRetweeterIds`, `checkRepost`, `getSubtitles`, `translate` and `resolveLinks`. Each has typed params and a typed response from the current API spec.
 * `client.x().users()` gains `retrieveBatchTweets`, `retrieveAffiliates`, `retrieveArticles`, `retrieveFollowerIds`, `retrieveFollowingIds`, `retrieveHighlights`, `retrieveInsights`, `retrieveListMemberships`, `retrieveLists`, `retrieveLive`, `retrieveSimilar`, `retrieveSubscriptions` and `translateBio`.
