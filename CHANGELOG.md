@@ -27,6 +27,7 @@
 
 ### Bug fixes
 
+* Follower, following and verified follower response unions select the coverage variant when the response contains `diagnostic`.
 * `XAccount` and `XAccountDetail` drop a timestamp field the API stopped returning.
 
 ### Chores

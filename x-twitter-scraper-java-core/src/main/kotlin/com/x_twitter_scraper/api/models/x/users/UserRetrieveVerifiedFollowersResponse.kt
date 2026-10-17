@@ -22,7 +22,6 @@ import com.x_twitter_scraper.api.core.ExcludeMissing
 import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
-import com.x_twitter_scraper.api.core.allMaxBy
 import com.x_twitter_scraper.api.core.checkKnown
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.getOrThrow
@@ -245,23 +244,17 @@ private constructor(
         ): UserRetrieveVerifiedFollowersResponse {
             val json = JsonValue.fromJsonNode(node)
 
-            val bestMatches =
-                sequenceOf(
-                        tryDeserialize(node, jacksonTypeRef<PaginatedUsers>())?.let {
-                            UserRetrieveVerifiedFollowersResponse(paginatedUsers = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<UserListCoverageResponse>())?.let {
-                            UserRetrieveVerifiedFollowersResponse(listCoverage = it, _json = json)
-                        },
-                    )
-                    .filterNotNull()
-                    .allMaxBy { it.validity() }
-                    .toList()
-            return when (bestMatches.size) {
-                0 -> UserRetrieveVerifiedFollowersResponse(_json = json)
-                1 -> bestMatches.single()
-                else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
-            }
+            val response =
+                if (node.has("diagnostic")) {
+                    tryDeserialize(node, jacksonTypeRef<UserListCoverageResponse>())?.let {
+                        UserRetrieveVerifiedFollowersResponse(listCoverage = it, _json = json)
+                    }
+                } else {
+                    tryDeserialize(node, jacksonTypeRef<PaginatedUsers>())?.let {
+                        UserRetrieveVerifiedFollowersResponse(paginatedUsers = it, _json = json)
+                    }
+                }
+            return response ?: UserRetrieveVerifiedFollowersResponse(_json = json)
         }
     }
 
