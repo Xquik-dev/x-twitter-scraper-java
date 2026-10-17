@@ -39,6 +39,14 @@ internal inline fun <reified T> json(jsonMapper: JsonMapper, value: T): HttpRequ
     }
 
 @JvmSynthetic
+internal fun uploadBody(
+    jsonMapper: JsonMapper,
+    fields: Map<String, MultipartField<*>>,
+    hasFile: Boolean,
+): HttpRequestBody =
+    if (hasFile) multipartFormData(jsonMapper, fields) else json(jsonMapper, fields)
+
+@JvmSynthetic
 internal fun uploadFile(file: InputStream): MultipartField<InputStream> {
     val stream = if (file.markSupported()) file else BufferedInputStream(file, 12)
     val header = ByteArray(12)
@@ -64,9 +72,11 @@ internal fun uploadFile(file: InputStream): MultipartField<InputStream> {
             matches(0, "\u00ff\u00d8\u00ff") -> "image/jpeg" to "upload.jpg"
             matches(0, "GIF87a") || matches(0, "GIF89a") -> "image/gif" to "upload.gif"
             matches(0, "RIFF") && matches(8, "WEBP") -> "image/webp" to "upload.webp"
-            size >= 12 && matches(4, "ftyp") ->
-                if (matches(8, "avif") || matches(8, "avis")) "image/avif" to "upload.avif"
-                else "video/mp4" to "upload.mp4"
+            matches(4, "ftyp") && (matches(8, "avif") || matches(8, "avis")) ->
+                "image/avif" to "upload.avif"
+            matches(4, "ftyp") &&
+                listOf("isom", "iso2", "mp41", "mp42", "avc1", "M4V ").any { matches(8, it) } ->
+                "video/mp4" to "upload.mp4"
             else -> "application/octet-stream" to "upload"
         }
     return MultipartField.builder<InputStream>()

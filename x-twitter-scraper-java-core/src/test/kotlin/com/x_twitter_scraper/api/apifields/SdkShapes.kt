@@ -46,6 +46,8 @@ private val leafClasses: Set<Class<*>> =
 private val requiredMessage = Regex("^`(\\w+)` is required, but was not set$")
 private val alternativeMessage = Regex("^Exactly one of `(\\w+)` or `(\\w+)` must be set$")
 
+internal data class SdkParams(val builder: Any, val required: Set<String>, val inputs: List<String>)
+
 internal class SdkShapes {
 
     val defs = linkedMapOf<String, Shape>()
@@ -165,7 +167,11 @@ internal class SdkShapes {
         }
     }
 
-    private fun missingRequired(builder: Any): String? =
+    private fun missingRequired(
+        builder: Any,
+        input: String? = null,
+        inputs: MutableSet<String> = linkedSetOf(),
+    ): String? =
         try {
             builder.javaClass.getMethod("build").invoke(builder)
             null
@@ -173,8 +179,10 @@ internal class SdkShapes {
             val message = e.targetException.message.orEmpty()
             val alternative = alternativeMessage.matchEntire(message)
             if (alternative != null) {
-                setPlaceholder(builder, alternative.groupValues[1])
-                missingRequired(builder)
+                val names = alternative.groupValues.drop(1)
+                inputs.addAll(names)
+                setPlaceholder(builder, input ?: names.first())
+                missingRequired(builder, input, inputs)
             } else {
                 requiredMessage.find(message)?.groupValues?.get(1) ?: throw e.targetException
             }
@@ -230,19 +238,27 @@ internal class SdkShapes {
             .toSet()
     }
 
-    fun params(cls: Class<*>): Pair<Shape, Shape?> = query(cls) to body(cls)
+    fun params(cls: Class<*>, input: String? = null): Pair<Shape, Shape?> =
+        query(cls) to body(cls, input)
 
-    fun newParams(cls: Class<*>): Pair<Any, Set<String>> {
+    fun newParams(cls: Class<*>, input: String? = null): SdkParams {
         val builder =
             builderOf(cls)
                 ?: throw CheckFailure("${cls.name} has no builder the field check can read.")
         val required = linkedSetOf<String>()
+        val inputs = linkedSetOf<String>()
         while (true) {
-            val name = missingRequired(builder) ?: break
+            val name = missingRequired(builder, input, inputs) ?: break
             if (!required.add(name)) throw CheckFailure("${cls.name} keeps asking for ${name}.")
             setPlaceholder(builder, name)
         }
-        return builder to required
+        if (
+            input == "file" &&
+                builder.javaClass.methods.any { it.name == "isLongVideo" && it.parameterCount == 1 }
+        ) {
+            setPlaceholder(builder, "isLongVideo")
+        }
+        return SdkParams(builder, required, inputs.toList())
     }
 
     private fun query(cls: Class<*>): Shape {
@@ -304,7 +320,7 @@ internal class SdkShapes {
             type.actualTypeArguments[0]
         else type
 
-    private fun body(cls: Class<*>): Shape? {
+    private fun body(cls: Class<*>, input: String?): Shape? {
         val method =
             cls.methods.firstOrNull { it.name == "_body" && it.parameterCount == 0 } ?: return null
         val type = method.genericReturnType
@@ -317,7 +333,23 @@ internal class SdkShapes {
                         ?: throw CheckFailure(
                             "${cls.name} sends a multipart body without a Body class."
                         )
-                type(body)
+                val shape = type(body)
+                if (input == null) {
+                    shape
+                } else {
+                    val inputs = newParams(cls, input).inputs
+                    val props = (canon(shape, defs) as Obj).props
+                    Obj(
+                        props
+                            .filterKeys {
+                                (it !in inputs || it == input) &&
+                                    (input == "file" || it != "is_long_video")
+                            }
+                            .mapValues { (name, prop) ->
+                                if (name == input) prop.copy(required = true) else prop
+                            }
+                    )
+                }
             }
             else -> type(type)
         }

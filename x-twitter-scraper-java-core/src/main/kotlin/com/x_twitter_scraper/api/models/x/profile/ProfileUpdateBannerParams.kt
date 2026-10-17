@@ -12,6 +12,7 @@ import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.MultipartField
 import com.x_twitter_scraper.api.core.Params
+import com.x_twitter_scraper.api.core.checkExactlyOne
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
@@ -438,9 +439,7 @@ private constructor(
              * @throws IllegalStateException if any required field is unset.
              */
             fun build(): Body {
-                val hasUrl = !url.value.isMissing() && !url.value.isNull()
-                val hasFile = !file.value.isMissing() && !file.value.isNull()
-                check(hasUrl xor hasFile) { "Exactly one of `url` or `file` must be set" }
+                checkExactlyOne("url", url, "file", file)
                 return Body(
                     checkRequired("account", account),
                     url,

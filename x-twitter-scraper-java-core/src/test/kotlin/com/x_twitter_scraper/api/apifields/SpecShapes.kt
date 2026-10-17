@@ -152,7 +152,11 @@ internal class SpecShapes(private val spec: JsonNode) {
             }
             ?.map { (_, media) -> media.get("schema") } ?: emptyList()
 
-    fun operation(pathItem: JsonNode, operation: JsonNode): SpecOperation {
+    fun operation(
+        pathItem: JsonNode,
+        operation: JsonNode,
+        bodyType: String? = null,
+    ): SpecOperation {
         val params = linkedMapOf<String, JsonNode>()
         for (raw in pathItem.path("parameters") + operation.path("parameters")) {
             val param = if (raw.has("\$ref")) resolve(raw.get("\$ref").asText()) else raw
@@ -179,7 +183,10 @@ internal class SpecShapes(private val spec: JsonNode) {
                 if (it.has("\$ref")) resolve(it.get("\$ref").asText()) else it
             }
         val bodies =
-            schemas(requestBody?.get("content")) { it in bodyTypes }.map { shape(it).first }
+            schemas(requestBody?.get("content")) {
+                    it in bodyTypes && (bodyType == null || it == bodyType)
+                }
+                .map { shape(it).first }
         val responses =
             operation
                 .path("responses")

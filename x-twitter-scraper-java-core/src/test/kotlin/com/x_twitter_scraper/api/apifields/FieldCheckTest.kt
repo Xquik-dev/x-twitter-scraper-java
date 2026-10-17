@@ -32,6 +32,21 @@ internal class FieldCheckTest {
             "lifetime_purchased": {"type": "string"}, "lifetime_used": {"type": "string"}%s
           }}}}}}}}"""
 
+    private val mediaUpload =
+        """"/api/v1/x/media": {"post": {
+          "requestBody": {"content": {
+            "application/json": {"schema": {
+              "type": "object", "required": ["account", "url"],
+              "properties": {"account": {"type": "string"}, "url": {"type": "string"}}
+            }},
+            "multipart/form-data": {"schema": {
+              "type": "object", "required": ["account", "file"],
+              "properties": {"account": {"type": "string"}, "file": {"type": "string"}, "is_long_video": {"type": "boolean"}}
+            }}
+          }},
+          "responses": {}
+        }}"""
+
     private fun root(accepted: String = "[]", excluded: String = "[]"): File =
         Files.createTempDirectory("api-fields").toFile().apply {
             resolve("accepted-field-differences.json").writeText(accepted)
@@ -50,6 +65,48 @@ internal class FieldCheckTest {
         assertThat(check(credits.format("")))
             .isEqualTo(
                 "The SDK's fields match the API for 1 operation, and accepted-field-differences.json lists 0 accepted differences."
+            )
+    }
+
+    @Test
+    fun comparesJsonUploadWithoutLongVideo() {
+        assertThat(check(mediaUpload))
+            .isEqualTo(
+                "The SDK's fields match the API for 1 operation, and accepted-field-differences.json lists 0 accepted differences."
+            )
+    }
+
+    @Test
+    fun reportsAFieldMissingFromMultipartEvenWhenJsonHasIt() {
+        val spec =
+            mediaUpload
+                .replace("\"required\": [\"account\", \"file\"]", "\"required\": [\"file\"]")
+                .replace(
+                    "\"properties\": {\"account\": {\"type\": \"string\"}, \"file\"",
+                    "\"properties\": {\"file\"",
+                )
+
+        assertThat(failure(spec).lines())
+            .containsExactly(
+                "POST /api/v1/x/media request extra account",
+                "Fix each field above in the SDK, or list it in accepted-field-differences.json with a reason.",
+            )
+    }
+
+    @Test
+    fun reportsAFieldMissingFromJsonEvenWhenMultipartHasIt() {
+        val spec =
+            mediaUpload
+                .replace("\"required\": [\"account\", \"url\"]", "\"required\": [\"url\"]")
+                .replace(
+                    "\"properties\": {\"account\": {\"type\": \"string\"}, \"url\"",
+                    "\"properties\": {\"url\"",
+                )
+
+        assertThat(failure(spec).lines())
+            .containsExactly(
+                "POST /api/v1/x/media request extra account",
+                "Fix each field above in the SDK, or list it in accepted-field-differences.json with a reason.",
             )
     }
 
@@ -153,14 +210,28 @@ internal class FieldCheckTest {
     fun findsEverySdkMethodByTheRequestItSends() {
         val methods = Operations.methods(SdkShapes())
 
-        assertThat(methods).hasSize(180)
+        assertThat(methods).hasSize(183)
         assertThat(methods.map { "${it.httpMethod} /${it.segments.joinToString("/")}" })
             .contains(
                 "GET /api/v1/credits",
                 "GET /api/v1/x/tweets/sample/replies",
                 "DELETE /api/v1/x/dm/sample/messages/sample",
             )
-            .doesNotHaveDuplicates()
+        assertThat(methods.map { it.name to it.input }).doesNotHaveDuplicates()
+        assertThat(methods.map { "${it.httpMethod} /${it.segments.joinToString("/")}" }.distinct())
+            .hasSize(180)
+        listOf(
+                MediaUploadParams::class.java,
+                ProfileUpdateAvatarParams::class.java,
+                ProfileUpdateBannerParams::class.java,
+            )
+            .forEach { cls ->
+                assertThat(methods.filter { it.params == cls }.map { it.input to it.bodyType })
+                    .containsExactlyInAnyOrder(
+                        "url" to "application/json",
+                        "file" to "multipart/form-data",
+                    )
+            }
     }
 
     @Test
@@ -214,13 +285,20 @@ internal class FieldCheckTest {
             )
             .forEach { cls ->
                 val shapes = SdkShapes()
-                val (query, body) = shapes.params(cls)
-                val props = (canon(body!!, shapes.defs) as Obj).props
+                listOf("url", "file").forEach { input ->
+                    val (query, body) = shapes.params(cls, input)
+                    val props = (canon(body!!, shapes.defs) as Obj).props
 
-                assertThat((query as Obj).props).isEmpty()
-                assertThat(props.getValue("account").required).isTrue()
-                assertThat(props.getValue("url").required).isFalse()
-                assertThat(props.getValue("file").required).isFalse()
+                    assertThat((query as Obj).props).isEmpty()
+                    assertThat(props.getValue("account").required).isTrue()
+                    assertThat(props.getValue(input).required).isTrue()
+                    assertThat(props).doesNotContainKey(if (input == "url") "file" else "url")
+                    if (cls == MediaUploadParams::class.java && input == "file") {
+                        assertThat(props.getValue("is_long_video").required).isFalse()
+                    } else {
+                        assertThat(props).doesNotContainKey("is_long_video")
+                    }
+                }
             }
     }
 }

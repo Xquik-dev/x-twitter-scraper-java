@@ -24,6 +24,26 @@ internal class CheckTest {
     }
 
     @Test
+    fun exactlyOneValue() {
+        val present = MultipartField.of("present")
+        val absent =
+            listOf(MultipartField.of<String>(JsonMissing.of()), MultipartField.of<String>(null))
+
+        absent.forEach { field ->
+            checkExactlyOne("url", present, "file", field)
+            checkExactlyOne("url", field, "file", present)
+            absent.forEach { other ->
+                assertThatThrownBy { checkExactlyOne("url", field, "file", other) }
+                    .isInstanceOf(IllegalStateException::class.java)
+                    .hasMessage("Exactly one of `url` or `file` must be set")
+            }
+        }
+        assertThatThrownBy { checkExactlyOne("url", present, "file", present) }
+            .isInstanceOf(IllegalStateException::class.java)
+            .hasMessage("Exactly one of `url` or `file` must be set")
+    }
+
+    @Test
     fun knownValues() {
         assertThat(checkKnown("field", JsonField.of("known"))).isEqualTo("known")
         assertThat(checkKnown("field", MultipartField.of("known"))).isEqualTo("known")
