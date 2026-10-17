@@ -31,10 +31,6 @@ prepare_checks() {
         stub "scripts/$name" <<EOF
 #!/usr/bin/env bash
 echo "$name" >>"\$FAKE_LOGS/order"
-if [[ "\${FAKE_SLOW_CHECK:-}" == "$name" ]]; then
-    touch "\$FAKE_LOGS/slow-check-started"
-    sleep 1
-fi
 [[ "\${FAKE_FAILING_CHECK:-}" != "$name" ]]
 EOF
     done
@@ -211,25 +207,23 @@ test_an_api_coverage_failure_stops_the_run_before_the_slow_checks() {
 
 test_a_failing_check_removes_its_temp_dir() {
     prepare_checks
-    run_env+=("FAKE_FAILING_CHECK=lint")
+    stub scripts/lint < <(temp_step xquik-java-check)
 
     run_in_repo bin/check-local --no-status
 
-    assert_equal 1 "$run_status" "the exit code"
+    assert_equal 37 "$run_status" "the exit code"
     assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
 }
 
 test_a_terminated_run_removes_its_temp_dir_and_exits_143() {
     prepare_checks
-    run_env+=("FAKE_SLOW_CHECK=lint")
+    stub scripts/lint < <(temp_step xquik-java-check)
+    run_env+=("FAKE_TEMP_STEP_WAIT=1")
 
-    start_in_repo bin/check-local --no-status
-    wait_for_log slow-check-started
-    kill -TERM "$run_pid"
-    finish_run
+    signal_in_repo TERM bin/check-local --no-status
 
     assert_equal 143 "$run_status" "the exit code"
-    assert_equal "Check failed at Java and Kotlin formatting. Run ./scripts/format, then rerun." "$run_stderr" "stderr"
+    assert_contains "$run_stderr" "Check failed at Java and Kotlin formatting. Run ./scripts/format, then rerun." "stderr"
     assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
 }
 
@@ -302,6 +296,54 @@ test_an_unknown_option_stops_with_the_usage_line() {
     assert_equal 2 "$run_status" "the exit code"
     assert_equal "Unknown option --fast. Run bin/check-local or bin/check-local --no-status." "$run_stderr" "stderr"
     assert_equal "" "$(log_of order)" "the checks that ran"
+}
+
+test_a_hung_up_run_removes_its_temp_dir_and_exits_129() {
+    prepare_checks
+    stub scripts/lint < <(temp_step xquik-java-check)
+    run_env+=("FAKE_TEMP_STEP_WAIT=1")
+
+    signal_in_repo HUP bin/check-local --no-status
+
+    assert_equal 129 "$run_status" "the exit code"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
+test_an_interrupted_run_removes_its_temp_dir_and_exits_130() {
+    prepare_checks
+    stub scripts/lint < <(temp_step xquik-java-check)
+    run_env+=("FAKE_TEMP_STEP_WAIT=1")
+
+    signal_in_repo INT bin/check-local --no-status
+
+    assert_equal 130 "$run_status" "the exit code"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
+prepare_reproducibility() {
+    copy_file scripts/check-reproducible
+    copy_file scripts/lib/temp-paths.bash
+    stub gradlew < <(temp_step xquik-java-reproducibility)
+    sandbox_git init --quiet --initial-branch=main
+}
+
+test_a_failing_reproducible_build_removes_its_read_only_temp_dir() {
+    prepare_reproducibility
+
+    run_in_repo scripts/check-reproducible
+
+    assert_equal 37 "$run_status" "the exit code"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
+test_a_terminated_reproducible_build_removes_its_read_only_temp_dir_and_exits_143() {
+    prepare_reproducibility
+    run_env+=("FAKE_TEMP_STEP_WAIT=1")
+
+    signal_in_repo TERM scripts/check-reproducible
+
+    assert_equal 143 "$run_status" "the exit code"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
 }
 
 run_tests

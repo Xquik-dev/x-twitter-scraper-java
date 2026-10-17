@@ -21,6 +21,7 @@
 
 ### Chores
 
+* The check and release scripts remove their temp dirs on every exit, including a failed step, a signal and read-only build caches.
 * `bin/check-local` now fails when the API has an operation that the SDK neither sends nor lists in `excluded-operations.json`. CONTRIBUTING.md explains the check.
 * The dependency audit now works in a Git worktree under `.claude/worktrees`.
 

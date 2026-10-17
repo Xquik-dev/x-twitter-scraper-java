@@ -95,4 +95,26 @@ test_a_version_without_the_v_prefix_is_refused() {
     assert_equal "" "$(log_of curl)" "the downloads"
 }
 
+test_a_failing_step_removes_its_read_only_temp_dir() {
+    prepare_verification
+    fake gpg < <(temp_step xquik-java-verify)
+
+    run_in_repo bin/verify-release-signature v9.9.9
+
+    assert_equal 37 "$run_status" "the exit code"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
+test_a_terminated_run_removes_its_read_only_temp_dir_and_exits_143() {
+    prepare_verification
+    fake gpg < <(temp_step xquik-java-verify)
+    remove_tool sleep
+    run_env+=("FAKE_TEMP_STEP_WAIT=1")
+
+    signal_in_repo TERM bin/verify-release-signature v9.9.9
+
+    assert_equal 143 "$run_status" "the exit code"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
 run_tests

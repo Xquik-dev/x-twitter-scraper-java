@@ -32,8 +32,6 @@ check_label=""
 check_hint="Fix the error above, then rerun."
 passed_checks=()
 status_sha=""
-workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-java-check.XXXXXX")"
-temp_paths+=("$workspace")
 
 post_status() {
     if [[ -z "$status_sha" ]]; then
@@ -57,6 +55,8 @@ finish() {
 }
 trap finish EXIT
 exit_on_signals
+workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-java-check.XXXXXX")"
+temp_paths+=("$workspace")
 
 start_check() {
     check_name="$1"

@@ -48,10 +48,14 @@ case "$command" in
                 --language=*) echo "${argument#--language=}" >>"$FAKE_LOGS/codeql-language" ;;
             esac
         done
-        if [ -n "${FAKE_CODEQL_BUILD_FAILS:-}" ]; then
+        if [ -n "${FAKE_CODEQL_BUILD_FAILS:-}${FAKE_CODEQL_BUILD_WAITS:-}" ]; then
             mkdir -p "$database/cache"
             echo "Read-only cache." >"$database/cache/entry"
             chmod -R a-w "$database"
+            if [ -n "${FAKE_CODEQL_BUILD_WAITS:-}" ]; then
+                touch "$FAKE_LOGS/temp-step-started"
+                sleep 30
+            fi
             echo "The traced build failed." >&2
             exit 2
         fi
@@ -109,7 +113,8 @@ test_codeql_scans_a_copy_and_leaves_the_working_tree_alone() {
 ./example-core/src/main/kotlin/Client.kt
 ./example-core/src/test/kotlin/ClientTest.kt
 ./notes-in-progress.txt
-./scripts/codeql" "$(log_of codeql-copied-files)" "the copied files"
+./scripts/codeql
+./scripts/lib/temp-paths.bash" "$(log_of codeql-copied-files)" "the copied files"
     assert_not_contains "$(log_of codeql-source-root)" "$sandbox_repo" "the scanned folder"
     assert_equal "$tree_before" "$(sandbox_git status --porcelain)" "the working tree"
     assert_equal "" "$(ls "$sandbox/tmp")" "the temporary folder after the run"
@@ -182,6 +187,16 @@ test_a_failing_traced_build_fails_the_run() {
     assert_equal 2 "$run_status" "the exit code"
     assert_equal "The traced build failed." "$run_stderr" "stderr"
     assert_equal "" "$(log_of codeql-suite)" "the query runs"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
+test_a_terminated_run_removes_its_read_only_temp_dir_and_exits_143() {
+    prepare_codeql
+    run_env+=("FAKE_CODEQL_BUILD_WAITS=1")
+
+    signal_in_repo TERM scripts/codeql
+
+    assert_equal 143 "$run_status" "the exit code"
     assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
 }
 
