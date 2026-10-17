@@ -4,6 +4,7 @@
 
 ### Breaking changes
 
+* `AccountBulkRetryParams._body()` returns `AccountBulkRetryParams.Body` instead of `Optional<Map<String, JsonValue>>`, and bulk retry always sends a JSON body, which is `{}` when no account is named. Code that calls `_body()` must change, and compiled callers must rebuild.
 * `MediaUploadParams`, `ProfileUpdateAvatarParams` and `ProfileUpdateBannerParams` take exactly 1 of `url` or `file`, so their `url()` getters return `Optional<String>`. Builders that set `url` keep working.
 
 ### Features
