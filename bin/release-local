@@ -9,7 +9,6 @@ set +o xtrace
 
 cd -- "$(dirname -- "$0")/.."
 
-# shellcheck source=scripts/lib/temp-paths.bash
 source scripts/lib/temp-paths.bash
 
 readonly repository="Xquik-dev/x-twitter-scraper-java"

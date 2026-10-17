@@ -8,7 +8,6 @@ set -euo pipefail
 
 cd -- "$(dirname -- "$0")/.."
 
-# shellcheck source=scripts/lib/temp-paths.bash
 source scripts/lib/temp-paths.bash
 
 trap remove_temp_paths EXIT

@@ -16,7 +16,6 @@ esac
 
 cd -- "$(dirname -- "$0")/.."
 
-# shellcheck source=scripts/lib/temp-paths.bash
 source scripts/lib/temp-paths.bash
 
 readonly exclusion_file="excluded-operations.json"
