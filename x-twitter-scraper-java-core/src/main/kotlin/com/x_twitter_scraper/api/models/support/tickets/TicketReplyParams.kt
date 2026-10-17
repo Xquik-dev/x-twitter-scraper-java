@@ -12,8 +12,8 @@ import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.MultipartField
 import com.x_twitter_scraper.api.core.Params
+import com.x_twitter_scraper.api.core.checkAtLeastOne
 import com.x_twitter_scraper.api.core.checkKnown
-import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
 import com.x_twitter_scraper.api.core.toImmutable
@@ -39,10 +39,11 @@ private constructor(
     fun idempotencyKey(): Optional<String> = Optional.ofNullable(idempotencyKey)
 
     /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null.
+     * Body is optional when attachments are sent.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
-    fun body(): String = body.body()
+    fun body(): Optional<String> = body.body()
 
     /**
      * Returns the raw multipart value of [body].
@@ -74,18 +75,14 @@ private constructor(
 
     companion object {
 
-        /**
-         * Returns a mutable builder for constructing an instance of [TicketReplyParams].
-         *
-         * The following fields are required:
-         * ```java
-         * .body()
-         * ```
-         */
+        /** Returns a mutable builder for constructing an instance of [TicketReplyParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [TicketReplyParams]. */
+    /**
+     * A builder for [TicketReplyParams] with up to 4 attachments, 10 MiB per image, 25 MiB per
+     * video, and 30 MiB per request.
+     */
     class Builder internal constructor() {
 
         private var id: String? = null
@@ -117,6 +114,7 @@ private constructor(
         /** Sets the entire request body. */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
+        /** Body is optional when attachments are sent. */
         fun body(body: String) = apply { this.body.body(body) }
 
         /** Sets [Builder.body] to an arbitrary multipart value. */
@@ -257,13 +255,6 @@ private constructor(
          * Returns an immutable instance of [TicketReplyParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
-         *
-         * The following fields are required:
-         * ```java
-         * .body()
-         * ```
-         *
-         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): TicketReplyParams =
             TicketReplyParams(
@@ -305,10 +296,11 @@ private constructor(
     ) {
 
         /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null.
+         * Body is optional when attachments are sent.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
-        fun body(): String = body.value.getRequired("body")
+        fun body(): Optional<String> = body.value.getOptional("body")
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun attachments(): Optional<List<InputStream>> =
@@ -345,21 +337,17 @@ private constructor(
 
         companion object {
 
-            /**
-             * Returns a mutable builder for constructing an instance of [Body].
-             *
-             * The following fields are required:
-             * ```java
-             * .body()
-             * ```
-             */
+            /** Returns a mutable builder for constructing an instance of [Body]. */
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [Body]. */
+        /**
+         * A builder for [Body] with up to 4 attachments, 10 MiB per image, 25 MiB per video, and 30
+         * MiB per request.
+         */
         class Builder internal constructor() {
 
-            private var body: MultipartField<String>? = null
+            private var body: MultipartField<String> = MultipartField.of(JsonMissing.of())
             private var attachments: MultipartField<MutableList<InputStream>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -370,13 +358,20 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
+            /** Body is optional when attachments are sent. */
             fun body(body: String) = body(MultipartField.of(body))
 
             /** Sets [Builder.body] to an arbitrary multipart value. */
             fun body(body: MultipartField<String>) = apply { this.body = body }
 
             fun attachments(attachments: List<InputStream>) =
-                attachments(MultipartField.of(attachments))
+                attachments(
+                    MultipartField.builder<List<InputStream>>()
+                        .value(attachments)
+                        .filename("attachment")
+                        .contentType("application/octet-stream")
+                        .build()
+                )
 
             /** Sets [Builder.attachments] to an arbitrary multipart value. */
             fun attachments(attachments: MultipartField<List<InputStream>>) = apply {
@@ -390,9 +385,15 @@ private constructor(
              */
             fun addAttachment(attachment: InputStream) = apply {
                 this.attachments =
-                    (this.attachments ?: MultipartField.of(mutableListOf())).also {
-                        checkKnown("attachments", it).add(attachment)
-                    }
+                    (this.attachments
+                            ?: MultipartField.builder<MutableList<InputStream>>()
+                                .value(mutableListOf())
+                                .filename("attachment")
+                                .contentType("application/octet-stream")
+                                .build())
+                        .also {
+                            checkKnown("attachments", it).add(attachment)
+                        }
             }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -418,20 +419,15 @@ private constructor(
              * Returns an immutable instance of [Body].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
-             *
-             * The following fields are required:
-             * ```java
-             * .body()
-             * ```
-             *
-             * @throws IllegalStateException if any required field is unset.
              */
-            fun build(): Body =
-                Body(
-                    checkRequired("body", body),
+            fun build(): Body {
+                checkAtLeastOne("body", body, "attachments", attachments)
+                return Body(
+                    body,
                     (attachments ?: MultipartField.of(JsonMissing.of())).map { it.toImmutable() },
                     additionalProperties.toMutableMap(),
                 )
+            }
         }
 
         private var validated: Boolean = false

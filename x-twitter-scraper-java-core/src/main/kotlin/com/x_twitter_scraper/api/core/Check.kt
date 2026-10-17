@@ -16,6 +16,29 @@ fun <T : Any> checkRequired(name: String, value: T?): T =
     checkNotNull(value) { "`$name` is required, but was not set" }
 
 @JvmSynthetic
+internal fun checkAtLeastOne(
+    firstName: String,
+    first: MultipartField<*>?,
+    secondName: String,
+    second: MultipartField<*>?,
+) {
+    check(
+        listOf(first, second).any { field ->
+            when (val value = field?.value) {
+                null,
+                is JsonMissing,
+                is JsonNull -> false
+                is KnownValue -> (value.value as? Collection<*>)?.isNotEmpty() ?: true
+                is JsonArray -> value.values.isNotEmpty()
+                else -> true
+            }
+        }
+    ) {
+        "At least one of `$firstName` or `$secondName` must be set"
+    }
+}
+
+@JvmSynthetic
 internal fun <T : Any> checkKnown(name: String, value: JsonField<T>): T =
     value.asKnown().orElseThrow {
         IllegalStateException("`$name` is not a known type: ${value.javaClass.simpleName}")

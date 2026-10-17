@@ -4,10 +4,13 @@
 
 ### Breaking changes
 
+* `TicketCreateParams.body()` and `TicketReplyParams.body()` now return `Optional<String>` and no longer require a body.
+* Ticket and reply builders now require `body` or non-empty `attachments`.
 * `MediaUploadParams`, `ProfileUpdateAvatarParams` and `ProfileUpdateBannerParams` take exactly 1 of `url` or `file`, so their `url()` getters return `Optional<String>`. Builders that set `url` keep working.
 
 ### Features
 
+* Tickets and replies can send attachments without a body.
 * `UserProfile.IdentityVerification` gains optional `overrideVerifiedYear` for the verification start year X displays on profiles and user objects in tweets.
 * `client.x().tweets()` gains `listTop`, `embed`, `getHiddenReplies`, `getInsights`, `getRetweeterIds`, `checkRepost`, `getSubtitles`, `translate` and `resolveLinks`. Each has typed params and a typed response from the current API spec.
 * `client.x().users()` gains `retrieveBatchTweets`, `retrieveAffiliates`, `retrieveArticles`, `retrieveFollowerIds`, `retrieveFollowingIds`, `retrieveHighlights`, `retrieveInsights`, `retrieveListMemberships`, `retrieveLists`, `retrieveLive`, `retrieveSimilar`, `retrieveSubscriptions` and `translateBio`.
@@ -28,6 +31,7 @@
 ### Bug fixes
 
 * Ticket creation sends default attachment streams as `application/octet-stream` with a neutral filename so the server can detect their type.
+* Ticket replies now send attachment filenames so the API keeps the uploads.
 * Media, avatar and banner uploads detect file types from stream headers and preserve every byte, including MP4 streams for long videos.
 * Follower, following and verified follower response unions select the coverage variant when the response contains `diagnostic`.
 * `XAccount` and `XAccountDetail` drop a timestamp field the API stopped returning.
