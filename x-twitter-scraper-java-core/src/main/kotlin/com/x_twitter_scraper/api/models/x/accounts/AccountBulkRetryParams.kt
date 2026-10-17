@@ -4,27 +4,53 @@
 
 package com.x_twitter_scraper.api.models.x.accounts
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.x_twitter_scraper.api.core.ExcludeMissing
+import com.x_twitter_scraper.api.core.JsonField
+import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.Params
+import com.x_twitter_scraper.api.core.checkKnown
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
 import com.x_twitter_scraper.api.core.toImmutable
+import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /**
- * Clears loginFailedAt and loginFailureReason for all accounts with transient or automated failure
- * reasons, making them eligible for retry on next use.
+ * Clears loginFailedAt and loginFailureReason for every account with a transient or automated
+ * failure reason. Each can then retry on its next use. Name accounts in accountIds to retry only
+ * those. Needs a dashboard session, since each retry signs in to X again.
  */
 class AccountBulkRetryParams
 private constructor(
+    private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
-    private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
 
-    /** Additional body properties to send with the request. */
-    fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
+    /**
+     * IDs of the X accounts to retry. Accounts that failed for another reason, or belong to someone
+     * else, stay as they are.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun accountIds(): Optional<List<String>> = body.accountIds()
+
+    /**
+     * Returns the raw JSON value of [accountIds].
+     *
+     * Unlike [accountIds], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _accountIds(): JsonField<List<String>> = body._accountIds()
+
+    fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -45,16 +71,53 @@ private constructor(
     /** A builder for [AccountBulkRetryParams]. */
     class Builder internal constructor() {
 
+        private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
-        private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(accountBulkRetryParams: AccountBulkRetryParams) = apply {
+            body = accountBulkRetryParams.body.toBuilder()
             additionalHeaders = accountBulkRetryParams.additionalHeaders.toBuilder()
             additionalQueryParams = accountBulkRetryParams.additionalQueryParams.toBuilder()
-            additionalBodyProperties =
-                accountBulkRetryParams.additionalBodyProperties.toMutableMap()
+        }
+
+        /** Sets the entire request body. */
+        fun body(body: Body) = apply { this.body = body.toBuilder() }
+
+        /**
+         * IDs of the X accounts to retry. Accounts that failed for another reason, or belong to
+         * someone else, stay as they are.
+         */
+        fun accountIds(accountIds: List<String>) = apply { body.accountIds(accountIds) }
+
+        /** Sets [Builder.accountIds] to an arbitrary JSON value. */
+        fun accountIds(accountIds: JsonField<List<String>>) = apply { body.accountIds(accountIds) }
+
+        /**
+         * Adds a single [String] to [accountIds].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addAccountId(accountId: String) = apply { body.addAccountId(accountId) }
+
+        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
+            body.additionalProperties(additionalBodyProperties)
+        }
+
+        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
+            body.putAdditionalProperty(key, value)
+        }
+
+        fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
+            apply {
+                body.putAllAdditionalProperties(additionalBodyProperties)
+            }
+
+        fun removeAdditionalBodyProperty(key: String) = apply { body.removeAdditionalProperty(key) }
+
+        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
+            body.removeAllAdditionalProperties(keys)
         }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
@@ -155,28 +218,6 @@ private constructor(
             additionalQueryParams.removeAll(keys)
         }
 
-        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
-            this.additionalBodyProperties.clear()
-            putAllAdditionalBodyProperties(additionalBodyProperties)
-        }
-
-        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
-            additionalBodyProperties.put(key, value)
-        }
-
-        fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
-            apply {
-                this.additionalBodyProperties.putAll(additionalBodyProperties)
-            }
-
-        fun removeAdditionalBodyProperty(key: String) = apply {
-            additionalBodyProperties.remove(key)
-        }
-
-        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalBodyProperty)
-        }
-
         /**
          * Returns an immutable instance of [AccountBulkRetryParams].
          *
@@ -184,18 +225,180 @@ private constructor(
          */
         fun build(): AccountBulkRetryParams =
             AccountBulkRetryParams(
+                body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
-                additionalBodyProperties.toImmutable(),
             )
     }
 
-    fun _body(): Optional<Map<String, JsonValue>> =
-        Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
+    fun _body(): Body = body
 
     override fun _headers(): Headers = additionalHeaders
 
     override fun _queryParams(): QueryParams = additionalQueryParams
+
+    class Body
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val accountIds: JsonField<List<String>>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("accountIds")
+            @ExcludeMissing
+            accountIds: JsonField<List<String>> = JsonMissing.of()
+        ) : this(accountIds, mutableMapOf())
+
+        /**
+         * IDs of the X accounts to retry. Accounts that failed for another reason, or belong to
+         * someone else, stay as they are.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun accountIds(): Optional<List<String>> = accountIds.getOptional("accountIds")
+
+        /**
+         * Returns the raw JSON value of [accountIds].
+         *
+         * Unlike [accountIds], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("accountIds")
+        @ExcludeMissing
+        fun _accountIds(): JsonField<List<String>> = accountIds
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [Body]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Body]. */
+        class Builder internal constructor() {
+
+            private var accountIds: JsonField<MutableList<String>>? = null
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(body: Body) = apply {
+                accountIds = body.accountIds.map { it.toMutableList() }
+                additionalProperties = body.additionalProperties.toMutableMap()
+            }
+
+            /**
+             * IDs of the X accounts to retry. Accounts that failed for another reason, or belong to
+             * someone else, stay as they are.
+             */
+            fun accountIds(accountIds: List<String>) = accountIds(JsonField.of(accountIds))
+
+            /** Sets [Builder.accountIds] to an arbitrary JSON value. */
+            fun accountIds(accountIds: JsonField<List<String>>) = apply {
+                this.accountIds = accountIds.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [String] to [accountIds].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addAccountId(accountId: String) = apply {
+                accountIds =
+                    (accountIds ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("accountIds", it).add(accountId)
+                    }
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Body].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): Body =
+                Body(
+                    (accountIds ?: JsonMissing.of()).map { it.toImmutable() },
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): Body = apply {
+            if (validated) {
+                return@apply
+            }
+
+            accountIds()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        @JvmSynthetic internal fun validity(): Int = accountIds.asKnown().getOrNull()?.size ?: 0
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Body &&
+                accountIds == other.accountIds &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(accountIds, additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "Body{accountIds=$accountIds, additionalProperties=$additionalProperties}"
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -203,14 +406,13 @@ private constructor(
         }
 
         return other is AccountBulkRetryParams &&
+            body == other.body &&
             additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams &&
-            additionalBodyProperties == other.additionalBodyProperties
+            additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(additionalHeaders, additionalQueryParams, additionalBodyProperties)
+    override fun hashCode(): Int = Objects.hash(body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "AccountBulkRetryParams{additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "AccountBulkRetryParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

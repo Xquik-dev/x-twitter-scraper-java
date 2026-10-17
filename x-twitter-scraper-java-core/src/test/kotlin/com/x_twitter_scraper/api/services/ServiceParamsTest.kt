@@ -6,16 +6,21 @@ package com.x_twitter_scraper.api.services
 
 import com.github.tomakehurst.wiremock.client.WireMock.anyUrl
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.equalToJson
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.ok
+import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.github.tomakehurst.wiremock.client.WireMock.verify
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo
 import com.github.tomakehurst.wiremock.junit5.WireMockTest
 import com.x_twitter_scraper.api.client.XTwitterScraperClient
 import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClient
 import com.x_twitter_scraper.api.models.account.AccountRetrieveParams
+import com.x_twitter_scraper.api.models.x.accounts.AccountBulkRetryParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams
 import java.time.LocalDate
 import org.junit.jupiter.api.BeforeEach
@@ -54,6 +59,34 @@ internal class ServiceParamsTest {
             getRequestedFor(anyUrl())
                 .withHeader("Secret-Header", equalTo("42"))
                 .withQueryParam("secret_query_param", equalTo("42"))
+        )
+    }
+
+    @Test
+    fun bulkRetryWithAccountIds() {
+        val accountService = client.x().accounts()
+        stubFor(post(urlPathEqualTo("/x/accounts/bulk-retry")).willReturn(ok("{}")))
+
+        accountService.bulkRetry(
+            AccountBulkRetryParams.builder().accountIds(listOf("1")).addAccountId("xacct_2").build()
+        )
+
+        verify(
+            postRequestedFor(urlPathEqualTo("/x/accounts/bulk-retry"))
+                .withRequestBody(equalToJson("{\"accountIds\": [\"1\", \"xacct_2\"]}"))
+        )
+    }
+
+    @Test
+    fun bulkRetryWithoutAccountIds() {
+        val accountService = client.x().accounts()
+        stubFor(post(urlPathEqualTo("/x/accounts/bulk-retry")).willReturn(ok("{}")))
+
+        accountService.bulkRetry()
+
+        verify(
+            postRequestedFor(urlPathEqualTo("/x/accounts/bulk-retry"))
+                .withRequestBody(equalTo("{}"))
         )
     }
 
