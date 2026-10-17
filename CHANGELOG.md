@@ -4,7 +4,8 @@
 
 ### Breaking changes
 
-* `MediaUploadParams`, `ProfileUpdateAvatarParams` and `ProfileUpdateBannerParams` take exactly 1 of `url` or `file`, so their `url()` getters return `Optional<String>`. Builders that set `url` keep working.
+* `MediaUploadParams`, `ProfileUpdateAvatarParams` and `ProfileUpdateBannerParams` now return `Optional<String>` instead of `String` from `url()`. Builders no longer require `url` and take exactly one of `url` or `file`.
+* Media uploads now reject `isLongVideo` without a file.
 
 ### Features
 
@@ -28,7 +29,7 @@
 ### Bug fixes
 
 * Ticket creation sends default attachment streams as `application/octet-stream` with a neutral filename so the server can detect their type.
-* Media, avatar and banner uploads detect file types from stream headers and preserve every byte, including MP4 streams for long videos.
+* Media, avatar and banner uploads detect supported image formats and MP4 brands from stream headers and preserve every byte. Other `ftyp` brands use `application/octet-stream` with the filename `upload`.
 * Follower, following and verified follower response unions select the coverage variant when the response contains `diagnostic`.
 * `XAccount` and `XAccountDetail` drop a timestamp field the API stopped returning.
 

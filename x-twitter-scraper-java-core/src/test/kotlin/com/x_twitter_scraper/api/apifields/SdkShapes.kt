@@ -45,6 +45,14 @@ private val leafClasses: Set<Class<*>> =
 
 private val requiredMessage = Regex("^`(\\w+)` is required, but was not set$")
 private val alternativeMessage = Regex("^Exactly one of `(\\w+)` or `(\\w+)` must be set$")
+private val requiresMessage = Regex("^`(\\w+)` requires `(\\w+)`$")
+
+internal data class SdkParams(
+    val builder: Any,
+    val required: Set<String>,
+    val inputs: List<String>,
+    val requires: Map<String, String> = emptyMap(),
+)
 
 internal class SdkShapes {
 
@@ -165,7 +173,11 @@ internal class SdkShapes {
         }
     }
 
-    private fun missingRequired(builder: Any): String? =
+    private fun missingRequired(
+        builder: Any,
+        input: String? = null,
+        inputs: MutableSet<String> = linkedSetOf(),
+    ): String? =
         try {
             builder.javaClass.getMethod("build").invoke(builder)
             null
@@ -173,8 +185,10 @@ internal class SdkShapes {
             val message = e.targetException.message.orEmpty()
             val alternative = alternativeMessage.matchEntire(message)
             if (alternative != null) {
-                setPlaceholder(builder, alternative.groupValues[1])
-                missingRequired(builder)
+                val names = alternative.groupValues.drop(1)
+                inputs.addAll(names)
+                setPlaceholder(builder, input ?: names.first())
+                missingRequired(builder, input, inputs)
             } else {
                 requiredMessage.find(message)?.groupValues?.get(1) ?: throw e.targetException
             }
@@ -230,19 +244,55 @@ internal class SdkShapes {
             .toSet()
     }
 
-    fun params(cls: Class<*>): Pair<Shape, Shape?> = query(cls) to body(cls)
+    fun params(cls: Class<*>, input: String? = null): Pair<Shape, Shape?> =
+        query(cls) to body(cls, input)
 
-    fun newParams(cls: Class<*>): Pair<Any, Set<String>> {
+    fun newParams(cls: Class<*>, input: String? = null): SdkParams {
+        val params = requiredParams(cls, input)
+        val requires = linkedMapOf<String, String>()
+        val fields =
+            cls.methods
+                .filter {
+                    it.name.startsWith("_") &&
+                        it.parameterCount == 0 &&
+                        it.returnType == MultipartField::class.java
+                }
+                .map { it.name.removePrefix("_") }
+                .filter { it !in params.required && it !in params.inputs }
+        for (alternative in params.inputs) {
+            val builder = requiredParams(cls, alternative).builder
+            val base = builder.javaClass.getMethod("build").invoke(builder)
+            for (name in fields) {
+                val changed = base.javaClass.getMethod("toBuilder").invoke(base)
+                setPlaceholder(changed, name)
+                try {
+                    changed.javaClass.getMethod("build").invoke(changed)
+                } catch (e: InvocationTargetException) {
+                    val match =
+                        requiresMessage.matchEntire(e.targetException.message.orEmpty())
+                            ?: throw e.targetException
+                    requires[match.groupValues[1]] = match.groupValues[2]
+                }
+            }
+        }
+        for ((name, requiredInput) in requires) {
+            if (input == requiredInput) setPlaceholder(params.builder, name)
+        }
+        return params.copy(requires = requires)
+    }
+
+    private fun requiredParams(cls: Class<*>, input: String?): SdkParams {
         val builder =
             builderOf(cls)
                 ?: throw CheckFailure("${cls.name} has no builder the field check can read.")
         val required = linkedSetOf<String>()
+        val inputs = linkedSetOf<String>()
         while (true) {
-            val name = missingRequired(builder) ?: break
+            val name = missingRequired(builder, input, inputs) ?: break
             if (!required.add(name)) throw CheckFailure("${cls.name} keeps asking for ${name}.")
             setPlaceholder(builder, name)
         }
-        return builder to required
+        return SdkParams(builder, required, inputs.toList())
     }
 
     private fun query(cls: Class<*>): Shape {
@@ -304,7 +354,7 @@ internal class SdkShapes {
             type.actualTypeArguments[0]
         else type
 
-    private fun body(cls: Class<*>): Shape? {
+    private fun body(cls: Class<*>, input: String?): Shape? {
         val method =
             cls.methods.firstOrNull { it.name == "_body" && it.parameterCount == 0 } ?: return null
         val type = method.genericReturnType
@@ -317,7 +367,29 @@ internal class SdkShapes {
                         ?: throw CheckFailure(
                             "${cls.name} sends a multipart body without a Body class."
                         )
-                type(body)
+                val shape = type(body)
+                if (input == null) {
+                    shape
+                } else {
+                    val params = newParams(cls, input)
+                    val names =
+                        modelProperties(body).associate { (wire, method) ->
+                            wire to method.name.removePrefix("_")
+                        }
+                    val props = (canon(shape, defs) as Obj).props
+                    Obj(
+                        props
+                            .filterKeys { wire ->
+                                val name = names.getValue(wire)
+                                val requiredInput = params.requires[name]
+                                (name !in params.inputs || name == input) &&
+                                    (requiredInput == null || requiredInput == input)
+                            }
+                            .mapValues { (wire, prop) ->
+                                if (names[wire] == input) prop.copy(required = true) else prop
+                            }
+                    )
+                }
             }
             else -> type(type)
         }

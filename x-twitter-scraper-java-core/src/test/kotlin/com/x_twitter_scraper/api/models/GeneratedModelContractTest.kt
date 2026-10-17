@@ -265,24 +265,27 @@ internal class GeneratedModelContractTest {
 
     private fun verifyParams(paramClass: Class<*>) {
         when (paramClass) {
-            MediaUploadParams::class.java,
+            MediaUploadParams::class.java -> {
+                verifyParams(paramClass, setOf("file", "isLongVideo"))
+                verifyParams(paramClass, setOf("url"))
+            }
             ProfileUpdateAvatarParams::class.java,
             ProfileUpdateBannerParams::class.java -> {
-                verifyParams(paramClass, "file")
-                verifyParams(paramClass, "url")
+                verifyParams(paramClass, setOf("file"))
+                verifyParams(paramClass, setOf("url"))
             }
-            else -> verifyParams(paramClass, null)
+            else -> verifyParams(paramClass, emptySet())
         }
     }
 
-    private fun verifyParams(paramClass: Class<*>, omittedField: String?) {
+    private fun verifyParams(paramClass: Class<*>, omittedFields: Set<String>) {
         val builder = newBuilder(paramClass)
         val unsupportedMethods =
             applyBuilderMutators(
                 builder,
                 { type ->
                     if (
-                        omittedField != null &&
+                        omittedFields.isNotEmpty() &&
                             type is Class<*> &&
                             type.enclosingClass == paramClass &&
                             type.simpleName == "Body"
@@ -291,7 +294,7 @@ internal class GeneratedModelContractTest {
                         assertThat(
                                 applyBuilderMutators(
                                     bodyBuilder,
-                                    shouldSkip = { it.name == omittedField },
+                                    shouldSkip = { it.name in omittedFields },
                                 )
                             )
                             .describedAs("Unsupported builder methods for ${type.name}")
@@ -301,7 +304,7 @@ internal class GeneratedModelContractTest {
                         sampleValue(type)
                     }
                 },
-                { it.name == omittedField },
+                { it.name in omittedFields },
             )
 
         assertThat(unsupportedMethods)
@@ -331,7 +334,7 @@ internal class GeneratedModelContractTest {
                 val value = getter.invoke(params)
                 assertThat(value).describedAs("${paramClass.name}.${getter.name}").isNotNull()
                 if (value is Optional<*> && !getter.name.startsWith("_")) {
-                    if (getter.name == omittedField) {
+                    if (getter.name in omittedFields) {
                         assertThat(value).describedAs("${paramClass.name}.${getter.name}").isEmpty()
                     } else {
                         assertThat(value)
