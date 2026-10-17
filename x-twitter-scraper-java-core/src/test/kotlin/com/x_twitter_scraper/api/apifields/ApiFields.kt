@@ -15,10 +15,13 @@ import kotlin.system.exitProcess
 private const val ACCEPTED_FILE = "accepted-field-differences.json"
 private const val EXCLUDED_FILE = "excluded-operations.json"
 
-private val httpMethods = listOf("get", "put", "post", "delete", "options", "head", "patch", "trace")
+private val httpMethods =
+    listOf("get", "put", "post", "delete", "options", "head", "patch", "trace")
 
 private val differencePattern =
-    Regex("^(${httpMethods.joinToString("|") { it.uppercase() }}) /\\S* (request|response) (missing|extra|enum|required|nullable) \\S+$")
+    Regex(
+        "^(${httpMethods.joinToString("|") { it.uppercase() }}) /\\S* (request|response) (missing|extra|enum|required|nullable) \\S+$"
+    )
 
 internal fun comparable(operation: String): String = operation.replace(Regex("\\{[^}]*\\}"), "{}")
 
@@ -49,7 +52,11 @@ internal class FieldCheck(private val spec: JsonNode, private val root: File) {
                     sdk.getValue(id).flatMap { method ->
                         val (query, body) = shapes.params(method.params)
                         val response = method.response?.let { shapes.type(it) }
-                        compareOperation(specShapes.operation(pathItem, operation), SdkOperation(query, body, response), shapes.defs)
+                        compareOperation(
+                                specShapes.operation(pathItem, operation),
+                                SdkOperation(query, body, response),
+                                shapes.defs,
+                            )
                             .map { "$id ${it.side} ${it.kind} ${it.path}" }
                     }
                 }
@@ -58,11 +65,13 @@ internal class FieldCheck(private val spec: JsonNode, private val root: File) {
         val foundKeys = found.map(::comparable).toSet()
         val differences = found.filter { comparable(it) !in acceptedKeys }
         val stale =
-            accepted.filter { comparable(it) !in foundKeys }
+            accepted
+                .filter { comparable(it) !in foundKeys }
                 .map { "$ACCEPTED_FILE lists $it, which the check no longer finds. Remove it." }
         if (differences.isNotEmpty() || stale.isNotEmpty()) {
             val next =
-                if (differences.isNotEmpty()) "Fix each field above in the SDK, or list it in $ACCEPTED_FILE with a reason."
+                if (differences.isNotEmpty())
+                    "Fix each field above in the SDK, or list it in $ACCEPTED_FILE with a reason."
                 else "Remove each difference above from $ACCEPTED_FILE."
             throw CheckFailure((differences + stale + next).joinToString("\n"))
         }
@@ -70,14 +79,19 @@ internal class FieldCheck(private val spec: JsonNode, private val root: File) {
             "$ACCEPTED_FILE lists ${plural(accepted.size, "accepted difference")}."
     }
 
-    private fun plural(count: Int, noun: String): String = "$count $noun${if (count == 1) "" else "s"}"
+    private fun plural(count: Int, noun: String): String =
+        "$count $noun${if (count == 1) "" else "s"}"
 
     private fun specOperations(): List<Pair<String, Pair<JsonNode, JsonNode>>> {
         val root = firstUrl(spec.get("servers"))
         return spec.path("paths").properties().flatMap { (path, item) ->
             httpMethods.mapNotNull { method ->
                 item.get(method)?.let { operation ->
-                    val server = firstUrl(operation.get("servers")) ?: firstUrl(item.get("servers")) ?: root ?: ""
+                    val server =
+                        firstUrl(operation.get("servers"))
+                            ?: firstUrl(item.get("servers"))
+                            ?: root
+                            ?: ""
                     "${method.uppercase()} ${urlPath(server)}$path" to (item to operation)
                 }
             }
@@ -88,7 +102,9 @@ internal class FieldCheck(private val spec: JsonNode, private val root: File) {
         servers?.takeIf { it.isArray && !it.isEmpty }?.get(0)?.get("url")?.asText()
 
     private fun urlPath(url: String): String =
-        url.replace(Regex("^[A-Za-z][A-Za-z0-9+.-]*://[^/]*"), "").replace(Regex("[?#].*$"), "").trimEnd('/')
+        url.replace(Regex("^[A-Za-z][A-Za-z0-9+.-]*://[^/]*"), "")
+            .replace(Regex("[?#].*$"), "")
+            .trimEnd('/')
 
     private fun sdkOperations(shapes: SdkShapes, ids: List<String>): Map<String, List<SdkMethod>> {
         val templates = ids.map { id -> id to Operations.segments(id.substringAfter(" ")) }
@@ -102,29 +118,40 @@ internal class FieldCheck(private val spec: JsonNode, private val root: File) {
             .filter { (id, segments) ->
                 id.substringBefore(" ") == method.httpMethod &&
                     segments.size == method.segments.size &&
-                    segments.zip(method.segments).all { (template, actual) -> template.startsWith("{") || template == actual }
+                    segments.zip(method.segments).all { (template, actual) ->
+                        template.startsWith("{") || template == actual
+                    }
             }
             .maxByOrNull { (_, segments) -> segments.count { !it.startsWith("{") } }
             ?.first
 
     private fun readExcluded(): Set<String> =
-        readJson(EXCLUDED_FILE).flatMap { group -> group.path("operations").map { comparable(it.asText()) } }.toSet()
+        readJson(EXCLUDED_FILE)
+            .flatMap { group -> group.path("operations").map { comparable(it.asText()) } }
+            .toSet()
 
     private fun readAccepted(): List<String> {
         val groups = readJson(ACCEPTED_FILE)
-        fun invalid(problem: String): Nothing = throw CheckFailure("$ACCEPTED_FILE is not valid. $problem.")
+        fun invalid(problem: String): Nothing =
+            throw CheckFailure("$ACCEPTED_FILE is not valid. $problem.")
         if (!groups.isArray) invalid("It must hold a list of groups")
         val seen = mutableSetOf<String>()
         groups.forEachIndexed { index, group ->
             val label = "Group ${index + 1}"
             if (!group.isObject) invalid("$label is not an object")
-            group.fieldNames().asSequence().firstOrNull { it != "reason" && it != "differences" }?.let {
-                invalid("$label has the unknown field $it")
-            }
+            group
+                .fieldNames()
+                .asSequence()
+                .firstOrNull { it != "reason" && it != "differences" }
+                ?.let {
+                    invalid("$label has the unknown field $it")
+                }
             val reason = group.get("reason")
-            if (reason == null || !reason.isTextual || reason.asText().isBlank()) invalid("$label needs a reason")
+            if (reason == null || !reason.isTextual || reason.asText().isBlank())
+                invalid("$label needs a reason")
             val differences = group.get("differences")
-            if (differences == null || !differences.isArray || differences.isEmpty) invalid("$label needs at least 1 difference")
+            if (differences == null || !differences.isArray || differences.isEmpty)
+                invalid("$label needs at least 1 difference")
             for (entry in differences) {
                 if (!entry.isTextual || !differencePattern.matches(entry.asText())) {
                     invalid(
@@ -132,7 +159,8 @@ internal class FieldCheck(private val spec: JsonNode, private val root: File) {
                             "such as GET /api/v1/events response missing events[].data.followedAt"
                     )
                 }
-                if (!seen.add(comparable(entry.asText()))) invalid("It lists ${entry.asText()} more than once")
+                if (!seen.add(comparable(entry.asText())))
+                    invalid("It lists ${entry.asText()} more than once")
             }
         }
         return groups.flatMap { group -> group.get("differences").map { it.asText() } }
@@ -140,11 +168,14 @@ internal class FieldCheck(private val spec: JsonNode, private val root: File) {
 
     private fun readJson(name: String): JsonNode {
         val file = File(root, name)
-        if (!file.isFile) throw CheckFailure("$name is not valid. The repository root has no such file.")
+        if (!file.isFile)
+            throw CheckFailure("$name is not valid. The repository root has no such file.")
         return try {
             mapper.readTree(file)
         } catch (e: JsonProcessingException) {
-            throw CheckFailure("$name is not valid. It is not JSON near line ${e.location?.lineNr ?: 1}.")
+            throw CheckFailure(
+                "$name is not valid. It is not JSON near line ${e.location?.lineNr ?: 1}."
+            )
         }
     }
 }

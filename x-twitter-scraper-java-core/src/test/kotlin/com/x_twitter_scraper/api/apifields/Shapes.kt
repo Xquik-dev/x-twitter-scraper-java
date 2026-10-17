@@ -31,13 +31,20 @@ internal fun leaf(values: Collection<Any?>?): Leaf =
 
 private fun opaque(shape: Shape): Boolean = shape is Free || shape is Cycle || shape is Unknown
 
-internal fun canon(shape: Shape, defs: Map<String, Shape> = emptyMap(), stack: List<String> = emptyList()): Shape =
+internal fun canon(
+    shape: Shape,
+    defs: Map<String, Shape> = emptyMap(),
+    stack: List<String> = emptyList(),
+): Shape =
     when (shape) {
         is Ref ->
             if (shape.name in stack) Cycle
             else canon(defs.getValue(shape.name), defs, stack + shape.name)
         is Obj ->
-            Obj(shape.props.mapValues { (_, p) -> p.copy(shape = canon(p.shape, defs, stack)) }, shape.open)
+            Obj(
+                shape.props.mapValues { (_, p) -> p.copy(shape = canon(p.shape, defs, stack)) },
+                shape.open,
+            )
         is Arr -> Arr(canon(shape.items, defs, stack))
         is Union -> mergeUnion(shape.variants.map { canon(it, defs, stack) })
         else -> shape
@@ -116,7 +123,13 @@ internal fun intersect(all: List<Shape>): Shape {
 private fun topLevel(shape: Shape?, kind: String, side: String): List<Difference> =
     if (shape is Obj) shape.props.keys.map { Difference(side, kind, it) } else emptyList()
 
-private fun compareTree(spec: Shape, sdk: Shape, path: String, side: String, out: MutableList<Difference>) {
+private fun compareTree(
+    spec: Shape,
+    sdk: Shape,
+    path: String,
+    side: String,
+    out: MutableList<Difference>,
+) {
     if (opaque(spec) || opaque(sdk)) return
     if (spec is Obj && sdk is Obj) {
         for ((name, specProp) in spec.props) {
@@ -126,10 +139,18 @@ private fun compareTree(spec: Shape, sdk: Shape, path: String, side: String, out
                 out.add(Difference(side, "missing", here))
                 continue
             }
-            if (specProp.required != null && sdkProp.required != null && specProp.required != sdkProp.required) {
+            if (
+                specProp.required != null &&
+                    sdkProp.required != null &&
+                    specProp.required != sdkProp.required
+            ) {
                 out.add(Difference(side, "required", here))
             }
-            if (specProp.nullable != null && sdkProp.nullable != null && specProp.nullable != sdkProp.nullable) {
+            if (
+                specProp.nullable != null &&
+                    sdkProp.nullable != null &&
+                    specProp.nullable != sdkProp.nullable
+            ) {
                 out.add(Difference(side, "nullable", here))
             }
             compareTree(specProp.shape, sdkProp.shape, here, side, out)
@@ -157,10 +178,17 @@ private fun compareTree(spec: Shape, sdk: Shape, path: String, side: String, out
 
 private fun normalized(name: String): String = name.lowercase().replace(Regex("[^a-z0-9]"), "")
 
-private fun withoutParams(shape: Shape?, nonBodyParams: List<String>, specNames: Set<String>): Shape? {
+private fun withoutParams(
+    shape: Shape?,
+    nonBodyParams: List<String>,
+    specNames: Set<String>,
+): Shape? {
     if (shape !is Obj) return shape
     val names = nonBodyParams.map(::normalized).toSet()
-    return Obj(shape.props.filterKeys { !(normalized(it) in names && it !in specNames) }, shape.open)
+    return Obj(
+        shape.props.filterKeys { !(normalized(it) in names && it !in specNames) },
+        shape.open,
+    )
 }
 
 internal data class SpecOperation(

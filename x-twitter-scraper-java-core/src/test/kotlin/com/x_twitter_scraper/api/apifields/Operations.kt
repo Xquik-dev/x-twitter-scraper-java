@@ -45,7 +45,9 @@ private object RecordingHttpClient : HttpClient {
     override fun close() {}
 }
 
-/** Finds each SDK method by calling it with a client that records the request instead of sending it. */
+/**
+ * Finds each SDK method by calling it with a client that records the request instead of sending it.
+ */
 internal object Operations {
 
     fun basePath(): List<String> = segments(URI(ClientOptions.PRODUCTION_URL).path)
@@ -53,7 +55,12 @@ internal object Operations {
     fun segments(path: String): List<String> = path.split("/").filter { it.isNotEmpty() }
 
     fun methods(shapes: SdkShapes): List<SdkMethod> {
-        val options = ClientOptions.builder().httpClient(RecordingHttpClient).apiKey("key").maxRetries(0).build()
+        val options =
+            ClientOptions.builder()
+                .httpClient(RecordingHttpClient)
+                .apiKey("key")
+                .maxRetries(0)
+                .build()
         val client: XTwitterScraperClient = XTwitterScraperClientImpl(options)
         val out = mutableListOf<SdkMethod>()
         walk(client, XTwitterScraperClient::class.java, "client", shapes, out, mutableSetOf())
@@ -73,17 +80,29 @@ internal object Operations {
             if (method.parameterCount != 0 || !method.returnType.isInterface) continue
             val child = method.returnType
             when {
-                method.name == "withRawResponse" -> raw(method.invoke(service), child, path, shapes, out)
-                child.name.endsWith("Service") && child.packageName.contains(".services.blocking") ->
+                method.name == "withRawResponse" ->
+                    raw(method.invoke(service), child, path, shapes, out)
+                child.name.endsWith("Service") &&
+                    child.packageName.contains(".services.blocking") ->
                     walk(method.invoke(service), child, "$path.${method.name}()", shapes, out, seen)
             }
         }
     }
 
-    private fun raw(raw: Any, type: Class<*>, path: String, shapes: SdkShapes, out: MutableList<SdkMethod>) {
+    private fun raw(
+        raw: Any,
+        type: Class<*>,
+        path: String,
+        shapes: SdkShapes,
+        out: MutableList<SdkMethod>,
+    ) {
         for (method in type.methods.sortedBy { it.name }) {
             val types = method.parameterTypes
-            if (types.size != 2 || !Params::class.java.isAssignableFrom(types[0]) || types[1] != RequestOptions::class.java) {
+            if (
+                types.size != 2 ||
+                    !Params::class.java.isAssignableFrom(types[0]) ||
+                    types[1] != RequestOptions::class.java
+            ) {
                 continue
             }
             val request = record(raw, method, shapes)

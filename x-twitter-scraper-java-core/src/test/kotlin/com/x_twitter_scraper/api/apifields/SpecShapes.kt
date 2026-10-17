@@ -10,10 +10,20 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 
 internal class CheckFailure(message: String) : Exception(message)
 
-private val bodyTypes = setOf("application/json", "multipart/form-data", "application/x-www-form-urlencoded")
+private val bodyTypes =
+    setOf("application/json", "multipart/form-data", "application/x-www-form-urlencoded")
 
 private val ignoredRefSiblings =
-    setOf("\$ref", "description", "example", "examples", "title", "deprecated", "readOnly", "writeOnly")
+    setOf(
+        "\$ref",
+        "description",
+        "example",
+        "examples",
+        "title",
+        "deprecated",
+        "readOnly",
+        "writeOnly",
+    )
 
 internal class SpecShapes(private val spec: JsonNode) {
 
@@ -56,7 +66,10 @@ internal class SpecShapes(private val spec: JsonNode) {
             var variants = mutableListOf<Shape>()
             for (sub in alternatives) {
                 val enum = sub.get("enum")
-                if (sub.path("type").asText() == "null" || (enum != null && enum.size() == 1 && enum[0].isNull)) {
+                if (
+                    sub.path("type").asText() == "null" ||
+                        (enum != null && enum.size() == 1 && enum[0].isNull)
+                ) {
                     nullable = true
                     continue
                 }
@@ -73,10 +86,13 @@ internal class SpecShapes(private val spec: JsonNode) {
             return (if (variants.size == 1) variants.single() else Union(variants)) to nullable
         }
         if (schema.has("const")) return leaf(listOf(scalar(schema.get("const")))) to nullable
-        schema.get("enum")?.takeIf { it.isArray }?.let { enum ->
-            val values = enum.filter { !it.isNull }.map(::scalar)
-            return leaf(values) to (nullable || values.size < enum.size())
-        }
+        schema
+            .get("enum")
+            ?.takeIf { it.isArray }
+            ?.let { enum ->
+                val values = enum.filter { !it.isNull }.map(::scalar)
+                return leaf(values) to (nullable || values.size < enum.size())
+            }
         val properties = schema.get("properties")
         if (plainTypes == null && properties == null && schema.has("required")) {
             return Free(schema.path("required").map { it.asText() }) to nullable
@@ -106,7 +122,8 @@ internal class SpecShapes(private val spec: JsonNode) {
         return Leaf() to nullable
     }
 
-    private fun scalar(node: JsonNode): String = if (node.isTextual) node.asText() else node.toString()
+    private fun scalar(node: JsonNode): String =
+        if (node.isTextual) node.asText() else node.toString()
 
     private fun refShape(schema: ObjectNode, stack: List<String>): Pair<Shape, Boolean> {
         val ref = schema.get("\$ref").asText()
@@ -120,13 +137,20 @@ internal class SpecShapes(private val spec: JsonNode) {
         }
         val (shape, nullable) = shape(target, stack + ref)
         val siblingType = siblings.get("type")
-        return shape to (nullable || (siblingType != null && siblingType.isArray && siblingType.any { it.asText() == "null" }))
+        return shape to
+            (nullable ||
+                (siblingType != null &&
+                    siblingType.isArray &&
+                    siblingType.any { it.asText() == "null" }))
     }
 
     private fun schemas(content: JsonNode?, accept: (String) -> Boolean): List<JsonNode> =
-        content?.properties()?.filter { (type, media) ->
-            accept(type.substringBefore(";").trim()) && media.has("schema")
-        }?.map { (_, media) -> media.get("schema") } ?: emptyList()
+        content
+            ?.properties()
+            ?.filter { (type, media) ->
+                accept(type.substringBefore(";").trim()) && media.has("schema")
+            }
+            ?.map { (_, media) -> media.get("schema") } ?: emptyList()
 
     fun operation(pathItem: JsonNode, operation: JsonNode): SpecOperation {
         val params = linkedMapOf<String, JsonNode>()
@@ -139,18 +163,33 @@ internal class SpecShapes(private val spec: JsonNode) {
         for (param in params.values) {
             val name = param.path("name").asText()
             when (param.path("in").asText()) {
-                "query" -> query[name] = Prop(param.path("required").asBoolean(false), null, shape(param.get("schema")).first)
-                "path", "header" -> nonBodyParams.add(name)
+                "query" ->
+                    query[name] =
+                        Prop(
+                            param.path("required").asBoolean(false),
+                            null,
+                            shape(param.get("schema")).first,
+                        )
+                "path",
+                "header" -> nonBodyParams.add(name)
             }
         }
-        val requestBody = operation.get("requestBody")?.let { if (it.has("\$ref")) resolve(it.get("\$ref").asText()) else it }
-        val bodies = schemas(requestBody?.get("content")) { it in bodyTypes }.map { shape(it).first }
+        val requestBody =
+            operation.get("requestBody")?.let {
+                if (it.has("\$ref")) resolve(it.get("\$ref").asText()) else it
+            }
+        val bodies =
+            schemas(requestBody?.get("content")) { it in bodyTypes }.map { shape(it).first }
         val responses =
-            operation.path("responses").properties()
+            operation
+                .path("responses")
+                .properties()
                 .filter { (code, _) -> code.startsWith("2") }
                 .flatMap { (_, raw) ->
                     val response = if (raw.has("\$ref")) resolve(raw.get("\$ref").asText()) else raw
-                    schemas(response.get("content")) { it == "application/json" || it.endsWith("+json") }
+                    schemas(response.get("content")) {
+                        it == "application/json" || it.endsWith("+json")
+                    }
                 }
                 .map { shape(it).first }
         return SpecOperation(Obj(query), nonBodyParams, one(bodies), one(responses))

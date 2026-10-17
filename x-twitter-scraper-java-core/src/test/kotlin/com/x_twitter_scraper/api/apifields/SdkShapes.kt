@@ -63,8 +63,9 @@ internal class SdkShapes {
         val argument = type.actualTypeArguments.firstOrNull()
         return when {
             List::class.java.isAssignableFrom(raw) -> Arr(type(argument!!))
-            raw == Optional::class.java || raw == JsonField::class.java || raw == MultipartField::class.java ->
-                type(argument!!)
+            raw == Optional::class.java ||
+                raw == JsonField::class.java ||
+                raw == MultipartField::class.java -> type(argument!!)
             Map::class.java.isAssignableFrom(raw) -> Free()
             else -> throw CheckFailure("The field check cannot read the type $type.")
         }
@@ -97,21 +98,34 @@ internal class SdkShapes {
                 value.asKnown().orElseThrow().toString()
             }
 
-    private fun isUnion(cls: Class<*>): Boolean = cls.declaredClasses.any { it.simpleName == "Visitor" && it.isInterface }
+    private fun isUnion(cls: Class<*>): Boolean =
+        cls.declaredClasses.any { it.simpleName == "Visitor" && it.isInterface }
 
     private fun unionVariants(cls: Class<*>): List<Shape> =
         cls.methods
-            .filter { it.name.startsWith("is") && it.parameterCount == 0 && it.returnType == Boolean::class.javaPrimitiveType }
+            .filter {
+                it.name.startsWith("is") &&
+                    it.parameterCount == 0 &&
+                    it.returnType == Boolean::class.javaPrimitiveType
+            }
             .mapNotNull { check ->
                 val accessor = check.name.removePrefix("is").replaceFirstChar { it.lowercase() }
-                cls.methods.firstOrNull { it.name == accessor && it.parameterCount == 0 && it.returnType == Optional::class.java }
+                cls.methods.firstOrNull {
+                    it.name == accessor &&
+                        it.parameterCount == 0 &&
+                        it.returnType == Optional::class.java
+                }
             }
             .sortedBy { it.name }
             .map { type(it.genericReturnType) }
 
     private fun modelProperties(cls: Class<*>): List<Pair<String, Method>> =
         cls.declaredMethods
-            .filter { it.name.startsWith("_") && it.parameterCount == 0 && it.isAnnotationPresent(JsonProperty::class.java) }
+            .filter {
+                it.name.startsWith("_") &&
+                    it.parameterCount == 0 &&
+                    it.isAnnotationPresent(JsonProperty::class.java)
+            }
             .map { it.getAnnotation(JsonProperty::class.java).value to it }
             .sortedBy { it.first }
 
@@ -122,16 +136,27 @@ internal class SdkShapes {
             modelProperties(cls).associate { (wire, method) ->
                 val name = method.name.removePrefix("_")
                 val raw = method.returnType == JsonValue::class.java
-                wire to Prop(if (raw) null else name in required, if (raw) null else name in nullable, type(method.genericReturnType))
+                wire to
+                    Prop(
+                        if (raw) null else name in required,
+                        if (raw) null else name in nullable,
+                        type(method.genericReturnType),
+                    )
             }
         return Obj(props)
     }
 
     private fun builderOf(cls: Class<*>): Any? =
-        cls.methods.firstOrNull { it.name == "builder" && it.parameterCount == 0 && Modifier.isStatic(it.modifiers) }?.invoke(null)
+        cls.methods
+            .firstOrNull {
+                it.name == "builder" && it.parameterCount == 0 && Modifier.isStatic(it.modifiers)
+            }
+            ?.invoke(null)
 
     private fun requiredFields(cls: Class<*>): Set<String> {
-        val builder = builderOf(cls) ?: throw CheckFailure("${cls.name} has no builder the field check can read.")
+        val builder =
+            builderOf(cls)
+                ?: throw CheckFailure("${cls.name} has no builder the field check can read.")
         val required = linkedSetOf<String>()
         while (true) {
             val name = missingRequired(builder) ?: return required
@@ -156,27 +181,43 @@ internal class SdkShapes {
 
     private fun setPlaceholder(builder: Any, name: String) {
         val setters = builder.javaClass.methods.filter { it.name == name && it.parameterCount == 1 }
-        setters.firstNotNullOfOrNull { s -> Samples.of(s.genericParameterTypes[0])?.let { s to it.first } }?.let { (setter, value) ->
-            setter.invoke(builder, value)
-            return
-        }
-        setters.firstOrNull { it.parameterTypes[0].name.startsWith("com.x_twitter_scraper.api.models") }?.let {
-            it.invoke(builder, jsonMapper().convertValue(emptyMap<String, Any>(), it.parameterTypes[0]))
-            return
-        }
-        setters.firstOrNull { it.parameterTypes[0] == JsonField::class.java }?.let {
-            it.invoke(builder, JsonMissing.of())
-            return
-        }
-        setters.firstOrNull { it.parameterTypes[0] == MultipartField::class.java }?.let {
-            it.invoke(builder, MultipartField.of<Any>(JsonMissing.of()))
-            return
-        }
+        setters
+            .firstNotNullOfOrNull { s ->
+                Samples.of(s.genericParameterTypes[0])?.let { s to it.first }
+            }
+            ?.let { (setter, value) ->
+                setter.invoke(builder, value)
+                return
+            }
+        setters
+            .firstOrNull {
+                it.parameterTypes[0].name.startsWith("com.x_twitter_scraper.api.models")
+            }
+            ?.let {
+                it.invoke(
+                    builder,
+                    jsonMapper().convertValue(emptyMap<String, Any>(), it.parameterTypes[0]),
+                )
+                return
+            }
+        setters
+            .firstOrNull { it.parameterTypes[0] == JsonField::class.java }
+            ?.let {
+                it.invoke(builder, JsonMissing.of())
+                return
+            }
+        setters
+            .firstOrNull { it.parameterTypes[0] == MultipartField::class.java }
+            ?.let {
+                it.invoke(builder, MultipartField.of<Any>(JsonMissing.of()))
+                return
+            }
         throw CheckFailure("The field check cannot set ${builder.javaClass.name}.$name.")
     }
 
     private fun nullableFields(cls: Class<*>): Set<String> {
-        val builder = cls.declaredClasses.firstOrNull { it.simpleName == "Builder" } ?: return emptySet()
+        val builder =
+            cls.declaredClasses.firstOrNull { it.simpleName == "Builder" } ?: return emptySet()
         return builder.kotlin.declaredMemberFunctions
             .filter { f -> f.parameters.size == 2 && f.parameters[1].type.isMarkedNullable }
             .map { it.name }
@@ -186,7 +227,9 @@ internal class SdkShapes {
     fun params(cls: Class<*>): Pair<Shape, Shape?> = query(cls) to body(cls)
 
     fun newParams(cls: Class<*>): Pair<Any, Set<String>> {
-        val builder = builderOf(cls) ?: throw CheckFailure("${cls.name} has no builder the field check can read.")
+        val builder =
+            builderOf(cls)
+                ?: throw CheckFailure("${cls.name} has no builder the field check can read.")
         val required = linkedSetOf<String>()
         while (true) {
             val name = missingRequired(builder) ?: break
@@ -202,21 +245,34 @@ internal class SdkShapes {
         val baseQuery = queryMap(base)
         val props = linkedMapOf<String, Prop>()
         for (getter in cls.declaredMethods) {
-            if (getter.parameterCount != 0 || getter.name.startsWith("_") || getter.isSynthetic || !Modifier.isPublic(getter.modifiers)) continue
-            val setters = builder.javaClass.methods.filter { it.name == getter.name && it.parameterCount == 1 }
+            if (
+                getter.parameterCount != 0 ||
+                    getter.name.startsWith("_") ||
+                    getter.isSynthetic ||
+                    !Modifier.isPublic(getter.modifiers)
+            )
+                continue
+            val setters =
+                builder.javaClass.methods.filter {
+                    it.name == getter.name && it.parameterCount == 1
+                }
             if (setters.isEmpty()) continue
             val current = currentValue(getter, base)
             val setter =
                 setters.firstNotNullOfOrNull { s ->
-                    Samples.of(s.genericParameterTypes[0])?.let { (a, b) -> s to (if (a == current) b else a) }
+                    Samples.of(s.genericParameterTypes[0])?.let { (a, b) ->
+                        s to (if (a == current) b else a)
+                    }
                 } ?: continue
             val changed = base.javaClass.getMethod("toBuilder").invoke(base)
             setter.first.invoke(changed, setter.second)
             val after = queryMap(changed.javaClass.getMethod("build").invoke(changed) as Params)
             val keys = (after.keys + baseQuery.keys).filter { after[it] != baseQuery[it] }
             if (keys.isEmpty()) continue
-            if (keys.size > 1) throw CheckFailure("${cls.name}.${getter.name} sets ${keys.joinToString()}.")
-            props[keys.single()] = Prop(getter.name in required, null, type(unwrapOptional(getter.genericReturnType)))
+            if (keys.size > 1)
+                throw CheckFailure("${cls.name}.${getter.name} sets ${keys.joinToString()}.")
+            props[keys.single()] =
+                Prop(getter.name in required, null, type(unwrapOptional(getter.genericReturnType)))
         }
         return Obj(props)
     }
@@ -232,24 +288,31 @@ internal class SdkShapes {
         params._queryParams().let { q -> q.keys().associateWith { q.values(it) } }
 
     private fun unwrapOptional(type: Type): Type =
-        if (type is ParameterizedType && type.rawType == Optional::class.java) type.actualTypeArguments[0] else type
+        if (type is ParameterizedType && type.rawType == Optional::class.java)
+            type.actualTypeArguments[0]
+        else type
 
     private fun body(cls: Class<*>): Shape? {
-        val method = cls.methods.firstOrNull { it.name == "_body" && it.parameterCount == 0 } ?: return null
+        val method =
+            cls.methods.firstOrNull { it.name == "_body" && it.parameterCount == 0 } ?: return null
         val type = method.genericReturnType
         val raw = (type as? ParameterizedType)?.rawType ?: type
         return when {
             raw == Optional::class.java -> null
             raw is Class<*> && Map::class.java.isAssignableFrom(raw) -> {
-                val body = cls.declaredClasses.firstOrNull { it.simpleName == "Body" }
-                    ?: throw CheckFailure("${cls.name} sends a multipart body without a Body class.")
+                val body =
+                    cls.declaredClasses.firstOrNull { it.simpleName == "Body" }
+                        ?: throw CheckFailure(
+                            "${cls.name} sends a multipart body without a Body class."
+                        )
                 type(body)
             }
             else -> type(type)
         }
     }
 
-    private fun hasMethod(cls: Class<*>, name: String): Boolean = cls.methods.any { it.name == name && it.parameterCount == 0 }
+    private fun hasMethod(cls: Class<*>, name: String): Boolean =
+        cls.methods.any { it.name == name && it.parameterCount == 0 }
 }
 
 /** 2 distinct sample values for each settable parameter type. */
@@ -264,22 +327,37 @@ internal object Samples {
         return when {
             cls == String::class.java -> "sample" to "other"
             cls == Long::class.javaObjectType || cls == Long::class.javaPrimitiveType -> 7L to 8L
-            cls == Double::class.javaObjectType || cls == Double::class.javaPrimitiveType -> 7.5 to 8.5
-            cls == Boolean::class.javaObjectType || cls == Boolean::class.javaPrimitiveType -> true to false
+            cls == Double::class.javaObjectType || cls == Double::class.javaPrimitiveType ->
+                7.5 to 8.5
+            cls == Boolean::class.javaObjectType || cls == Boolean::class.javaPrimitiveType ->
+                true to false
             cls == OffsetDateTime::class.java ->
-                OffsetDateTime.parse("2026-01-01T00:00:00Z") to OffsetDateTime.parse("2026-01-02T00:00:00Z")
-            cls == LocalDate::class.java -> LocalDate.parse("2026-01-01") to LocalDate.parse("2026-01-02")
-            cls == InputStream::class.java -> ByteArrayInputStream(byteArrayOf(1)) to ByteArrayInputStream(byteArrayOf(2))
+                OffsetDateTime.parse("2026-01-01T00:00:00Z") to
+                    OffsetDateTime.parse("2026-01-02T00:00:00Z")
+            cls == LocalDate::class.java ->
+                LocalDate.parse("2026-01-01") to LocalDate.parse("2026-01-02")
+            cls == InputStream::class.java ->
+                ByteArrayInputStream(byteArrayOf(1)) to ByteArrayInputStream(byteArrayOf(2))
             Enum::class.java.isAssignableFrom(cls) -> enumSamples(cls)
             else -> null
         }
     }
 
     private fun enumSamples(cls: Class<*>): Pair<Any, Any> {
-        val constants = cls.fields.filter { Modifier.isStatic(it.modifiers) && it.type == cls }.map { it.get(null) }
-        constants.getOrNull(1)?.let { return constants.first() to it }
-        val factory = cls.methods.first { it.name == "of" && it.parameterCount == 1 && Modifier.isStatic(it.modifiers) }
-        val raw = of(factory.parameterTypes[0]) ?: throw CheckFailure("The field check cannot build a value of ${cls.name}.")
+        val constants =
+            cls.fields
+                .filter { Modifier.isStatic(it.modifiers) && it.type == cls }
+                .map { it.get(null) }
+        constants.getOrNull(1)?.let {
+            return constants.first() to it
+        }
+        val factory =
+            cls.methods.first {
+                it.name == "of" && it.parameterCount == 1 && Modifier.isStatic(it.modifiers)
+            }
+        val raw =
+            of(factory.parameterTypes[0])
+                ?: throw CheckFailure("The field check cannot build a value of ${cls.name}.")
         return constants.first() to factory.invoke(null, raw.second)
     }
 }

@@ -33,10 +33,18 @@ internal class ShapesTest {
         return shapes.operation(spec.at("/paths/~1things"), spec.at("/paths/~1things/get"))
     }
 
-    private fun compare(spec: SpecOperation, response: Shape?, query: Shape = Obj(emptyMap()), body: Shape? = null) =
-        compareOperation(spec, SdkOperation(query, body, response), emptyMap()).map { "${it.side} ${it.kind} ${it.path}" }
+    private fun compare(
+        spec: SpecOperation,
+        response: Shape?,
+        query: Shape = Obj(emptyMap()),
+        body: Shape? = null,
+    ) =
+        compareOperation(spec, SdkOperation(query, body, response), emptyMap()).map {
+            "${it.side} ${it.kind} ${it.path}"
+        }
 
-    private fun json(schema: String) = """{"200": {"content": {"application/json": {"schema": $schema}}}}"""
+    private fun json(schema: String) =
+        """{"200": {"content": {"application/json": {"schema": $schema}}}}"""
 
     @Test
     fun reportsMissingExtraRequiredAndNullableFieldsAtEveryDepth() {
@@ -50,7 +58,19 @@ internal class ShapesTest {
             Obj(
                 mapOf(
                     "id" to Prop(false, false, Leaf()),
-                    "items" to Prop(false, false, Arr(Obj(mapOf("kind" to Prop(false, false, leaf(listOf("a"))), "old" to Prop(false, false, Leaf()))))),
+                    "items" to
+                        Prop(
+                            false,
+                            false,
+                            Arr(
+                                Obj(
+                                    mapOf(
+                                        "kind" to Prop(false, false, leaf(listOf("a"))),
+                                        "old" to Prop(false, false, Leaf()),
+                                    )
+                                )
+                            ),
+                        ),
                 )
             )
 
@@ -66,7 +86,12 @@ internal class ShapesTest {
 
     @Test
     fun countsAMissingObjectOnceAtItsTopPosition() {
-        val spec = specOperation(json("""{"type": "object", "properties": {"thing": {"${'$'}ref": "#/components/schemas/Thing"}}}"""))
+        val spec =
+            specOperation(
+                json(
+                    """{"type": "object", "properties": {"thing": {"${'$'}ref": "#/components/schemas/Thing"}}}"""
+                )
+            )
 
         assertThat(compare(spec, Obj(emptyMap()))).containsExactly("response missing thing")
         assertThat(compare(spec, null)).containsExactly("response missing thing")
@@ -81,7 +106,14 @@ internal class ShapesTest {
                   "202": {"content": {"application/json": {"schema": {"type": "object", "required": ["a"], "properties": {"a": {"type": "string"}, "c": {"type": "string"}}}}}}
                 }"""
             )
-        val sdk = Obj(mapOf("a" to Prop(true, false, Leaf()), "b" to Prop(true, false, Leaf()), "c" to Prop(false, false, Leaf())))
+        val sdk =
+            Obj(
+                mapOf(
+                    "a" to Prop(true, false, Leaf()),
+                    "b" to Prop(true, false, Leaf()),
+                    "c" to Prop(false, false, Leaf()),
+                )
+            )
 
         assertThat(compare(spec, sdk)).containsExactly("response required b")
     }
@@ -102,7 +134,20 @@ internal class ShapesTest {
             Obj(
                 mapOf(
                     "note" to Prop(true, false, Leaf()),
-                    "rows" to Prop(false, false, Arr(Obj(mapOf("id" to Prop(true, false, Leaf()), "tags" to Prop(false, false, Arr(Leaf())), "rank" to Prop(false, false, Leaf()))))),
+                    "rows" to
+                        Prop(
+                            false,
+                            false,
+                            Arr(
+                                Obj(
+                                    mapOf(
+                                        "id" to Prop(true, false, Leaf()),
+                                        "tags" to Prop(false, false, Arr(Leaf())),
+                                        "rank" to Prop(false, false, Leaf()),
+                                    )
+                                )
+                            ),
+                        ),
                 )
             )
 
@@ -120,7 +165,21 @@ internal class ShapesTest {
         val sdk =
             Obj(
                 mapOf(
-                    "node" to Prop(false, false, Obj(mapOf("child" to Prop(false, false, Obj(mapOf("other" to Prop(false, false, Leaf()))))))),
+                    "node" to
+                        Prop(
+                            false,
+                            false,
+                            Obj(
+                                mapOf(
+                                    "child" to
+                                        Prop(
+                                            false,
+                                            false,
+                                            Obj(mapOf("other" to Prop(false, false, Leaf()))),
+                                        )
+                                )
+                            ),
+                        ),
                     "meta" to Prop(false, false, Obj(mapOf("any" to Prop(false, false, Leaf())))),
                     "data" to Prop(false, false, Unknown),
                 )
@@ -131,16 +190,29 @@ internal class ShapesTest {
 
     @Test
     fun allowsExtraSdkFieldsUnderAnOpenObject() {
-        val spec = specOperation(json("""{"type": "object", "additionalProperties": true, "properties": {"a": {"type": "string"}}}"""))
+        val spec =
+            specOperation(
+                json(
+                    """{"type": "object", "additionalProperties": true, "properties": {"a": {"type": "string"}}}"""
+                )
+            )
 
-        assertThat(compare(spec, Obj(mapOf("a" to Prop(false, false, Leaf()), "b" to Prop(false, false, Leaf()))))).isEmpty()
+        assertThat(
+                compare(
+                    spec,
+                    Obj(mapOf("a" to Prop(false, false, Leaf()), "b" to Prop(false, false, Leaf()))),
+                )
+            )
+            .isEmpty()
     }
 
     @Test
     fun readsQueryParamsBodiesAndRefsWithSiblings() {
         val spec =
             specOperation(
-                json("""{"${'$'}ref": "#/components/schemas/Thing", "description": "Ignored", "properties": {"extra": {"type": "string"}}}"""),
+                json(
+                    """{"${'$'}ref": "#/components/schemas/Thing", "description": "Ignored", "properties": {"extra": {"type": "string"}}}"""
+                ),
                 """"parameters": [{"${'$'}ref": "#/components/parameters/Limit"}, {"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}], "requestBody": {"${'$'}ref": "#/components/requestBodies/Upload"},""",
             )
 
@@ -148,7 +220,8 @@ internal class ShapesTest {
         assertThat(spec.query.props.getValue("limit").required).isTrue()
         assertThat(spec.nonBodyParams).containsExactly("id")
         assertThat((spec.body as Obj).props.keys).containsExactly("file")
-        assertThat((spec.response as Obj).props.keys).containsExactlyInAnyOrder("id", "tags", "extra")
+        assertThat((spec.response as Obj).props.keys)
+            .containsExactlyInAnyOrder("id", "tags", "extra")
     }
 
     @Test
@@ -168,8 +241,12 @@ internal class ShapesTest {
 
     @Test
     fun failsOnAReferenceTheSpecDoesNotDefine() {
-        assertThatThrownBy { specOperation(json("""{"${'$'}ref": "#/components/schemas/Missing"}""")) }
+        assertThatThrownBy {
+                specOperation(json("""{"${'$'}ref": "#/components/schemas/Missing"}"""))
+            }
             .isInstanceOf(CheckFailure::class.java)
-            .hasMessage("Could not resolve #/components/schemas/Missing in the API spec. Check the spec source.")
+            .hasMessage(
+                "Could not resolve #/components/schemas/Missing in the API spec. Check the spec source."
+            )
     }
 }
