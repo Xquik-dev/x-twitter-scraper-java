@@ -61,6 +61,10 @@ Run every gate before requesting review.
 bin/check-local
 ```
 
+When `git config checklocal.runner` names a command, `bin/check-local` runs that command with the checkout path and its own arguments instead.
+A maintainer can use it to run the checks on another machine.
+Set `CHECK_LOCAL_HERE=1` to run them here anyway.
+
 It checks the tools and both JDKs first.
 Then it runs the API coverage check, lint, shellcheck, the script tests, REUSE, build, tests, coverage, 30 seconds of Jazzer fuzzing, the dependency audit, the reproducible artifact check, and CodeQL security-extended queries.
 It stops at the first failure and says what to fix.

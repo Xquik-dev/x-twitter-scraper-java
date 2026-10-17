@@ -22,6 +22,7 @@
 ### Chores
 
 * `bin/check-local` now fails when the API has an operation that the SDK neither sends nor lists in `excluded-operations.json`. CONTRIBUTING.md explains the check.
+* `bin/check-local` hands its run to the command that `git config checklocal.runner` names. `CHECK_LOCAL_HERE=1` runs the checks here anyway.
 * The dependency audit now works in a Git worktree under `.claude/worktrees`.
 
 ## 0.10.4 (2026-10-13)
