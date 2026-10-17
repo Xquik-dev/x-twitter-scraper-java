@@ -36,10 +36,11 @@ private constructor(
     fun idempotencyKey(): Optional<String> = Optional.ofNullable(idempotencyKey)
 
     /**
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null.
+     * Body is optional when attachments are sent.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
-    fun body(): String = body.body()
+    fun body(): Optional<String> = body.body()
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -89,7 +90,6 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .body()
          * .subject()
          * ```
          */
@@ -121,6 +121,7 @@ private constructor(
         /** Sets the entire request body. */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
+        /** Body is optional when attachments are sent. */
         fun body(body: String) = apply { this.body.body(body) }
 
         /** Sets [Builder.body] to an arbitrary multipart value. */
@@ -269,7 +270,6 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .body()
          * .subject()
          * ```
          *
@@ -309,10 +309,11 @@ private constructor(
     ) {
 
         /**
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null.
+         * Body is optional when attachments are sent.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
-        fun body(): String = body.value.getRequired("body")
+        fun body(): Optional<String> = body.value.getOptional("body")
 
         /**
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
@@ -368,7 +369,6 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .body()
              * .subject()
              * ```
              */
@@ -378,7 +378,7 @@ private constructor(
         /** A builder for [Body]. */
         class Builder internal constructor() {
 
-            private var body: MultipartField<String>? = null
+            private var body: MultipartField<String> = MultipartField.of(JsonMissing.of())
             private var subject: MultipartField<String>? = null
             private var attachments: MultipartField<MutableList<InputStream>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -391,6 +391,7 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
+            /** Body is optional when attachments are sent. */
             fun body(body: String) = body(MultipartField.of(body))
 
             /** Sets [Builder.body] to an arbitrary multipart value. */
@@ -459,7 +460,6 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .body()
              * .subject()
              * ```
              *
@@ -467,7 +467,7 @@ private constructor(
              */
             fun build(): Body =
                 Body(
-                    checkRequired("body", body),
+                    body,
                     checkRequired("subject", subject),
                     (attachments ?: MultipartField.of(JsonMissing.of())).map { it.toImmutable() },
                     additionalProperties.toMutableMap(),

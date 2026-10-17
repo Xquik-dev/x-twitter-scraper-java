@@ -72,6 +72,7 @@ internal class TicketReplyParamsTest {
 
         val body = params._body()
 
+        assertThat(params.body()).contains("Thank you for the update.")
         assertThat(body.filterValues { !it.value.isNull() })
             .usingRecursiveComparison()
             .withEqualsForType(
@@ -88,26 +89,37 @@ internal class TicketReplyParamsTest {
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params =
-            TicketReplyParams.builder()
-                .id("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
-                .body("Thank you for the update.")
-                .build()
+        val params = TicketReplyParams.builder().id("tkt_a1b2c3d4e5f6a1b2c3d4e5f6").build()
 
         val body = params._body()
 
-        assertThat(body.filterValues { !it.value.isNull() })
-            .usingRecursiveComparison()
-            .withEqualsForType(
-                { a, b -> a.readBytes() contentEquals b.readBytes() },
-                InputStream::class.java,
-            )
-            .isEqualTo(
-                mapOf("body" to MultipartField.of("Thank you for the update.")).mapValues {
-                    (_, field) ->
-                    field.map { (it as? ByteArray)?.inputStream() ?: it }
-                }
-            )
+        assertThat(params.body()).isEmpty()
+        assertThat(body).isEmpty()
+    }
+
+    @Test
+    fun attachmentsWithoutBody() {
+        val params =
+            TicketReplyParams.builder()
+                .id("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
+                .attachments(listOf("upload".byteInputStream()))
+                .build()
+
+        assertThat(params.body()).isEmpty()
+        assertThat(params._body()).containsOnlyKeys("attachments")
+        assertThat(params.toBuilder().build()).isEqualTo(params)
+    }
+
+    @Test
+    fun bodyBuilderWithoutBody() {
+        val body =
+            TicketReplyParams.Body.builder().attachments(listOf("upload".byteInputStream())).build()
+
+        assertThat(body.body()).isEmpty()
+        assertThat(body.validate()).isSameAs(body)
+        assertThat(body.toBuilder().build()).isEqualTo(body)
+        assertThat(TicketReplyParams.builder().body(body).build().body()).isEmpty()
+        assertThat(body.toBuilder().body("Please help").build().body()).contains("Please help")
     }
 
     @Test

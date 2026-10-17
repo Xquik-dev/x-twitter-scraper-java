@@ -8,6 +8,7 @@ import com.x_twitter_scraper.api.core.MultipartField
 import com.x_twitter_scraper.api.core.http.Headers
 import java.io.InputStream
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatIllegalStateException
 import org.junit.jupiter.api.Test
 
 internal class TicketCreateParamsTest {
@@ -60,6 +61,7 @@ internal class TicketCreateParamsTest {
 
         val body = params._body()
 
+        assertThat(params.body()).contains("I am unable to connect my X account. Please help.")
         assertThat(body.filterValues { !it.value.isNull() })
             .usingRecursiveComparison()
             .withEqualsForType(
@@ -80,30 +82,53 @@ internal class TicketCreateParamsTest {
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params =
-            TicketCreateParams.builder()
-                .body("I am unable to connect my X account. Please help.")
-                .subject("Cannot connect X account")
-                .build()
+        val params = TicketCreateParams.builder().subject("Cannot connect X account").build()
 
         val body = params._body()
 
-        assertThat(body.filterValues { !it.value.isNull() })
-            .usingRecursiveComparison()
-            .withEqualsForType(
-                { a, b -> a.readBytes() contentEquals b.readBytes() },
-                InputStream::class.java,
-            )
-            .isEqualTo(
-                mapOf(
-                        "body" to
-                            MultipartField.of("I am unable to connect my X account. Please help."),
-                        "subject" to MultipartField.of("Cannot connect X account"),
-                    )
-                    .mapValues { (_, field) ->
-                        field.map { (it as? ByteArray)?.inputStream() ?: it }
-                    }
-            )
+        assertThat(params.body()).isEmpty()
+        assertThat(body)
+            .isEqualTo(mapOf("subject" to MultipartField.of("Cannot connect X account")))
+    }
+
+    @Test
+    fun attachmentsWithoutBody() {
+        val params =
+            TicketCreateParams.builder()
+                .subject("Upload issue")
+                .attachments(listOf("upload".byteInputStream()))
+                .build()
+
+        assertThat(params.body()).isEmpty()
+        assertThat(params._body()).containsOnlyKeys("subject", "attachments")
+        assertThat(params.toBuilder().build()).isEqualTo(params)
+    }
+
+    @Test
+    fun bodyBuilderWithoutBody() {
+        val body =
+            TicketCreateParams.Body.builder()
+                .subject("Upload issue")
+                .attachments(listOf("upload".byteInputStream()))
+                .build()
+
+        assertThat(body.body()).isEmpty()
+        assertThat(body.validate()).isSameAs(body)
+        assertThat(body.toBuilder().build()).isEqualTo(body)
+        assertThat(TicketCreateParams.builder().body(body).build().body()).isEmpty()
+        assertThat(body.toBuilder().body("Please help").build().body()).contains("Please help")
+    }
+
+    @Test
+    fun subjectIsRequired() {
+        assertThatIllegalStateException().isThrownBy {
+            TicketCreateParams.builder().attachments(listOf("upload".byteInputStream())).build()
+        }
+        assertThatIllegalStateException().isThrownBy {
+            TicketCreateParams.Body.builder()
+                .attachments(listOf("upload".byteInputStream()))
+                .build()
+        }
     }
 
     @Test

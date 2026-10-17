@@ -5,12 +5,14 @@
 ### Breaking changes
 
 * `AccountBulkRetryParams._body()` returns `AccountBulkRetryParams.Body` instead of `Optional<Map<String, JsonValue>>`, and bulk retry always sends a JSON body, which is `{}` when no account is named. Code that calls `_body()` must change, and compiled callers must rebuild.
+* `TicketCreateParams.body()` and `TicketReplyParams.body()` now return `Optional<String>` and no longer require a body.
 * `MediaUploadParams`, `ProfileUpdateAvatarParams` and `ProfileUpdateBannerParams` take exactly 1 of `url` or `file`, so their `url()` getters return `Optional<String>`. Builders that set `url` keep working.
 
 ### Features
 
 * Bulk retry can target specific accounts with `accountIds`.
 * Embedded parent, quoted and retweeted posts carry every tweet field and the author.
+* Tickets and replies can send attachments without a body.
 * `UserProfile.IdentityVerification` gains optional `overrideVerifiedYear` for the verification start year X displays on profiles and user objects in tweets.
 * `client.x().tweets()` gains `listTop`, `embed`, `getHiddenReplies`, `getInsights`, `getRetweeterIds`, `checkRepost`, `getSubtitles`, `translate` and `resolveLinks`. Each has typed params and a typed response from the current API spec.
 * `client.x().users()` gains `retrieveBatchTweets`, `retrieveAffiliates`, `retrieveArticles`, `retrieveFollowerIds`, `retrieveFollowingIds`, `retrieveHighlights`, `retrieveInsights`, `retrieveListMemberships`, `retrieveLists`, `retrieveLive`, `retrieveSimilar`, `retrieveSubscriptions` and `translateBio`.
