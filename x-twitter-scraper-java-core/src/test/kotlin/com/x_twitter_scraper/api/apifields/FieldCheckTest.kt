@@ -8,7 +8,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.x_twitter_scraper.api.models.credits.CreditRetrieveBalanceResponse
 import com.x_twitter_scraper.api.models.drafts.DraftCreateParams
 import com.x_twitter_scraper.api.models.trends.TrendListResponse
+import com.x_twitter_scraper.api.models.x.media.MediaUploadParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateAvatarParams
+import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateBannerParams
 import com.x_twitter_scraper.api.models.x.spaces.SpaceSearchParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse
@@ -201,5 +203,24 @@ internal class FieldCheckTest {
             )
             .containsOnly(true)
         assertThat(balance.props.getValue("auto_topup_stopped").required).isFalse()
+    }
+
+    @Test
+    fun readsAlternativeUploadInputs() {
+        listOf(
+                MediaUploadParams::class.java,
+                ProfileUpdateAvatarParams::class.java,
+                ProfileUpdateBannerParams::class.java,
+            )
+            .forEach { cls ->
+                val shapes = SdkShapes()
+                val (query, body) = shapes.params(cls)
+                val props = (canon(body!!, shapes.defs) as Obj).props
+
+                assertThat((query as Obj).props).isEmpty()
+                assertThat(props.getValue("account").required).isTrue()
+                assertThat(props.getValue("url").required).isFalse()
+                assertThat(props.getValue("file").required).isFalse()
+            }
     }
 }

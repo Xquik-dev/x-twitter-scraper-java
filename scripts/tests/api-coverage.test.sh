@@ -109,6 +109,7 @@ EOF
 
 prepare_coverage() {
     copy_file scripts/api-coverage
+    copy_file scripts/lib/api-spec.bash
     write_client_options "https://xquik.com/api/v1"
     write_tweet_service
     covered_spec

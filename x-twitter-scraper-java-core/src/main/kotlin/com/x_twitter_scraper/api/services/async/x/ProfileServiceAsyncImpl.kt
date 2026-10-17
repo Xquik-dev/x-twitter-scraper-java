@@ -114,7 +114,13 @@ class ProfileServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .method(HttpMethod.PATCH)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("x", "profile", "avatar")
-                    .body(multipartFormData(clientOptions.jsonMapper, params._body()))
+                    .body(
+                        if (params.file().isPresent) {
+                            multipartFormData(clientOptions.jsonMapper, params._body())
+                        } else {
+                            json(clientOptions.jsonMapper, params._body())
+                        }
+                    )
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
@@ -145,7 +151,13 @@ class ProfileServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .method(HttpMethod.PATCH)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("x", "profile", "banner")
-                    .body(multipartFormData(clientOptions.jsonMapper, params._body()))
+                    .body(
+                        if (params.file().isPresent) {
+                            multipartFormData(clientOptions.jsonMapper, params._body())
+                        } else {
+                            json(clientOptions.jsonMapper, params._body())
+                        }
+                    )
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))

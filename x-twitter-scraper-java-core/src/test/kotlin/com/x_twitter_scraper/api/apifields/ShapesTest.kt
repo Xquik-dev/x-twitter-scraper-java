@@ -200,7 +200,9 @@ internal class ShapesTest {
         assertThat(
                 compare(
                     spec,
-                    Obj(mapOf("a" to Prop(false, false, Leaf()), "b" to Prop(false, false, Leaf()))),
+                    Obj(
+                        mapOf("a" to Prop(false, false, Leaf()), "b" to Prop(false, false, Leaf()))
+                    ),
                 )
             )
             .isEmpty()

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Breaking changes
+
+* `MediaUploadParams`, `ProfileUpdateAvatarParams` and `ProfileUpdateBannerParams` take exactly 1 of `url` or `file`, so their `url()` getters return `Optional<String>`. Builders that set `url` keep working.
+
 ### Features
 
 * `UserProfile.IdentityVerification` gains optional `overrideVerifiedYear` for the verification start year X displays on profiles and user objects in tweets.

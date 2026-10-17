@@ -8,6 +8,7 @@ import com.x_twitter_scraper.api.core.MultipartField
 import com.x_twitter_scraper.api.core.http.Headers
 import java.io.InputStream
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatIllegalStateException
 import org.junit.jupiter.api.Test
 
 internal class MediaUploadParamsTest {
@@ -70,7 +71,6 @@ internal class MediaUploadParamsTest {
             MediaUploadParams.builder()
                 .account("sample")
                 .idempotencyKey("sample")
-                .url("sample")
                 .file("upload".byteInputStream())
                 .isLongVideo(true)
                 .build()
@@ -80,5 +80,34 @@ internal class MediaUploadParamsTest {
         assertThat(params.isLongVideo()).isPresent()
         assertThat(params._body()).containsKey("is_long_video")
         assertThat(params.toBuilder().build()).isEqualTo(params)
+        assertThat(params.url()).isEmpty()
+        assertThat(params._body()).doesNotContainKey("url")
+        assertThat(
+                MediaUploadParams.Body.builder()
+                    .account("sample")
+                    .file("upload".byteInputStream())
+                    .build()
+                    .isValid()
+            )
+            .isTrue()
+    }
+
+    @Test
+    fun rejectsMissingInput() {
+        assertThatIllegalStateException().isThrownBy {
+            MediaUploadParams.builder().account("sample").idempotencyKey("sample").build()
+        }
+    }
+
+    @Test
+    fun rejectsBothInputs() {
+        assertThatIllegalStateException().isThrownBy {
+            MediaUploadParams.builder()
+                .account("sample")
+                .idempotencyKey("sample")
+                .url("https://example.com/image.png")
+                .file("upload".byteInputStream())
+                .build()
+        }
     }
 }

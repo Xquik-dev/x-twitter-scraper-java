@@ -99,7 +99,13 @@ class MediaServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("x", "media")
-                    .body(multipartFormData(clientOptions.jsonMapper, params._body()))
+                    .body(
+                        if (params.file().isPresent) {
+                            multipartFormData(clientOptions.jsonMapper, params._body())
+                        } else {
+                            json(clientOptions.jsonMapper, params._body())
+                        }
+                    )
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))

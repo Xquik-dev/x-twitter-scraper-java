@@ -107,7 +107,13 @@ class ProfileServiceImpl internal constructor(private val clientOptions: ClientO
                     .method(HttpMethod.PATCH)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("x", "profile", "avatar")
-                    .body(multipartFormData(clientOptions.jsonMapper, params._body()))
+                    .body(
+                        if (params.file().isPresent) {
+                            multipartFormData(clientOptions.jsonMapper, params._body())
+                        } else {
+                            json(clientOptions.jsonMapper, params._body())
+                        }
+                    )
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
@@ -135,7 +141,13 @@ class ProfileServiceImpl internal constructor(private val clientOptions: ClientO
                     .method(HttpMethod.PATCH)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("x", "profile", "banner")
-                    .body(multipartFormData(clientOptions.jsonMapper, params._body()))
+                    .body(
+                        if (params.file().isPresent) {
+                            multipartFormData(clientOptions.jsonMapper, params._body())
+                        } else {
+                            json(clientOptions.jsonMapper, params._body())
+                        }
+                    )
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))

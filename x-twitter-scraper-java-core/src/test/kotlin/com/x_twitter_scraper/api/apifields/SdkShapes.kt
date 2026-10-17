@@ -44,6 +44,7 @@ private val leafClasses: Set<Class<*>> =
     )
 
 private val requiredMessage = Regex("^`(\\w+)` is required, but was not set$")
+private val alternativeMessage = Regex("^Exactly one of `(\\w+)` or `(\\w+)` must be set$")
 
 /** Reads the JSON shapes of the SDK's compiled model, params, enum and union classes. */
 internal class SdkShapes {
@@ -171,7 +172,13 @@ internal class SdkShapes {
             null
         } catch (e: InvocationTargetException) {
             val message = e.targetException.message.orEmpty()
-            requiredMessage.find(message)?.groupValues?.get(1) ?: throw e.targetException
+            val alternative = alternativeMessage.matchEntire(message)
+            if (alternative != null) {
+                setPlaceholder(builder, alternative.groupValues[1])
+                missingRequired(builder)
+            } else {
+                requiredMessage.find(message)?.groupValues?.get(1) ?: throw e.targetException
+            }
         }
 
     fun setRequired(builder: Any, error: IllegalStateException) {
@@ -250,6 +257,12 @@ internal class SdkShapes {
                     getter.name.startsWith("_") ||
                     getter.isSynthetic ||
                     !Modifier.isPublic(getter.modifiers)
+            )
+                continue
+            if (
+                cls.methods.any {
+                    it.name == "_${getter.name}" && it.returnType == MultipartField::class.java
+                }
             )
                 continue
             val setters =

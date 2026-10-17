@@ -57,9 +57,6 @@
       "GET /api/v1/x/communities/search request required communityId",
       "GET /api/v1/x/communities/tweets request required communityId",
       "GET /api/v1/x/users/batch request required ids",
-      "PATCH /api/v1/x/profile/avatar request required url",
-      "PATCH /api/v1/x/profile/banner request required url",
-      "POST /api/v1/x/media request required url",
       "PUT /api/v1/styles/{id} request required label"
     ]
   },

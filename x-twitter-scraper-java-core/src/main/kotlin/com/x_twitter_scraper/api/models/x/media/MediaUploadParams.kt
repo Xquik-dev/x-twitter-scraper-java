@@ -44,10 +44,9 @@ private constructor(
     /**
      * HTTPS URL to download and upload as media
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null.
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
-    fun url(): String = body.url()
+    fun url(): Optional<String> = body.url()
 
     /**
      * Returns the raw multipart value of [account].
@@ -103,8 +102,9 @@ private constructor(
          * ```java
          * .idempotencyKey()
          * .account()
-         * .url()
          * ```
+         *
+         * Specify exactly one of `url` or `file`.
          */
         @JvmStatic fun builder() = Builder()
     }
@@ -142,6 +142,9 @@ private constructor(
         /** Sets [Builder.url] to an arbitrary multipart value. */
         fun url(url: MultipartField<String>) = apply { body.url(url) }
 
+        /**
+         * PNG image to upload. Use a [MultipartField] to specify another filename or media type.
+         */
         fun file(file: InputStream) = apply { body.file(file) }
 
         /** Sets [Builder.file] to an arbitrary multipart value. */
@@ -280,8 +283,9 @@ private constructor(
          * ```java
          * .idempotencyKey()
          * .account()
-         * .url()
          * ```
+         *
+         * Specify exactly one of `url` or `file`.
          *
          * @throws IllegalStateException if any required field is unset.
          */
@@ -334,10 +338,9 @@ private constructor(
         /**
          * HTTPS URL to download and upload as media
          *
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null.
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
-        fun url(): String = url.value.getRequired("url")
+        fun url(): Optional<String> = url.value.getOptional("url")
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun file(): Optional<InputStream> = file.value.getOptional("file")
@@ -397,8 +400,9 @@ private constructor(
              * The following fields are required:
              * ```java
              * .account()
-             * .url()
              * ```
+             *
+             * Specify exactly one of `url` or `file`.
              */
             @JvmStatic fun builder() = Builder()
         }
@@ -407,7 +411,7 @@ private constructor(
         class Builder internal constructor() {
 
             private var account: MultipartField<String>? = null
-            private var url: MultipartField<String>? = null
+            private var url: MultipartField<String> = MultipartField.of(JsonMissing.of())
             private var file: MultipartField<InputStream> = MultipartField.of(JsonMissing.of())
             private var isLongVideo: MultipartField<Boolean> = MultipartField.of(JsonMissing.of())
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -433,7 +437,18 @@ private constructor(
             /** Sets [Builder.url] to an arbitrary multipart value. */
             fun url(url: MultipartField<String>) = apply { this.url = url }
 
-            fun file(file: InputStream) = file(MultipartField.of(file))
+            /**
+             * PNG image to upload. Use a [MultipartField] to specify another filename or media
+             * type.
+             */
+            fun file(file: InputStream) =
+                file(
+                    MultipartField.builder<InputStream>()
+                        .value(file)
+                        .filename("upload.png")
+                        .contentType("image/png")
+                        .build()
+                )
 
             /** Sets [Builder.file] to an arbitrary multipart value. */
             fun file(file: MultipartField<InputStream>) = apply { this.file = file }
@@ -472,19 +487,24 @@ private constructor(
              * The following fields are required:
              * ```java
              * .account()
-             * .url()
              * ```
+             *
+             * Specify exactly one of `url` or `file`.
              *
              * @throws IllegalStateException if any required field is unset.
              */
-            fun build(): Body =
-                Body(
+            fun build(): Body {
+                val hasUrl = !url.value.isMissing() && !url.value.isNull()
+                val hasFile = !file.value.isMissing() && !file.value.isNull()
+                check(hasUrl xor hasFile) { "Exactly one of `url` or `file` must be set" }
+                return Body(
                     checkRequired("account", account),
-                    checkRequired("url", url),
+                    url,
                     file,
                     isLongVideo,
                     additionalProperties.toMutableMap(),
                 )
+            }
         }
 
         private var validated: Boolean = false

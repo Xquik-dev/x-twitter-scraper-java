@@ -402,7 +402,13 @@ private constructor(
             fun subject(subject: MultipartField<String>) = apply { this.subject = subject }
 
             fun attachments(attachments: List<InputStream>) =
-                attachments(MultipartField.of(attachments))
+                attachments(
+                    MultipartField.builder<List<InputStream>>()
+                        .value(attachments)
+                        .filename("attachment.png")
+                        .contentType("image/png")
+                        .build()
+                )
 
             /** Sets [Builder.attachments] to an arbitrary multipart value. */
             fun attachments(attachments: MultipartField<List<InputStream>>) = apply {
@@ -416,9 +422,15 @@ private constructor(
              */
             fun addAttachment(attachment: InputStream) = apply {
                 this.attachments =
-                    (this.attachments ?: MultipartField.of(mutableListOf())).also {
-                        checkKnown("attachments", it).add(attachment)
-                    }
+                    (this.attachments
+                            ?: MultipartField.builder<MutableList<InputStream>>()
+                                .value(mutableListOf())
+                                .filename("attachment.png")
+                                .contentType("image/png")
+                                .build())
+                        .also {
+                            checkKnown("attachments", it).add(attachment)
+                        }
             }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
