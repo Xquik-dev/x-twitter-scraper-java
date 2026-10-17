@@ -85,7 +85,8 @@ internal class ServiceParamsTest {
         accountService.bulkRetry()
 
         verify(
-            postRequestedFor(urlPathEqualTo("/x/accounts/bulk-retry")).withRequestBody(equalTo("{}"))
+            postRequestedFor(urlPathEqualTo("/x/accounts/bulk-retry"))
+                .withRequestBody(equalTo("{}"))
         )
     }
 
