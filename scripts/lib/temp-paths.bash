@@ -17,6 +17,6 @@ remove_temp_paths() {
 
 exit_on_signals() {
     trap 'exit 129' HUP
-    trap 'exit 130' INT
+    trap 'trap - INT; kill -INT "$$"' INT
     trap 'exit 143' TERM
 }

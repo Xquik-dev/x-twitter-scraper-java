@@ -309,14 +309,29 @@ test_a_hung_up_run_removes_its_temp_dir_and_exits_129() {
     assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
 }
 
-test_an_interrupted_run_removes_its_temp_dir_and_exits_130() {
+test_an_interrupted_run_removes_its_temp_dir_and_dies_by_sigint() {
     prepare_checks
     stub scripts/lint < <(temp_step xquik-java-check)
     run_env+=("FAKE_TEMP_STEP_WAIT=1")
 
     signal_in_repo INT bin/check-local --no-status
 
-    assert_equal 130 "$run_status" "the exit code"
+    assert_equal 130 "$run_status" "the SIGINT wait status"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
+test_an_interrupted_run_stops_its_bash_parent_before_the_next_command() {
+    prepare_checks
+    stub scripts/lint < <(temp_step xquik-java-check)
+    run_env+=("FAKE_TEMP_STEP_WAIT=1")
+
+    signal_in_repo INT bash -c '
+bin/check-local --no-status
+echo ran >"$FAKE_LOGS/after-check"
+'
+
+    assert_equal 130 "$run_status" "the SIGINT wait status"
+    assert_equal "" "$(log_of after-check)" "the command after the check"
     assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
 }
 
