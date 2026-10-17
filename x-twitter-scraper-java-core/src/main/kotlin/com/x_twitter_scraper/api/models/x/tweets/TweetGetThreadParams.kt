@@ -27,11 +27,13 @@ private constructor(
     private val cursor: String?,
     private val exactPhrase: String?,
     private val excludeWords: String?,
+    private val fields: String?,
     private val fromUser: String?,
     private val hashtags: String?,
     private val inReplyToTweetId: String?,
     private val language: String?,
     private val maxFaves: Long?,
+    private val maxId: String?,
     private val maxQuotes: Long?,
     private val maxReplies: Long?,
     private val maxRetweets: Long?,
@@ -39,10 +41,13 @@ private constructor(
     private val mentioning: String?,
     private val minBookmarks: Long?,
     private val minFaves: Long?,
+    private val minLikes: Long?,
     private val minQuotes: Long?,
     private val minReplies: Long?,
     private val minRetweets: Long?,
     private val minViews: Long?,
+    private val nativeRetweets: Boolean?,
+    private val omit: String?,
     private val pageSize: Long?,
     private val quotes: Quotes?,
     private val quotesOfTweetId: String?,
@@ -50,10 +55,12 @@ private constructor(
     private val retweets: Retweets?,
     private val retweetsOfTweetId: String?,
     private val sinceDate: LocalDate?,
+    private val sinceId: String?,
     private val toUser: String?,
     private val untilDate: LocalDate?,
     private val url: String?,
     private val verifiedOnly: Boolean?,
+    private val withinTime: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -81,6 +88,15 @@ private constructor(
     /** Words or quoted phrases to exclude. Separate with spaces, commas, or lines. */
     fun excludeWords(): Optional<String> = Optional.ofNullable(excludeWords)
 
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+     * author.username. A list keeps the field in each item. Case & underscores do not matter. A row
+     * that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name
+     * answers 400 unknown_field with the valid names, before any read. The price stays the same. A
+     * required getter throws when you leave its field out, and response validation fails.
+     */
+    fun fields(): Optional<String> = Optional.ofNullable(fields)
+
     /** Filter by author username. */
     fun fromUser(): Optional<String> = Optional.ofNullable(fromUser)
 
@@ -95,6 +111,9 @@ private constructor(
 
     /** Maximum likes threshold. maxLikes is also accepted. */
     fun maxFaves(): Optional<Long> = Optional.ofNullable(maxFaves)
+
+    /** Return Tweets at or below this ID. */
+    fun maxId(): Optional<String> = Optional.ofNullable(maxId)
 
     /** Maximum quotes threshold. */
     fun maxQuotes(): Optional<Long> = Optional.ofNullable(maxQuotes)
@@ -117,6 +136,9 @@ private constructor(
     /** Minimum likes threshold. minLikes is also accepted. */
     fun minFaves(): Optional<Long> = Optional.ofNullable(minFaves)
 
+    /** Minimum likes. Its aliases are minFaves, min_likes & min_faves. */
+    fun minLikes(): Optional<Long> = Optional.ofNullable(minLikes)
+
     /** Minimum quote count threshold. */
     fun minQuotes(): Optional<Long> = Optional.ofNullable(minQuotes)
 
@@ -128,6 +150,15 @@ private constructor(
 
     /** Minimum view count threshold. */
     fun minViews(): Optional<Long> = Optional.ofNullable(minViews)
+
+    /** Only return native reposts. */
+    fun nativeRetweets(): Optional<Boolean> = Optional.ofNullable(nativeRetweets)
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+     * fields, it drops from the kept fields.
+     */
+    fun omit(): Optional<String> = Optional.ofNullable(omit)
 
     /**
      * Maximum page items (1-100, default 20). Source, filters, or credits can reduce results.
@@ -153,6 +184,9 @@ private constructor(
     /** Start date in YYYY-MM-DD format. */
     fun sinceDate(): Optional<LocalDate> = Optional.ofNullable(sinceDate)
 
+    /** Return Tweets whose IDs exceed this ID. */
+    fun sinceId(): Optional<String> = Optional.ofNullable(sinceId)
+
     /** Filter replies sent to a username. */
     fun toUser(): Optional<String> = Optional.ofNullable(toUser)
 
@@ -164,6 +198,9 @@ private constructor(
 
     /** Only return tweets from verified authors. */
     fun verifiedOnly(): Optional<Boolean> = Optional.ofNullable(verifiedOnly)
+
+    /** Keeps Tweets from a recent window, such as 90m or 7d. Use a whole number & s, m, h or d. */
+    fun withinTime(): Optional<String> = Optional.ofNullable(withinTime)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -192,11 +229,13 @@ private constructor(
         private var cursor: String? = null
         private var exactPhrase: String? = null
         private var excludeWords: String? = null
+        private var fields: String? = null
         private var fromUser: String? = null
         private var hashtags: String? = null
         private var inReplyToTweetId: String? = null
         private var language: String? = null
         private var maxFaves: Long? = null
+        private var maxId: String? = null
         private var maxQuotes: Long? = null
         private var maxReplies: Long? = null
         private var maxRetweets: Long? = null
@@ -204,10 +243,13 @@ private constructor(
         private var mentioning: String? = null
         private var minBookmarks: Long? = null
         private var minFaves: Long? = null
+        private var minLikes: Long? = null
         private var minQuotes: Long? = null
         private var minReplies: Long? = null
         private var minRetweets: Long? = null
         private var minViews: Long? = null
+        private var nativeRetweets: Boolean? = null
+        private var omit: String? = null
         private var pageSize: Long? = null
         private var quotes: Quotes? = null
         private var quotesOfTweetId: String? = null
@@ -215,10 +257,12 @@ private constructor(
         private var retweets: Retweets? = null
         private var retweetsOfTweetId: String? = null
         private var sinceDate: LocalDate? = null
+        private var sinceId: String? = null
         private var toUser: String? = null
         private var untilDate: LocalDate? = null
         private var url: String? = null
         private var verifiedOnly: Boolean? = null
+        private var withinTime: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -232,11 +276,13 @@ private constructor(
             cursor = tweetGetThreadParams.cursor
             exactPhrase = tweetGetThreadParams.exactPhrase
             excludeWords = tweetGetThreadParams.excludeWords
+            fields = tweetGetThreadParams.fields
             fromUser = tweetGetThreadParams.fromUser
             hashtags = tweetGetThreadParams.hashtags
             inReplyToTweetId = tweetGetThreadParams.inReplyToTweetId
             language = tweetGetThreadParams.language
             maxFaves = tweetGetThreadParams.maxFaves
+            maxId = tweetGetThreadParams.maxId
             maxQuotes = tweetGetThreadParams.maxQuotes
             maxReplies = tweetGetThreadParams.maxReplies
             maxRetweets = tweetGetThreadParams.maxRetweets
@@ -244,10 +290,13 @@ private constructor(
             mentioning = tweetGetThreadParams.mentioning
             minBookmarks = tweetGetThreadParams.minBookmarks
             minFaves = tweetGetThreadParams.minFaves
+            minLikes = tweetGetThreadParams.minLikes
             minQuotes = tweetGetThreadParams.minQuotes
             minReplies = tweetGetThreadParams.minReplies
             minRetweets = tweetGetThreadParams.minRetweets
             minViews = tweetGetThreadParams.minViews
+            nativeRetweets = tweetGetThreadParams.nativeRetweets
+            omit = tweetGetThreadParams.omit
             pageSize = tweetGetThreadParams.pageSize
             quotes = tweetGetThreadParams.quotes
             quotesOfTweetId = tweetGetThreadParams.quotesOfTweetId
@@ -255,10 +304,12 @@ private constructor(
             retweets = tweetGetThreadParams.retweets
             retweetsOfTweetId = tweetGetThreadParams.retweetsOfTweetId
             sinceDate = tweetGetThreadParams.sinceDate
+            sinceId = tweetGetThreadParams.sinceId
             toUser = tweetGetThreadParams.toUser
             untilDate = tweetGetThreadParams.untilDate
             url = tweetGetThreadParams.url
             verifiedOnly = tweetGetThreadParams.verifiedOnly
+            withinTime = tweetGetThreadParams.withinTime
             additionalHeaders = tweetGetThreadParams.additionalHeaders.toBuilder()
             additionalQueryParams = tweetGetThreadParams.additionalQueryParams.toBuilder()
         }
@@ -320,6 +371,19 @@ private constructor(
         /** Alias for calling [Builder.excludeWords] with `excludeWords.orElse(null)`. */
         fun excludeWords(excludeWords: Optional<String>) = excludeWords(excludeWords.getOrNull())
 
+        /**
+         * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+         * author.username. A list keeps the field in each item. Case & underscores do not matter. A
+         * row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An
+         * unknown name answers 400 unknown_field with the valid names, before any read. The price
+         * stays the same. A required getter throws when you leave its field out, and response
+         * validation fails.
+         */
+        fun fields(fields: String?) = apply { this.fields = fields }
+
+        /** Alias for calling [Builder.fields] with `fields.orElse(null)`. */
+        fun fields(fields: Optional<String>) = fields(fields.getOrNull())
+
         /** Filter by author username. */
         fun fromUser(fromUser: String?) = apply { this.fromUser = fromUser }
 
@@ -355,6 +419,12 @@ private constructor(
 
         /** Alias for calling [Builder.maxFaves] with `maxFaves.orElse(null)`. */
         fun maxFaves(maxFaves: Optional<Long>) = maxFaves(maxFaves.getOrNull())
+
+        /** Return Tweets at or below this ID. */
+        fun maxId(maxId: String?) = apply { this.maxId = maxId }
+
+        /** Alias for calling [Builder.maxId] with `maxId.orElse(null)`. */
+        fun maxId(maxId: Optional<String>) = maxId(maxId.getOrNull())
 
         /** Maximum quotes threshold. */
         fun maxQuotes(maxQuotes: Long?) = apply { this.maxQuotes = maxQuotes }
@@ -413,6 +483,15 @@ private constructor(
         /** Alias for calling [Builder.minFaves] with `minFaves.orElse(null)`. */
         fun minFaves(minFaves: Optional<Long>) = minFaves(minFaves.getOrNull())
 
+        /** Minimum likes. Its aliases are minFaves, min_likes & min_faves. */
+        fun minLikes(minLikes: Long?) = apply { this.minLikes = minLikes }
+
+        /** Alias for [Builder.minLikes]. */
+        fun minLikes(minLikes: Long) = minLikes(minLikes as Long?)
+
+        /** Alias for calling [Builder.minLikes] with `minLikes.orElse(null)`. */
+        fun minLikes(minLikes: Optional<Long>) = minLikes(minLikes.getOrNull())
+
         /** Minimum quote count threshold. */
         fun minQuotes(minQuotes: Long?) = apply { this.minQuotes = minQuotes }
 
@@ -448,6 +527,27 @@ private constructor(
 
         /** Alias for calling [Builder.minViews] with `minViews.orElse(null)`. */
         fun minViews(minViews: Optional<Long>) = minViews(minViews.getOrNull())
+
+        /** Only return native reposts. */
+        fun nativeRetweets(nativeRetweets: Boolean?) = apply {
+            this.nativeRetweets = nativeRetweets
+        }
+
+        /** Alias for [Builder.nativeRetweets]. */
+        fun nativeRetweets(nativeRetweets: Boolean) = nativeRetweets(nativeRetweets as Boolean?)
+
+        /** Alias for calling [Builder.nativeRetweets] with `nativeRetweets.orElse(null)`. */
+        fun nativeRetweets(nativeRetweets: Optional<Boolean>) =
+            nativeRetweets(nativeRetweets.getOrNull())
+
+        /**
+         * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+         * fields, it drops from the kept fields.
+         */
+        fun omit(omit: String?) = apply { this.omit = omit }
+
+        /** Alias for calling [Builder.omit] with `omit.orElse(null)`. */
+        fun omit(omit: Optional<String>) = omit(omit.getOrNull())
 
         /**
          * Maximum page items (1-100, default 20). Source, filters, or credits can reduce results.
@@ -503,6 +603,12 @@ private constructor(
         /** Alias for calling [Builder.sinceDate] with `sinceDate.orElse(null)`. */
         fun sinceDate(sinceDate: Optional<LocalDate>) = sinceDate(sinceDate.getOrNull())
 
+        /** Return Tweets whose IDs exceed this ID. */
+        fun sinceId(sinceId: String?) = apply { this.sinceId = sinceId }
+
+        /** Alias for calling [Builder.sinceId] with `sinceId.orElse(null)`. */
+        fun sinceId(sinceId: Optional<String>) = sinceId(sinceId.getOrNull())
+
         /** Filter replies sent to a username. */
         fun toUser(toUser: String?) = apply { this.toUser = toUser }
 
@@ -529,6 +635,14 @@ private constructor(
 
         /** Alias for calling [Builder.verifiedOnly] with `verifiedOnly.orElse(null)`. */
         fun verifiedOnly(verifiedOnly: Optional<Boolean>) = verifiedOnly(verifiedOnly.getOrNull())
+
+        /**
+         * Keeps Tweets from a recent window, such as 90m or 7d. Use a whole number & s, m, h or d.
+         */
+        fun withinTime(withinTime: String?) = apply { this.withinTime = withinTime }
+
+        /** Alias for calling [Builder.withinTime] with `withinTime.orElse(null)`. */
+        fun withinTime(withinTime: Optional<String>) = withinTime(withinTime.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -643,11 +757,13 @@ private constructor(
                 cursor,
                 exactPhrase,
                 excludeWords,
+                fields,
                 fromUser,
                 hashtags,
                 inReplyToTweetId,
                 language,
                 maxFaves,
+                maxId,
                 maxQuotes,
                 maxReplies,
                 maxRetweets,
@@ -655,10 +771,13 @@ private constructor(
                 mentioning,
                 minBookmarks,
                 minFaves,
+                minLikes,
                 minQuotes,
                 minReplies,
                 minRetweets,
                 minViews,
+                nativeRetweets,
+                omit,
                 pageSize,
                 quotes,
                 quotesOfTweetId,
@@ -666,10 +785,12 @@ private constructor(
                 retweets,
                 retweetsOfTweetId,
                 sinceDate,
+                sinceId,
                 toUser,
                 untilDate,
                 url,
                 verifiedOnly,
+                withinTime,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -693,11 +814,13 @@ private constructor(
                 cursor?.let { put("cursor", it) }
                 exactPhrase?.let { put("exactPhrase", it) }
                 excludeWords?.let { put("excludeWords", it) }
+                fields?.let { put("fields", it) }
                 fromUser?.let { put("fromUser", it) }
                 hashtags?.let { put("hashtags", it) }
                 inReplyToTweetId?.let { put("inReplyToTweetId", it) }
                 language?.let { put("language", it) }
                 maxFaves?.let { put("maxFaves", it.toString()) }
+                maxId?.let { put("maxId", it) }
                 maxQuotes?.let { put("maxQuotes", it.toString()) }
                 maxReplies?.let { put("maxReplies", it.toString()) }
                 maxRetweets?.let { put("maxRetweets", it.toString()) }
@@ -705,10 +828,13 @@ private constructor(
                 mentioning?.let { put("mentioning", it) }
                 minBookmarks?.let { put("minBookmarks", it.toString()) }
                 minFaves?.let { put("minFaves", it.toString()) }
+                minLikes?.let { put("minLikes", it.toString()) }
                 minQuotes?.let { put("minQuotes", it.toString()) }
                 minReplies?.let { put("minReplies", it.toString()) }
                 minRetweets?.let { put("minRetweets", it.toString()) }
                 minViews?.let { put("minViews", it.toString()) }
+                nativeRetweets?.let { put("nativeRetweets", it.toString()) }
+                omit?.let { put("omit", it) }
                 pageSize?.let { put("pageSize", it.toString()) }
                 quotes?.let { put("quotes", it.toString()) }
                 quotesOfTweetId?.let { put("quotesOfTweetId", it) }
@@ -716,10 +842,12 @@ private constructor(
                 retweets?.let { put("retweets", it.toString()) }
                 retweetsOfTweetId?.let { put("retweetsOfTweetId", it) }
                 sinceDate?.let { put("sinceDate", it.toString()) }
+                sinceId?.let { put("sinceId", it) }
                 toUser?.let { put("toUser", it) }
                 untilDate?.let { put("untilDate", it.toString()) }
                 url?.let { put("url", it) }
                 verifiedOnly?.let { put("verifiedOnly", it.toString()) }
+                withinTime?.let { put("withinTime", it) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -1242,11 +1370,13 @@ private constructor(
             cursor == other.cursor &&
             exactPhrase == other.exactPhrase &&
             excludeWords == other.excludeWords &&
+            fields == other.fields &&
             fromUser == other.fromUser &&
             hashtags == other.hashtags &&
             inReplyToTweetId == other.inReplyToTweetId &&
             language == other.language &&
             maxFaves == other.maxFaves &&
+            maxId == other.maxId &&
             maxQuotes == other.maxQuotes &&
             maxReplies == other.maxReplies &&
             maxRetweets == other.maxRetweets &&
@@ -1254,10 +1384,13 @@ private constructor(
             mentioning == other.mentioning &&
             minBookmarks == other.minBookmarks &&
             minFaves == other.minFaves &&
+            minLikes == other.minLikes &&
             minQuotes == other.minQuotes &&
             minReplies == other.minReplies &&
             minRetweets == other.minRetweets &&
             minViews == other.minViews &&
+            nativeRetweets == other.nativeRetweets &&
+            omit == other.omit &&
             pageSize == other.pageSize &&
             quotes == other.quotes &&
             quotesOfTweetId == other.quotesOfTweetId &&
@@ -1265,10 +1398,12 @@ private constructor(
             retweets == other.retweets &&
             retweetsOfTweetId == other.retweetsOfTweetId &&
             sinceDate == other.sinceDate &&
+            sinceId == other.sinceId &&
             toUser == other.toUser &&
             untilDate == other.untilDate &&
             url == other.url &&
             verifiedOnly == other.verifiedOnly &&
+            withinTime == other.withinTime &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
@@ -1283,11 +1418,13 @@ private constructor(
             cursor,
             exactPhrase,
             excludeWords,
+            fields,
             fromUser,
             hashtags,
             inReplyToTweetId,
             language,
             maxFaves,
+            maxId,
             maxQuotes,
             maxReplies,
             maxRetweets,
@@ -1295,10 +1432,13 @@ private constructor(
             mentioning,
             minBookmarks,
             minFaves,
+            minLikes,
             minQuotes,
             minReplies,
             minRetweets,
             minViews,
+            nativeRetweets,
+            omit,
             pageSize,
             quotes,
             quotesOfTweetId,
@@ -1306,14 +1446,16 @@ private constructor(
             retweets,
             retweetsOfTweetId,
             sinceDate,
+            sinceId,
             toUser,
             untilDate,
             url,
             verifiedOnly,
+            withinTime,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "TweetGetThreadParams{id=$id, anyWords=$anyWords, blueVerifiedOnly=$blueVerifiedOnly, cashtags=$cashtags, conversationId=$conversationId, cursor=$cursor, exactPhrase=$exactPhrase, excludeWords=$excludeWords, fromUser=$fromUser, hashtags=$hashtags, inReplyToTweetId=$inReplyToTweetId, language=$language, maxFaves=$maxFaves, maxQuotes=$maxQuotes, maxReplies=$maxReplies, maxRetweets=$maxRetweets, mediaType=$mediaType, mentioning=$mentioning, minBookmarks=$minBookmarks, minFaves=$minFaves, minQuotes=$minQuotes, minReplies=$minReplies, minRetweets=$minRetweets, minViews=$minViews, pageSize=$pageSize, quotes=$quotes, quotesOfTweetId=$quotesOfTweetId, replies=$replies, retweets=$retweets, retweetsOfTweetId=$retweetsOfTweetId, sinceDate=$sinceDate, toUser=$toUser, untilDate=$untilDate, url=$url, verifiedOnly=$verifiedOnly, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "TweetGetThreadParams{id=$id, anyWords=$anyWords, blueVerifiedOnly=$blueVerifiedOnly, cashtags=$cashtags, conversationId=$conversationId, cursor=$cursor, exactPhrase=$exactPhrase, excludeWords=$excludeWords, fields=$fields, fromUser=$fromUser, hashtags=$hashtags, inReplyToTweetId=$inReplyToTweetId, language=$language, maxFaves=$maxFaves, maxId=$maxId, maxQuotes=$maxQuotes, maxReplies=$maxReplies, maxRetweets=$maxRetweets, mediaType=$mediaType, mentioning=$mentioning, minBookmarks=$minBookmarks, minFaves=$minFaves, minLikes=$minLikes, minQuotes=$minQuotes, minReplies=$minReplies, minRetweets=$minRetweets, minViews=$minViews, nativeRetweets=$nativeRetweets, omit=$omit, pageSize=$pageSize, quotes=$quotes, quotesOfTweetId=$quotesOfTweetId, replies=$replies, retweets=$retweets, retweetsOfTweetId=$retweetsOfTweetId, sinceDate=$sinceDate, sinceId=$sinceId, toUser=$toUser, untilDate=$untilDate, url=$url, verifiedOnly=$verifiedOnly, withinTime=$withinTime, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -2732,4 +2732,1231 @@ internal class TweetRetrieveResponseTest {
 
         assertThat(roundtrippedTweetRetrieveResponse).isEqualTo(tweetRetrieveResponse)
     }
+
+    @Test
+    fun readsEveryFieldTheSpecDescribes() {
+        val tweetRetrieveResponse =
+            jsonMapper()
+                .readValue(
+                    """
+                    {
+                      "tweet": {
+                        "id": "1234567890",
+                        "text": "Just launched!",
+                        "type": "tweet",
+                        "createdAt": "2025-01-15T12:00:00Z",
+                        "url": "https://x.com/example_user/status/1234567890",
+                        "lang": "en",
+                        "isReply": false,
+                        "isLimitedReply": false,
+                        "isNoteTweet": false,
+                        "isPinned": false,
+                        "isQuoteStatus": false,
+                        "isRetweet": false,
+                        "quotedTweetId": "quotedTweetId-value",
+                        "quotedTweetPermalink": {
+                          "displayUrl": "displayUrl-value",
+                          "expandedUrl": "expandedUrl-value",
+                          "url": "url-value"
+                        },
+                        "quotedTweetUnavailable": {
+                          "reason": "Suspended"
+                        },
+                        "retweetedAt": "2026-09-11T20:24:45.000Z",
+                        "inReplyToId": "1234567890",
+                        "inReplyToUserId": "9876543210",
+                        "inReplyToUsername": "example_user",
+                        "conversationId": "1234567890",
+                        "conversationControl": {
+                          "allowedCountryCodes": [
+                            "TR"
+                          ],
+                          "inviteViaMention": false,
+                          "mode": "my_network",
+                          "ownerId": "1902917852849385472",
+                          "ownerUsername": "ownerUsername-value",
+                          "policy": "by_invitation"
+                        },
+                        "limitedActions": [
+                          {
+                            "action": "Reply",
+                            "prompt": {
+                              "ctaType": "SeeConversation",
+                              "headline": "headline-value",
+                              "metadata": {},
+                              "subtext": "subtext-value"
+                            }
+                          }
+                        ],
+                        "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+                        "displayTextRange": [
+                          1772
+                        ],
+                        "textHighlights": [
+                          {
+                            "startIndex": 5,
+                            "endIndex": 13
+                          }
+                        ],
+                        "contentDisclosure": {
+                          "advertising": {
+                            "isPaidPromotion": true
+                          },
+                          "aiGenerated": {
+                            "detectionSource": "GrokSignature",
+                            "hasAiGeneratedMedia": true
+                          }
+                        },
+                        "article": {
+                          "coverMedia": {},
+                          "id": "id-value",
+                          "lifecycleState": {},
+                          "metadata": {},
+                          "title": "title-value",
+                          "previewText": "previewText-value",
+                          "coverMediaUrl": "coverMediaUrl-value"
+                        },
+                        "authorUnavailable": {
+                          "reason": "Suspended",
+                          "message": "message-value"
+                        },
+                        "unavailableAuthorId": "unavailableAuthorId-value",
+                        "card": {
+                          "id": "id-value",
+                          "name": "name-value",
+                          "url": "url-value",
+                          "bindingValues": {},
+                          "platform": {},
+                          "userReferenceErrors": [
+                            {
+                              "message": "message-value",
+                              "reason": "reason-value"
+                            }
+                          ],
+                          "userReferences": [
+                            {
+                              "id": "11348282",
+                              "username": "NASA",
+                              "name": "NASA",
+                              "followers": 92376187,
+                              "accountBasedIn": null,
+                              "following": 115,
+                              "verified": true,
+                              "isBlueVerified": true,
+                              "isVerified": true,
+                              "profilePicture": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB_normal.jpg",
+                              "profilePictureOriginal": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB.jpg",
+                              "coverPicture": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                              "profileBannerUrl": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                              "description": "Making the seemingly impossible, possible. ✨",
+                              "location": "Pale Blue Dot",
+                              "createdAt": "Wed Dec 19 20:20:32 +0000 2007",
+                              "birthdate": {
+                                "day": 1,
+                                "month": 10,
+                                "year": 1958
+                              },
+                              "statusesCount": 74336,
+                              "mediaCount": 28160,
+                              "protected": false,
+                              "url": "http://www.nasa.gov/",
+                              "contactInfo": {
+                                "links": [
+                                  {
+                                    "url": "http://www.nasa.gov/",
+                                    "network": "website",
+                                    "source": "url"
+                                  }
+                                ]
+                              },
+                              "favouritesCount": 17003,
+                              "possiblySensitive": false,
+                              "verifiedType": "Government",
+                              "profile_bio": {
+                                "description": "Making the seemingly impossible, possible. ✨",
+                                "entities": {
+                                  "description": {},
+                                  "url": {
+                                    "urls": [
+                                      {
+                                        "display_url": "nasa.gov",
+                                        "expanded_url": "http://www.nasa.gov/",
+                                        "indices": [
+                                          0,
+                                          23
+                                        ],
+                                        "url": "https://t.co/9NkQJKAnuU"
+                                      }
+                                    ]
+                                  }
+                                }
+                              },
+                              "businessAccountAffiliatesCount": 85,
+                              "creatorSubscriptionsCount": 0,
+                              "hasGraduatedAccess": true,
+                              "hasHiddenSubscriptionsOnProfile": false,
+                              "highlightsInfo": {
+                                "canHighlightTweets": true,
+                                "highlightedTweets": "280"
+                              },
+                              "identityVerification": {
+                                "isIdentityVerified": false,
+                                "verifiedSinceMsec": "1249674830941"
+                              },
+                              "isProfileTranslatable": false,
+                              "parodyCommentaryFanLabel": "None",
+                              "profileDescriptionLanguage": "en",
+                              "profileImageShape": "Square",
+                              "profileSortEnabled": true,
+                              "profileTranslatorType": "regular",
+                              "superFollowEligible": false,
+                              "verificationReason": {
+                                "entities": [
+                                  {
+                                    "fromIndex": 91,
+                                    "toIndex": 101,
+                                    "url": "https://help.twitter.com/en/rules-and-policies/profile-labels",
+                                    "urlType": "ExternalUrl"
+                                  }
+                                ],
+                                "text": "This account is verified because it is a government or multilateral organization account.  Learn more"
+                              }
+                            }
+                          ]
+                        },
+                        "cashtagAttachments": [
+                          {
+                            "cashtag": "${'$'}TSLA",
+                            "candleSize": "5m",
+                            "timeframe": "1D",
+                            "startTime": "2026-10-09T13:30:00.000Z",
+                            "endTime": "2026-10-09T13:42:08.796Z",
+                            "sizeVariant": 1
+                          }
+                        ],
+                        "communityId": "communityId-value",
+                        "communityName": "Build in Public",
+                        "communityNote": {
+                          "id": "id-value",
+                          "title": "title-value",
+                          "shortTitle": "shortTitle-value",
+                          "subtitle": "subtitle-value",
+                          "footer": "footer-value",
+                          "footerIconType": "footerIconType-value",
+                          "destinationUrl": "destinationUrl-value",
+                          "iconType": "iconType-value",
+                          "visualStyle": "visualStyle-value",
+                          "metadata": {}
+                        },
+                        "hasCommunityNotes": true,
+                        "edit": {
+                          "editTweetIds": [
+                            "editTweetIds-value"
+                          ],
+                          "editableUntilMsecs": "editableUntilMsecs-value",
+                          "initialTweetId": "initialTweetId-value"
+                        },
+                        "exclusiveContent": {
+                          "creatorUserName": "creatorUserName-value",
+                          "subscribeUrl": "subscribeUrl-value"
+                        },
+                        "isTranslatable": false,
+                        "grokShareAttachment": {},
+                        "grokTranslatedPost": {},
+                        "jetfuelAttachment": {},
+                        "noteTweet": {
+                          "id": "id-value",
+                          "noteId": "2100306607800229889",
+                          "text": "text-value",
+                          "isExpandable": true,
+                          "entities": {
+                            "hashtags": [
+                              {
+                                "indices": [
+                                  1
+                                ],
+                                "tag": {
+                                  "id": "U21hcnRUYWc6VFNMQQ==",
+                                  "info": {
+                                    "info": {
+                                      "active": true,
+                                      "name": "Tesla Inc",
+                                      "ticker": "TSLA"
+                                    }
+                                  }
+                                },
+                                "text": "string"
+                              }
+                            ],
+                            "smarttags": [
+                              {
+                                "indices": [
+                                  1
+                                ],
+                                "seconds": 1.5,
+                                "text": "string",
+                                "tag": {
+                                  "id": "U21hcnRUYWc6VFNMQQ==",
+                                  "info": {
+                                    "info": {
+                                      "active": true,
+                                      "name": "Tesla Inc",
+                                      "ticker": "TSLA"
+                                    }
+                                  }
+                                }
+                              }
+                            ],
+                            "symbols": [
+                              {
+                                "indices": [
+                                  1
+                                ],
+                                "seconds": 1.5,
+                                "text": "string",
+                                "tag": {
+                                  "id": "U21hcnRUYWc6VFNMQQ==",
+                                  "info": {
+                                    "info": {
+                                      "active": true,
+                                      "name": "Tesla Inc",
+                                      "ticker": "TSLA"
+                                    }
+                                  }
+                                }
+                              }
+                            ],
+                            "timestamps": [
+                              {
+                                "indices": [
+                                  1
+                                ],
+                                "seconds": 1.5,
+                                "text": "string",
+                                "tag": {
+                                  "id": "U21hcnRUYWc6VFNMQQ==",
+                                  "info": {
+                                    "info": {
+                                      "active": true,
+                                      "name": "Tesla Inc",
+                                      "ticker": "TSLA"
+                                    }
+                                  }
+                                }
+                              }
+                            ],
+                            "urls": [
+                              {
+                                "display_url": "string",
+                                "expanded_url": "string",
+                                "indices": [
+                                  1
+                                ],
+                                "url": "string"
+                              }
+                            ],
+                            "user_mentions": [
+                              {
+                                "id_str": "string",
+                                "indices": [
+                                  1
+                                ],
+                                "name": "string",
+                                "screen_name": "string"
+                              }
+                            ]
+                          },
+                          "inlineMedia": [
+                            {
+                              "index": 636,
+                              "mediaId": "mediaId-value"
+                            }
+                          ],
+                          "richtextTags": [
+                            {
+                              "fromIndex": 1040,
+                              "toIndex": 831,
+                              "types": [
+                                "types-value"
+                              ]
+                            }
+                          ]
+                        },
+                        "place": {
+                          "boundingBox": {},
+                          "country": "country-value",
+                          "countryCode": "countryCode-value",
+                          "fullName": "fullName-value",
+                          "id": "id-value",
+                          "name": "name-value",
+                          "placeType": "placeType-value",
+                          "url": "url-value"
+                        },
+                        "coordinates": {
+                          "coordinates": [
+                            1279.5
+                          ],
+                          "type": "Point"
+                        },
+                        "geo": {
+                          "coordinates": [
+                            1279.5
+                          ],
+                          "type": "Point"
+                        },
+                        "postCta": {},
+                        "possiblySensitive": false,
+                        "previousCounts": {
+                          "bookmarkCount": 1475,
+                          "likeCount": 1042,
+                          "quoteCount": 1179,
+                          "replyCount": 1177,
+                          "retweetCount": 1389
+                        },
+                        "reactionContext": {
+                          "reactedToPostId": "reactedToPostId-value",
+                          "reactedToUser": {
+                            "id": "11348282",
+                            "username": "NASA",
+                            "name": "NASA",
+                            "followers": 92376187,
+                            "accountBasedIn": null,
+                            "following": 115,
+                            "verified": true,
+                            "isBlueVerified": true,
+                            "isVerified": true,
+                            "profilePicture": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB_normal.jpg",
+                            "profilePictureOriginal": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB.jpg",
+                            "coverPicture": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                            "profileBannerUrl": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                            "description": "Making the seemingly impossible, possible. ✨",
+                            "location": "Pale Blue Dot",
+                            "createdAt": "Wed Dec 19 20:20:32 +0000 2007",
+                            "birthdate": {
+                              "day": 1,
+                              "month": 10,
+                              "year": 1958
+                            },
+                            "statusesCount": 74336,
+                            "mediaCount": 28160,
+                            "protected": false,
+                            "url": "http://www.nasa.gov/",
+                            "contactInfo": {
+                              "links": [
+                                {
+                                  "url": "http://www.nasa.gov/",
+                                  "network": "website",
+                                  "source": "url"
+                                }
+                              ]
+                            },
+                            "favouritesCount": 17003,
+                            "possiblySensitive": false,
+                            "verifiedType": "Government",
+                            "profile_bio": {
+                              "description": "Making the seemingly impossible, possible. ✨",
+                              "entities": {
+                                "description": {},
+                                "url": {
+                                  "urls": [
+                                    {
+                                      "display_url": "nasa.gov",
+                                      "expanded_url": "http://www.nasa.gov/",
+                                      "indices": [
+                                        0,
+                                        23
+                                      ],
+                                      "url": "https://t.co/9NkQJKAnuU"
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            "businessAccountAffiliatesCount": 85,
+                            "creatorSubscriptionsCount": 0,
+                            "hasGraduatedAccess": true,
+                            "hasHiddenSubscriptionsOnProfile": false,
+                            "highlightsInfo": {
+                              "canHighlightTweets": true,
+                              "highlightedTweets": "280"
+                            },
+                            "identityVerification": {
+                              "isIdentityVerified": false,
+                              "verifiedSinceMsec": "1249674830941"
+                            },
+                            "isProfileTranslatable": false,
+                            "parodyCommentaryFanLabel": "None",
+                            "profileDescriptionLanguage": "en",
+                            "profileImageShape": "Square",
+                            "profileSortEnabled": true,
+                            "profileTranslatorType": "regular",
+                            "superFollowEligible": false,
+                            "verificationReason": {
+                              "entities": [
+                                {
+                                  "fromIndex": 91,
+                                  "toIndex": 101,
+                                  "url": "https://help.twitter.com/en/rules-and-policies/profile-labels",
+                                  "urlType": "ExternalUrl"
+                                }
+                              ],
+                              "text": "This account is verified because it is a government or multilateral organization account.  Learn more"
+                            }
+                          }
+                        },
+                        "sportsContext": {
+                          "gameId": "gameId-value",
+                          "league": "league-value",
+                          "title": "title-value",
+                          "url": "url-value",
+                          "state": "state-value",
+                          "statusText": "statusText-value",
+                          "scheduledAtMs": 1418.5,
+                          "competitors": [
+                            {
+                              "teamId": "teamId-value",
+                              "color": "color-value",
+                              "isActive": true,
+                              "isWinner": false,
+                              "abbreviation": "abbreviation-value",
+                              "name": "name-value",
+                              "score": "score-value",
+                              "logoUrl": "logoUrl-value",
+                              "darkLogoUrl": "darkLogoUrl-value"
+                            }
+                          ]
+                        },
+                        "subscriberBadge": {
+                          "creatorId": "44196397"
+                        },
+                        "tombstone": {
+                          "type": "type-value",
+                          "text": {
+                            "text": "text-value",
+                            "rtl": true,
+                            "entities": [
+                              {
+                                "ref": {}
+                              }
+                            ]
+                          }
+                        },
+                        "interstitial": {
+                          "displayType": "NonCompliant",
+                          "text": {
+                            "text": "This Post violated the X Rules about glorifying violence. However, X has determined that it may be in the public's interest for the Post to remain accessible. Learn more",
+                            "rtl": true,
+                            "entities": [
+                              {
+                                "ref": {}
+                              }
+                            ]
+                          }
+                        },
+                        "unmentionedUserIds": [
+                          "unmentionedUserIds-value"
+                        ],
+                        "viewState": "viewState-value",
+                        "entities": {
+                          "hashtags": [
+                            {
+                              "indices": [
+                                1
+                              ],
+                              "text": "text-value"
+                            }
+                          ],
+                          "smarttags": [
+                            {
+                              "indices": [
+                                1
+                              ],
+                              "seconds": 851.5,
+                              "text": "text-value"
+                            }
+                          ],
+                          "symbols": [
+                            {
+                              "indices": [
+                                1
+                              ],
+                              "seconds": 851.5,
+                              "text": "text-value"
+                            }
+                          ],
+                          "timestamps": [
+                            {
+                              "indices": [
+                                1
+                              ],
+                              "seconds": 851.5,
+                              "text": "text-value"
+                            }
+                          ],
+                          "urls": [
+                            {
+                              "display_url": "display_url-value",
+                              "expanded_url": "expanded_url-value",
+                              "indices": [
+                                1
+                              ],
+                              "url": "url-value"
+                            }
+                          ],
+                          "user_mentions": [
+                            {
+                              "id_str": "id_str-value",
+                              "indices": [
+                                1
+                              ],
+                              "name": "name-value",
+                              "screen_name": "screen_name-value"
+                            }
+                          ]
+                        },
+                        "scopes": {},
+                        "media": [
+                          {
+                            "mediaUrl": "string",
+                            "type": "photo",
+                            "url": "string",
+                            "adultContent": true,
+                            "allowDownload": true,
+                            "altText": "string",
+                            "aspectRatio": [
+                              1
+                            ],
+                            "availabilityReason": "Dmcaed",
+                            "availabilityStatus": "Available",
+                            "description": "string",
+                            "displayUrl": "string",
+                            "durationMillis": 1,
+                            "expandedUrl": "string",
+                            "embeddable": true,
+                            "faceRects": {},
+                            "focusRects": [
+                              {
+                                "x": 1,
+                                "y": 1,
+                                "w": 1,
+                                "h": 1
+                              }
+                            ],
+                            "grokImageAnnotation": {
+                              "prompt": "string",
+                              "upsampledPrompt": "string"
+                            },
+                            "grokPostId": "string",
+                            "graphicViolence": true,
+                            "height": 1,
+                            "id": "string",
+                            "indices": [
+                              1
+                            ],
+                            "mediaKey": "string",
+                            "monetizable": true,
+                            "otherSensitiveContent": true,
+                            "sizes": {},
+                            "sourceStatusId": "string",
+                            "sourceUser": {
+                              "id": "11348282",
+                              "username": "NASA",
+                              "name": "NASA",
+                              "followers": 92376187,
+                              "accountBasedIn": null,
+                              "following": 115,
+                              "verified": true,
+                              "isBlueVerified": true,
+                              "isVerified": true,
+                              "profilePicture": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB_normal.jpg",
+                              "profilePictureOriginal": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB.jpg",
+                              "coverPicture": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                              "profileBannerUrl": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                              "description": "Making the seemingly impossible, possible. ✨",
+                              "location": "Pale Blue Dot",
+                              "createdAt": "Wed Dec 19 20:20:32 +0000 2007",
+                              "birthdate": {
+                                "day": 1,
+                                "month": 10,
+                                "year": 1958
+                              },
+                              "statusesCount": 74336,
+                              "mediaCount": 28160,
+                              "protected": false,
+                              "url": "http://www.nasa.gov/",
+                              "contactInfo": {
+                                "links": [
+                                  {
+                                    "url": "http://www.nasa.gov/",
+                                    "network": "website",
+                                    "source": "url"
+                                  }
+                                ]
+                              },
+                              "favouritesCount": 17003,
+                              "possiblySensitive": false,
+                              "verifiedType": "Government",
+                              "profile_bio": {
+                                "description": "Making the seemingly impossible, possible. ✨",
+                                "entities": {
+                                  "description": {},
+                                  "url": {
+                                    "urls": [
+                                      {
+                                        "display_url": "nasa.gov",
+                                        "expanded_url": "http://www.nasa.gov/",
+                                        "indices": [
+                                          0,
+                                          23
+                                        ],
+                                        "url": "https://t.co/9NkQJKAnuU"
+                                      }
+                                    ]
+                                  }
+                                }
+                              },
+                              "businessAccountAffiliatesCount": 85,
+                              "creatorSubscriptionsCount": 0,
+                              "hasGraduatedAccess": true,
+                              "hasHiddenSubscriptionsOnProfile": false,
+                              "highlightsInfo": {
+                                "canHighlightTweets": true,
+                                "highlightedTweets": "280"
+                              },
+                              "identityVerification": {
+                                "isIdentityVerified": false,
+                                "verifiedSinceMsec": "1249674830941"
+                              },
+                              "isProfileTranslatable": false,
+                              "parodyCommentaryFanLabel": "None",
+                              "profileDescriptionLanguage": "en",
+                              "profileImageShape": "Square",
+                              "profileSortEnabled": true,
+                              "profileTranslatorType": "regular",
+                              "superFollowEligible": false,
+                              "verificationReason": {
+                                "entities": [
+                                  {
+                                    "fromIndex": 91,
+                                    "toIndex": 101,
+                                    "url": "https://help.twitter.com/en/rules-and-policies/profile-labels",
+                                    "urlType": "ExternalUrl"
+                                  }
+                                ],
+                                "text": "This account is verified because it is a government or multilateral organization account.  Learn more"
+                              }
+                            },
+                            "sourceUserId": "string",
+                            "tags": [
+                              {
+                                "name": "string",
+                                "screen_name": "string",
+                                "type": "string",
+                                "user_id": "string"
+                              }
+                            ],
+                            "title": "string",
+                            "videoVariants": [
+                              {
+                                "bitrate": 1,
+                                "contentType": "string",
+                                "url": "string"
+                              }
+                            ],
+                            "watchNowUrl": "string",
+                            "visitSiteUrl": "string",
+                            "width": 1
+                          }
+                        ],
+                        "retweetCount": 5,
+                        "replyCount": 3,
+                        "likeCount": 42,
+                        "quoteCount": 1,
+                        "viewCount": 1500,
+                        "bookmarkCount": 2,
+                        "parentTweet": {
+                          "id": "1234567890",
+                          "text": "Just launched!",
+                          "retweetCount": 5,
+                          "replyCount": 3,
+                          "likeCount": 42,
+                          "quoteCount": 1,
+                          "viewCount": 1500,
+                          "bookmarkCount": 2,
+                          "author": {
+                            "id": "11348282",
+                            "username": "NASA",
+                            "name": "NASA",
+                            "followers": 92376187,
+                            "accountBasedIn": null,
+                            "following": 115,
+                            "verified": true,
+                            "isBlueVerified": true,
+                            "isVerified": true,
+                            "profilePicture": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB_normal.jpg",
+                            "profilePictureOriginal": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB.jpg",
+                            "coverPicture": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                            "profileBannerUrl": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                            "description": "Making the seemingly impossible, possible. ✨",
+                            "location": "Pale Blue Dot",
+                            "createdAt": "Wed Dec 19 20:20:32 +0000 2007",
+                            "birthdate": {
+                              "day": 1,
+                              "month": 10,
+                              "year": 1958
+                            },
+                            "statusesCount": 74336,
+                            "mediaCount": 28160,
+                            "protected": false,
+                            "url": "http://www.nasa.gov/",
+                            "contactInfo": {
+                              "links": [
+                                {
+                                  "url": "http://www.nasa.gov/",
+                                  "network": "website",
+                                  "source": "url"
+                                }
+                              ]
+                            },
+                            "favouritesCount": 17003,
+                            "possiblySensitive": false,
+                            "verifiedType": "Government",
+                            "profile_bio": {
+                              "description": "Making the seemingly impossible, possible. ✨",
+                              "entities": {
+                                "description": {},
+                                "url": {
+                                  "urls": [
+                                    {
+                                      "display_url": "nasa.gov",
+                                      "expanded_url": "http://www.nasa.gov/",
+                                      "indices": [
+                                        0,
+                                        23
+                                      ],
+                                      "url": "https://t.co/9NkQJKAnuU"
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            "businessAccountAffiliatesCount": 85,
+                            "creatorSubscriptionsCount": 0,
+                            "hasGraduatedAccess": true,
+                            "hasHiddenSubscriptionsOnProfile": false,
+                            "highlightsInfo": {
+                              "canHighlightTweets": true,
+                              "highlightedTweets": "280"
+                            },
+                            "identityVerification": {
+                              "isIdentityVerified": false,
+                              "verifiedSinceMsec": "1249674830941"
+                            },
+                            "isProfileTranslatable": false,
+                            "parodyCommentaryFanLabel": "None",
+                            "profileDescriptionLanguage": "en",
+                            "profileImageShape": "Square",
+                            "profileSortEnabled": true,
+                            "profileTranslatorType": "regular",
+                            "superFollowEligible": false,
+                            "verificationReason": {
+                              "entities": [
+                                {
+                                  "fromIndex": 91,
+                                  "toIndex": 101,
+                                  "url": "https://help.twitter.com/en/rules-and-policies/profile-labels",
+                                  "urlType": "ExternalUrl"
+                                }
+                              ],
+                              "text": "This account is verified because it is a government or multilateral organization account.  Learn more"
+                            }
+                          }
+                        },
+                        "quoted_tweet": {
+                          "id": "1234567890",
+                          "text": "Just launched!",
+                          "retweetCount": 5,
+                          "replyCount": 3,
+                          "likeCount": 42,
+                          "quoteCount": 1,
+                          "viewCount": 1500,
+                          "bookmarkCount": 2,
+                          "author": {
+                            "id": "11348282",
+                            "username": "NASA",
+                            "name": "NASA",
+                            "followers": 92376187,
+                            "accountBasedIn": null,
+                            "following": 115,
+                            "verified": true,
+                            "isBlueVerified": true,
+                            "isVerified": true,
+                            "profilePicture": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB_normal.jpg",
+                            "profilePictureOriginal": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB.jpg",
+                            "coverPicture": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                            "profileBannerUrl": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                            "description": "Making the seemingly impossible, possible. ✨",
+                            "location": "Pale Blue Dot",
+                            "createdAt": "Wed Dec 19 20:20:32 +0000 2007",
+                            "birthdate": {
+                              "day": 1,
+                              "month": 10,
+                              "year": 1958
+                            },
+                            "statusesCount": 74336,
+                            "mediaCount": 28160,
+                            "protected": false,
+                            "url": "http://www.nasa.gov/",
+                            "contactInfo": {
+                              "links": [
+                                {
+                                  "url": "http://www.nasa.gov/",
+                                  "network": "website",
+                                  "source": "url"
+                                }
+                              ]
+                            },
+                            "favouritesCount": 17003,
+                            "possiblySensitive": false,
+                            "verifiedType": "Government",
+                            "profile_bio": {
+                              "description": "Making the seemingly impossible, possible. ✨",
+                              "entities": {
+                                "description": {},
+                                "url": {
+                                  "urls": [
+                                    {
+                                      "display_url": "nasa.gov",
+                                      "expanded_url": "http://www.nasa.gov/",
+                                      "indices": [
+                                        0,
+                                        23
+                                      ],
+                                      "url": "https://t.co/9NkQJKAnuU"
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            "businessAccountAffiliatesCount": 85,
+                            "creatorSubscriptionsCount": 0,
+                            "hasGraduatedAccess": true,
+                            "hasHiddenSubscriptionsOnProfile": false,
+                            "highlightsInfo": {
+                              "canHighlightTweets": true,
+                              "highlightedTweets": "280"
+                            },
+                            "identityVerification": {
+                              "isIdentityVerified": false,
+                              "verifiedSinceMsec": "1249674830941"
+                            },
+                            "isProfileTranslatable": false,
+                            "parodyCommentaryFanLabel": "None",
+                            "profileDescriptionLanguage": "en",
+                            "profileImageShape": "Square",
+                            "profileSortEnabled": true,
+                            "profileTranslatorType": "regular",
+                            "superFollowEligible": false,
+                            "verificationReason": {
+                              "entities": [
+                                {
+                                  "fromIndex": 91,
+                                  "toIndex": 101,
+                                  "url": "https://help.twitter.com/en/rules-and-policies/profile-labels",
+                                  "urlType": "ExternalUrl"
+                                }
+                              ],
+                              "text": "This account is verified because it is a government or multilateral organization account.  Learn more"
+                            }
+                          }
+                        },
+                        "retweeted_tweet": {
+                          "id": "1234567890",
+                          "text": "Just launched!",
+                          "retweetCount": 5,
+                          "replyCount": 3,
+                          "likeCount": 42,
+                          "quoteCount": 1,
+                          "viewCount": 1500,
+                          "bookmarkCount": 2,
+                          "author": {
+                            "id": "11348282",
+                            "username": "NASA",
+                            "name": "NASA",
+                            "followers": 92376187,
+                            "accountBasedIn": null,
+                            "following": 115,
+                            "verified": true,
+                            "isBlueVerified": true,
+                            "isVerified": true,
+                            "profilePicture": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB_normal.jpg",
+                            "profilePictureOriginal": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB.jpg",
+                            "coverPicture": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                            "profileBannerUrl": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                            "description": "Making the seemingly impossible, possible. ✨",
+                            "location": "Pale Blue Dot",
+                            "createdAt": "Wed Dec 19 20:20:32 +0000 2007",
+                            "birthdate": {
+                              "day": 1,
+                              "month": 10,
+                              "year": 1958
+                            },
+                            "statusesCount": 74336,
+                            "mediaCount": 28160,
+                            "protected": false,
+                            "url": "http://www.nasa.gov/",
+                            "contactInfo": {
+                              "links": [
+                                {
+                                  "url": "http://www.nasa.gov/",
+                                  "network": "website",
+                                  "source": "url"
+                                }
+                              ]
+                            },
+                            "favouritesCount": 17003,
+                            "possiblySensitive": false,
+                            "verifiedType": "Government",
+                            "profile_bio": {
+                              "description": "Making the seemingly impossible, possible. ✨",
+                              "entities": {
+                                "description": {},
+                                "url": {
+                                  "urls": [
+                                    {
+                                      "display_url": "nasa.gov",
+                                      "expanded_url": "http://www.nasa.gov/",
+                                      "indices": [
+                                        0,
+                                        23
+                                      ],
+                                      "url": "https://t.co/9NkQJKAnuU"
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            "businessAccountAffiliatesCount": 85,
+                            "creatorSubscriptionsCount": 0,
+                            "hasGraduatedAccess": true,
+                            "hasHiddenSubscriptionsOnProfile": false,
+                            "highlightsInfo": {
+                              "canHighlightTweets": true,
+                              "highlightedTweets": "280"
+                            },
+                            "identityVerification": {
+                              "isIdentityVerified": false,
+                              "verifiedSinceMsec": "1249674830941"
+                            },
+                            "isProfileTranslatable": false,
+                            "parodyCommentaryFanLabel": "None",
+                            "profileDescriptionLanguage": "en",
+                            "profileImageShape": "Square",
+                            "profileSortEnabled": true,
+                            "profileTranslatorType": "regular",
+                            "superFollowEligible": false,
+                            "verificationReason": {
+                              "entities": [
+                                {
+                                  "fromIndex": 91,
+                                  "toIndex": 101,
+                                  "url": "https://help.twitter.com/en/rules-and-policies/profile-labels",
+                                  "urlType": "ExternalUrl"
+                                }
+                              ],
+                              "text": "This account is verified because it is a government or multilateral organization account.  Learn more"
+                            }
+                          }
+                        },
+                        "author": {
+                          "id": "11348282",
+                          "username": "NASA",
+                          "name": "NASA",
+                          "followers": 150000000,
+                          "accountBasedIn": null,
+                          "following": 115,
+                          "verified": true,
+                          "isBlueVerified": true,
+                          "isVerified": true,
+                          "profilePicture": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB_normal.jpg",
+                          "profilePictureOriginal": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB.jpg",
+                          "coverPicture": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                          "profileBannerUrl": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                          "description": "Making the seemingly impossible, possible. ✨",
+                          "location": "Pale Blue Dot",
+                          "createdAt": "Wed Dec 19 20:20:32 +0000 2007",
+                          "birthdate": {
+                            "day": 1,
+                            "month": 10,
+                            "year": 1958
+                          },
+                          "statusesCount": 74336,
+                          "mediaCount": 28160,
+                          "protected": false,
+                          "url": "http://www.nasa.gov/",
+                          "contactInfo": {
+                            "links": [
+                              {
+                                "url": "http://www.nasa.gov/",
+                                "network": "website",
+                                "source": "url"
+                              }
+                            ]
+                          },
+                          "favouritesCount": 17003,
+                          "possiblySensitive": false,
+                          "verifiedType": "Government",
+                          "profile_bio": {
+                            "description": "Making the seemingly impossible, possible. ✨",
+                            "entities": {
+                              "description": {},
+                              "url": {
+                                "urls": [
+                                  {
+                                    "display_url": "nasa.gov",
+                                    "expanded_url": "http://www.nasa.gov/",
+                                    "indices": [
+                                      0,
+                                      23
+                                    ],
+                                    "url": "https://t.co/9NkQJKAnuU"
+                                  }
+                                ]
+                              }
+                            }
+                          },
+                          "businessAccountAffiliatesCount": 85,
+                          "creatorSubscriptionsCount": 0,
+                          "hasGraduatedAccess": true,
+                          "hasHiddenSubscriptionsOnProfile": false,
+                          "highlightsInfo": {
+                            "canHighlightTweets": true,
+                            "highlightedTweets": "280"
+                          },
+                          "identityVerification": {
+                            "isIdentityVerified": false,
+                            "verifiedSinceMsec": "1249674830941"
+                          },
+                          "isProfileTranslatable": false,
+                          "parodyCommentaryFanLabel": "None",
+                          "profileDescriptionLanguage": "en",
+                          "profileImageShape": "Square",
+                          "profileSortEnabled": true,
+                          "profileTranslatorType": "regular",
+                          "superFollowEligible": false,
+                          "verificationReason": {
+                            "entities": [
+                              {
+                                "fromIndex": 91,
+                                "toIndex": 101,
+                                "url": "https://help.twitter.com/en/rules-and-policies/profile-labels",
+                                "urlType": "ExternalUrl"
+                              }
+                            ],
+                            "text": "This account is verified because it is a government or multilateral organization account.  Learn more"
+                          }
+                        }
+                      },
+                      "author": {
+                        "id": "11348282",
+                        "username": "NASA",
+                        "name": "NASA",
+                        "followers": 150000000,
+                        "accountBasedIn": null,
+                        "following": 115,
+                        "verified": true,
+                        "isBlueVerified": true,
+                        "isVerified": true,
+                        "profilePicture": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB_normal.jpg",
+                        "profilePictureOriginal": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB.jpg",
+                        "coverPicture": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                        "profileBannerUrl": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                        "description": "Making the seemingly impossible, possible. ✨",
+                        "location": "Pale Blue Dot",
+                        "createdAt": "Wed Dec 19 20:20:32 +0000 2007",
+                        "birthdate": {
+                          "day": 1,
+                          "month": 10,
+                          "year": 1958
+                        },
+                        "statusesCount": 74336,
+                        "mediaCount": 28160,
+                        "protected": false,
+                        "url": "http://www.nasa.gov/",
+                        "contactInfo": {
+                          "links": [
+                            {
+                              "url": "http://www.nasa.gov/",
+                              "network": "website",
+                              "source": "url"
+                            }
+                          ]
+                        },
+                        "favouritesCount": 17003,
+                        "possiblySensitive": false,
+                        "verifiedType": "Government",
+                        "profile_bio": {
+                          "description": "Making the seemingly impossible, possible. ✨",
+                          "entities": {
+                            "description": {},
+                            "url": {
+                              "urls": [
+                                {
+                                  "display_url": "nasa.gov",
+                                  "expanded_url": "http://www.nasa.gov/",
+                                  "indices": [
+                                    0,
+                                    23
+                                  ],
+                                  "url": "https://t.co/9NkQJKAnuU"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        "businessAccountAffiliatesCount": 85,
+                        "creatorSubscriptionsCount": 0,
+                        "hasGraduatedAccess": true,
+                        "hasHiddenSubscriptionsOnProfile": false,
+                        "highlightsInfo": {
+                          "canHighlightTweets": true,
+                          "highlightedTweets": "280"
+                        },
+                        "identityVerification": {
+                          "isIdentityVerified": false,
+                          "verifiedSinceMsec": "1249674830941"
+                        },
+                        "isProfileTranslatable": false,
+                        "parodyCommentaryFanLabel": "None",
+                        "profileDescriptionLanguage": "en",
+                        "profileImageShape": "Square",
+                        "profileSortEnabled": true,
+                        "profileTranslatorType": "regular",
+                        "superFollowEligible": false,
+                        "verificationReason": {
+                          "entities": [
+                            {
+                              "fromIndex": 91,
+                              "toIndex": 101,
+                              "url": "https://help.twitter.com/en/rules-and-policies/profile-labels",
+                              "urlType": "ExternalUrl"
+                            }
+                          ],
+                          "text": "This account is verified because it is a government or multilateral organization account.  Learn more"
+                        }
+                      }
+                    }
+                    """
+                        .trimIndent(),
+                    jacksonTypeRef<TweetRetrieveResponse>(),
+                )
+
+        tweetRetrieveResponse.validate()
+        assertThat(tweetRetrieveResponse.tweet().id()).isEqualTo("1234567890")
+        assertThat(tweetRetrieveResponse.tweet().text()).isEqualTo("Just launched!")
+        assertThat(tweetRetrieveResponse.author().get().id()).isEqualTo("11348282")
+        assertThat(tweetRetrieveResponse.author().get().name()).isEqualTo("NASA")
+        assertThat(tweetRetrieveResponse.author().get().username()).isEqualTo("NASA")
+        assertThat(tweetRetrieveResponse._additionalProperties()).isEmpty()
+    }
 }

@@ -29,6 +29,13 @@ private constructor(
     private val mediaUrl: JsonField<String>,
     private val type: JsonField<Type>,
     private val url: JsonField<String>,
+    private val adultContent: JsonField<Boolean>,
+    private val availabilityReason: JsonField<String>,
+    private val description: JsonField<String>,
+    private val embeddable: JsonField<Boolean>,
+    private val graphicViolence: JsonField<Boolean>,
+    private val grokImageAnnotation: JsonField<GrokImageAnnotation>,
+    private val grokPostId: JsonField<String>,
     private val id: JsonField<String>,
     private val allowDownload: JsonField<Boolean>,
     private val altText: JsonField<String>,
@@ -43,8 +50,16 @@ private constructor(
     private val indices: JsonField<List<Long>>,
     private val mediaKey: JsonField<String>,
     private val monetizable: JsonField<Boolean>,
+    private val otherSensitiveContent: JsonField<Boolean>,
     private val sizes: JsonField<Sizes>,
+    private val sourceStatusId: JsonField<String>,
+    private val sourceUser: JsonField<UserProfile>,
+    private val sourceUserId: JsonField<String>,
+    private val tags: JsonField<List<Tag>>,
+    private val title: JsonField<String>,
     private val videoVariants: JsonField<List<VideoVariant>>,
+    private val visitSiteUrl: JsonField<String>,
+    private val watchNowUrl: JsonField<String>,
     private val width: JsonField<Long>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -54,6 +69,27 @@ private constructor(
         @JsonProperty("mediaUrl") @ExcludeMissing mediaUrl: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
         @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("adultContent")
+        @ExcludeMissing
+        adultContent: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("availabilityReason")
+        @ExcludeMissing
+        availabilityReason: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("description")
+        @ExcludeMissing
+        description: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("embeddable")
+        @ExcludeMissing
+        embeddable: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("graphicViolence")
+        @ExcludeMissing
+        graphicViolence: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("grokImageAnnotation")
+        @ExcludeMissing
+        grokImageAnnotation: JsonField<GrokImageAnnotation> = JsonMissing.of(),
+        @JsonProperty("grokPostId")
+        @ExcludeMissing
+        grokPostId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
         @JsonProperty("allowDownload")
         @ExcludeMissing
@@ -86,15 +122,42 @@ private constructor(
         @JsonProperty("monetizable")
         @ExcludeMissing
         monetizable: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("otherSensitiveContent")
+        @ExcludeMissing
+        otherSensitiveContent: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("sizes") @ExcludeMissing sizes: JsonField<Sizes> = JsonMissing.of(),
+        @JsonProperty("sourceStatusId")
+        @ExcludeMissing
+        sourceStatusId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("sourceUser")
+        @ExcludeMissing
+        sourceUser: JsonField<UserProfile> = JsonMissing.of(),
+        @JsonProperty("sourceUserId")
+        @ExcludeMissing
+        sourceUserId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("tags") @ExcludeMissing tags: JsonField<List<Tag>> = JsonMissing.of(),
+        @JsonProperty("title") @ExcludeMissing title: JsonField<String> = JsonMissing.of(),
         @JsonProperty("videoVariants")
         @ExcludeMissing
         videoVariants: JsonField<List<VideoVariant>> = JsonMissing.of(),
+        @JsonProperty("visitSiteUrl")
+        @ExcludeMissing
+        visitSiteUrl: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("watchNowUrl")
+        @ExcludeMissing
+        watchNowUrl: JsonField<String> = JsonMissing.of(),
         @JsonProperty("width") @ExcludeMissing width: JsonField<Long> = JsonMissing.of(),
     ) : this(
         mediaUrl,
         type,
         url,
+        adultContent,
+        availabilityReason,
+        description,
+        embeddable,
+        graphicViolence,
+        grokImageAnnotation,
+        grokPostId,
         id,
         allowDownload,
         altText,
@@ -109,8 +172,16 @@ private constructor(
         indices,
         mediaKey,
         monetizable,
+        otherSensitiveContent,
         sizes,
+        sourceStatusId,
+        sourceUser,
+        sourceUserId,
+        tags,
+        title,
         videoVariants,
+        visitSiteUrl,
+        watchNowUrl,
         width,
         mutableMapOf(),
     )
@@ -136,6 +207,58 @@ private constructor(
      *   unexpectedly missing or null.
      */
     fun url(): String = url.getRequired("url")
+
+    /**
+     * Adult-content warning.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun adultContent(): Optional<Boolean> = adultContent.getOptional("adultContent")
+
+    /**
+     * Why X made the media unavailable, such as `Dmcaed` after a copyright report. Omitted on
+     * available media.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun availabilityReason(): Optional<String> =
+        availabilityReason.getOptional("availabilityReason")
+
+    /**
+     * Media description.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun description(): Optional<String> = description.getOptional("description")
+
+    /**
+     * Embeddable status.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun embeddable(): Optional<Boolean> = embeddable.getOptional("embeddable")
+
+    /**
+     * Graphic-violence warning.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun graphicViolence(): Optional<Boolean> = graphicViolence.getOptional("graphicViolence")
+
+    /**
+     * Prompt a Grok image came from. Absent on other media & when X sends no prompt.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun grokImageAnnotation(): Optional<GrokImageAnnotation> =
+        grokImageAnnotation.getOptional("grokImageAnnotation")
+
+    /**
+     * Grok post ID associated with the media.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun grokPostId(): Optional<String> = grokPostId.getOptional("grokPostId")
 
     /**
      * X media entity ID.
@@ -236,6 +359,10 @@ private constructor(
      */
     fun monetizable(): Optional<Boolean> = monetizable.getOptional("monetizable")
 
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun otherSensitiveContent(): Optional<Boolean> =
+        otherSensitiveContent.getOptional("otherSensitiveContent")
+
     /**
      * Named media renditions and resize modes.
      *
@@ -244,11 +371,60 @@ private constructor(
     fun sizes(): Optional<Sizes> = sizes.getOptional("sizes")
 
     /**
+     * Source tweet ID for copied media.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun sourceStatusId(): Optional<String> = sourceStatusId.getOptional("sourceStatusId")
+
+    /**
+     * The account that first posted the media. Some reads carry only its name, picture & badges.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun sourceUser(): Optional<UserProfile> = sourceUser.getOptional("sourceUser")
+
+    /**
+     * Source profile ID for copied media.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun sourceUserId(): Optional<String> = sourceUserId.getOptional("sourceUserId")
+
+    /**
+     * Public profiles tagged in the media.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun tags(): Optional<List<Tag>> = tags.getOptional("tags")
+
+    /**
+     * Media title.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun title(): Optional<String> = title.getOptional("title")
+
+    /**
      * Available video encodings, ordered as returned
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun videoVariants(): Optional<List<VideoVariant>> = videoVariants.getOptional("videoVariants")
+
+    /**
+     * Public destination URL.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun visitSiteUrl(): Optional<String> = visitSiteUrl.getOptional("visitSiteUrl")
+
+    /**
+     * Public media action URL.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun watchNowUrl(): Optional<String> = watchNowUrl.getOptional("watchNowUrl")
 
     /**
      * Original media width.
@@ -277,6 +453,65 @@ private constructor(
      * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
+
+    /**
+     * Returns the raw JSON value of [adultContent].
+     *
+     * Unlike [adultContent], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("adultContent")
+    @ExcludeMissing
+    fun _adultContent(): JsonField<Boolean> = adultContent
+
+    /**
+     * Returns the raw JSON value of [availabilityReason].
+     *
+     * Unlike [availabilityReason], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("availabilityReason")
+    @ExcludeMissing
+    fun _availabilityReason(): JsonField<String> = availabilityReason
+
+    /**
+     * Returns the raw JSON value of [description].
+     *
+     * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
+
+    /**
+     * Returns the raw JSON value of [embeddable].
+     *
+     * Unlike [embeddable], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("embeddable") @ExcludeMissing fun _embeddable(): JsonField<Boolean> = embeddable
+
+    /**
+     * Returns the raw JSON value of [graphicViolence].
+     *
+     * Unlike [graphicViolence], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("graphicViolence")
+    @ExcludeMissing
+    fun _graphicViolence(): JsonField<Boolean> = graphicViolence
+
+    /**
+     * Returns the raw JSON value of [grokImageAnnotation].
+     *
+     * Unlike [grokImageAnnotation], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("grokImageAnnotation")
+    @ExcludeMissing
+    fun _grokImageAnnotation(): JsonField<GrokImageAnnotation> = grokImageAnnotation
+
+    /**
+     * Returns the raw JSON value of [grokPostId].
+     *
+     * Unlike [grokPostId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("grokPostId") @ExcludeMissing fun _grokPostId(): JsonField<String> = grokPostId
 
     /**
      * Returns the raw JSON value of [id].
@@ -390,11 +625,62 @@ private constructor(
     fun _monetizable(): JsonField<Boolean> = monetizable
 
     /**
+     * Returns the raw JSON value of [otherSensitiveContent].
+     *
+     * Unlike [otherSensitiveContent], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("otherSensitiveContent")
+    @ExcludeMissing
+    fun _otherSensitiveContent(): JsonField<Boolean> = otherSensitiveContent
+
+    /**
      * Returns the raw JSON value of [sizes].
      *
      * Unlike [sizes], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("sizes") @ExcludeMissing fun _sizes(): JsonField<Sizes> = sizes
+
+    /**
+     * Returns the raw JSON value of [sourceStatusId].
+     *
+     * Unlike [sourceStatusId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("sourceStatusId")
+    @ExcludeMissing
+    fun _sourceStatusId(): JsonField<String> = sourceStatusId
+
+    /**
+     * Returns the raw JSON value of [sourceUser].
+     *
+     * Unlike [sourceUser], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("sourceUser")
+    @ExcludeMissing
+    fun _sourceUser(): JsonField<UserProfile> = sourceUser
+
+    /**
+     * Returns the raw JSON value of [sourceUserId].
+     *
+     * Unlike [sourceUserId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("sourceUserId")
+    @ExcludeMissing
+    fun _sourceUserId(): JsonField<String> = sourceUserId
+
+    /**
+     * Returns the raw JSON value of [tags].
+     *
+     * Unlike [tags], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("tags") @ExcludeMissing fun _tags(): JsonField<List<Tag>> = tags
+
+    /**
+     * Returns the raw JSON value of [title].
+     *
+     * Unlike [title], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("title") @ExcludeMissing fun _title(): JsonField<String> = title
 
     /**
      * Returns the raw JSON value of [videoVariants].
@@ -404,6 +690,22 @@ private constructor(
     @JsonProperty("videoVariants")
     @ExcludeMissing
     fun _videoVariants(): JsonField<List<VideoVariant>> = videoVariants
+
+    /**
+     * Returns the raw JSON value of [visitSiteUrl].
+     *
+     * Unlike [visitSiteUrl], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("visitSiteUrl")
+    @ExcludeMissing
+    fun _visitSiteUrl(): JsonField<String> = visitSiteUrl
+
+    /**
+     * Returns the raw JSON value of [watchNowUrl].
+     *
+     * Unlike [watchNowUrl], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("watchNowUrl") @ExcludeMissing fun _watchNowUrl(): JsonField<String> = watchNowUrl
 
     /**
      * Returns the raw JSON value of [width].
@@ -445,6 +747,13 @@ private constructor(
         private var mediaUrl: JsonField<String>? = null
         private var type: JsonField<Type>? = null
         private var url: JsonField<String>? = null
+        private var adultContent: JsonField<Boolean> = JsonMissing.of()
+        private var availabilityReason: JsonField<String> = JsonMissing.of()
+        private var description: JsonField<String> = JsonMissing.of()
+        private var embeddable: JsonField<Boolean> = JsonMissing.of()
+        private var graphicViolence: JsonField<Boolean> = JsonMissing.of()
+        private var grokImageAnnotation: JsonField<GrokImageAnnotation> = JsonMissing.of()
+        private var grokPostId: JsonField<String> = JsonMissing.of()
         private var id: JsonField<String> = JsonMissing.of()
         private var allowDownload: JsonField<Boolean> = JsonMissing.of()
         private var altText: JsonField<String> = JsonMissing.of()
@@ -459,8 +768,16 @@ private constructor(
         private var indices: JsonField<MutableList<Long>>? = null
         private var mediaKey: JsonField<String> = JsonMissing.of()
         private var monetizable: JsonField<Boolean> = JsonMissing.of()
+        private var otherSensitiveContent: JsonField<Boolean> = JsonMissing.of()
         private var sizes: JsonField<Sizes> = JsonMissing.of()
+        private var sourceStatusId: JsonField<String> = JsonMissing.of()
+        private var sourceUser: JsonField<UserProfile> = JsonMissing.of()
+        private var sourceUserId: JsonField<String> = JsonMissing.of()
+        private var tags: JsonField<MutableList<Tag>>? = null
+        private var title: JsonField<String> = JsonMissing.of()
         private var videoVariants: JsonField<MutableList<VideoVariant>>? = null
+        private var visitSiteUrl: JsonField<String> = JsonMissing.of()
+        private var watchNowUrl: JsonField<String> = JsonMissing.of()
         private var width: JsonField<Long> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -469,6 +786,13 @@ private constructor(
             mediaUrl = tweetMedia.mediaUrl
             type = tweetMedia.type
             url = tweetMedia.url
+            adultContent = tweetMedia.adultContent
+            availabilityReason = tweetMedia.availabilityReason
+            description = tweetMedia.description
+            embeddable = tweetMedia.embeddable
+            graphicViolence = tweetMedia.graphicViolence
+            grokImageAnnotation = tweetMedia.grokImageAnnotation
+            grokPostId = tweetMedia.grokPostId
             id = tweetMedia.id
             allowDownload = tweetMedia.allowDownload
             altText = tweetMedia.altText
@@ -483,8 +807,16 @@ private constructor(
             indices = tweetMedia.indices.map { it.toMutableList() }
             mediaKey = tweetMedia.mediaKey
             monetizable = tweetMedia.monetizable
+            otherSensitiveContent = tweetMedia.otherSensitiveContent
             sizes = tweetMedia.sizes
+            sourceStatusId = tweetMedia.sourceStatusId
+            sourceUser = tweetMedia.sourceUser
+            sourceUserId = tweetMedia.sourceUserId
+            tags = tweetMedia.tags.map { it.toMutableList() }
+            title = tweetMedia.title
             videoVariants = tweetMedia.videoVariants.map { it.toMutableList() }
+            visitSiteUrl = tweetMedia.visitSiteUrl
+            watchNowUrl = tweetMedia.watchNowUrl
             width = tweetMedia.width
             additionalProperties = tweetMedia.additionalProperties.toMutableMap()
         }
@@ -505,6 +837,62 @@ private constructor(
 
         /** Sets [Builder.url] to an arbitrary JSON value. */
         fun url(url: JsonField<String>) = apply { this.url = url }
+
+        /** Adult-content warning. */
+        fun adultContent(adultContent: Boolean) = adultContent(JsonField.of(adultContent))
+
+        /** Sets [Builder.adultContent] to an arbitrary JSON value. */
+        fun adultContent(adultContent: JsonField<Boolean>) = apply {
+            this.adultContent = adultContent
+        }
+
+        /**
+         * Why X made the media unavailable, such as `Dmcaed` after a copyright report. Omitted on
+         * available media.
+         */
+        fun availabilityReason(availabilityReason: String) =
+            availabilityReason(JsonField.of(availabilityReason))
+
+        /** Sets [Builder.availabilityReason] to an arbitrary JSON value. */
+        fun availabilityReason(availabilityReason: JsonField<String>) = apply {
+            this.availabilityReason = availabilityReason
+        }
+
+        /** Media description. */
+        fun description(description: String) = description(JsonField.of(description))
+
+        /** Sets [Builder.description] to an arbitrary JSON value. */
+        fun description(description: JsonField<String>) = apply { this.description = description }
+
+        /** Embeddable status. */
+        fun embeddable(embeddable: Boolean) = embeddable(JsonField.of(embeddable))
+
+        /** Sets [Builder.embeddable] to an arbitrary JSON value. */
+        fun embeddable(embeddable: JsonField<Boolean>) = apply { this.embeddable = embeddable }
+
+        /** Graphic-violence warning. */
+        fun graphicViolence(graphicViolence: Boolean) =
+            graphicViolence(JsonField.of(graphicViolence))
+
+        /** Sets [Builder.graphicViolence] to an arbitrary JSON value. */
+        fun graphicViolence(graphicViolence: JsonField<Boolean>) = apply {
+            this.graphicViolence = graphicViolence
+        }
+
+        /** Prompt a Grok image came from. Absent on other media & when X sends no prompt. */
+        fun grokImageAnnotation(grokImageAnnotation: GrokImageAnnotation) =
+            grokImageAnnotation(JsonField.of(grokImageAnnotation))
+
+        /** Sets [Builder.grokImageAnnotation] to an arbitrary JSON value. */
+        fun grokImageAnnotation(grokImageAnnotation: JsonField<GrokImageAnnotation>) = apply {
+            this.grokImageAnnotation = grokImageAnnotation
+        }
+
+        /** Grok post ID associated with the media. */
+        fun grokPostId(grokPostId: String) = grokPostId(JsonField.of(grokPostId))
+
+        /** Sets [Builder.grokPostId] to an arbitrary JSON value. */
+        fun grokPostId(grokPostId: JsonField<String>) = apply { this.grokPostId = grokPostId }
 
         /** X media entity ID. */
         fun id(id: String) = id(JsonField.of(id))
@@ -639,11 +1027,65 @@ private constructor(
         /** Sets [Builder.monetizable] to an arbitrary JSON value. */
         fun monetizable(monetizable: JsonField<Boolean>) = apply { this.monetizable = monetizable }
 
+        fun otherSensitiveContent(otherSensitiveContent: Boolean) =
+            otherSensitiveContent(JsonField.of(otherSensitiveContent))
+
+        /** Sets [Builder.otherSensitiveContent] to an arbitrary JSON value. */
+        fun otherSensitiveContent(otherSensitiveContent: JsonField<Boolean>) = apply {
+            this.otherSensitiveContent = otherSensitiveContent
+        }
+
         /** Named media renditions and resize modes. */
         fun sizes(sizes: Sizes) = sizes(JsonField.of(sizes))
 
         /** Sets [Builder.sizes] to an arbitrary JSON value. */
         fun sizes(sizes: JsonField<Sizes>) = apply { this.sizes = sizes }
+
+        /** Source tweet ID for copied media. */
+        fun sourceStatusId(sourceStatusId: String) = sourceStatusId(JsonField.of(sourceStatusId))
+
+        /** Sets [Builder.sourceStatusId] to an arbitrary JSON value. */
+        fun sourceStatusId(sourceStatusId: JsonField<String>) = apply {
+            this.sourceStatusId = sourceStatusId
+        }
+
+        /**
+         * The account that first posted the media. Some reads carry only its name, picture &
+         * badges.
+         */
+        fun sourceUser(sourceUser: UserProfile) = sourceUser(JsonField.of(sourceUser))
+
+        /** Sets [Builder.sourceUser] to an arbitrary JSON value. */
+        fun sourceUser(sourceUser: JsonField<UserProfile>) = apply { this.sourceUser = sourceUser }
+
+        /** Source profile ID for copied media. */
+        fun sourceUserId(sourceUserId: String) = sourceUserId(JsonField.of(sourceUserId))
+
+        /** Sets [Builder.sourceUserId] to an arbitrary JSON value. */
+        fun sourceUserId(sourceUserId: JsonField<String>) = apply {
+            this.sourceUserId = sourceUserId
+        }
+
+        /** Public profiles tagged in the media. */
+        fun tags(tags: List<Tag>) = tags(JsonField.of(tags))
+
+        /** Sets [Builder.tags] to an arbitrary JSON value. */
+        fun tags(tags: JsonField<List<Tag>>) = apply { this.tags = tags.map { it.toMutableList() } }
+
+        /**
+         * Adds a single [Tag] to [tags].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addTag(tag: Tag) = apply {
+            tags = (tags ?: JsonField.of(mutableListOf())).also { checkKnown("tags", it).add(tag) }
+        }
+
+        /** Media title. */
+        fun title(title: String) = title(JsonField.of(title))
+
+        /** Sets [Builder.title] to an arbitrary JSON value. */
+        fun title(title: JsonField<String>) = apply { this.title = title }
 
         /** Available video encodings, ordered as returned */
         fun videoVariants(videoVariants: List<VideoVariant>) =
@@ -665,6 +1107,20 @@ private constructor(
                     checkKnown("videoVariants", it).add(videoVariant)
                 }
         }
+
+        /** Public destination URL. */
+        fun visitSiteUrl(visitSiteUrl: String) = visitSiteUrl(JsonField.of(visitSiteUrl))
+
+        /** Sets [Builder.visitSiteUrl] to an arbitrary JSON value. */
+        fun visitSiteUrl(visitSiteUrl: JsonField<String>) = apply {
+            this.visitSiteUrl = visitSiteUrl
+        }
+
+        /** Public media action URL. */
+        fun watchNowUrl(watchNowUrl: String) = watchNowUrl(JsonField.of(watchNowUrl))
+
+        /** Sets [Builder.watchNowUrl] to an arbitrary JSON value. */
+        fun watchNowUrl(watchNowUrl: JsonField<String>) = apply { this.watchNowUrl = watchNowUrl }
 
         /** Original media width. */
         fun width(width: Long) = width(JsonField.of(width))
@@ -710,6 +1166,13 @@ private constructor(
                 checkRequired("mediaUrl", mediaUrl),
                 checkRequired("type", type),
                 checkRequired("url", url),
+                adultContent,
+                availabilityReason,
+                description,
+                embeddable,
+                graphicViolence,
+                grokImageAnnotation,
+                grokPostId,
                 id,
                 allowDownload,
                 altText,
@@ -724,8 +1187,16 @@ private constructor(
                 (indices ?: JsonMissing.of()).map { it.toImmutable() },
                 mediaKey,
                 monetizable,
+                otherSensitiveContent,
                 sizes,
+                sourceStatusId,
+                sourceUser,
+                sourceUserId,
+                (tags ?: JsonMissing.of()).map { it.toImmutable() },
+                title,
                 (videoVariants ?: JsonMissing.of()).map { it.toImmutable() },
+                visitSiteUrl,
+                watchNowUrl,
                 width,
                 additionalProperties.toMutableMap(),
             )
@@ -749,6 +1220,13 @@ private constructor(
         mediaUrl()
         type().validate()
         url()
+        adultContent()
+        availabilityReason()
+        description()
+        embeddable()
+        graphicViolence()
+        grokImageAnnotation().ifPresent { it.validate() }
+        grokPostId()
         id()
         allowDownload()
         altText()
@@ -763,8 +1241,16 @@ private constructor(
         indices()
         mediaKey()
         monetizable()
+        otherSensitiveContent()
         sizes().ifPresent { it.validate() }
+        sourceStatusId()
+        sourceUser().ifPresent { it.validate() }
+        sourceUserId()
+        tags().ifPresent { it.forEach { it.validate() } }
+        title()
         videoVariants().ifPresent { it.forEach { it.validate() } }
+        visitSiteUrl()
+        watchNowUrl()
         width()
         validated = true
     }
@@ -782,6 +1268,13 @@ private constructor(
         (if (mediaUrl.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0) +
             (if (url.asKnown().isPresent) 1 else 0) +
+            (if (adultContent.asKnown().isPresent) 1 else 0) +
+            (if (availabilityReason.asKnown().isPresent) 1 else 0) +
+            (if (description.asKnown().isPresent) 1 else 0) +
+            (if (embeddable.asKnown().isPresent) 1 else 0) +
+            (if (graphicViolence.asKnown().isPresent) 1 else 0) +
+            (grokImageAnnotation.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (grokPostId.asKnown().isPresent) 1 else 0) +
             (if (id.asKnown().isPresent) 1 else 0) +
             (if (allowDownload.asKnown().isPresent) 1 else 0) +
             (if (altText.asKnown().isPresent) 1 else 0) +
@@ -796,8 +1289,16 @@ private constructor(
             (indices.asKnown().getOrNull()?.size ?: 0) +
             (if (mediaKey.asKnown().isPresent) 1 else 0) +
             (if (monetizable.asKnown().isPresent) 1 else 0) +
+            (if (otherSensitiveContent.asKnown().isPresent) 1 else 0) +
             (sizes.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (sourceStatusId.asKnown().isPresent) 1 else 0) +
+            (sourceUser.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (sourceUserId.asKnown().isPresent) 1 else 0) +
+            (tags.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
+            (if (title.asKnown().isPresent) 1 else 0) +
             (videoVariants.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
+            (if (visitSiteUrl.asKnown().isPresent) 1 else 0) +
+            (if (watchNowUrl.asKnown().isPresent) 1 else 0) +
             (if (width.asKnown().isPresent) 1 else 0)
 
     class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -918,6 +1419,184 @@ private constructor(
         override fun hashCode() = value.hashCode()
 
         override fun toString() = value.toString()
+    }
+
+    /** Prompt a Grok image came from. Absent on other media & when X sends no prompt. */
+    class GrokImageAnnotation
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val prompt: JsonField<String>,
+        private val upsampledPrompt: JsonField<String>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("prompt") @ExcludeMissing prompt: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("upsampledPrompt")
+            @ExcludeMissing
+            upsampledPrompt: JsonField<String> = JsonMissing.of(),
+        ) : this(prompt, upsampledPrompt, mutableMapOf())
+
+        /**
+         * Prompt the image came from.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun prompt(): Optional<String> = prompt.getOptional("prompt")
+
+        /**
+         * Grok's longer rewrite of the prompt.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun upsampledPrompt(): Optional<String> = upsampledPrompt.getOptional("upsampledPrompt")
+
+        /**
+         * Returns the raw JSON value of [prompt].
+         *
+         * Unlike [prompt], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("prompt") @ExcludeMissing fun _prompt(): JsonField<String> = prompt
+
+        /**
+         * Returns the raw JSON value of [upsampledPrompt].
+         *
+         * Unlike [upsampledPrompt], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("upsampledPrompt")
+        @ExcludeMissing
+        fun _upsampledPrompt(): JsonField<String> = upsampledPrompt
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [GrokImageAnnotation]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [GrokImageAnnotation]. */
+        class Builder internal constructor() {
+
+            private var prompt: JsonField<String> = JsonMissing.of()
+            private var upsampledPrompt: JsonField<String> = JsonMissing.of()
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(grokImageAnnotation: GrokImageAnnotation) = apply {
+                prompt = grokImageAnnotation.prompt
+                upsampledPrompt = grokImageAnnotation.upsampledPrompt
+                additionalProperties = grokImageAnnotation.additionalProperties.toMutableMap()
+            }
+
+            /** Prompt the image came from. */
+            fun prompt(prompt: String) = prompt(JsonField.of(prompt))
+
+            /** Sets [Builder.prompt] to an arbitrary JSON value. */
+            fun prompt(prompt: JsonField<String>) = apply { this.prompt = prompt }
+
+            /** Grok's longer rewrite of the prompt. */
+            fun upsampledPrompt(upsampledPrompt: String) =
+                upsampledPrompt(JsonField.of(upsampledPrompt))
+
+            /** Sets [Builder.upsampledPrompt] to an arbitrary JSON value. */
+            fun upsampledPrompt(upsampledPrompt: JsonField<String>) = apply {
+                this.upsampledPrompt = upsampledPrompt
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [GrokImageAnnotation].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): GrokImageAnnotation =
+                GrokImageAnnotation(prompt, upsampledPrompt, additionalProperties.toMutableMap())
+        }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): GrokImageAnnotation = apply {
+            if (validated) {
+                return@apply
+            }
+
+            prompt()
+            upsampledPrompt()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (prompt.asKnown().isPresent) 1 else 0) +
+                (if (upsampledPrompt.asKnown().isPresent) 1 else 0)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is GrokImageAnnotation &&
+                prompt == other.prompt &&
+                upsampledPrompt == other.upsampledPrompt &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy {
+            Objects.hash(prompt, upsampledPrompt, additionalProperties)
+        }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "GrokImageAnnotation{prompt=$prompt, upsampledPrompt=$upsampledPrompt, additionalProperties=$additionalProperties}"
     }
 
     /** Face-aware crop rectangles grouped by media size. */
@@ -1367,6 +2046,213 @@ private constructor(
         override fun toString() = "Sizes{additionalProperties=$additionalProperties}"
     }
 
+    class Tag
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val name: JsonField<String>,
+        private val screenName: JsonField<String>,
+        private val type: JsonField<String>,
+        private val userId: JsonField<String>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("screen_name")
+            @ExcludeMissing
+            screenName: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("type") @ExcludeMissing type: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("user_id") @ExcludeMissing userId: JsonField<String> = JsonMissing.of(),
+        ) : this(name, screenName, type, userId, mutableMapOf())
+
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun name(): Optional<String> = name.getOptional("name")
+
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun screenName(): Optional<String> = screenName.getOptional("screen_name")
+
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun type(): Optional<String> = type.getOptional("type")
+
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun userId(): Optional<String> = userId.getOptional("user_id")
+
+        /**
+         * Returns the raw JSON value of [name].
+         *
+         * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+        /**
+         * Returns the raw JSON value of [screenName].
+         *
+         * Unlike [screenName], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("screen_name")
+        @ExcludeMissing
+        fun _screenName(): JsonField<String> = screenName
+
+        /**
+         * Returns the raw JSON value of [type].
+         *
+         * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<String> = type
+
+        /**
+         * Returns the raw JSON value of [userId].
+         *
+         * Unlike [userId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("user_id") @ExcludeMissing fun _userId(): JsonField<String> = userId
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [Tag]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Tag]. */
+        class Builder internal constructor() {
+
+            private var name: JsonField<String> = JsonMissing.of()
+            private var screenName: JsonField<String> = JsonMissing.of()
+            private var type: JsonField<String> = JsonMissing.of()
+            private var userId: JsonField<String> = JsonMissing.of()
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(tag: Tag) = apply {
+                name = tag.name
+                screenName = tag.screenName
+                type = tag.type
+                userId = tag.userId
+                additionalProperties = tag.additionalProperties.toMutableMap()
+            }
+
+            fun name(name: String) = name(JsonField.of(name))
+
+            /** Sets [Builder.name] to an arbitrary JSON value. */
+            fun name(name: JsonField<String>) = apply { this.name = name }
+
+            fun screenName(screenName: String) = screenName(JsonField.of(screenName))
+
+            /** Sets [Builder.screenName] to an arbitrary JSON value. */
+            fun screenName(screenName: JsonField<String>) = apply { this.screenName = screenName }
+
+            fun type(type: String) = type(JsonField.of(type))
+
+            /** Sets [Builder.type] to an arbitrary JSON value. */
+            fun type(type: JsonField<String>) = apply { this.type = type }
+
+            fun userId(userId: String) = userId(JsonField.of(userId))
+
+            /** Sets [Builder.userId] to an arbitrary JSON value. */
+            fun userId(userId: JsonField<String>) = apply { this.userId = userId }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Tag].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): Tag =
+                Tag(name, screenName, type, userId, additionalProperties.toMutableMap())
+        }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): Tag = apply {
+            if (validated) {
+                return@apply
+            }
+
+            name()
+            screenName()
+            type()
+            userId()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (name.asKnown().isPresent) 1 else 0) +
+                (if (screenName.asKnown().isPresent) 1 else 0) +
+                (if (type.asKnown().isPresent) 1 else 0) +
+                (if (userId.asKnown().isPresent) 1 else 0)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Tag &&
+                name == other.name &&
+                screenName == other.screenName &&
+                type == other.type &&
+                userId == other.userId &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy {
+            Objects.hash(name, screenName, type, userId, additionalProperties)
+        }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "Tag{name=$name, screenName=$screenName, type=$type, userId=$userId, additionalProperties=$additionalProperties}"
+    }
+
     class VideoVariant
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
@@ -1590,6 +2476,13 @@ private constructor(
             mediaUrl == other.mediaUrl &&
             type == other.type &&
             url == other.url &&
+            adultContent == other.adultContent &&
+            availabilityReason == other.availabilityReason &&
+            description == other.description &&
+            embeddable == other.embeddable &&
+            graphicViolence == other.graphicViolence &&
+            grokImageAnnotation == other.grokImageAnnotation &&
+            grokPostId == other.grokPostId &&
             id == other.id &&
             allowDownload == other.allowDownload &&
             altText == other.altText &&
@@ -1604,8 +2497,16 @@ private constructor(
             indices == other.indices &&
             mediaKey == other.mediaKey &&
             monetizable == other.monetizable &&
+            otherSensitiveContent == other.otherSensitiveContent &&
             sizes == other.sizes &&
+            sourceStatusId == other.sourceStatusId &&
+            sourceUser == other.sourceUser &&
+            sourceUserId == other.sourceUserId &&
+            tags == other.tags &&
+            title == other.title &&
             videoVariants == other.videoVariants &&
+            visitSiteUrl == other.visitSiteUrl &&
+            watchNowUrl == other.watchNowUrl &&
             width == other.width &&
             additionalProperties == other.additionalProperties
     }
@@ -1615,6 +2516,13 @@ private constructor(
             mediaUrl,
             type,
             url,
+            adultContent,
+            availabilityReason,
+            description,
+            embeddable,
+            graphicViolence,
+            grokImageAnnotation,
+            grokPostId,
             id,
             allowDownload,
             altText,
@@ -1629,8 +2537,16 @@ private constructor(
             indices,
             mediaKey,
             monetizable,
+            otherSensitiveContent,
             sizes,
+            sourceStatusId,
+            sourceUser,
+            sourceUserId,
+            tags,
+            title,
             videoVariants,
+            visitSiteUrl,
+            watchNowUrl,
             width,
             additionalProperties,
         )
@@ -1639,5 +2555,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "TweetMedia{mediaUrl=$mediaUrl, type=$type, url=$url, id=$id, allowDownload=$allowDownload, altText=$altText, aspectRatio=$aspectRatio, availabilityStatus=$availabilityStatus, displayUrl=$displayUrl, durationMillis=$durationMillis, expandedUrl=$expandedUrl, faceRects=$faceRects, focusRects=$focusRects, height=$height, indices=$indices, mediaKey=$mediaKey, monetizable=$monetizable, sizes=$sizes, videoVariants=$videoVariants, width=$width, additionalProperties=$additionalProperties}"
+        "TweetMedia{mediaUrl=$mediaUrl, type=$type, url=$url, adultContent=$adultContent, availabilityReason=$availabilityReason, description=$description, embeddable=$embeddable, graphicViolence=$graphicViolence, grokImageAnnotation=$grokImageAnnotation, grokPostId=$grokPostId, id=$id, allowDownload=$allowDownload, altText=$altText, aspectRatio=$aspectRatio, availabilityStatus=$availabilityStatus, displayUrl=$displayUrl, durationMillis=$durationMillis, expandedUrl=$expandedUrl, faceRects=$faceRects, focusRects=$focusRects, height=$height, indices=$indices, mediaKey=$mediaKey, monetizable=$monetizable, otherSensitiveContent=$otherSensitiveContent, sizes=$sizes, sourceStatusId=$sourceStatusId, sourceUser=$sourceUser, sourceUserId=$sourceUserId, tags=$tags, title=$title, videoVariants=$videoVariants, visitSiteUrl=$visitSiteUrl, watchNowUrl=$watchNowUrl, width=$width, additionalProperties=$additionalProperties}"
 }

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
 package com.x_twitter_scraper.api.models.x.tweets
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -282,6 +286,11 @@ private constructor(
         private val nextCursor: JsonField<String>,
         private val tweets: JsonField<List<SearchTweet>>,
         private val diagnostic: JsonField<Diagnostic>,
+        private val filteredCount: JsonField<Long>,
+        private val readBackTo: JsonField<OffsetDateTime>,
+        private val searchContext: JsonField<PaginatedTweets.SearchContext>,
+        private val searchedQuery: JsonField<String>,
+        private val windowComplete: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -299,13 +308,44 @@ private constructor(
             @JsonProperty("diagnostic")
             @ExcludeMissing
             diagnostic: JsonField<Diagnostic> = JsonMissing.of(),
-        ) : this(hasNextPage, nextCursor, tweets, diagnostic, mutableMapOf())
+            @JsonProperty("filtered_count")
+            @ExcludeMissing
+            filteredCount: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("readBackTo")
+            @ExcludeMissing
+            readBackTo: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("searchContext")
+            @ExcludeMissing
+            searchContext: JsonField<PaginatedTweets.SearchContext> = JsonMissing.of(),
+            @JsonProperty("searchedQuery")
+            @ExcludeMissing
+            searchedQuery: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("windowComplete")
+            @ExcludeMissing
+            windowComplete: JsonField<Boolean> = JsonMissing.of(),
+        ) : this(
+            hasNextPage,
+            nextCursor,
+            tweets,
+            diagnostic,
+            filteredCount,
+            readBackTo,
+            searchContext,
+            searchedQuery,
+            windowComplete,
+            mutableMapOf(),
+        )
 
         fun toPaginatedTweets(): PaginatedTweets =
             PaginatedTweets.builder()
                 .hasNextPage(hasNextPage)
                 .nextCursor(nextCursor)
                 .tweets(tweets)
+                .filteredCount(filteredCount)
+                .readBackTo(readBackTo)
+                .searchContext(searchContext)
+                .searchedQuery(searchedQuery)
+                .windowComplete(windowComplete)
                 .build()
 
         /**
@@ -333,6 +373,40 @@ private constructor(
          *   is unexpectedly missing or null.
          */
         fun diagnostic(): Diagnostic = diagnostic.getRequired("diagnostic")
+
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun filteredCount(): Optional<Long> = filteredCount.getOptional("filtered_count")
+
+        /**
+         * How far back a filtered Latest search has read, in UTC. Xquik checked every newer post,
+         * so an empty page still moves this time back.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun readBackTo(): Optional<OffsetDateTime> = readBackTo.getOptional("readBackTo")
+
+        /**
+         * What X shows beside a search's posts that is the same for every reader. Present on a
+         * search for a cashtag X has a card for, such as $BTC.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun searchContext(): Optional<PaginatedTweets.SearchContext> =
+            searchContext.getOptional("searchContext")
+
+        /**
+         * Search q as X ran it, when Xquik fixed it.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun searchedQuery(): Optional<String> = searchedQuery.getOptional("searchedQuery")
+
+        /**
+         * Present on a last page whose sources all read past its start time.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun windowComplete(): Optional<Boolean> = windowComplete.getOptional("windowComplete")
 
         /**
          * Returns the raw JSON value of [hasNextPage].
@@ -367,6 +441,55 @@ private constructor(
         @JsonProperty("diagnostic")
         @ExcludeMissing
         fun _diagnostic(): JsonField<Diagnostic> = diagnostic
+
+        /**
+         * Returns the raw JSON value of [filteredCount].
+         *
+         * Unlike [filteredCount], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("filtered_count")
+        @ExcludeMissing
+        fun _filteredCount(): JsonField<Long> = filteredCount
+
+        /**
+         * Returns the raw JSON value of [readBackTo].
+         *
+         * Unlike [readBackTo], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("readBackTo")
+        @ExcludeMissing
+        fun _readBackTo(): JsonField<OffsetDateTime> = readBackTo
+
+        /**
+         * Returns the raw JSON value of [searchContext].
+         *
+         * Unlike [searchContext], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("searchContext")
+        @ExcludeMissing
+        fun _searchContext(): JsonField<PaginatedTweets.SearchContext> = searchContext
+
+        /**
+         * Returns the raw JSON value of [searchedQuery].
+         *
+         * Unlike [searchedQuery], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("searchedQuery")
+        @ExcludeMissing
+        fun _searchedQuery(): JsonField<String> = searchedQuery
+
+        /**
+         * Returns the raw JSON value of [windowComplete].
+         *
+         * Unlike [windowComplete], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("windowComplete")
+        @ExcludeMissing
+        fun _windowComplete(): JsonField<Boolean> = windowComplete
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -404,6 +527,11 @@ private constructor(
             private var nextCursor: JsonField<String>? = null
             private var tweets: JsonField<MutableList<SearchTweet>>? = null
             private var diagnostic: JsonField<Diagnostic>? = null
+            private var filteredCount: JsonField<Long> = JsonMissing.of()
+            private var readBackTo: JsonField<OffsetDateTime> = JsonMissing.of()
+            private var searchContext: JsonField<PaginatedTweets.SearchContext> = JsonMissing.of()
+            private var searchedQuery: JsonField<String> = JsonMissing.of()
+            private var windowComplete: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -412,6 +540,11 @@ private constructor(
                 nextCursor = tweetSearchCoverageResponse.nextCursor
                 tweets = tweetSearchCoverageResponse.tweets.map { it.toMutableList() }
                 diagnostic = tweetSearchCoverageResponse.diagnostic
+                filteredCount = tweetSearchCoverageResponse.filteredCount
+                readBackTo = tweetSearchCoverageResponse.readBackTo
+                searchContext = tweetSearchCoverageResponse.searchContext
+                searchedQuery = tweetSearchCoverageResponse.searchedQuery
+                windowComplete = tweetSearchCoverageResponse.windowComplete
                 additionalProperties =
                     tweetSearchCoverageResponse.additionalProperties.toMutableMap()
             }
@@ -455,6 +588,53 @@ private constructor(
                 this.diagnostic = diagnostic
             }
 
+            fun filteredCount(filteredCount: Long) = filteredCount(JsonField.of(filteredCount))
+
+            /** Sets [Builder.filteredCount] to an arbitrary JSON value. */
+            fun filteredCount(filteredCount: JsonField<Long>) = apply {
+                this.filteredCount = filteredCount
+            }
+
+            /**
+             * How far back a filtered Latest search has read, in UTC. Xquik checked every newer
+             * post, so an empty page still moves this time back.
+             */
+            fun readBackTo(readBackTo: OffsetDateTime) = readBackTo(JsonField.of(readBackTo))
+
+            /** Sets [Builder.readBackTo] to an arbitrary JSON value. */
+            fun readBackTo(readBackTo: JsonField<OffsetDateTime>) = apply {
+                this.readBackTo = readBackTo
+            }
+
+            /**
+             * What X shows beside a search's posts that is the same for every reader. Present on a
+             * search for a cashtag X has a card for, such as $BTC.
+             */
+            fun searchContext(searchContext: PaginatedTweets.SearchContext) =
+                searchContext(JsonField.of(searchContext))
+
+            /** Sets [Builder.searchContext] to an arbitrary JSON value. */
+            fun searchContext(searchContext: JsonField<PaginatedTweets.SearchContext>) = apply {
+                this.searchContext = searchContext
+            }
+
+            /** Search q as X ran it, when Xquik fixed it. */
+            fun searchedQuery(searchedQuery: String) = searchedQuery(JsonField.of(searchedQuery))
+
+            /** Sets [Builder.searchedQuery] to an arbitrary JSON value. */
+            fun searchedQuery(searchedQuery: JsonField<String>) = apply {
+                this.searchedQuery = searchedQuery
+            }
+
+            /** Present on a last page whose sources all read past its start time. */
+            fun windowComplete(windowComplete: Boolean) =
+                windowComplete(JsonField.of(windowComplete))
+
+            /** Sets [Builder.windowComplete] to an arbitrary JSON value. */
+            fun windowComplete(windowComplete: JsonField<Boolean>) = apply {
+                this.windowComplete = windowComplete
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -495,6 +675,11 @@ private constructor(
                     checkRequired("nextCursor", nextCursor),
                     checkRequired("tweets", tweets).map { it.toImmutable() },
                     checkRequired("diagnostic", diagnostic),
+                    filteredCount,
+                    readBackTo,
+                    searchContext,
+                    searchedQuery,
+                    windowComplete,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -519,6 +704,11 @@ private constructor(
             nextCursor()
             tweets().forEach { it.validate() }
             diagnostic().validate()
+            filteredCount()
+            readBackTo()
+            searchContext().ifPresent { it.validate() }
+            searchedQuery()
+            windowComplete()
             validated = true
         }
 
@@ -535,7 +725,12 @@ private constructor(
             (if (hasNextPage.asKnown().isPresent) 1 else 0) +
                 (if (nextCursor.asKnown().isPresent) 1 else 0) +
                 (tweets.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
-                (diagnostic.asKnown().getOrNull()?.validity() ?: 0)
+                (diagnostic.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (filteredCount.asKnown().isPresent) 1 else 0) +
+                (if (readBackTo.asKnown().isPresent) 1 else 0) +
+                (searchContext.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (searchedQuery.asKnown().isPresent) 1 else 0) +
+                (if (windowComplete.asKnown().isPresent) 1 else 0)
 
         /** Coverage evidence across parallel search strategies. */
         class Diagnostic
@@ -1966,7 +2161,9 @@ private constructor(
 
                         fun putAllAdditionalProperties(
                             additionalProperties: Map<String, JsonValue>
-                        ) = apply { this.additionalProperties.putAll(additionalProperties) }
+                        ) = apply {
+                            this.additionalProperties.putAll(additionalProperties)
+                        }
 
                         fun removeAdditionalProperty(key: String) = apply {
                             additionalProperties.remove(key)
@@ -2375,16 +2572,32 @@ private constructor(
                 nextCursor == other.nextCursor &&
                 tweets == other.tweets &&
                 diagnostic == other.diagnostic &&
+                filteredCount == other.filteredCount &&
+                readBackTo == other.readBackTo &&
+                searchContext == other.searchContext &&
+                searchedQuery == other.searchedQuery &&
+                windowComplete == other.windowComplete &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(hasNextPage, nextCursor, tweets, diagnostic, additionalProperties)
+            Objects.hash(
+                hasNextPage,
+                nextCursor,
+                tweets,
+                diagnostic,
+                filteredCount,
+                readBackTo,
+                searchContext,
+                searchedQuery,
+                windowComplete,
+                additionalProperties,
+            )
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "TweetSearchCoverageResponse{hasNextPage=$hasNextPage, nextCursor=$nextCursor, tweets=$tweets, diagnostic=$diagnostic, additionalProperties=$additionalProperties}"
+            "TweetSearchCoverageResponse{hasNextPage=$hasNextPage, nextCursor=$nextCursor, tweets=$tweets, diagnostic=$diagnostic, filteredCount=$filteredCount, readBackTo=$readBackTo, searchContext=$searchContext, searchedQuery=$searchedQuery, windowComplete=$windowComplete, additionalProperties=$additionalProperties}"
     }
 }

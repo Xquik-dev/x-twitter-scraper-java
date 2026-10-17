@@ -57,4 +57,34 @@ internal class ContentDisclosureTest {
 
         assertThat(roundtrippedContentDisclosure).isEqualTo(contentDisclosure)
     }
+
+    @Test
+    fun readsEveryFieldTheSpecDescribes() {
+        val contentDisclosure =
+            jsonMapper()
+                .readValue(
+                    """
+                    {
+                      "advertising": {
+                        "isPaidPromotion": true
+                      },
+                      "aiGenerated": {
+                        "detectionSource": "GrokSignature",
+                        "hasAiGeneratedMedia": true
+                      }
+                    }
+                    """
+                        .trimIndent(),
+                    jacksonTypeRef<ContentDisclosure>(),
+                )
+
+        contentDisclosure.validate()
+        assertThat(contentDisclosure.advertising().get().isPaidPromotion()).contains(true)
+        assertThat(contentDisclosure.advertising().get()._additionalProperties()).isEmpty()
+        assertThat(contentDisclosure.aiGenerated().get().detectionSource())
+            .contains("GrokSignature")
+        assertThat(contentDisclosure.aiGenerated().get().hasAiGeneratedMedia()).contains(true)
+        assertThat(contentDisclosure.aiGenerated().get()._additionalProperties()).isEmpty()
+        assertThat(contentDisclosure._additionalProperties()).isEmpty()
+    }
 }

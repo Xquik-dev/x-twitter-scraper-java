@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
 package com.x_twitter_scraper.api.models.x.tweets
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -15,6 +19,7 @@ import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import com.x_twitter_scraper.api.models.PaginatedTweets
 import com.x_twitter_scraper.api.models.SearchTweet
+import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -31,7 +36,17 @@ private constructor(
     private val nextCursor: JsonField<String>,
     private val tweets: JsonField<List<SearchTweet>>,
     private val diagnostic: JsonField<Diagnostic>,
+    private val filteredCount: JsonField<Long>,
+    private val hiddenReplies: JsonField<Long>,
+    private val limitReached: JsonField<Boolean>,
+    private val message: JsonField<String>,
     private val nestedReplies: JsonField<List<SearchTweet>>,
+    private val orderPartial: JsonField<Boolean>,
+    private val partialBefore: JsonField<OffsetDateTime>,
+    private val readBackTo: JsonField<OffsetDateTime>,
+    private val searchContext: JsonField<PaginatedTweets.SearchContext>,
+    private val searchedQuery: JsonField<String>,
+    private val windowComplete: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -49,16 +64,66 @@ private constructor(
         @JsonProperty("diagnostic")
         @ExcludeMissing
         diagnostic: JsonField<Diagnostic> = JsonMissing.of(),
+        @JsonProperty("filtered_count")
+        @ExcludeMissing
+        filteredCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("hiddenReplies")
+        @ExcludeMissing
+        hiddenReplies: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("limit_reached")
+        @ExcludeMissing
+        limitReached: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("message") @ExcludeMissing message: JsonField<String> = JsonMissing.of(),
         @JsonProperty("nested_replies")
         @ExcludeMissing
         nestedReplies: JsonField<List<SearchTweet>> = JsonMissing.of(),
-    ) : this(hasNextPage, nextCursor, tweets, diagnostic, nestedReplies, mutableMapOf())
+        @JsonProperty("orderPartial")
+        @ExcludeMissing
+        orderPartial: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("partialBefore")
+        @ExcludeMissing
+        partialBefore: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("readBackTo")
+        @ExcludeMissing
+        readBackTo: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("searchContext")
+        @ExcludeMissing
+        searchContext: JsonField<PaginatedTweets.SearchContext> = JsonMissing.of(),
+        @JsonProperty("searchedQuery")
+        @ExcludeMissing
+        searchedQuery: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("windowComplete")
+        @ExcludeMissing
+        windowComplete: JsonField<Boolean> = JsonMissing.of(),
+    ) : this(
+        hasNextPage,
+        nextCursor,
+        tweets,
+        diagnostic,
+        filteredCount,
+        hiddenReplies,
+        limitReached,
+        message,
+        nestedReplies,
+        orderPartial,
+        partialBefore,
+        readBackTo,
+        searchContext,
+        searchedQuery,
+        windowComplete,
+        mutableMapOf(),
+    )
 
     fun toPaginatedTweets(): PaginatedTweets =
         PaginatedTweets.builder()
             .hasNextPage(hasNextPage)
             .nextCursor(nextCursor)
             .tweets(tweets)
+            .filteredCount(filteredCount)
+            .readBackTo(readBackTo)
+            .searchContext(searchContext)
+            .searchedQuery(searchedQuery)
+            .windowComplete(windowComplete)
             .build()
 
     /**
@@ -86,12 +151,87 @@ private constructor(
      */
     fun diagnostic(): Optional<Diagnostic> = diagnostic.getOptional("diagnostic")
 
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun filteredCount(): Optional<Long> = filteredCount.getOptional("filtered_count")
+
+    /**
+     * Present on the last automatic page, and on a complete-mode answer without rows. X counts this
+     * many more replies but shows them to nobody. They may be hidden, protected or deleted. A retry
+     * returns the same replies.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun hiddenReplies(): Optional<Long> = hiddenReplies.getOptional("hiddenReplies")
+
+    /**
+     * Present when your limit cut a complete-mode answer. The post has more replies. Raise limit to
+     * get them all.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun limitReached(): Optional<Boolean> = limitReached.getOptional("limit_reached")
+
+    /**
+     * Explains an answer cut by your limit.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun message(): Optional<String> = message.getOptional("message")
+
     /**
      * Nested replies. Excluded from direct coverage.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun nestedReplies(): Optional<List<SearchTweet>> = nestedReplies.getOptional("nested_replies")
+
+    /**
+     * Present with latest or oldest sort. The read stopped before it held every reply X shows. Rows
+     * stay sorted by date, but replies may be missing between them. Retry later for a gap-free
+     * order. Complete mode and automatic pages set it alike.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun orderPartial(): Optional<Boolean> = orderPartial.getOptional("orderPartial")
+
+    /**
+     * Present on an answer that lacks replies of a large thread posted before this time. X shows
+     * only part of the replies older than 7 days. A retry returns about the same replies.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun partialBefore(): Optional<OffsetDateTime> = partialBefore.getOptional("partialBefore")
+
+    /**
+     * How far back a filtered Latest search has read, in UTC. Xquik checked every newer post, so an
+     * empty page still moves this time back.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun readBackTo(): Optional<OffsetDateTime> = readBackTo.getOptional("readBackTo")
+
+    /**
+     * What X shows beside a search's posts that is the same for every reader. Present on a search
+     * for a cashtag X has a card for, such as $BTC.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun searchContext(): Optional<PaginatedTweets.SearchContext> =
+        searchContext.getOptional("searchContext")
+
+    /**
+     * Search q as X ran it, when Xquik fixed it.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun searchedQuery(): Optional<String> = searchedQuery.getOptional("searchedQuery")
+
+    /**
+     * Present on a last page whose sources all read past its start time.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun windowComplete(): Optional<Boolean> = windowComplete.getOptional("windowComplete")
 
     /**
      * Returns the raw JSON value of [hasNextPage].
@@ -126,6 +266,40 @@ private constructor(
     fun _diagnostic(): JsonField<Diagnostic> = diagnostic
 
     /**
+     * Returns the raw JSON value of [filteredCount].
+     *
+     * Unlike [filteredCount], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("filtered_count")
+    @ExcludeMissing
+    fun _filteredCount(): JsonField<Long> = filteredCount
+
+    /**
+     * Returns the raw JSON value of [hiddenReplies].
+     *
+     * Unlike [hiddenReplies], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("hiddenReplies")
+    @ExcludeMissing
+    fun _hiddenReplies(): JsonField<Long> = hiddenReplies
+
+    /**
+     * Returns the raw JSON value of [limitReached].
+     *
+     * Unlike [limitReached], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("limit_reached")
+    @ExcludeMissing
+    fun _limitReached(): JsonField<Boolean> = limitReached
+
+    /**
+     * Returns the raw JSON value of [message].
+     *
+     * Unlike [message], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("message") @ExcludeMissing fun _message(): JsonField<String> = message
+
+    /**
      * Returns the raw JSON value of [nestedReplies].
      *
      * Unlike [nestedReplies], this method doesn't throw if the JSON field has an unexpected type.
@@ -133,6 +307,60 @@ private constructor(
     @JsonProperty("nested_replies")
     @ExcludeMissing
     fun _nestedReplies(): JsonField<List<SearchTweet>> = nestedReplies
+
+    /**
+     * Returns the raw JSON value of [orderPartial].
+     *
+     * Unlike [orderPartial], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("orderPartial")
+    @ExcludeMissing
+    fun _orderPartial(): JsonField<Boolean> = orderPartial
+
+    /**
+     * Returns the raw JSON value of [partialBefore].
+     *
+     * Unlike [partialBefore], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("partialBefore")
+    @ExcludeMissing
+    fun _partialBefore(): JsonField<OffsetDateTime> = partialBefore
+
+    /**
+     * Returns the raw JSON value of [readBackTo].
+     *
+     * Unlike [readBackTo], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("readBackTo")
+    @ExcludeMissing
+    fun _readBackTo(): JsonField<OffsetDateTime> = readBackTo
+
+    /**
+     * Returns the raw JSON value of [searchContext].
+     *
+     * Unlike [searchContext], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("searchContext")
+    @ExcludeMissing
+    fun _searchContext(): JsonField<PaginatedTweets.SearchContext> = searchContext
+
+    /**
+     * Returns the raw JSON value of [searchedQuery].
+     *
+     * Unlike [searchedQuery], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("searchedQuery")
+    @ExcludeMissing
+    fun _searchedQuery(): JsonField<String> = searchedQuery
+
+    /**
+     * Returns the raw JSON value of [windowComplete].
+     *
+     * Unlike [windowComplete], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("windowComplete")
+    @ExcludeMissing
+    fun _windowComplete(): JsonField<Boolean> = windowComplete
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -168,7 +396,17 @@ private constructor(
         private var nextCursor: JsonField<String>? = null
         private var tweets: JsonField<MutableList<SearchTweet>>? = null
         private var diagnostic: JsonField<Diagnostic> = JsonMissing.of()
+        private var filteredCount: JsonField<Long> = JsonMissing.of()
+        private var hiddenReplies: JsonField<Long> = JsonMissing.of()
+        private var limitReached: JsonField<Boolean> = JsonMissing.of()
+        private var message: JsonField<String> = JsonMissing.of()
         private var nestedReplies: JsonField<MutableList<SearchTweet>>? = null
+        private var orderPartial: JsonField<Boolean> = JsonMissing.of()
+        private var partialBefore: JsonField<OffsetDateTime> = JsonMissing.of()
+        private var readBackTo: JsonField<OffsetDateTime> = JsonMissing.of()
+        private var searchContext: JsonField<PaginatedTweets.SearchContext> = JsonMissing.of()
+        private var searchedQuery: JsonField<String> = JsonMissing.of()
+        private var windowComplete: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -177,7 +415,17 @@ private constructor(
             nextCursor = tweetGetRepliesResponse.nextCursor
             tweets = tweetGetRepliesResponse.tweets.map { it.toMutableList() }
             diagnostic = tweetGetRepliesResponse.diagnostic
+            filteredCount = tweetGetRepliesResponse.filteredCount
+            hiddenReplies = tweetGetRepliesResponse.hiddenReplies
+            limitReached = tweetGetRepliesResponse.limitReached
+            message = tweetGetRepliesResponse.message
             nestedReplies = tweetGetRepliesResponse.nestedReplies.map { it.toMutableList() }
+            orderPartial = tweetGetRepliesResponse.orderPartial
+            partialBefore = tweetGetRepliesResponse.partialBefore
+            readBackTo = tweetGetRepliesResponse.readBackTo
+            searchContext = tweetGetRepliesResponse.searchContext
+            searchedQuery = tweetGetRepliesResponse.searchedQuery
+            windowComplete = tweetGetRepliesResponse.windowComplete
             additionalProperties = tweetGetRepliesResponse.additionalProperties.toMutableMap()
         }
 
@@ -216,6 +464,42 @@ private constructor(
         /** Sets [Builder.diagnostic] to an arbitrary JSON value. */
         fun diagnostic(diagnostic: JsonField<Diagnostic>) = apply { this.diagnostic = diagnostic }
 
+        fun filteredCount(filteredCount: Long) = filteredCount(JsonField.of(filteredCount))
+
+        /** Sets [Builder.filteredCount] to an arbitrary JSON value. */
+        fun filteredCount(filteredCount: JsonField<Long>) = apply {
+            this.filteredCount = filteredCount
+        }
+
+        /**
+         * Present on the last automatic page, and on a complete-mode answer without rows. X counts
+         * this many more replies but shows them to nobody. They may be hidden, protected or
+         * deleted. A retry returns the same replies.
+         */
+        fun hiddenReplies(hiddenReplies: Long) = hiddenReplies(JsonField.of(hiddenReplies))
+
+        /** Sets [Builder.hiddenReplies] to an arbitrary JSON value. */
+        fun hiddenReplies(hiddenReplies: JsonField<Long>) = apply {
+            this.hiddenReplies = hiddenReplies
+        }
+
+        /**
+         * Present when your limit cut a complete-mode answer. The post has more replies. Raise
+         * limit to get them all.
+         */
+        fun limitReached(limitReached: Boolean) = limitReached(JsonField.of(limitReached))
+
+        /** Sets [Builder.limitReached] to an arbitrary JSON value. */
+        fun limitReached(limitReached: JsonField<Boolean>) = apply {
+            this.limitReached = limitReached
+        }
+
+        /** Explains an answer cut by your limit. */
+        fun message(message: String) = message(JsonField.of(message))
+
+        /** Sets [Builder.message] to an arbitrary JSON value. */
+        fun message(message: JsonField<String>) = apply { this.message = message }
+
         /** Nested replies. Excluded from direct coverage. */
         fun nestedReplies(nestedReplies: List<SearchTweet>) =
             nestedReplies(JsonField.of(nestedReplies))
@@ -235,6 +519,69 @@ private constructor(
                 (nestedReplies ?: JsonField.of(mutableListOf())).also {
                     checkKnown("nestedReplies", it).add(nestedReply)
                 }
+        }
+
+        /**
+         * Present with latest or oldest sort. The read stopped before it held every reply X shows.
+         * Rows stay sorted by date, but replies may be missing between them. Retry later for a
+         * gap-free order. Complete mode and automatic pages set it alike.
+         */
+        fun orderPartial(orderPartial: Boolean) = orderPartial(JsonField.of(orderPartial))
+
+        /** Sets [Builder.orderPartial] to an arbitrary JSON value. */
+        fun orderPartial(orderPartial: JsonField<Boolean>) = apply {
+            this.orderPartial = orderPartial
+        }
+
+        /**
+         * Present on an answer that lacks replies of a large thread posted before this time. X
+         * shows only part of the replies older than 7 days. A retry returns about the same replies.
+         */
+        fun partialBefore(partialBefore: OffsetDateTime) =
+            partialBefore(JsonField.of(partialBefore))
+
+        /** Sets [Builder.partialBefore] to an arbitrary JSON value. */
+        fun partialBefore(partialBefore: JsonField<OffsetDateTime>) = apply {
+            this.partialBefore = partialBefore
+        }
+
+        /**
+         * How far back a filtered Latest search has read, in UTC. Xquik checked every newer post,
+         * so an empty page still moves this time back.
+         */
+        fun readBackTo(readBackTo: OffsetDateTime) = readBackTo(JsonField.of(readBackTo))
+
+        /** Sets [Builder.readBackTo] to an arbitrary JSON value. */
+        fun readBackTo(readBackTo: JsonField<OffsetDateTime>) = apply {
+            this.readBackTo = readBackTo
+        }
+
+        /**
+         * What X shows beside a search's posts that is the same for every reader. Present on a
+         * search for a cashtag X has a card for, such as $BTC.
+         */
+        fun searchContext(searchContext: PaginatedTweets.SearchContext) =
+            searchContext(JsonField.of(searchContext))
+
+        /** Sets [Builder.searchContext] to an arbitrary JSON value. */
+        fun searchContext(searchContext: JsonField<PaginatedTweets.SearchContext>) = apply {
+            this.searchContext = searchContext
+        }
+
+        /** Search q as X ran it, when Xquik fixed it. */
+        fun searchedQuery(searchedQuery: String) = searchedQuery(JsonField.of(searchedQuery))
+
+        /** Sets [Builder.searchedQuery] to an arbitrary JSON value. */
+        fun searchedQuery(searchedQuery: JsonField<String>) = apply {
+            this.searchedQuery = searchedQuery
+        }
+
+        /** Present on a last page whose sources all read past its start time. */
+        fun windowComplete(windowComplete: Boolean) = windowComplete(JsonField.of(windowComplete))
+
+        /** Sets [Builder.windowComplete] to an arbitrary JSON value. */
+        fun windowComplete(windowComplete: JsonField<Boolean>) = apply {
+            this.windowComplete = windowComplete
         }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -276,7 +623,17 @@ private constructor(
                 checkRequired("nextCursor", nextCursor),
                 checkRequired("tweets", tweets).map { it.toImmutable() },
                 diagnostic,
+                filteredCount,
+                hiddenReplies,
+                limitReached,
+                message,
                 (nestedReplies ?: JsonMissing.of()).map { it.toImmutable() },
+                orderPartial,
+                partialBefore,
+                readBackTo,
+                searchContext,
+                searchedQuery,
+                windowComplete,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -300,7 +657,17 @@ private constructor(
         nextCursor()
         tweets().forEach { it.validate() }
         diagnostic().ifPresent { it.validate() }
+        filteredCount()
+        hiddenReplies()
+        limitReached()
+        message()
         nestedReplies().ifPresent { it.forEach { it.validate() } }
+        orderPartial()
+        partialBefore()
+        readBackTo()
+        searchContext().ifPresent { it.validate() }
+        searchedQuery()
+        windowComplete()
         validated = true
     }
 
@@ -318,7 +685,17 @@ private constructor(
             (if (nextCursor.asKnown().isPresent) 1 else 0) +
             (tweets.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (diagnostic.asKnown().getOrNull()?.validity() ?: 0) +
-            (nestedReplies.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
+            (if (filteredCount.asKnown().isPresent) 1 else 0) +
+            (if (hiddenReplies.asKnown().isPresent) 1 else 0) +
+            (if (limitReached.asKnown().isPresent) 1 else 0) +
+            (if (message.asKnown().isPresent) 1 else 0) +
+            (nestedReplies.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
+            (if (orderPartial.asKnown().isPresent) 1 else 0) +
+            (if (partialBefore.asKnown().isPresent) 1 else 0) +
+            (if (readBackTo.asKnown().isPresent) 1 else 0) +
+            (searchContext.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (searchedQuery.asKnown().isPresent) 1 else 0) +
+            (if (windowComplete.asKnown().isPresent) 1 else 0)
 
     /** Evidence for direct-reply coverage and collector behavior. */
     class Diagnostic
@@ -342,6 +719,9 @@ private constructor(
         private val targetDirectReplies: JsonField<Long>,
         private val uniqueDirectReplies: JsonField<Long>,
         private val unrelatedCount: JsonField<Long>,
+        private val replyScopeComplete: JsonField<Boolean>,
+        private val replyTreeComplete: JsonField<Boolean>,
+        private val sourcesEnded: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -401,6 +781,15 @@ private constructor(
             @JsonProperty("unrelatedCount")
             @ExcludeMissing
             unrelatedCount: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("replyScopeComplete")
+            @ExcludeMissing
+            replyScopeComplete: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("replyTreeComplete")
+            @ExcludeMissing
+            replyTreeComplete: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("sourcesEnded")
+            @ExcludeMissing
+            sourcesEnded: JsonField<Boolean> = JsonMissing.of(),
         ) : this(
             complete,
             coveragePercentage,
@@ -420,6 +809,9 @@ private constructor(
             targetDirectReplies,
             uniqueDirectReplies,
             unrelatedCount,
+            replyScopeComplete,
+            replyTreeComplete,
+            sourcesEnded,
             mutableMapOf(),
         )
 
@@ -569,6 +961,30 @@ private constructor(
          *   is unexpectedly missing or null.
          */
         fun unrelatedCount(): Long = unrelatedCount.getRequired("unrelatedCount")
+
+        /**
+         * Replies are accounted for through the requested scope & depth. Source errors remain
+         * separate.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun replyScopeComplete(): Optional<Boolean> =
+            replyScopeComplete.getOptional("replyScopeComplete")
+
+        /**
+         * All child counts are known & match collected replies.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun replyTreeComplete(): Optional<Boolean> =
+            replyTreeComplete.getOptional("replyTreeComplete")
+
+        /**
+         * Every source ended, or no reply view shows a reply. A retry returns the same rows.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun sourcesEnded(): Optional<Boolean> = sourcesEnded.getOptional("sourcesEnded")
 
         /**
          * Returns the raw JSON value of [complete].
@@ -745,6 +1161,36 @@ private constructor(
         @ExcludeMissing
         fun _unrelatedCount(): JsonField<Long> = unrelatedCount
 
+        /**
+         * Returns the raw JSON value of [replyScopeComplete].
+         *
+         * Unlike [replyScopeComplete], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("replyScopeComplete")
+        @ExcludeMissing
+        fun _replyScopeComplete(): JsonField<Boolean> = replyScopeComplete
+
+        /**
+         * Returns the raw JSON value of [replyTreeComplete].
+         *
+         * Unlike [replyTreeComplete], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("replyTreeComplete")
+        @ExcludeMissing
+        fun _replyTreeComplete(): JsonField<Boolean> = replyTreeComplete
+
+        /**
+         * Returns the raw JSON value of [sourcesEnded].
+         *
+         * Unlike [sourcesEnded], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("sourcesEnded")
+        @ExcludeMissing
+        fun _sourcesEnded(): JsonField<Boolean> = sourcesEnded
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -808,6 +1254,9 @@ private constructor(
             private var targetDirectReplies: JsonField<Long>? = null
             private var uniqueDirectReplies: JsonField<Long>? = null
             private var unrelatedCount: JsonField<Long>? = null
+            private var replyScopeComplete: JsonField<Boolean> = JsonMissing.of()
+            private var replyTreeComplete: JsonField<Boolean> = JsonMissing.of()
+            private var sourcesEnded: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -831,6 +1280,9 @@ private constructor(
                 targetDirectReplies = diagnostic.targetDirectReplies
                 uniqueDirectReplies = diagnostic.uniqueDirectReplies
                 unrelatedCount = diagnostic.unrelatedCount
+                replyScopeComplete = diagnostic.replyScopeComplete
+                replyTreeComplete = diagnostic.replyTreeComplete
+                sourcesEnded = diagnostic.sourcesEnded
                 additionalProperties = diagnostic.additionalProperties.toMutableMap()
             }
 
@@ -1015,6 +1467,37 @@ private constructor(
                 this.unrelatedCount = unrelatedCount
             }
 
+            /**
+             * Replies are accounted for through the requested scope & depth. Source errors remain
+             * separate.
+             */
+            fun replyScopeComplete(replyScopeComplete: Boolean) =
+                replyScopeComplete(JsonField.of(replyScopeComplete))
+
+            /** Sets [Builder.replyScopeComplete] to an arbitrary JSON value. */
+            fun replyScopeComplete(replyScopeComplete: JsonField<Boolean>) = apply {
+                this.replyScopeComplete = replyScopeComplete
+            }
+
+            /** All child counts are known & match collected replies. */
+            fun replyTreeComplete(replyTreeComplete: Boolean) =
+                replyTreeComplete(JsonField.of(replyTreeComplete))
+
+            /** Sets [Builder.replyTreeComplete] to an arbitrary JSON value. */
+            fun replyTreeComplete(replyTreeComplete: JsonField<Boolean>) = apply {
+                this.replyTreeComplete = replyTreeComplete
+            }
+
+            /**
+             * Every source ended, or no reply view shows a reply. A retry returns the same rows.
+             */
+            fun sourcesEnded(sourcesEnded: Boolean) = sourcesEnded(JsonField.of(sourcesEnded))
+
+            /** Sets [Builder.sourcesEnded] to an arbitrary JSON value. */
+            fun sourcesEnded(sourcesEnded: JsonField<Boolean>) = apply {
+                this.sourcesEnded = sourcesEnded
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -1086,6 +1569,9 @@ private constructor(
                     checkRequired("targetDirectReplies", targetDirectReplies),
                     checkRequired("uniqueDirectReplies", uniqueDirectReplies),
                     checkRequired("unrelatedCount", unrelatedCount),
+                    replyScopeComplete,
+                    replyTreeComplete,
+                    sourcesEnded,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -1124,6 +1610,9 @@ private constructor(
             targetDirectReplies()
             uniqueDirectReplies()
             unrelatedCount()
+            replyScopeComplete()
+            replyTreeComplete()
+            sourcesEnded()
             validated = true
         }
 
@@ -1154,7 +1643,10 @@ private constructor(
                 (strategiesAttempted.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
                 (if (targetDirectReplies.asKnown().isPresent) 1 else 0) +
                 (if (uniqueDirectReplies.asKnown().isPresent) 1 else 0) +
-                (if (unrelatedCount.asKnown().isPresent) 1 else 0)
+                (if (unrelatedCount.asKnown().isPresent) 1 else 0) +
+                (if (replyScopeComplete.asKnown().isPresent) 1 else 0) +
+                (if (replyTreeComplete.asKnown().isPresent) 1 else 0) +
+                (if (sourcesEnded.asKnown().isPresent) 1 else 0)
 
         /** Field-presence counts across the collected direct replies. */
         class Richness
@@ -1773,6 +2265,7 @@ private constructor(
             private val newNestedReplies: JsonField<Long>,
             private val pagesAttempted: JsonField<Long>,
             private val stopReason: JsonField<StopReason>,
+            private val newDirectReplyPages: JsonField<List<Long>>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -1791,12 +2284,16 @@ private constructor(
                 @JsonProperty("stopReason")
                 @ExcludeMissing
                 stopReason: JsonField<StopReason> = JsonMissing.of(),
+                @JsonProperty("newDirectReplyPages")
+                @ExcludeMissing
+                newDirectReplyPages: JsonField<List<Long>> = JsonMissing.of(),
             ) : this(
                 name,
                 newDirectReplies,
                 newNestedReplies,
                 pagesAttempted,
                 stopReason,
+                newDirectReplyPages,
                 mutableMapOf(),
             )
 
@@ -1829,6 +2326,15 @@ private constructor(
              *   or is unexpectedly missing or null.
              */
             fun stopReason(): StopReason = stopReason.getRequired("stopReason")
+
+            /**
+             * For a search of the post's conversation, the page that listed each new direct reply,
+             * from 1.
+             *
+             * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+             */
+            fun newDirectReplyPages(): Optional<List<Long>> =
+                newDirectReplyPages.getOptional("newDirectReplyPages")
 
             /**
              * Returns the raw JSON value of [name].
@@ -1877,6 +2383,16 @@ private constructor(
             @ExcludeMissing
             fun _stopReason(): JsonField<StopReason> = stopReason
 
+            /**
+             * Returns the raw JSON value of [newDirectReplyPages].
+             *
+             * Unlike [newDirectReplyPages], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("newDirectReplyPages")
+            @ExcludeMissing
+            fun _newDirectReplyPages(): JsonField<List<Long>> = newDirectReplyPages
+
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
                 additionalProperties.put(key, value)
@@ -1914,6 +2430,7 @@ private constructor(
                 private var newNestedReplies: JsonField<Long>? = null
                 private var pagesAttempted: JsonField<Long>? = null
                 private var stopReason: JsonField<StopReason>? = null
+                private var newDirectReplyPages: JsonField<MutableList<Long>>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
@@ -1923,6 +2440,8 @@ private constructor(
                     newNestedReplies = strategiesAttempted.newNestedReplies
                     pagesAttempted = strategiesAttempted.pagesAttempted
                     stopReason = strategiesAttempted.stopReason
+                    newDirectReplyPages =
+                        strategiesAttempted.newDirectReplyPages.map { it.toMutableList() }
                     additionalProperties = strategiesAttempted.additionalProperties.toMutableMap()
                 }
 
@@ -1960,6 +2479,30 @@ private constructor(
                 /** Sets [Builder.stopReason] to an arbitrary JSON value. */
                 fun stopReason(stopReason: JsonField<StopReason>) = apply {
                     this.stopReason = stopReason
+                }
+
+                /**
+                 * For a search of the post's conversation, the page that listed each new direct
+                 * reply, from 1.
+                 */
+                fun newDirectReplyPages(newDirectReplyPages: List<Long>) =
+                    newDirectReplyPages(JsonField.of(newDirectReplyPages))
+
+                /** Sets [Builder.newDirectReplyPages] to an arbitrary JSON value. */
+                fun newDirectReplyPages(newDirectReplyPages: JsonField<List<Long>>) = apply {
+                    this.newDirectReplyPages = newDirectReplyPages.map { it.toMutableList() }
+                }
+
+                /**
+                 * Adds a single [Long] to [newDirectReplyPages].
+                 *
+                 * @throws IllegalStateException if the field was previously set to a non-list.
+                 */
+                fun addNewDirectReplyPage(newDirectReplyPage: Long) = apply {
+                    newDirectReplyPages =
+                        (newDirectReplyPages ?: JsonField.of(mutableListOf())).also {
+                            checkKnown("newDirectReplyPages", it).add(newDirectReplyPage)
+                        }
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -2007,6 +2550,7 @@ private constructor(
                         checkRequired("newNestedReplies", newNestedReplies),
                         checkRequired("pagesAttempted", pagesAttempted),
                         checkRequired("stopReason", stopReason),
+                        (newDirectReplyPages ?: JsonMissing.of()).map { it.toImmutable() },
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -2033,6 +2577,7 @@ private constructor(
                 newNestedReplies()
                 pagesAttempted()
                 stopReason().validate()
+                newDirectReplyPages()
                 validated = true
             }
 
@@ -2050,7 +2595,8 @@ private constructor(
                     (if (newDirectReplies.asKnown().isPresent) 1 else 0) +
                     (if (newNestedReplies.asKnown().isPresent) 1 else 0) +
                     (if (pagesAttempted.asKnown().isPresent) 1 else 0) +
-                    (stopReason.asKnown().getOrNull()?.validity() ?: 0)
+                    (stopReason.asKnown().getOrNull()?.validity() ?: 0) +
+                    (newDirectReplyPages.asKnown().getOrNull()?.size ?: 0)
 
             class StopReason
             @JsonCreator
@@ -2075,6 +2621,12 @@ private constructor(
 
                     @JvmField val REPEATED_CURSOR = of("repeated_cursor")
 
+                    @JvmField val PARTIAL_VIEW = of("partial_view")
+
+                    @JvmField val WINDOW_COVERED = of("window_covered")
+
+                    @JvmField val WINDOW_PASSED = of("window_passed")
+
                     @JvmStatic fun of(value: String) = StopReason(JsonField.of(value))
                 }
 
@@ -2087,6 +2639,9 @@ private constructor(
                     NO_NEXT_PAGE,
                     PAGE_CAP,
                     REPEATED_CURSOR,
+                    PARTIAL_VIEW,
+                    WINDOW_COVERED,
+                    WINDOW_PASSED,
                 }
 
                 /**
@@ -2106,6 +2661,9 @@ private constructor(
                     NO_NEXT_PAGE,
                     PAGE_CAP,
                     REPEATED_CURSOR,
+                    PARTIAL_VIEW,
+                    WINDOW_COVERED,
+                    WINDOW_PASSED,
                     /**
                      * An enum member indicating that [StopReason] was instantiated with an unknown
                      * value.
@@ -2126,6 +2684,9 @@ private constructor(
                         NO_NEXT_PAGE -> Value.NO_NEXT_PAGE
                         PAGE_CAP -> Value.PAGE_CAP
                         REPEATED_CURSOR -> Value.REPEATED_CURSOR
+                        PARTIAL_VIEW -> Value.PARTIAL_VIEW
+                        WINDOW_COVERED -> Value.WINDOW_COVERED
+                        WINDOW_PASSED -> Value.WINDOW_PASSED
                         else -> Value._UNKNOWN
                     }
 
@@ -2144,6 +2705,9 @@ private constructor(
                         NO_NEXT_PAGE -> Known.NO_NEXT_PAGE
                         PAGE_CAP -> Known.PAGE_CAP
                         REPEATED_CURSOR -> Known.REPEATED_CURSOR
+                        PARTIAL_VIEW -> Known.PARTIAL_VIEW
+                        WINDOW_COVERED -> Known.WINDOW_COVERED
+                        WINDOW_PASSED -> Known.WINDOW_PASSED
                         else ->
                             throw XTwitterScraperInvalidDataException("Unknown StopReason: $value")
                     }
@@ -2214,6 +2778,7 @@ private constructor(
                     newNestedReplies == other.newNestedReplies &&
                     pagesAttempted == other.pagesAttempted &&
                     stopReason == other.stopReason &&
+                    newDirectReplyPages == other.newDirectReplyPages &&
                     additionalProperties == other.additionalProperties
             }
 
@@ -2224,6 +2789,7 @@ private constructor(
                     newNestedReplies,
                     pagesAttempted,
                     stopReason,
+                    newDirectReplyPages,
                     additionalProperties,
                 )
             }
@@ -2231,7 +2797,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "StrategiesAttempted{name=$name, newDirectReplies=$newDirectReplies, newNestedReplies=$newNestedReplies, pagesAttempted=$pagesAttempted, stopReason=$stopReason, additionalProperties=$additionalProperties}"
+                "StrategiesAttempted{name=$name, newDirectReplies=$newDirectReplies, newNestedReplies=$newNestedReplies, pagesAttempted=$pagesAttempted, stopReason=$stopReason, newDirectReplyPages=$newDirectReplyPages, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {
@@ -2258,6 +2824,9 @@ private constructor(
                 targetDirectReplies == other.targetDirectReplies &&
                 uniqueDirectReplies == other.uniqueDirectReplies &&
                 unrelatedCount == other.unrelatedCount &&
+                replyScopeComplete == other.replyScopeComplete &&
+                replyTreeComplete == other.replyTreeComplete &&
+                sourcesEnded == other.sourcesEnded &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -2281,6 +2850,9 @@ private constructor(
                 targetDirectReplies,
                 uniqueDirectReplies,
                 unrelatedCount,
+                replyScopeComplete,
+                replyTreeComplete,
+                sourcesEnded,
                 additionalProperties,
             )
         }
@@ -2288,7 +2860,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Diagnostic{complete=$complete, coveragePercentage=$coveragePercentage, cursorFailures=$cursorFailures, duplicateCount=$duplicateCount, emptyFalseProgressPages=$emptyFalseProgressPages, malformedCount=$malformedCount, missingResponseModulesOrFields=$missingResponseModulesOrFields, nestedReplyCount=$nestedReplyCount, pagesAttempted=$pagesAttempted, recommendedFallback=$recommendedFallback, repeatedCursorCount=$repeatedCursorCount, reportedReplyCount=$reportedReplyCount, responseTruncated=$responseTruncated, richness=$richness, strategiesAttempted=$strategiesAttempted, targetDirectReplies=$targetDirectReplies, uniqueDirectReplies=$uniqueDirectReplies, unrelatedCount=$unrelatedCount, additionalProperties=$additionalProperties}"
+            "Diagnostic{complete=$complete, coveragePercentage=$coveragePercentage, cursorFailures=$cursorFailures, duplicateCount=$duplicateCount, emptyFalseProgressPages=$emptyFalseProgressPages, malformedCount=$malformedCount, missingResponseModulesOrFields=$missingResponseModulesOrFields, nestedReplyCount=$nestedReplyCount, pagesAttempted=$pagesAttempted, recommendedFallback=$recommendedFallback, repeatedCursorCount=$repeatedCursorCount, reportedReplyCount=$reportedReplyCount, responseTruncated=$responseTruncated, richness=$richness, strategiesAttempted=$strategiesAttempted, targetDirectReplies=$targetDirectReplies, uniqueDirectReplies=$uniqueDirectReplies, unrelatedCount=$unrelatedCount, replyScopeComplete=$replyScopeComplete, replyTreeComplete=$replyTreeComplete, sourcesEnded=$sourcesEnded, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
@@ -2301,7 +2873,17 @@ private constructor(
             nextCursor == other.nextCursor &&
             tweets == other.tweets &&
             diagnostic == other.diagnostic &&
+            filteredCount == other.filteredCount &&
+            hiddenReplies == other.hiddenReplies &&
+            limitReached == other.limitReached &&
+            message == other.message &&
             nestedReplies == other.nestedReplies &&
+            orderPartial == other.orderPartial &&
+            partialBefore == other.partialBefore &&
+            readBackTo == other.readBackTo &&
+            searchContext == other.searchContext &&
+            searchedQuery == other.searchedQuery &&
+            windowComplete == other.windowComplete &&
             additionalProperties == other.additionalProperties
     }
 
@@ -2311,7 +2893,17 @@ private constructor(
             nextCursor,
             tweets,
             diagnostic,
+            filteredCount,
+            hiddenReplies,
+            limitReached,
+            message,
             nestedReplies,
+            orderPartial,
+            partialBefore,
+            readBackTo,
+            searchContext,
+            searchedQuery,
+            windowComplete,
             additionalProperties,
         )
     }
@@ -2319,5 +2911,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "TweetGetRepliesResponse{hasNextPage=$hasNextPage, nextCursor=$nextCursor, tweets=$tweets, diagnostic=$diagnostic, nestedReplies=$nestedReplies, additionalProperties=$additionalProperties}"
+        "TweetGetRepliesResponse{hasNextPage=$hasNextPage, nextCursor=$nextCursor, tweets=$tweets, diagnostic=$diagnostic, filteredCount=$filteredCount, hiddenReplies=$hiddenReplies, limitReached=$limitReached, message=$message, nestedReplies=$nestedReplies, orderPartial=$orderPartial, partialBefore=$partialBefore, readBackTo=$readBackTo, searchContext=$searchContext, searchedQuery=$searchedQuery, windowComplete=$windowComplete, additionalProperties=$additionalProperties}"
 }

@@ -786,4 +786,128 @@ internal class EmbeddedTweetTest {
 
         assertThat(roundtrippedEmbeddedTweet).isEqualTo(embeddedTweet)
     }
+
+    @Test
+    fun readsEveryFieldTheSpecDescribes() {
+        val embeddedTweet =
+            jsonMapper()
+                .readValue(
+                    """
+                    {
+                      "id": "1234567890",
+                      "text": "Just launched!",
+                      "retweetCount": 5,
+                      "replyCount": 3,
+                      "likeCount": 42,
+                      "quoteCount": 1,
+                      "viewCount": 1500,
+                      "bookmarkCount": 2,
+                      "author": {
+                        "id": "11348282",
+                        "username": "NASA",
+                        "name": "NASA",
+                        "followers": 92376187,
+                        "accountBasedIn": null,
+                        "following": 115,
+                        "verified": true,
+                        "isBlueVerified": true,
+                        "isVerified": true,
+                        "profilePicture": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB_normal.jpg",
+                        "profilePictureOriginal": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB.jpg",
+                        "coverPicture": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                        "profileBannerUrl": "https://pbs.twimg.com/profile_banners/11348282/1788992290",
+                        "description": "Making the seemingly impossible, possible. ✨",
+                        "location": "Pale Blue Dot",
+                        "createdAt": "Wed Dec 19 20:20:32 +0000 2007",
+                        "birthdate": {
+                          "day": 1,
+                          "month": 10,
+                          "year": 1958
+                        },
+                        "statusesCount": 74336,
+                        "mediaCount": 28160,
+                        "protected": false,
+                        "url": "http://www.nasa.gov/",
+                        "contactInfo": {
+                          "links": [
+                            {
+                              "url": "http://www.nasa.gov/",
+                              "network": "website",
+                              "source": "url"
+                            }
+                          ]
+                        },
+                        "favouritesCount": 17003,
+                        "possiblySensitive": false,
+                        "verifiedType": "Government",
+                        "profile_bio": {
+                          "description": "Making the seemingly impossible, possible. ✨",
+                          "entities": {
+                            "description": {},
+                            "url": {
+                              "urls": [
+                                {
+                                  "display_url": "nasa.gov",
+                                  "expanded_url": "http://www.nasa.gov/",
+                                  "indices": [
+                                    0,
+                                    23
+                                  ],
+                                  "url": "https://t.co/9NkQJKAnuU"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        "businessAccountAffiliatesCount": 85,
+                        "creatorSubscriptionsCount": 0,
+                        "hasGraduatedAccess": true,
+                        "hasHiddenSubscriptionsOnProfile": false,
+                        "highlightsInfo": {
+                          "canHighlightTweets": true,
+                          "highlightedTweets": "280"
+                        },
+                        "identityVerification": {
+                          "isIdentityVerified": false,
+                          "verifiedSinceMsec": "1249674830941"
+                        },
+                        "isProfileTranslatable": false,
+                        "parodyCommentaryFanLabel": "None",
+                        "profileDescriptionLanguage": "en",
+                        "profileImageShape": "Square",
+                        "profileSortEnabled": true,
+                        "profileTranslatorType": "regular",
+                        "superFollowEligible": false,
+                        "verificationReason": {
+                          "entities": [
+                            {
+                              "fromIndex": 91,
+                              "toIndex": 101,
+                              "url": "https://help.twitter.com/en/rules-and-policies/profile-labels",
+                              "urlType": "ExternalUrl"
+                            }
+                          ],
+                          "text": "This account is verified because it is a government or multilateral organization account.  Learn more"
+                        }
+                      }
+                    }
+                    """
+                        .trimIndent(),
+                    jacksonTypeRef<EmbeddedTweet>(),
+                )
+
+        embeddedTweet.validate()
+        assertThat(embeddedTweet.id()).isEqualTo("1234567890")
+        assertThat(embeddedTweet.bookmarkCount()).isEqualTo(2L)
+        assertThat(embeddedTweet.likeCount()).isEqualTo(42L)
+        assertThat(embeddedTweet.quoteCount()).isEqualTo(1L)
+        assertThat(embeddedTweet.replyCount()).isEqualTo(3L)
+        assertThat(embeddedTweet.retweetCount()).isEqualTo(5L)
+        assertThat(embeddedTweet.text()).isEqualTo("Just launched!")
+        assertThat(embeddedTweet.viewCount()).isEqualTo(1500L)
+        assertThat(embeddedTweet.author().get().id()).isEqualTo("11348282")
+        assertThat(embeddedTweet.author().get().name()).isEqualTo("NASA")
+        assertThat(embeddedTweet.author().get().username()).isEqualTo("NASA")
+        assertThat(embeddedTweet._additionalProperties()).isEmpty()
+    }
 }

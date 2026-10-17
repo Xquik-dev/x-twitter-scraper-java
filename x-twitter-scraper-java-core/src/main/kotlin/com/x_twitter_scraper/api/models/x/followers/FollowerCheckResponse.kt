@@ -16,6 +16,7 @@ import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 
 class FollowerCheckResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -24,6 +25,8 @@ private constructor(
     private val isFollowing: JsonField<Boolean>,
     private val sourceUsername: JsonField<String>,
     private val targetUsername: JsonField<String>,
+    private val sourceId: JsonField<String>,
+    private val targetId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -41,7 +44,17 @@ private constructor(
         @JsonProperty("targetUsername")
         @ExcludeMissing
         targetUsername: JsonField<String> = JsonMissing.of(),
-    ) : this(isFollowedBy, isFollowing, sourceUsername, targetUsername, mutableMapOf())
+        @JsonProperty("sourceId") @ExcludeMissing sourceId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("targetId") @ExcludeMissing targetId: JsonField<String> = JsonMissing.of(),
+    ) : this(
+        isFollowedBy,
+        isFollowing,
+        sourceUsername,
+        targetUsername,
+        sourceId,
+        targetId,
+        mutableMapOf(),
+    )
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -66,6 +79,20 @@ private constructor(
      *   unexpectedly missing or null.
      */
     fun targetUsername(): String = targetUsername.getRequired("targetUsername")
+
+    /**
+     * The source account's user ID, as X gives it.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun sourceId(): Optional<String> = sourceId.getOptional("sourceId")
+
+    /**
+     * The target account's user ID, as X gives it.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun targetId(): Optional<String> = targetId.getOptional("targetId")
 
     /**
      * Returns the raw JSON value of [isFollowedBy].
@@ -103,6 +130,20 @@ private constructor(
     @ExcludeMissing
     fun _targetUsername(): JsonField<String> = targetUsername
 
+    /**
+     * Returns the raw JSON value of [sourceId].
+     *
+     * Unlike [sourceId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("sourceId") @ExcludeMissing fun _sourceId(): JsonField<String> = sourceId
+
+    /**
+     * Returns the raw JSON value of [targetId].
+     *
+     * Unlike [targetId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("targetId") @ExcludeMissing fun _targetId(): JsonField<String> = targetId
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -138,6 +179,8 @@ private constructor(
         private var isFollowing: JsonField<Boolean>? = null
         private var sourceUsername: JsonField<String>? = null
         private var targetUsername: JsonField<String>? = null
+        private var sourceId: JsonField<String> = JsonMissing.of()
+        private var targetId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -146,6 +189,8 @@ private constructor(
             isFollowing = followerCheckResponse.isFollowing
             sourceUsername = followerCheckResponse.sourceUsername
             targetUsername = followerCheckResponse.targetUsername
+            sourceId = followerCheckResponse.sourceId
+            targetId = followerCheckResponse.targetId
             additionalProperties = followerCheckResponse.additionalProperties.toMutableMap()
         }
 
@@ -174,6 +219,18 @@ private constructor(
         fun targetUsername(targetUsername: JsonField<String>) = apply {
             this.targetUsername = targetUsername
         }
+
+        /** The source account's user ID, as X gives it. */
+        fun sourceId(sourceId: String) = sourceId(JsonField.of(sourceId))
+
+        /** Sets [Builder.sourceId] to an arbitrary JSON value. */
+        fun sourceId(sourceId: JsonField<String>) = apply { this.sourceId = sourceId }
+
+        /** The target account's user ID, as X gives it. */
+        fun targetId(targetId: String) = targetId(JsonField.of(targetId))
+
+        /** Sets [Builder.targetId] to an arbitrary JSON value. */
+        fun targetId(targetId: JsonField<String>) = apply { this.targetId = targetId }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -215,6 +272,8 @@ private constructor(
                 checkRequired("isFollowing", isFollowing),
                 checkRequired("sourceUsername", sourceUsername),
                 checkRequired("targetUsername", targetUsername),
+                sourceId,
+                targetId,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -238,6 +297,8 @@ private constructor(
         isFollowing()
         sourceUsername()
         targetUsername()
+        sourceId()
+        targetId()
         validated = true
     }
 
@@ -254,7 +315,9 @@ private constructor(
         (if (isFollowedBy.asKnown().isPresent) 1 else 0) +
             (if (isFollowing.asKnown().isPresent) 1 else 0) +
             (if (sourceUsername.asKnown().isPresent) 1 else 0) +
-            (if (targetUsername.asKnown().isPresent) 1 else 0)
+            (if (targetUsername.asKnown().isPresent) 1 else 0) +
+            (if (sourceId.asKnown().isPresent) 1 else 0) +
+            (if (targetId.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -266,6 +329,8 @@ private constructor(
             isFollowing == other.isFollowing &&
             sourceUsername == other.sourceUsername &&
             targetUsername == other.targetUsername &&
+            sourceId == other.sourceId &&
+            targetId == other.targetId &&
             additionalProperties == other.additionalProperties
     }
 
@@ -275,6 +340,8 @@ private constructor(
             isFollowing,
             sourceUsername,
             targetUsername,
+            sourceId,
+            targetId,
             additionalProperties,
         )
     }
@@ -282,5 +349,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "FollowerCheckResponse{isFollowedBy=$isFollowedBy, isFollowing=$isFollowing, sourceUsername=$sourceUsername, targetUsername=$targetUsername, additionalProperties=$additionalProperties}"
+        "FollowerCheckResponse{isFollowedBy=$isFollowedBy, isFollowing=$isFollowing, sourceUsername=$sourceUsername, targetUsername=$targetUsername, sourceId=$sourceId, targetId=$targetId, additionalProperties=$additionalProperties}"
 }
