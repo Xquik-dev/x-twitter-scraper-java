@@ -7,6 +7,8 @@ package com.x_twitter_scraper.api.apifields
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.x_twitter_scraper.api.models.credits.CreditRetrieveBalanceResponse
 import com.x_twitter_scraper.api.models.drafts.DraftCreateParams
+import com.x_twitter_scraper.api.models.support.tickets.TicketCreateParams
+import com.x_twitter_scraper.api.models.support.tickets.TicketReplyParams
 import com.x_twitter_scraper.api.models.trends.TrendListResponse
 import com.x_twitter_scraper.api.models.x.media.MediaUploadParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateAvatarParams
@@ -203,6 +205,17 @@ internal class FieldCheckTest {
             )
             .containsOnly(true)
         assertThat(balance.props.getValue("auto_topup_stopped").required).isFalse()
+    }
+
+    @Test
+    fun readsTicketBodyRequiredFlags() {
+        listOf(TicketCreateParams::class.java, TicketReplyParams::class.java).forEach { cls ->
+            val shapes = SdkShapes()
+            val body = canon(shapes.params(cls).second!!, shapes.defs) as Obj
+
+            assertThat(body.props.getValue("body").required).isFalse()
+            assertThat(body.props.getValue("attachments").required).isFalse()
+        }
     }
 
     @Test

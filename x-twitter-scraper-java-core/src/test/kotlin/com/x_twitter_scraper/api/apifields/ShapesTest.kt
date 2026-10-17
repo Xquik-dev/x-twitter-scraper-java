@@ -46,6 +46,15 @@ internal class ShapesTest {
     private fun json(schema: String) =
         """{"200": {"content": {"application/json": {"schema": $schema}}}}"""
 
+    private fun requestBodySpec(mediaType: String): SpecOperation =
+        specOperation(
+            "{}",
+            """"requestBody": {"content": {
+              "application/json": {"schema": {"type": "object", "required": ["body"], "properties": {"body": {"type": "string"}}}},
+              "$mediaType": {"schema": {"type": "object", "properties": {"body": {"type": "string"}, "attachments": {"type": "array", "items": {"type": "string", "format": "binary"}}}}}
+            }},""",
+        )
+
     @Test
     fun reportsMissingExtraRequiredAndNullableFieldsAtEveryDepth() {
         val spec =
@@ -116,6 +125,31 @@ internal class ShapesTest {
             )
 
         assertThat(compare(spec, sdk)).containsExactly("response required b")
+    }
+
+    @Test
+    fun reportsRequiredAndMissingFieldsAcrossRequestBodyTypes() {
+        val sdk = Obj(mapOf("body" to Prop(true, false, Leaf())))
+
+        listOf("multipart/form-data", "application/x-www-form-urlencoded").forEach { mediaType ->
+            assertThat(compare(requestBodySpec(mediaType), null, body = sdk))
+                .containsExactly("request required body", "request missing attachments")
+        }
+    }
+
+    @Test
+    fun passesWhenRequestFieldsMatchEveryBodyType() {
+        val sdk =
+            Obj(
+                mapOf(
+                    "body" to Prop(false, false, Leaf()),
+                    "attachments" to Prop(false, false, Arr(Leaf())),
+                )
+            )
+
+        listOf("multipart/form-data", "application/x-www-form-urlencoded").forEach { mediaType ->
+            assertThat(compare(requestBodySpec(mediaType), null, body = sdk)).isEmpty()
+        }
     }
 
     @Test

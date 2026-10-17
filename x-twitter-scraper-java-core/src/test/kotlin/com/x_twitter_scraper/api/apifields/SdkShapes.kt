@@ -134,7 +134,10 @@ internal class SdkShapes {
         val nullable = nullableFields(cls)
         val props =
             modelProperties(cls).associate { (wire, method) ->
-                val name = method.name.removePrefix("_")
+                val name =
+                    method.name.removePrefix("_").let {
+                        if (hasMethod(cls, it)) it else it.removeSuffix("_")
+                    }
                 val raw = method.returnType == JsonValue::class.java
                 wire to
                     Prop(
