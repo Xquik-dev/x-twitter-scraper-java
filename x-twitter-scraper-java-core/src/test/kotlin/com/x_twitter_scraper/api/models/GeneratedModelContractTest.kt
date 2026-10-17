@@ -334,7 +334,9 @@ internal class GeneratedModelContractTest {
                     if (getter.name == omittedField) {
                         assertThat(value).describedAs("${paramClass.name}.${getter.name}").isEmpty()
                     } else {
-                        assertThat(value).describedAs("${paramClass.name}.${getter.name}").isPresent()
+                        assertThat(value)
+                            .describedAs("${paramClass.name}.${getter.name}")
+                            .isPresent()
                     }
                 }
             }
