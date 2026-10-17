@@ -126,7 +126,7 @@ test_a_clean_pushed_head_gets_a_pending_status_then_a_success_status() {
     assert_equal "" "$run_stderr" "stderr"
     assert_equal 0 "$run_status" "the exit code"
     assert_equal "repos/Xquik-dev/x-twitter-scraper-java/statuses/$head pending Local checks are running.
-repos/Xquik-dev/x-twitter-scraper-java/statuses/$head success $passed_line" \
+repos/Xquik-dev/x-twitter-scraper-java/statuses/$head success Passed all 13 local checks." \
         "$(log_of gh)" "the posted statuses"
 }
 

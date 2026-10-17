@@ -193,5 +193,5 @@ for index in "${!passed_checks[@]}"; do
     fi
 done
 summary="Passed $summary."
-post_status success "$summary"
+post_status success "Passed all ${#passed_checks[@]} local checks."
 echo "$summary"
