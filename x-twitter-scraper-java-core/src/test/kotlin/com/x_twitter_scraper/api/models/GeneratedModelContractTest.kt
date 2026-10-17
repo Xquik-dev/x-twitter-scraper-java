@@ -15,6 +15,8 @@ import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
 import com.x_twitter_scraper.api.core.jsonMapper
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import com.x_twitter_scraper.api.models.support.tickets.TicketCreateParams
+import com.x_twitter_scraper.api.models.support.tickets.TicketReplyParams
 import com.x_twitter_scraper.api.models.x.media.MediaUploadParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateAvatarParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateBannerParams
@@ -271,9 +273,20 @@ internal class GeneratedModelContractTest {
                 verifyParams(paramClass, "file")
                 verifyParams(paramClass, "url")
             }
+            TicketCreateParams::class.java,
+            TicketReplyParams::class.java -> {
+                verifyParams(paramClass, "body")
+                verifyParams(paramClass, "attachments")
+                verifyParams(paramClass, null)
+            }
             else -> verifyParams(paramClass, null)
         }
     }
+
+    private fun omits(method: Method, field: String?): Boolean =
+        field != null &&
+            (method.name == field ||
+                method.name == "add" + field.replaceFirstChar { it.uppercase() }.removeSuffix("s"))
 
     private fun verifyParams(paramClass: Class<*>, omittedField: String?) {
         val builder = newBuilder(paramClass)
@@ -291,7 +304,7 @@ internal class GeneratedModelContractTest {
                         assertThat(
                                 applyBuilderMutators(
                                     bodyBuilder,
-                                    shouldSkip = { it.name == omittedField },
+                                    shouldSkip = { omits(it, omittedField) },
                                 )
                             )
                             .describedAs("Unsupported builder methods for ${type.name}")
@@ -301,7 +314,7 @@ internal class GeneratedModelContractTest {
                         sampleValue(type)
                     }
                 },
-                { it.name == omittedField },
+                { omits(it, omittedField) },
             )
 
         assertThat(unsupportedMethods)

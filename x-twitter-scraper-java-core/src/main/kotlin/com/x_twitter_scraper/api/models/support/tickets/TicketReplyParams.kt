@@ -12,6 +12,7 @@ import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.MultipartField
 import com.x_twitter_scraper.api.core.Params
+import com.x_twitter_scraper.api.core.checkAtLeastOne
 import com.x_twitter_scraper.api.core.checkKnown
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
@@ -78,7 +79,10 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [TicketReplyParams]. */
+    /**
+     * A builder for [TicketReplyParams] with up to 4 attachments, 10 MiB per image, 25 MiB per
+     * video, and 30 MiB per request.
+     */
     class Builder internal constructor() {
 
         private var id: String? = null
@@ -337,7 +341,10 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [Body]. */
+        /**
+         * A builder for [Body] with up to 4 attachments, 10 MiB per image, 25 MiB per video, and 30
+         * MiB per request.
+         */
         class Builder internal constructor() {
 
             private var body: MultipartField<String> = MultipartField.of(JsonMissing.of())
@@ -413,12 +420,14 @@ private constructor(
              *
              * Further updates to this [Builder] will not mutate the returned instance.
              */
-            fun build(): Body =
-                Body(
+            fun build(): Body {
+                checkAtLeastOne("body", body, "attachments", attachments)
+                return Body(
                     body,
                     (attachments ?: MultipartField.of(JsonMissing.of())).map { it.toImmutable() },
                     additionalProperties.toMutableMap(),
                 )
+            }
         }
 
         private var validated: Boolean = false
