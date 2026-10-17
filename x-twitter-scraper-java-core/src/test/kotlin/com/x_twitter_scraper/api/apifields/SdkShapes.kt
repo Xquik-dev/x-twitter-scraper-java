@@ -45,8 +45,14 @@ private val leafClasses: Set<Class<*>> =
 
 private val requiredMessage = Regex("^`(\\w+)` is required, but was not set$")
 private val alternativeMessage = Regex("^Exactly one of `(\\w+)` or `(\\w+)` must be set$")
+private val requiresMessage = Regex("^`(\\w+)` requires `(\\w+)`$")
 
-internal data class SdkParams(val builder: Any, val required: Set<String>, val inputs: List<String>)
+internal data class SdkParams(
+    val builder: Any,
+    val required: Set<String>,
+    val inputs: List<String>,
+    val requires: Map<String, String> = emptyMap(),
+)
 
 internal class SdkShapes {
 
@@ -242,6 +248,40 @@ internal class SdkShapes {
         query(cls) to body(cls, input)
 
     fun newParams(cls: Class<*>, input: String? = null): SdkParams {
+        val params = requiredParams(cls, input)
+        val requires = linkedMapOf<String, String>()
+        val fields =
+            cls.methods
+                .filter {
+                    it.name.startsWith("_") &&
+                        it.parameterCount == 0 &&
+                        it.returnType == MultipartField::class.java
+                }
+                .map { it.name.removePrefix("_") }
+                .filter { it !in params.required && it !in params.inputs }
+        for (alternative in params.inputs) {
+            val builder = requiredParams(cls, alternative).builder
+            val base = builder.javaClass.getMethod("build").invoke(builder)
+            for (name in fields) {
+                val changed = base.javaClass.getMethod("toBuilder").invoke(base)
+                setPlaceholder(changed, name)
+                try {
+                    changed.javaClass.getMethod("build").invoke(changed)
+                } catch (e: InvocationTargetException) {
+                    val match =
+                        requiresMessage.matchEntire(e.targetException.message.orEmpty())
+                            ?: throw e.targetException
+                    requires[match.groupValues[1]] = match.groupValues[2]
+                }
+            }
+        }
+        for ((name, requiredInput) in requires) {
+            if (input == requiredInput) setPlaceholder(params.builder, name)
+        }
+        return params.copy(requires = requires)
+    }
+
+    private fun requiredParams(cls: Class<*>, input: String?): SdkParams {
         val builder =
             builderOf(cls)
                 ?: throw CheckFailure("${cls.name} has no builder the field check can read.")
@@ -251,12 +291,6 @@ internal class SdkShapes {
             val name = missingRequired(builder, input, inputs) ?: break
             if (!required.add(name)) throw CheckFailure("${cls.name} keeps asking for ${name}.")
             setPlaceholder(builder, name)
-        }
-        if (
-            input == "file" &&
-                builder.javaClass.methods.any { it.name == "isLongVideo" && it.parameterCount == 1 }
-        ) {
-            setPlaceholder(builder, "isLongVideo")
         }
         return SdkParams(builder, required, inputs.toList())
     }
@@ -337,16 +371,22 @@ internal class SdkShapes {
                 if (input == null) {
                     shape
                 } else {
-                    val inputs = newParams(cls, input).inputs
+                    val params = newParams(cls, input)
+                    val names =
+                        modelProperties(body).associate { (wire, method) ->
+                            wire to method.name.removePrefix("_")
+                        }
                     val props = (canon(shape, defs) as Obj).props
                     Obj(
                         props
-                            .filterKeys {
-                                (it !in inputs || it == input) &&
-                                    (input == "file" || it != "is_long_video")
+                            .filterKeys { wire ->
+                                val name = names.getValue(wire)
+                                val requiredInput = params.requires[name]
+                                (name !in params.inputs || name == input) &&
+                                    (requiredInput == null || requiredInput == input)
                             }
-                            .mapValues { (name, prop) ->
-                                if (name == input) prop.copy(required = true) else prop
+                            .mapValues { (wire, prop) ->
+                                if (names[wire] == input) prop.copy(required = true) else prop
                             }
                     )
                 }

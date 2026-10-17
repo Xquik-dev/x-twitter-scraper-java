@@ -4,6 +4,7 @@
 
 package com.x_twitter_scraper.api.models.x.media
 
+import com.x_twitter_scraper.api.core.JsonNull
 import com.x_twitter_scraper.api.core.MultipartField
 import com.x_twitter_scraper.api.core.http.Headers
 import java.io.InputStream
@@ -65,6 +66,21 @@ internal class MediaUploadParamsTest {
                         field.map { (it as? ByteArray)?.inputStream() ?: it }
                     }
             )
+    }
+
+    @Test
+    fun omitsNullFileWithUrlInput() {
+        val params =
+            MediaUploadParams.builder()
+                .account("sample")
+                .idempotencyKey("sample")
+                .url("https://example.com/image.png")
+                .file(MultipartField.of(JsonNull.of()))
+                .build()
+
+        assertThat(params._body())
+            .containsEntry("url", MultipartField.of("https://example.com/image.png"))
+            .doesNotContainKey("file")
     }
 
     @Test
