@@ -76,4 +76,26 @@ internal class WebhookListResponseTest {
 
         assertThat(roundtrippedWebhookListResponse).isEqualTo(webhookListResponse)
     }
+
+    @Test
+    fun additionalFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json = """{"hasMore":true,"nextCursor":"sample"}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<WebhookListResponse>())
+
+        assertThat(model.hasMore()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("hasMore")
+        assertThat(model.nextCursor()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("nextCursor")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<WebhookListResponse>(),
+                )
+            )
+            .isEqualTo(model)
+    }
 }

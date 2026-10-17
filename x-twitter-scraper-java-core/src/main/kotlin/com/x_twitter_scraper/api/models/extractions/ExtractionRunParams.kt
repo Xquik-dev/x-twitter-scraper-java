@@ -1406,6 +1406,47 @@ private constructor(
      */
     fun _withinTime(): JsonField<String> = body._withinTime()
 
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun enrichProfiles(): Optional<Boolean> = body.enrichProfiles()
+
+    /**
+     * Returns the raw JSON value of [enrichProfiles].
+     *
+     * Unlike [enrichProfiles], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _enrichProfiles(): JsonField<Boolean> = body._enrichProfiles()
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun hasEmail(): Optional<Boolean> = body.hasEmail()
+
+    /**
+     * Returns the raw JSON value of [hasEmail].
+     *
+     * Unlike [hasEmail], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _hasEmail(): JsonField<Boolean> = body._hasEmail()
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun businessEmailOnly(): Optional<Boolean> = body.businessEmailOnly()
+
+    /**
+     * Returns the raw JSON value of [businessEmailOnly].
+     *
+     * Unlike [businessEmailOnly], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    fun _businessEmailOnly(): JsonField<Boolean> = body._businessEmailOnly()
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun emailDomains(): Optional<String> = body.emailDomains()
+
+    /**
+     * Returns the raw JSON value of [emailDomains].
+     *
+     * Unlike [emailDomains], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _emailDomains(): JsonField<String> = body._emailDomains()
+
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
     /** Additional headers to send with the request. */
@@ -2223,6 +2264,34 @@ private constructor(
         /** Sets [Builder.withinTime] to an arbitrary JSON value. */
         fun withinTime(withinTime: JsonField<String>) = apply { body.withinTime(withinTime) }
 
+        fun enrichProfiles(enrichProfiles: Boolean) = apply { body.enrichProfiles(enrichProfiles) }
+
+        /** Sets [Builder.enrichProfiles] to an arbitrary JSON value. */
+        fun enrichProfiles(enrichProfiles: JsonField<Boolean>) = apply {
+            body.enrichProfiles(enrichProfiles)
+        }
+
+        fun hasEmail(hasEmail: Boolean) = apply { body.hasEmail(hasEmail) }
+
+        /** Sets [Builder.hasEmail] to an arbitrary JSON value. */
+        fun hasEmail(hasEmail: JsonField<Boolean>) = apply { body.hasEmail(hasEmail) }
+
+        fun businessEmailOnly(businessEmailOnly: Boolean) = apply {
+            body.businessEmailOnly(businessEmailOnly)
+        }
+
+        /** Sets [Builder.businessEmailOnly] to an arbitrary JSON value. */
+        fun businessEmailOnly(businessEmailOnly: JsonField<Boolean>) = apply {
+            body.businessEmailOnly(businessEmailOnly)
+        }
+
+        fun emailDomains(emailDomains: String) = apply { body.emailDomains(emailDomains) }
+
+        /** Sets [Builder.emailDomains] to an arbitrary JSON value. */
+        fun emailDomains(emailDomains: JsonField<String>) = apply {
+            body.emailDomains(emailDomains)
+        }
+
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
         }
@@ -2473,6 +2542,10 @@ private constructor(
         private val verifiedType: JsonField<String>,
         private val within: JsonField<String>,
         private val withinTime: JsonField<String>,
+        private val enrichProfiles: JsonField<Boolean>,
+        private val hasEmail: JsonField<Boolean>,
+        private val businessEmailOnly: JsonField<Boolean>,
+        private val emailDomains: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -2722,6 +2795,18 @@ private constructor(
             @JsonProperty("withinTime")
             @ExcludeMissing
             withinTime: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("enrichProfiles")
+            @ExcludeMissing
+            enrichProfiles: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("hasEmail")
+            @ExcludeMissing
+            hasEmail: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("businessEmailOnly")
+            @ExcludeMissing
+            businessEmailOnly: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("emailDomains")
+            @ExcludeMissing
+            emailDomains: JsonField<String> = JsonMissing.of(),
         ) : this(
             toolType,
             advancedQuery,
@@ -2819,6 +2904,10 @@ private constructor(
             verifiedType,
             within,
             withinTime,
+            enrichProfiles,
+            hasEmail,
+            businessEmailOnly,
+            emailDomains,
             mutableMapOf(),
         )
 
@@ -3500,6 +3589,19 @@ private constructor(
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
         fun withinTime(): Optional<String> = withinTime.getOptional("withinTime")
+
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun enrichProfiles(): Optional<Boolean> = enrichProfiles.getOptional("enrichProfiles")
+
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun hasEmail(): Optional<Boolean> = hasEmail.getOptional("hasEmail")
+
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun businessEmailOnly(): Optional<Boolean> =
+            businessEmailOnly.getOptional("businessEmailOnly")
+
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun emailDomains(): Optional<String> = emailDomains.getOptional("emailDomains")
 
         /**
          * Returns the raw JSON value of [toolType].
@@ -4336,6 +4438,43 @@ private constructor(
         @ExcludeMissing
         fun _withinTime(): JsonField<String> = withinTime
 
+        /**
+         * Returns the raw JSON value of [enrichProfiles].
+         *
+         * Unlike [enrichProfiles], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("enrichProfiles")
+        @ExcludeMissing
+        fun _enrichProfiles(): JsonField<Boolean> = enrichProfiles
+
+        /**
+         * Returns the raw JSON value of [hasEmail].
+         *
+         * Unlike [hasEmail], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("hasEmail") @ExcludeMissing fun _hasEmail(): JsonField<Boolean> = hasEmail
+
+        /**
+         * Returns the raw JSON value of [businessEmailOnly].
+         *
+         * Unlike [businessEmailOnly], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("businessEmailOnly")
+        @ExcludeMissing
+        fun _businessEmailOnly(): JsonField<Boolean> = businessEmailOnly
+
+        /**
+         * Returns the raw JSON value of [emailDomains].
+         *
+         * Unlike [emailDomains], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("emailDomains")
+        @ExcludeMissing
+        fun _emailDomains(): JsonField<String> = emailDomains
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -4460,6 +4599,10 @@ private constructor(
             private var verifiedType: JsonField<String> = JsonMissing.of()
             private var within: JsonField<String> = JsonMissing.of()
             private var withinTime: JsonField<String> = JsonMissing.of()
+            private var enrichProfiles: JsonField<Boolean> = JsonMissing.of()
+            private var hasEmail: JsonField<Boolean> = JsonMissing.of()
+            private var businessEmailOnly: JsonField<Boolean> = JsonMissing.of()
+            private var emailDomains: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -4560,6 +4703,10 @@ private constructor(
                 verifiedType = body.verifiedType
                 within = body.within
                 withinTime = body.withinTime
+                enrichProfiles = body.enrichProfiles
+                hasEmail = body.hasEmail
+                businessEmailOnly = body.businessEmailOnly
+                emailDomains = body.emailDomains
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -5378,6 +5525,34 @@ private constructor(
             /** Sets [Builder.withinTime] to an arbitrary JSON value. */
             fun withinTime(withinTime: JsonField<String>) = apply { this.withinTime = withinTime }
 
+            fun enrichProfiles(enrichProfiles: Boolean) =
+                enrichProfiles(JsonField.of(enrichProfiles))
+
+            /** Sets [Builder.enrichProfiles] to an arbitrary JSON value. */
+            fun enrichProfiles(enrichProfiles: JsonField<Boolean>) = apply {
+                this.enrichProfiles = enrichProfiles
+            }
+
+            fun hasEmail(hasEmail: Boolean) = hasEmail(JsonField.of(hasEmail))
+
+            /** Sets [Builder.hasEmail] to an arbitrary JSON value. */
+            fun hasEmail(hasEmail: JsonField<Boolean>) = apply { this.hasEmail = hasEmail }
+
+            fun businessEmailOnly(businessEmailOnly: Boolean) =
+                businessEmailOnly(JsonField.of(businessEmailOnly))
+
+            /** Sets [Builder.businessEmailOnly] to an arbitrary JSON value. */
+            fun businessEmailOnly(businessEmailOnly: JsonField<Boolean>) = apply {
+                this.businessEmailOnly = businessEmailOnly
+            }
+
+            fun emailDomains(emailDomains: String) = emailDomains(JsonField.of(emailDomains))
+
+            /** Sets [Builder.emailDomains] to an arbitrary JSON value. */
+            fun emailDomains(emailDomains: JsonField<String>) = apply {
+                this.emailDomains = emailDomains
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -5507,6 +5682,10 @@ private constructor(
                     verifiedType,
                     within,
                     withinTime,
+                    enrichProfiles,
+                    hasEmail,
+                    businessEmailOnly,
+                    emailDomains,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -5623,6 +5802,10 @@ private constructor(
             verifiedType()
             within()
             withinTime()
+            enrichProfiles()
+            hasEmail()
+            businessEmailOnly()
+            emailDomains()
             validated = true
         }
 
@@ -5731,7 +5914,11 @@ private constructor(
                 (if (verifiedOnly.asKnown().isPresent) 1 else 0) +
                 (if (verifiedType.asKnown().isPresent) 1 else 0) +
                 (if (within.asKnown().isPresent) 1 else 0) +
-                (if (withinTime.asKnown().isPresent) 1 else 0)
+                (if (withinTime.asKnown().isPresent) 1 else 0) +
+                (if (enrichProfiles.asKnown().isPresent) 1 else 0) +
+                (if (hasEmail.asKnown().isPresent) 1 else 0) +
+                (if (businessEmailOnly.asKnown().isPresent) 1 else 0) +
+                (if (emailDomains.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -5835,6 +6022,10 @@ private constructor(
                 verifiedType == other.verifiedType &&
                 within == other.within &&
                 withinTime == other.withinTime &&
+                enrichProfiles == other.enrichProfiles &&
+                hasEmail == other.hasEmail &&
+                businessEmailOnly == other.businessEmailOnly &&
+                emailDomains == other.emailDomains &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -5936,6 +6127,10 @@ private constructor(
                 verifiedType,
                 within,
                 withinTime,
+                enrichProfiles,
+                hasEmail,
+                businessEmailOnly,
+                emailDomains,
                 additionalProperties,
             )
         }
@@ -5943,7 +6138,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{toolType=$toolType, advancedQuery=$advancedQuery, anyWords=$anyWords, bioContains=$bioContains, blueVerifiedOnly=$blueVerifiedOnly, boundingBox=$boundingBox, cardName=$cardName, cashtags=$cashtags, collectionStrategy=$collectionStrategy, conversationId=$conversationId, dedupeAcrossTargets=$dedupeAcrossTargets, dedupeMode=$dedupeMode, exactPhrase=$exactPhrase, excludeOriginalAuthor=$excludeOriginalAuthor, excludeSource=$excludeSource, excludeWords=$excludeWords, fromUser=$fromUser, geocode=$geocode, hashtags=$hashtags, hasLocation=$hasLocation, hasMediaOnly=$hasMediaOnly, hasWebsite=$hasWebsite, includeOriginalPost=$includeOriginalPost, includeSearchTerms=$includeSearchTerms, includeTargetMetadata=$includeTargetMetadata, inReplyToTweetId=$inReplyToTweetId, language=$language, listId=$listId, locationContains=$locationContains, maxDepth=$maxDepth, maxFollowers=$maxFollowers, maxFollowing=$maxFollowing, maxId=$maxId, maxItemsPerTarget=$maxItemsPerTarget, maxLikes=$maxLikes, maxPagesPerTarget=$maxPagesPerTarget, maxPosts=$maxPosts, maxQuotes=$maxQuotes, maxReplies=$maxReplies, maxRetweets=$maxRetweets, mediaType=$mediaType, mentioning=$mentioning, minAccountAgeDays=$minAccountAgeDays, minBookmarks=$minBookmarks, minFaves=$minFaves, minFollowers=$minFollowers, minFollowing=$minFollowing, minPosts=$minPosts, minQuotes=$minQuotes, minReplies=$minReplies, minRetweets=$minRetweets, minViews=$minViews, nativeRetweets=$nativeRetweets, near=$near, news=$news, overlapMode=$overlapMode, place=$place, placeCountry=$placeCountry, pointRadius=$pointRadius, queryType=$queryType, quotes=$quotes, quotesOfTweetId=$quotesOfTweetId, relationTargets=$relationTargets, replies=$replies, resultsLimit=$resultsLimit, retweets=$retweets, retweetsOfTweetId=$retweetsOfTweetId, safe=$safe, scope=$scope, searchQueries=$searchQueries, searchQuery=$searchQuery, sinceDate=$sinceDate, sinceId=$sinceId, sinceTime=$sinceTime, sort=$sort, source=$source, startCursor=$startCursor, targetCommunityId=$targetCommunityId, targetCommunityIds=$targetCommunityIds, targetListId=$targetListId, targetListIds=$targetListIds, targets=$targets, targetSpaceId=$targetSpaceId, targetTweetId=$targetTweetId, targetTweetIds=$targetTweetIds, targetUsername=$targetUsername, targetUsernames=$targetUsernames, toUser=$toUser, untilDate=$untilDate, untilTime=$untilTime, url=$url, usernameContains=$usernameContains, verifiedOnly=$verifiedOnly, verifiedType=$verifiedType, within=$within, withinTime=$withinTime, additionalProperties=$additionalProperties}"
+            "Body{toolType=$toolType, advancedQuery=$advancedQuery, anyWords=$anyWords, bioContains=$bioContains, blueVerifiedOnly=$blueVerifiedOnly, boundingBox=$boundingBox, cardName=$cardName, cashtags=$cashtags, collectionStrategy=$collectionStrategy, conversationId=$conversationId, dedupeAcrossTargets=$dedupeAcrossTargets, dedupeMode=$dedupeMode, exactPhrase=$exactPhrase, excludeOriginalAuthor=$excludeOriginalAuthor, excludeSource=$excludeSource, excludeWords=$excludeWords, fromUser=$fromUser, geocode=$geocode, hashtags=$hashtags, hasLocation=$hasLocation, hasMediaOnly=$hasMediaOnly, hasWebsite=$hasWebsite, includeOriginalPost=$includeOriginalPost, includeSearchTerms=$includeSearchTerms, includeTargetMetadata=$includeTargetMetadata, inReplyToTweetId=$inReplyToTweetId, language=$language, listId=$listId, locationContains=$locationContains, maxDepth=$maxDepth, maxFollowers=$maxFollowers, maxFollowing=$maxFollowing, maxId=$maxId, maxItemsPerTarget=$maxItemsPerTarget, maxLikes=$maxLikes, maxPagesPerTarget=$maxPagesPerTarget, maxPosts=$maxPosts, maxQuotes=$maxQuotes, maxReplies=$maxReplies, maxRetweets=$maxRetweets, mediaType=$mediaType, mentioning=$mentioning, minAccountAgeDays=$minAccountAgeDays, minBookmarks=$minBookmarks, minFaves=$minFaves, minFollowers=$minFollowers, minFollowing=$minFollowing, minPosts=$minPosts, minQuotes=$minQuotes, minReplies=$minReplies, minRetweets=$minRetweets, minViews=$minViews, nativeRetweets=$nativeRetweets, near=$near, news=$news, overlapMode=$overlapMode, place=$place, placeCountry=$placeCountry, pointRadius=$pointRadius, queryType=$queryType, quotes=$quotes, quotesOfTweetId=$quotesOfTweetId, relationTargets=$relationTargets, replies=$replies, resultsLimit=$resultsLimit, retweets=$retweets, retweetsOfTweetId=$retweetsOfTweetId, safe=$safe, scope=$scope, searchQueries=$searchQueries, searchQuery=$searchQuery, sinceDate=$sinceDate, sinceId=$sinceId, sinceTime=$sinceTime, sort=$sort, source=$source, startCursor=$startCursor, targetCommunityId=$targetCommunityId, targetCommunityIds=$targetCommunityIds, targetListId=$targetListId, targetListIds=$targetListIds, targets=$targets, targetSpaceId=$targetSpaceId, targetTweetId=$targetTweetId, targetTweetIds=$targetTweetIds, targetUsername=$targetUsername, targetUsernames=$targetUsernames, toUser=$toUser, untilDate=$untilDate, untilTime=$untilTime, url=$url, usernameContains=$usernameContains, verifiedOnly=$verifiedOnly, verifiedType=$verifiedType, within=$within, withinTime=$withinTime, enrichProfiles=$enrichProfiles, hasEmail=$hasEmail, businessEmailOnly=$businessEmailOnly, emailDomains=$emailDomains, additionalProperties=$additionalProperties}"
     }
 
     /** Identifier for the extraction tool used to run a job. */
@@ -6604,6 +6799,8 @@ private constructor(
 
             @JvmField val BOTH = of("Both")
 
+            @JvmField val RELEVANCE = of("relevance")
+
             @JvmStatic fun of(value: String) = QueryType(JsonField.of(value))
         }
 
@@ -6612,6 +6809,7 @@ private constructor(
             LATEST,
             TOP,
             BOTH,
+            RELEVANCE,
         }
 
         /**
@@ -6627,6 +6825,7 @@ private constructor(
             LATEST,
             TOP,
             BOTH,
+            RELEVANCE,
             /**
              * An enum member indicating that [QueryType] was instantiated with an unknown value.
              */
@@ -6639,6 +6838,7 @@ private constructor(
          */
         fun value(): Value =
             when (this) {
+                RELEVANCE -> Value.RELEVANCE
                 LATEST -> Value.LATEST
                 TOP -> Value.TOP
                 BOTH -> Value.BOTH
@@ -6653,6 +6853,7 @@ private constructor(
          */
         fun known(): Known =
             when (this) {
+                RELEVANCE -> Known.RELEVANCE
                 LATEST -> Known.LATEST
                 TOP -> Known.TOP
                 BOTH -> Known.BOTH

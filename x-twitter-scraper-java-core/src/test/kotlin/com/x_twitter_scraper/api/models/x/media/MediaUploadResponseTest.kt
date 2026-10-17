@@ -307,4 +307,10 @@ internal class MediaUploadResponseTest {
 
         assertThat(roundtrippedMediaUploadResponse).isEqualTo(mediaUploadResponse)
     }
+
+    @Test
+    fun additionalActionValues() {
+        assertThat(MediaUploadResponse.Action.of("delete_dm").known())
+            .isEqualTo(MediaUploadResponse.Action.Known.DELETE_DM)
+    }
 }

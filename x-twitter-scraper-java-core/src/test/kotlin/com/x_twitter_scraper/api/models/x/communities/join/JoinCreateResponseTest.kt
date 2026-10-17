@@ -307,4 +307,10 @@ internal class JoinCreateResponseTest {
 
         assertThat(roundtrippedJoinCreateResponse).isEqualTo(joinCreateResponse)
     }
+
+    @Test
+    fun additionalActionValues() {
+        assertThat(JoinCreateResponse.Action.of("delete_dm").known())
+            .isEqualTo(JoinCreateResponse.Action.Known.DELETE_DM)
+    }
 }

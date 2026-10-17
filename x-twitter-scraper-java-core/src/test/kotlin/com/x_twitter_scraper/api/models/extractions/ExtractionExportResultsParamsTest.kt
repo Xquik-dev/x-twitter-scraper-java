@@ -115,4 +115,23 @@ internal class ExtractionExportResultsParamsTest {
 
         assertThat(queryParams).isEqualTo(QueryParams.builder().put("format", "csv").build())
     }
+
+    @Test
+    fun additionalFields() {
+        val params =
+            ExtractionExportResultsParams.builder()
+                .format(ExtractionExportResultsParams.Format.CSV)
+                .hasEmail(true)
+                .businessEmailOnly(true)
+                .emailDomains("sample")
+                .build()
+
+        assertThat(params.hasEmail()).isPresent()
+        assertThat(params._queryParams().values("hasEmail")).containsExactly("true")
+        assertThat(params.businessEmailOnly()).isPresent()
+        assertThat(params._queryParams().values("businessEmailOnly")).containsExactly("true")
+        assertThat(params.emailDomains()).isPresent()
+        assertThat(params._queryParams().values("emailDomains")).containsExactly("sample")
+        assertThat(params.toBuilder().build()).isEqualTo(params)
+    }
 }

@@ -311,4 +311,10 @@ internal class RetweetCreateResponseTest {
 
         assertThat(roundtrippedRetweetCreateResponse).isEqualTo(retweetCreateResponse)
     }
+
+    @Test
+    fun additionalActionValues() {
+        assertThat(RetweetCreateResponse.Action.of("delete_dm").known())
+            .isEqualTo(RetweetCreateResponse.Action.Known.DELETE_DM)
+    }
 }

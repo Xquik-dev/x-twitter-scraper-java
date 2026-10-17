@@ -235,6 +235,8 @@ private constructor(
         private val replyCount: JsonField<Long>,
         private val retweetCount: JsonField<Long>,
         private val viewCount: JsonField<Long>,
+        private val quoteCount: JsonField<Long>,
+        private val bookmarkCount: JsonField<Long>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -257,6 +259,12 @@ private constructor(
             @JsonProperty("viewCount")
             @ExcludeMissing
             viewCount: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("quoteCount")
+            @ExcludeMissing
+            quoteCount: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("bookmarkCount")
+            @ExcludeMissing
+            bookmarkCount: JsonField<Long> = JsonMissing.of(),
         ) : this(
             id,
             text,
@@ -265,6 +273,8 @@ private constructor(
             replyCount,
             retweetCount,
             viewCount,
+            quoteCount,
+            bookmarkCount,
             mutableMapOf(),
         )
 
@@ -294,6 +304,12 @@ private constructor(
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun viewCount(): Optional<Long> = viewCount.getOptional("viewCount")
+
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun quoteCount(): Optional<Long> = quoteCount.getOptional("quoteCount")
+
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun bookmarkCount(): Optional<Long> = bookmarkCount.getOptional("bookmarkCount")
 
         /**
          * Returns the raw JSON value of [id].
@@ -347,6 +363,23 @@ private constructor(
          */
         @JsonProperty("viewCount") @ExcludeMissing fun _viewCount(): JsonField<Long> = viewCount
 
+        /**
+         * Returns the raw JSON value of [quoteCount].
+         *
+         * Unlike [quoteCount], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("quoteCount") @ExcludeMissing fun _quoteCount(): JsonField<Long> = quoteCount
+
+        /**
+         * Returns the raw JSON value of [bookmarkCount].
+         *
+         * Unlike [bookmarkCount], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("bookmarkCount")
+        @ExcludeMissing
+        fun _bookmarkCount(): JsonField<Long> = bookmarkCount
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -383,6 +416,8 @@ private constructor(
             private var replyCount: JsonField<Long> = JsonMissing.of()
             private var retweetCount: JsonField<Long> = JsonMissing.of()
             private var viewCount: JsonField<Long> = JsonMissing.of()
+            private var quoteCount: JsonField<Long> = JsonMissing.of()
+            private var bookmarkCount: JsonField<Long> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -394,6 +429,8 @@ private constructor(
                 replyCount = tweet.replyCount
                 retweetCount = tweet.retweetCount
                 viewCount = tweet.viewCount
+                quoteCount = tweet.quoteCount
+                bookmarkCount = tweet.bookmarkCount
                 additionalProperties = tweet.additionalProperties.toMutableMap()
             }
 
@@ -433,6 +470,18 @@ private constructor(
 
             /** Sets [Builder.viewCount] to an arbitrary JSON value. */
             fun viewCount(viewCount: JsonField<Long>) = apply { this.viewCount = viewCount }
+
+            fun quoteCount(quoteCount: Long) = quoteCount(JsonField.of(quoteCount))
+
+            /** Sets [Builder.quoteCount] to an arbitrary JSON value. */
+            fun quoteCount(quoteCount: JsonField<Long>) = apply { this.quoteCount = quoteCount }
+
+            fun bookmarkCount(bookmarkCount: Long) = bookmarkCount(JsonField.of(bookmarkCount))
+
+            /** Sets [Builder.bookmarkCount] to an arbitrary JSON value. */
+            fun bookmarkCount(bookmarkCount: JsonField<Long>) = apply {
+                this.bookmarkCount = bookmarkCount
+            }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -475,6 +524,8 @@ private constructor(
                     replyCount,
                     retweetCount,
                     viewCount,
+                    quoteCount,
+                    bookmarkCount,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -502,6 +553,8 @@ private constructor(
             replyCount()
             retweetCount()
             viewCount()
+            quoteCount()
+            bookmarkCount()
             validated = true
         }
 
@@ -521,7 +574,9 @@ private constructor(
                 (if (likeCount.asKnown().isPresent) 1 else 0) +
                 (if (replyCount.asKnown().isPresent) 1 else 0) +
                 (if (retweetCount.asKnown().isPresent) 1 else 0) +
-                (if (viewCount.asKnown().isPresent) 1 else 0)
+                (if (viewCount.asKnown().isPresent) 1 else 0) +
+                (if (quoteCount.asKnown().isPresent) 1 else 0) +
+                (if (bookmarkCount.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -536,6 +591,8 @@ private constructor(
                 replyCount == other.replyCount &&
                 retweetCount == other.retweetCount &&
                 viewCount == other.viewCount &&
+                quoteCount == other.quoteCount &&
+                bookmarkCount == other.bookmarkCount &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -548,6 +605,8 @@ private constructor(
                 replyCount,
                 retweetCount,
                 viewCount,
+                quoteCount,
+                bookmarkCount,
                 additionalProperties,
             )
         }
@@ -555,7 +614,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Tweet{id=$id, text=$text, createdAt=$createdAt, likeCount=$likeCount, replyCount=$replyCount, retweetCount=$retweetCount, viewCount=$viewCount, additionalProperties=$additionalProperties}"
+            "Tweet{id=$id, text=$text, createdAt=$createdAt, likeCount=$likeCount, replyCount=$replyCount, retweetCount=$retweetCount, viewCount=$viewCount, quoteCount=$quoteCount, bookmarkCount=$bookmarkCount, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

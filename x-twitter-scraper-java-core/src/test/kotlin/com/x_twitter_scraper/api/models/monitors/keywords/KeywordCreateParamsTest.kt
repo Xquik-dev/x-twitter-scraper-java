@@ -31,4 +31,18 @@ internal class KeywordCreateParamsTest {
         assertThat(body.eventTypes()).containsExactly(EventType.TWEET_NEW)
         assertThat(body.query()).isEqualTo("xquik OR \"x api\"")
     }
+
+    @Test
+    fun additionalFields() {
+        val params =
+            KeywordCreateParams.builder()
+                .eventTypes(listOf(EventType.TWEET_NEW))
+                .query("sample")
+                .name("sample")
+                .build()
+
+        assertThat(params.name()).isPresent()
+        assertThat(params._name().isMissing()).isFalse()
+        assertThat(params.toBuilder().build()).isEqualTo(params)
+    }
 }

@@ -25,6 +25,7 @@ private constructor(
     private val limit: Long?,
     private val outputMode: OutputMode?,
     private val outputPreset: OutputPreset?,
+    private val wait: Long?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -48,6 +49,8 @@ private constructor(
 
     /** Keep enrichment nested or merge it into each result. */
     fun outputPreset(): Optional<OutputPreset> = Optional.ofNullable(outputPreset)
+
+    fun wait(): Optional<Long> = Optional.ofNullable(wait)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -75,6 +78,7 @@ private constructor(
         private var limit: Long? = null
         private var outputMode: OutputMode? = null
         private var outputPreset: OutputPreset? = null
+        private var wait: Long? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -87,6 +91,7 @@ private constructor(
             limit = extractionRetrieveParams.limit
             outputMode = extractionRetrieveParams.outputMode
             outputPreset = extractionRetrieveParams.outputPreset
+            wait = extractionRetrieveParams.wait
             additionalHeaders = extractionRetrieveParams.additionalHeaders.toBuilder()
             additionalQueryParams = extractionRetrieveParams.additionalQueryParams.toBuilder()
         }
@@ -138,6 +143,14 @@ private constructor(
         /** Alias for calling [Builder.outputPreset] with `outputPreset.orElse(null)`. */
         fun outputPreset(outputPreset: Optional<OutputPreset>) =
             outputPreset(outputPreset.getOrNull())
+
+        fun wait(wait: Long?) = apply { this.wait = wait }
+
+        /** Alias for [Builder.wait]. */
+        fun wait(wait: Long) = wait(wait as Long?)
+
+        /** Alias for calling [Builder.wait] with `wait.orElse(null)`. */
+        fun wait(wait: Optional<Long>) = wait(wait.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -251,6 +264,7 @@ private constructor(
                 limit,
                 outputMode,
                 outputPreset,
+                wait,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -273,6 +287,7 @@ private constructor(
                 limit?.let { put("limit", it.toString()) }
                 outputMode?.let { put("outputMode", it.toString()) }
                 outputPreset?.let { put("outputPreset", it.toString()) }
+                wait?.let { put("wait", it.toString()) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -654,12 +669,14 @@ private constructor(
             limit == other.limit &&
             outputMode == other.outputMode &&
             outputPreset == other.outputPreset &&
+            wait == other.wait &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
         Objects.hash(
+            wait,
             id,
             cursor,
             fieldStyle,
@@ -672,5 +689,5 @@ private constructor(
         )
 
     override fun toString() =
-        "ExtractionRetrieveParams{id=$id, cursor=$cursor, fieldStyle=$fieldStyle, includeRaw=$includeRaw, limit=$limit, outputMode=$outputMode, outputPreset=$outputPreset, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ExtractionRetrieveParams{id=$id, cursor=$cursor, fieldStyle=$fieldStyle, includeRaw=$includeRaw, limit=$limit, outputMode=$outputMode, outputPreset=$outputPreset, wait=$wait, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

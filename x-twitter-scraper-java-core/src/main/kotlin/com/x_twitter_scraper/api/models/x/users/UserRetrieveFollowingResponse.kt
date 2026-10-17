@@ -22,7 +22,6 @@ import com.x_twitter_scraper.api.core.ExcludeMissing
 import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
-import com.x_twitter_scraper.api.core.allMaxBy
 import com.x_twitter_scraper.api.core.checkKnown
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.getOrThrow
@@ -239,23 +238,17 @@ private constructor(
         override fun ObjectCodec.deserialize(node: JsonNode): UserRetrieveFollowingResponse {
             val json = JsonValue.fromJsonNode(node)
 
-            val bestMatches =
-                sequenceOf(
-                        tryDeserialize(node, jacksonTypeRef<PaginatedUsers>())?.let {
-                            UserRetrieveFollowingResponse(paginatedUsers = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<UserListCoverageResponse>())?.let {
-                            UserRetrieveFollowingResponse(listCoverage = it, _json = json)
-                        },
-                    )
-                    .filterNotNull()
-                    .allMaxBy { it.validity() }
-                    .toList()
-            return when (bestMatches.size) {
-                0 -> UserRetrieveFollowingResponse(_json = json)
-                1 -> bestMatches.single()
-                else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
-            }
+            val response =
+                if (node.has("diagnostic")) {
+                    tryDeserialize(node, jacksonTypeRef<UserListCoverageResponse>())?.let {
+                        UserRetrieveFollowingResponse(listCoverage = it, _json = json)
+                    }
+                } else {
+                    tryDeserialize(node, jacksonTypeRef<PaginatedUsers>())?.let {
+                        UserRetrieveFollowingResponse(paginatedUsers = it, _json = json)
+                    }
+                }
+            return response ?: UserRetrieveFollowingResponse(_json = json)
         }
     }
 

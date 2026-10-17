@@ -307,4 +307,10 @@ internal class DmSendResponseTest {
 
         assertThat(roundtrippedDmSendResponse).isEqualTo(dmSendResponse)
     }
+
+    @Test
+    fun additionalActionValues() {
+        assertThat(DmSendResponse.Action.of("delete_dm").known())
+            .isEqualTo(DmSendResponse.Action.Known.DELETE_DM)
+    }
 }

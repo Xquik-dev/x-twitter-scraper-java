@@ -324,4 +324,10 @@ internal class UserRemoveFollowerResponseTest {
 
         assertThat(roundtrippedUserRemoveFollowerResponse).isEqualTo(userRemoveFollowerResponse)
     }
+
+    @Test
+    fun additionalActionValues() {
+        assertThat(UserRemoveFollowerResponse.Action.of("delete_dm").known())
+            .isEqualTo(UserRemoveFollowerResponse.Action.Known.DELETE_DM)
+    }
 }

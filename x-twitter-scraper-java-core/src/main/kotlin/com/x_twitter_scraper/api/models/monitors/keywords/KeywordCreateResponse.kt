@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.x_twitter_scraper.api.core.Enum
 import com.x_twitter_scraper.api.core.ExcludeMissing
 import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.core.JsonMissing
@@ -20,6 +21,7 @@ import com.x_twitter_scraper.api.models.EventType
 import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** Keyword monitor that tracks matching public X activity. */
@@ -32,6 +34,9 @@ private constructor(
     private val isActive: JsonField<Boolean>,
     private val nextBillingAt: JsonField<OffsetDateTime>,
     private val query: JsonField<String>,
+    private val name: JsonField<String>,
+    private val pausedReason: JsonField<PausedReason>,
+    private val pausedAt: JsonField<OffsetDateTime>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -49,7 +54,25 @@ private constructor(
         @ExcludeMissing
         nextBillingAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("query") @ExcludeMissing query: JsonField<String> = JsonMissing.of(),
-    ) : this(id, createdAt, eventTypes, isActive, nextBillingAt, query, mutableMapOf())
+        @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("pausedReason")
+        @ExcludeMissing
+        pausedReason: JsonField<PausedReason> = JsonMissing.of(),
+        @JsonProperty("pausedAt")
+        @ExcludeMissing
+        pausedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+    ) : this(
+        id,
+        createdAt,
+        eventTypes,
+        isActive,
+        nextBillingAt,
+        query,
+        name,
+        pausedReason,
+        pausedAt,
+        mutableMapOf(),
+    )
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -90,6 +113,15 @@ private constructor(
      *   unexpectedly missing or null.
      */
     fun query(): String = query.getRequired("query")
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun name(): Optional<String> = name.getOptional("name")
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun pausedReason(): Optional<PausedReason> = pausedReason.getOptional("pausedReason")
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun pausedAt(): Optional<OffsetDateTime> = pausedAt.getOptional("pausedAt")
 
     /**
      * Returns the raw JSON value of [id].
@@ -139,6 +171,29 @@ private constructor(
      */
     @JsonProperty("query") @ExcludeMissing fun _query(): JsonField<String> = query
 
+    /**
+     * Returns the raw JSON value of [name].
+     *
+     * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+    /**
+     * Returns the raw JSON value of [pausedReason].
+     *
+     * Unlike [pausedReason], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("pausedReason")
+    @ExcludeMissing
+    fun _pausedReason(): JsonField<PausedReason> = pausedReason
+
+    /**
+     * Returns the raw JSON value of [pausedAt].
+     *
+     * Unlike [pausedAt], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("pausedAt") @ExcludeMissing fun _pausedAt(): JsonField<OffsetDateTime> = pausedAt
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -178,6 +233,9 @@ private constructor(
         private var isActive: JsonField<Boolean>? = null
         private var nextBillingAt: JsonField<OffsetDateTime>? = null
         private var query: JsonField<String>? = null
+        private var name: JsonField<String> = JsonMissing.of()
+        private var pausedReason: JsonField<PausedReason> = JsonMissing.of()
+        private var pausedAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -188,6 +246,9 @@ private constructor(
             isActive = keywordCreateResponse.isActive
             nextBillingAt = keywordCreateResponse.nextBillingAt
             query = keywordCreateResponse.query
+            name = keywordCreateResponse.name
+            pausedReason = keywordCreateResponse.pausedReason
+            pausedAt = keywordCreateResponse.pausedAt
             additionalProperties = keywordCreateResponse.additionalProperties.toMutableMap()
         }
 
@@ -240,6 +301,23 @@ private constructor(
         /** Sets [Builder.query] to an arbitrary JSON value. */
         fun query(query: JsonField<String>) = apply { this.query = query }
 
+        fun name(name: String) = name(JsonField.of(name))
+
+        /** Sets [Builder.name] to an arbitrary JSON value. */
+        fun name(name: JsonField<String>) = apply { this.name = name }
+
+        fun pausedReason(pausedReason: PausedReason) = pausedReason(JsonField.of(pausedReason))
+
+        /** Sets [Builder.pausedReason] to an arbitrary JSON value. */
+        fun pausedReason(pausedReason: JsonField<PausedReason>) = apply {
+            this.pausedReason = pausedReason
+        }
+
+        fun pausedAt(pausedAt: OffsetDateTime) = pausedAt(JsonField.of(pausedAt))
+
+        /** Sets [Builder.pausedAt] to an arbitrary JSON value. */
+        fun pausedAt(pausedAt: JsonField<OffsetDateTime>) = apply { this.pausedAt = pausedAt }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -284,6 +362,9 @@ private constructor(
                 checkRequired("isActive", isActive),
                 checkRequired("nextBillingAt", nextBillingAt),
                 checkRequired("query", query),
+                name,
+                pausedReason,
+                pausedAt,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -309,6 +390,9 @@ private constructor(
         isActive()
         nextBillingAt()
         query()
+        name()
+        pausedReason().ifPresent { it.validate() }
+        pausedAt()
         validated = true
     }
 
@@ -327,7 +411,10 @@ private constructor(
             (eventTypes.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (if (isActive.asKnown().isPresent) 1 else 0) +
             (if (nextBillingAt.asKnown().isPresent) 1 else 0) +
-            (if (query.asKnown().isPresent) 1 else 0)
+            (if (query.asKnown().isPresent) 1 else 0) +
+            (if (name.asKnown().isPresent) 1 else 0) +
+            (pausedReason.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (pausedAt.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -341,6 +428,9 @@ private constructor(
             isActive == other.isActive &&
             nextBillingAt == other.nextBillingAt &&
             query == other.query &&
+            name == other.name &&
+            pausedReason == other.pausedReason &&
+            pausedAt == other.pausedAt &&
             additionalProperties == other.additionalProperties
     }
 
@@ -352,6 +442,9 @@ private constructor(
             isActive,
             nextBillingAt,
             query,
+            name,
+            pausedReason,
+            pausedAt,
             additionalProperties,
         )
     }
@@ -359,5 +452,116 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "KeywordCreateResponse{id=$id, createdAt=$createdAt, eventTypes=$eventTypes, isActive=$isActive, nextBillingAt=$nextBillingAt, query=$query, additionalProperties=$additionalProperties}"
+        "KeywordCreateResponse{id=$id, createdAt=$createdAt, eventTypes=$eventTypes, isActive=$isActive, nextBillingAt=$nextBillingAt, query=$query, name=$name, pausedReason=$pausedReason, pausedAt=$pausedAt, additionalProperties=$additionalProperties}"
+
+    class PausedReason @JsonCreator private constructor(private val value: JsonField<String>) :
+        Enum {
+
+        /** Returns this class instance's raw value. */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val INSUFFICIENT_CREDITS = of("insufficient_credits")
+
+            @JvmStatic fun of(value: String) = PausedReason(JsonField.of(value))
+        }
+
+        /** An enum containing [PausedReason]'s known values. */
+        enum class Known {
+            INSUFFICIENT_CREDITS
+        }
+
+        /**
+         * An enum containing [PausedReason]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [PausedReason] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            INSUFFICIENT_CREDITS,
+            /**
+             * An enum member indicating that [PausedReason] was instantiated with an unknown value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         */
+        fun value(): Value =
+            when (this) {
+                INSUFFICIENT_CREDITS -> Value.INSUFFICIENT_CREDITS
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
+         */
+        fun known(): Known =
+            when (this) {
+                INSUFFICIENT_CREDITS -> Known.INSUFFICIENT_CREDITS
+                else -> throw XTwitterScraperInvalidDataException("Unknown PausedReason: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): PausedReason = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is PausedReason && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
 }

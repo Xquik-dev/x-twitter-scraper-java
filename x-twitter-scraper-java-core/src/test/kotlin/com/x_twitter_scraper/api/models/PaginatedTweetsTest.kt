@@ -3655,4 +3655,46 @@ internal class PaginatedTweetsTest {
         assertThat(paginatedTweets.windowComplete()).contains(true)
         assertThat(paginatedTweets._additionalProperties()).isEmpty()
     }
+
+    @Test
+    fun additionalSkippedFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json = """{"entry":"sample","reason":"sample"}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<PaginatedTweets.Skipped>())
+
+        assertThat(model.entry()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("entry")
+        assertThat(model.reason()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("reason")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<PaginatedTweets.Skipped>(),
+                )
+            )
+            .isEqualTo(model)
+    }
+
+    @Test
+    fun additionalFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json = """{"skipped":[{}]}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<PaginatedTweets>())
+
+        assertThat(model.skipped()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("skipped")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<PaginatedTweets>(),
+                )
+            )
+            .isEqualTo(model)
+    }
 }

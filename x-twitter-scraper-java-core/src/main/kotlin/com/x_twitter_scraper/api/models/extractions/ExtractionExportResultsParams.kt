@@ -40,6 +40,9 @@ private constructor(
     private val sinceDate: LocalDate?,
     private val untilDate: LocalDate?,
     private val verified: Boolean?,
+    private val hasEmail: Boolean?,
+    private val businessEmailOnly: Boolean?,
+    private val emailDomains: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -103,6 +106,12 @@ private constructor(
     /** Filter by verified status. */
     fun verified(): Optional<Boolean> = Optional.ofNullable(verified)
 
+    fun hasEmail(): Optional<Boolean> = Optional.ofNullable(hasEmail)
+
+    fun businessEmailOnly(): Optional<Boolean> = Optional.ofNullable(businessEmailOnly)
+
+    fun emailDomains(): Optional<String> = Optional.ofNullable(emailDomains)
+
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
 
@@ -148,6 +157,9 @@ private constructor(
         private var sinceDate: LocalDate? = null
         private var untilDate: LocalDate? = null
         private var verified: Boolean? = null
+        private var hasEmail: Boolean? = null
+        private var businessEmailOnly: Boolean? = null
+        private var emailDomains: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -173,6 +185,9 @@ private constructor(
             sinceDate = extractionExportResultsParams.sinceDate
             untilDate = extractionExportResultsParams.untilDate
             verified = extractionExportResultsParams.verified
+            hasEmail = extractionExportResultsParams.hasEmail
+            businessEmailOnly = extractionExportResultsParams.businessEmailOnly
+            emailDomains = extractionExportResultsParams.emailDomains
             additionalHeaders = extractionExportResultsParams.additionalHeaders.toBuilder()
             additionalQueryParams = extractionExportResultsParams.additionalQueryParams.toBuilder()
         }
@@ -338,6 +353,31 @@ private constructor(
         /** Alias for calling [Builder.verified] with `verified.orElse(null)`. */
         fun verified(verified: Optional<Boolean>) = verified(verified.getOrNull())
 
+        fun hasEmail(hasEmail: Boolean?) = apply { this.hasEmail = hasEmail }
+
+        /** Alias for [Builder.hasEmail]. */
+        fun hasEmail(hasEmail: Boolean) = hasEmail(hasEmail as Boolean?)
+
+        /** Alias for calling [Builder.hasEmail] with `hasEmail.orElse(null)`. */
+        fun hasEmail(hasEmail: Optional<Boolean>) = hasEmail(hasEmail.getOrNull())
+
+        fun businessEmailOnly(businessEmailOnly: Boolean?) = apply {
+            this.businessEmailOnly = businessEmailOnly
+        }
+
+        /** Alias for [Builder.businessEmailOnly]. */
+        fun businessEmailOnly(businessEmailOnly: Boolean) =
+            businessEmailOnly(businessEmailOnly as Boolean?)
+
+        /** Alias for calling [Builder.businessEmailOnly] with `businessEmailOnly.orElse(null)`. */
+        fun businessEmailOnly(businessEmailOnly: Optional<Boolean>) =
+            businessEmailOnly(businessEmailOnly.getOrNull())
+
+        fun emailDomains(emailDomains: String?) = apply { this.emailDomains = emailDomains }
+
+        /** Alias for calling [Builder.emailDomains] with `emailDomains.orElse(null)`. */
+        fun emailDomains(emailDomains: Optional<String>) = emailDomains(emailDomains.getOrNull())
+
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
             putAllAdditionalHeaders(additionalHeaders)
@@ -470,6 +510,9 @@ private constructor(
                 sinceDate,
                 untilDate,
                 verified,
+                hasEmail,
+                businessEmailOnly,
+                emailDomains,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -505,6 +548,9 @@ private constructor(
                 sinceDate?.let { put("sinceDate", it.toString()) }
                 untilDate?.let { put("untilDate", it.toString()) }
                 verified?.let { put("verified", it.toString()) }
+                hasEmail?.let { put("hasEmail", it.toString()) }
+                businessEmailOnly?.let { put("businessEmailOnly", it.toString()) }
+                emailDomains?.let { put("emailDomains", it) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -680,12 +726,18 @@ private constructor(
             sinceDate == other.sinceDate &&
             untilDate == other.untilDate &&
             verified == other.verified &&
+            hasEmail == other.hasEmail &&
+            businessEmailOnly == other.businessEmailOnly &&
+            emailDomains == other.emailDomains &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
         Objects.hash(
+            hasEmail,
+            businessEmailOnly,
+            emailDomains,
             id,
             format,
             hasDescription,
@@ -711,5 +763,5 @@ private constructor(
         )
 
     override fun toString() =
-        "ExtractionExportResultsParams{id=$id, format=$format, hasDescription=$hasDescription, hasLocation=$hasLocation, hasMedia=$hasMedia, lang=$lang, maxFollowers=$maxFollowers, maxFollowing=$maxFollowing, maxPosts=$maxPosts, minFollowers=$minFollowers, minFollowing=$minFollowing, minLikes=$minLikes, minPosts=$minPosts, minReplies=$minReplies, minRetweets=$minRetweets, minViews=$minViews, search=$search, sinceDate=$sinceDate, untilDate=$untilDate, verified=$verified, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ExtractionExportResultsParams{id=$id, format=$format, hasDescription=$hasDescription, hasLocation=$hasLocation, hasMedia=$hasMedia, lang=$lang, maxFollowers=$maxFollowers, maxFollowing=$maxFollowing, maxPosts=$maxPosts, minFollowers=$minFollowers, minFollowing=$minFollowing, minLikes=$minLikes, minPosts=$minPosts, minReplies=$minReplies, minRetweets=$minRetweets, minViews=$minViews, search=$search, sinceDate=$sinceDate, untilDate=$untilDate, verified=$verified, hasEmail=$hasEmail, businessEmailOnly=$businessEmailOnly, emailDomains=$emailDomains, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
+import org.junit.jupiter.params.provider.ValueSource
 
 internal class UserRetrieveFollowersResponseTest {
 
@@ -478,6 +479,67 @@ internal class UserRetrieveFollowersResponseTest {
                 userRetrieveFollowersResponse.validate()
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
+    }
+
+    @Test
+    fun terminalPageWithoutDiagnosticDeserializesToPaginatedUsers() {
+        val userRetrieveFollowersResponse =
+            jsonMapper()
+                .readValue(
+                    """
+                    {
+                      "users": [],
+                      "has_next_page": false,
+                      "next_cursor": "",
+                      "filtered_count": 100000,
+                      "scanLimit": {
+                        "limit": 100000,
+                        "rowsRead": 100000,
+                        "message": "Stopped at the scan limit"
+                      }
+                    }
+                    """
+                        .trimIndent(),
+                    jacksonTypeRef<UserRetrieveFollowersResponse>(),
+                )
+
+        userRetrieveFollowersResponse.validate()
+        assertThat(userRetrieveFollowersResponse.isPaginatedUsers()).isTrue()
+        assertThat(userRetrieveFollowersResponse.asPaginatedUsers().filteredCount())
+            .contains(100000L)
+        assertThat(
+                userRetrieveFollowersResponse
+                    .asPaginatedUsers()
+                    .scanLimit()
+                    .orElseThrow()
+                    .rowsRead()
+            )
+            .contains(100000L)
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["null", "{}", "false"])
+    fun malformedDiagnosticDeserializesToInvalidListCoverage(diagnostic: String) {
+        val userRetrieveFollowersResponse =
+            jsonMapper()
+                .readValue(
+                    """
+                    {
+                      "users": [],
+                      "has_next_page": false,
+                      "next_cursor": "",
+                      "diagnostic": $diagnostic
+                    }
+                    """
+                        .trimIndent(),
+                    jacksonTypeRef<UserRetrieveFollowersResponse>(),
+                )
+
+        assertThat(userRetrieveFollowersResponse.isListCoverage()).isTrue()
+        assertThat(userRetrieveFollowersResponse.isValid()).isFalse()
+        assertThrows<XTwitterScraperInvalidDataException> {
+            userRetrieveFollowersResponse.validate()
+        }
     }
 
     @Test

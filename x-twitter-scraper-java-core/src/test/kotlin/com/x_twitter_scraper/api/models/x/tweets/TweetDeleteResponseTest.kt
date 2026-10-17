@@ -307,4 +307,10 @@ internal class TweetDeleteResponseTest {
 
         assertThat(roundtrippedTweetDeleteResponse).isEqualTo(tweetDeleteResponse)
     }
+
+    @Test
+    fun additionalActionValues() {
+        assertThat(TweetDeleteResponse.Action.of("delete_dm").known())
+            .isEqualTo(TweetDeleteResponse.Action.Known.DELETE_DM)
+    }
 }

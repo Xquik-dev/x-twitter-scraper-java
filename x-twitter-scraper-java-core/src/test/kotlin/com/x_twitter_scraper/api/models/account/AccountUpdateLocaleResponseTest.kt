@@ -29,4 +29,24 @@ internal class AccountUpdateLocaleResponseTest {
 
         assertThat(roundtrippedAccountUpdateLocaleResponse).isEqualTo(accountUpdateLocaleResponse)
     }
+
+    @Test
+    fun additionalFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json = """{"ignoredFields":["sample"]}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<AccountUpdateLocaleResponse>())
+
+        assertThat(model.ignoredFields()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("ignoredFields")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<AccountUpdateLocaleResponse>(),
+                )
+            )
+            .isEqualTo(model)
+    }
 }

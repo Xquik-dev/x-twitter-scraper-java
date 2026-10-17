@@ -37,6 +37,7 @@ private constructor(
     private val xUserId: JsonField<String>,
     private val pausedAt: JsonField<OffsetDateTime>,
     private val pausedReason: JsonField<PausedReason>,
+    private val name: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -61,6 +62,7 @@ private constructor(
         @JsonProperty("pausedReason")
         @ExcludeMissing
         pausedReason: JsonField<PausedReason> = JsonMissing.of(),
+        @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
     ) : this(
         id,
         createdAt,
@@ -71,6 +73,7 @@ private constructor(
         xUserId,
         pausedAt,
         pausedReason,
+        name,
         mutableMapOf(),
     )
 
@@ -133,6 +136,9 @@ private constructor(
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun pausedReason(): Optional<PausedReason> = pausedReason.getOptional("pausedReason")
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun name(): Optional<String> = name.getOptional("name")
 
     /**
      * Returns the raw JSON value of [id].
@@ -205,6 +211,13 @@ private constructor(
     @ExcludeMissing
     fun _pausedReason(): JsonField<PausedReason> = pausedReason
 
+    /**
+     * Returns the raw JSON value of [name].
+     *
+     * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -248,6 +261,7 @@ private constructor(
         private var xUserId: JsonField<String>? = null
         private var pausedAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var pausedReason: JsonField<PausedReason> = JsonMissing.of()
+        private var name: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -261,6 +275,7 @@ private constructor(
             xUserId = monitor.xUserId
             pausedAt = monitor.pausedAt
             pausedReason = monitor.pausedReason
+            name = monitor.name
             additionalProperties = monitor.additionalProperties.toMutableMap()
         }
 
@@ -332,6 +347,11 @@ private constructor(
             this.pausedReason = pausedReason
         }
 
+        fun name(name: String) = name(JsonField.of(name))
+
+        /** Sets [Builder.name] to an arbitrary JSON value. */
+        fun name(name: JsonField<String>) = apply { this.name = name }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -380,6 +400,7 @@ private constructor(
                 checkRequired("xUserId", xUserId),
                 pausedAt,
                 pausedReason,
+                name,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -408,6 +429,7 @@ private constructor(
         xUserId()
         pausedAt()
         pausedReason().ifPresent { it.validate() }
+        name()
         validated = true
     }
 
@@ -429,7 +451,8 @@ private constructor(
             (if (username.asKnown().isPresent) 1 else 0) +
             (if (xUserId.asKnown().isPresent) 1 else 0) +
             (if (pausedAt.asKnown().isPresent) 1 else 0) +
-            (pausedReason.asKnown().getOrNull()?.validity() ?: 0)
+            (pausedReason.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (name.asKnown().isPresent) 1 else 0)
 
     /** Why Xquik automatically paused this monitor. */
     class PausedReason @JsonCreator private constructor(private val value: JsonField<String>) :
@@ -442,12 +465,18 @@ private constructor(
 
             @JvmField val X_USER_NOT_FOUND = of("x_user_not_found")
 
+            @JvmField val INSUFFICIENT_CREDITS = of("insufficient_credits")
+
+            @JvmField val X_ACCOUNT_PROTECTED = of("x_account_protected")
+
             @JvmStatic fun of(value: String) = PausedReason(JsonField.of(value))
         }
 
         /** An enum containing [PausedReason]'s known values. */
         enum class Known {
-            X_USER_NOT_FOUND
+            X_USER_NOT_FOUND,
+            INSUFFICIENT_CREDITS,
+            X_ACCOUNT_PROTECTED,
         }
 
         /**
@@ -461,6 +490,8 @@ private constructor(
          */
         enum class Value {
             X_USER_NOT_FOUND,
+            INSUFFICIENT_CREDITS,
+            X_ACCOUNT_PROTECTED,
             /**
              * An enum member indicating that [PausedReason] was instantiated with an unknown value.
              */
@@ -473,6 +504,8 @@ private constructor(
          */
         fun value(): Value =
             when (this) {
+                INSUFFICIENT_CREDITS -> Value.INSUFFICIENT_CREDITS
+                X_ACCOUNT_PROTECTED -> Value.X_ACCOUNT_PROTECTED
                 X_USER_NOT_FOUND -> Value.X_USER_NOT_FOUND
                 else -> Value._UNKNOWN
             }
@@ -485,6 +518,8 @@ private constructor(
          */
         fun known(): Known =
             when (this) {
+                INSUFFICIENT_CREDITS -> Known.INSUFFICIENT_CREDITS
+                X_ACCOUNT_PROTECTED -> Known.X_ACCOUNT_PROTECTED
                 X_USER_NOT_FOUND -> Known.X_USER_NOT_FOUND
                 else -> throw XTwitterScraperInvalidDataException("Unknown PausedReason: $value")
             }
@@ -558,6 +593,7 @@ private constructor(
             xUserId == other.xUserId &&
             pausedAt == other.pausedAt &&
             pausedReason == other.pausedReason &&
+            name == other.name &&
             additionalProperties == other.additionalProperties
     }
 
@@ -572,6 +608,7 @@ private constructor(
             xUserId,
             pausedAt,
             pausedReason,
+            name,
             additionalProperties,
         )
     }
@@ -579,5 +616,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Monitor{id=$id, createdAt=$createdAt, eventTypes=$eventTypes, isActive=$isActive, nextBillingAt=$nextBillingAt, username=$username, xUserId=$xUserId, pausedAt=$pausedAt, pausedReason=$pausedReason, additionalProperties=$additionalProperties}"
+        "Monitor{id=$id, createdAt=$createdAt, eventTypes=$eventTypes, isActive=$isActive, nextBillingAt=$nextBillingAt, username=$username, xUserId=$xUserId, pausedAt=$pausedAt, pausedReason=$pausedReason, name=$name, additionalProperties=$additionalProperties}"
 }

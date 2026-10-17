@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# SPDX-FileCopyrightText: 2026 Xquik contributors
+#
+# SPDX-License-Identifier: Apache-2.0
+
+set -euo pipefail
+
+# shellcheck source=scripts/lib/api-spec.bash
+source "$(dirname -- "$0")/lib/api-spec.bash"
+
+cd -- "$(dirname -- "$0")/.."
+
+source scripts/lib/temp-paths.bash
+
+trap remove_temp_paths EXIT
+exit_on_signals
+declare workspace
+temp_path workspace xquik-java-api-fields
+
+read_spec
+./gradlew --quiet :x-twitter-scraper-java-core:apiFieldsClasspath >"$workspace/classpath.txt"
+java_bin="java"
+if [[ -n "${JAVA_HOME:-}" ]]; then
+    java_bin="$JAVA_HOME/bin/java"
+fi
+"$java_bin" -cp "$(tail -n 1 "$workspace/classpath.txt")" com.x_twitter_scraper.api.apifields.ApiFields "$spec_file" "$PWD"

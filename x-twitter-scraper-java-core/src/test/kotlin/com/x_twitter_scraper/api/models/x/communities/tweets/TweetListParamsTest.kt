@@ -57,4 +57,14 @@ internal class TweetListParamsTest {
                 QueryParams.builder().put("communityId", "321669910225").put("q", "q").build()
             )
     }
+
+    @Test
+    fun additionalFields() {
+        val params =
+            TweetListParams.builder().communityId("sample").q("sample").ids("sample").build()
+
+        assertThat(params.ids()).isPresent()
+        assertThat(params._queryParams().values("ids")).containsExactly("sample")
+        assertThat(params.toBuilder().build()).isEqualTo(params)
+    }
 }

@@ -658,7 +658,11 @@ private constructor(
                 contentType
                     ?: if (
                         value is KnownValue &&
-                            (value.value is InputStream || value.value is ByteArray)
+                            (value.value is InputStream ||
+                                value.value is ByteArray ||
+                                (value.value is List<*> &&
+                                    value.value.isNotEmpty() &&
+                                    value.value.all { it is InputStream }))
                     )
                         "application/octet-stream"
                     else "text/plain; charset=utf-8",

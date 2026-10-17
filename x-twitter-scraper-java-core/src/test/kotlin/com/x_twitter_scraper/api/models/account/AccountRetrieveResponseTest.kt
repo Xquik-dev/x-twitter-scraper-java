@@ -112,4 +112,72 @@ internal class AccountRetrieveResponseTest {
 
         assertThat(roundtrippedAccountRetrieveResponse).isEqualTo(accountRetrieveResponse)
     }
+
+    @Test
+    fun additionalCreditInfoFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json = """{"autoTopupStopped":true}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<AccountRetrieveResponse.CreditInfo>())
+
+        assertThat(model.autoTopupStopped()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("autoTopupStopped")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<AccountRetrieveResponse.CreditInfo>(),
+                )
+            )
+            .isEqualTo(model)
+    }
+
+    @Test
+    fun additionalSubscriptionFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json =
+            """{"status":"none","tier":"starter","currentPeriodStart":"2025-01-15T12:00:00Z","currentPeriodEnd":"2025-01-15T12:00:00Z"}"""
+        val model =
+            jsonMapper.readValue(json, jacksonTypeRef<AccountRetrieveResponse.Subscription>())
+
+        assertThat(model.status()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("status")
+        assertThat(model.tier()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("tier")
+        assertThat(model.currentPeriodStart()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("currentPeriodStart")
+        assertThat(model.currentPeriodEnd()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("currentPeriodEnd")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<AccountRetrieveResponse.Subscription>(),
+                )
+            )
+            .isEqualTo(model)
+    }
+
+    @Test
+    fun additionalFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json = """{"subscription":{}}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<AccountRetrieveResponse>())
+
+        assertThat(model.subscription()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("subscription")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<AccountRetrieveResponse>(),
+                )
+            )
+            .isEqualTo(model)
+    }
 }

@@ -119,6 +119,10 @@ start_check "API coverage" "API coverage" "Fix the API coverage lines above, the
 ./scripts/api-coverage
 pass_check
 
+start_check "API fields" "API fields" "Fix the API fields lines above, then rerun."
+./scripts/api-fields
+pass_check
+
 start_check "Java and Kotlin formatting" "lint" "Run ./scripts/format, then rerun."
 ./scripts/lint
 pass_check
@@ -193,5 +197,5 @@ for index in "${!passed_checks[@]}"; do
     fi
 done
 summary="Passed $summary."
-post_status success "$summary"
+post_status success "Passed all ${#passed_checks[@]} local checks."
 echo "$summary"

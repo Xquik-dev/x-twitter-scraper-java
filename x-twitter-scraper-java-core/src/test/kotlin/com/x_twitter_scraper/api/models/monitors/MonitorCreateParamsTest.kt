@@ -33,4 +33,18 @@ internal class MonitorCreateParamsTest {
         assertThat(body.eventTypes()).containsExactly(EventType.TWEET_NEW, EventType.TWEET_REPLY)
         assertThat(body.username()).isEqualTo("elonmusk")
     }
+
+    @Test
+    fun additionalFields() {
+        val params =
+            MonitorCreateParams.builder()
+                .eventTypes(listOf(EventType.TWEET_NEW))
+                .username("sample")
+                .name("sample")
+                .build()
+
+        assertThat(params.name()).isPresent()
+        assertThat(params._name().isMissing()).isFalse()
+        assertThat(params.toBuilder().build()).isEqualTo(params)
+    }
 }

@@ -67,4 +67,13 @@ internal class ExtractionRetrieveParamsTest {
 
         assertThat(queryParams).isEqualTo(QueryParams.builder().build())
     }
+
+    @Test
+    fun additionalFields() {
+        val params = ExtractionRetrieveParams.builder().wait(1L).build()
+
+        assertThat(params.wait()).isPresent()
+        assertThat(params._queryParams().values("wait")).containsExactly("1")
+        assertThat(params.toBuilder().build()).isEqualTo(params)
+    }
 }

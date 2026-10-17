@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
+import org.junit.jupiter.params.provider.ValueSource
 
 internal class UserRetrieveVerifiedFollowersResponseTest {
 
@@ -486,6 +487,67 @@ internal class UserRetrieveVerifiedFollowersResponseTest {
                 userRetrieveVerifiedFollowersResponse.validate()
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
+    }
+
+    @Test
+    fun terminalPageWithoutDiagnosticDeserializesToPaginatedUsers() {
+        val userRetrieveVerifiedFollowersResponse =
+            jsonMapper()
+                .readValue(
+                    """
+                    {
+                      "users": [],
+                      "has_next_page": false,
+                      "next_cursor": "",
+                      "filtered_count": 100000,
+                      "scanLimit": {
+                        "limit": 100000,
+                        "rowsRead": 100000,
+                        "message": "Stopped at the scan limit"
+                      }
+                    }
+                    """
+                        .trimIndent(),
+                    jacksonTypeRef<UserRetrieveVerifiedFollowersResponse>(),
+                )
+
+        userRetrieveVerifiedFollowersResponse.validate()
+        assertThat(userRetrieveVerifiedFollowersResponse.isPaginatedUsers()).isTrue()
+        assertThat(userRetrieveVerifiedFollowersResponse.asPaginatedUsers().filteredCount())
+            .contains(100000L)
+        assertThat(
+                userRetrieveVerifiedFollowersResponse
+                    .asPaginatedUsers()
+                    .scanLimit()
+                    .orElseThrow()
+                    .rowsRead()
+            )
+            .contains(100000L)
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["null", "{}", "false"])
+    fun malformedDiagnosticDeserializesToInvalidListCoverage(diagnostic: String) {
+        val userRetrieveVerifiedFollowersResponse =
+            jsonMapper()
+                .readValue(
+                    """
+                    {
+                      "users": [],
+                      "has_next_page": false,
+                      "next_cursor": "",
+                      "diagnostic": $diagnostic
+                    }
+                    """
+                        .trimIndent(),
+                    jacksonTypeRef<UserRetrieveVerifiedFollowersResponse>(),
+                )
+
+        assertThat(userRetrieveVerifiedFollowersResponse.isListCoverage()).isTrue()
+        assertThat(userRetrieveVerifiedFollowersResponse.isValid()).isFalse()
+        assertThrows<XTwitterScraperInvalidDataException> {
+            userRetrieveVerifiedFollowersResponse.validate()
+        }
     }
 
     @Test

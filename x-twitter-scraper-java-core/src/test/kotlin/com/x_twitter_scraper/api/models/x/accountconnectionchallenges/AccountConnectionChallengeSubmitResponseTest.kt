@@ -53,4 +53,32 @@ internal class AccountConnectionChallengeSubmitResponseTest {
         assertThat(roundtrippedAccountConnectionChallengeSubmitResponse)
             .isEqualTo(accountConnectionChallengeSubmitResponse)
     }
+
+    @Test
+    fun additionalFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json =
+            """{"object":"x_account_connection_challenge","expiresAt":"2025-01-15T12:00:00Z","message":"sample","username":"sample"}"""
+        val model =
+            jsonMapper.readValue(json, jacksonTypeRef<AccountConnectionChallengeSubmitResponse>())
+
+        assertThat(model.object_()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("object")
+        assertThat(model.expiresAt()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("expiresAt")
+        assertThat(model.message()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("message")
+        assertThat(model.username()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("username")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<AccountConnectionChallengeSubmitResponse>(),
+                )
+            )
+            .isEqualTo(model)
+    }
 }

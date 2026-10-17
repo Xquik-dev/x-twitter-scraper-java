@@ -12,7 +12,9 @@ import com.x_twitter_scraper.api.core.ExcludeMissing
 import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
+import com.x_twitter_scraper.api.core.checkKnown
 import com.x_twitter_scraper.api.core.checkRequired
+import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.time.OffsetDateTime
 import java.util.Collections
@@ -29,6 +31,7 @@ private constructor(
     private val updatedAt: JsonField<OffsetDateTime>,
     private val goal: JsonField<String>,
     private val topic: JsonField<String>,
+    private val ignoredFields: JsonField<List<String>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -44,7 +47,19 @@ private constructor(
         updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("goal") @ExcludeMissing goal: JsonField<String> = JsonMissing.of(),
         @JsonProperty("topic") @ExcludeMissing topic: JsonField<String> = JsonMissing.of(),
-    ) : this(id, createdAt, text, updatedAt, goal, topic, mutableMapOf())
+        @JsonProperty("ignoredFields")
+        @ExcludeMissing
+        ignoredFields: JsonField<List<String>> = JsonMissing.of(),
+    ) : this(
+        id,
+        createdAt,
+        text,
+        updatedAt,
+        goal,
+        topic,
+        ignoredFields,
+        mutableMapOf(),
+    )
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -75,6 +90,9 @@ private constructor(
 
     /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun topic(): Optional<String> = topic.getOptional("topic")
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun ignoredFields(): Optional<List<String>> = ignoredFields.getOptional("ignoredFields")
 
     /**
      * Returns the raw JSON value of [id].
@@ -122,6 +140,15 @@ private constructor(
      */
     @JsonProperty("topic") @ExcludeMissing fun _topic(): JsonField<String> = topic
 
+    /**
+     * Returns the raw JSON value of [ignoredFields].
+     *
+     * Unlike [ignoredFields], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("ignoredFields")
+    @ExcludeMissing
+    fun _ignoredFields(): JsonField<List<String>> = ignoredFields
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -159,6 +186,7 @@ private constructor(
         private var updatedAt: JsonField<OffsetDateTime>? = null
         private var goal: JsonField<String> = JsonMissing.of()
         private var topic: JsonField<String> = JsonMissing.of()
+        private var ignoredFields: JsonField<MutableList<String>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -169,6 +197,7 @@ private constructor(
             updatedAt = draftDetail.updatedAt
             goal = draftDetail.goal
             topic = draftDetail.topic
+            ignoredFields = draftDetail.ignoredFields.map { it.toMutableList() }
             additionalProperties = draftDetail.additionalProperties.toMutableMap()
         }
 
@@ -201,6 +230,25 @@ private constructor(
 
         /** Sets [Builder.topic] to an arbitrary JSON value. */
         fun topic(topic: JsonField<String>) = apply { this.topic = topic }
+
+        fun ignoredFields(ignoredFields: List<String>) = ignoredFields(JsonField.of(ignoredFields))
+
+        /** Sets [Builder.ignoredFields] to an arbitrary JSON value. */
+        fun ignoredFields(ignoredFields: JsonField<List<String>>) = apply {
+            this.ignoredFields = ignoredFields.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [String] to [ignoredFields].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addIgnoredField(ignoredField: String) = apply {
+            this.ignoredFields =
+                (this.ignoredFields ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("ignoredFields", it).add(ignoredField)
+                }
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -244,6 +292,7 @@ private constructor(
                 checkRequired("updatedAt", updatedAt),
                 goal,
                 topic,
+                (ignoredFields ?: JsonMissing.of()).map { it.toImmutable() },
                 additionalProperties.toMutableMap(),
             )
     }
@@ -269,6 +318,7 @@ private constructor(
         updatedAt()
         goal()
         topic()
+        ignoredFields()
         validated = true
     }
 
@@ -287,7 +337,8 @@ private constructor(
             (if (text.asKnown().isPresent) 1 else 0) +
             (if (updatedAt.asKnown().isPresent) 1 else 0) +
             (if (goal.asKnown().isPresent) 1 else 0) +
-            (if (topic.asKnown().isPresent) 1 else 0)
+            (if (topic.asKnown().isPresent) 1 else 0) +
+            (if (ignoredFields.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -301,15 +352,25 @@ private constructor(
             updatedAt == other.updatedAt &&
             goal == other.goal &&
             topic == other.topic &&
+            ignoredFields == other.ignoredFields &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, createdAt, text, updatedAt, goal, topic, additionalProperties)
+        Objects.hash(
+            id,
+            createdAt,
+            text,
+            updatedAt,
+            goal,
+            topic,
+            ignoredFields,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "DraftDetail{id=$id, createdAt=$createdAt, text=$text, updatedAt=$updatedAt, goal=$goal, topic=$topic, additionalProperties=$additionalProperties}"
+        "DraftDetail{id=$id, createdAt=$createdAt, text=$text, updatedAt=$updatedAt, goal=$goal, topic=$topic, ignoredFields=$ignoredFields, additionalProperties=$additionalProperties}"
 }

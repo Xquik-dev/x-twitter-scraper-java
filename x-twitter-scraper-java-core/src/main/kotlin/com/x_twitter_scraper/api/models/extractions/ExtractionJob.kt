@@ -31,6 +31,10 @@ private constructor(
     private val toolType: JsonField<ToolType>,
     private val totalResults: JsonField<Long>,
     private val completedAt: JsonField<OffsetDateTime>,
+    private val resultsLimit: JsonField<Long>,
+    private val effectiveResultsLimit: JsonField<Long>,
+    private val completionReason: JsonField<CompletionReason>,
+    private val errorMessage: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -48,7 +52,31 @@ private constructor(
         @JsonProperty("completedAt")
         @ExcludeMissing
         completedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-    ) : this(id, createdAt, status, toolType, totalResults, completedAt, mutableMapOf())
+        @JsonProperty("resultsLimit")
+        @ExcludeMissing
+        resultsLimit: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("effectiveResultsLimit")
+        @ExcludeMissing
+        effectiveResultsLimit: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("completionReason")
+        @ExcludeMissing
+        completionReason: JsonField<CompletionReason> = JsonMissing.of(),
+        @JsonProperty("errorMessage")
+        @ExcludeMissing
+        errorMessage: JsonField<String> = JsonMissing.of(),
+    ) : this(
+        id,
+        createdAt,
+        status,
+        toolType,
+        totalResults,
+        completedAt,
+        resultsLimit,
+        effectiveResultsLimit,
+        completionReason,
+        errorMessage,
+        mutableMapOf(),
+    )
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -84,6 +112,20 @@ private constructor(
 
     /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun completedAt(): Optional<OffsetDateTime> = completedAt.getOptional("completedAt")
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun resultsLimit(): Optional<Long> = resultsLimit.getOptional("resultsLimit")
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun effectiveResultsLimit(): Optional<Long> =
+        effectiveResultsLimit.getOptional("effectiveResultsLimit")
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun completionReason(): Optional<CompletionReason> =
+        completionReason.getOptional("completionReason")
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun errorMessage(): Optional<String> = errorMessage.getOptional("errorMessage")
 
     /**
      * Returns the raw JSON value of [id].
@@ -133,6 +175,44 @@ private constructor(
     @ExcludeMissing
     fun _completedAt(): JsonField<OffsetDateTime> = completedAt
 
+    /**
+     * Returns the raw JSON value of [resultsLimit].
+     *
+     * Unlike [resultsLimit], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("resultsLimit")
+    @ExcludeMissing
+    fun _resultsLimit(): JsonField<Long> = resultsLimit
+
+    /**
+     * Returns the raw JSON value of [effectiveResultsLimit].
+     *
+     * Unlike [effectiveResultsLimit], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("effectiveResultsLimit")
+    @ExcludeMissing
+    fun _effectiveResultsLimit(): JsonField<Long> = effectiveResultsLimit
+
+    /**
+     * Returns the raw JSON value of [completionReason].
+     *
+     * Unlike [completionReason], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("completionReason")
+    @ExcludeMissing
+    fun _completionReason(): JsonField<CompletionReason> = completionReason
+
+    /**
+     * Returns the raw JSON value of [errorMessage].
+     *
+     * Unlike [errorMessage], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("errorMessage")
+    @ExcludeMissing
+    fun _errorMessage(): JsonField<String> = errorMessage
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -171,6 +251,10 @@ private constructor(
         private var toolType: JsonField<ToolType>? = null
         private var totalResults: JsonField<Long>? = null
         private var completedAt: JsonField<OffsetDateTime> = JsonMissing.of()
+        private var resultsLimit: JsonField<Long> = JsonMissing.of()
+        private var effectiveResultsLimit: JsonField<Long> = JsonMissing.of()
+        private var completionReason: JsonField<CompletionReason> = JsonMissing.of()
+        private var errorMessage: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -181,6 +265,10 @@ private constructor(
             toolType = extractionJob.toolType
             totalResults = extractionJob.totalResults
             completedAt = extractionJob.completedAt
+            resultsLimit = extractionJob.resultsLimit
+            effectiveResultsLimit = extractionJob.effectiveResultsLimit
+            completionReason = extractionJob.completionReason
+            errorMessage = extractionJob.errorMessage
             additionalProperties = extractionJob.additionalProperties.toMutableMap()
         }
 
@@ -215,6 +303,34 @@ private constructor(
         /** Sets [Builder.completedAt] to an arbitrary JSON value. */
         fun completedAt(completedAt: JsonField<OffsetDateTime>) = apply {
             this.completedAt = completedAt
+        }
+
+        fun resultsLimit(resultsLimit: Long) = resultsLimit(JsonField.of(resultsLimit))
+
+        /** Sets [Builder.resultsLimit] to an arbitrary JSON value. */
+        fun resultsLimit(resultsLimit: JsonField<Long>) = apply { this.resultsLimit = resultsLimit }
+
+        fun effectiveResultsLimit(effectiveResultsLimit: Long) =
+            effectiveResultsLimit(JsonField.of(effectiveResultsLimit))
+
+        /** Sets [Builder.effectiveResultsLimit] to an arbitrary JSON value. */
+        fun effectiveResultsLimit(effectiveResultsLimit: JsonField<Long>) = apply {
+            this.effectiveResultsLimit = effectiveResultsLimit
+        }
+
+        fun completionReason(completionReason: CompletionReason) =
+            completionReason(JsonField.of(completionReason))
+
+        /** Sets [Builder.completionReason] to an arbitrary JSON value. */
+        fun completionReason(completionReason: JsonField<CompletionReason>) = apply {
+            this.completionReason = completionReason
+        }
+
+        fun errorMessage(errorMessage: String) = errorMessage(JsonField.of(errorMessage))
+
+        /** Sets [Builder.errorMessage] to an arbitrary JSON value. */
+        fun errorMessage(errorMessage: JsonField<String>) = apply {
+            this.errorMessage = errorMessage
         }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -260,6 +376,10 @@ private constructor(
                 checkRequired("toolType", toolType),
                 checkRequired("totalResults", totalResults),
                 completedAt,
+                resultsLimit,
+                effectiveResultsLimit,
+                completionReason,
+                errorMessage,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -285,6 +405,10 @@ private constructor(
         toolType().validate()
         totalResults()
         completedAt()
+        resultsLimit()
+        effectiveResultsLimit()
+        completionReason().ifPresent { it.validate() }
+        errorMessage()
         validated = true
     }
 
@@ -303,7 +427,11 @@ private constructor(
             (status.asKnown().getOrNull()?.validity() ?: 0) +
             (toolType.asKnown().getOrNull()?.validity() ?: 0) +
             (if (totalResults.asKnown().isPresent) 1 else 0) +
-            (if (completedAt.asKnown().isPresent) 1 else 0)
+            (if (completedAt.asKnown().isPresent) 1 else 0) +
+            (if (resultsLimit.asKnown().isPresent) 1 else 0) +
+            (if (effectiveResultsLimit.asKnown().isPresent) 1 else 0) +
+            (completionReason.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (errorMessage.asKnown().isPresent) 1 else 0)
 
     class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -318,6 +446,10 @@ private constructor(
 
             @JvmField val FAILED = of("failed")
 
+            @JvmField val CANCELED = of("canceled")
+
+            @JvmField val PENDING = of("pending")
+
             @JvmStatic fun of(value: String) = Status(JsonField.of(value))
         }
 
@@ -326,6 +458,8 @@ private constructor(
             RUNNING,
             COMPLETED,
             FAILED,
+            CANCELED,
+            PENDING,
         }
 
         /**
@@ -341,6 +475,8 @@ private constructor(
             RUNNING,
             COMPLETED,
             FAILED,
+            CANCELED,
+            PENDING,
             /** An enum member indicating that [Status] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -351,6 +487,8 @@ private constructor(
          */
         fun value(): Value =
             when (this) {
+                CANCELED -> Value.CANCELED
+                PENDING -> Value.PENDING
                 RUNNING -> Value.RUNNING
                 COMPLETED -> Value.COMPLETED
                 FAILED -> Value.FAILED
@@ -365,6 +503,8 @@ private constructor(
          */
         fun known(): Known =
             when (this) {
+                CANCELED -> Known.CANCELED
+                PENDING -> Known.PENDING
                 RUNNING -> Known.RUNNING
                 COMPLETED -> Known.COMPLETED
                 FAILED -> Known.FAILED
@@ -678,6 +818,10 @@ private constructor(
             toolType == other.toolType &&
             totalResults == other.totalResults &&
             completedAt == other.completedAt &&
+            resultsLimit == other.resultsLimit &&
+            effectiveResultsLimit == other.effectiveResultsLimit &&
+            completionReason == other.completionReason &&
+            errorMessage == other.errorMessage &&
             additionalProperties == other.additionalProperties
     }
 
@@ -689,6 +833,10 @@ private constructor(
             toolType,
             totalResults,
             completedAt,
+            resultsLimit,
+            effectiveResultsLimit,
+            completionReason,
+            errorMessage,
             additionalProperties,
         )
     }
@@ -696,5 +844,160 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ExtractionJob{id=$id, createdAt=$createdAt, status=$status, toolType=$toolType, totalResults=$totalResults, completedAt=$completedAt, additionalProperties=$additionalProperties}"
+        "ExtractionJob{id=$id, createdAt=$createdAt, status=$status, toolType=$toolType, totalResults=$totalResults, completedAt=$completedAt, resultsLimit=$resultsLimit, effectiveResultsLimit=$effectiveResultsLimit, completionReason=$completionReason, errorMessage=$errorMessage, additionalProperties=$additionalProperties}"
+
+    class CompletionReason @JsonCreator private constructor(private val value: JsonField<String>) :
+        Enum {
+
+        /** Returns this class instance's raw value. */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val BUDGET_LIMITED = of("budget_limited")
+
+            @JvmField val CANCELED = of("canceled")
+
+            @JvmField val DEADLINE_REACHED = of("deadline_reached")
+
+            @JvmField val FAILED = of("failed")
+
+            @JvmField val PAGINATION_SAFETY_LIMIT = of("pagination_safety_limit")
+
+            @JvmField val PARTIAL_FAILURE = of("partial_failure")
+
+            @JvmField val REQUESTED_LIMIT_REACHED = of("requested_limit_reached")
+
+            @JvmField val SOURCE_EXHAUSTED = of("source_exhausted")
+
+            @JvmStatic fun of(value: String) = CompletionReason(JsonField.of(value))
+        }
+
+        /** An enum containing [CompletionReason]'s known values. */
+        enum class Known {
+            BUDGET_LIMITED,
+            CANCELED,
+            DEADLINE_REACHED,
+            FAILED,
+            PAGINATION_SAFETY_LIMIT,
+            PARTIAL_FAILURE,
+            REQUESTED_LIMIT_REACHED,
+            SOURCE_EXHAUSTED,
+        }
+
+        /**
+         * An enum containing [CompletionReason]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [CompletionReason] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            BUDGET_LIMITED,
+            CANCELED,
+            DEADLINE_REACHED,
+            FAILED,
+            PAGINATION_SAFETY_LIMIT,
+            PARTIAL_FAILURE,
+            REQUESTED_LIMIT_REACHED,
+            SOURCE_EXHAUSTED,
+            /**
+             * An enum member indicating that [CompletionReason] was instantiated with an unknown
+             * value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         */
+        fun value(): Value =
+            when (this) {
+                BUDGET_LIMITED -> Value.BUDGET_LIMITED
+                CANCELED -> Value.CANCELED
+                DEADLINE_REACHED -> Value.DEADLINE_REACHED
+                FAILED -> Value.FAILED
+                PAGINATION_SAFETY_LIMIT -> Value.PAGINATION_SAFETY_LIMIT
+                PARTIAL_FAILURE -> Value.PARTIAL_FAILURE
+                REQUESTED_LIMIT_REACHED -> Value.REQUESTED_LIMIT_REACHED
+                SOURCE_EXHAUSTED -> Value.SOURCE_EXHAUSTED
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
+         */
+        fun known(): Known =
+            when (this) {
+                BUDGET_LIMITED -> Known.BUDGET_LIMITED
+                CANCELED -> Known.CANCELED
+                DEADLINE_REACHED -> Known.DEADLINE_REACHED
+                FAILED -> Known.FAILED
+                PAGINATION_SAFETY_LIMIT -> Known.PAGINATION_SAFETY_LIMIT
+                PARTIAL_FAILURE -> Known.PARTIAL_FAILURE
+                REQUESTED_LIMIT_REACHED -> Known.REQUESTED_LIMIT_REACHED
+                SOURCE_EXHAUSTED -> Known.SOURCE_EXHAUSTED
+                else ->
+                    throw XTwitterScraperInvalidDataException("Unknown CompletionReason: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): CompletionReason = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is CompletionReason && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
 }

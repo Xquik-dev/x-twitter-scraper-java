@@ -8,16 +8,20 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.x_twitter_scraper.api.core.ExcludeMissing
+import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.MultipartField
 import com.x_twitter_scraper.api.core.Params
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
+import com.x_twitter_scraper.api.core.http.uploadFile
 import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import java.io.InputStream
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 
 /** Upload media */
 class MediaUploadParams
@@ -41,10 +45,9 @@ private constructor(
     /**
      * HTTPS URL to download and upload as media
      *
-     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null.
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
-    fun url(): String = body.url()
+    fun url(): Optional<String> = body.url()
 
     /**
      * Returns the raw multipart value of [account].
@@ -59,6 +62,27 @@ private constructor(
      * Unlike [url], this method doesn't throw if the multipart field has an unexpected type.
      */
     fun _url(): MultipartField<String> = body._url()
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun file(): Optional<InputStream> = body.file()
+
+    /**
+     * Returns the raw multipart value of [file].
+     *
+     * Unlike [file], this method doesn't throw if the multipart field has an unexpected type.
+     */
+    fun _file(): MultipartField<InputStream> = body._file()
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun isLongVideo(): Optional<Boolean> = body.isLongVideo()
+
+    /**
+     * Returns the raw multipart value of [isLongVideo].
+     *
+     * Unlike [isLongVideo], this method doesn't throw if the multipart field has an unexpected
+     * type.
+     */
+    fun _isLongVideo(): MultipartField<Boolean> = body._isLongVideo()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -79,8 +103,9 @@ private constructor(
          * ```java
          * .idempotencyKey()
          * .account()
-         * .url()
          * ```
+         *
+         * Specify exactly one of `url` or `file`.
          */
         @JvmStatic fun builder() = Builder()
     }
@@ -117,6 +142,19 @@ private constructor(
 
         /** Sets [Builder.url] to an arbitrary multipart value. */
         fun url(url: MultipartField<String>) = apply { body.url(url) }
+
+        /** File to upload. Use a [MultipartField] to specify another filename or media type. */
+        fun file(file: InputStream) = apply { body.file(file) }
+
+        /** Sets [Builder.file] to an arbitrary multipart value. */
+        fun file(file: MultipartField<InputStream>) = apply { body.file(file) }
+
+        fun isLongVideo(isLongVideo: Boolean) = apply { body.isLongVideo(isLongVideo) }
+
+        /** Sets [Builder.isLongVideo] to an arbitrary multipart value. */
+        fun isLongVideo(isLongVideo: MultipartField<Boolean>) = apply {
+            body.isLongVideo(isLongVideo)
+        }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -244,8 +282,9 @@ private constructor(
          * ```java
          * .idempotencyKey()
          * .account()
-         * .url()
          * ```
+         *
+         * Specify exactly one of `url` or `file`.
          *
          * @throws IllegalStateException if any required field is unset.
          */
@@ -259,8 +298,13 @@ private constructor(
     }
 
     fun _body(): Map<String, MultipartField<*>> =
-        (mapOf("account" to _account(), "url" to _url()) +
-                _additionalBodyProperties().mapValues { (_, value) -> MultipartField.of(value) })
+        (mapOf(
+                "account" to _account(),
+                "url" to _url(),
+                "is_long_video" to _isLongVideo(),
+                "file" to _file(),
+            ) + _additionalBodyProperties().mapValues { (_, value) -> MultipartField.of(value) })
+            .filterValues { !it.value.isMissing() }
             .toImmutable()
 
     override fun _headers(): Headers =
@@ -277,6 +321,8 @@ private constructor(
     private constructor(
         private val account: MultipartField<String>,
         private val url: MultipartField<String>,
+        private val file: MultipartField<InputStream>,
+        private val isLongVideo: MultipartField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -291,10 +337,15 @@ private constructor(
         /**
          * HTTPS URL to download and upload as media
          *
-         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null.
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
-        fun url(): String = url.value.getRequired("url")
+        fun url(): Optional<String> = url.value.getOptional("url")
+
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun file(): Optional<InputStream> = file.value.getOptional("file")
+
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun isLongVideo(): Optional<Boolean> = isLongVideo.value.getOptional("is_long_video")
 
         /**
          * Returns the raw multipart value of [account].
@@ -310,6 +361,23 @@ private constructor(
          * Unlike [url], this method doesn't throw if the multipart field has an unexpected type.
          */
         @JsonProperty("url") @ExcludeMissing fun _url(): MultipartField<String> = url
+
+        /**
+         * Returns the raw multipart value of [file].
+         *
+         * Unlike [file], this method doesn't throw if the multipart field has an unexpected type.
+         */
+        @JsonProperty("file") @ExcludeMissing fun _file(): MultipartField<InputStream> = file
+
+        /**
+         * Returns the raw multipart value of [isLongVideo].
+         *
+         * Unlike [isLongVideo], this method doesn't throw if the multipart field has an unexpected
+         * type.
+         */
+        @JsonProperty("is_long_video")
+        @ExcludeMissing
+        fun _isLongVideo(): MultipartField<Boolean> = isLongVideo
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -331,8 +399,9 @@ private constructor(
              * The following fields are required:
              * ```java
              * .account()
-             * .url()
              * ```
+             *
+             * Specify exactly one of `url` or `file`.
              */
             @JvmStatic fun builder() = Builder()
         }
@@ -341,13 +410,17 @@ private constructor(
         class Builder internal constructor() {
 
             private var account: MultipartField<String>? = null
-            private var url: MultipartField<String>? = null
+            private var url: MultipartField<String> = MultipartField.of(JsonMissing.of())
+            private var file: MultipartField<InputStream> = MultipartField.of(JsonMissing.of())
+            private var isLongVideo: MultipartField<Boolean> = MultipartField.of(JsonMissing.of())
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 account = body.account
                 url = body.url
+                file = body.file
+                isLongVideo = body.isLongVideo
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -362,6 +435,19 @@ private constructor(
 
             /** Sets [Builder.url] to an arbitrary multipart value. */
             fun url(url: MultipartField<String>) = apply { this.url = url }
+
+            /** File to upload. Use a [MultipartField] to specify another filename or media type. */
+            fun file(file: InputStream) = file(uploadFile(file))
+
+            /** Sets [Builder.file] to an arbitrary multipart value. */
+            fun file(file: MultipartField<InputStream>) = apply { this.file = file }
+
+            fun isLongVideo(isLongVideo: Boolean) = isLongVideo(MultipartField.of(isLongVideo))
+
+            /** Sets [Builder.isLongVideo] to an arbitrary multipart value. */
+            fun isLongVideo(isLongVideo: MultipartField<Boolean>) = apply {
+                this.isLongVideo = isLongVideo
+            }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -390,17 +476,24 @@ private constructor(
              * The following fields are required:
              * ```java
              * .account()
-             * .url()
              * ```
+             *
+             * Specify exactly one of `url` or `file`.
              *
              * @throws IllegalStateException if any required field is unset.
              */
-            fun build(): Body =
-                Body(
+            fun build(): Body {
+                val hasUrl = !url.value.isMissing() && !url.value.isNull()
+                val hasFile = !file.value.isMissing() && !file.value.isNull()
+                check(hasUrl xor hasFile) { "Exactly one of `url` or `file` must be set" }
+                return Body(
                     checkRequired("account", account),
-                    checkRequired("url", url),
+                    url,
+                    file,
+                    isLongVideo,
                     additionalProperties.toMutableMap(),
                 )
+            }
         }
 
         private var validated: Boolean = false
@@ -421,6 +514,8 @@ private constructor(
 
             account()
             url()
+            file()
+            isLongVideo()
             validated = true
         }
 
@@ -440,15 +535,19 @@ private constructor(
             return other is Body &&
                 account == other.account &&
                 url == other.url &&
+                file == other.file &&
+                isLongVideo == other.isLongVideo &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(account, url, additionalProperties) }
+        private val hashCode: Int by lazy {
+            Objects.hash(account, url, file, isLongVideo, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{account=$account, url=$url, additionalProperties=$additionalProperties}"
+            "Body{account=$account, url=$url, file=$file, isLongVideo=$isLongVideo, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

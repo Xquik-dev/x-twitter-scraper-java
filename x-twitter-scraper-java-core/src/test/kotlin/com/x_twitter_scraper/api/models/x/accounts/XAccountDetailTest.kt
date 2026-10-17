@@ -22,7 +22,7 @@ internal class XAccountDetailTest {
                 .status("active")
                 .xUserId("9876543210")
                 .xUsername("elonmusk")
-                .cookiesObtainedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
+                .connectedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
                 .updatedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
                 .build()
 
@@ -33,7 +33,7 @@ internal class XAccountDetailTest {
         assertThat(xAccountDetail.status()).isEqualTo("active")
         assertThat(xAccountDetail.xUserId()).isEqualTo("9876543210")
         assertThat(xAccountDetail.xUsername()).isEqualTo("elonmusk")
-        assertThat(xAccountDetail.cookiesObtainedAt())
+        assertThat(xAccountDetail.connectedAt())
             .contains(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
         assertThat(xAccountDetail.updatedAt())
             .contains(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
@@ -50,7 +50,7 @@ internal class XAccountDetailTest {
                 .status("active")
                 .xUserId("9876543210")
                 .xUsername("elonmusk")
-                .cookiesObtainedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
+                .connectedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
                 .updatedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
                 .build()
 
@@ -61,5 +61,25 @@ internal class XAccountDetailTest {
             )
 
         assertThat(roundtrippedXAccountDetail).isEqualTo(xAccountDetail)
+    }
+
+    @Test
+    fun additionalFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json = """{"connectedAt":"2025-01-15T12:00:00Z"}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<XAccountDetail>())
+
+        assertThat(model.connectedAt()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("connectedAt")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<XAccountDetail>(),
+                )
+            )
+            .isEqualTo(model)
     }
 }

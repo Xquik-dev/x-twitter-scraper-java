@@ -363,4 +363,32 @@ internal class ExtractionEstimateCostParamsTest {
         assertThat(body.toolType())
             .isEqualTo(ExtractionEstimateCostParams.ToolType.FOLLOWER_EXPLORER)
     }
+
+    @Test
+    fun additionalFields() {
+        val params =
+            ExtractionEstimateCostParams.builder()
+                .toolType(ExtractionEstimateCostParams.ToolType.ARTICLE_EXTRACTOR)
+                .enrichProfiles(true)
+                .hasEmail(true)
+                .businessEmailOnly(true)
+                .emailDomains("sample")
+                .build()
+
+        assertThat(params.enrichProfiles()).isPresent()
+        assertThat(params._enrichProfiles().isMissing()).isFalse()
+        assertThat(params.hasEmail()).isPresent()
+        assertThat(params._hasEmail().isMissing()).isFalse()
+        assertThat(params.businessEmailOnly()).isPresent()
+        assertThat(params._businessEmailOnly().isMissing()).isFalse()
+        assertThat(params.emailDomains()).isPresent()
+        assertThat(params._emailDomains().isMissing()).isFalse()
+        assertThat(params.toBuilder().build()).isEqualTo(params)
+    }
+
+    @Test
+    fun additionalQueryTypeValues() {
+        assertThat(ExtractionEstimateCostParams.QueryType.of("relevance").known())
+            .isEqualTo(ExtractionEstimateCostParams.QueryType.Known.RELEVANCE)
+    }
 }
