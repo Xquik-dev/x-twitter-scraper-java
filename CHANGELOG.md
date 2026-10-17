@@ -4,6 +4,7 @@
 
 ### Features
 
+* `UserProfile.IdentityVerification` gains optional `overrideVerifiedYear` for the verification start year X displays on profiles and user objects in tweets.
 * `client.x().tweets()` gains `listTop`, `embed`, `getHiddenReplies`, `getInsights`, `getRetweeterIds`, `checkRepost`, `getSubtitles`, `translate` and `resolveLinks`. Each has typed params and a typed response from the current API spec.
 * `client.x().users()` gains `retrieveBatchTweets`, `retrieveAffiliates`, `retrieveArticles`, `retrieveFollowerIds`, `retrieveFollowingIds`, `retrieveHighlights`, `retrieveInsights`, `retrieveListMemberships`, `retrieveLists`, `retrieveLive`, `retrieveSimilar`, `retrieveSubscriptions` and `translateBio`.
 * `client.x().communities()` gains `find`, `listPopular`, `listSuggested`, `listTopics`, `searchMembers` and the `media().list` subresource. The shared `Community`, `CommunityPage` and `CommunityTopic` models describe their results.
@@ -18,11 +19,17 @@
 * `ClientOptions` and the OkHttp client builders gain `streamHandlerExecutor`, which runs async stream callbacks.
 * `UserProfile`, `SearchTweet`, `TweetMedia`, `EmbeddedTweet`, `ContentDisclosure`, `PaginatedTweets`, `PaginatedUsers`, `TweetDetail` and `TweetAuthor` gain every field the API spec lists. New fields are optional in the builders.
 * 32 reads, such as `client.x().tweets().retrieve` and `client.x().users().retrieveFollowers`, take `fields` and `omit` and their other missing query params. Their responses gain the fields the spec lists.
+* The remaining request and response models gain the fields and enum values in the API spec. New fields are optional in builders. List reads gain pagination params and metadata, and upload requests gain file fields.
+
+### Bug fixes
+
+* `XAccount` and `XAccountDetail` drop a timestamp field the API stopped returning.
 
 ### Chores
 
 * `bin/check-local` now fails when the API has an operation that the SDK neither sends nor lists in `excluded-operations.json`. CONTRIBUTING.md explains the check.
 * The dependency audit now works in a Git worktree under `.claude/worktrees`.
+* `scripts/api-fields` checks request and response fields against the API spec. `accepted-field-differences.json` records the differences kept for caller compatibility.
 
 ## 0.10.4 (2026-10-13)
 

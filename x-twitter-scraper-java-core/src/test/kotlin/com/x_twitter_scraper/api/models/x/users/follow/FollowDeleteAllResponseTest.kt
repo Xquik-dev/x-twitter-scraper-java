@@ -316,4 +316,10 @@ internal class FollowDeleteAllResponseTest {
 
         assertThat(roundtrippedFollowDeleteAllResponse).isEqualTo(followDeleteAllResponse)
     }
+
+    @Test
+    fun additionalActionValues() {
+        assertThat(FollowDeleteAllResponse.Action.of("delete_dm").known())
+            .isEqualTo(FollowDeleteAllResponse.Action.Known.DELETE_DM)
+    }
 }

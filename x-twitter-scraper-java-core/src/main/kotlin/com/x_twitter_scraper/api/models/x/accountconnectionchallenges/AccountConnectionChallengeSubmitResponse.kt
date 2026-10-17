@@ -18,6 +18,7 @@ import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** Sanitized X account summary returned by connect and reauth. */
@@ -30,6 +31,10 @@ private constructor(
     private val status: JsonValue,
     private val xUserId: JsonField<String>,
     private val xUsername: JsonField<String>,
+    private val object_: JsonField<Object>,
+    private val expiresAt: JsonField<OffsetDateTime>,
+    private val message: JsonField<String>,
+    private val username: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -43,7 +48,25 @@ private constructor(
         @JsonProperty("status") @ExcludeMissing status: JsonValue = JsonMissing.of(),
         @JsonProperty("xUserId") @ExcludeMissing xUserId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("xUsername") @ExcludeMissing xUsername: JsonField<String> = JsonMissing.of(),
-    ) : this(id, createdAt, health, status, xUserId, xUsername, mutableMapOf())
+        @JsonProperty("object") @ExcludeMissing object_: JsonField<Object> = JsonMissing.of(),
+        @JsonProperty("expiresAt")
+        @ExcludeMissing
+        expiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("message") @ExcludeMissing message: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("username") @ExcludeMissing username: JsonField<String> = JsonMissing.of(),
+    ) : this(
+        id,
+        createdAt,
+        health,
+        status,
+        xUserId,
+        xUsername,
+        object_,
+        expiresAt,
+        message,
+        username,
+        mutableMapOf(),
+    )
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -83,6 +106,18 @@ private constructor(
      */
     fun xUsername(): String = xUsername.getRequired("xUsername")
 
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun object_(): Optional<Object> = object_.getOptional("object")
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun expiresAt(): Optional<OffsetDateTime> = expiresAt.getOptional("expiresAt")
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun message(): Optional<String> = message.getOptional("message")
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun username(): Optional<String> = username.getOptional("username")
+
     /**
      * Returns the raw JSON value of [id].
      *
@@ -119,6 +154,36 @@ private constructor(
      * Unlike [xUsername], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("xUsername") @ExcludeMissing fun _xUsername(): JsonField<String> = xUsername
+
+    /**
+     * Returns the raw JSON value of [object_].
+     *
+     * Unlike [object_], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("object") @ExcludeMissing fun _object_(): JsonField<Object> = object_
+
+    /**
+     * Returns the raw JSON value of [expiresAt].
+     *
+     * Unlike [expiresAt], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("expiresAt")
+    @ExcludeMissing
+    fun _expiresAt(): JsonField<OffsetDateTime> = expiresAt
+
+    /**
+     * Returns the raw JSON value of [message].
+     *
+     * Unlike [message], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("message") @ExcludeMissing fun _message(): JsonField<String> = message
+
+    /**
+     * Returns the raw JSON value of [username].
+     *
+     * Unlike [username], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("username") @ExcludeMissing fun _username(): JsonField<String> = username
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -159,6 +224,10 @@ private constructor(
         private var status: JsonValue = JsonValue.from("active")
         private var xUserId: JsonField<String>? = null
         private var xUsername: JsonField<String>? = null
+        private var object_: JsonField<Object> = JsonMissing.of()
+        private var expiresAt: JsonField<OffsetDateTime> = JsonMissing.of()
+        private var message: JsonField<String> = JsonMissing.of()
+        private var username: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -171,6 +240,10 @@ private constructor(
             status = accountConnectionChallengeSubmitResponse.status
             xUserId = accountConnectionChallengeSubmitResponse.xUserId
             xUsername = accountConnectionChallengeSubmitResponse.xUsername
+            object_ = accountConnectionChallengeSubmitResponse.object_
+            expiresAt = accountConnectionChallengeSubmitResponse.expiresAt
+            message = accountConnectionChallengeSubmitResponse.message
+            username = accountConnectionChallengeSubmitResponse.username
             additionalProperties =
                 accountConnectionChallengeSubmitResponse.additionalProperties.toMutableMap()
         }
@@ -209,6 +282,26 @@ private constructor(
 
         /** Sets [Builder.xUsername] to an arbitrary JSON value. */
         fun xUsername(xUsername: JsonField<String>) = apply { this.xUsername = xUsername }
+
+        fun object_(object_: Object) = object_(JsonField.of(object_))
+
+        /** Sets [Builder.object_] to an arbitrary JSON value. */
+        fun object_(object_: JsonField<Object>) = apply { this.object_ = object_ }
+
+        fun expiresAt(expiresAt: OffsetDateTime) = expiresAt(JsonField.of(expiresAt))
+
+        /** Sets [Builder.expiresAt] to an arbitrary JSON value. */
+        fun expiresAt(expiresAt: JsonField<OffsetDateTime>) = apply { this.expiresAt = expiresAt }
+
+        fun message(message: String) = message(JsonField.of(message))
+
+        /** Sets [Builder.message] to an arbitrary JSON value. */
+        fun message(message: JsonField<String>) = apply { this.message = message }
+
+        fun username(username: String) = username(JsonField.of(username))
+
+        /** Sets [Builder.username] to an arbitrary JSON value. */
+        fun username(username: JsonField<String>) = apply { this.username = username }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -253,6 +346,10 @@ private constructor(
                 status,
                 checkRequired("xUserId", xUserId),
                 checkRequired("xUsername", xUsername),
+                object_,
+                expiresAt,
+                message,
+                username,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -282,6 +379,10 @@ private constructor(
         }
         xUserId()
         xUsername()
+        object_().ifPresent { it.validate() }
+        expiresAt()
+        message()
+        username()
         validated = true
     }
 
@@ -300,7 +401,11 @@ private constructor(
             (health.asKnown().getOrNull()?.validity() ?: 0) +
             status.let { if (it == JsonValue.from("active")) 1 else 0 } +
             (if (xUserId.asKnown().isPresent) 1 else 0) +
-            (if (xUsername.asKnown().isPresent) 1 else 0)
+            (if (xUsername.asKnown().isPresent) 1 else 0) +
+            (object_.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (expiresAt.asKnown().isPresent) 1 else 0) +
+            (if (message.asKnown().isPresent) 1 else 0) +
+            (if (username.asKnown().isPresent) 1 else 0)
 
     class Health @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -452,15 +557,139 @@ private constructor(
             status == other.status &&
             xUserId == other.xUserId &&
             xUsername == other.xUsername &&
+            object_ == other.object_ &&
+            expiresAt == other.expiresAt &&
+            message == other.message &&
+            username == other.username &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, createdAt, health, status, xUserId, xUsername, additionalProperties)
+        Objects.hash(
+            id,
+            createdAt,
+            health,
+            status,
+            xUserId,
+            xUsername,
+            object_,
+            expiresAt,
+            message,
+            username,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "AccountConnectionChallengeSubmitResponse{id=$id, createdAt=$createdAt, health=$health, status=$status, xUserId=$xUserId, xUsername=$xUsername, additionalProperties=$additionalProperties}"
+        "AccountConnectionChallengeSubmitResponse{id=$id, createdAt=$createdAt, health=$health, status=$status, xUserId=$xUserId, xUsername=$xUsername, object_=$object_, expiresAt=$expiresAt, message=$message, username=$username, additionalProperties=$additionalProperties}"
+
+    class Object @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /** Returns this class instance's raw value. */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val X_ACCOUNT_CONNECTION_CHALLENGE = of("x_account_connection_challenge")
+
+            @JvmStatic fun of(value: String) = Object(JsonField.of(value))
+        }
+
+        /** An enum containing [Object]'s known values. */
+        enum class Known {
+            X_ACCOUNT_CONNECTION_CHALLENGE
+        }
+
+        /**
+         * An enum containing [Object]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Object] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            X_ACCOUNT_CONNECTION_CHALLENGE,
+            /** An enum member indicating that [Object] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         */
+        fun value(): Value =
+            when (this) {
+                X_ACCOUNT_CONNECTION_CHALLENGE -> Value.X_ACCOUNT_CONNECTION_CHALLENGE
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
+         */
+        fun known(): Known =
+            when (this) {
+                X_ACCOUNT_CONNECTION_CHALLENGE -> Known.X_ACCOUNT_CONNECTION_CHALLENGE
+                else -> throw XTwitterScraperInvalidDataException("Unknown Object: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): Object = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Object && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
 }

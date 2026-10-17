@@ -8,13 +8,21 @@ import com.x_twitter_scraper.api.core.Params
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
 import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /** List cached style profiles */
 class StyleListParams
 private constructor(
+    private val limit: Long?,
+    private val cursor: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    fun limit(): Optional<Long> = Optional.ofNullable(limit)
+
+    fun cursor(): Optional<String> = Optional.ofNullable(cursor)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -35,14 +43,31 @@ private constructor(
     /** A builder for [StyleListParams]. */
     class Builder internal constructor() {
 
+        private var limit: Long? = null
+        private var cursor: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(styleListParams: StyleListParams) = apply {
+            limit = styleListParams.limit
+            cursor = styleListParams.cursor
             additionalHeaders = styleListParams.additionalHeaders.toBuilder()
             additionalQueryParams = styleListParams.additionalQueryParams.toBuilder()
         }
+
+        fun limit(limit: Long?) = apply { this.limit = limit }
+
+        /** Alias for [Builder.limit]. */
+        fun limit(limit: Long) = limit(limit as Long?)
+
+        /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
+        fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
+
+        fun cursor(cursor: String?) = apply { this.cursor = cursor }
+
+        /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
+        fun cursor(cursor: Optional<String>) = cursor(cursor.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -148,12 +173,19 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          */
         fun build(): StyleListParams =
-            StyleListParams(additionalHeaders.build(), additionalQueryParams.build())
+            StyleListParams(limit, cursor, additionalHeaders.build(), additionalQueryParams.build())
     }
 
     override fun _headers(): Headers = additionalHeaders
 
-    override fun _queryParams(): QueryParams = additionalQueryParams
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                limit?.let { put("limit", it.toString()) }
+                cursor?.let { put("cursor", it) }
+                putAll(additionalQueryParams)
+            }
+            .build()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -161,12 +193,15 @@ private constructor(
         }
 
         return other is StyleListParams &&
+            limit == other.limit &&
+            cursor == other.cursor &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(limit, cursor, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "StyleListParams{additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "StyleListParams{limit=$limit, cursor=$cursor, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

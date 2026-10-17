@@ -54,4 +54,10 @@ internal class ExtractionEstimateCostResponseTest {
         assertThat(roundtrippedExtractionEstimateCostResponse)
             .isEqualTo(extractionEstimateCostResponse)
     }
+
+    @Test
+    fun additionalSourceValues() {
+        assertThat(ExtractionEstimateCostResponse.Source.of("likeCount").known())
+            .isEqualTo(ExtractionEstimateCostResponse.Source.Known.LIKECOUNT)
+    }
 }

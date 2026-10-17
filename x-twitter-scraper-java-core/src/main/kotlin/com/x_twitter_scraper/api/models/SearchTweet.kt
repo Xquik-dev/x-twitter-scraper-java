@@ -109,6 +109,7 @@ private constructor(
     private val unmentionedUserIds: JsonField<List<String>>,
     private val url: JsonField<String>,
     private val viewState: JsonField<String>,
+    private val hiddenByAuthor: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -270,6 +271,9 @@ private constructor(
         unmentionedUserIds: JsonField<List<String>> = JsonMissing.of(),
         @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
         @JsonProperty("viewState") @ExcludeMissing viewState: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("hiddenByAuthor")
+        @ExcludeMissing
+        hiddenByAuthor: JsonField<Boolean> = JsonMissing.of(),
     ) : this(
         id,
         bookmarkCount,
@@ -339,6 +343,7 @@ private constructor(
         unmentionedUserIds,
         url,
         viewState,
+        hiddenByAuthor,
         mutableMapOf(),
     )
 
@@ -806,6 +811,9 @@ private constructor(
 
     /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun viewState(): Optional<String> = viewState.getOptional("viewState")
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun hiddenByAuthor(): Optional<Boolean> = hiddenByAuthor.getOptional("hiddenByAuthor")
 
     /**
      * Returns the raw JSON value of [id].
@@ -1377,6 +1385,15 @@ private constructor(
      */
     @JsonProperty("viewState") @ExcludeMissing fun _viewState(): JsonField<String> = viewState
 
+    /**
+     * Returns the raw JSON value of [hiddenByAuthor].
+     *
+     * Unlike [hiddenByAuthor], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("hiddenByAuthor")
+    @ExcludeMissing
+    fun _hiddenByAuthor(): JsonField<Boolean> = hiddenByAuthor
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -1480,6 +1497,7 @@ private constructor(
         private var unmentionedUserIds: JsonField<MutableList<String>>? = null
         private var url: JsonField<String> = JsonMissing.of()
         private var viewState: JsonField<String> = JsonMissing.of()
+        private var hiddenByAuthor: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -1552,6 +1570,7 @@ private constructor(
             unmentionedUserIds = searchTweet.unmentionedUserIds.map { it.toMutableList() }
             url = searchTweet.url
             viewState = searchTweet.viewState
+            hiddenByAuthor = searchTweet.hiddenByAuthor
             additionalProperties = searchTweet.additionalProperties.toMutableMap()
         }
 
@@ -2160,6 +2179,13 @@ private constructor(
         /** Sets [Builder.viewState] to an arbitrary JSON value. */
         fun viewState(viewState: JsonField<String>) = apply { this.viewState = viewState }
 
+        fun hiddenByAuthor(hiddenByAuthor: Boolean) = hiddenByAuthor(JsonField.of(hiddenByAuthor))
+
+        /** Sets [Builder.hiddenByAuthor] to an arbitrary JSON value. */
+        fun hiddenByAuthor(hiddenByAuthor: JsonField<Boolean>) = apply {
+            this.hiddenByAuthor = hiddenByAuthor
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -2268,6 +2294,7 @@ private constructor(
                 (unmentionedUserIds ?: JsonMissing.of()).map { it.toImmutable() },
                 url,
                 viewState,
+                hiddenByAuthor,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -2355,6 +2382,7 @@ private constructor(
         unmentionedUserIds()
         url()
         viewState()
+        hiddenByAuthor()
         validated = true
     }
 
@@ -2435,7 +2463,8 @@ private constructor(
             (if (unavailableAuthorId.asKnown().isPresent) 1 else 0) +
             (unmentionedUserIds.asKnown().getOrNull()?.size ?: 0) +
             (if (url.asKnown().isPresent) 1 else 0) +
-            (if (viewState.asKnown().isPresent) 1 else 0)
+            (if (viewState.asKnown().isPresent) 1 else 0) +
+            (if (hiddenByAuthor.asKnown().isPresent) 1 else 0)
 
     /** Article metadata attached to a tweet. */
     class Article
@@ -20697,6 +20726,7 @@ private constructor(
             unmentionedUserIds == other.unmentionedUserIds &&
             url == other.url &&
             viewState == other.viewState &&
+            hiddenByAuthor == other.hiddenByAuthor &&
             additionalProperties == other.additionalProperties
     }
 
@@ -20770,6 +20800,7 @@ private constructor(
             unmentionedUserIds,
             url,
             viewState,
+            hiddenByAuthor,
             additionalProperties,
         )
     }
@@ -20777,5 +20808,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SearchTweet{id=$id, bookmarkCount=$bookmarkCount, likeCount=$likeCount, quoteCount=$quoteCount, replyCount=$replyCount, retweetCount=$retweetCount, text=$text, viewCount=$viewCount, article=$article, author=$author, authorUnavailable=$authorUnavailable, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, contentDisclosure=$contentDisclosure, conversationControl=$conversationControl, conversationId=$conversationId, coordinates=$coordinates, createdAt=$createdAt, displayTextRange=$displayTextRange, edit=$edit, entities=$entities, exclusiveContent=$exclusiveContent, geo=$geo, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, hasCommunityNotes=$hasCommunityNotes, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, interstitial=$interstitial, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isReply=$isReply, isRetweet=$isRetweet, isTranslatable=$isTranslatable, jetfuelAttachment=$jetfuelAttachment, lang=$lang, limitedActions=$limitedActions, media=$media, noteTweet=$noteTweet, parentTweet=$parentTweet, place=$place, possiblySensitive=$possiblySensitive, postCta=$postCta, previousCounts=$previousCounts, quotedTweet=$quotedTweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, reactionContext=$reactionContext, retweetedTweet=$retweetedTweet, retweetedAt=$retweetedAt, scopes=$scopes, source=$source, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, textHighlights=$textHighlights, tombstone=$tombstone, type=$type, unavailableAuthorId=$unavailableAuthorId, unmentionedUserIds=$unmentionedUserIds, url=$url, viewState=$viewState, additionalProperties=$additionalProperties}"
+        "SearchTweet{id=$id, bookmarkCount=$bookmarkCount, likeCount=$likeCount, quoteCount=$quoteCount, replyCount=$replyCount, retweetCount=$retweetCount, text=$text, viewCount=$viewCount, article=$article, author=$author, authorUnavailable=$authorUnavailable, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, contentDisclosure=$contentDisclosure, conversationControl=$conversationControl, conversationId=$conversationId, coordinates=$coordinates, createdAt=$createdAt, displayTextRange=$displayTextRange, edit=$edit, entities=$entities, exclusiveContent=$exclusiveContent, geo=$geo, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, hasCommunityNotes=$hasCommunityNotes, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, interstitial=$interstitial, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isReply=$isReply, isRetweet=$isRetweet, isTranslatable=$isTranslatable, jetfuelAttachment=$jetfuelAttachment, lang=$lang, limitedActions=$limitedActions, media=$media, noteTweet=$noteTweet, parentTweet=$parentTweet, place=$place, possiblySensitive=$possiblySensitive, postCta=$postCta, previousCounts=$previousCounts, quotedTweet=$quotedTweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, reactionContext=$reactionContext, retweetedTweet=$retweetedTweet, retweetedAt=$retweetedAt, scopes=$scopes, source=$source, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, textHighlights=$textHighlights, tombstone=$tombstone, type=$type, unavailableAuthorId=$unavailableAuthorId, unmentionedUserIds=$unmentionedUserIds, url=$url, viewState=$viewState, hiddenByAuthor=$hiddenByAuthor, additionalProperties=$additionalProperties}"
 }

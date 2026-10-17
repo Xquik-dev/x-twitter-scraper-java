@@ -63,4 +63,19 @@ internal class ProfileUpdateBannerParamsTest {
                     }
             )
     }
+
+    @Test
+    fun additionalFields() {
+        val params =
+            ProfileUpdateBannerParams.builder()
+                .account("sample")
+                .idempotencyKey("sample")
+                .url("sample")
+                .file("upload".byteInputStream())
+                .build()
+
+        assertThat(params.file()).isPresent()
+        assertThat(params._body()).containsKey("file")
+        assertThat(params.toBuilder().build()).isEqualTo(params)
+    }
 }

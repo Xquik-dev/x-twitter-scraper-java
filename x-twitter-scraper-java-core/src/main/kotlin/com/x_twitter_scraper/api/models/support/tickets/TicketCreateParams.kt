@@ -8,14 +8,17 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.x_twitter_scraper.api.core.ExcludeMissing
+import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.MultipartField
 import com.x_twitter_scraper.api.core.Params
+import com.x_twitter_scraper.api.core.checkKnown
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
 import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import java.io.InputStream
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -57,6 +60,17 @@ private constructor(
      * Unlike [subject], this method doesn't throw if the multipart field has an unexpected type.
      */
     fun _subject(): MultipartField<String> = body._subject()
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun attachments(): Optional<List<InputStream>> = body.attachments()
+
+    /**
+     * Returns the raw multipart value of [attachments].
+     *
+     * Unlike [attachments], this method doesn't throw if the multipart field has an unexpected
+     * type.
+     */
+    fun _attachments(): MultipartField<List<InputStream>> = body._attachments()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -116,6 +130,20 @@ private constructor(
 
         /** Sets [Builder.subject] to an arbitrary multipart value. */
         fun subject(subject: MultipartField<String>) = apply { body.subject(subject) }
+
+        fun attachments(attachments: List<InputStream>) = apply { body.attachments(attachments) }
+
+        /** Sets [Builder.attachments] to an arbitrary multipart value. */
+        fun attachments(attachments: MultipartField<List<InputStream>>) = apply {
+            body.attachments(attachments)
+        }
+
+        /**
+         * Adds a single [InputStream] to [attachments].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addAttachment(attachment: InputStream) = apply { body.addAttachment(attachment) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -257,8 +285,9 @@ private constructor(
     }
 
     fun _body(): Map<String, MultipartField<*>> =
-        (mapOf("body" to _body_(), "subject" to _subject()) +
+        (mapOf("body" to _body_(), "attachments" to _attachments(), "subject" to _subject()) +
                 _additionalBodyProperties().mapValues { (_, value) -> MultipartField.of(value) })
+            .filterValues { !it.value.isMissing() }
             .toImmutable()
 
     override fun _headers(): Headers =
@@ -275,6 +304,7 @@ private constructor(
     private constructor(
         private val body: MultipartField<String>,
         private val subject: MultipartField<String>,
+        private val attachments: MultipartField<List<InputStream>>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -290,6 +320,10 @@ private constructor(
          */
         fun subject(): String = subject.value.getRequired("subject")
 
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun attachments(): Optional<List<InputStream>> =
+            attachments.value.getOptional("attachments")
+
         /**
          * Returns the raw multipart value of [body].
          *
@@ -304,6 +338,16 @@ private constructor(
          * type.
          */
         @JsonProperty("subject") @ExcludeMissing fun _subject(): MultipartField<String> = subject
+
+        /**
+         * Returns the raw multipart value of [attachments].
+         *
+         * Unlike [attachments], this method doesn't throw if the multipart field has an unexpected
+         * type.
+         */
+        @JsonProperty("attachments")
+        @ExcludeMissing
+        fun _attachments(): MultipartField<List<InputStream>> = attachments
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -336,12 +380,14 @@ private constructor(
 
             private var body: MultipartField<String>? = null
             private var subject: MultipartField<String>? = null
+            private var attachments: MultipartField<MutableList<InputStream>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 this.body = body.body
                 subject = body.subject
+                attachments = body.attachments.map { it.toMutableList() }
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -354,6 +400,26 @@ private constructor(
 
             /** Sets [Builder.subject] to an arbitrary multipart value. */
             fun subject(subject: MultipartField<String>) = apply { this.subject = subject }
+
+            fun attachments(attachments: List<InputStream>) =
+                attachments(MultipartField.of(attachments))
+
+            /** Sets [Builder.attachments] to an arbitrary multipart value. */
+            fun attachments(attachments: MultipartField<List<InputStream>>) = apply {
+                this.attachments = attachments.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [InputStream] to [attachments].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addAttachment(attachment: InputStream) = apply {
+                this.attachments =
+                    (this.attachments ?: MultipartField.of(mutableListOf())).also {
+                        checkKnown("attachments", it).add(attachment)
+                    }
+            }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -391,6 +457,7 @@ private constructor(
                 Body(
                     checkRequired("body", body),
                     checkRequired("subject", subject),
+                    (attachments ?: MultipartField.of(JsonMissing.of())).map { it.toImmutable() },
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -413,6 +480,7 @@ private constructor(
 
             body()
             subject()
+            attachments()
             validated = true
         }
 
@@ -432,15 +500,18 @@ private constructor(
             return other is Body &&
                 body == other.body &&
                 subject == other.subject &&
+                attachments == other.attachments &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(body, subject, additionalProperties) }
+        private val hashCode: Int by lazy {
+            Objects.hash(body, subject, attachments, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{body=$body, subject=$subject, additionalProperties=$additionalProperties}"
+            "Body{body=$body, subject=$subject, attachments=$attachments, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

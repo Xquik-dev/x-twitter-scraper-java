@@ -22,6 +22,7 @@ import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import com.x_twitter_scraper.api.models.EventType
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -65,6 +66,16 @@ private constructor(
      * Unlike [username], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _username(): JsonField<String> = body._username()
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun name(): Optional<String> = body.name()
+
+    /**
+     * Returns the raw JSON value of [name].
+     *
+     * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _name(): JsonField<String> = body._name()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -127,6 +138,11 @@ private constructor(
 
         /** Sets [Builder.username] to an arbitrary JSON value. */
         fun username(username: JsonField<String>) = apply { body.username(username) }
+
+        fun name(name: String) = apply { body.name(name) }
+
+        /** Sets [Builder.name] to an arbitrary JSON value. */
+        fun name(name: JsonField<String>) = apply { body.name(name) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -277,6 +293,7 @@ private constructor(
     private constructor(
         private val eventTypes: JsonField<List<EventType>>,
         private val username: JsonField<String>,
+        private val name: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -288,7 +305,13 @@ private constructor(
             @JsonProperty("username")
             @ExcludeMissing
             username: JsonField<String> = JsonMissing.of(),
-        ) : this(eventTypes, username, mutableMapOf())
+            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+        ) : this(
+            eventTypes,
+            username,
+            name,
+            mutableMapOf(),
+        )
 
         /**
          * Array of event types to subscribe to.
@@ -306,6 +329,9 @@ private constructor(
          */
         fun username(): String = username.getRequired("username")
 
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun name(): Optional<String> = name.getOptional("name")
+
         /**
          * Returns the raw JSON value of [eventTypes].
          *
@@ -321,6 +347,13 @@ private constructor(
          * Unlike [username], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("username") @ExcludeMissing fun _username(): JsonField<String> = username
+
+        /**
+         * Returns the raw JSON value of [name].
+         *
+         * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -353,12 +386,14 @@ private constructor(
 
             private var eventTypes: JsonField<MutableList<EventType>>? = null
             private var username: JsonField<String>? = null
+            private var name: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 eventTypes = body.eventTypes.map { it.toMutableList() }
                 username = body.username
+                name = body.name
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -387,6 +422,11 @@ private constructor(
 
             /** Sets [Builder.username] to an arbitrary JSON value. */
             fun username(username: JsonField<String>) = apply { this.username = username }
+
+            fun name(name: String) = name(JsonField.of(name))
+
+            /** Sets [Builder.name] to an arbitrary JSON value. */
+            fun name(name: JsonField<String>) = apply { this.name = name }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -424,6 +464,7 @@ private constructor(
                 Body(
                     checkRequired("eventTypes", eventTypes).map { it.toImmutable() },
                     checkRequired("username", username),
+                    name,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -446,6 +487,7 @@ private constructor(
 
             eventTypes().forEach { it.validate() }
             username()
+            name()
             validated = true
         }
 
@@ -460,7 +502,8 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (eventTypes.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
-                (if (username.asKnown().isPresent) 1 else 0)
+                (if (username.asKnown().isPresent) 1 else 0) +
+                (if (name.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -470,17 +513,18 @@ private constructor(
             return other is Body &&
                 eventTypes == other.eventTypes &&
                 username == other.username &&
+                name == other.name &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(eventTypes, username, additionalProperties)
+            Objects.hash(eventTypes, username, name, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{eventTypes=$eventTypes, username=$username, additionalProperties=$additionalProperties}"
+            "Body{eventTypes=$eventTypes, username=$username, name=$name, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

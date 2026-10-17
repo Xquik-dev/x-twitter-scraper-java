@@ -353,6 +353,8 @@ private constructor(
 
             @JvmField val UNKNOWN = of("unknown")
 
+            @JvmField val LIKECOUNT = of("likeCount")
+
             @JvmStatic fun of(value: String) = Source(JsonField.of(value))
         }
 
@@ -368,6 +370,7 @@ private constructor(
             RESULTS_LIMIT,
             RETWEET_COUNT,
             UNKNOWN,
+            LIKECOUNT,
         }
 
         /**
@@ -390,6 +393,7 @@ private constructor(
             RESULTS_LIMIT,
             RETWEET_COUNT,
             UNKNOWN,
+            LIKECOUNT,
             /** An enum member indicating that [Source] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -400,6 +404,7 @@ private constructor(
          */
         fun value(): Value =
             when (this) {
+                LIKECOUNT -> Value.LIKECOUNT
                 FOLLOWERS -> Value.FOLLOWERS
                 FOLLOWING -> Value.FOLLOWING
                 COLLECTION -> Value.COLLECTION
@@ -421,6 +426,7 @@ private constructor(
          */
         fun known(): Known =
             when (this) {
+                LIKECOUNT -> Known.LIKECOUNT
                 FOLLOWERS -> Known.FOLLOWERS
                 FOLLOWING -> Known.FOLLOWING
                 COLLECTION -> Known.COLLECTION

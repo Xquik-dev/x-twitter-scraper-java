@@ -324,4 +324,10 @@ internal class ProfileUpdateAvatarResponseTest {
 
         assertThat(roundtrippedProfileUpdateAvatarResponse).isEqualTo(profileUpdateAvatarResponse)
     }
+
+    @Test
+    fun additionalActionValues() {
+        assertThat(ProfileUpdateAvatarResponse.Action.of("delete_dm").known())
+            .isEqualTo(ProfileUpdateAvatarResponse.Action.Known.DELETE_DM)
+    }
 }

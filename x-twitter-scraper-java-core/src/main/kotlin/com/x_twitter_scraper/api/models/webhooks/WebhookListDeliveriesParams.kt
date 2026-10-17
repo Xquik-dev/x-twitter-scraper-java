@@ -15,11 +15,17 @@ import kotlin.jvm.optionals.getOrNull
 class WebhookListDeliveriesParams
 private constructor(
     private val id: String?,
+    private val limit: Long?,
+    private val cursor: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     fun id(): Optional<String> = Optional.ofNullable(id)
+
+    fun limit(): Optional<Long> = Optional.ofNullable(limit)
+
+    fun cursor(): Optional<String> = Optional.ofNullable(cursor)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -43,12 +49,16 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: String? = null
+        private var limit: Long? = null
+        private var cursor: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(webhookListDeliveriesParams: WebhookListDeliveriesParams) = apply {
             id = webhookListDeliveriesParams.id
+            limit = webhookListDeliveriesParams.limit
+            cursor = webhookListDeliveriesParams.cursor
             additionalHeaders = webhookListDeliveriesParams.additionalHeaders.toBuilder()
             additionalQueryParams = webhookListDeliveriesParams.additionalQueryParams.toBuilder()
         }
@@ -57,6 +67,19 @@ private constructor(
 
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
+
+        fun limit(limit: Long?) = apply { this.limit = limit }
+
+        /** Alias for [Builder.limit]. */
+        fun limit(limit: Long) = limit(limit as Long?)
+
+        /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
+        fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
+
+        fun cursor(cursor: String?) = apply { this.cursor = cursor }
+
+        /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
+        fun cursor(cursor: Optional<String>) = cursor(cursor.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -164,6 +187,8 @@ private constructor(
         fun build(): WebhookListDeliveriesParams =
             WebhookListDeliveriesParams(
                 id,
+                limit,
+                cursor,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -177,7 +202,14 @@ private constructor(
 
     override fun _headers(): Headers = additionalHeaders
 
-    override fun _queryParams(): QueryParams = additionalQueryParams
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                limit?.let { put("limit", it.toString()) }
+                cursor?.let { put("cursor", it) }
+                putAll(additionalQueryParams)
+            }
+            .build()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -186,12 +218,15 @@ private constructor(
 
         return other is WebhookListDeliveriesParams &&
             id == other.id &&
+            limit == other.limit &&
+            cursor == other.cursor &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(id, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(limit, cursor, id, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "WebhookListDeliveriesParams{id=$id, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "WebhookListDeliveriesParams{id=$id, limit=$limit, cursor=$cursor, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

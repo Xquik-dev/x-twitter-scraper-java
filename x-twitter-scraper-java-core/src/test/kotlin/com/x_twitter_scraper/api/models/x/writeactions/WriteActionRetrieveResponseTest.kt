@@ -324,4 +324,10 @@ internal class WriteActionRetrieveResponseTest {
 
         assertThat(roundtrippedWriteActionRetrieveResponse).isEqualTo(writeActionRetrieveResponse)
     }
+
+    @Test
+    fun additionalActionValues() {
+        assertThat(WriteActionRetrieveResponse.Action.of("delete_dm").known())
+            .isEqualTo(WriteActionRetrieveResponse.Action.Known.DELETE_DM)
+    }
 }

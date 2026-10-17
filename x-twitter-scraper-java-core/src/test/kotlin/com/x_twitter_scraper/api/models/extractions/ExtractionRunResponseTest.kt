@@ -52,4 +52,35 @@ internal class ExtractionRunResponseTest {
 
         assertThat(roundtrippedExtractionRunResponse).isEqualTo(extractionRunResponse)
     }
+
+    @Test
+    fun additionalFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json =
+            """{"id":"sample","pollAfterMs":1,"statusUrl":"sample","waitUrl":"sample","toolType":"article_extractor","status":"pending"}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<ExtractionRunResponse>())
+
+        assertThat(model.id()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("id")
+        assertThat(model.pollAfterMs()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("pollAfterMs")
+        assertThat(model.statusUrl()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("statusUrl")
+        assertThat(model.waitUrl()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("waitUrl")
+        assertThat(model.toolType()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("toolType")
+        assertThat(model.status()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("status")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<ExtractionRunResponse>(),
+                )
+            )
+            .isEqualTo(model)
+    }
 }

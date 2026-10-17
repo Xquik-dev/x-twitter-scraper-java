@@ -4,6 +4,7 @@
 
 package com.x_twitter_scraper.api.models.styles
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 internal class StyleListParamsTest {
@@ -11,5 +12,16 @@ internal class StyleListParamsTest {
     @Test
     fun create() {
         StyleListParams.builder().build()
+    }
+
+    @Test
+    fun additionalFields() {
+        val params = StyleListParams.builder().limit(1L).cursor("sample").build()
+
+        assertThat(params.limit()).isPresent()
+        assertThat(params._queryParams().values("limit")).containsExactly("1")
+        assertThat(params.cursor()).isPresent()
+        assertThat(params._queryParams().values("cursor")).containsExactly("sample")
+        assertThat(params.toBuilder().build()).isEqualTo(params)
     }
 }

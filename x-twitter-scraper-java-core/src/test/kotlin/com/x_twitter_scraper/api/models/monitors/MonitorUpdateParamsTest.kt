@@ -49,4 +49,13 @@ internal class MonitorUpdateParamsTest {
 
         val body = params._body()
     }
+
+    @Test
+    fun additionalFields() {
+        val params = MonitorUpdateParams.builder().name("sample").build()
+
+        assertThat(params.name()).isPresent()
+        assertThat(params._name().isMissing()).isFalse()
+        assertThat(params.toBuilder().build()).isEqualTo(params)
+    }
 }

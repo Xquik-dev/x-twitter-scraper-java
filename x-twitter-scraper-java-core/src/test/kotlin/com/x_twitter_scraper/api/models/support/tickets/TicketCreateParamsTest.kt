@@ -105,4 +105,18 @@ internal class TicketCreateParamsTest {
                     }
             )
     }
+
+    @Test
+    fun additionalFields() {
+        val params =
+            TicketCreateParams.builder()
+                .body("sample")
+                .subject("sample")
+                .attachments(listOf("upload".byteInputStream()))
+                .build()
+
+        assertThat(params.attachments()).isPresent()
+        assertThat(params._body()).containsKey("attachments")
+        assertThat(params.toBuilder().build()).isEqualTo(params)
+    }
 }

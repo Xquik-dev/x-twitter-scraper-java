@@ -25,7 +25,7 @@ internal class AccountListResponseTest {
                         .updatedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
                         .xUserId("9876543210")
                         .xUsername("elonmusk")
-                        .cookiesObtainedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
+                        .connectedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
                         .build()
                 )
                 .build()
@@ -40,7 +40,7 @@ internal class AccountListResponseTest {
                     .updatedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
                     .xUserId("9876543210")
                     .xUsername("elonmusk")
-                    .cookiesObtainedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
+                    .connectedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
                     .build()
             )
     }
@@ -59,7 +59,7 @@ internal class AccountListResponseTest {
                         .updatedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
                         .xUserId("9876543210")
                         .xUsername("elonmusk")
-                        .cookiesObtainedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
+                        .connectedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
                         .build()
                 )
                 .build()
@@ -71,5 +71,27 @@ internal class AccountListResponseTest {
             )
 
         assertThat(roundtrippedAccountListResponse).isEqualTo(accountListResponse)
+    }
+
+    @Test
+    fun additionalFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json = """{"hasMore":true,"nextCursor":"sample"}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<AccountListResponse>())
+
+        assertThat(model.hasMore()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("hasMore")
+        assertThat(model.nextCursor()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("nextCursor")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<AccountListResponse>(),
+                )
+            )
+            .isEqualTo(model)
     }
 }

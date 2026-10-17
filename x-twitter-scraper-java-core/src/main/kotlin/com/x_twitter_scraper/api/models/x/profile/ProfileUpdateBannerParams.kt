@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.x_twitter_scraper.api.core.ExcludeMissing
+import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.MultipartField
 import com.x_twitter_scraper.api.core.Params
@@ -16,8 +17,10 @@ import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
 import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import java.io.InputStream
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 
 /** Update profile banner */
 class ProfileUpdateBannerParams
@@ -59,6 +62,16 @@ private constructor(
      * Unlike [url], this method doesn't throw if the multipart field has an unexpected type.
      */
     fun _url(): MultipartField<String> = body._url()
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun file(): Optional<InputStream> = body.file()
+
+    /**
+     * Returns the raw multipart value of [file].
+     *
+     * Unlike [file], this method doesn't throw if the multipart field has an unexpected type.
+     */
+    fun _file(): MultipartField<InputStream> = body._file()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -117,6 +130,11 @@ private constructor(
 
         /** Sets [Builder.url] to an arbitrary multipart value. */
         fun url(url: MultipartField<String>) = apply { body.url(url) }
+
+        fun file(file: InputStream) = apply { body.file(file) }
+
+        /** Sets [Builder.file] to an arbitrary multipart value. */
+        fun file(file: MultipartField<InputStream>) = apply { body.file(file) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -259,8 +277,9 @@ private constructor(
     }
 
     fun _body(): Map<String, MultipartField<*>> =
-        (mapOf("account" to _account(), "url" to _url()) +
+        (mapOf("account" to _account(), "url" to _url(), "file" to _file()) +
                 _additionalBodyProperties().mapValues { (_, value) -> MultipartField.of(value) })
+            .filterValues { !it.value.isMissing() }
             .toImmutable()
 
     override fun _headers(): Headers =
@@ -277,6 +296,7 @@ private constructor(
     private constructor(
         private val account: MultipartField<String>,
         private val url: MultipartField<String>,
+        private val file: MultipartField<InputStream>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -296,6 +316,9 @@ private constructor(
          */
         fun url(): String = url.value.getRequired("url")
 
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun file(): Optional<InputStream> = file.value.getOptional("file")
+
         /**
          * Returns the raw multipart value of [account].
          *
@@ -310,6 +333,13 @@ private constructor(
          * Unlike [url], this method doesn't throw if the multipart field has an unexpected type.
          */
         @JsonProperty("url") @ExcludeMissing fun _url(): MultipartField<String> = url
+
+        /**
+         * Returns the raw multipart value of [file].
+         *
+         * Unlike [file], this method doesn't throw if the multipart field has an unexpected type.
+         */
+        @JsonProperty("file") @ExcludeMissing fun _file(): MultipartField<InputStream> = file
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -342,12 +372,14 @@ private constructor(
 
             private var account: MultipartField<String>? = null
             private var url: MultipartField<String>? = null
+            private var file: MultipartField<InputStream> = MultipartField.of(JsonMissing.of())
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 account = body.account
                 url = body.url
+                file = body.file
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -362,6 +394,11 @@ private constructor(
 
             /** Sets [Builder.url] to an arbitrary multipart value. */
             fun url(url: MultipartField<String>) = apply { this.url = url }
+
+            fun file(file: InputStream) = file(MultipartField.of(file))
+
+            /** Sets [Builder.file] to an arbitrary multipart value. */
+            fun file(file: MultipartField<InputStream>) = apply { this.file = file }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -399,6 +436,7 @@ private constructor(
                 Body(
                     checkRequired("account", account),
                     checkRequired("url", url),
+                    file,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -421,6 +459,7 @@ private constructor(
 
             account()
             url()
+            file()
             validated = true
         }
 
@@ -440,15 +479,16 @@ private constructor(
             return other is Body &&
                 account == other.account &&
                 url == other.url &&
+                file == other.file &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(account, url, additionalProperties) }
+        private val hashCode: Int by lazy { Objects.hash(account, url, file, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{account=$account, url=$url, additionalProperties=$additionalProperties}"
+            "Body{account=$account, url=$url, file=$file, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

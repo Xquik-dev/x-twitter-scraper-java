@@ -23,7 +23,7 @@ internal class XAccountTest {
                 .updatedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
                 .xUserId("9876543210")
                 .xUsername("elonmusk")
-                .cookiesObtainedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
+                .connectedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
                 .build()
 
         assertThat(xAccount.id()).isEqualTo("42")
@@ -33,8 +33,7 @@ internal class XAccountTest {
         assertThat(xAccount.updatedAt()).isEqualTo(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
         assertThat(xAccount.xUserId()).isEqualTo("9876543210")
         assertThat(xAccount.xUsername()).isEqualTo("elonmusk")
-        assertThat(xAccount.cookiesObtainedAt())
-            .contains(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
+        assertThat(xAccount.connectedAt()).contains(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
     }
 
     @Test
@@ -49,7 +48,7 @@ internal class XAccountTest {
                 .updatedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
                 .xUserId("9876543210")
                 .xUsername("elonmusk")
-                .cookiesObtainedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
+                .connectedAt(OffsetDateTime.parse("2025-03-10T08:30:00Z"))
                 .build()
 
         val roundtrippedXAccount =
@@ -59,5 +58,25 @@ internal class XAccountTest {
             )
 
         assertThat(roundtrippedXAccount).isEqualTo(xAccount)
+    }
+
+    @Test
+    fun additionalFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json = """{"connectedAt":"2025-01-15T12:00:00Z"}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<XAccount>())
+
+        assertThat(model.connectedAt()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("connectedAt")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<XAccount>(),
+                )
+            )
+            .isEqualTo(model)
     }
 }

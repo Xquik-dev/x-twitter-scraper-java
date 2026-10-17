@@ -63,6 +63,7 @@ private constructor(
     private val url: String?,
     private val verifiedOnly: Boolean?,
     private val withinTime: String?,
+    private val ids: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -208,6 +209,8 @@ private constructor(
     /** Keeps Tweets from a recent window, such as 90m or 7d. Use a whole number & s, m, h or d. */
     fun withinTime(): Optional<String> = Optional.ofNullable(withinTime)
 
+    fun ids(): Optional<String> = Optional.ofNullable(ids)
+
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
 
@@ -276,6 +279,7 @@ private constructor(
         private var url: String? = null
         private var verifiedOnly: Boolean? = null
         private var withinTime: String? = null
+        private var ids: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -324,6 +328,7 @@ private constructor(
             url = tweetListParams.url
             verifiedOnly = tweetListParams.verifiedOnly
             withinTime = tweetListParams.withinTime
+            ids = tweetListParams.ids
             additionalHeaders = tweetListParams.additionalHeaders.toBuilder()
             additionalQueryParams = tweetListParams.additionalQueryParams.toBuilder()
         }
@@ -656,6 +661,11 @@ private constructor(
         /** Alias for calling [Builder.withinTime] with `withinTime.orElse(null)`. */
         fun withinTime(withinTime: Optional<String>) = withinTime(withinTime.getOrNull())
 
+        fun ids(ids: String?) = apply { this.ids = ids }
+
+        /** Alias for calling [Builder.ids] with `ids.orElse(null)`. */
+        fun ids(ids: Optional<String>) = ids(ids.getOrNull())
+
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
             putAllAdditionalHeaders(additionalHeaders)
@@ -812,6 +822,7 @@ private constructor(
                 url,
                 verifiedOnly,
                 withinTime,
+                ids,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -865,6 +876,7 @@ private constructor(
                 url?.let { put("url", it) }
                 verifiedOnly?.let { put("verifiedOnly", it.toString()) }
                 withinTime?.let { put("withinTime", it) }
+                ids?.let { put("ids", it) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -1535,12 +1547,14 @@ private constructor(
             url == other.url &&
             verifiedOnly == other.verifiedOnly &&
             withinTime == other.withinTime &&
+            ids == other.ids &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
         Objects.hash(
+            ids,
             communityId,
             q,
             anyWords,
@@ -1589,5 +1603,5 @@ private constructor(
         )
 
     override fun toString() =
-        "TweetListParams{communityId=$communityId, q=$q, anyWords=$anyWords, blueVerifiedOnly=$blueVerifiedOnly, cashtags=$cashtags, conversationId=$conversationId, cursor=$cursor, exactPhrase=$exactPhrase, excludeWords=$excludeWords, fields=$fields, fromUser=$fromUser, hashtags=$hashtags, inReplyToTweetId=$inReplyToTweetId, language=$language, maxFaves=$maxFaves, maxId=$maxId, maxQuotes=$maxQuotes, maxReplies=$maxReplies, maxRetweets=$maxRetweets, mediaType=$mediaType, mentioning=$mentioning, minBookmarks=$minBookmarks, minLikes=$minLikes, minQuotes=$minQuotes, minReplies=$minReplies, minRetweets=$minRetweets, minViews=$minViews, nativeRetweets=$nativeRetweets, omit=$omit, pageSize=$pageSize, queryType=$queryType, quotes=$quotes, quotesOfTweetId=$quotesOfTweetId, replies=$replies, retweets=$retweets, retweetsOfTweetId=$retweetsOfTweetId, sinceDate=$sinceDate, sinceId=$sinceId, toUser=$toUser, untilDate=$untilDate, url=$url, verifiedOnly=$verifiedOnly, withinTime=$withinTime, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "TweetListParams{communityId=$communityId, q=$q, anyWords=$anyWords, blueVerifiedOnly=$blueVerifiedOnly, cashtags=$cashtags, conversationId=$conversationId, cursor=$cursor, exactPhrase=$exactPhrase, excludeWords=$excludeWords, fields=$fields, fromUser=$fromUser, hashtags=$hashtags, inReplyToTweetId=$inReplyToTweetId, language=$language, maxFaves=$maxFaves, maxId=$maxId, maxQuotes=$maxQuotes, maxReplies=$maxReplies, maxRetweets=$maxRetweets, mediaType=$mediaType, mentioning=$mentioning, minBookmarks=$minBookmarks, minLikes=$minLikes, minQuotes=$minQuotes, minReplies=$minReplies, minRetweets=$minRetweets, minViews=$minViews, nativeRetweets=$nativeRetweets, omit=$omit, pageSize=$pageSize, queryType=$queryType, quotes=$quotes, quotesOfTweetId=$quotesOfTweetId, replies=$replies, retweets=$retweets, retweetsOfTweetId=$retweetsOfTweetId, sinceDate=$sinceDate, sinceId=$sinceId, toUser=$toUser, untilDate=$untilDate, url=$url, verifiedOnly=$verifiedOnly, withinTime=$withinTime, ids=$ids, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

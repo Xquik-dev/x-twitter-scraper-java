@@ -74,4 +74,26 @@ internal class StyleGetPerformanceResponseTest {
 
         assertThat(roundtrippedStyleGetPerformanceResponse).isEqualTo(styleGetPerformanceResponse)
     }
+
+    @Test
+    fun additionalTweetFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json = """{"quoteCount":1,"bookmarkCount":1}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<StyleGetPerformanceResponse.Tweet>())
+
+        assertThat(model.quoteCount()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("quoteCount")
+        assertThat(model.bookmarkCount()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("bookmarkCount")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<StyleGetPerformanceResponse.Tweet>(),
+                )
+            )
+            .isEqualTo(model)
+    }
 }

@@ -29,4 +29,26 @@ internal class MonitorDeactivateResponseTest {
 
         assertThat(roundtrippedMonitorDeactivateResponse).isEqualTo(monitorDeactivateResponse)
     }
+
+    @Test
+    fun additionalFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json = """{"deletionStatus":"deleting","statusUrl":"sample"}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<MonitorDeactivateResponse>())
+
+        assertThat(model.deletionStatus()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("deletionStatus")
+        assertThat(model.statusUrl()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("statusUrl")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<MonitorDeactivateResponse>(),
+                )
+            )
+            .isEqualTo(model)
+    }
 }

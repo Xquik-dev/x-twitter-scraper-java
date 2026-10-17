@@ -15,6 +15,7 @@ import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -29,6 +30,7 @@ private constructor(
     private val plan: JsonField<Plan>,
     private val creditInfo: JsonField<CreditInfo>,
     private val xUsername: JsonField<String>,
+    private val subscription: JsonField<Subscription>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -48,6 +50,9 @@ private constructor(
         @ExcludeMissing
         creditInfo: JsonField<CreditInfo> = JsonMissing.of(),
         @JsonProperty("xUsername") @ExcludeMissing xUsername: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("subscription")
+        @ExcludeMissing
+        subscription: JsonField<Subscription> = JsonMissing.of(),
     ) : this(
         monitorBilling,
         monitorsAllowed,
@@ -55,6 +60,7 @@ private constructor(
         plan,
         creditInfo,
         xUsername,
+        subscription,
         mutableMapOf(),
     )
 
@@ -94,6 +100,9 @@ private constructor(
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun xUsername(): Optional<String> = xUsername.getOptional("xUsername")
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun subscription(): Optional<Subscription> = subscription.getOptional("subscription")
 
     /**
      * Returns the raw JSON value of [monitorBilling].
@@ -146,6 +155,15 @@ private constructor(
      */
     @JsonProperty("xUsername") @ExcludeMissing fun _xUsername(): JsonField<String> = xUsername
 
+    /**
+     * Returns the raw JSON value of [subscription].
+     *
+     * Unlike [subscription], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("subscription")
+    @ExcludeMissing
+    fun _subscription(): JsonField<Subscription> = subscription
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -183,6 +201,7 @@ private constructor(
         private var plan: JsonField<Plan>? = null
         private var creditInfo: JsonField<CreditInfo> = JsonMissing.of()
         private var xUsername: JsonField<String> = JsonMissing.of()
+        private var subscription: JsonField<Subscription> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -193,6 +212,7 @@ private constructor(
             plan = accountRetrieveResponse.plan
             creditInfo = accountRetrieveResponse.creditInfo
             xUsername = accountRetrieveResponse.xUsername
+            subscription = accountRetrieveResponse.subscription
             additionalProperties = accountRetrieveResponse.additionalProperties.toMutableMap()
         }
 
@@ -237,6 +257,13 @@ private constructor(
         /** Sets [Builder.xUsername] to an arbitrary JSON value. */
         fun xUsername(xUsername: JsonField<String>) = apply { this.xUsername = xUsername }
 
+        fun subscription(subscription: Subscription) = subscription(JsonField.of(subscription))
+
+        /** Sets [Builder.subscription] to an arbitrary JSON value. */
+        fun subscription(subscription: JsonField<Subscription>) = apply {
+            this.subscription = subscription
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -279,6 +306,7 @@ private constructor(
                 checkRequired("plan", plan),
                 creditInfo,
                 xUsername,
+                subscription,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -304,6 +332,7 @@ private constructor(
         plan().validate()
         creditInfo().ifPresent { it.validate() }
         xUsername()
+        subscription().ifPresent { it.validate() }
         validated = true
     }
 
@@ -322,7 +351,8 @@ private constructor(
             (if (monitorsUsed.asKnown().isPresent) 1 else 0) +
             (plan.asKnown().getOrNull()?.validity() ?: 0) +
             (creditInfo.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (xUsername.asKnown().isPresent) 1 else 0)
+            (if (xUsername.asKnown().isPresent) 1 else 0) +
+            (subscription.asKnown().getOrNull()?.validity() ?: 0)
 
     class MonitorBilling
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -871,6 +901,7 @@ private constructor(
         private val balance: JsonField<String>,
         private val lifetimePurchased: JsonField<String>,
         private val lifetimeUsed: JsonField<String>,
+        private val autoTopupStopped: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -892,6 +923,9 @@ private constructor(
             @JsonProperty("lifetimeUsed")
             @ExcludeMissing
             lifetimeUsed: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("autoTopupStopped")
+            @ExcludeMissing
+            autoTopupStopped: JsonField<Boolean> = JsonMissing.of(),
         ) : this(
             autoTopupAmountDollars,
             autoTopupEnabled,
@@ -899,6 +933,7 @@ private constructor(
             balance,
             lifetimePurchased,
             lifetimeUsed,
+            autoTopupStopped,
             mutableMapOf(),
         )
 
@@ -948,6 +983,9 @@ private constructor(
          *   is unexpectedly missing or null.
          */
         fun lifetimeUsed(): String = lifetimeUsed.getRequired("lifetimeUsed")
+
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun autoTopupStopped(): Optional<Boolean> = autoTopupStopped.getOptional("autoTopupStopped")
 
         /**
          * Returns the raw JSON value of [autoTopupAmountDollars].
@@ -1006,6 +1044,16 @@ private constructor(
         @ExcludeMissing
         fun _lifetimeUsed(): JsonField<String> = lifetimeUsed
 
+        /**
+         * Returns the raw JSON value of [autoTopupStopped].
+         *
+         * Unlike [autoTopupStopped], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("autoTopupStopped")
+        @ExcludeMissing
+        fun _autoTopupStopped(): JsonField<Boolean> = autoTopupStopped
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -1045,6 +1093,7 @@ private constructor(
             private var balance: JsonField<String>? = null
             private var lifetimePurchased: JsonField<String>? = null
             private var lifetimeUsed: JsonField<String>? = null
+            private var autoTopupStopped: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -1055,6 +1104,7 @@ private constructor(
                 balance = creditInfo.balance
                 lifetimePurchased = creditInfo.lifetimePurchased
                 lifetimeUsed = creditInfo.lifetimeUsed
+                autoTopupStopped = creditInfo.autoTopupStopped
                 additionalProperties = creditInfo.additionalProperties.toMutableMap()
             }
 
@@ -1107,6 +1157,14 @@ private constructor(
                 this.lifetimeUsed = lifetimeUsed
             }
 
+            fun autoTopupStopped(autoTopupStopped: Boolean) =
+                autoTopupStopped(JsonField.of(autoTopupStopped))
+
+            /** Sets [Builder.autoTopupStopped] to an arbitrary JSON value. */
+            fun autoTopupStopped(autoTopupStopped: JsonField<Boolean>) = apply {
+                this.autoTopupStopped = autoTopupStopped
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -1151,6 +1209,7 @@ private constructor(
                     checkRequired("balance", balance),
                     checkRequired("lifetimePurchased", lifetimePurchased),
                     checkRequired("lifetimeUsed", lifetimeUsed),
+                    autoTopupStopped,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -1177,6 +1236,7 @@ private constructor(
             balance()
             lifetimePurchased()
             lifetimeUsed()
+            autoTopupStopped()
             validated = true
         }
 
@@ -1195,7 +1255,8 @@ private constructor(
                 (if (autoTopupThreshold.asKnown().isPresent) 1 else 0) +
                 (if (balance.asKnown().isPresent) 1 else 0) +
                 (if (lifetimePurchased.asKnown().isPresent) 1 else 0) +
-                (if (lifetimeUsed.asKnown().isPresent) 1 else 0)
+                (if (lifetimeUsed.asKnown().isPresent) 1 else 0) +
+                (if (autoTopupStopped.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -1209,6 +1270,7 @@ private constructor(
                 balance == other.balance &&
                 lifetimePurchased == other.lifetimePurchased &&
                 lifetimeUsed == other.lifetimeUsed &&
+                autoTopupStopped == other.autoTopupStopped &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -1220,6 +1282,7 @@ private constructor(
                 balance,
                 lifetimePurchased,
                 lifetimeUsed,
+                autoTopupStopped,
                 additionalProperties,
             )
         }
@@ -1227,7 +1290,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "CreditInfo{autoTopupAmountDollars=$autoTopupAmountDollars, autoTopupEnabled=$autoTopupEnabled, autoTopupThreshold=$autoTopupThreshold, balance=$balance, lifetimePurchased=$lifetimePurchased, lifetimeUsed=$lifetimeUsed, additionalProperties=$additionalProperties}"
+            "CreditInfo{autoTopupAmountDollars=$autoTopupAmountDollars, autoTopupEnabled=$autoTopupEnabled, autoTopupThreshold=$autoTopupThreshold, balance=$balance, lifetimePurchased=$lifetimePurchased, lifetimeUsed=$lifetimeUsed, autoTopupStopped=$autoTopupStopped, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
@@ -1242,6 +1305,7 @@ private constructor(
             plan == other.plan &&
             creditInfo == other.creditInfo &&
             xUsername == other.xUsername &&
+            subscription == other.subscription &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1253,6 +1317,7 @@ private constructor(
             plan,
             creditInfo,
             xUsername,
+            subscription,
             additionalProperties,
         )
     }
@@ -1260,5 +1325,489 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "AccountRetrieveResponse{monitorBilling=$monitorBilling, monitorsAllowed=$monitorsAllowed, monitorsUsed=$monitorsUsed, plan=$plan, creditInfo=$creditInfo, xUsername=$xUsername, additionalProperties=$additionalProperties}"
+        "AccountRetrieveResponse{monitorBilling=$monitorBilling, monitorsAllowed=$monitorsAllowed, monitorsUsed=$monitorsUsed, plan=$plan, creditInfo=$creditInfo, xUsername=$xUsername, subscription=$subscription, additionalProperties=$additionalProperties}"
+
+    class Subscription
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val status: JsonField<Status>,
+        private val tier: JsonField<Tier>,
+        private val currentPeriodStart: JsonField<OffsetDateTime>,
+        private val currentPeriodEnd: JsonField<OffsetDateTime>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+        @JsonCreator
+        private constructor(
+            @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of(),
+            @JsonProperty("tier") @ExcludeMissing tier: JsonField<Tier> = JsonMissing.of(),
+            @JsonProperty("currentPeriodStart")
+            @ExcludeMissing
+            currentPeriodStart: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("currentPeriodEnd")
+            @ExcludeMissing
+            currentPeriodEnd: JsonField<OffsetDateTime> = JsonMissing.of(),
+        ) : this(
+            status,
+            tier,
+            currentPeriodStart,
+            currentPeriodEnd,
+            mutableMapOf(),
+        )
+
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun status(): Optional<Status> = status.getOptional("status")
+
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun tier(): Optional<Tier> = tier.getOptional("tier")
+
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun currentPeriodStart(): Optional<OffsetDateTime> =
+            currentPeriodStart.getOptional("currentPeriodStart")
+
+        /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+        fun currentPeriodEnd(): Optional<OffsetDateTime> =
+            currentPeriodEnd.getOptional("currentPeriodEnd")
+
+        /**
+         * Returns the raw JSON value of [status].
+         *
+         * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<Status> = status
+
+        /**
+         * Returns the raw JSON value of [tier].
+         *
+         * Unlike [tier], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("tier") @ExcludeMissing fun _tier(): JsonField<Tier> = tier
+
+        /**
+         * Returns the raw JSON value of [currentPeriodStart].
+         *
+         * Unlike [currentPeriodStart], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("currentPeriodStart")
+        @ExcludeMissing
+        fun _currentPeriodStart(): JsonField<OffsetDateTime> = currentPeriodStart
+
+        /**
+         * Returns the raw JSON value of [currentPeriodEnd].
+         *
+         * Unlike [currentPeriodEnd], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("currentPeriodEnd")
+        @ExcludeMissing
+        fun _currentPeriodEnd(): JsonField<OffsetDateTime> = currentPeriodEnd
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+            /** Returns a mutable builder for constructing an instance of [Subscription]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Subscription]. */
+        class Builder internal constructor() {
+            private var status: JsonField<Status> = JsonMissing.of()
+            private var tier: JsonField<Tier> = JsonMissing.of()
+            private var currentPeriodStart: JsonField<OffsetDateTime> = JsonMissing.of()
+            private var currentPeriodEnd: JsonField<OffsetDateTime> = JsonMissing.of()
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(subscription: Subscription) = apply {
+                status = subscription.status
+                tier = subscription.tier
+                currentPeriodStart = subscription.currentPeriodStart
+                currentPeriodEnd = subscription.currentPeriodEnd
+                additionalProperties = subscription.additionalProperties.toMutableMap()
+            }
+
+            fun status(status: Status) = status(JsonField.of(status))
+
+            /** Sets [Builder.status] to an arbitrary JSON value. */
+            fun status(status: JsonField<Status>) = apply { this.status = status }
+
+            fun tier(tier: Tier) = tier(JsonField.of(tier))
+
+            /** Sets [Builder.tier] to an arbitrary JSON value. */
+            fun tier(tier: JsonField<Tier>) = apply { this.tier = tier }
+
+            fun currentPeriodStart(currentPeriodStart: OffsetDateTime) =
+                currentPeriodStart(JsonField.of(currentPeriodStart))
+
+            /** Sets [Builder.currentPeriodStart] to an arbitrary JSON value. */
+            fun currentPeriodStart(currentPeriodStart: JsonField<OffsetDateTime>) = apply {
+                this.currentPeriodStart = currentPeriodStart
+            }
+
+            fun currentPeriodEnd(currentPeriodEnd: OffsetDateTime) =
+                currentPeriodEnd(JsonField.of(currentPeriodEnd))
+
+            /** Sets [Builder.currentPeriodEnd] to an arbitrary JSON value. */
+            fun currentPeriodEnd(currentPeriodEnd: JsonField<OffsetDateTime>) = apply {
+                this.currentPeriodEnd = currentPeriodEnd
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Subscription].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): Subscription =
+                Subscription(
+                    status,
+                    tier,
+                    currentPeriodStart,
+                    currentPeriodEnd,
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): Subscription = apply {
+            if (validated) {
+                return@apply
+            }
+            status().ifPresent { it.validate() }
+            tier().ifPresent { it.validate() }
+            currentPeriodStart()
+            currentPeriodEnd()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (status.asKnown().getOrNull()?.validity() ?: 0) +
+                (tier.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (currentPeriodStart.asKnown().isPresent) 1 else 0) +
+                (if (currentPeriodEnd.asKnown().isPresent) 1 else 0)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+            return other is Subscription &&
+                status == other.status &&
+                tier == other.tier &&
+                currentPeriodStart == other.currentPeriodStart &&
+                currentPeriodEnd == other.currentPeriodEnd &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy {
+            Objects.hash(status, tier, currentPeriodStart, currentPeriodEnd, additionalProperties)
+        }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "Subscription{status=$status, tier=$tier, currentPeriodStart=$currentPeriodStart, currentPeriodEnd=$currentPeriodEnd, additionalProperties=$additionalProperties}"
+
+        class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+            /** Returns this class instance's raw value. */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val NONE = of("none")
+
+                @JvmField val ACTIVE = of("active")
+
+                @JvmField val PAST_DUE = of("past_due")
+
+                @JvmField val CANCELING = of("canceling")
+
+                @JvmField val INCOMPLETE = of("incomplete")
+
+                @JvmStatic fun of(value: String) = Status(JsonField.of(value))
+            }
+
+            /** An enum containing [Status]'s known values. */
+            enum class Known {
+                NONE,
+                ACTIVE,
+                PAST_DUE,
+                CANCELING,
+                INCOMPLETE,
+            }
+
+            /**
+             * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [Status] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                NONE,
+                ACTIVE,
+                PAST_DUE,
+                CANCELING,
+                INCOMPLETE,
+                /**
+                 * An enum member indicating that [Status] was instantiated with an unknown value.
+                 */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             */
+            fun value(): Value =
+                when (this) {
+                    NONE -> Value.NONE
+                    ACTIVE -> Value.ACTIVE
+                    PAST_DUE -> Value.PAST_DUE
+                    CANCELING -> Value.CANCELING
+                    INCOMPLETE -> Value.INCOMPLETE
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+             *   known member.
+             */
+            fun known(): Known =
+                when (this) {
+                    NONE -> Known.NONE
+                    ACTIVE -> Known.ACTIVE
+                    PAST_DUE -> Known.PAST_DUE
+                    CANCELING -> Known.CANCELING
+                    INCOMPLETE -> Known.INCOMPLETE
+                    else -> throw XTwitterScraperInvalidDataException("Unknown Status: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * @throws XTwitterScraperInvalidDataException if this class instance's value does not
+             *   have the expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    XTwitterScraperInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
+             */
+            fun validate(): Status = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: XTwitterScraperInvalidDataException) {
+                    false
+                }
+
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Status && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
+
+        class Tier @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+            /** Returns this class instance's raw value. */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val STARTER = of("starter")
+
+                @JvmField val PRO = of("pro")
+
+                @JvmField val BUSINESS = of("business")
+
+                @JvmStatic fun of(value: String) = Tier(JsonField.of(value))
+            }
+
+            /** An enum containing [Tier]'s known values. */
+            enum class Known {
+                STARTER,
+                PRO,
+                BUSINESS,
+            }
+
+            /**
+             * An enum containing [Tier]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [Tier] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                STARTER,
+                PRO,
+                BUSINESS,
+                /** An enum member indicating that [Tier] was instantiated with an unknown value. */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             */
+            fun value(): Value =
+                when (this) {
+                    STARTER -> Value.STARTER
+                    PRO -> Value.PRO
+                    BUSINESS -> Value.BUSINESS
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+             *   known member.
+             */
+            fun known(): Known =
+                when (this) {
+                    STARTER -> Known.STARTER
+                    PRO -> Known.PRO
+                    BUSINESS -> Known.BUSINESS
+                    else -> throw XTwitterScraperInvalidDataException("Unknown Tier: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * @throws XTwitterScraperInvalidDataException if this class instance's value does not
+             *   have the expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    XTwitterScraperInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
+             */
+            fun validate(): Tier = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: XTwitterScraperInvalidDataException) {
+                    false
+                }
+
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Tier && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
+    }
 }

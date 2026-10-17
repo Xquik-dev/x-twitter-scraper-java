@@ -53,4 +53,24 @@ internal class CreditRetrieveBalanceResponseTest {
         assertThat(roundtrippedCreditRetrieveBalanceResponse)
             .isEqualTo(creditRetrieveBalanceResponse)
     }
+
+    @Test
+    fun additionalFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json = """{"auto_topup_stopped":true}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<CreditRetrieveBalanceResponse>())
+
+        assertThat(model.autoTopupStopped()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("auto_topup_stopped")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<CreditRetrieveBalanceResponse>(),
+                )
+            )
+            .isEqualTo(model)
+    }
 }

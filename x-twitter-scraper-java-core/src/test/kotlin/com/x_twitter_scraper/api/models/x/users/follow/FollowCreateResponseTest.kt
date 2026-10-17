@@ -311,4 +311,10 @@ internal class FollowCreateResponseTest {
 
         assertThat(roundtrippedFollowCreateResponse).isEqualTo(followCreateResponse)
     }
+
+    @Test
+    fun additionalActionValues() {
+        assertThat(FollowCreateResponse.Action.of("delete_dm").known())
+            .isEqualTo(FollowCreateResponse.Action.Known.DELETE_DM)
+    }
 }

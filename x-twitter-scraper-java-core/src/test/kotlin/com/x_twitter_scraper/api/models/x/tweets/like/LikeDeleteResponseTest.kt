@@ -307,4 +307,10 @@ internal class LikeDeleteResponseTest {
 
         assertThat(roundtrippedLikeDeleteResponse).isEqualTo(likeDeleteResponse)
     }
+
+    @Test
+    fun additionalActionValues() {
+        assertThat(LikeDeleteResponse.Action.of("delete_dm").known())
+            .isEqualTo(LikeDeleteResponse.Action.Known.DELETE_DM)
+    }
 }

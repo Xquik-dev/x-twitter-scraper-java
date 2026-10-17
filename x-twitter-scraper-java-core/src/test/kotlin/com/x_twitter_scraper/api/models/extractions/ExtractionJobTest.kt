@@ -55,4 +55,39 @@ internal class ExtractionJobTest {
 
         assertThat(roundtrippedExtractionJob).isEqualTo(extractionJob)
     }
+
+    @Test
+    fun additionalFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json =
+            """{"resultsLimit":1,"effectiveResultsLimit":1,"completionReason":"budget_limited","errorMessage":"sample"}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<ExtractionJob>())
+
+        assertThat(model.resultsLimit()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("resultsLimit")
+        assertThat(model.effectiveResultsLimit()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("effectiveResultsLimit")
+        assertThat(model.completionReason()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("completionReason")
+        assertThat(model.errorMessage()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("errorMessage")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<ExtractionJob>(),
+                )
+            )
+            .isEqualTo(model)
+    }
+
+    @Test
+    fun additionalStatusValues() {
+        assertThat(ExtractionJob.Status.of("canceled").known())
+            .isEqualTo(ExtractionJob.Status.Known.CANCELED)
+        assertThat(ExtractionJob.Status.of("pending").known())
+            .isEqualTo(ExtractionJob.Status.Known.PENDING)
+    }
 }

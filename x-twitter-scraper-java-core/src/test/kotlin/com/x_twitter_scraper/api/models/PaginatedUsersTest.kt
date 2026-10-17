@@ -384,4 +384,126 @@ internal class PaginatedUsersTest {
         assertThat(paginatedUsers.filteredCount()).contains(1595L)
         assertThat(paginatedUsers._additionalProperties()).isEmpty()
     }
+
+    @Test
+    fun additionalScanLimitFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json = """{"limit":100000,"rowsRead":1,"message":"sample"}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<PaginatedUsers.ScanLimit>())
+
+        assertThat(model.limit()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("limit")
+        assertThat(model.rowsRead()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("rowsRead")
+        assertThat(model.message()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("message")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<PaginatedUsers.ScanLimit>(),
+                )
+            )
+            .isEqualTo(model)
+    }
+
+    @Test
+    fun additionalFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json = """{"scanLimit":{},"diagnostic":{}}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<PaginatedUsers>())
+
+        assertThat(model.scanLimit()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("scanLimit")
+        assertThat(model.diagnostic()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("diagnostic")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<PaginatedUsers>(),
+                )
+            )
+            .isEqualTo(model)
+    }
+
+    @Test
+    fun additionalDiagnosticFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json =
+            """{"complete":true,"cursorFailureCount":1,"deadlineReached":true,"duplicateCount":1,"failedStrategyCount":1,"malformedCount":1,"pagesFetched":1,"responseTruncated":true,"resultLimitReached":true,"stalledStrategyCount":1,"strategyCount":1,"returnedUsers":1,"strategies":[{}],"uniqueUsers":1}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<PaginatedUsers.Diagnostic>())
+
+        assertThat(model.complete()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("complete")
+        assertThat(model.cursorFailureCount()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("cursorFailureCount")
+        assertThat(model.deadlineReached()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("deadlineReached")
+        assertThat(model.duplicateCount()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("duplicateCount")
+        assertThat(model.failedStrategyCount()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("failedStrategyCount")
+        assertThat(model.malformedCount()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("malformedCount")
+        assertThat(model.pagesFetched()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("pagesFetched")
+        assertThat(model.responseTruncated()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("responseTruncated")
+        assertThat(model.resultLimitReached()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("resultLimitReached")
+        assertThat(model.stalledStrategyCount()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("stalledStrategyCount")
+        assertThat(model.strategyCount()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("strategyCount")
+        assertThat(model.returnedUsers()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("returnedUsers")
+        assertThat(model.strategies()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("strategies")
+        assertThat(model.uniqueUsers()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("uniqueUsers")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<PaginatedUsers.Diagnostic>(),
+                )
+            )
+            .isEqualTo(model)
+    }
+
+    @Test
+    fun additionalDiagnosticStrategyFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json =
+            """{"duplicateCount":1,"pagesFetched":1,"stopReason":"cursor_failure","strategy":1,"uniqueAdded":1}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<PaginatedUsers.Diagnostic.Strategy>())
+
+        assertThat(model.duplicateCount()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("duplicateCount")
+        assertThat(model.pagesFetched()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("pagesFetched")
+        assertThat(model.stopReason()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("stopReason")
+        assertThat(model.strategy()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("strategy")
+        assertThat(model.uniqueAdded()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("uniqueAdded")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<PaginatedUsers.Diagnostic.Strategy>(),
+                )
+            )
+            .isEqualTo(model)
+    }
 }

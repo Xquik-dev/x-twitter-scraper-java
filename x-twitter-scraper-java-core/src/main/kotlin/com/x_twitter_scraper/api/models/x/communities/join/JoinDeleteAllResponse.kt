@@ -1651,6 +1651,8 @@ private constructor(
 
             @JvmField val LEAVE_COMMUNITY = of("leave_community")
 
+            @JvmField val DELETE_DM = of("delete_dm")
+
             @JvmStatic fun of(value: String) = Action(JsonField.of(value))
         }
 
@@ -1674,6 +1676,7 @@ private constructor(
             DELETE_COMMUNITY,
             JOIN_COMMUNITY,
             LEAVE_COMMUNITY,
+            DELETE_DM,
         }
 
         /**
@@ -1704,6 +1707,7 @@ private constructor(
             DELETE_COMMUNITY,
             JOIN_COMMUNITY,
             LEAVE_COMMUNITY,
+            DELETE_DM,
             /** An enum member indicating that [Action] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -1714,6 +1718,7 @@ private constructor(
          */
         fun value(): Value =
             when (this) {
+                DELETE_DM -> Value.DELETE_DM
                 CREATE_TWEET -> Value.CREATE_TWEET
                 DELETE_TWEET -> Value.DELETE_TWEET
                 LIKE -> Value.LIKE
@@ -1743,6 +1748,7 @@ private constructor(
          */
         fun known(): Known =
             when (this) {
+                DELETE_DM -> Known.DELETE_DM
                 CREATE_TWEET -> Known.CREATE_TWEET
                 DELETE_TWEET -> Known.DELETE_TWEET
                 LIKE -> Known.LIKE

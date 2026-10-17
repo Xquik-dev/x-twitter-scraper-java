@@ -62,4 +62,32 @@ internal class MonitorTest {
 
         assertThat(roundtrippedMonitor).isEqualTo(monitor)
     }
+
+    @Test
+    fun additionalFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json = """{"name":"sample"}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<Monitor>())
+
+        assertThat(model.name()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("name")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<Monitor>(),
+                )
+            )
+            .isEqualTo(model)
+    }
+
+    @Test
+    fun additionalPausedReasonValues() {
+        assertThat(Monitor.PausedReason.of("insufficient_credits").known())
+            .isEqualTo(Monitor.PausedReason.Known.INSUFFICIENT_CREDITS)
+        assertThat(Monitor.PausedReason.of("x_account_protected").known())
+            .isEqualTo(Monitor.PausedReason.Known.X_ACCOUNT_PROTECTED)
+    }
 }

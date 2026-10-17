@@ -56,4 +56,24 @@ internal class WebhookCreateResponseTest {
 
         assertThat(roundtrippedWebhookCreateResponse).isEqualTo(webhookCreateResponse)
     }
+
+    @Test
+    fun additionalFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json = """{"ignoredFields":["sample"]}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<WebhookCreateResponse>())
+
+        assertThat(model.ignoredFields()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("ignoredFields")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<WebhookCreateResponse>(),
+                )
+            )
+            .isEqualTo(model)
+    }
 }

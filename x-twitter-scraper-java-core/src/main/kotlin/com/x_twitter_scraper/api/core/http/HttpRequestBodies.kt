@@ -45,10 +45,19 @@ internal fun multipartFormData(
     MultipartBody.Builder()
         .apply {
             fields.forEach { (name, field) ->
+                if (field.value.isMissing()) {
+                    return@forEach
+                }
                 val knownValue = field.value.asKnown().getOrNull()
                 val parts =
                     if (knownValue is InputStream) {
                         sequenceOf(name to knownValue)
+                    } else if (
+                        knownValue is List<*> &&
+                            knownValue.isNotEmpty() &&
+                            knownValue.all { it is InputStream }
+                    ) {
+                        knownValue.asSequence().map { name to it as InputStream }
                     } else {
                         val node = jsonMapper.valueToTree<JsonNode>(field.value)
                         serializePart(name, node)

@@ -4,6 +4,7 @@
 
 package com.x_twitter_scraper.api.core.http
 
+import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.MultipartField
 import com.x_twitter_scraper.api.core.jsonMapper
 import java.io.ByteArrayOutputStream
@@ -12,6 +13,37 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 internal class HttpRequestBodiesTest {
+
+    @Test
+    fun multipartFormData_omitsMissingFields() {
+        val body =
+            multipartFormData(
+                jsonMapper(),
+                mapOf("file" to MultipartField.of<String>(JsonMissing.of())),
+            )
+        val output = ByteArrayOutputStream()
+        body.writeTo(output)
+
+        assertThat(output.toString("UTF-8")).doesNotContain("Content-Disposition")
+    }
+
+    @Test
+    fun multipartFormData_serializesBinaryAttachments() {
+        val field = MultipartField.of(listOf("first".byteInputStream(), "second".byteInputStream()))
+        val body = multipartFormData(jsonMapper(), mapOf("attachments" to field))
+        val output = ByteArrayOutputStream()
+        body.writeTo(output)
+
+        assertThat(field.contentType).isEqualTo("application/octet-stream")
+        assertThat(output.toString("UTF-8"))
+            .contains(
+                "name=\"attachments\"",
+                "first",
+                "second",
+                "Content-Type: application/octet-stream",
+            )
+        assertThat(output.size().toLong()).isEqualTo(body.contentLength())
+    }
 
     @Test
     fun multipartFormData_serializesFieldWithFilename() {

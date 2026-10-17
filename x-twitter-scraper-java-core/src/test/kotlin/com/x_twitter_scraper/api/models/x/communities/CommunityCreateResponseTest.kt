@@ -316,4 +316,10 @@ internal class CommunityCreateResponseTest {
 
         assertThat(roundtrippedCommunityCreateResponse).isEqualTo(communityCreateResponse)
     }
+
+    @Test
+    fun additionalActionValues() {
+        assertThat(CommunityCreateResponse.Action.of("delete_dm").known())
+            .isEqualTo(CommunityCreateResponse.Action.Known.DELETE_DM)
+    }
 }

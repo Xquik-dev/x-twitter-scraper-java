@@ -250,6 +250,10 @@ private constructor(
 
             @JvmField val FAILED = of("failed")
 
+            @JvmField val CANCELED = of("canceled")
+
+            @JvmField val PENDING = of("pending")
+
             @JvmStatic fun of(value: String) = Status(JsonField.of(value))
         }
 
@@ -258,6 +262,8 @@ private constructor(
             RUNNING,
             COMPLETED,
             FAILED,
+            CANCELED,
+            PENDING,
         }
 
         /**
@@ -273,6 +279,8 @@ private constructor(
             RUNNING,
             COMPLETED,
             FAILED,
+            CANCELED,
+            PENDING,
             /** An enum member indicating that [Status] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -283,6 +291,8 @@ private constructor(
          */
         fun value(): Value =
             when (this) {
+                CANCELED -> Value.CANCELED
+                PENDING -> Value.PENDING
                 RUNNING -> Value.RUNNING
                 COMPLETED -> Value.COMPLETED
                 FAILED -> Value.FAILED
@@ -297,6 +307,8 @@ private constructor(
          */
         fun known(): Known =
             when (this) {
+                CANCELED -> Known.CANCELED
+                PENDING -> Known.PENDING
                 RUNNING -> Known.RUNNING
                 COMPLETED -> Known.COMPLETED
                 FAILED -> Known.FAILED

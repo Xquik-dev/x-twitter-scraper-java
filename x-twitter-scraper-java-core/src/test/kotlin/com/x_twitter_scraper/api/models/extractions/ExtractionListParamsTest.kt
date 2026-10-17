@@ -51,4 +51,12 @@ internal class ExtractionListParamsTest {
 
         assertThat(queryParams).isEqualTo(QueryParams.builder().build())
     }
+
+    @Test
+    fun additionalStatusValues() {
+        assertThat(ExtractionListParams.Status.of("canceled").known())
+            .isEqualTo(ExtractionListParams.Status.Known.CANCELED)
+        assertThat(ExtractionListParams.Status.of("pending").known())
+            .isEqualTo(ExtractionListParams.Status.Known.PENDING)
+    }
 }

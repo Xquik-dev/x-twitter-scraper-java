@@ -31,8 +31,8 @@ private constructor(
     private val status: JsonField<String>,
     private val xUserId: JsonField<String>,
     private val xUsername: JsonField<String>,
-    private val cookiesObtainedAt: JsonField<OffsetDateTime>,
     private val updatedAt: JsonField<OffsetDateTime>,
+    private val connectedAt: JsonField<OffsetDateTime>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -46,12 +46,12 @@ private constructor(
         @JsonProperty("status") @ExcludeMissing status: JsonField<String> = JsonMissing.of(),
         @JsonProperty("xUserId") @ExcludeMissing xUserId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("xUsername") @ExcludeMissing xUsername: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("cookiesObtainedAt")
-        @ExcludeMissing
-        cookiesObtainedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("updatedAt")
         @ExcludeMissing
         updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("connectedAt")
+        @ExcludeMissing
+        connectedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
     ) : this(
         id,
         createdAt,
@@ -59,8 +59,8 @@ private constructor(
         status,
         xUserId,
         xUsername,
-        cookiesObtainedAt,
         updatedAt,
+        connectedAt,
         mutableMapOf(),
     )
 
@@ -101,11 +101,10 @@ private constructor(
     fun xUsername(): String = xUsername.getRequired("xUsername")
 
     /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
-    fun cookiesObtainedAt(): Optional<OffsetDateTime> =
-        cookiesObtainedAt.getOptional("cookiesObtainedAt")
+    fun updatedAt(): Optional<OffsetDateTime> = updatedAt.getOptional("updatedAt")
 
     /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
-    fun updatedAt(): Optional<OffsetDateTime> = updatedAt.getOptional("updatedAt")
+    fun connectedAt(): Optional<OffsetDateTime> = connectedAt.getOptional("connectedAt")
 
     /**
      * Returns the raw JSON value of [id].
@@ -152,16 +151,6 @@ private constructor(
     @JsonProperty("xUsername") @ExcludeMissing fun _xUsername(): JsonField<String> = xUsername
 
     /**
-     * Returns the raw JSON value of [cookiesObtainedAt].
-     *
-     * Unlike [cookiesObtainedAt], this method doesn't throw if the JSON field has an unexpected
-     * type.
-     */
-    @JsonProperty("cookiesObtainedAt")
-    @ExcludeMissing
-    fun _cookiesObtainedAt(): JsonField<OffsetDateTime> = cookiesObtainedAt
-
-    /**
      * Returns the raw JSON value of [updatedAt].
      *
      * Unlike [updatedAt], this method doesn't throw if the JSON field has an unexpected type.
@@ -169,6 +158,15 @@ private constructor(
     @JsonProperty("updatedAt")
     @ExcludeMissing
     fun _updatedAt(): JsonField<OffsetDateTime> = updatedAt
+
+    /**
+     * Returns the raw JSON value of [connectedAt].
+     *
+     * Unlike [connectedAt], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("connectedAt")
+    @ExcludeMissing
+    fun _connectedAt(): JsonField<OffsetDateTime> = connectedAt
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -209,8 +207,8 @@ private constructor(
         private var status: JsonField<String>? = null
         private var xUserId: JsonField<String>? = null
         private var xUsername: JsonField<String>? = null
-        private var cookiesObtainedAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var updatedAt: JsonField<OffsetDateTime> = JsonMissing.of()
+        private var connectedAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -221,8 +219,8 @@ private constructor(
             status = xAccountDetail.status
             xUserId = xAccountDetail.xUserId
             xUsername = xAccountDetail.xUsername
-            cookiesObtainedAt = xAccountDetail.cookiesObtainedAt
             updatedAt = xAccountDetail.updatedAt
+            connectedAt = xAccountDetail.connectedAt
             additionalProperties = xAccountDetail.additionalProperties.toMutableMap()
         }
 
@@ -256,24 +254,17 @@ private constructor(
         /** Sets [Builder.xUsername] to an arbitrary JSON value. */
         fun xUsername(xUsername: JsonField<String>) = apply { this.xUsername = xUsername }
 
-        fun cookiesObtainedAt(cookiesObtainedAt: OffsetDateTime) =
-            cookiesObtainedAt(JsonField.of(cookiesObtainedAt))
-
-        /**
-         * Sets [Builder.cookiesObtainedAt] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.cookiesObtainedAt] with a well-typed [OffsetDateTime]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
-         */
-        fun cookiesObtainedAt(cookiesObtainedAt: JsonField<OffsetDateTime>) = apply {
-            this.cookiesObtainedAt = cookiesObtainedAt
-        }
-
         fun updatedAt(updatedAt: OffsetDateTime) = updatedAt(JsonField.of(updatedAt))
 
         /** Sets [Builder.updatedAt] to an arbitrary JSON value. */
         fun updatedAt(updatedAt: JsonField<OffsetDateTime>) = apply { this.updatedAt = updatedAt }
+
+        fun connectedAt(connectedAt: OffsetDateTime) = connectedAt(JsonField.of(connectedAt))
+
+        /** Sets [Builder.connectedAt] to an arbitrary JSON value. */
+        fun connectedAt(connectedAt: JsonField<OffsetDateTime>) = apply {
+            this.connectedAt = connectedAt
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -319,8 +310,8 @@ private constructor(
                 checkRequired("status", status),
                 checkRequired("xUserId", xUserId),
                 checkRequired("xUsername", xUsername),
-                cookiesObtainedAt,
                 updatedAt,
+                connectedAt,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -346,8 +337,8 @@ private constructor(
         status()
         xUserId()
         xUsername()
-        cookiesObtainedAt()
         updatedAt()
+        connectedAt()
         validated = true
     }
 
@@ -367,8 +358,8 @@ private constructor(
             (if (status.asKnown().isPresent) 1 else 0) +
             (if (xUserId.asKnown().isPresent) 1 else 0) +
             (if (xUsername.asKnown().isPresent) 1 else 0) +
-            (if (cookiesObtainedAt.asKnown().isPresent) 1 else 0) +
-            (if (updatedAt.asKnown().isPresent) 1 else 0)
+            (if (updatedAt.asKnown().isPresent) 1 else 0) +
+            (if (connectedAt.asKnown().isPresent) 1 else 0)
 
     class Health @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -520,8 +511,8 @@ private constructor(
             status == other.status &&
             xUserId == other.xUserId &&
             xUsername == other.xUsername &&
-            cookiesObtainedAt == other.cookiesObtainedAt &&
             updatedAt == other.updatedAt &&
+            connectedAt == other.connectedAt &&
             additionalProperties == other.additionalProperties
     }
 
@@ -533,8 +524,8 @@ private constructor(
             status,
             xUserId,
             xUsername,
-            cookiesObtainedAt,
             updatedAt,
+            connectedAt,
             additionalProperties,
         )
     }
@@ -542,5 +533,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "XAccountDetail{id=$id, createdAt=$createdAt, health=$health, status=$status, xUserId=$xUserId, xUsername=$xUsername, cookiesObtainedAt=$cookiesObtainedAt, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "XAccountDetail{id=$id, createdAt=$createdAt, health=$health, status=$status, xUserId=$xUserId, xUsername=$xUsername, updatedAt=$updatedAt, connectedAt=$connectedAt, additionalProperties=$additionalProperties, hashCode=$hashCode}"
 }

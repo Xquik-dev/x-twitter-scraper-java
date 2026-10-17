@@ -367,6 +367,7 @@ internal class UserProfileTest {
                       "identityVerification": {
                         "description": "description-value",
                         "isIdentityVerified": true,
+                        "overrideVerifiedYear": 2009,
                         "verifiedSinceMsec": "1507188387580"
                       },
                       "isProfileTranslatable": true,
@@ -514,6 +515,7 @@ internal class UserProfileTest {
         assertThat(userProfile.identityVerification().get().description())
             .contains("description-value")
         assertThat(userProfile.identityVerification().get().isIdentityVerified()).contains(true)
+        assertThat(userProfile.identityVerification().get().overrideVerifiedYear()).contains(2009L)
         assertThat(userProfile.identityVerification().get().verifiedSinceMsec())
             .contains("1507188387580")
         assertThat(userProfile.identityVerification().get()._additionalProperties()).isEmpty()

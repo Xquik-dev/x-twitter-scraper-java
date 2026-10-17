@@ -63,4 +63,22 @@ internal class MediaUploadParamsTest {
                     }
             )
     }
+
+    @Test
+    fun additionalFields() {
+        val params =
+            MediaUploadParams.builder()
+                .account("sample")
+                .idempotencyKey("sample")
+                .url("sample")
+                .file("upload".byteInputStream())
+                .isLongVideo(true)
+                .build()
+
+        assertThat(params.file()).isPresent()
+        assertThat(params._body()).containsKey("file")
+        assertThat(params.isLongVideo()).isPresent()
+        assertThat(params._body()).containsKey("is_long_video")
+        assertThat(params.toBuilder().build()).isEqualTo(params)
+    }
 }

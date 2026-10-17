@@ -18,12 +18,15 @@ import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class WebhookListResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val webhooks: JsonField<List<Webhook>>,
+    private val hasMore: JsonField<Boolean>,
+    private val nextCursor: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -31,8 +34,17 @@ private constructor(
     private constructor(
         @JsonProperty("webhooks")
         @ExcludeMissing
-        webhooks: JsonField<List<Webhook>> = JsonMissing.of()
-    ) : this(webhooks, mutableMapOf())
+        webhooks: JsonField<List<Webhook>> = JsonMissing.of(),
+        @JsonProperty("hasMore") @ExcludeMissing hasMore: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("nextCursor")
+        @ExcludeMissing
+        nextCursor: JsonField<String> = JsonMissing.of(),
+    ) : this(
+        webhooks,
+        hasMore,
+        nextCursor,
+        mutableMapOf(),
+    )
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -40,12 +52,32 @@ private constructor(
      */
     fun webhooks(): List<Webhook> = webhooks.getRequired("webhooks")
 
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun hasMore(): Optional<Boolean> = hasMore.getOptional("hasMore")
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun nextCursor(): Optional<String> = nextCursor.getOptional("nextCursor")
+
     /**
      * Returns the raw JSON value of [webhooks].
      *
      * Unlike [webhooks], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("webhooks") @ExcludeMissing fun _webhooks(): JsonField<List<Webhook>> = webhooks
+
+    /**
+     * Returns the raw JSON value of [hasMore].
+     *
+     * Unlike [hasMore], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("hasMore") @ExcludeMissing fun _hasMore(): JsonField<Boolean> = hasMore
+
+    /**
+     * Returns the raw JSON value of [nextCursor].
+     *
+     * Unlike [nextCursor], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("nextCursor") @ExcludeMissing fun _nextCursor(): JsonField<String> = nextCursor
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -76,11 +108,15 @@ private constructor(
     class Builder internal constructor() {
 
         private var webhooks: JsonField<MutableList<Webhook>>? = null
+        private var hasMore: JsonField<Boolean> = JsonMissing.of()
+        private var nextCursor: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(webhookListResponse: WebhookListResponse) = apply {
             webhooks = webhookListResponse.webhooks.map { it.toMutableList() }
+            hasMore = webhookListResponse.hasMore
+            nextCursor = webhookListResponse.nextCursor
             additionalProperties = webhookListResponse.additionalProperties.toMutableMap()
         }
 
@@ -102,6 +138,16 @@ private constructor(
                     checkKnown("webhooks", it).add(webhook)
                 }
         }
+
+        fun hasMore(hasMore: Boolean) = hasMore(JsonField.of(hasMore))
+
+        /** Sets [Builder.hasMore] to an arbitrary JSON value. */
+        fun hasMore(hasMore: JsonField<Boolean>) = apply { this.hasMore = hasMore }
+
+        fun nextCursor(nextCursor: String) = nextCursor(JsonField.of(nextCursor))
+
+        /** Sets [Builder.nextCursor] to an arbitrary JSON value. */
+        fun nextCursor(nextCursor: JsonField<String>) = apply { this.nextCursor = nextCursor }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -137,6 +183,8 @@ private constructor(
         fun build(): WebhookListResponse =
             WebhookListResponse(
                 checkRequired("webhooks", webhooks).map { it.toImmutable() },
+                hasMore,
+                nextCursor,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -157,6 +205,8 @@ private constructor(
         }
 
         webhooks().forEach { it.validate() }
+        hasMore()
+        nextCursor()
         validated = true
     }
 
@@ -169,7 +219,10 @@ private constructor(
         }
 
     @JvmSynthetic
-    internal fun validity(): Int = (webhooks.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
+    internal fun validity(): Int =
+        (webhooks.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
+            (if (hasMore.asKnown().isPresent) 1 else 0) +
+            (if (nextCursor.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -178,13 +231,17 @@ private constructor(
 
         return other is WebhookListResponse &&
             webhooks == other.webhooks &&
+            hasMore == other.hasMore &&
+            nextCursor == other.nextCursor &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(webhooks, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(webhooks, hasMore, nextCursor, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "WebhookListResponse{webhooks=$webhooks, additionalProperties=$additionalProperties}"
+        "WebhookListResponse{webhooks=$webhooks, hasMore=$hasMore, nextCursor=$nextCursor, additionalProperties=$additionalProperties}"
 }

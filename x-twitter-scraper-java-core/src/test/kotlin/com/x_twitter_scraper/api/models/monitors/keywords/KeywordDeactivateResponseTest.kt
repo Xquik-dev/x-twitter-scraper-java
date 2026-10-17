@@ -29,4 +29,26 @@ internal class KeywordDeactivateResponseTest {
 
         assertThat(roundtrippedKeywordDeactivateResponse).isEqualTo(keywordDeactivateResponse)
     }
+
+    @Test
+    fun additionalFieldsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val json = """{"deletionStatus":"deleting","statusUrl":"sample"}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<KeywordDeactivateResponse>())
+
+        assertThat(model.deletionStatus()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("deletionStatus")
+        assertThat(model.statusUrl()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("statusUrl")
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
+        assertThat(
+                jsonMapper.readValue(
+                    jsonMapper.writeValueAsString(model),
+                    jacksonTypeRef<KeywordDeactivateResponse>(),
+                )
+            )
+            .isEqualTo(model)
+    }
 }

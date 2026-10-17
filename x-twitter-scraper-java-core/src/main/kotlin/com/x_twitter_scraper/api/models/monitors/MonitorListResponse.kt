@@ -18,6 +18,7 @@ import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class MonitorListResponse
@@ -25,6 +26,8 @@ class MonitorListResponse
 private constructor(
     private val monitors: JsonField<List<Monitor>>,
     private val total: JsonField<Long>,
+    private val hasMore: JsonField<Boolean>,
+    private val nextCursor: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -34,7 +37,17 @@ private constructor(
         @ExcludeMissing
         monitors: JsonField<List<Monitor>> = JsonMissing.of(),
         @JsonProperty("total") @ExcludeMissing total: JsonField<Long> = JsonMissing.of(),
-    ) : this(monitors, total, mutableMapOf())
+        @JsonProperty("hasMore") @ExcludeMissing hasMore: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("nextCursor")
+        @ExcludeMissing
+        nextCursor: JsonField<String> = JsonMissing.of(),
+    ) : this(
+        monitors,
+        total,
+        hasMore,
+        nextCursor,
+        mutableMapOf(),
+    )
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -47,6 +60,12 @@ private constructor(
      *   unexpectedly missing or null.
      */
     fun total(): Long = total.getRequired("total")
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun hasMore(): Optional<Boolean> = hasMore.getOptional("hasMore")
+
+    /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
+    fun nextCursor(): Optional<String> = nextCursor.getOptional("nextCursor")
 
     /**
      * Returns the raw JSON value of [monitors].
@@ -61,6 +80,20 @@ private constructor(
      * Unlike [total], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("total") @ExcludeMissing fun _total(): JsonField<Long> = total
+
+    /**
+     * Returns the raw JSON value of [hasMore].
+     *
+     * Unlike [hasMore], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("hasMore") @ExcludeMissing fun _hasMore(): JsonField<Boolean> = hasMore
+
+    /**
+     * Returns the raw JSON value of [nextCursor].
+     *
+     * Unlike [nextCursor], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("nextCursor") @ExcludeMissing fun _nextCursor(): JsonField<String> = nextCursor
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -93,12 +126,16 @@ private constructor(
 
         private var monitors: JsonField<MutableList<Monitor>>? = null
         private var total: JsonField<Long>? = null
+        private var hasMore: JsonField<Boolean> = JsonMissing.of()
+        private var nextCursor: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(monitorListResponse: MonitorListResponse) = apply {
             monitors = monitorListResponse.monitors.map { it.toMutableList() }
             total = monitorListResponse.total
+            hasMore = monitorListResponse.hasMore
+            nextCursor = monitorListResponse.nextCursor
             additionalProperties = monitorListResponse.additionalProperties.toMutableMap()
         }
 
@@ -125,6 +162,16 @@ private constructor(
 
         /** Sets [Builder.total] to an arbitrary JSON value. */
         fun total(total: JsonField<Long>) = apply { this.total = total }
+
+        fun hasMore(hasMore: Boolean) = hasMore(JsonField.of(hasMore))
+
+        /** Sets [Builder.hasMore] to an arbitrary JSON value. */
+        fun hasMore(hasMore: JsonField<Boolean>) = apply { this.hasMore = hasMore }
+
+        fun nextCursor(nextCursor: String) = nextCursor(JsonField.of(nextCursor))
+
+        /** Sets [Builder.nextCursor] to an arbitrary JSON value. */
+        fun nextCursor(nextCursor: JsonField<String>) = apply { this.nextCursor = nextCursor }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -162,6 +209,8 @@ private constructor(
             MonitorListResponse(
                 checkRequired("monitors", monitors).map { it.toImmutable() },
                 checkRequired("total", total),
+                hasMore,
+                nextCursor,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -183,6 +232,8 @@ private constructor(
 
         monitors().forEach { it.validate() }
         total()
+        hasMore()
+        nextCursor()
         validated = true
     }
 
@@ -197,7 +248,9 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (monitors.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
-            (if (total.asKnown().isPresent) 1 else 0)
+            (if (total.asKnown().isPresent) 1 else 0) +
+            (if (hasMore.asKnown().isPresent) 1 else 0) +
+            (if (nextCursor.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -207,13 +260,17 @@ private constructor(
         return other is MonitorListResponse &&
             monitors == other.monitors &&
             total == other.total &&
+            hasMore == other.hasMore &&
+            nextCursor == other.nextCursor &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(monitors, total, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(monitors, total, hasMore, nextCursor, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "MonitorListResponse{monitors=$monitors, total=$total, additionalProperties=$additionalProperties}"
+        "MonitorListResponse{monitors=$monitors, total=$total, hasMore=$hasMore, nextCursor=$nextCursor, additionalProperties=$additionalProperties}"
 }
