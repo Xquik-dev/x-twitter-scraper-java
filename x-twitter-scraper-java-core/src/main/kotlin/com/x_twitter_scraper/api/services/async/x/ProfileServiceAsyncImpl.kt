@@ -15,8 +15,8 @@ import com.x_twitter_scraper.api.core.http.HttpResponse
 import com.x_twitter_scraper.api.core.http.HttpResponse.Handler
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.core.http.json
-import com.x_twitter_scraper.api.core.http.multipartFormData
 import com.x_twitter_scraper.api.core.http.parseable
+import com.x_twitter_scraper.api.core.http.uploadBody
 import com.x_twitter_scraper.api.core.prepareAsync
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateAvatarParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateAvatarResponse
@@ -115,11 +115,11 @@ class ProfileServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("x", "profile", "avatar")
                     .body(
-                        if (params.file().isPresent) {
-                            multipartFormData(clientOptions.jsonMapper, params._body())
-                        } else {
-                            json(clientOptions.jsonMapper, params._body())
-                        }
+                        uploadBody(
+                            clientOptions.jsonMapper,
+                            params._body(),
+                            params.file().isPresent,
+                        )
                     )
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -152,11 +152,11 @@ class ProfileServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("x", "profile", "banner")
                     .body(
-                        if (params.file().isPresent) {
-                            multipartFormData(clientOptions.jsonMapper, params._body())
-                        } else {
-                            json(clientOptions.jsonMapper, params._body())
-                        }
+                        uploadBody(
+                            clientOptions.jsonMapper,
+                            params._body(),
+                            params.file().isPresent,
+                        )
                     )
                     .build()
                     .prepareAsync(clientOptions, params)
