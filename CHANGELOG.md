@@ -65,7 +65,7 @@ Full Changelog: [v0.10.1...v0.10.2](https://github.com/Xquik-dev/x-twitter-scrap
 
 ### Documentation
 
-* refine public Java SDK text ([#54](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/54)) ([84135cf](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/84135cffafb041380a56c23cfba830d8b9d504fd))
+* refine public Java SDK text ([84135cf](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/84135cffafb041380a56c23cfba830d8b9d504fd))
 
 ## 0.10.1 (2026-08-18)
 
@@ -82,7 +82,7 @@ Full Changelog: [v0.8.4...v0.10.0](https://github.com/Xquik-dev/x-twitter-scrape
 ### Features
 
 * add OpenSSF Gold quality gates ([f0fb44d](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/f0fb44d9b07c3c612ff9b005a694e6f838081f3a))
-* **api:** align reply extraction contracts ([#30](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/30)) ([7702591](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/7702591c9b20cabdef63849eb98419cec0ef356a))
+* **api:** align reply extraction contracts ([7702591](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/7702591c9b20cabdef63849eb98419cec0ef356a))
 * **api:** api update ([e75a791](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/e75a7919e8ff8da00ddf41ae4111e0f560c6e54a))
 * **api:** api update ([d9ec682](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/d9ec6821d543fce1a888f4d0582c3ec24f3c0564))
 * **api:** api update ([aa06dd7](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/aa06dd748fa884ccfa058fe5ed576d97fae978ef))
@@ -99,7 +99,7 @@ Full Changelog: [v0.8.4...v0.10.0](https://github.com/Xquik-dev/x-twitter-scrape
 
 * align SLF4J test provider ([e760ae0](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/e760ae0bc9ff0ecb402e6f989c319908d1282875))
 * escape ampersand in OpenAPI summaries for C# XML docs ([fb78c9a](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/fb78c9aea1252be7535e3b5efcc5f916805831d4))
-* **release:** allow Maven publication propagation ([#32](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/32)) ([efd0ddc](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/efd0ddc053c497054b01d765e7c1fbbddf5d6106))
+* **release:** allow Maven publication propagation ([efd0ddc](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/efd0ddc053c497054b01d765e7c1fbbddf5d6106))
 * remove unused async lock helper ([bf2e7a9](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/bf2e7a9d5bbfd1b53ce9bf34386a6fe0194ba73c))
 * trust verified Gradle metadata ([e0e3e87](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/e0e3e8783d7b3077af70647d8e5f67565da4bc3f))
 
@@ -129,7 +129,7 @@ Full Changelog: [v0.8.4...v0.10.0](https://github.com/Xquik-dev/x-twitter-scrape
 * add DeepWiki badge ([3b366af](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/3b366af5ff33de6e029885af3c7fedbf7c0a6b9a))
 * clarify repository discovery ([e6c115b](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/e6c115b50205ce8720f5d30c7cfdf48f780537b3))
 * correct Java test evidence count ([6e6a171](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/6e6a171d428896d32833fa94e5860c68ad7e2739))
-* map common X data tasks ([#12](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/12)) ([f3438ea](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/f3438ea480f091967958c158a10fc7722d6298fd))
+* map common X data tasks ([f3438ea](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/f3438ea480f091967958c158a10fc7722d6298fd))
 * mark Maven publication pending ([2aad6f6](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/2aad6f6d7208d90eaffbb483677cd50a34f55559))
 
 ## [0.9.1](https://github.com/stainless-sdks/x-twitter-scraper-java/compare/v0.9.0...v0.9.1) (2026-08-11)
@@ -178,7 +178,7 @@ Full Changelog: [v0.8.0...v0.8.1](https://github.com/Xquik-dev/x-twitter-scraper
 
 ### Bug Fixes
 
-* **release:** allow Maven publication propagation ([#32](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/32)) ([efd0ddc](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/efd0ddc053c497054b01d765e7c1fbbddf5d6106))
+* **release:** allow Maven publication propagation ([efd0ddc](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/efd0ddc053c497054b01d765e7c1fbbddf5d6106))
 
 ## 0.8.0 (2026-07-31)
 
@@ -186,7 +186,7 @@ Full Changelog: [v0.7.1...v0.8.0](https://github.com/Xquik-dev/x-twitter-scraper
 
 ### Features
 
-* **api:** align reply extraction contracts ([#30](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/30)) ([7702591](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/7702591c9b20cabdef63849eb98419cec0ef356a))
+* **api:** align reply extraction contracts ([7702591](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/7702591c9b20cabdef63849eb98419cec0ef356a))
 
 ## 0.7.1 (2026-07-30)
 
@@ -247,7 +247,7 @@ Full Changelog: [v0.5.1...v0.5.2](https://github.com/Xquik-dev/x-twitter-scraper
 
 ### Documentation
 
-* map common X data tasks ([#12](https://github.com/Xquik-dev/x-twitter-scraper-java/issues/12)) ([f3438ea](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/f3438ea480f091967958c158a10fc7722d6298fd))
+* map common X data tasks ([f3438ea](https://github.com/Xquik-dev/x-twitter-scraper-java/commit/f3438ea480f091967958c158a10fc7722d6298fd))
 
 ## 0.5.1 (2026-07-22)
 
