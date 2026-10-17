@@ -11,8 +11,12 @@ source "$(dirname -- "$0")/lib/api-spec.bash"
 
 cd -- "$(dirname -- "$0")/.."
 
-workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-java-api-fields.XXXXXX")"
-trap 'rm -rf -- "${workspace:?}"' EXIT
+source scripts/lib/temp-paths.bash
+
+trap remove_temp_paths EXIT
+exit_on_signals
+declare workspace
+temp_path workspace xquik-java-api-fields
 
 read_spec
 ./gradlew --quiet :x-twitter-scraper-java-core:apiFieldsClasspath >"$workspace/classpath.txt"

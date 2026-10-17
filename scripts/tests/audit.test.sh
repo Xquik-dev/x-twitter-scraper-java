@@ -19,6 +19,7 @@ day_from_today() {
 
 prepare_audit() {
     copy_file scripts/audit
+    copy_file scripts/lib/temp-paths.bash
     stub gradlew <<'EOF'
 #!/bin/sh
 echo "$*" >>"$FAKE_LOGS/gradlew"
@@ -290,6 +291,7 @@ test_a_scanner_error_blocks() {
 
     assert_equal 1 "$run_status" "the exit code"
     assert_ends_with "$run_stderr" "OSV Scanner failed with exit code 127. Fix the error above, then rerun." "stderr"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
 }
 
 test_a_license_failure_blocks_before_the_scan() {
@@ -300,6 +302,27 @@ test_a_license_failure_blocks_before_the_scan() {
 
     assert_equal 1 "$run_status" "the exit code"
     assert_equal "" "$(log_of osv-scanner)" "the scanner calls"
+}
+
+test_a_failing_step_removes_its_read_only_temp_dir() {
+    prepare_audit
+    stub gradlew < <(temp_step xquik-java-audit)
+
+    run_in_repo scripts/audit
+
+    assert_equal 37 "$run_status" "the exit code"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
+test_a_terminated_run_removes_its_read_only_temp_dir_and_exits_143() {
+    prepare_audit
+    stub gradlew < <(temp_step xquik-java-audit)
+    run_env+=("FAKE_TEMP_STEP_WAIT=1")
+
+    signal_in_repo TERM scripts/audit
+
+    assert_equal 143 "$run_status" "the exit code"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
 }
 
 run_tests

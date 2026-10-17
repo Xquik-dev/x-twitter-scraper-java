@@ -110,6 +110,7 @@ EOF
 prepare_coverage() {
     copy_file scripts/api-coverage
     copy_file scripts/lib/api-spec.bash
+    copy_file scripts/lib/temp-paths.bash
     write_client_options "https://xquik.com/api/v1"
     write_tweet_service
     covered_spec
@@ -157,6 +158,7 @@ EOF
     assert_fails_with "GET /api/v1/x/trends/history (getXTrendsHistory) is in the API but not in the SDK.
 GET /api/v1/x/trends/locations is in the API but not in the SDK.
 $missing_next_step"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
 }
 
 test_an_exclusion_the_api_no_longer_has_fails() {
@@ -556,6 +558,27 @@ EOF
 
     assert_fails_with "$api_root/services/blocking/XServiceImpl.kt:8 adds path segments a second time in 1 HttpRequest.builder() chain.
 $api_root/services/blocking/XServiceImpl.kt:16 sets a second request method in 1 HttpRequest.builder() chain."
+}
+
+test_a_failing_step_removes_its_read_only_temp_dir() {
+    prepare_coverage
+    fake awk < <(temp_step xquik-java-api-coverage)
+
+    run_in_repo scripts/api-coverage
+
+    assert_equal 37 "$run_status" "the exit code"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
+test_a_terminated_run_removes_its_read_only_temp_dir_and_exits_143() {
+    prepare_coverage
+    fake awk < <(temp_step xquik-java-api-coverage)
+    run_env+=("FAKE_TEMP_STEP_WAIT=1")
+
+    signal_in_repo TERM scripts/api-coverage
+
+    assert_equal 143 "$run_status" "the exit code"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
 }
 
 run_tests

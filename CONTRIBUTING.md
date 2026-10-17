@@ -69,6 +69,8 @@ CodeQL and REUSE are required, and any finding fails the run.
 A file that CodeQL reads only in part, or skips, fails it too.
 CodeQL traces a Gradle build of a copy of the source files, so your working tree and its checksum metadata stay unchanged.
 The run fails when a check changed or added files in a clean working tree.
+The check and release scripts remove temporary paths on every exit, including failures and signals.
+Temporary reports are removed when each script exits.
 
 The dependency audit checks licenses, then scans every lockfile with OSV Scanner.
 It passes the scanner each `gradle.lockfile` and `gradle/verification-metadata.xml` that Git does not ignore, so other worktrees under `.claude/worktrees` stay out.

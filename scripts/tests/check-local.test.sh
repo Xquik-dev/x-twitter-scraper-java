@@ -27,6 +27,7 @@ readonly passed_line="Passed API coverage, API fields, lint, shellcheck, script 
 prepare_checks() {
     local name
     copy_file bin/check-local
+    copy_file scripts/lib/temp-paths.bash
     for name in api-coverage api-fields lint test-scripts build coverage fuzz audit check-reproducible codeql; do
         stub "scripts/$name" <<EOF
 #!/usr/bin/env bash
@@ -112,6 +113,7 @@ EOF
     run_in_repo bin/check-local --no-status
 
     assert_equal 0 "$run_status" "the exit code"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
     assert_equal "--external-sources bin/check-local scripts/api-coverage scripts/api-fields scripts/audit scripts/build scripts/check-reproducible scripts/codeql scripts/coverage scripts/fuzz scripts/lint scripts/test scripts/test-scripts scripts/tests/sample.test.sh" \
         "$(log_of shellcheck)" "the shellcheck call"
 }
@@ -216,6 +218,98 @@ test_an_api_fields_failure_stops_the_run_before_the_slow_checks() {
 api-fields" "$(log_of order)" "the checks that ran"
 }
 
+test_a_failing_check_removes_its_temp_dir() {
+    prepare_checks
+    stub scripts/lint < <(temp_step xquik-java-check)
+
+    run_in_repo bin/check-local --no-status
+
+    assert_equal 37 "$run_status" "the exit code"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
+test_a_chmod_failure_still_removes_temp_dirs_and_posts_the_check_failure() {
+    local head
+    prepare_checks
+    head="$(sandbox_git rev-parse HEAD)"
+    run_env+=("FAKE_FAILING_CHECK=lint")
+    fake chmod <<'EOF'
+#!/bin/sh
+echo "Permission denied." >&2
+exit 41
+EOF
+
+    run_in_repo bin/check-local
+
+    assert_equal 1 "$run_status" "the exit code"
+    assert_equal "Check failed at Java and Kotlin formatting. Run ./scripts/format, then rerun." "$run_stderr" "stderr"
+    assert_equal "repos/Xquik-dev/x-twitter-scraper-java/statuses/$head pending Local checks are running.
+repos/Xquik-dev/x-twitter-scraper-java/statuses/$head failure Failed at Java and Kotlin formatting." \
+        "$(log_of gh)" "the posted statuses"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
+test_temp_path_assigns_and_tracks_each_directory() {
+    copy_file scripts/lib/temp-paths.bash
+
+    stub scripts/allocate-temp-paths <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+source scripts/lib/temp-paths.bash
+trap remove_temp_paths EXIT
+temp_path first xquik-java-first
+temp_path second xquik-java-second
+[[ -d "$first" && -d "$second" ]]
+[[ "$first" == "$TMPDIR/xquik-java-first."* ]]
+[[ "$second" == "$TMPDIR/xquik-java-second."* ]]
+[[ "${#temp_paths[@]}" -eq 2 ]]
+[[ "${temp_paths[0]}" == "$first" && "${temp_paths[1]}" == "$second" ]]
+EOF
+
+    run_in_repo scripts/allocate-temp-paths
+
+    assert_equal 0 "$run_status" "the exit code"
+    assert_equal "" "$run_stderr" "stderr"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
+test_a_temp_path_creation_failure_stops_before_the_next_command() {
+    copy_file scripts/lib/temp-paths.bash
+    fake mktemp <<'EOF'
+#!/bin/sh
+echo "Could not create a temporary directory." >&2
+exit 23
+EOF
+
+    stub scripts/allocate-temp-path <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+source scripts/lib/temp-paths.bash
+trap remove_temp_paths EXIT
+temp_path workspace xquik-java-check
+echo ran >"$FAKE_LOGS/after-temp-path"
+EOF
+
+    run_in_repo scripts/allocate-temp-path
+
+    assert_equal 23 "$run_status" "the exit code"
+    assert_equal "Could not create a temporary directory." "$run_stderr" "stderr"
+    assert_equal "" "$(log_of after-temp-path)" "the command after the allocation"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
+test_a_terminated_run_removes_its_temp_dir_and_exits_143() {
+    prepare_checks
+    stub scripts/lint < <(temp_step xquik-java-check)
+    run_env+=("FAKE_TEMP_STEP_WAIT=1")
+
+    signal_in_repo TERM bin/check-local --no-status
+
+    assert_equal 143 "$run_status" "the exit code"
+    assert_contains "$run_stderr" "Check failed at Java and Kotlin formatting. Run ./scripts/format, then rerun." "stderr"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
 test_a_failing_check_stops_the_run_and_posts_a_failure_status_that_names_it() {
     local head
     prepare_checks
@@ -286,6 +380,66 @@ test_an_unknown_option_stops_with_the_usage_line() {
     assert_equal 2 "$run_status" "the exit code"
     assert_equal "Unknown option --fast. Run bin/check-local or bin/check-local --no-status." "$run_stderr" "stderr"
     assert_equal "" "$(log_of order)" "the checks that ran"
+}
+
+test_a_hung_up_run_removes_its_temp_dir_and_exits_129() {
+    prepare_checks
+    stub scripts/lint < <(temp_step xquik-java-check)
+    run_env+=("FAKE_TEMP_STEP_WAIT=1")
+
+    signal_in_repo HUP bin/check-local --no-status
+
+    assert_equal 129 "$run_status" "the exit code"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
+test_an_interrupted_run_removes_its_temp_dir_and_dies_by_sigint() {
+    prepare_checks
+    stub scripts/lint < <(temp_step xquik-java-check)
+    run_env+=("FAKE_TEMP_STEP_WAIT=1")
+
+    signal_in_repo INT bin/check-local --no-status
+
+    assert_equal 130 "$run_status" "the SIGINT wait status"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
+test_an_interrupted_run_stops_its_bash_parent_before_the_next_command() {
+    prepare_checks
+    stub scripts/lint < <(temp_step xquik-java-check)
+    run_env+=("FAKE_TEMP_STEP_WAIT=1")
+
+    signal_in_repo INT bash -c "bin/check-local --no-status; echo ran >\"\$FAKE_LOGS/after-check\""
+
+    assert_equal 130 "$run_status" "the SIGINT wait status"
+    assert_equal "" "$(log_of after-check)" "the command after the check"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
+prepare_reproducibility() {
+    copy_file scripts/check-reproducible
+    copy_file scripts/lib/temp-paths.bash
+    stub gradlew < <(temp_step xquik-java-reproducibility)
+    sandbox_git init --quiet --initial-branch=main
+}
+
+test_a_failing_reproducible_build_removes_its_read_only_temp_dir() {
+    prepare_reproducibility
+
+    run_in_repo scripts/check-reproducible
+
+    assert_equal 37 "$run_status" "the exit code"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
+test_a_terminated_reproducible_build_removes_its_read_only_temp_dir_and_exits_143() {
+    prepare_reproducibility
+    run_env+=("FAKE_TEMP_STEP_WAIT=1")
+
+    signal_in_repo TERM scripts/check-reproducible
+
+    assert_equal 143 "$run_status" "the exit code"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
 }
 
 run_tests

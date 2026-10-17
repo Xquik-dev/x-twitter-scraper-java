@@ -8,10 +8,12 @@ set -euo pipefail
 
 cd -- "$(dirname -- "$0")/.."
 
-reproducibility_workspace="$(
-    mktemp -d "${TMPDIR:-/tmp}/xquik-java-reproducibility.XXXXXX"
-)"
-trap 'rm -rf -- "$reproducibility_workspace"' EXIT
+source scripts/lib/temp-paths.bash
+
+trap remove_temp_paths EXIT
+exit_on_signals
+declare reproducibility_workspace
+temp_path reproducibility_workspace xquik-java-reproducibility
 
 copy_source() {
     local destination="$1"

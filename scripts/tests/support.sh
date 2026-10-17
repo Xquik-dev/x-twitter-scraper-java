@@ -7,13 +7,15 @@
 tests_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)"
 readonly tests_root
 
+source "$tests_root/scripts/lib/temp-paths.bash"
+
 readonly local_tools=(bash git jq)
 
 readonly remote_tools=(codeql curl gh gpg java security shellcheck uvx)
 
 create_sandbox() {
     local tool tool_path
-    sandbox="$(mktemp -d "${TMPDIR:-/tmp}/xquik-java-script-test.XXXXXX")"
+    temp_path sandbox xquik-java-script-test
     sandbox="$(cd -- "$sandbox" && pwd -P)"
     sandbox_repo="$sandbox/repo"
     sandbox_bin="$sandbox/bin"
@@ -36,7 +38,11 @@ create_sandbox() {
 }
 
 remove_sandbox() {
-    rm -rf -- "${sandbox:?}"
+    if [[ -n "${run_pid:-}" ]]; then
+        kill -TERM -- "-$run_pid" 2>/dev/null || true
+        wait "$run_pid" 2>/dev/null || true
+    fi
+    remove_temp_paths
 }
 
 fake() {
@@ -89,26 +95,88 @@ add_origin() {
     sandbox_git push --quiet origin main
 }
 
+repo_command() {
+    cd -- "$sandbox_repo"
+    exec env -i \
+        FAKE_LOGS="$sandbox_logs" \
+        GIT_AUTHOR_EMAIL="tester@example.com" \
+        GIT_AUTHOR_NAME="Script Tester" \
+        GIT_COMMITTER_EMAIL="tester@example.com" \
+        GIT_COMMITTER_NAME="Script Tester" \
+        GIT_CONFIG_GLOBAL=/dev/null \
+        GIT_CONFIG_NOSYSTEM=1 \
+        HOME="$sandbox/home" \
+        PATH="$sandbox_bin:/usr/bin:/bin" \
+        TMPDIR="$sandbox/tmp" \
+        ${run_env[@]+"${run_env[@]}"} \
+        "$@"
+}
+
 run_in_repo() {
     run_status=0
-    (
-        cd -- "$sandbox_repo"
-        env -i \
-            FAKE_LOGS="$sandbox_logs" \
-            GIT_AUTHOR_EMAIL="tester@example.com" \
-            GIT_AUTHOR_NAME="Script Tester" \
-            GIT_COMMITTER_EMAIL="tester@example.com" \
-            GIT_COMMITTER_NAME="Script Tester" \
-            GIT_CONFIG_GLOBAL=/dev/null \
-            GIT_CONFIG_NOSYSTEM=1 \
-            HOME="$sandbox/home" \
-            PATH="$sandbox_bin:/usr/bin:/bin" \
-            TMPDIR="$sandbox/tmp" \
-            ${run_env[@]+"${run_env[@]}"} \
-            "$@"
-    ) >"$sandbox/stdout" 2>"$sandbox/stderr" </dev/null || run_status=$?
+    (repo_command "$@") >"$sandbox/stdout" 2>"$sandbox/stderr" </dev/null || run_status=$?
     run_stdout="$(cat "$sandbox/stdout")"
     run_stderr="$(cat "$sandbox/stderr")"
+}
+
+start_in_repo() {
+    set -m
+    (repo_command "$@") >"$sandbox/stdout" 2>"$sandbox/stderr" </dev/null &
+    run_pid=$!
+    set +m
+}
+
+finish_run() {
+    run_status=0
+    wait "$run_pid" || run_status=$?
+    run_pid=""
+    run_stdout="$(cat "$sandbox/stdout")"
+    run_stderr="$(cat "$sandbox/stderr")"
+}
+
+signal_in_repo() {
+    local signal="$1"
+    shift
+    start_in_repo "$@"
+    wait_for_log temp-step-started
+    kill -"$signal" -- "-$run_pid"
+    finish_run
+}
+
+temp_step() {
+    cat <<EOF
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+paths=("\$TMPDIR"/$1.*)
+EOF
+    cat <<'EOF'
+[[ "${#paths[@]}" -eq 1 && -d "${paths[0]}" ]]
+mkdir -p "${paths[0]}/cache"
+echo "Read-only cache." >"${paths[0]}/cache/entry"
+chmod -R a-w "${paths[0]}/cache"
+if [[ "${FAKE_TEMP_STEP_WAIT:-}" == 1 ]]; then
+    touch "$FAKE_LOGS/temp-step-started"
+    sleep 30
+fi
+exit 37
+EOF
+}
+
+wait_for_log() {
+    local tries=0
+    until [[ -f "$sandbox_logs/$1" ]]; do
+        tries=$((tries + 1))
+        if ((tries > 300)); then
+            fail_test "The run never wrote the $1 log."
+        fi
+        sleep 0.1
+    done
+}
+
+temp_entries() {
+    ls -A "$sandbox/tmp"
 }
 
 log_of() {
@@ -175,8 +243,9 @@ run_tests() {
         set +e
         (
             set -euo pipefail
-            create_sandbox
             trap remove_sandbox EXIT
+            exit_on_signals
+            create_sandbox
             "$name"
         )
         status=$?

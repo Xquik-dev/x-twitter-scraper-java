@@ -8,6 +8,8 @@ set -euo pipefail
 
 cd -- "$(dirname -- "$0")/.."
 
+source scripts/lib/temp-paths.bash
+
 release_ref="${1:-}"
 if [[ ! "$release_ref" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-+][0-9A-Za-z.+-]+)?$ ]]; then
     echo "Pass a valid v-prefixed release version." >&2
@@ -22,11 +24,11 @@ expected_fingerprint="6965E561C0ACEE32060AB961D2037E4157E62A59"
 verification_timeout_minutes=20
 retry_delay_seconds=15
 max_attempts=$((verification_timeout_minutes * 60 / retry_delay_seconds))
-verification_workspace="$(
-    mktemp -d "/tmp/xquik-java-verify.XXXXXX"
-)"
+trap remove_temp_paths EXIT
+exit_on_signals
+declare verification_workspace
+temp_path verification_workspace xquik-java-verify
 verification_gnupg="$verification_workspace/gnupg"
-trap 'rm -rf -- "$verification_workspace"' EXIT
 mkdir -m 700 "$verification_gnupg"
 
 for ((attempt = 1; attempt <= max_attempts; attempt++)); do

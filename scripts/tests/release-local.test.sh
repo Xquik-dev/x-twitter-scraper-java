@@ -87,6 +87,7 @@ EOF
 
 prepare_release() {
     copy_file bin/release-local
+    copy_file scripts/lib/temp-paths.bash
     copy_file scripts/maven-listing
     stub bin/check-local <<'EOF'
 #!/bin/sh
@@ -189,6 +190,9 @@ echo "${line# }" >>"$FAKE_LOGS/gh"
 EOF
     write_maven_fixture
     run_env=("FAKE_MAVEN_FIXTURE=$sandbox/maven-fixture")
+    if [[ "${1:-}" == temp-step ]]; then
+        stub bin/check-local < <(temp_step xquik-java-release)
+    fi
     commit_repo
     add_origin
 }
@@ -341,6 +345,7 @@ test_a_failed_signature_check_after_the_upload_stops_before_the_tag() {
     assert_equal "" "$(origin_tags)" "the tags on origin"
     assert_equal "" "$(log_of gh)" "the GitHub release calls"
     assert_no_secret_leaked
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
 }
 
 test_a_central_error_stops_the_release_before_the_checks() {
@@ -446,6 +451,25 @@ test_an_unknown_option_stops_with_the_usage_line() {
 
     assert_equal 2 "$run_status" "the exit code"
     assert_equal "Unknown option --force. Run bin/release-local or bin/release-local --dry-run." "$run_stderr" "stderr"
+}
+
+test_a_failing_step_removes_its_read_only_temp_dir() {
+    prepare_release temp-step
+
+    run_in_repo bin/release-local --dry-run
+
+    assert_equal 37 "$run_status" "the exit code"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
+}
+
+test_a_terminated_run_removes_its_read_only_temp_dir_and_exits_143() {
+    prepare_release temp-step
+    run_env+=("FAKE_TEMP_STEP_WAIT=1")
+
+    signal_in_repo TERM bin/release-local --dry-run
+
+    assert_equal 143 "$run_status" "the exit code"
+    assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
 }
 
 run_tests
