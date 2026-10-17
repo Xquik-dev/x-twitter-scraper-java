@@ -16,6 +16,18 @@ fun <T : Any> checkRequired(name: String, value: T?): T =
     checkNotNull(value) { "`$name` is required, but was not set" }
 
 @JvmSynthetic
+internal fun checkExactlyOne(
+    firstName: String,
+    first: MultipartField<*>,
+    secondName: String,
+    second: MultipartField<*>,
+) {
+    val hasFirst = !first.value.isMissing() && !first.value.isNull()
+    val hasSecond = !second.value.isMissing() && !second.value.isNull()
+    check(hasFirst xor hasSecond) { "Exactly one of `$firstName` or `$secondName` must be set" }
+}
+
+@JvmSynthetic
 internal fun <T : Any> checkKnown(name: String, value: JsonField<T>): T =
     value.asKnown().orElseThrow {
         IllegalStateException("`$name` is not a known type: ${value.javaClass.simpleName}")

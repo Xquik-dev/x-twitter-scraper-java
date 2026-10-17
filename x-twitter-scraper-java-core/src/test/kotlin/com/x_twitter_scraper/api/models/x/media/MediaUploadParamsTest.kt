@@ -10,6 +10,8 @@ import java.io.InputStream
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatIllegalStateException
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 
 internal class MediaUploadParamsTest {
 
@@ -97,6 +99,35 @@ internal class MediaUploadParamsTest {
         assertThatIllegalStateException().isThrownBy {
             MediaUploadParams.builder().account("sample").idempotencyKey("sample").build()
         }
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun rejectsLongVideoWithoutFile(isLongVideo: Boolean) {
+        assertThatIllegalStateException()
+            .isThrownBy {
+                MediaUploadParams.builder()
+                    .account("sample")
+                    .idempotencyKey("sample")
+                    .url("https://example.com/video.mp4")
+                    .isLongVideo(isLongVideo)
+                    .build()
+            }
+            .withMessage("`isLongVideo` requires `file`")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun bodyRejectsLongVideoWithoutFile(isLongVideo: Boolean) {
+        assertThatIllegalStateException()
+            .isThrownBy {
+                MediaUploadParams.Body.builder()
+                    .account("sample")
+                    .url("https://example.com/video.mp4")
+                    .isLongVideo(isLongVideo)
+                    .build()
+            }
+            .withMessage("`isLongVideo` requires `file`")
     }
 
     @Test

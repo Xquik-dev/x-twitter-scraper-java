@@ -12,6 +12,7 @@
 * `MediaUploadParams`, `ProfileUpdateAvatarParams` and `ProfileUpdateBannerParams` take exactly 1 of `url` or `file`, so their `url()` getters return `Optional<String>`. Builders that set `url` keep working.
 * `UserRetrieveInsightsResponse.Insights.builder()` requires `medianViews`, which the API always sends. Code that builds it by hand must set it.
 * `TweetSearchParams.q()` returns `Optional<String>`, and `TweetSearchParams.builder()` no longer requires `q`, since the API can build the search from `fromUser`, `keywords` or another field. Code that reads `q()` must change. A search with no query field still answers `missing_query`.
+* Media uploads now reject `isLongVideo` without a file.
 
 ### Security
 
@@ -87,7 +88,7 @@
 
 * `TicketCreateParams` and `TicketReplyParams` throw from `build()` when `body` is blank and no attachment is set, with the same "At least one of `body` or `attachments` must be set" error. The API rejects such a ticket or reply with a 400.
 * Ticket creation sends default attachment streams as `application/octet-stream` with a neutral filename so the server can detect their type.
-* Media, avatar and banner uploads detect file types from stream headers and preserve every byte, including MP4 streams for long videos.
+* Media, avatar and banner uploads detect supported image formats and MP4 brands from stream headers and preserve every byte. Other `ftyp` brands use `application/octet-stream` with the filename `upload`.
 * Follower, following and verified follower response unions select the coverage variant when the response contains `diagnostic`.
 * `XAccount` and `XAccountDetail` drop a timestamp field the API stopped returning.
 * Reading the generic types of a raw response's class no longer throws `TypeNotPresentException`.
