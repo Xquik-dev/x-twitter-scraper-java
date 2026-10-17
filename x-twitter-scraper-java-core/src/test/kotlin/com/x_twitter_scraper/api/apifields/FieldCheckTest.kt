@@ -4,7 +4,15 @@
 
 package com.x_twitter_scraper.api.apifields
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.x_twitter_scraper.api.core.JsonMissing
+import com.x_twitter_scraper.api.core.MultipartField
+import com.x_twitter_scraper.api.core.Params
+import com.x_twitter_scraper.api.core.checkExactlyOne
+import com.x_twitter_scraper.api.core.checkRequired
+import com.x_twitter_scraper.api.core.http.Headers
+import com.x_twitter_scraper.api.core.http.QueryParams
 import com.x_twitter_scraper.api.models.credits.CreditRetrieveBalanceResponse
 import com.x_twitter_scraper.api.models.drafts.DraftCreateParams
 import com.x_twitter_scraper.api.models.trends.TrendListResponse
@@ -15,6 +23,7 @@ import com.x_twitter_scraper.api.models.x.spaces.SpaceSearchParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse
 import java.io.File
+import java.io.InputStream
 import java.nio.file.Files
 import kotlin.test.assertFailsWith
 import org.assertj.core.api.Assertions.assertThat
@@ -74,6 +83,45 @@ internal class FieldCheckTest {
             .isEqualTo(
                 "The SDK's fields match the API for 1 operation, and accepted-field-differences.json lists 0 accepted differences."
             )
+    }
+
+    @Test
+    fun reportsLongVideoInJsonWhenTheBuilderHasNoRequiresRule() {
+        val spec = ObjectMapper().readTree("""{"paths": {$mediaUpload}}""")
+        val path = spec.at("/paths/~1api~1v1~1x~1media")
+        val operation = SpecShapes(spec).operation(path, path.get("post"), "application/json")
+        val shapes = SdkShapes()
+        val (query, body) = shapes.params(UploadWithoutRequires::class.java, "url")
+
+        assertThat(
+                compareOperation(operation, SdkOperation(query, body, null), shapes.defs).map {
+                    "${it.side} ${it.kind} ${it.path}"
+                }
+            )
+            .containsExactly("request extra is_long_video")
+
+        val (checkedQuery, checkedBody) = shapes.params(MediaUploadParams::class.java, "url")
+
+        assertThat(
+                compareOperation(
+                    operation,
+                    SdkOperation(checkedQuery, checkedBody, null),
+                    shapes.defs,
+                )
+            )
+            .isEmpty()
+    }
+
+    @Test
+    fun setsDependentFieldsOnlyForTheRequiredInput() {
+        listOf("url", "file").forEach { input ->
+            val builder =
+                SdkShapes().newParams(MediaUploadParams::class.java, input).builder
+                    as MediaUploadParams.Builder
+
+            assertThat(builder.build()._body().containsKey("is_long_video"))
+                .isEqualTo(input == "file")
+        }
     }
 
     @Test
@@ -300,5 +348,97 @@ internal class FieldCheckTest {
                     }
                 }
             }
+    }
+
+    class UploadWithoutRequires private constructor(private val body: Body) : Params {
+
+        fun _account(): MultipartField<String> = body._account()
+
+        fun _url(): MultipartField<String> = body._url()
+
+        fun _file(): MultipartField<InputStream> = body._file()
+
+        fun _isLongVideo(): MultipartField<Boolean> = body._isLongVideo()
+
+        fun _body(): Map<String, MultipartField<*>> =
+            mapOf(
+                    "account" to _account(),
+                    "url" to _url(),
+                    "file" to _file(),
+                    "is_long_video" to _isLongVideo(),
+                )
+                .filterValues { !it.value.isMissing() }
+
+        override fun _headers(): Headers = Headers.builder().build()
+
+        override fun _queryParams(): QueryParams = QueryParams.builder().build()
+
+        fun toBuilder(): Builder = Builder(body.toBuilder())
+
+        companion object {
+
+            @JvmStatic fun builder() = Builder()
+        }
+
+        class Builder(private val body: Body.Builder = Body.builder()) {
+
+            fun account(account: String) = apply { body.account(account) }
+
+            fun url(url: String) = apply { body.url(url) }
+
+            fun file(file: InputStream) = apply { body.file(file) }
+
+            fun isLongVideo(isLongVideo: Boolean) = apply { body.isLongVideo(isLongVideo) }
+
+            fun build(): UploadWithoutRequires = UploadWithoutRequires(body.build())
+        }
+
+        class Body
+        private constructor(
+            private val account: MultipartField<String>,
+            private val url: MultipartField<String>,
+            private val file: MultipartField<InputStream>,
+            private val isLongVideo: MultipartField<Boolean>,
+        ) {
+
+            @JsonProperty("account") fun _account(): MultipartField<String> = account
+
+            @JsonProperty("url") fun _url(): MultipartField<String> = url
+
+            @JsonProperty("file") fun _file(): MultipartField<InputStream> = file
+
+            @JsonProperty("is_long_video") fun _isLongVideo(): MultipartField<Boolean> = isLongVideo
+
+            fun toBuilder(): Builder = Builder(account, url, file, isLongVideo)
+
+            companion object {
+
+                @JvmStatic fun builder() = Builder()
+            }
+
+            class Builder(
+                private var account: MultipartField<String>? = null,
+                private var url: MultipartField<String> = MultipartField.of(JsonMissing.of()),
+                private var file: MultipartField<InputStream> = MultipartField.of(JsonMissing.of()),
+                private var isLongVideo: MultipartField<Boolean> =
+                    MultipartField.of(JsonMissing.of()),
+            ) {
+
+                fun account(account: String) = apply { this.account = MultipartField.of(account) }
+
+                fun url(url: String) = apply { this.url = MultipartField.of(url) }
+
+                fun file(file: InputStream) = apply { this.file = MultipartField.of(file) }
+
+                fun isLongVideo(isLongVideo: Boolean) = apply {
+                    this.isLongVideo = MultipartField.of(isLongVideo)
+                }
+
+                fun build(): Body {
+                    checkExactlyOne("url", url, "file", file)
+                    return Body(checkRequired("account", account), url, file, isLongVideo)
+                }
+            }
+        }
     }
 }
