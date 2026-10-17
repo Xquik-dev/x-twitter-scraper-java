@@ -231,10 +231,7 @@ private constructor(
             )
     }
 
-    fun _body(): Optional<Body> =
-        Optional.of(body).filter {
-            !it._accountIds().isMissing() || it._additionalProperties().isNotEmpty()
-        }
+    fun _body(): Body = body
 
     override fun _headers(): Headers = additionalHeaders
 
