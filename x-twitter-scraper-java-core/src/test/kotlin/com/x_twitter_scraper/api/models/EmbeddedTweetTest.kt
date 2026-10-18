@@ -802,6 +802,7 @@ internal class EmbeddedTweetTest {
                       "quoteCount": 1,
                       "viewCount": 1500,
                       "bookmarkCount": 2,
+                      "unknownCounts": ["bookmarkCount"],
                       "author": {
                         "id": "11348282",
                         "username": "NASA",
@@ -899,6 +900,7 @@ internal class EmbeddedTweetTest {
         embeddedTweet.validate()
         assertThat(embeddedTweet.id()).isEqualTo("1234567890")
         assertThat(embeddedTweet.bookmarkCount()).isEqualTo(2L)
+        assertThat(embeddedTweet.unknownCounts()).contains(listOf(UnknownCount.BOOKMARK_COUNT))
         assertThat(embeddedTweet.likeCount()).isEqualTo(42L)
         assertThat(embeddedTweet.quoteCount()).isEqualTo(1L)
         assertThat(embeddedTweet.replyCount()).isEqualTo(3L)
