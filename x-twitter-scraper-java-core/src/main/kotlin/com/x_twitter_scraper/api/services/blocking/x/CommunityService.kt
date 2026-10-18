@@ -166,7 +166,10 @@ interface CommunityService {
     fun listTopics(requestOptions: RequestOptions): CommunityListTopicsResponse =
         listTopics(CommunityListTopicsParams.none(), requestOptions)
 
-    /** Read community activity for X's latest period. Each request costs 1 credit. */
+    /**
+     * Returns community activity for X's latest period. Includes likes, new members, posts, replies
+     * & unique posters. Each metric has a count and a changePercent. Each request costs 1 credit.
+     */
     fun retrieveAnalytics(id: String): CommunityAnalytics =
         retrieveAnalytics(id, CommunityRetrieveAnalyticsParams.none())
 
@@ -489,7 +492,10 @@ interface CommunityService {
         ): HttpResponseFor<CommunityListTopicsResponse> =
             listTopics(CommunityListTopicsParams.none(), requestOptions)
 
-        /** Read community analytics with its raw HTTP response. */
+        /**
+         * Returns a raw HTTP response for `get /x/communities/{id}/analytics`, but is otherwise the
+         * same as [CommunityService.retrieveAnalytics].
+         */
         @MustBeClosed
         fun retrieveAnalytics(id: String): HttpResponseFor<CommunityAnalytics> =
             retrieveAnalytics(id, CommunityRetrieveAnalyticsParams.none())

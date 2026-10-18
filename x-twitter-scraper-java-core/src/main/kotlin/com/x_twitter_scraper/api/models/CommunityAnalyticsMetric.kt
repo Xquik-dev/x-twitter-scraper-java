@@ -17,7 +17,7 @@ import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.util.Collections
 import java.util.Objects
 
-/** Describe a community metric and its percent change for X's latest period. */
+/** A community metric for X's latest period & its percent change. */
 class CommunityAnalyticsMetric
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -35,32 +35,32 @@ private constructor(
     ) : this(count, changePercent, mutableMapOf())
 
     /**
-     * Count the total for this metric during X's latest period.
+     * Total for this metric during X's latest period.
      *
-     * @throws XTwitterScraperInvalidDataException if this field is missing, null or has an
-     *   unexpected type.
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null.
      */
     fun count(): Long = count.getRequired("count")
 
     /**
-     * Compare this figure with 1 day earlier. Keep the percentage unrounded.
+     * Change in percent from the same figure 1 day earlier. Values stay unrounded.
      *
-     * @throws XTwitterScraperInvalidDataException if this field is missing, null or has an
-     *   unexpected type.
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null.
      */
     fun changePercent(): Double = changePercent.getRequired("changePercent")
 
     /**
-     * Return the raw JSON value of [count].
+     * Returns the raw JSON value of [count].
      *
-     * This method accepts unexpected field types.
+     * Unlike [count], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("count") @ExcludeMissing fun _count(): JsonField<Long> = count
 
     /**
-     * Return the raw JSON value of [changePercent].
+     * Returns the raw JSON value of [changePercent].
      *
-     * This method accepts unexpected field types.
+     * Unlike [changePercent], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("changePercent")
     @ExcludeMissing
@@ -81,10 +81,9 @@ private constructor(
     companion object {
 
         /**
-         * Return a mutable builder for [CommunityAnalyticsMetric].
+         * Returns a mutable builder for constructing an instance of [CommunityAnalyticsMetric].
          *
-         * Set these required fields.
-         *
+         * The following fields are required:
          * ```java
          * .count()
          * .changePercent()
@@ -107,13 +106,13 @@ private constructor(
             additionalProperties = communityAnalyticsMetric.additionalProperties.toMutableMap()
         }
 
-        /** Count the total for this metric during X's latest period. */
+        /** Total for this metric during X's latest period. */
         fun count(count: Long) = count(JsonField.of(count))
 
         /** Sets [Builder.count] to an arbitrary JSON value. */
         fun count(count: JsonField<Long>) = apply { this.count = count }
 
-        /** Compare this figure with 1 day earlier. Keep the percentage unrounded. */
+        /** Change in percent from the same figure 1 day earlier. Values stay unrounded. */
         fun changePercent(changePercent: Double) = changePercent(JsonField.of(changePercent))
 
         /** Sets [Builder.changePercent] to an arbitrary JSON value. */
@@ -141,9 +140,15 @@ private constructor(
         }
 
         /**
-         * Return an immutable [CommunityAnalyticsMetric].
+         * Returns an immutable instance of [CommunityAnalyticsMetric].
          *
-         * Later builder changes leave this instance unchanged.
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .count()
+         * .changePercent()
+         * ```
          *
          * @throws IllegalStateException if any required field is unset.
          */
@@ -158,11 +163,12 @@ private constructor(
     private var validated: Boolean = false
 
     /**
-     * Validate every field and nested value.
+     * Validates that the types of all values in this object match their expected types recursively.
      *
-     * New types for existing fields can fail validation.
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
      *
-     * @throws XTwitterScraperInvalidDataException if any field has an unexpected type.
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
      */
     fun validate(): CommunityAnalyticsMetric = apply {
         if (validated) {

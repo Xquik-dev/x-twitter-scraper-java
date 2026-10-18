@@ -11,7 +11,10 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Read community activity for X's latest period. Each request costs 1 credit. */
+/**
+ * Returns community activity for X's latest period. Includes likes, new members, posts, replies &
+ * unique posters. Each metric has a count and a changePercent. Each request costs 1 credit.
+ */
 class CommunityRetrieveAnalyticsParams
 private constructor(
     private val id: String?,
@@ -24,12 +27,18 @@ private constructor(
     fun id(): Optional<String> = Optional.ofNullable(id)
 
     /**
-     * Keep these comma-separated fields in each row. Use dots for nested fields. Required getters
-     * throw when omitted fields are missing. Response validation then fails.
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+     * author.username. A list keeps the field in each item. Case & underscores do not matter. A row
+     * that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name
+     * answers 400 unknown_field with the valid names, before any read. The price stays the same. A
+     * required getter throws when you leave its field out, and response validation fails.
      */
     fun fields(): Optional<String> = Optional.ofNullable(fields)
 
-    /** Drop these comma-separated fields from each row, including fields kept by fields. */
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+     * fields, it drops from the kept fields.
+     */
     fun omit(): Optional<String> = Optional.ofNullable(omit)
 
     /** Additional headers to send with the request. */
@@ -44,7 +53,10 @@ private constructor(
 
         @JvmStatic fun none(): CommunityRetrieveAnalyticsParams = builder().build()
 
-        /** Return a mutable builder for [CommunityRetrieveAnalyticsParams]. */
+        /**
+         * Returns a mutable builder for constructing an instance of
+         * [CommunityRetrieveAnalyticsParams].
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -74,15 +86,22 @@ private constructor(
         fun id(id: Optional<String>) = id(id.getOrNull())
 
         /**
-         * Keep these comma-separated fields in each row. Use dots for nested fields. Required
-         * getters throw when omitted fields are missing. Response validation then fails.
+         * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+         * author.username. A list keeps the field in each item. Case & underscores do not matter. A
+         * row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An
+         * unknown name answers 400 unknown_field with the valid names, before any read. The price
+         * stays the same. A required getter throws when you leave its field out, and response
+         * validation fails.
          */
         fun fields(fields: String?) = apply { this.fields = fields }
 
         /** Alias for calling [Builder.fields] with `fields.orElse(null)`. */
         fun fields(fields: Optional<String>) = fields(fields.getOrNull())
 
-        /** Drop these comma-separated fields from each row, including fields kept by fields. */
+        /**
+         * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+         * fields, it drops from the kept fields.
+         */
         fun omit(omit: String?) = apply { this.omit = omit }
 
         /** Alias for calling [Builder.omit] with `omit.orElse(null)`. */

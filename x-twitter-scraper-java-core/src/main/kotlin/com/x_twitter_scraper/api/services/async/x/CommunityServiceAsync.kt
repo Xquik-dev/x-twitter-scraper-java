@@ -175,7 +175,10 @@ interface CommunityServiceAsync {
     fun listTopics(requestOptions: RequestOptions): CompletableFuture<CommunityListTopicsResponse> =
         listTopics(CommunityListTopicsParams.none(), requestOptions)
 
-    /** Read community activity for X's latest period. Each request costs 1 credit. */
+    /**
+     * Returns community activity for X's latest period. Includes likes, new members, posts, replies
+     * & unique posters. Each metric has a count and a changePercent. Each request costs 1 credit.
+     */
     fun retrieveAnalytics(id: String): CompletableFuture<CommunityAnalytics> =
         retrieveAnalytics(id, CommunityRetrieveAnalyticsParams.none())
 
@@ -514,7 +517,10 @@ interface CommunityServiceAsync {
         ): CompletableFuture<HttpResponseFor<CommunityListTopicsResponse>> =
             listTopics(CommunityListTopicsParams.none(), requestOptions)
 
-        /** Read community analytics with its raw HTTP response. */
+        /**
+         * Returns a raw HTTP response for `get /x/communities/{id}/analytics`, but is otherwise the
+         * same as [CommunityServiceAsync.retrieveAnalytics].
+         */
         fun retrieveAnalytics(id: String): CompletableFuture<HttpResponseFor<CommunityAnalytics>> =
             retrieveAnalytics(id, CommunityRetrieveAnalyticsParams.none())
 
