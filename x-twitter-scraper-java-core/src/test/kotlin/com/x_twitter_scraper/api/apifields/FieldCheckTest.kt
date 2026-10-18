@@ -153,7 +153,7 @@ internal class FieldCheckTest {
     fun findsEverySdkMethodByTheRequestItSends() {
         val methods = Operations.methods(SdkShapes())
 
-        assertThat(methods).hasSize(180)
+        assertThat(methods).hasSize(181)
         assertThat(methods.map { "${it.httpMethod} /${it.segments.joinToString("/")}" })
             .contains(
                 "GET /api/v1/credits",
