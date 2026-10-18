@@ -33,6 +33,7 @@ import com.x_twitter_scraper.api.models.EmbeddedTweet
 import com.x_twitter_scraper.api.models.EventType
 import com.x_twitter_scraper.api.models.SearchTweet
 import com.x_twitter_scraper.api.models.TweetMedia
+import com.x_twitter_scraper.api.models.UnknownCount
 import com.x_twitter_scraper.api.models.UserProfile
 import java.time.OffsetDateTime
 import java.util.Collections
@@ -548,6 +549,7 @@ private constructor(
         private val quoteCount: JsonField<Long>,
         private val viewCount: JsonField<Long>,
         private val bookmarkCount: JsonField<Long>,
+        private val unknownCounts: JsonField<List<UnknownCount>>,
         private val parentTweet: JsonField<EmbeddedTweet>,
         private val quotedTweet: JsonField<EmbeddedTweet>,
         private val retweetedTweet: JsonField<EmbeddedTweet>,
@@ -740,6 +742,9 @@ private constructor(
             @JsonProperty("bookmarkCount")
             @ExcludeMissing
             bookmarkCount: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("unknownCounts")
+            @ExcludeMissing
+            unknownCounts: JsonField<List<UnknownCount>> = JsonMissing.of(),
             @JsonProperty("parentTweet")
             @ExcludeMissing
             parentTweet: JsonField<EmbeddedTweet> = JsonMissing.of(),
@@ -834,6 +839,7 @@ private constructor(
             quoteCount,
             viewCount,
             bookmarkCount,
+            unknownCounts,
             parentTweet,
             quotedTweet,
             retweetedTweet,
@@ -1066,6 +1072,14 @@ private constructor(
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun bookmarkCount(): Optional<Long> = bookmarkCount.getOptional("bookmarkCount")
+
+        /**
+         * Treat counts X did not send for this post as unknown even though they read 0.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun unknownCounts(): Optional<List<UnknownCount>> =
+            unknownCounts.getOptional("unknownCounts")
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun parentTweet(): Optional<EmbeddedTweet> = parentTweet.getOptional("parentTweet")
@@ -1680,6 +1694,16 @@ private constructor(
         fun _bookmarkCount(): JsonField<Long> = bookmarkCount
 
         /**
+         * Returns the raw JSON value of [unknownCounts].
+         *
+         * Unlike [unknownCounts], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("unknownCounts")
+        @ExcludeMissing
+        fun _unknownCounts(): JsonField<List<UnknownCount>> = unknownCounts
+
+        /**
          * Returns the raw JSON value of [parentTweet].
          *
          * Unlike [parentTweet], this method doesn't throw if the JSON field has an unexpected type.
@@ -1875,6 +1899,7 @@ private constructor(
             private var quoteCount: JsonField<Long> = JsonMissing.of()
             private var viewCount: JsonField<Long> = JsonMissing.of()
             private var bookmarkCount: JsonField<Long> = JsonMissing.of()
+            private var unknownCounts: JsonField<MutableList<UnknownCount>>? = null
             private var parentTweet: JsonField<EmbeddedTweet> = JsonMissing.of()
             private var quotedTweet: JsonField<EmbeddedTweet> = JsonMissing.of()
             private var retweetedTweet: JsonField<EmbeddedTweet> = JsonMissing.of()
@@ -1956,6 +1981,7 @@ private constructor(
                 quoteCount = data.quoteCount
                 viewCount = data.viewCount
                 bookmarkCount = data.bookmarkCount
+                unknownCounts = data.unknownCounts.map { it.toMutableList() }
                 parentTweet = data.parentTweet
                 quotedTweet = data.quotedTweet
                 retweetedTweet = data.retweetedTweet
@@ -2486,6 +2512,27 @@ private constructor(
                 this.bookmarkCount = bookmarkCount
             }
 
+            /** Treat counts X did not send for this post as unknown even though they read 0. */
+            fun unknownCounts(unknownCounts: List<UnknownCount>) =
+                unknownCounts(JsonField.of(unknownCounts))
+
+            /** Sets [Builder.unknownCounts] to an arbitrary JSON value. */
+            fun unknownCounts(unknownCounts: JsonField<List<UnknownCount>>) = apply {
+                this.unknownCounts = unknownCounts.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [UnknownCount] to [unknownCounts].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addUnknownCount(unknownCount: UnknownCount) = apply {
+                unknownCounts =
+                    (unknownCounts ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("unknownCounts", it).add(unknownCount)
+                    }
+            }
+
             fun parentTweet(parentTweet: EmbeddedTweet) = parentTweet(JsonField.of(parentTweet))
 
             /** Sets [Builder.parentTweet] to an arbitrary JSON value. */
@@ -2689,6 +2736,7 @@ private constructor(
                     quoteCount,
                     viewCount,
                     bookmarkCount,
+                    (unknownCounts ?: JsonMissing.of()).map { it.toImmutable() },
                     parentTweet,
                     quotedTweet,
                     retweetedTweet,
@@ -2785,6 +2833,7 @@ private constructor(
             quoteCount()
             viewCount()
             bookmarkCount()
+            unknownCounts().ifPresent { it.forEach { it.validate() } }
             parentTweet().ifPresent { it.validate() }
             quotedTweet().ifPresent { it.validate() }
             retweetedTweet().ifPresent { it.validate() }
@@ -2876,6 +2925,7 @@ private constructor(
                 (if (quoteCount.asKnown().isPresent) 1 else 0) +
                 (if (viewCount.asKnown().isPresent) 1 else 0) +
                 (if (bookmarkCount.asKnown().isPresent) 1 else 0) +
+                (unknownCounts.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
                 (parentTweet.asKnown().getOrNull()?.validity() ?: 0) +
                 (quotedTweet.asKnown().getOrNull()?.validity() ?: 0) +
                 (retweetedTweet.asKnown().getOrNull()?.validity() ?: 0) +
@@ -2959,6 +3009,7 @@ private constructor(
                 quoteCount == other.quoteCount &&
                 viewCount == other.viewCount &&
                 bookmarkCount == other.bookmarkCount &&
+                unknownCounts == other.unknownCounts &&
                 parentTweet == other.parentTweet &&
                 quotedTweet == other.quotedTweet &&
                 retweetedTweet == other.retweetedTweet &&
@@ -3041,6 +3092,7 @@ private constructor(
                 quoteCount,
                 viewCount,
                 bookmarkCount,
+                unknownCounts,
                 parentTweet,
                 quotedTweet,
                 retweetedTweet,
@@ -3061,7 +3113,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{id=$id, text=$text, type=$type, createdAt=$createdAt, url=$url, lang=$lang, isReply=$isReply, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isRetweet=$isRetweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, retweetedAt=$retweetedAt, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, conversationId=$conversationId, conversationControl=$conversationControl, limitedActions=$limitedActions, source=$source, displayTextRange=$displayTextRange, textHighlights=$textHighlights, contentDisclosure=$contentDisclosure, article=$article, authorUnavailable=$authorUnavailable, unavailableAuthorId=$unavailableAuthorId, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, hasCommunityNotes=$hasCommunityNotes, edit=$edit, exclusiveContent=$exclusiveContent, isTranslatable=$isTranslatable, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, jetfuelAttachment=$jetfuelAttachment, noteTweet=$noteTweet, place=$place, coordinates=$coordinates, geo=$geo, postCta=$postCta, possiblySensitive=$possiblySensitive, previousCounts=$previousCounts, reactionContext=$reactionContext, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, tombstone=$tombstone, interstitial=$interstitial, unmentionedUserIds=$unmentionedUserIds, viewState=$viewState, entities=$entities, scopes=$scopes, media=$media, retweetCount=$retweetCount, replyCount=$replyCount, likeCount=$likeCount, quoteCount=$quoteCount, viewCount=$viewCount, bookmarkCount=$bookmarkCount, parentTweet=$parentTweet, quotedTweet=$quotedTweet, retweetedTweet=$retweetedTweet, author=$author, field=$field, change=$change, userId=$userId, username=$username, previous=$previous, current=$current, followedAt=$followedAt, followedAtExact=$followedAtExact, reason=$reason, additionalProperties=$additionalProperties}"
+            "Data{id=$id, text=$text, type=$type, createdAt=$createdAt, url=$url, lang=$lang, isReply=$isReply, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isRetweet=$isRetweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, retweetedAt=$retweetedAt, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, conversationId=$conversationId, conversationControl=$conversationControl, limitedActions=$limitedActions, source=$source, displayTextRange=$displayTextRange, textHighlights=$textHighlights, contentDisclosure=$contentDisclosure, article=$article, authorUnavailable=$authorUnavailable, unavailableAuthorId=$unavailableAuthorId, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, hasCommunityNotes=$hasCommunityNotes, edit=$edit, exclusiveContent=$exclusiveContent, isTranslatable=$isTranslatable, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, jetfuelAttachment=$jetfuelAttachment, noteTweet=$noteTweet, place=$place, coordinates=$coordinates, geo=$geo, postCta=$postCta, possiblySensitive=$possiblySensitive, previousCounts=$previousCounts, reactionContext=$reactionContext, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, tombstone=$tombstone, interstitial=$interstitial, unmentionedUserIds=$unmentionedUserIds, viewState=$viewState, entities=$entities, scopes=$scopes, media=$media, retweetCount=$retweetCount, replyCount=$replyCount, likeCount=$likeCount, quoteCount=$quoteCount, viewCount=$viewCount, bookmarkCount=$bookmarkCount, unknownCounts=$unknownCounts, parentTweet=$parentTweet, quotedTweet=$quotedTweet, retweetedTweet=$retweetedTweet, author=$author, field=$field, change=$change, userId=$userId, username=$username, previous=$previous, current=$current, followedAt=$followedAt, followedAtExact=$followedAtExact, reason=$reason, additionalProperties=$additionalProperties}"
 
         @JsonDeserialize(using = ProfileValue.Deserializer::class)
         @JsonSerialize(using = ProfileValue.Serializer::class)

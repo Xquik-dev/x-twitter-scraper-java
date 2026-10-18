@@ -32,6 +32,7 @@ class EmbeddedTweet
 private constructor(
     private val id: JsonField<String>,
     private val bookmarkCount: JsonField<Long>,
+    private val unknownCounts: JsonField<List<UnknownCount>>,
     private val likeCount: JsonField<Long>,
     private val quoteCount: JsonField<Long>,
     private val replyCount: JsonField<Long>,
@@ -107,6 +108,9 @@ private constructor(
         @JsonProperty("bookmarkCount")
         @ExcludeMissing
         bookmarkCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("unknownCounts")
+        @ExcludeMissing
+        unknownCounts: JsonField<List<UnknownCount>> = JsonMissing.of(),
         @JsonProperty("likeCount") @ExcludeMissing likeCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("quoteCount") @ExcludeMissing quoteCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("replyCount") @ExcludeMissing replyCount: JsonField<Long> = JsonMissing.of(),
@@ -266,6 +270,7 @@ private constructor(
     ) : this(
         id,
         bookmarkCount,
+        unknownCounts,
         likeCount,
         quoteCount,
         replyCount,
@@ -346,6 +351,13 @@ private constructor(
      *   unexpectedly missing or null.
      */
     fun bookmarkCount(): Long = bookmarkCount.getRequired("bookmarkCount")
+
+    /**
+     * Treat counts X did not send for this post as unknown even though they read 0.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun unknownCounts(): Optional<List<UnknownCount>> = unknownCounts.getOptional("unknownCounts")
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -800,6 +812,15 @@ private constructor(
     @JsonProperty("bookmarkCount")
     @ExcludeMissing
     fun _bookmarkCount(): JsonField<Long> = bookmarkCount
+
+    /**
+     * Returns the raw JSON value of [unknownCounts].
+     *
+     * Unlike [unknownCounts], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("unknownCounts")
+    @ExcludeMissing
+    fun _unknownCounts(): JsonField<List<UnknownCount>> = unknownCounts
 
     /**
      * Returns the raw JSON value of [likeCount].
@@ -1397,6 +1418,7 @@ private constructor(
 
         private var id: JsonField<String>? = null
         private var bookmarkCount: JsonField<Long>? = null
+        private var unknownCounts: JsonField<MutableList<UnknownCount>>? = null
         private var likeCount: JsonField<Long>? = null
         private var quoteCount: JsonField<Long>? = null
         private var replyCount: JsonField<Long>? = null
@@ -1474,6 +1496,7 @@ private constructor(
         internal fun from(embeddedTweet: EmbeddedTweet) = apply {
             id = embeddedTweet.id
             bookmarkCount = embeddedTweet.bookmarkCount
+            unknownCounts = embeddedTweet.unknownCounts.map { it.toMutableList() }
             likeCount = embeddedTweet.likeCount
             quoteCount = embeddedTweet.quoteCount
             replyCount = embeddedTweet.replyCount
@@ -1553,6 +1576,27 @@ private constructor(
         /** Sets [Builder.bookmarkCount] to an arbitrary JSON value. */
         fun bookmarkCount(bookmarkCount: JsonField<Long>) = apply {
             this.bookmarkCount = bookmarkCount
+        }
+
+        /** Treat counts X did not send for this post as unknown even though they read 0. */
+        fun unknownCounts(unknownCounts: List<UnknownCount>) =
+            unknownCounts(JsonField.of(unknownCounts))
+
+        /** Sets [Builder.unknownCounts] to an arbitrary JSON value. */
+        fun unknownCounts(unknownCounts: JsonField<List<UnknownCount>>) = apply {
+            this.unknownCounts = unknownCounts.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [UnknownCount] to [unknownCounts].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addUnknownCount(unknownCount: UnknownCount) = apply {
+            unknownCounts =
+                (unknownCounts ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("unknownCounts", it).add(unknownCount)
+                }
         }
 
         fun likeCount(likeCount: Long) = likeCount(JsonField.of(likeCount))
@@ -2186,6 +2230,7 @@ private constructor(
             EmbeddedTweet(
                 checkRequired("id", id),
                 checkRequired("bookmarkCount", bookmarkCount),
+                (unknownCounts ?: JsonMissing.of()).map { it.toImmutable() },
                 checkRequired("likeCount", likeCount),
                 checkRequired("quoteCount", quoteCount),
                 checkRequired("replyCount", replyCount),
@@ -2273,6 +2318,7 @@ private constructor(
 
         id()
         bookmarkCount()
+        unknownCounts().ifPresent { it.forEach { it.validate() } }
         likeCount()
         quoteCount()
         replyCount()
@@ -2354,6 +2400,7 @@ private constructor(
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (bookmarkCount.asKnown().isPresent) 1 else 0) +
+            (unknownCounts.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (if (likeCount.asKnown().isPresent) 1 else 0) +
             (if (quoteCount.asKnown().isPresent) 1 else 0) +
             (if (replyCount.asKnown().isPresent) 1 else 0) +
@@ -6014,6 +6061,7 @@ private constructor(
         return other is EmbeddedTweet &&
             id == other.id &&
             bookmarkCount == other.bookmarkCount &&
+            unknownCounts == other.unknownCounts &&
             likeCount == other.likeCount &&
             quoteCount == other.quoteCount &&
             replyCount == other.replyCount &&
@@ -6087,6 +6135,7 @@ private constructor(
         Objects.hash(
             id,
             bookmarkCount,
+            unknownCounts,
             likeCount,
             quoteCount,
             replyCount,
@@ -6160,5 +6209,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "EmbeddedTweet{id=$id, bookmarkCount=$bookmarkCount, likeCount=$likeCount, quoteCount=$quoteCount, replyCount=$replyCount, retweetCount=$retweetCount, text=$text, viewCount=$viewCount, article=$article, author=$author, authorUnavailable=$authorUnavailable, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, contentDisclosure=$contentDisclosure, conversationControl=$conversationControl, conversationId=$conversationId, coordinates=$coordinates, createdAt=$createdAt, displayTextRange=$displayTextRange, edit=$edit, entities=$entities, exclusiveContent=$exclusiveContent, geo=$geo, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, hasCommunityNotes=$hasCommunityNotes, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, interstitial=$interstitial, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isReply=$isReply, isRetweet=$isRetweet, isTranslatable=$isTranslatable, jetfuelAttachment=$jetfuelAttachment, lang=$lang, limitedActions=$limitedActions, media=$media, noteTweet=$noteTweet, parentTweet=$parentTweet, place=$place, possiblySensitive=$possiblySensitive, postCta=$postCta, previousCounts=$previousCounts, quotedTweet=$quotedTweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, reactionContext=$reactionContext, retweetedTweet=$retweetedTweet, retweetedAt=$retweetedAt, scopes=$scopes, source=$source, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, textHighlights=$textHighlights, tombstone=$tombstone, type=$type, unavailableAuthorId=$unavailableAuthorId, unmentionedUserIds=$unmentionedUserIds, url=$url, viewState=$viewState, additionalProperties=$additionalProperties}"
+        "EmbeddedTweet{id=$id, bookmarkCount=$bookmarkCount, unknownCounts=$unknownCounts, likeCount=$likeCount, quoteCount=$quoteCount, replyCount=$replyCount, retweetCount=$retweetCount, text=$text, viewCount=$viewCount, article=$article, author=$author, authorUnavailable=$authorUnavailable, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, contentDisclosure=$contentDisclosure, conversationControl=$conversationControl, conversationId=$conversationId, coordinates=$coordinates, createdAt=$createdAt, displayTextRange=$displayTextRange, edit=$edit, entities=$entities, exclusiveContent=$exclusiveContent, geo=$geo, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, hasCommunityNotes=$hasCommunityNotes, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, interstitial=$interstitial, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isReply=$isReply, isRetweet=$isRetweet, isTranslatable=$isTranslatable, jetfuelAttachment=$jetfuelAttachment, lang=$lang, limitedActions=$limitedActions, media=$media, noteTweet=$noteTweet, parentTweet=$parentTweet, place=$place, possiblySensitive=$possiblySensitive, postCta=$postCta, previousCounts=$previousCounts, quotedTweet=$quotedTweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, reactionContext=$reactionContext, retweetedTweet=$retweetedTweet, retweetedAt=$retweetedAt, scopes=$scopes, source=$source, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, textHighlights=$textHighlights, tombstone=$tombstone, type=$type, unavailableAuthorId=$unavailableAuthorId, unmentionedUserIds=$unmentionedUserIds, url=$url, viewState=$viewState, additionalProperties=$additionalProperties}"
 }

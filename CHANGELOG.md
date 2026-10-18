@@ -9,6 +9,7 @@
 
 ### Features
 
+* Posts and embedded posts name the counts X did not send in `unknownCounts`.
 * Bulk retry can target specific accounts with `accountIds`.
 * Embedded parent, quoted and retweeted posts carry every tweet field and the author.
 * `UserProfile.IdentityVerification` gains optional `overrideVerifiedYear` for the verification start year X displays on profiles and user objects in tweets.
