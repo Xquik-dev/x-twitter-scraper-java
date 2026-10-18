@@ -81,6 +81,7 @@ Call REST directly when a Maven dependency does not fit.
 | Discover X trends | `GET /x/trends` | `client.x().getTrends()` |
 | Read past trends or the places X offers trends for | `GET /x/trends/history`, `GET /x/trends/locations` | `client.x().getTrendsHistory()`, `client.x().getTrendLocations()` |
 | Find popular or suggested communities | `GET /x/communities/popular`, `GET /x/communities/suggested` | `client.x().communities()` |
+| Read community activity and growth | `GET /x/communities/{id}/analytics` | `client.x().communities().retrieveAnalytics()` |
 | Export large X datasets | `POST /extractions` | `client.extractions()` |
 | Monitor tweet keywords or accounts | `POST /monitors/keywords`, `POST /monitors` | `client.monitors()` |
 | Receive signed event deliveries | `POST /webhooks` | `client.webhooks()` |
