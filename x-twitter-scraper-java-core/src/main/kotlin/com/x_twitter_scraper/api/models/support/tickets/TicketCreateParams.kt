@@ -277,7 +277,8 @@ private constructor(
          * .subject()
          * ```
          *
-         * @throws IllegalStateException if any required field is unset.
+         * @throws IllegalStateException if `subject` is unset or neither `body` nor `attachments`
+         *   is set.
          */
         fun build(): TicketCreateParams =
             TicketCreateParams(
@@ -470,7 +471,8 @@ private constructor(
              * .subject()
              * ```
              *
-             * @throws IllegalStateException if any required field is unset.
+             * @throws IllegalStateException if `subject` is unset or neither `body` nor
+             *   `attachments` is set.
              */
             fun build(): Body {
                 checkAtLeastOne("body", body, "attachments", attachments)

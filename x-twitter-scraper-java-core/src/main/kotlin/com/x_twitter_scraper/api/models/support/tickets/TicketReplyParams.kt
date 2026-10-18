@@ -255,6 +255,8 @@ private constructor(
          * Returns an immutable instance of [TicketReplyParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * @throws IllegalStateException if neither `body` nor `attachments` is set.
          */
         fun build(): TicketReplyParams =
             TicketReplyParams(
@@ -419,6 +421,8 @@ private constructor(
              * Returns an immutable instance of [Body].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * @throws IllegalStateException if neither `body` nor `attachments` is set.
              */
             fun build(): Body {
                 checkAtLeastOne("body", body, "attachments", attachments)

@@ -283,10 +283,16 @@ internal class GeneratedModelContractTest {
         }
     }
 
+    private val omittedMethods =
+        mapOf(
+            "attachments" to setOf("attachments", "addAttachment"),
+            "body" to setOf("body"),
+            "file" to setOf("file"),
+            "url" to setOf("url"),
+        )
+
     private fun omits(method: Method, field: String?): Boolean =
-        field != null &&
-            (method.name == field ||
-                method.name == "add" + field.replaceFirstChar { it.uppercase() }.removeSuffix("s"))
+        field != null && method.name in omittedMethods.getValue(field)
 
     private fun verifyParams(paramClass: Class<*>, omittedField: String?) {
         val builder = newBuilder(paramClass)

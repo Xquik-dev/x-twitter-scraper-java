@@ -110,10 +110,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /**
-     * A builder for [MediaUploadParams] with limits of 10 MiB per image, 25 MiB per video, and 30
-     * MiB per request.
-     */
+    /** A builder for [MediaUploadParams] with files up to 15 MiB. */
     class Builder internal constructor() {
 
         private var idempotencyKey: String? = null
@@ -409,10 +406,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        /**
-         * A builder for [Body] with limits of 10 MiB per image, 25 MiB per video, and 30 MiB per
-         * request.
-         */
+        /** A builder for [Body] with files up to 15 MiB. */
         class Builder internal constructor() {
 
             private var account: MultipartField<String>? = null
