@@ -10,6 +10,7 @@ import com.x_twitter_scraper.api.core.jsonMapper
 import com.x_twitter_scraper.api.models.ContentDisclosure
 import com.x_twitter_scraper.api.models.EmbeddedTweet
 import com.x_twitter_scraper.api.models.TweetMedia
+import com.x_twitter_scraper.api.models.UnknownCount
 import com.x_twitter_scraper.api.models.UserProfile
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -2731,6 +2732,119 @@ internal class TweetRetrieveResponseTest {
             )
 
         assertThat(roundtrippedTweetRetrieveResponse).isEqualTo(tweetRetrieveResponse)
+    }
+
+    @Test
+    fun readsUnknownCountsForPostsAndRetweetedPosts() {
+        val tweetRetrieveResponse =
+            jsonMapper()
+                .readValue(
+                    """
+                    {
+                      "tweet": {
+                        "id": "1234567890",
+                        "text": "Reposted post",
+                        "bookmarkCount": 0,
+                        "unknownCounts": ["bookmarkCount", "viewCount"],
+                        "likeCount": 42,
+                        "quoteCount": 1,
+                        "replyCount": 3,
+                        "retweetCount": 5,
+                        "viewCount": 0,
+                        "retweeted_tweet": {
+                          "id": "9876543210",
+                          "text": "Original post",
+                          "bookmarkCount": 0,
+                          "unknownCounts": ["bookmarkCount", "viewCount"],
+                          "likeCount": 42,
+                          "quoteCount": 1,
+                          "replyCount": 3,
+                          "retweetCount": 5,
+                          "viewCount": 0
+                        }
+                      }
+                    }
+                    """
+                        .trimIndent(),
+                    jacksonTypeRef<TweetRetrieveResponse>(),
+                )
+
+        tweetRetrieveResponse.validate()
+        val tweet = tweetRetrieveResponse.tweet()
+        assertThat(tweet.unknownCounts())
+            .hasValue(listOf(UnknownCount.BOOKMARK_COUNT, UnknownCount.VIEW_COUNT))
+        assertThat(tweet.retweetedTweet().orElseThrow().unknownCounts())
+            .hasValue(listOf(UnknownCount.BOOKMARK_COUNT, UnknownCount.VIEW_COUNT))
+    }
+
+    @Test
+    fun readsPostsWithoutUnknownCounts() {
+        val tweetRetrieveResponse =
+            jsonMapper()
+                .readValue(
+                    """
+                    {
+                      "tweet": {
+                        "id": "1234567890",
+                        "text": "Post with every count",
+                        "bookmarkCount": 2,
+                        "likeCount": 42,
+                        "quoteCount": 1,
+                        "replyCount": 3,
+                        "retweetCount": 5,
+                        "viewCount": 1500,
+                        "retweeted_tweet": {
+                          "id": "9876543210",
+                          "text": "Original post with every count",
+                          "bookmarkCount": 2,
+                          "likeCount": 42,
+                          "quoteCount": 1,
+                          "replyCount": 3,
+                          "retweetCount": 5,
+                          "viewCount": 1500
+                        }
+                      }
+                    }
+                    """
+                        .trimIndent(),
+                    jacksonTypeRef<TweetRetrieveResponse>(),
+                )
+
+        tweetRetrieveResponse.validate()
+        val tweet = tweetRetrieveResponse.tweet()
+        assertThat(tweet.unknownCounts()).isEmpty()
+        assertThat(tweet._unknownCounts().isMissing()).isTrue()
+        assertThat(tweet.retweetedTweet().orElseThrow().unknownCounts()).isEmpty()
+        assertThat(tweet.retweetedTweet().orElseThrow()._unknownCounts().isMissing()).isTrue()
+    }
+
+    @Test
+    fun readsUnknownCountsFromFutureApiValues() {
+        val tweetRetrieveResponse =
+            jsonMapper()
+                .readValue(
+                    """
+                    {
+                      "tweet": {
+                        "unknownCounts": ["futureCount"],
+                        "retweeted_tweet": {
+                          "unknownCounts": ["futureCount"]
+                        }
+                      }
+                    }
+                    """
+                        .trimIndent(),
+                    jacksonTypeRef<TweetRetrieveResponse>(),
+                )
+
+        val tweet = tweetRetrieveResponse.tweet()
+        val unknownCount = tweet.unknownCounts().orElseThrow().single()
+        assertThat(unknownCount.value()).isEqualTo(UnknownCount.Value._UNKNOWN)
+        assertThat(unknownCount.asString()).isEqualTo("futureCount")
+        val retweetedUnknownCount =
+            tweet.retweetedTweet().orElseThrow().unknownCounts().orElseThrow().single()
+        assertThat(retweetedUnknownCount.value()).isEqualTo(UnknownCount.Value._UNKNOWN)
+        assertThat(retweetedUnknownCount.asString()).isEqualTo("futureCount")
     }
 
     @Test
