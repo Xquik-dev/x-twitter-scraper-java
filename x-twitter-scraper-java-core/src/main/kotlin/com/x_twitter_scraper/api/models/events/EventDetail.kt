@@ -21,6 +21,7 @@ import com.x_twitter_scraper.api.models.ContentDisclosure
 import com.x_twitter_scraper.api.models.EmbeddedTweet
 import com.x_twitter_scraper.api.models.EventType
 import com.x_twitter_scraper.api.models.SearchTweet
+import com.x_twitter_scraper.api.models.SoftIntervention
 import com.x_twitter_scraper.api.models.TweetMedia
 import com.x_twitter_scraper.api.models.UnknownCount
 import java.time.OffsetDateTime
@@ -557,6 +558,7 @@ private constructor(
         private val viewState: JsonField<String>,
         private val entities: JsonField<SearchTweet.Entities>,
         private val scopes: JsonField<SearchTweet.Scopes>,
+        private val softIntervention: JsonField<SoftIntervention>,
         private val media: JsonField<List<TweetMedia>>,
         private val retweetCount: JsonField<Long>,
         private val replyCount: JsonField<Long>,
@@ -738,6 +740,9 @@ private constructor(
             @JsonProperty("scopes")
             @ExcludeMissing
             scopes: JsonField<SearchTweet.Scopes> = JsonMissing.of(),
+            @JsonProperty("softIntervention")
+            @ExcludeMissing
+            softIntervention: JsonField<SoftIntervention> = JsonMissing.of(),
             @JsonProperty("media")
             @ExcludeMissing
             media: JsonField<List<TweetMedia>> = JsonMissing.of(),
@@ -851,6 +856,7 @@ private constructor(
             viewState,
             entities,
             scopes,
+            softIntervention,
             media,
             retweetCount,
             replyCount,
@@ -1070,6 +1076,15 @@ private constructor(
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun scopes(): Optional<SearchTweet.Scopes> = scopes.getOptional("scopes")
+
+        /**
+         * The label X shows under a post whose reach it limits. It links to the page that explains
+         * it.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun softIntervention(): Optional<SoftIntervention> =
+            softIntervention.getOptional("softIntervention")
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun media(): Optional<List<TweetMedia>> = media.getOptional("media")
@@ -1658,6 +1673,16 @@ private constructor(
         fun _scopes(): JsonField<SearchTweet.Scopes> = scopes
 
         /**
+         * Returns the raw JSON value of [softIntervention].
+         *
+         * Unlike [softIntervention], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("softIntervention")
+        @ExcludeMissing
+        fun _softIntervention(): JsonField<SoftIntervention> = softIntervention
+
+        /**
          * Returns the raw JSON value of [media].
          *
          * Unlike [media], this method doesn't throw if the JSON field has an unexpected type.
@@ -1913,6 +1938,7 @@ private constructor(
             private var viewState: JsonField<String> = JsonMissing.of()
             private var entities: JsonField<SearchTweet.Entities> = JsonMissing.of()
             private var scopes: JsonField<SearchTweet.Scopes> = JsonMissing.of()
+            private var softIntervention: JsonField<SoftIntervention> = JsonMissing.of()
             private var media: JsonField<MutableList<TweetMedia>>? = null
             private var retweetCount: JsonField<Long> = JsonMissing.of()
             private var replyCount: JsonField<Long> = JsonMissing.of()
@@ -1995,6 +2021,7 @@ private constructor(
                 viewState = data.viewState
                 entities = data.entities
                 scopes = data.scopes
+                softIntervention = data.softIntervention
                 media = data.media.map { it.toMutableList() }
                 retweetCount = data.retweetCount
                 replyCount = data.replyCount
@@ -2480,6 +2507,18 @@ private constructor(
             /** Sets [Builder.scopes] to an arbitrary JSON value. */
             fun scopes(scopes: JsonField<SearchTweet.Scopes>) = apply { this.scopes = scopes }
 
+            /**
+             * The label X shows under a post whose reach it limits. It links to the page that
+             * explains it.
+             */
+            fun softIntervention(softIntervention: SoftIntervention) =
+                softIntervention(JsonField.of(softIntervention))
+
+            /** Sets [Builder.softIntervention] to an arbitrary JSON value. */
+            fun softIntervention(softIntervention: JsonField<SoftIntervention>) = apply {
+                this.softIntervention = softIntervention
+            }
+
             fun media(media: List<TweetMedia>) = media(JsonField.of(media))
 
             /** Sets [Builder.media] to an arbitrary JSON value. */
@@ -2755,6 +2794,7 @@ private constructor(
                     viewState,
                     entities,
                     scopes,
+                    softIntervention,
                     (media ?: JsonMissing.of()).map { it.toImmutable() },
                     retweetCount,
                     replyCount,
@@ -2852,6 +2892,7 @@ private constructor(
             viewState()
             entities().ifPresent { it.validate() }
             scopes().ifPresent { it.validate() }
+            softIntervention().ifPresent { it.validate() }
             media().ifPresent { it.forEach { it.validate() } }
             retweetCount()
             replyCount()
@@ -2944,6 +2985,7 @@ private constructor(
                 (if (viewState.asKnown().isPresent) 1 else 0) +
                 (entities.asKnown().getOrNull()?.validity() ?: 0) +
                 (scopes.asKnown().getOrNull()?.validity() ?: 0) +
+                (softIntervention.asKnown().getOrNull()?.validity() ?: 0) +
                 (media.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
                 (if (retweetCount.asKnown().isPresent) 1 else 0) +
                 (if (replyCount.asKnown().isPresent) 1 else 0) +
@@ -3028,6 +3070,7 @@ private constructor(
                 viewState == other.viewState &&
                 entities == other.entities &&
                 scopes == other.scopes &&
+                softIntervention == other.softIntervention &&
                 media == other.media &&
                 retweetCount == other.retweetCount &&
                 replyCount == other.replyCount &&
@@ -3111,6 +3154,7 @@ private constructor(
                 viewState,
                 entities,
                 scopes,
+                softIntervention,
                 media,
                 retweetCount,
                 replyCount,
@@ -3139,7 +3183,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{id=$id, text=$text, type=$type, createdAt=$createdAt, url=$url, lang=$lang, isReply=$isReply, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isRetweet=$isRetweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, retweetedAt=$retweetedAt, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, conversationId=$conversationId, conversationControl=$conversationControl, limitedActions=$limitedActions, source=$source, displayTextRange=$displayTextRange, textHighlights=$textHighlights, contentDisclosure=$contentDisclosure, article=$article, authorUnavailable=$authorUnavailable, unavailableAuthorId=$unavailableAuthorId, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, hasCommunityNotes=$hasCommunityNotes, edit=$edit, exclusiveContent=$exclusiveContent, isTranslatable=$isTranslatable, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, jetfuelAttachment=$jetfuelAttachment, noteTweet=$noteTweet, place=$place, coordinates=$coordinates, geo=$geo, postCta=$postCta, possiblySensitive=$possiblySensitive, previousCounts=$previousCounts, reactionContext=$reactionContext, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, tombstone=$tombstone, interstitial=$interstitial, unmentionedUserIds=$unmentionedUserIds, viewState=$viewState, entities=$entities, scopes=$scopes, media=$media, retweetCount=$retweetCount, replyCount=$replyCount, likeCount=$likeCount, quoteCount=$quoteCount, viewCount=$viewCount, bookmarkCount=$bookmarkCount, unknownCounts=$unknownCounts, parentTweet=$parentTweet, quotedTweet=$quotedTweet, retweetedTweet=$retweetedTweet, author=$author, field=$field, change=$change, userId=$userId, username=$username, previous=$previous, current=$current, followedAt=$followedAt, followedAtExact=$followedAtExact, reason=$reason, additionalProperties=$additionalProperties}"
+            "Data{id=$id, text=$text, type=$type, createdAt=$createdAt, url=$url, lang=$lang, isReply=$isReply, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isRetweet=$isRetweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, retweetedAt=$retweetedAt, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, conversationId=$conversationId, conversationControl=$conversationControl, limitedActions=$limitedActions, source=$source, displayTextRange=$displayTextRange, textHighlights=$textHighlights, contentDisclosure=$contentDisclosure, article=$article, authorUnavailable=$authorUnavailable, unavailableAuthorId=$unavailableAuthorId, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, hasCommunityNotes=$hasCommunityNotes, edit=$edit, exclusiveContent=$exclusiveContent, isTranslatable=$isTranslatable, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, jetfuelAttachment=$jetfuelAttachment, noteTweet=$noteTweet, place=$place, coordinates=$coordinates, geo=$geo, postCta=$postCta, possiblySensitive=$possiblySensitive, previousCounts=$previousCounts, reactionContext=$reactionContext, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, tombstone=$tombstone, interstitial=$interstitial, unmentionedUserIds=$unmentionedUserIds, viewState=$viewState, entities=$entities, scopes=$scopes, softIntervention=$softIntervention, media=$media, retweetCount=$retweetCount, replyCount=$replyCount, likeCount=$likeCount, quoteCount=$quoteCount, viewCount=$viewCount, bookmarkCount=$bookmarkCount, unknownCounts=$unknownCounts, parentTweet=$parentTweet, quotedTweet=$quotedTweet, retweetedTweet=$retweetedTweet, author=$author, field=$field, change=$change, userId=$userId, username=$username, previous=$previous, current=$current, followedAt=$followedAt, followedAtExact=$followedAtExact, reason=$reason, additionalProperties=$additionalProperties}"
 
         class Reason @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 

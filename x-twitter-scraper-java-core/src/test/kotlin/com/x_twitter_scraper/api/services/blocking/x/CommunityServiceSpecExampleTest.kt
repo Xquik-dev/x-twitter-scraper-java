@@ -23,11 +23,13 @@ import com.x_twitter_scraper.api.models.x.communities.CommunityFindParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityListPopularParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityListSuggestedParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityListTopicsParams
+import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveAnalyticsParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveInfoParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveMembersParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveModeratorsParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveSearchParams
 import com.x_twitter_scraper.api.models.x.communities.CommunitySearchMembersParams
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -841,6 +843,58 @@ internal class CommunityServiceSpecExampleTest {
     }
 
     @Test
+    fun retrieveAnalyticsParsesTheSpecExample() {
+        stubFor(
+            get(urlPathEqualTo("/x/communities/1493446837214187523/analytics"))
+                .willReturn(okJson(communityAnalyticsExample))
+        )
+        val params =
+            CommunityRetrieveAnalyticsParams.builder()
+                .id("1493446837214187523")
+                .fields("id,periodEndsAt,metrics")
+                .omit("unused")
+                .build()
+
+        val response = client.x().communities().retrieveAnalytics(params)
+        val asyncResponse =
+            asyncClient.x().communities().retrieveAnalytics("1493446837214187523", params).get()
+        val rawResponse =
+            client.x().communities().withRawResponse().retrieveAnalytics(params).use { it.parse() }
+        val asyncRawResponse =
+            asyncClient
+                .x()
+                .communities()
+                .withRawResponse()
+                .retrieveAnalytics("1493446837214187523", params)
+                .get()
+                .use { it.parse() }
+
+        verify(
+            4,
+            getRequestedFor(urlPathEqualTo("/x/communities/1493446837214187523/analytics"))
+                .withQueryParam("fields", equalTo("id,periodEndsAt,metrics"))
+                .withQueryParam("omit", equalTo("unused")),
+        )
+        assertThat(asyncResponse).isEqualTo(response)
+        assertThat(rawResponse).isEqualTo(response)
+        assertThat(asyncRawResponse).isEqualTo(response)
+        assertThat(response.id()).isEqualTo("1493446837214187523")
+        assertThat(response.periodEndsAt())
+            .isEqualTo(OffsetDateTime.parse("2026-10-16T23:59:59.999Z"))
+        assertThat(response.metrics().likes().count()).isEqualTo(15298L)
+        assertThat(response.metrics().likes().changePercent()).isEqualTo(-1.2076202776880853)
+        assertThat(response.metrics().newMembers().count()).isEqualTo(557L)
+        assertThat(response.metrics().newMembers().changePercent()).isEqualTo(-1.5901060070671376)
+        assertThat(response.metrics().posts().count()).isEqualTo(5108L)
+        assertThat(response.metrics().posts().changePercent()).isEqualTo(0.5907837731390311)
+        assertThat(response.metrics().replies().count()).isEqualTo(6851L)
+        assertThat(response.metrics().replies().changePercent()).isEqualTo(-0.8251302837290099)
+        assertThat(response.metrics().uniquePosters().count()).isEqualTo(1800L)
+        assertThat(response.metrics().uniquePosters().changePercent())
+            .isEqualTo(-0.33222591362126247)
+    }
+
+    @Test
     fun retrieveInfoParsesTheSpecExample() {
         stubFor(
             get(urlPathEqualTo("/x/communities/1500000000000000000/info"))
@@ -1216,6 +1270,37 @@ internal class CommunityServiceSpecExampleTest {
     }
 
     companion object {
+
+        private val communityAnalyticsExample =
+            """
+            {
+              "id": "1493446837214187523",
+              "periodEndsAt": "2026-10-16T23:59:59.999Z",
+              "metrics": {
+                "likes": {
+                  "count": 15298,
+                  "changePercent": -1.2076202776880853
+                },
+                "newMembers": {
+                  "count": 557,
+                  "changePercent": -1.5901060070671376
+                },
+                "posts": {
+                  "count": 5108,
+                  "changePercent": 0.5907837731390311
+                },
+                "replies": {
+                  "count": 6851,
+                  "changePercent": -0.8251302837290099
+                },
+                "uniquePosters": {
+                  "count": 1800,
+                  "changePercent": -0.33222591362126247
+                }
+              }
+            }
+            """
+                .trimIndent()
 
         private val paginatedTweetsExample =
             """

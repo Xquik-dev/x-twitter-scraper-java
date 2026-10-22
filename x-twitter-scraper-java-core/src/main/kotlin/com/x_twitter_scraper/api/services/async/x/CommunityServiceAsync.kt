@@ -7,6 +7,7 @@ package com.x_twitter_scraper.api.services.async.x
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
+import com.x_twitter_scraper.api.models.CommunityAnalytics
 import com.x_twitter_scraper.api.models.CommunityPage
 import com.x_twitter_scraper.api.models.PaginatedTweets
 import com.x_twitter_scraper.api.models.PaginatedUsers
@@ -20,6 +21,7 @@ import com.x_twitter_scraper.api.models.x.communities.CommunityListSuggestedPara
 import com.x_twitter_scraper.api.models.x.communities.CommunityListSuggestedResponse
 import com.x_twitter_scraper.api.models.x.communities.CommunityListTopicsParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityListTopicsResponse
+import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveAnalyticsParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveInfoParams
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveInfoResponse
 import com.x_twitter_scraper.api.models.x.communities.CommunityRetrieveMembersParams
@@ -172,6 +174,45 @@ interface CommunityServiceAsync {
     /** @see listTopics */
     fun listTopics(requestOptions: RequestOptions): CompletableFuture<CommunityListTopicsResponse> =
         listTopics(CommunityListTopicsParams.none(), requestOptions)
+
+    /**
+     * Returns community activity for X's latest period. Includes likes, new members, posts, replies
+     * & unique posters. Each metric has a count and a changePercent. Each request costs 1 credit.
+     */
+    fun retrieveAnalytics(id: String): CompletableFuture<CommunityAnalytics> =
+        retrieveAnalytics(id, CommunityRetrieveAnalyticsParams.none())
+
+    /** @see retrieveAnalytics */
+    fun retrieveAnalytics(
+        id: String,
+        params: CommunityRetrieveAnalyticsParams = CommunityRetrieveAnalyticsParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<CommunityAnalytics> =
+        retrieveAnalytics(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see retrieveAnalytics */
+    fun retrieveAnalytics(
+        id: String,
+        params: CommunityRetrieveAnalyticsParams = CommunityRetrieveAnalyticsParams.none(),
+    ): CompletableFuture<CommunityAnalytics> = retrieveAnalytics(id, params, RequestOptions.none())
+
+    /** @see retrieveAnalytics */
+    fun retrieveAnalytics(
+        params: CommunityRetrieveAnalyticsParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<CommunityAnalytics>
+
+    /** @see retrieveAnalytics */
+    fun retrieveAnalytics(
+        params: CommunityRetrieveAnalyticsParams
+    ): CompletableFuture<CommunityAnalytics> = retrieveAnalytics(params, RequestOptions.none())
+
+    /** @see retrieveAnalytics */
+    fun retrieveAnalytics(
+        id: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<CommunityAnalytics> =
+        retrieveAnalytics(id, CommunityRetrieveAnalyticsParams.none(), requestOptions)
 
     /** Get community name, description and member count */
     fun retrieveInfo(id: String): CompletableFuture<CommunityRetrieveInfoResponse> =
@@ -475,6 +516,47 @@ interface CommunityServiceAsync {
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<CommunityListTopicsResponse>> =
             listTopics(CommunityListTopicsParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /x/communities/{id}/analytics`, but is otherwise the
+         * same as [CommunityServiceAsync.retrieveAnalytics].
+         */
+        fun retrieveAnalytics(id: String): CompletableFuture<HttpResponseFor<CommunityAnalytics>> =
+            retrieveAnalytics(id, CommunityRetrieveAnalyticsParams.none())
+
+        /** @see retrieveAnalytics */
+        fun retrieveAnalytics(
+            id: String,
+            params: CommunityRetrieveAnalyticsParams = CommunityRetrieveAnalyticsParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<CommunityAnalytics>> =
+            retrieveAnalytics(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see retrieveAnalytics */
+        fun retrieveAnalytics(
+            id: String,
+            params: CommunityRetrieveAnalyticsParams = CommunityRetrieveAnalyticsParams.none(),
+        ): CompletableFuture<HttpResponseFor<CommunityAnalytics>> =
+            retrieveAnalytics(id, params, RequestOptions.none())
+
+        /** @see retrieveAnalytics */
+        fun retrieveAnalytics(
+            params: CommunityRetrieveAnalyticsParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<CommunityAnalytics>>
+
+        /** @see retrieveAnalytics */
+        fun retrieveAnalytics(
+            params: CommunityRetrieveAnalyticsParams
+        ): CompletableFuture<HttpResponseFor<CommunityAnalytics>> =
+            retrieveAnalytics(params, RequestOptions.none())
+
+        /** @see retrieveAnalytics */
+        fun retrieveAnalytics(
+            id: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<CommunityAnalytics>> =
+            retrieveAnalytics(id, CommunityRetrieveAnalyticsParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /x/communities/{id}/info`, but is otherwise the same
