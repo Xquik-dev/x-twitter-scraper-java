@@ -20,7 +20,9 @@ Use public issues for non-sensitive design discussions.
 
 Use pull requests for reviewed repository changes.
 
-Preserve generated API contracts unless the public specification changes.
+Never remove or rename a public method, parameter, type, or field.
+
+Add new ones when the public specification changes.
 
 Prefer consensus for user-visible and governance decisions.
 
@@ -37,14 +39,6 @@ Every nontrivial change requires review before release.
 Security-sensitive changes require an explicit security review.
 
 Reviewers follow the shared [review policy][review-policy].
-
-## Generated Code
-
-Most SDK types come from the public OpenAPI contract.
-
-Fix generator defects at their source when possible.
-
-Protect local runtime fixes with focused regression tests.
 
 ## Releases
 

@@ -31,15 +31,31 @@ Gradle only adds checksums. Delete the entries of replaced versions from `gradle
 
 Never commit credentials or runtime environment files.
 
-## Generated code
+## Change the SDK by hand
 
-Most SDK files come from the public OpenAPI contract.
+Maintainers write and review every SDK source file by hand.
+No code generator runs.
 
-Preserve generated method names and response contracts.
+When the API changes, the [API coverage](#api-coverage) check or `scripts/api-fields` fails.
+Each failure names an operation or field that differs from the API spec.
+Copy the pattern of a sibling operation or model.
 
-Avoid generated-file changes when a generator fix exists.
+1. Add the method to its service interface, its `WithRawResponse` interface, and both `Impl` classes in `x-twitter-scraper-java-core/src/main/kotlin/com/x_twitter_scraper/api/services/blocking` and `services/async`. A new service also needs a getter on its parent service.
+2. Add its params and response models in `x-twitter-scraper-java-core/src/main/kotlin/com/x_twitter_scraper/api/models`.
+3. List a new workflow in the endpoint table of `README.md`.
+4. Add model tests in `x-twitter-scraper-java-core/src/test/kotlin/com/x_twitter_scraper/api/models`, and tests that call the blocking and async clients in `src/test/kotlin/com/x_twitter_scraper/api/services`.
+5. Add a line to the `Unreleased` section of `CHANGELOG.md`.
 
-Protect maintained runtime changes with focused regression tests.
+Fix a field difference in the SDK when you can.
+List an intended difference in `accepted-field-differences.json` with its reason.
+
+Keep every change additive.
+Never remove or rename a public method, parameter, type, field, or the `com.x_twitter_scraper.api` package.
+To rename something, add the new name beside the old one and keep the old one working.
+
+Each request sends `X-Xquik-SDK: java`, which Xquik reads to count SDK requests.
+Keep every other header the SDK sends unchanged.
+Installed releases send only the older language header, so Xquik still reads it.
 
 ## First contributions
 
@@ -62,7 +78,7 @@ bin/check-local
 ```
 
 It checks the tools and both JDKs first.
-Then it runs the API coverage check, lint, shellcheck, the script tests, REUSE, build, tests, coverage, 30 seconds of Jazzer fuzzing, the dependency audit, the reproducible artifact check, and CodeQL security-extended queries.
+Then it runs the API coverage and API fields checks, lint, shellcheck, the script tests, REUSE, build, tests, coverage, 30 seconds of Jazzer fuzzing, the dependency audit, the reproducible artifact check, and CodeQL security-extended queries.
 It stops at the first failure and says what to fix.
 REUSE 6.2.0 runs through `uvx` on every run.
 CodeQL and REUSE are required, and any finding fails the run.
