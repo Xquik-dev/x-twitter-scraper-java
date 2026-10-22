@@ -40,16 +40,15 @@ When the API changes, the [API coverage](#api-coverage) check or `scripts/api-fi
 Each failure names an operation or field that differs from the API spec.
 Copy the pattern of a sibling operation or model.
 
-1. Add the method to its service interface, its `WithRawResponse` interface, and both `Impl` classes in `x-twitter-scraper-java-core/src/main/kotlin/com/x_twitter_scraper/api/services/blocking` and `services/async`. A new service also needs a getter on its parent service.
+1. Add the method to the blocking service interface and its nested `WithRawResponse` interface, then to the service's `Impl` class and its nested `WithRawResponseImpl`, in `x-twitter-scraper-java-core/src/main/kotlin/com/x_twitter_scraper/api/services/blocking`. Do the same for the async service in `services/async`. A new service also needs a getter on its parent service.
 2. Add its params and response models in `x-twitter-scraper-java-core/src/main/kotlin/com/x_twitter_scraper/api/models`.
 3. List a new workflow in the endpoint table of `README.md`.
-4. Add model tests in `x-twitter-scraper-java-core/src/test/kotlin/com/x_twitter_scraper/api/models`, and tests that call the blocking and async clients in `src/test/kotlin/com/x_twitter_scraper/api/services`.
+4. Add model tests in `x-twitter-scraper-java-core/src/test/kotlin/com/x_twitter_scraper/api/models`, and tests that call the blocking and async clients in `x-twitter-scraper-java-core/src/test/kotlin/com/x_twitter_scraper/api/services/blocking` and `services/async`.
 5. Add a line to the `Unreleased` section of `CHANGELOG.md`.
 
 Fix a field difference in the SDK when you can.
 List an intended difference in `accepted-field-differences.json` with its reason.
 
-Keep every change additive.
 Never remove or rename a public method, parameter, type, field, or the `com.x_twitter_scraper.api` package.
 To rename something, add the new name beside the old one and keep the old one working.
 
