@@ -90,6 +90,22 @@ internal class SoftInterventionExampleTest {
         }
     }
 
+    @Test
+    fun eventPostsReturnTheLabel() {
+        val event =
+            """{"id":"42","type":"tweet.new","monitorId":"7","monitorType":"account","occurredAt":"2025-01-15T12:00:00.000Z","data":{"id":"2102761519985332442","softIntervention":$label}}"""
+        val page = """{"events":[$event],"hasMore":false}"""
+        stubFor(get(urlPathEqualTo("/events")).willReturn(okJson(page)))
+        stubFor(get(urlPathEqualTo("/events/42")).willReturn(okJson(event)))
+
+        val listed = listOf(client.events().list(), asyncClient.events().list().get())
+        val details =
+            listOf(client.events().retrieve("42"), asyncClient.events().retrieve("42").get())
+
+        listed.forEach { assertLabel(it.events()[0].data().softIntervention()) }
+        details.forEach { assertLabel(it.data().softIntervention()) }
+    }
+
     private fun assertLabel(label: Optional<SoftIntervention>) {
         val soft = label.orElseThrow()
         assertThat(soft.displayType()).hasValue("Fosnr")

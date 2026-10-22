@@ -19,6 +19,7 @@ import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import com.x_twitter_scraper.api.models.ContentDisclosure
 import com.x_twitter_scraper.api.models.EmbeddedTweet
 import com.x_twitter_scraper.api.models.SearchTweet
+import com.x_twitter_scraper.api.models.SoftIntervention
 import com.x_twitter_scraper.api.models.TweetMedia
 import com.x_twitter_scraper.api.models.UnknownCount
 import com.x_twitter_scraper.api.models.UserProfile
@@ -94,6 +95,7 @@ private constructor(
     private val retweetedTweet: JsonField<EmbeddedTweet>,
     private val retweetedAt: JsonField<OffsetDateTime>,
     private val scopes: JsonField<SearchTweet.Scopes>,
+    private val softIntervention: JsonField<SoftIntervention>,
     private val source: JsonField<String>,
     private val sportsContext: JsonField<SearchTweet.SportsContext>,
     private val subscriberBadge: JsonField<SearchTweet.SubscriberBadge>,
@@ -250,6 +252,9 @@ private constructor(
         @JsonProperty("scopes")
         @ExcludeMissing
         scopes: JsonField<SearchTweet.Scopes> = JsonMissing.of(),
+        @JsonProperty("softIntervention")
+        @ExcludeMissing
+        softIntervention: JsonField<SoftIntervention> = JsonMissing.of(),
         @JsonProperty("source") @ExcludeMissing source: JsonField<String> = JsonMissing.of(),
         @JsonProperty("sportsContext")
         @ExcludeMissing
@@ -332,6 +337,7 @@ private constructor(
         retweetedTweet,
         retweetedAt,
         scopes,
+        softIntervention,
         source,
         sportsContext,
         subscriberBadge,
@@ -749,6 +755,14 @@ private constructor(
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun scopes(): Optional<SearchTweet.Scopes> = scopes.getOptional("scopes")
+
+    /**
+     * The label X shows under a post whose reach it limits. It links to the page that explains it.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun softIntervention(): Optional<SoftIntervention> =
+        softIntervention.getOptional("softIntervention")
 
     /**
      * Client application used to post this tweet
@@ -1325,6 +1339,16 @@ private constructor(
     @JsonProperty("scopes") @ExcludeMissing fun _scopes(): JsonField<SearchTweet.Scopes> = scopes
 
     /**
+     * Returns the raw JSON value of [softIntervention].
+     *
+     * Unlike [softIntervention], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("softIntervention")
+    @ExcludeMissing
+    fun _softIntervention(): JsonField<SoftIntervention> = softIntervention
+
+    /**
      * Returns the raw JSON value of [source].
      *
      * Unlike [source], this method doesn't throw if the JSON field has an unexpected type.
@@ -1507,6 +1531,7 @@ private constructor(
         private var retweetedTweet: JsonField<EmbeddedTweet> = JsonMissing.of()
         private var retweetedAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var scopes: JsonField<SearchTweet.Scopes> = JsonMissing.of()
+        private var softIntervention: JsonField<SoftIntervention> = JsonMissing.of()
         private var source: JsonField<String> = JsonMissing.of()
         private var sportsContext: JsonField<SearchTweet.SportsContext> = JsonMissing.of()
         private var subscriberBadge: JsonField<SearchTweet.SubscriberBadge> = JsonMissing.of()
@@ -1580,6 +1605,7 @@ private constructor(
             retweetedTweet = tweetDetail.retweetedTweet
             retweetedAt = tweetDetail.retweetedAt
             scopes = tweetDetail.scopes
+            softIntervention = tweetDetail.softIntervention
             source = tweetDetail.source
             sportsContext = tweetDetail.sportsContext
             subscriberBadge = tweetDetail.subscriberBadge
@@ -2124,6 +2150,18 @@ private constructor(
         /** Sets [Builder.scopes] to an arbitrary JSON value. */
         fun scopes(scopes: JsonField<SearchTweet.Scopes>) = apply { this.scopes = scopes }
 
+        /**
+         * The label X shows under a post whose reach it limits. It links to the page that explains
+         * it.
+         */
+        fun softIntervention(softIntervention: SoftIntervention) =
+            softIntervention(JsonField.of(softIntervention))
+
+        /** Sets [Builder.softIntervention] to an arbitrary JSON value. */
+        fun softIntervention(softIntervention: JsonField<SoftIntervention>) = apply {
+            this.softIntervention = softIntervention
+        }
+
         /** Client application used to post this tweet */
         fun source(source: String) = source(JsonField.of(source))
 
@@ -2330,6 +2368,7 @@ private constructor(
                 retweetedTweet,
                 retweetedAt,
                 scopes,
+                softIntervention,
                 source,
                 sportsContext,
                 subscriberBadge,
@@ -2418,6 +2457,7 @@ private constructor(
         retweetedTweet().ifPresent { it.validate() }
         retweetedAt()
         scopes().ifPresent { it.validate() }
+        softIntervention().ifPresent { it.validate() }
         source()
         sportsContext().ifPresent { it.validate() }
         subscriberBadge().ifPresent { it.validate() }
@@ -2500,6 +2540,7 @@ private constructor(
             (retweetedTweet.asKnown().getOrNull()?.validity() ?: 0) +
             (if (retweetedAt.asKnown().isPresent) 1 else 0) +
             (scopes.asKnown().getOrNull()?.validity() ?: 0) +
+            (softIntervention.asKnown().getOrNull()?.validity() ?: 0) +
             (if (source.asKnown().isPresent) 1 else 0) +
             (sportsContext.asKnown().getOrNull()?.validity() ?: 0) +
             (subscriberBadge.asKnown().getOrNull()?.validity() ?: 0) +
@@ -14428,6 +14469,7 @@ private constructor(
             retweetedTweet == other.retweetedTweet &&
             retweetedAt == other.retweetedAt &&
             scopes == other.scopes &&
+            softIntervention == other.softIntervention &&
             source == other.source &&
             sportsContext == other.sportsContext &&
             subscriberBadge == other.subscriberBadge &&
@@ -14502,6 +14544,7 @@ private constructor(
             retweetedTweet,
             retweetedAt,
             scopes,
+            softIntervention,
             source,
             sportsContext,
             subscriberBadge,
@@ -14519,5 +14562,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "TweetDetail{id=$id, bookmarkCount=$bookmarkCount, unknownCounts=$unknownCounts, likeCount=$likeCount, quoteCount=$quoteCount, replyCount=$replyCount, retweetCount=$retweetCount, text=$text, viewCount=$viewCount, article=$article, author=$author, authorUnavailable=$authorUnavailable, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, contentDisclosure=$contentDisclosure, conversationControl=$conversationControl, conversationId=$conversationId, coordinates=$coordinates, createdAt=$createdAt, displayTextRange=$displayTextRange, edit=$edit, entities=$entities, exclusiveContent=$exclusiveContent, geo=$geo, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, hasCommunityNotes=$hasCommunityNotes, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, interstitial=$interstitial, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isReply=$isReply, isRetweet=$isRetweet, isTranslatable=$isTranslatable, jetfuelAttachment=$jetfuelAttachment, lang=$lang, limitedActions=$limitedActions, media=$media, noteTweet=$noteTweet, parentTweet=$parentTweet, place=$place, possiblySensitive=$possiblySensitive, postCta=$postCta, previousCounts=$previousCounts, quotedTweet=$quotedTweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, reactionContext=$reactionContext, retweetedTweet=$retweetedTweet, retweetedAt=$retweetedAt, scopes=$scopes, source=$source, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, textHighlights=$textHighlights, tombstone=$tombstone, type=$type, unavailableAuthorId=$unavailableAuthorId, unmentionedUserIds=$unmentionedUserIds, url=$url, viewState=$viewState, additionalProperties=$additionalProperties}"
+        "TweetDetail{id=$id, bookmarkCount=$bookmarkCount, unknownCounts=$unknownCounts, likeCount=$likeCount, quoteCount=$quoteCount, replyCount=$replyCount, retweetCount=$retweetCount, text=$text, viewCount=$viewCount, article=$article, author=$author, authorUnavailable=$authorUnavailable, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, contentDisclosure=$contentDisclosure, conversationControl=$conversationControl, conversationId=$conversationId, coordinates=$coordinates, createdAt=$createdAt, displayTextRange=$displayTextRange, edit=$edit, entities=$entities, exclusiveContent=$exclusiveContent, geo=$geo, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, hasCommunityNotes=$hasCommunityNotes, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, interstitial=$interstitial, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isReply=$isReply, isRetweet=$isRetweet, isTranslatable=$isTranslatable, jetfuelAttachment=$jetfuelAttachment, lang=$lang, limitedActions=$limitedActions, media=$media, noteTweet=$noteTweet, parentTweet=$parentTweet, place=$place, possiblySensitive=$possiblySensitive, postCta=$postCta, previousCounts=$previousCounts, quotedTweet=$quotedTweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, reactionContext=$reactionContext, retweetedTweet=$retweetedTweet, retweetedAt=$retweetedAt, scopes=$scopes, softIntervention=$softIntervention, source=$source, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, textHighlights=$textHighlights, tombstone=$tombstone, type=$type, unavailableAuthorId=$unavailableAuthorId, unmentionedUserIds=$unmentionedUserIds, url=$url, viewState=$viewState, additionalProperties=$additionalProperties}"
 }
