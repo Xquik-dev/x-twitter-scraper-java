@@ -40,7 +40,7 @@ Security-sensitive areas include the following.
 - API key and OAuth token handling
 - Request construction, redirects, retries, and uploads
 - Response parsing and error handling
-- Generated and maintained runtime code
+- Runtime code
 - Dependencies, build inputs, and published Maven artifacts
 - Local check and release scripts, release metadata, and documentation examples
 

@@ -9,6 +9,7 @@
 
 ### Features
 
+* Every request sends `X-Xquik-SDK: java` beside the platform headers it already sends.
 * Communities add the analytics read with `retrieveAnalytics`.
 * Posts, embedded posts and event posts return `softIntervention`, the label X shows under a post whose reach it limits.
 * Posts and embedded posts name the counts X did not send in `unknownCounts`.
