@@ -10,6 +10,7 @@ import com.x_twitter_scraper.api.core.MultipartField
 import com.x_twitter_scraper.api.core.RequestOptions
 import com.x_twitter_scraper.api.core.jsonMapper
 import com.x_twitter_scraper.api.models.support.tickets.TicketCreateParams
+import com.x_twitter_scraper.api.models.support.tickets.TicketReplyParams
 import com.x_twitter_scraper.api.models.x.media.MediaUploadParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateAvatarParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateBannerParams
@@ -101,6 +102,89 @@ internal class HttpRequestBodiesTest {
                 assertThat(it.first["content-type"]).isEqualTo("application/octet-stream")
                 assertThat(it.second.toByteArray(Charsets.ISO_8859_1)).isEqualTo(png)
             }
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "create, false, false",
+        "create, false, true",
+        "create, true, false",
+        "create, true, true",
+        "reply, false, false",
+        "reply, false, true",
+        "reply, true, false",
+        "reply, true, true",
+    )
+    fun ticketRequests_serializeAttachmentsWithOptionalBody(
+        route: String,
+        addIndividually: Boolean,
+        withBody: Boolean,
+    ) {
+        val httpClient = CapturingHttpClient()
+        val options = ClientOptions.builder().httpClient(httpClient).apiKey("test").build()
+
+        when (route) {
+            "create" -> {
+                val params =
+                    TicketCreateParams.builder()
+                        .subject("Upload issue")
+                        .apply {
+                            if (withBody) body("Please help")
+                            if (addIndividually) {
+                                addAttachment("first".byteInputStream())
+                                addAttachment("second".byteInputStream())
+                            } else {
+                                attachments(
+                                    listOf("first".byteInputStream(), "second".byteInputStream())
+                                )
+                            }
+                        }
+                        .build()
+                        .toBuilder()
+                        .build()
+                TicketServiceImpl(options).withRawResponse().create(params).close()
+            }
+            "reply" -> {
+                val params =
+                    TicketReplyParams.builder()
+                        .id("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
+                        .apply {
+                            if (withBody) body("Please help")
+                            if (addIndividually) {
+                                addAttachment("first".byteInputStream())
+                                addAttachment("second".byteInputStream())
+                            } else {
+                                attachments(
+                                    listOf("first".byteInputStream(), "second".byteInputStream())
+                                )
+                            }
+                        }
+                        .build()
+                        .toBuilder()
+                        .build()
+                TicketServiceImpl(options).withRawResponse().reply(params).close()
+            }
+        }
+
+        val parts = multipartParts(checkNotNull(httpClient.request.body))
+        val bodyParts = parts.filter { disposition(it.first)["name"] == "body" }
+        if (withBody) {
+            assertThat(bodyParts.map { it.second }).containsExactly("Please help")
+        } else {
+            assertThat(bodyParts).isEmpty()
+        }
+        if (route == "create") {
+            assertThat(
+                    parts.filter { disposition(it.first)["name"] == "subject" }.map { it.second }
+                )
+                .containsExactly("Upload issue")
+        }
+        val attachments = parts.filter { disposition(it.first)["name"] == "attachments" }
+        assertThat(attachments.map { it.second }).containsExactly("first", "second")
+        attachments.forEach {
+            assertThat(disposition(it.first)).containsEntry("filename", "attachment")
+            assertThat(it.first["content-type"]).isEqualTo("application/octet-stream")
+        }
     }
 
     @ParameterizedTest

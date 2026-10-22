@@ -110,7 +110,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [MediaUploadParams]. */
+    /** A builder for [MediaUploadParams] with files up to 15 MiB. */
     class Builder internal constructor() {
 
         private var idempotencyKey: String? = null
@@ -406,7 +406,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [Body]. */
+        /** A builder for [Body] with files up to 15 MiB. */
         class Builder internal constructor() {
 
             private var account: MultipartField<String>? = null
