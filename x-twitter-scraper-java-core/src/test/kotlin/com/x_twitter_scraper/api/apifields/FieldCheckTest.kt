@@ -178,7 +178,7 @@ internal class FieldCheckTest {
         val spaces = shapes.params(SpaceSearchParams::class.java).first as Obj
         val trends = canon(shapes.type(TrendListResponse::class.java), shapes.defs) as Obj
         val search = canon(shapes.type(TweetSearchResponse::class.java), shapes.defs) as Obj
-        val trend = (trends.props.getValue("trends").shape as Arr).items as Obj
+        val trend = (trends.props.getValue("trends").shape as Many).items as Obj
 
         assertThat(spaces.props.getValue("queryType").shape)
             .isEqualTo(Leaf(listOf("Latest", "Live", "Top", "Upcoming")))

@@ -66,7 +66,7 @@ internal class ShapesTest {
                         Prop(
                             false,
                             false,
-                            Arr(
+                            Many(
                                 Obj(
                                     mapOf(
                                         "kind" to Prop(false, false, leaf(listOf("a"))),
@@ -142,11 +142,11 @@ internal class ShapesTest {
                         Prop(
                             false,
                             false,
-                            Arr(
+                            Many(
                                 Obj(
                                     mapOf(
                                         "id" to Prop(true, false, Leaf()),
-                                        "tags" to Prop(false, false, Arr(Leaf())),
+                                        "tags" to Prop(false, false, Many(Leaf())),
                                         "rank" to Prop(false, false, Leaf()),
                                     )
                                 )
