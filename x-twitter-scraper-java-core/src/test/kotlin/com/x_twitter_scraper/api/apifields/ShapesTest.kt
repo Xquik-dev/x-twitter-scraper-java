@@ -4,7 +4,10 @@
 
 package com.x_twitter_scraper.api.apifields
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.x_twitter_scraper.api.core.JsonValue
+import com.x_twitter_scraper.api.models.x.sports.SportsTeamRecord
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -38,8 +41,9 @@ internal class ShapesTest {
         response: Shape?,
         query: Shape = Obj(emptyMap()),
         body: Shape? = null,
+        defs: Map<String, Shape> = emptyMap(),
     ) =
-        compareOperation(spec, SdkOperation(query, body, response), emptyMap()).map {
+        compareOperation(spec, SdkOperation(query, body, response), defs).map {
             "${it.side} ${it.kind} ${it.path}"
         }
 
@@ -186,6 +190,44 @@ internal class ShapesTest {
             )
 
         assertThat(compare(spec, sdk)).isEmpty()
+    }
+
+    private val record =
+        """{"type": "object", "required": ["wins", "losses", "ties"], "properties": {"wins": {"type": ["integer", "null"]}, "losses": {"type": ["integer", "null"]}, "ties": {"type": ["integer", "null"]}}}"""
+
+    private val recordWithStreak =
+        """{"allOf": [$record, {"type": "object", "properties": {"streak": {"type": "string"}}}]}"""
+
+    private val typedRecords = object : TypeReference<Map<String, SportsTeamRecord>>() {}
+
+    private val untypedRecords = object : TypeReference<Map<String, JsonValue>>() {}
+
+    private fun map(values: String) = """{"type": "object", "additionalProperties": $values}"""
+
+    private fun recordsDifferences(records: String, sdkRecords: TypeReference<*>): List<String> {
+        val shapes = SdkShapes()
+        val sdk = Obj(mapOf("records" to Prop(false, false, shapes.type(sdkRecords.type))))
+        val spec = specOperation(json("""{"type": "object", "properties": {"records": $records}}"""))
+        return compare(spec, sdk, defs = shapes.defs)
+    }
+
+    @Test
+    fun reportsAFieldTheSdkLacksInTypedMapValues() {
+        val missing = listOf("response missing records{}.streak")
+        val union = """{"anyOf": [${map(record)}, ${map(recordWithStreak)}]}"""
+        val intersection = """{"allOf": [${map(record)}, ${map(recordWithStreak)}]}"""
+
+        assertThat(recordsDifferences(map(recordWithStreak), typedRecords)).isEqualTo(missing)
+        assertThat(recordsDifferences(union, typedRecords)).isEqualTo(missing)
+        assertThat(recordsDifferences(intersection, typedRecords)).isEqualTo(missing)
+    }
+
+    @Test
+    fun leavesAMapFreeFormWhenEitherSideLeavesItsValuesUntyped() {
+        assertThat(recordsDifferences(map(record), typedRecords)).isEmpty()
+        assertThat(recordsDifferences(map("true"), typedRecords)).isEmpty()
+        assertThat(recordsDifferences(map("{}"), typedRecords)).isEmpty()
+        assertThat(recordsDifferences(record, untypedRecords)).isEmpty()
     }
 
     @Test
