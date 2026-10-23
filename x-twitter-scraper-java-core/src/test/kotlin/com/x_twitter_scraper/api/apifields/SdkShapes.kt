@@ -62,14 +62,17 @@ internal class SdkShapes {
         val raw = type.rawType as Class<*>
         val argument = type.actualTypeArguments.firstOrNull()
         return when {
-            List::class.java.isAssignableFrom(raw) -> Arr(type(argument!!))
+            List::class.java.isAssignableFrom(raw) -> Many(type(argument!!))
             raw == Optional::class.java ||
                 raw == JsonField::class.java ||
                 raw == MultipartField::class.java -> type(argument!!)
-            Map::class.java.isAssignableFrom(raw) -> Free()
+            Map::class.java.isAssignableFrom(raw) -> map(type.actualTypeArguments[1])
             else -> throw CheckFailure("The field check cannot read the type $type.")
         }
     }
+
+    private fun map(values: Type): Shape =
+        type(values).let { if (it == Unknown) Free() else Many(it, Container.MAP) }
 
     private fun classShape(cls: Class<*>): Shape {
         if (cls in leafClasses) return Leaf()

@@ -109,13 +109,17 @@ internal class SpecShapes(private val spec: JsonNode) {
             val open = additional != null && !(additional.isBoolean && !additional.asBoolean())
             return Obj(props, open) to nullable
         }
+        val mapValues = schema.get("additionalProperties")?.takeIf { it.isObject && it.size() > 0 }
+        if (isObject && mapValues != null && schema.path("required").isEmpty()) {
+            return Many(shape(mapValues, stack).first, Container.MAP) to nullable
+        }
         if (isObject) {
             val required = schema.path("required").map { it.asText() }
             return Free(required) to nullable
         }
         if (plainTypes?.contains("array") == true) {
             if (schema.has("items") && !schema.has("prefixItems")) {
-                return Arr(shape(schema.get("items"), stack).first) to nullable
+                return Many(shape(schema.get("items"), stack).first) to nullable
             }
             return Leaf() to nullable
         }
