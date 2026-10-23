@@ -34,6 +34,7 @@ private constructor(
     private val colors: JsonField<List<SportsTeamColor>>,
     private val logos: JsonField<SportsTeamLogos>,
     private val xUserId: JsonField<String>,
+    private val record: JsonField<SportsTeamRecord>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -48,7 +49,8 @@ private constructor(
         @JsonProperty("colors") @ExcludeMissing colors: JsonField<List<SportsTeamColor>> = JsonMissing.of(),
         @JsonProperty("logos") @ExcludeMissing logos: JsonField<SportsTeamLogos> = JsonMissing.of(),
         @JsonProperty("xUserId") @ExcludeMissing xUserId: JsonField<String> = JsonMissing.of(),
-    ) : this(id, name, shortName, abbreviation, alternateId, location, colors, logos, xUserId, mutableMapOf())
+        @JsonProperty("record") @ExcludeMissing record: JsonField<SportsTeamRecord> = JsonMissing.of(),
+    ) : this(id, name, shortName, abbreviation, alternateId, location, colors, logos, xUserId, record, mutableMapOf())
 
     /** The team ID that games & players refer to. */
     fun id(): String = id.getRequired("id")
@@ -65,7 +67,7 @@ private constructor(
     /** Another ID X keeps for the team. */
     fun alternateId(): Optional<String> = alternateId.getOptional("alternateId")
 
-    /** The school or place a college team plays for. X sends it only in college football schedules. */
+    /** The school or place the team plays for. X sends it in college football schedules & in a game's audience. */
     fun location(): Optional<String> = location.getOptional("location")
 
     /** The team's colors, as red, green & blue from 0 to 255. */
@@ -76,6 +78,9 @@ private constructor(
 
     /** The user ID of the team's X account. */
     fun xUserId(): Optional<String> = xUserId.getOptional("xUserId")
+
+    /** The team's wins, losses & ties this season. X sends it only in college football games. */
+    fun record(): Optional<SportsTeamRecord> = record.getOptional("record")
 
     /** Returns the raw JSON value of [id]. */
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
@@ -103,6 +108,9 @@ private constructor(
 
     /** Returns the raw JSON value of [xUserId]. */
     @JsonProperty("xUserId") @ExcludeMissing fun _xUserId(): JsonField<String> = xUserId
+
+    /** Returns the raw JSON value of [record]. */
+    @JsonProperty("record") @ExcludeMissing fun _record(): JsonField<SportsTeamRecord> = record
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -134,6 +142,7 @@ private constructor(
         private var colors: JsonField<MutableList<SportsTeamColor>>? = null
         private var logos: JsonField<SportsTeamLogos>? = null
         private var xUserId: JsonField<String>? = null
+        private var record: JsonField<SportsTeamRecord>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic internal fun from(sportsTeam: SportsTeam) = apply {
@@ -146,6 +155,7 @@ private constructor(
             colors = sportsTeam.colors.map { it.toMutableList() }
             logos = sportsTeam.logos
             xUserId = sportsTeam.xUserId
+            record = sportsTeam.record
             additionalProperties = sportsTeam.additionalProperties.toMutableMap()
         }
 
@@ -187,7 +197,7 @@ private constructor(
         /** Sets [Builder.alternateId] to an arbitrary JSON value. */
         fun alternateId(alternateId: JsonField<String>) = apply { this.alternateId = alternateId }
 
-        /** The school or place a college team plays for. X sends it only in college football schedules. */
+        /** The school or place the team plays for. X sends it in college football schedules & in a game's audience. */
         fun location(location: String?) = location(JsonField.ofNullable(location))
 
         fun location(location: Optional<String>) = location(location.getOrNull())
@@ -222,6 +232,14 @@ private constructor(
 
         /** Sets [Builder.xUserId] to an arbitrary JSON value. */
         fun xUserId(xUserId: JsonField<String>) = apply { this.xUserId = xUserId }
+
+        /** The team's wins, losses & ties this season. X sends it only in college football games. */
+        fun record(record: SportsTeamRecord?) = record(JsonField.ofNullable(record))
+
+        fun record(record: Optional<SportsTeamRecord>) = record(record.getOrNull())
+
+        /** Sets [Builder.record] to an arbitrary JSON value. */
+        fun record(record: JsonField<SportsTeamRecord>) = apply { this.record = record }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -258,6 +276,7 @@ private constructor(
                 checkRequired("colors", colors).map { it.toImmutable() },
                 checkRequired("logos", logos),
                 checkRequired("xUserId", xUserId),
+                checkRequired("record", record),
                 additionalProperties.toMutableMap(),
             )
     }
@@ -284,6 +303,7 @@ private constructor(
         colors().forEach { it.validate() }
         logos().validate()
         xUserId()
+        record().ifPresent { it.validate() }
         validated = true
     }
 
@@ -304,7 +324,8 @@ private constructor(
             (if (location.asKnown().isPresent) 1 else 0) +
             (colors.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (logos.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (xUserId.asKnown().isPresent) 1 else 0)
+            (if (xUserId.asKnown().isPresent) 1 else 0) +
+            (record.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -321,13 +342,14 @@ private constructor(
             colors == other.colors &&
             logos == other.logos &&
             xUserId == other.xUserId &&
+            record == other.record &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, name, shortName, abbreviation, alternateId, location, colors, logos, xUserId, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(id, name, shortName, abbreviation, alternateId, location, colors, logos, xUserId, record, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SportsTeam{id=$id, name=$name, shortName=$shortName, abbreviation=$abbreviation, alternateId=$alternateId, location=$location, colors=$colors, logos=$logos, xUserId=$xUserId, additionalProperties=$additionalProperties}"
+        "SportsTeam{id=$id, name=$name, shortName=$shortName, abbreviation=$abbreviation, alternateId=$alternateId, location=$location, colors=$colors, logos=$logos, xUserId=$xUserId, record=$record, additionalProperties=$additionalProperties}"
 }
