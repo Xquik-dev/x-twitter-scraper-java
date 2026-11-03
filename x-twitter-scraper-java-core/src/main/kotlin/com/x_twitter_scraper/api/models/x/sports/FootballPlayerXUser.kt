@@ -26,6 +26,9 @@ private constructor(
     private val id: JsonField<String>,
     private val username: JsonField<String>,
     private val blueVerified: JsonField<Boolean>,
+    private val protected_: JsonField<Boolean>,
+    private val superFollowEligible: JsonField<Boolean>,
+    private val labelType: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -36,7 +39,14 @@ private constructor(
         @JsonProperty("blueVerified")
         @ExcludeMissing
         blueVerified: JsonField<Boolean> = JsonMissing.of(),
-    ) : this(id, username, blueVerified, mutableMapOf())
+        @JsonProperty("protected")
+        @ExcludeMissing
+        protected_: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("superFollowEligible")
+        @ExcludeMissing
+        superFollowEligible: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("labelType") @ExcludeMissing labelType: JsonField<String> = JsonMissing.of(),
+    ) : this(id, username, blueVerified, protected_, superFollowEligible, labelType, mutableMapOf())
 
     /** The account's user ID. */
     fun id(): String = id.getRequired("id")
@@ -46,6 +56,16 @@ private constructor(
 
     /** Whether the account has a blue check. */
     fun blueVerified(): Optional<Boolean> = blueVerified.getOptional("blueVerified")
+
+    /** Whether the account protects its posts. Only rosters carry it. */
+    fun protected_(): Optional<Boolean> = protected_.getOptional("protected")
+
+    /** Whether the account can offer subscriptions. Only rosters carry it. */
+    fun superFollowEligible(): Optional<Boolean> =
+        superFollowEligible.getOptional("superFollowEligible")
+
+    /** The label X highlights on the account, such as BusinessLabel. Only rosters carry it. */
+    fun labelType(): Optional<String> = labelType.getOptional("labelType")
 
     /** Returns the raw JSON value of [id]. */
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
@@ -57,6 +77,17 @@ private constructor(
     @JsonProperty("blueVerified")
     @ExcludeMissing
     fun _blueVerified(): JsonField<Boolean> = blueVerified
+
+    /** Returns the raw JSON value of [protected_]. */
+    @JsonProperty("protected") @ExcludeMissing fun _protected_(): JsonField<Boolean> = protected_
+
+    /** Returns the raw JSON value of [superFollowEligible]. */
+    @JsonProperty("superFollowEligible")
+    @ExcludeMissing
+    fun _superFollowEligible(): JsonField<Boolean> = superFollowEligible
+
+    /** Returns the raw JSON value of [labelType]. */
+    @JsonProperty("labelType") @ExcludeMissing fun _labelType(): JsonField<String> = labelType
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -82,6 +113,9 @@ private constructor(
         private var id: JsonField<String>? = null
         private var username: JsonField<String>? = null
         private var blueVerified: JsonField<Boolean>? = null
+        private var protected_: JsonField<Boolean>? = null
+        private var superFollowEligible: JsonField<Boolean>? = null
+        private var labelType: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -89,6 +123,9 @@ private constructor(
             id = footballPlayerXUser.id
             username = footballPlayerXUser.username
             blueVerified = footballPlayerXUser.blueVerified
+            protected_ = footballPlayerXUser.protected_
+            superFollowEligible = footballPlayerXUser.superFollowEligible
+            labelType = footballPlayerXUser.labelType
             additionalProperties = footballPlayerXUser.additionalProperties.toMutableMap()
         }
 
@@ -117,6 +154,39 @@ private constructor(
         fun blueVerified(blueVerified: JsonField<Boolean>) = apply {
             this.blueVerified = blueVerified
         }
+
+        /** Whether the account protects its posts. Only rosters carry it. */
+        fun protected_(protected_: Boolean?) = protected_(JsonField.ofNullable(protected_))
+
+        fun protected_(protected_: Boolean) = protected_(protected_ as Boolean?)
+
+        fun protected_(protected_: Optional<Boolean>) = protected_(protected_.getOrNull())
+
+        /** Sets [Builder.protected_] to an arbitrary JSON value. */
+        fun protected_(protected_: JsonField<Boolean>) = apply { this.protected_ = protected_ }
+
+        /** Whether the account can offer subscriptions. Only rosters carry it. */
+        fun superFollowEligible(superFollowEligible: Boolean?) =
+            superFollowEligible(JsonField.ofNullable(superFollowEligible))
+
+        fun superFollowEligible(superFollowEligible: Boolean) =
+            superFollowEligible(superFollowEligible as Boolean?)
+
+        fun superFollowEligible(superFollowEligible: Optional<Boolean>) =
+            superFollowEligible(superFollowEligible.getOrNull())
+
+        /** Sets [Builder.superFollowEligible] to an arbitrary JSON value. */
+        fun superFollowEligible(superFollowEligible: JsonField<Boolean>) = apply {
+            this.superFollowEligible = superFollowEligible
+        }
+
+        /** The label X highlights on the account, such as BusinessLabel. Only rosters carry it. */
+        fun labelType(labelType: String?) = labelType(JsonField.ofNullable(labelType))
+
+        fun labelType(labelType: Optional<String>) = labelType(labelType.getOrNull())
+
+        /** Sets [Builder.labelType] to an arbitrary JSON value. */
+        fun labelType(labelType: JsonField<String>) = apply { this.labelType = labelType }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -147,6 +217,9 @@ private constructor(
                 checkRequired("id", id),
                 checkRequired("username", username),
                 checkRequired("blueVerified", blueVerified),
+                checkRequired("protected_", protected_),
+                checkRequired("superFollowEligible", superFollowEligible),
+                checkRequired("labelType", labelType),
                 additionalProperties.toMutableMap(),
             )
     }
@@ -167,6 +240,9 @@ private constructor(
         id()
         username()
         blueVerified()
+        protected_()
+        superFollowEligible()
+        labelType()
         validated = true
     }
 
@@ -182,7 +258,10 @@ private constructor(
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (username.asKnown().isPresent) 1 else 0) +
-            (if (blueVerified.asKnown().isPresent) 1 else 0)
+            (if (blueVerified.asKnown().isPresent) 1 else 0) +
+            (if (protected_.asKnown().isPresent) 1 else 0) +
+            (if (superFollowEligible.asKnown().isPresent) 1 else 0) +
+            (if (labelType.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -193,15 +272,26 @@ private constructor(
             id == other.id &&
             username == other.username &&
             blueVerified == other.blueVerified &&
+            protected_ == other.protected_ &&
+            superFollowEligible == other.superFollowEligible &&
+            labelType == other.labelType &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, username, blueVerified, additionalProperties)
+        Objects.hash(
+            id,
+            username,
+            blueVerified,
+            protected_,
+            superFollowEligible,
+            labelType,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "FootballPlayerXUser{id=$id, username=$username, blueVerified=$blueVerified, additionalProperties=$additionalProperties}"
+        "FootballPlayerXUser{id=$id, username=$username, blueVerified=$blueVerified, protected_=$protected_, superFollowEligible=$superFollowEligible, labelType=$labelType, additionalProperties=$additionalProperties}"
 }

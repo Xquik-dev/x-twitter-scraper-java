@@ -7,7 +7,6 @@ package com.x_twitter_scraper.api.services.blocking
 import com.google.errorprone.annotations.MustBeClosed
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.RequestOptions
-import com.x_twitter_scraper.api.core.http.HttpResponse
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.models.activity.ActivityListParams
 import com.x_twitter_scraper.api.models.activity.ActivityLogRow

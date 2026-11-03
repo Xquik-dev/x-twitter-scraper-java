@@ -4,18 +4,11 @@
 
 package com.x_twitter_scraper.api.models
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter
-import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.x_twitter_scraper.api.core.Enum
-import com.x_twitter_scraper.api.core.ExcludeMissing
 import com.x_twitter_scraper.api.core.JsonField
-import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
-import java.util.Collections
-import java.util.Objects
 
 /** A post field X sent without its value. */
 class UnknownField @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -32,7 +25,7 @@ class UnknownField @JsonCreator private constructor(private val value: JsonField
 
     /** An enum containing [UnknownField]'s known values. */
     enum class Known {
-        TEXT,
+        TEXT
     }
 
     /** An enum containing [UnknownField]'s known values, as well as an [_UNKNOWN] member. */
@@ -42,7 +35,10 @@ class UnknownField @JsonCreator private constructor(private val value: JsonField
         _UNKNOWN,
     }
 
-    /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+    /**
+     * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if
+     * unknown.
+     */
     fun value(): Value =
         when (this) {
             TEXT -> Value.TEXT
@@ -52,7 +48,8 @@ class UnknownField @JsonCreator private constructor(private val value: JsonField
     /**
      * Returns an enum member corresponding to this class instance's value.
      *
-     * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a known member.
+     * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a known
+     *   member.
      */
     fun known(): Known =
         when (this) {
@@ -63,10 +60,13 @@ class UnknownField @JsonCreator private constructor(private val value: JsonField
     /**
      * Returns this class instance's primitive wire representation.
      *
-     * @throws XTwitterScraperInvalidDataException if this class instance's value does not have the expected primitive type.
+     * @throws XTwitterScraperInvalidDataException if this class instance's value does not have the
+     *   expected primitive type.
      */
     fun asString(): String =
-        _value().asString().orElseThrow { XTwitterScraperInvalidDataException("Value is not a String") }
+        _value().asString().orElseThrow {
+            XTwitterScraperInvalidDataException("Value is not a String")
+        }
 
     private var validated: Boolean = false
 

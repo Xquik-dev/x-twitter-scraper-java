@@ -4,6 +4,7 @@
 
 ### Breaking changes
 
+* `CreditTopupBalanceResponse.builder()` requires `chargedCurrency` and `chargedMinorUnits`, which the API always sends. Code that builds the response by hand must set both.
 * `AccountBulkRetryParams._body()` returns `AccountBulkRetryParams.Body` instead of `Optional<Map<String, JsonValue>>`, and bulk retry always sends a JSON body, which is `{}` when no account is named. Code that calls `_body()` must change, and compiled callers must rebuild.
 * `MediaUploadParams`, `ProfileUpdateAvatarParams` and `ProfileUpdateBannerParams` take exactly 1 of `url` or `file`, so their `url()` getters return `Optional<String>`. Builders that set `url` keep working.
 
@@ -16,6 +17,14 @@
 * Events read `postId`, `postUrl`, `authorId` and `authorUsername` on post events, and the `post` monitor type.
 * `EventListParams` filters by `postMonitorId`, and event data reads `metric`, `previousText` and `versionId`.
 * `EventType` adds the 10 post event types, such as `POST_REPLY_NEW`. Account and keyword monitors reject them.
+* Posts, embedded posts and event posts read `liveEventContext` and `unknownFields`, reaction contexts read `reactedToPost`, and media reads `editedWithNativeEditor`.
+* Profile and Space affiliation labels read `auxiliaryLabels`.
+* Post monitors read `authorAvatarUrl`, `authorVerified`, `media` and `baseline`.
+* Sports teams read `recentGames`, and a player's X user reads `protected_`, `superFollowEligible` and `labelType`.
+* Top-ups and subscriptions take a `currency` from the new `Currency` model, and top-ups take `returnPath`. Their checkouts read `chargedCurrency`, and top-ups read `chargedMinorUnits`.
+* `EventStreamParams` takes `include` and `lookBack`.
+* `AccountUpdateLocaleParams.Locale` adds `JA`, `KO` and `ZH`.
+* Media downloads read `items`, reply pages read `unreachedReplies`, and extraction results read `verifiedType`.
 * Every request sends `X-Xquik-SDK: java` beside the platform headers it already sends.
 * Communities add the analytics read with `retrieveAnalytics`.
 * Posts, embedded posts and event posts return `softIntervention`, the label X shows under a post whose reach it limits.

@@ -4,9 +4,6 @@
 
 package com.x_twitter_scraper.api.models.events
 
-import com.x_twitter_scraper.api.models.UnknownField
-import com.x_twitter_scraper.api.models.LiveEventContext
-import com.x_twitter_scraper.api.models.ReactedToPost
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -34,10 +31,13 @@ import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import com.x_twitter_scraper.api.models.ContentDisclosure
 import com.x_twitter_scraper.api.models.EmbeddedTweet
 import com.x_twitter_scraper.api.models.EventType
+import com.x_twitter_scraper.api.models.LiveEventContext
+import com.x_twitter_scraper.api.models.ReactedToPost
 import com.x_twitter_scraper.api.models.SearchTweet
 import com.x_twitter_scraper.api.models.SoftIntervention
 import com.x_twitter_scraper.api.models.TweetMedia
 import com.x_twitter_scraper.api.models.UnknownCount
+import com.x_twitter_scraper.api.models.UnknownField
 import com.x_twitter_scraper.api.models.UserProfile
 import java.time.OffsetDateTime
 import java.util.Collections
@@ -916,8 +916,12 @@ private constructor(
             @JsonProperty("versionId")
             @ExcludeMissing
             versionId: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("liveEventContext") @ExcludeMissing liveEventContext: JsonField<LiveEventContext> = JsonMissing.of(),
-            @JsonProperty("unknownFields") @ExcludeMissing unknownFields: JsonField<List<UnknownField>> = JsonMissing.of(),
+            @JsonProperty("liveEventContext")
+            @ExcludeMissing
+            liveEventContext: JsonField<LiveEventContext> = JsonMissing.of(),
+            @JsonProperty("unknownFields")
+            @ExcludeMissing
+            unknownFields: JsonField<List<UnknownField>> = JsonMissing.of(),
         ) : this(
             id,
             text,
@@ -1001,7 +1005,9 @@ private constructor(
             metric,
             previousText,
             versionId,
-            liveEventContext, unknownFields, mutableMapOf(),
+            liveEventContext,
+            unknownFields,
+            mutableMapOf(),
         )
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
@@ -1300,10 +1306,15 @@ private constructor(
         fun versionId(): Optional<String> = versionId.getOptional("versionId")
 
         /** The live event the post belongs to, such as an election. */
-        fun liveEventContext(): Optional<LiveEventContext> = liveEventContext.getOptional("liveEventContext")
+        fun liveEventContext(): Optional<LiveEventContext> =
+            liveEventContext.getOptional("liveEventContext")
 
-        /** The fields X did not send for this post. text reads empty, so treat it as unknown rather than empty. Left out when X sent the text. */
-        fun unknownFields(): Optional<List<UnknownField>> = unknownFields.getOptional("unknownFields")
+        /**
+         * The fields X did not send for this post. text reads empty, so treat it as unknown rather
+         * than empty. Left out when X sent the text.
+         */
+        fun unknownFields(): Optional<List<UnknownField>> =
+            unknownFields.getOptional("unknownFields")
 
         /**
          * Returns the raw JSON value of [id].
@@ -2027,10 +2038,14 @@ private constructor(
         @JsonProperty("versionId") @ExcludeMissing fun _versionId(): JsonField<String> = versionId
 
         /** Returns the raw JSON value of [liveEventContext]. */
-        @JsonProperty("liveEventContext") @ExcludeMissing fun _liveEventContext(): JsonField<LiveEventContext> = liveEventContext
+        @JsonProperty("liveEventContext")
+        @ExcludeMissing
+        fun _liveEventContext(): JsonField<LiveEventContext> = liveEventContext
 
         /** Returns the raw JSON value of [unknownFields]. */
-        @JsonProperty("unknownFields") @ExcludeMissing fun _unknownFields(): JsonField<List<UnknownField>> = unknownFields
+        @JsonProperty("unknownFields")
+        @ExcludeMissing
+        fun _unknownFields(): JsonField<List<UnknownField>> = unknownFields
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -2915,20 +2930,32 @@ private constructor(
             fun versionId(versionId: JsonField<String>) = apply { this.versionId = versionId }
 
             /** The live event the post belongs to, such as an election. */
-            fun liveEventContext(liveEventContext: LiveEventContext) = liveEventContext(JsonField.of(liveEventContext))
+            fun liveEventContext(liveEventContext: LiveEventContext) =
+                liveEventContext(JsonField.of(liveEventContext))
 
             /** Sets [Builder.liveEventContext] to an arbitrary JSON value. */
-            fun liveEventContext(liveEventContext: JsonField<LiveEventContext>) = apply { this.liveEventContext = liveEventContext }
+            fun liveEventContext(liveEventContext: JsonField<LiveEventContext>) = apply {
+                this.liveEventContext = liveEventContext
+            }
 
-            /** The fields X did not send for this post. text reads empty, so treat it as unknown rather than empty. Left out when X sent the text. */
-            fun unknownFields(unknownFields: List<UnknownField>) = unknownFields(JsonField.of(unknownFields))
+            /**
+             * The fields X did not send for this post. text reads empty, so treat it as unknown
+             * rather than empty. Left out when X sent the text.
+             */
+            fun unknownFields(unknownFields: List<UnknownField>) =
+                unknownFields(JsonField.of(unknownFields))
 
             /** Sets [Builder.unknownFields] to an arbitrary JSON value. */
-            fun unknownFields(unknownFields: JsonField<List<UnknownField>>) = apply { this.unknownFields = unknownFields.map { it.toMutableList() } }
+            fun unknownFields(unknownFields: JsonField<List<UnknownField>>) = apply {
+                this.unknownFields = unknownFields.map { it.toMutableList() }
+            }
 
             /** Adds a single [UnknownField] to [unknownFields]. */
             fun addUnknownField(unknownField: UnknownField) = apply {
-                unknownFields = (unknownFields ?: JsonField.of(mutableListOf())).also { checkKnown("unknownFields", it).add(unknownField) }
+                unknownFields =
+                    (unknownFields ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("unknownFields", it).add(unknownField)
+                    }
             }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -3240,8 +3267,8 @@ private constructor(
                 (metric.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (previousText.asKnown().isPresent) 1 else 0) +
                 (if (versionId.asKnown().isPresent) 1 else 0) +
-            (liveEventContext.asKnown().getOrNull()?.validity() ?: 0) +
-            (unknownFields.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
+                (liveEventContext.asKnown().getOrNull()?.validity() ?: 0) +
+                (unknownFields.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -3419,7 +3446,9 @@ private constructor(
                 metric,
                 previousText,
                 versionId,
-                liveEventContext, unknownFields, additionalProperties,
+                liveEventContext,
+                unknownFields,
+                additionalProperties,
             )
         }
 
@@ -7393,11 +7422,14 @@ private constructor(
                 @JsonProperty("reactedToUser")
                 @ExcludeMissing
                 reactedToUser: JsonField<Author> = JsonMissing.of(),
-                @JsonProperty("reactedToPost") @ExcludeMissing reactedToPost: JsonField<ReactedToPost> = JsonMissing.of(),
+                @JsonProperty("reactedToPost")
+                @ExcludeMissing
+                reactedToPost: JsonField<ReactedToPost> = JsonMissing.of(),
             ) : this(
                 reactedToPostId,
                 reactedToUser,
-                reactedToPost, mutableMapOf(),
+                reactedToPost,
+                mutableMapOf(),
             )
 
             /**
@@ -7410,8 +7442,13 @@ private constructor(
              */
             fun reactedToUser(): Optional<Author> = reactedToUser.getOptional("reactedToUser")
 
-            /** The post this one reacts to, with the same fields. X often sends only its ID, author & edit history. Then unknownFields lists text, and the flags X did not send are left out. */
-            fun reactedToPost(): Optional<ReactedToPost> = reactedToPost.getOptional("reactedToPost")
+            /**
+             * The post this one reacts to, with the same fields. X often sends only its ID, author
+             * & edit history. Then unknownFields lists text, and the flags X did not send are left
+             * out.
+             */
+            fun reactedToPost(): Optional<ReactedToPost> =
+                reactedToPost.getOptional("reactedToPost")
 
             /**
              * Returns the raw JSON value of [reactedToPostId].
@@ -7434,7 +7471,9 @@ private constructor(
             fun _reactedToUser(): JsonField<Author> = reactedToUser
 
             /** Returns the raw JSON value of [reactedToPost]. */
-            @JsonProperty("reactedToPost") @ExcludeMissing fun _reactedToPost(): JsonField<ReactedToPost> = reactedToPost
+            @JsonProperty("reactedToPost")
+            @ExcludeMissing
+            fun _reactedToPost(): JsonField<ReactedToPost> = reactedToPost
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -7484,11 +7523,18 @@ private constructor(
                     this.reactedToUser = reactedToUser
                 }
 
-                /** The post this one reacts to, with the same fields. X often sends only its ID, author & edit history. Then unknownFields lists text, and the flags X did not send are left out. */
-                fun reactedToPost(reactedToPost: ReactedToPost) = reactedToPost(JsonField.of(reactedToPost))
+                /**
+                 * The post this one reacts to, with the same fields. X often sends only its ID,
+                 * author & edit history. Then unknownFields lists text, and the flags X did not
+                 * send are left out.
+                 */
+                fun reactedToPost(reactedToPost: ReactedToPost) =
+                    reactedToPost(JsonField.of(reactedToPost))
 
                 /** Sets [Builder.reactedToPost] to an arbitrary JSON value. */
-                fun reactedToPost(reactedToPost: JsonField<ReactedToPost>) = apply { this.reactedToPost = reactedToPost }
+                fun reactedToPost(reactedToPost: JsonField<ReactedToPost>) = apply {
+                    this.reactedToPost = reactedToPost
+                }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                     this.additionalProperties.clear()
@@ -7561,7 +7607,7 @@ private constructor(
                 (0) +
                     (if (reactedToPostId.asKnown().isPresent) 1 else 0) +
                     (reactedToUser.asKnown().getOrNull()?.validity() ?: 0) +
-                (reactedToPost.asKnown().getOrNull()?.validity() ?: 0)
+                    (reactedToPost.asKnown().getOrNull()?.validity() ?: 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {

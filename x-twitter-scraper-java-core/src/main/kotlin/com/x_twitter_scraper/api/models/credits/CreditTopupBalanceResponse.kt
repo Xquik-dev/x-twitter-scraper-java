@@ -14,14 +14,18 @@ import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import com.x_twitter_scraper.api.models.Currency
 import java.util.Collections
 import java.util.Objects
+import kotlin.jvm.optionals.getOrNull
 
 class CreditTopupBalanceResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val redirectUrl: JsonField<String>,
     private val url: JsonField<String>,
+    private val chargedCurrency: JsonField<Currency>,
+    private val chargedMinorUnits: JsonField<Long>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -31,7 +35,13 @@ private constructor(
         @ExcludeMissing
         redirectUrl: JsonField<String> = JsonMissing.of(),
         @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
-    ) : this(redirectUrl, url, mutableMapOf())
+        @JsonProperty("chargedCurrency")
+        @ExcludeMissing
+        chargedCurrency: JsonField<Currency> = JsonMissing.of(),
+        @JsonProperty("chargedMinorUnits")
+        @ExcludeMissing
+        chargedMinorUnits: JsonField<Long> = JsonMissing.of(),
+    ) : this(redirectUrl, url, chargedCurrency, chargedMinorUnits, mutableMapOf())
 
     /**
      * Stable Xquik redirect URL for the active checkout.
@@ -50,6 +60,15 @@ private constructor(
      */
     fun url(): String = url.getRequired("url")
 
+    /** Currency the checkout charges. */
+    fun chargedCurrency(): Currency = chargedCurrency.getRequired("chargedCurrency")
+
+    /**
+     * Amount the checkout charges before tax, in the currency's smallest unit. JPY and KRW have no
+     * decimals, so 1580 JPY is ¥1,580.
+     */
+    fun chargedMinorUnits(): Long = chargedMinorUnits.getRequired("chargedMinorUnits")
+
     /**
      * Returns the raw JSON value of [redirectUrl].
      *
@@ -65,6 +84,16 @@ private constructor(
      * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
+
+    /** Returns the raw JSON value of [chargedCurrency]. */
+    @JsonProperty("chargedCurrency")
+    @ExcludeMissing
+    fun _chargedCurrency(): JsonField<Currency> = chargedCurrency
+
+    /** Returns the raw JSON value of [chargedMinorUnits]. */
+    @JsonProperty("chargedMinorUnits")
+    @ExcludeMissing
+    fun _chargedMinorUnits(): JsonField<Long> = chargedMinorUnits
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -87,6 +116,8 @@ private constructor(
          * ```java
          * .redirectUrl()
          * .url()
+         * .chargedCurrency()
+         * .chargedMinorUnits()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -97,12 +128,16 @@ private constructor(
 
         private var redirectUrl: JsonField<String>? = null
         private var url: JsonField<String>? = null
+        private var chargedCurrency: JsonField<Currency>? = null
+        private var chargedMinorUnits: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(creditTopupBalanceResponse: CreditTopupBalanceResponse) = apply {
             redirectUrl = creditTopupBalanceResponse.redirectUrl
             url = creditTopupBalanceResponse.url
+            chargedCurrency = creditTopupBalanceResponse.chargedCurrency
+            chargedMinorUnits = creditTopupBalanceResponse.chargedMinorUnits
             additionalProperties = creditTopupBalanceResponse.additionalProperties.toMutableMap()
         }
 
@@ -120,6 +155,27 @@ private constructor(
 
         /** Sets [Builder.url] to an arbitrary JSON value. */
         fun url(url: JsonField<String>) = apply { this.url = url }
+
+        /** Currency the checkout charges. */
+        fun chargedCurrency(chargedCurrency: Currency) =
+            chargedCurrency(JsonField.of(chargedCurrency))
+
+        /** Sets [Builder.chargedCurrency] to an arbitrary JSON value. */
+        fun chargedCurrency(chargedCurrency: JsonField<Currency>) = apply {
+            this.chargedCurrency = chargedCurrency
+        }
+
+        /**
+         * Amount the checkout charges before tax, in the currency's smallest unit. JPY and KRW have
+         * no decimals, so 1580 JPY is ¥1,580.
+         */
+        fun chargedMinorUnits(chargedMinorUnits: Long) =
+            chargedMinorUnits(JsonField.of(chargedMinorUnits))
+
+        /** Sets [Builder.chargedMinorUnits] to an arbitrary JSON value. */
+        fun chargedMinorUnits(chargedMinorUnits: JsonField<Long>) = apply {
+            this.chargedMinorUnits = chargedMinorUnits
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -149,6 +205,8 @@ private constructor(
          * ```java
          * .redirectUrl()
          * .url()
+         * .chargedCurrency()
+         * .chargedMinorUnits()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -157,6 +215,8 @@ private constructor(
             CreditTopupBalanceResponse(
                 checkRequired("redirectUrl", redirectUrl),
                 checkRequired("url", url),
+                checkRequired("chargedCurrency", chargedCurrency),
+                checkRequired("chargedMinorUnits", chargedMinorUnits),
                 additionalProperties.toMutableMap(),
             )
     }
@@ -178,6 +238,8 @@ private constructor(
 
         redirectUrl()
         url()
+        chargedCurrency().validate()
+        chargedMinorUnits()
         validated = true
     }
 
@@ -191,7 +253,10 @@ private constructor(
 
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (redirectUrl.asKnown().isPresent) 1 else 0) + (if (url.asKnown().isPresent) 1 else 0)
+        (if (redirectUrl.asKnown().isPresent) 1 else 0) +
+            (if (url.asKnown().isPresent) 1 else 0) +
+            (chargedCurrency.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (chargedMinorUnits.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -201,13 +266,17 @@ private constructor(
         return other is CreditTopupBalanceResponse &&
             redirectUrl == other.redirectUrl &&
             url == other.url &&
+            chargedCurrency == other.chargedCurrency &&
+            chargedMinorUnits == other.chargedMinorUnits &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(redirectUrl, url, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(redirectUrl, url, chargedCurrency, chargedMinorUnits, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CreditTopupBalanceResponse{redirectUrl=$redirectUrl, url=$url, additionalProperties=$additionalProperties}"
+        "CreditTopupBalanceResponse{redirectUrl=$redirectUrl, url=$url, chargedCurrency=$chargedCurrency, chargedMinorUnits=$chargedMinorUnits, additionalProperties=$additionalProperties}"
 }

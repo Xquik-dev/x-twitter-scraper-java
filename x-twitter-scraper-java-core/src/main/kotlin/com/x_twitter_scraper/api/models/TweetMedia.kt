@@ -148,7 +148,9 @@ private constructor(
         @ExcludeMissing
         watchNowUrl: JsonField<String> = JsonMissing.of(),
         @JsonProperty("width") @ExcludeMissing width: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("editedWithNativeEditor") @ExcludeMissing editedWithNativeEditor: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("editedWithNativeEditor")
+        @ExcludeMissing
+        editedWithNativeEditor: JsonField<Boolean> = JsonMissing.of(),
     ) : this(
         mediaUrl,
         type,
@@ -185,7 +187,8 @@ private constructor(
         visitSiteUrl,
         watchNowUrl,
         width,
-        editedWithNativeEditor, mutableMapOf(),
+        editedWithNativeEditor,
+        mutableMapOf(),
     )
 
     /**
@@ -435,8 +438,12 @@ private constructor(
      */
     fun width(): Optional<Long> = width.getOptional("width")
 
-    /** True when the author edited this media in X's own editor before posting. Absent when X sends no editor info. */
-    fun editedWithNativeEditor(): Optional<Boolean> = editedWithNativeEditor.getOptional("editedWithNativeEditor")
+    /**
+     * True when the author edited this media in X's own editor before posting. Absent when X sends
+     * no editor info.
+     */
+    fun editedWithNativeEditor(): Optional<Boolean> =
+        editedWithNativeEditor.getOptional("editedWithNativeEditor")
 
     /**
      * Returns the raw JSON value of [mediaUrl].
@@ -720,7 +727,9 @@ private constructor(
     @JsonProperty("width") @ExcludeMissing fun _width(): JsonField<Long> = width
 
     /** Returns the raw JSON value of [editedWithNativeEditor]. */
-    @JsonProperty("editedWithNativeEditor") @ExcludeMissing fun _editedWithNativeEditor(): JsonField<Boolean> = editedWithNativeEditor
+    @JsonProperty("editedWithNativeEditor")
+    @ExcludeMissing
+    fun _editedWithNativeEditor(): JsonField<Boolean> = editedWithNativeEditor
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1138,11 +1147,17 @@ private constructor(
         /** Sets [Builder.width] to an arbitrary JSON value. */
         fun width(width: JsonField<Long>) = apply { this.width = width }
 
-        /** True when the author edited this media in X's own editor before posting. Absent when X sends no editor info. */
-        fun editedWithNativeEditor(editedWithNativeEditor: Boolean) = editedWithNativeEditor(JsonField.of(editedWithNativeEditor))
+        /**
+         * True when the author edited this media in X's own editor before posting. Absent when X
+         * sends no editor info.
+         */
+        fun editedWithNativeEditor(editedWithNativeEditor: Boolean) =
+            editedWithNativeEditor(JsonField.of(editedWithNativeEditor))
 
         /** Sets [Builder.editedWithNativeEditor] to an arbitrary JSON value. */
-        fun editedWithNativeEditor(editedWithNativeEditor: JsonField<Boolean>) = apply { this.editedWithNativeEditor = editedWithNativeEditor }
+        fun editedWithNativeEditor(editedWithNativeEditor: JsonField<Boolean>) = apply {
+            this.editedWithNativeEditor = editedWithNativeEditor
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -1318,7 +1333,7 @@ private constructor(
             (if (visitSiteUrl.asKnown().isPresent) 1 else 0) +
             (if (watchNowUrl.asKnown().isPresent) 1 else 0) +
             (if (width.asKnown().isPresent) 1 else 0) +
-        (if (editedWithNativeEditor.asKnown().isPresent) 1 else 0)
+            (if (editedWithNativeEditor.asKnown().isPresent) 1 else 0)
 
     class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -2568,7 +2583,8 @@ private constructor(
             visitSiteUrl,
             watchNowUrl,
             width,
-            editedWithNativeEditor, additionalProperties,
+            editedWithNativeEditor,
+            additionalProperties,
         )
     }
 

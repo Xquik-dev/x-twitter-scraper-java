@@ -264,6 +264,7 @@
       "GET /api/v1/x/spaces/search response extra spaces[].tweet.hiddenByAuthor",
       "GET /api/v1/x/spaces/{id} response extra space.sharings[].tweet.hiddenByAuthor",
       "GET /api/v1/x/spaces/{id} response extra space.tweet.hiddenByAuthor",
+      "GET /api/v1/x/sports/{league}/games/{id}/posts response extra tweets[].hiddenByAuthor",
       "GET /api/v1/x/timeline response extra tweets[].hiddenByAuthor",
       "GET /api/v1/x/tweets response extra tweets[].hiddenByAuthor",
       "GET /api/v1/x/tweets/search response extra tweets[].hiddenByAuthor",

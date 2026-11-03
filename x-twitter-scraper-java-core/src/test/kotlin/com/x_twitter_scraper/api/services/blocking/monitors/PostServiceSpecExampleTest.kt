@@ -312,6 +312,16 @@ internal class PostServiceSpecExampleTest {
                   "current": 470,
                   "gain": 0
                 }
+              },
+              "media": [],
+              "baseline": {
+                "at": "2026-10-22T11:00:00Z",
+                "views": 541100,
+                "likes": 1885,
+                "retweets": 112,
+                "replies": 85,
+                "quotes": 87,
+                "bookmarks": 470
               }
             }
             """
@@ -360,6 +370,16 @@ internal class PostServiceSpecExampleTest {
                   "current": 471,
                   "gain": 1
                 }
+              },
+              "media": [],
+              "baseline": {
+                "at": "2026-10-22T11:00:00Z",
+                "views": 541100,
+                "likes": 1885,
+                "retweets": 112,
+                "replies": 85,
+                "quotes": 87,
+                "bookmarks": 470
               }
             }
             """
@@ -414,6 +434,16 @@ internal class PostServiceSpecExampleTest {
                       "current": 471,
                       "gain": 1
                     }
+                  },
+                  "media": [],
+                  "baseline": {
+                    "at": "2026-10-22T11:00:00Z",
+                    "views": 541100,
+                    "likes": 1885,
+                    "retweets": 112,
+                    "replies": 85,
+                    "quotes": 87,
+                    "bookmarks": 470
                   }
                 }
               ],

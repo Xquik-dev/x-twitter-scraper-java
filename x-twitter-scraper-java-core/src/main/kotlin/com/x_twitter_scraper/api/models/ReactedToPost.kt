@@ -7,25 +7,21 @@ package com.x_twitter_scraper.api.models
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.x_twitter_scraper.api.core.ExcludeMissing
-import com.x_twitter_scraper.api.core.JsonField
-import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.util.Collections
 import java.util.Objects
 
-/** The post a reaction answers. X often sends only its ID, author and edit history, so its fields stay open. */
+/**
+ * The post a reaction answers. X often sends only its ID, author and edit history, so its fields
+ * stay open.
+ */
 class ReactedToPost
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
-    private val additionalProperties: MutableMap<String, JsonValue>,
-) {
+private constructor(private val additionalProperties: MutableMap<String, JsonValue>) {
 
-    @JsonCreator
-    private constructor(
-    ) : this(mutableMapOf())
+    @JsonCreator private constructor() : this(mutableMapOf())
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -50,7 +46,8 @@ private constructor(
 
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(reactedToPost: ReactedToPost) = apply {
+        @JvmSynthetic
+        internal fun from(reactedToPost: ReactedToPost) = apply {
             additionalProperties = reactedToPost.additionalProperties.toMutableMap()
         }
 
@@ -73,14 +70,8 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
-        /**
-         * Returns an immutable instance of [ReactedToPost].
-         *
-         */
-        fun build(): ReactedToPost =
-            ReactedToPost(
-                additionalProperties.toMutableMap(),
-            )
+        /** Returns an immutable instance of [ReactedToPost]. */
+        fun build(): ReactedToPost = ReactedToPost(additionalProperties.toMutableMap())
     }
 
     private var validated: Boolean = false
@@ -88,7 +79,8 @@ private constructor(
     /**
      * Validates that the types of all values in this object match their expected types recursively.
      *
-     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
      */
     fun validate(): ReactedToPost = apply {
         if (validated) {
@@ -106,22 +98,19 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
-        0
+    @JvmSynthetic internal fun validity(): Int = 0
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is ReactedToPost &&
-            additionalProperties == other.additionalProperties
+        return other is ReactedToPost && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "ReactedToPost{additionalProperties=$additionalProperties}"
+    override fun toString() = "ReactedToPost{additionalProperties=$additionalProperties}"
 }

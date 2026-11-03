@@ -517,8 +517,8 @@ private constructor(
             /**
              * Maps an unknown variant of [Count] to a value of type [T].
              *
-             * An instance of [Count] can contain an unknown variant if it was deserialized from data
-             * that doesn't match any known variant.
+             * An instance of [Count] can contain an unknown variant if it was deserialized from
+             * data that doesn't match any known variant.
              *
              * @throws XTwitterScraperInvalidDataException in the default implementation.
              */
@@ -568,5 +568,4 @@ private constructor(
             }
         }
     }
-
 }

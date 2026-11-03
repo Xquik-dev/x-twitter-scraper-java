@@ -52,13 +52,32 @@ private constructor(
         @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of(),
         @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
         @JsonProperty("requestId") @ExcludeMissing requestId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("timestamps") @ExcludeMissing timestamps: JsonField<Timestamps> = JsonMissing.of(),
+        @JsonProperty("timestamps")
+        @ExcludeMissing
+        timestamps: JsonField<Timestamps> = JsonMissing.of(),
         @JsonProperty("request") @ExcludeMissing request: JsonField<Request> = JsonMissing.of(),
         @JsonProperty("caller") @ExcludeMissing caller: JsonField<Caller> = JsonMissing.of(),
         @JsonProperty("charge") @ExcludeMissing charge: JsonField<Charge> = JsonMissing.of(),
         @JsonProperty("details") @ExcludeMissing details: JsonField<Details> = JsonMissing.of(),
-        @JsonProperty("related") @ExcludeMissing related: JsonField<List<Related>> = JsonMissing.of(),
-    ) : this(object_, id, kind, type, status, url, requestId, timestamps, request, caller, charge, details, related, mutableMapOf())
+        @JsonProperty("related")
+        @ExcludeMissing
+        related: JsonField<List<Related>> = JsonMissing.of(),
+    ) : this(
+        object_,
+        id,
+        kind,
+        type,
+        status,
+        url,
+        requestId,
+        timestamps,
+        request,
+        caller,
+        charge,
+        details,
+        related,
+        mutableMapOf(),
+    )
 
     fun object_(): Object = object_.getRequired("object")
 
@@ -68,7 +87,11 @@ private constructor(
     /** Kind of the activity. Only a signed-in dashboard session sees an `api_key` record. */
     fun kind(): Kind = kind.getRequired("kind")
 
-    /** Type of the activity within its kind, the same as the type of its Activity log row. Examples are a write action type, an extraction tool type, a monitor change, a monitor event type or a ledger entry type. */
+    /**
+     * Type of the activity within its kind, the same as the type of its Activity log row. Examples
+     * are a write action type, an extraction tool type, a monitor change, a monitor event type or a
+     * ledger entry type.
+     */
     fun type(): String = type.getRequired("type")
 
     fun status(): Status = status.getRequired("status")
@@ -81,7 +104,11 @@ private constructor(
 
     fun timestamps(): Timestamps = timestamps.getRequired("timestamps")
 
-    /** The API request behind this activity. Null for activity from before Oct 30, 2026, and for activity no API request starts, such as a monitor event, a webhook delivery or a credit grant. */
+    /**
+     * The API request behind this activity. Null for activity from before Oct 30, 2026, and for
+     * activity no API request starts, such as a monitor event, a webhook delivery or a credit
+     * grant.
+     */
     fun request(): Optional<Request> = request.getOptional("request")
 
     fun caller(): Caller = caller.getRequired("caller")
@@ -89,7 +116,10 @@ private constructor(
     /** Credits charged for this activity. */
     fun charge(): Optional<Charge> = charge.getOptional("charge")
 
-    /** Fields of this kind of activity, such as its target. A field can hold JSON, such as the data of a monitor event or the payload of a webhook delivery. */
+    /**
+     * Fields of this kind of activity, such as its target. A field can hold JSON, such as the data
+     * of a monitor event or the payload of a webhook delivery.
+     */
     fun details(): Details = details.getRequired("details")
 
     /** Up to 5 other activities on the same subject within 7 days, newest first. */
@@ -117,7 +147,9 @@ private constructor(
     @JsonProperty("requestId") @ExcludeMissing fun _requestId(): JsonField<String> = requestId
 
     /** Returns the raw JSON value of [timestamps]. */
-    @JsonProperty("timestamps") @ExcludeMissing fun _timestamps(): JsonField<Timestamps> = timestamps
+    @JsonProperty("timestamps")
+    @ExcludeMissing
+    fun _timestamps(): JsonField<Timestamps> = timestamps
 
     /** Returns the raw JSON value of [request]. */
     @JsonProperty("request") @ExcludeMissing fun _request(): JsonField<Request> = request
@@ -170,7 +202,8 @@ private constructor(
         private var related: JsonField<MutableList<Related>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(activityRecord: ActivityRecord) = apply {
+        @JvmSynthetic
+        internal fun from(activityRecord: ActivityRecord) = apply {
             object_ = activityRecord.object_
             id = activityRecord.id
             kind = activityRecord.kind
@@ -204,7 +237,11 @@ private constructor(
         /** Sets [Builder.kind] to an arbitrary JSON value. */
         fun kind(kind: JsonField<Kind>) = apply { this.kind = kind }
 
-        /** Type of the activity within its kind, the same as the type of its Activity log row. Examples are a write action type, an extraction tool type, a monitor change, a monitor event type or a ledger entry type. */
+        /**
+         * Type of the activity within its kind, the same as the type of its Activity log row.
+         * Examples are a write action type, an extraction tool type, a monitor change, a monitor
+         * event type or a ledger entry type.
+         */
         fun type(type: String) = type(JsonField.of(type))
 
         /** Sets [Builder.type] to an arbitrary JSON value. */
@@ -235,7 +272,11 @@ private constructor(
         /** Sets [Builder.timestamps] to an arbitrary JSON value. */
         fun timestamps(timestamps: JsonField<Timestamps>) = apply { this.timestamps = timestamps }
 
-        /** The API request behind this activity. Null for activity from before Oct 30, 2026, and for activity no API request starts, such as a monitor event, a webhook delivery or a credit grant. */
+        /**
+         * The API request behind this activity. Null for activity from before Oct 30, 2026, and for
+         * activity no API request starts, such as a monitor event, a webhook delivery or a credit
+         * grant.
+         */
         fun request(request: Request?) = request(JsonField.ofNullable(request))
 
         /** Alias for calling [Builder.request] with `request.orElse(null)`. */
@@ -258,7 +299,10 @@ private constructor(
         /** Sets [Builder.charge] to an arbitrary JSON value. */
         fun charge(charge: JsonField<Charge>) = apply { this.charge = charge }
 
-        /** Fields of this kind of activity, such as its target. A field can hold JSON, such as the data of a monitor event or the payload of a webhook delivery. */
+        /**
+         * Fields of this kind of activity, such as its target. A field can hold JSON, such as the
+         * data of a monitor event or the payload of a webhook delivery.
+         */
         fun details(details: Details) = details(JsonField.of(details))
 
         /** Sets [Builder.details] to an arbitrary JSON value. */
@@ -268,7 +312,9 @@ private constructor(
         fun related(related: List<Related>) = related(JsonField.of(related))
 
         /** Sets [Builder.related] to an arbitrary JSON value. */
-        fun related(related: JsonField<List<Related>>) = apply { this.related = related.map { it.toMutableList() } }
+        fun related(related: JsonField<List<Related>>) = apply {
+            this.related = related.map { it.toMutableList() }
+        }
 
         /** Adds a single [Related] to [related]. */
         fun addRelatedItem(relatedItem: Related) = apply {
@@ -328,7 +374,8 @@ private constructor(
     /**
      * Validates that the types of all values in this object match their expected types recursively.
      *
-     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
      */
     fun validate(): ActivityRecord = apply {
         if (validated) {
@@ -359,7 +406,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (object_.asKnown().getOrNull()?.validity() ?: 0) +
             (if (id.asKnown().isPresent) 1 else 0) +
             (kind.asKnown().getOrNull()?.validity() ?: 0) +
@@ -388,7 +436,7 @@ private constructor(
 
         /** An enum containing [Object]'s known values. */
         enum class Known {
-            ACTIVITY,
+            ACTIVITY
         }
 
         /** An enum containing [Object]'s known values, as well as an [_UNKNOWN] member. */
@@ -398,7 +446,10 @@ private constructor(
             _UNKNOWN,
         }
 
-        /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if unknown.
+         */
         fun value(): Value =
             when (this) {
                 ACTIVITY -> Value.ACTIVITY
@@ -408,7 +459,8 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value.
          *
-         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a known member.
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
          */
         fun known(): Known =
             when (this) {
@@ -419,10 +471,13 @@ private constructor(
         /**
          * Returns this class instance's primitive wire representation.
          *
-         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have the expected primitive type.
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow { XTwitterScraperInvalidDataException("Value is not a String") }
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
 
         private var validated: Boolean = false
 
@@ -532,7 +587,10 @@ private constructor(
             _UNKNOWN,
         }
 
-        /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if unknown.
+         */
         fun value(): Value =
             when (this) {
                 WRITE_ACTION -> Value.WRITE_ACTION
@@ -554,7 +612,8 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value.
          *
-         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a known member.
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
          */
         fun known(): Known =
             when (this) {
@@ -577,10 +636,13 @@ private constructor(
         /**
          * Returns this class instance's primitive wire representation.
          *
-         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have the expected primitive type.
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow { XTwitterScraperInvalidDataException("Value is not a String") }
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
 
         private var validated: Boolean = false
 
@@ -653,7 +715,10 @@ private constructor(
             _UNKNOWN,
         }
 
-        /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if unknown.
+         */
         fun value(): Value =
             when (this) {
                 COMPLETED -> Value.COMPLETED
@@ -666,7 +731,8 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value.
          *
-         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a known member.
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
          */
         fun known(): Known =
             when (this) {
@@ -680,10 +746,13 @@ private constructor(
         /**
          * Returns this class instance's primitive wire representation.
          *
-         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have the expected primitive type.
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow { XTwitterScraperInvalidDataException("Value is not a String") }
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
 
         private var validated: Boolean = false
 
@@ -743,22 +812,69 @@ private constructor(
 
         @JsonCreator
         private constructor(
-            @JsonProperty("createdAt") @ExcludeMissing createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("updatedAt") @ExcludeMissing updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("completedAt") @ExcludeMissing completedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("confirmedAt") @ExcludeMissing confirmedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("expiresAt") @ExcludeMissing expiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("occurredAt") @ExcludeMissing occurredAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("discoveredAt") @ExcludeMissing discoveredAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("postedAt") @ExcludeMissing postedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("firstAttemptedAt") @ExcludeMissing firstAttemptedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("deliveredAt") @ExcludeMissing deliveredAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("nextRetryAt") @ExcludeMissing nextRetryAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("exhaustedAt") @ExcludeMissing exhaustedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("drawnAt") @ExcludeMissing drawnAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("lastUsedAt") @ExcludeMissing lastUsedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("pausedAt") @ExcludeMissing pausedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-        ) : this(createdAt, updatedAt, completedAt, confirmedAt, expiresAt, occurredAt, discoveredAt, postedAt, firstAttemptedAt, deliveredAt, nextRetryAt, exhaustedAt, drawnAt, lastUsedAt, pausedAt, mutableMapOf())
+            @JsonProperty("createdAt")
+            @ExcludeMissing
+            createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("updatedAt")
+            @ExcludeMissing
+            updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("completedAt")
+            @ExcludeMissing
+            completedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("confirmedAt")
+            @ExcludeMissing
+            confirmedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("expiresAt")
+            @ExcludeMissing
+            expiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("occurredAt")
+            @ExcludeMissing
+            occurredAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("discoveredAt")
+            @ExcludeMissing
+            discoveredAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("postedAt")
+            @ExcludeMissing
+            postedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("firstAttemptedAt")
+            @ExcludeMissing
+            firstAttemptedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("deliveredAt")
+            @ExcludeMissing
+            deliveredAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("nextRetryAt")
+            @ExcludeMissing
+            nextRetryAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("exhaustedAt")
+            @ExcludeMissing
+            exhaustedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("drawnAt")
+            @ExcludeMissing
+            drawnAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("lastUsedAt")
+            @ExcludeMissing
+            lastUsedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("pausedAt")
+            @ExcludeMissing
+            pausedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        ) : this(
+            createdAt,
+            updatedAt,
+            completedAt,
+            confirmedAt,
+            expiresAt,
+            occurredAt,
+            discoveredAt,
+            postedAt,
+            firstAttemptedAt,
+            deliveredAt,
+            nextRetryAt,
+            exhaustedAt,
+            drawnAt,
+            lastUsedAt,
+            pausedAt,
+            mutableMapOf(),
+        )
 
         fun createdAt(): OffsetDateTime = createdAt.getRequired("createdAt")
 
@@ -776,7 +892,8 @@ private constructor(
 
         fun postedAt(): Optional<OffsetDateTime> = postedAt.getOptional("postedAt")
 
-        fun firstAttemptedAt(): Optional<OffsetDateTime> = firstAttemptedAt.getOptional("firstAttemptedAt")
+        fun firstAttemptedAt(): Optional<OffsetDateTime> =
+            firstAttemptedAt.getOptional("firstAttemptedAt")
 
         fun deliveredAt(): Optional<OffsetDateTime> = deliveredAt.getOptional("deliveredAt")
 
@@ -791,49 +908,77 @@ private constructor(
         fun pausedAt(): Optional<OffsetDateTime> = pausedAt.getOptional("pausedAt")
 
         /** Returns the raw JSON value of [createdAt]. */
-        @JsonProperty("createdAt") @ExcludeMissing fun _createdAt(): JsonField<OffsetDateTime> = createdAt
+        @JsonProperty("createdAt")
+        @ExcludeMissing
+        fun _createdAt(): JsonField<OffsetDateTime> = createdAt
 
         /** Returns the raw JSON value of [updatedAt]. */
-        @JsonProperty("updatedAt") @ExcludeMissing fun _updatedAt(): JsonField<OffsetDateTime> = updatedAt
+        @JsonProperty("updatedAt")
+        @ExcludeMissing
+        fun _updatedAt(): JsonField<OffsetDateTime> = updatedAt
 
         /** Returns the raw JSON value of [completedAt]. */
-        @JsonProperty("completedAt") @ExcludeMissing fun _completedAt(): JsonField<OffsetDateTime> = completedAt
+        @JsonProperty("completedAt")
+        @ExcludeMissing
+        fun _completedAt(): JsonField<OffsetDateTime> = completedAt
 
         /** Returns the raw JSON value of [confirmedAt]. */
-        @JsonProperty("confirmedAt") @ExcludeMissing fun _confirmedAt(): JsonField<OffsetDateTime> = confirmedAt
+        @JsonProperty("confirmedAt")
+        @ExcludeMissing
+        fun _confirmedAt(): JsonField<OffsetDateTime> = confirmedAt
 
         /** Returns the raw JSON value of [expiresAt]. */
-        @JsonProperty("expiresAt") @ExcludeMissing fun _expiresAt(): JsonField<OffsetDateTime> = expiresAt
+        @JsonProperty("expiresAt")
+        @ExcludeMissing
+        fun _expiresAt(): JsonField<OffsetDateTime> = expiresAt
 
         /** Returns the raw JSON value of [occurredAt]. */
-        @JsonProperty("occurredAt") @ExcludeMissing fun _occurredAt(): JsonField<OffsetDateTime> = occurredAt
+        @JsonProperty("occurredAt")
+        @ExcludeMissing
+        fun _occurredAt(): JsonField<OffsetDateTime> = occurredAt
 
         /** Returns the raw JSON value of [discoveredAt]. */
-        @JsonProperty("discoveredAt") @ExcludeMissing fun _discoveredAt(): JsonField<OffsetDateTime> = discoveredAt
+        @JsonProperty("discoveredAt")
+        @ExcludeMissing
+        fun _discoveredAt(): JsonField<OffsetDateTime> = discoveredAt
 
         /** Returns the raw JSON value of [postedAt]. */
-        @JsonProperty("postedAt") @ExcludeMissing fun _postedAt(): JsonField<OffsetDateTime> = postedAt
+        @JsonProperty("postedAt")
+        @ExcludeMissing
+        fun _postedAt(): JsonField<OffsetDateTime> = postedAt
 
         /** Returns the raw JSON value of [firstAttemptedAt]. */
-        @JsonProperty("firstAttemptedAt") @ExcludeMissing fun _firstAttemptedAt(): JsonField<OffsetDateTime> = firstAttemptedAt
+        @JsonProperty("firstAttemptedAt")
+        @ExcludeMissing
+        fun _firstAttemptedAt(): JsonField<OffsetDateTime> = firstAttemptedAt
 
         /** Returns the raw JSON value of [deliveredAt]. */
-        @JsonProperty("deliveredAt") @ExcludeMissing fun _deliveredAt(): JsonField<OffsetDateTime> = deliveredAt
+        @JsonProperty("deliveredAt")
+        @ExcludeMissing
+        fun _deliveredAt(): JsonField<OffsetDateTime> = deliveredAt
 
         /** Returns the raw JSON value of [nextRetryAt]. */
-        @JsonProperty("nextRetryAt") @ExcludeMissing fun _nextRetryAt(): JsonField<OffsetDateTime> = nextRetryAt
+        @JsonProperty("nextRetryAt")
+        @ExcludeMissing
+        fun _nextRetryAt(): JsonField<OffsetDateTime> = nextRetryAt
 
         /** Returns the raw JSON value of [exhaustedAt]. */
-        @JsonProperty("exhaustedAt") @ExcludeMissing fun _exhaustedAt(): JsonField<OffsetDateTime> = exhaustedAt
+        @JsonProperty("exhaustedAt")
+        @ExcludeMissing
+        fun _exhaustedAt(): JsonField<OffsetDateTime> = exhaustedAt
 
         /** Returns the raw JSON value of [drawnAt]. */
         @JsonProperty("drawnAt") @ExcludeMissing fun _drawnAt(): JsonField<OffsetDateTime> = drawnAt
 
         /** Returns the raw JSON value of [lastUsedAt]. */
-        @JsonProperty("lastUsedAt") @ExcludeMissing fun _lastUsedAt(): JsonField<OffsetDateTime> = lastUsedAt
+        @JsonProperty("lastUsedAt")
+        @ExcludeMissing
+        fun _lastUsedAt(): JsonField<OffsetDateTime> = lastUsedAt
 
         /** Returns the raw JSON value of [pausedAt]. */
-        @JsonProperty("pausedAt") @ExcludeMissing fun _pausedAt(): JsonField<OffsetDateTime> = pausedAt
+        @JsonProperty("pausedAt")
+        @ExcludeMissing
+        fun _pausedAt(): JsonField<OffsetDateTime> = pausedAt
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -873,7 +1018,8 @@ private constructor(
             private var pausedAt: JsonField<OffsetDateTime> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic internal fun from(timestamps: Timestamps) = apply {
+            @JvmSynthetic
+            internal fun from(timestamps: Timestamps) = apply {
                 createdAt = timestamps.createdAt
                 updatedAt = timestamps.updatedAt
                 completedAt = timestamps.completedAt
@@ -895,62 +1041,86 @@ private constructor(
             fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
             /** Sets [Builder.createdAt] to an arbitrary JSON value. */
-            fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
+            fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply {
+                this.createdAt = createdAt
+            }
 
             fun updatedAt(updatedAt: OffsetDateTime) = updatedAt(JsonField.of(updatedAt))
 
             /** Sets [Builder.updatedAt] to an arbitrary JSON value. */
-            fun updatedAt(updatedAt: JsonField<OffsetDateTime>) = apply { this.updatedAt = updatedAt }
+            fun updatedAt(updatedAt: JsonField<OffsetDateTime>) = apply {
+                this.updatedAt = updatedAt
+            }
 
             fun completedAt(completedAt: OffsetDateTime) = completedAt(JsonField.of(completedAt))
 
             /** Sets [Builder.completedAt] to an arbitrary JSON value. */
-            fun completedAt(completedAt: JsonField<OffsetDateTime>) = apply { this.completedAt = completedAt }
+            fun completedAt(completedAt: JsonField<OffsetDateTime>) = apply {
+                this.completedAt = completedAt
+            }
 
             fun confirmedAt(confirmedAt: OffsetDateTime) = confirmedAt(JsonField.of(confirmedAt))
 
             /** Sets [Builder.confirmedAt] to an arbitrary JSON value. */
-            fun confirmedAt(confirmedAt: JsonField<OffsetDateTime>) = apply { this.confirmedAt = confirmedAt }
+            fun confirmedAt(confirmedAt: JsonField<OffsetDateTime>) = apply {
+                this.confirmedAt = confirmedAt
+            }
 
             fun expiresAt(expiresAt: OffsetDateTime) = expiresAt(JsonField.of(expiresAt))
 
             /** Sets [Builder.expiresAt] to an arbitrary JSON value. */
-            fun expiresAt(expiresAt: JsonField<OffsetDateTime>) = apply { this.expiresAt = expiresAt }
+            fun expiresAt(expiresAt: JsonField<OffsetDateTime>) = apply {
+                this.expiresAt = expiresAt
+            }
 
             fun occurredAt(occurredAt: OffsetDateTime) = occurredAt(JsonField.of(occurredAt))
 
             /** Sets [Builder.occurredAt] to an arbitrary JSON value. */
-            fun occurredAt(occurredAt: JsonField<OffsetDateTime>) = apply { this.occurredAt = occurredAt }
+            fun occurredAt(occurredAt: JsonField<OffsetDateTime>) = apply {
+                this.occurredAt = occurredAt
+            }
 
-            fun discoveredAt(discoveredAt: OffsetDateTime) = discoveredAt(JsonField.of(discoveredAt))
+            fun discoveredAt(discoveredAt: OffsetDateTime) =
+                discoveredAt(JsonField.of(discoveredAt))
 
             /** Sets [Builder.discoveredAt] to an arbitrary JSON value. */
-            fun discoveredAt(discoveredAt: JsonField<OffsetDateTime>) = apply { this.discoveredAt = discoveredAt }
+            fun discoveredAt(discoveredAt: JsonField<OffsetDateTime>) = apply {
+                this.discoveredAt = discoveredAt
+            }
 
             fun postedAt(postedAt: OffsetDateTime) = postedAt(JsonField.of(postedAt))
 
             /** Sets [Builder.postedAt] to an arbitrary JSON value. */
             fun postedAt(postedAt: JsonField<OffsetDateTime>) = apply { this.postedAt = postedAt }
 
-            fun firstAttemptedAt(firstAttemptedAt: OffsetDateTime) = firstAttemptedAt(JsonField.of(firstAttemptedAt))
+            fun firstAttemptedAt(firstAttemptedAt: OffsetDateTime) =
+                firstAttemptedAt(JsonField.of(firstAttemptedAt))
 
             /** Sets [Builder.firstAttemptedAt] to an arbitrary JSON value. */
-            fun firstAttemptedAt(firstAttemptedAt: JsonField<OffsetDateTime>) = apply { this.firstAttemptedAt = firstAttemptedAt }
+            fun firstAttemptedAt(firstAttemptedAt: JsonField<OffsetDateTime>) = apply {
+                this.firstAttemptedAt = firstAttemptedAt
+            }
 
             fun deliveredAt(deliveredAt: OffsetDateTime) = deliveredAt(JsonField.of(deliveredAt))
 
             /** Sets [Builder.deliveredAt] to an arbitrary JSON value. */
-            fun deliveredAt(deliveredAt: JsonField<OffsetDateTime>) = apply { this.deliveredAt = deliveredAt }
+            fun deliveredAt(deliveredAt: JsonField<OffsetDateTime>) = apply {
+                this.deliveredAt = deliveredAt
+            }
 
             fun nextRetryAt(nextRetryAt: OffsetDateTime) = nextRetryAt(JsonField.of(nextRetryAt))
 
             /** Sets [Builder.nextRetryAt] to an arbitrary JSON value. */
-            fun nextRetryAt(nextRetryAt: JsonField<OffsetDateTime>) = apply { this.nextRetryAt = nextRetryAt }
+            fun nextRetryAt(nextRetryAt: JsonField<OffsetDateTime>) = apply {
+                this.nextRetryAt = nextRetryAt
+            }
 
             fun exhaustedAt(exhaustedAt: OffsetDateTime) = exhaustedAt(JsonField.of(exhaustedAt))
 
             /** Sets [Builder.exhaustedAt] to an arbitrary JSON value. */
-            fun exhaustedAt(exhaustedAt: JsonField<OffsetDateTime>) = apply { this.exhaustedAt = exhaustedAt }
+            fun exhaustedAt(exhaustedAt: JsonField<OffsetDateTime>) = apply {
+                this.exhaustedAt = exhaustedAt
+            }
 
             fun drawnAt(drawnAt: OffsetDateTime) = drawnAt(JsonField.of(drawnAt))
 
@@ -960,7 +1130,9 @@ private constructor(
             fun lastUsedAt(lastUsedAt: OffsetDateTime) = lastUsedAt(JsonField.of(lastUsedAt))
 
             /** Sets [Builder.lastUsedAt] to an arbitrary JSON value. */
-            fun lastUsedAt(lastUsedAt: JsonField<OffsetDateTime>) = apply { this.lastUsedAt = lastUsedAt }
+            fun lastUsedAt(lastUsedAt: JsonField<OffsetDateTime>) = apply {
+                this.lastUsedAt = lastUsedAt
+            }
 
             fun pausedAt(pausedAt: OffsetDateTime) = pausedAt(JsonField.of(pausedAt))
 
@@ -1017,9 +1189,11 @@ private constructor(
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types recursively.
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
          *
-         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
          */
         fun validate(): Timestamps = apply {
             if (validated) {
@@ -1052,7 +1226,8 @@ private constructor(
                 false
             }
 
-        @JvmSynthetic internal fun validity(): Int =
+        @JvmSynthetic
+        internal fun validity(): Int =
             (if (createdAt.asKnown().isPresent) 1 else 0) +
                 (if (updatedAt.asKnown().isPresent) 1 else 0) +
                 (if (completedAt.asKnown().isPresent) 1 else 0) +
@@ -1093,7 +1268,26 @@ private constructor(
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(createdAt, updatedAt, completedAt, confirmedAt, expiresAt, occurredAt, discoveredAt, postedAt, firstAttemptedAt, deliveredAt, nextRetryAt, exhaustedAt, drawnAt, lastUsedAt, pausedAt, additionalProperties) }
+        private val hashCode: Int by lazy {
+            Objects.hash(
+                createdAt,
+                updatedAt,
+                completedAt,
+                confirmedAt,
+                expiresAt,
+                occurredAt,
+                discoveredAt,
+                postedAt,
+                firstAttemptedAt,
+                deliveredAt,
+                nextRetryAt,
+                exhaustedAt,
+                drawnAt,
+                lastUsedAt,
+                pausedAt,
+                additionalProperties,
+            )
+        }
 
         override fun hashCode(): Int = hashCode
 
@@ -1101,7 +1295,11 @@ private constructor(
             "Timestamps{createdAt=$createdAt, updatedAt=$updatedAt, completedAt=$completedAt, confirmedAt=$confirmedAt, expiresAt=$expiresAt, occurredAt=$occurredAt, discoveredAt=$discoveredAt, postedAt=$postedAt, firstAttemptedAt=$firstAttemptedAt, deliveredAt=$deliveredAt, nextRetryAt=$nextRetryAt, exhaustedAt=$exhaustedAt, drawnAt=$drawnAt, lastUsedAt=$lastUsedAt, pausedAt=$pausedAt, additionalProperties=$additionalProperties}"
     }
 
-    /** The API request behind this activity. Null for activity from before Oct 30, 2026, and for activity no API request starts, such as a monitor event, a webhook delivery or a credit grant. */
+    /**
+     * The API request behind this activity. Null for activity from before Oct 30, 2026, and for
+     * activity no API request starts, such as a monitor event, a webhook delivery or a credit
+     * grant.
+     */
     class Request
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
@@ -1119,10 +1317,18 @@ private constructor(
         private constructor(
             @JsonProperty("method") @ExcludeMissing method: JsonField<Method> = JsonMissing.of(),
             @JsonProperty("path") @ExcludeMissing path: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("httpStatus") @ExcludeMissing httpStatus: JsonField<Long> = JsonMissing.of(),
-            @JsonProperty("durationMs") @ExcludeMissing durationMs: JsonField<Long> = JsonMissing.of(),
-            @JsonProperty("ipAddress") @ExcludeMissing ipAddress: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("userAgent") @ExcludeMissing userAgent: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("httpStatus")
+            @ExcludeMissing
+            httpStatus: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("durationMs")
+            @ExcludeMissing
+            durationMs: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("ipAddress")
+            @ExcludeMissing
+            ipAddress: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("userAgent")
+            @ExcludeMissing
+            userAgent: JsonField<String> = JsonMissing.of(),
             @JsonProperty("at") @ExcludeMissing at: JsonField<OffsetDateTime> = JsonMissing.of(),
         ) : this(method, path, httpStatus, durationMs, ipAddress, userAgent, at, mutableMapOf())
 
@@ -1191,7 +1397,8 @@ private constructor(
             private var at: JsonField<OffsetDateTime>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic internal fun from(request: Request) = apply {
+            @JvmSynthetic
+            internal fun from(request: Request) = apply {
                 method = request.method
                 path = request.path
                 httpStatus = request.httpStatus
@@ -1285,9 +1492,11 @@ private constructor(
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types recursively.
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
          *
-         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
          */
         fun validate(): Request = apply {
             if (validated) {
@@ -1312,7 +1521,8 @@ private constructor(
                 false
             }
 
-        @JvmSynthetic internal fun validity(): Int =
+        @JvmSynthetic
+        internal fun validity(): Int =
             (method.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (path.asKnown().isPresent) 1 else 0) +
                 (if (httpStatus.asKnown().isPresent) 1 else 0) +
@@ -1353,11 +1563,16 @@ private constructor(
                 PATCH,
                 POST,
                 PUT,
-                /** An enum member indicating that [Method] was instantiated with an unknown value. */
+                /**
+                 * An enum member indicating that [Method] was instantiated with an unknown value.
+                 */
                 _UNKNOWN,
             }
 
-            /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if unknown.
+             */
             fun value(): Value =
                 when (this) {
                     DELETE -> Value.DELETE
@@ -1370,7 +1585,8 @@ private constructor(
             /**
              * Returns an enum member corresponding to this class instance's value.
              *
-             * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a known member.
+             * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+             *   known member.
              */
             fun known(): Known =
                 when (this) {
@@ -1384,10 +1600,13 @@ private constructor(
             /**
              * Returns this class instance's primitive wire representation.
              *
-             * @throws XTwitterScraperInvalidDataException if this class instance's value does not have the expected primitive type.
+             * @throws XTwitterScraperInvalidDataException if this class instance's value does not
+             *   have the expected primitive type.
              */
             fun asString(): String =
-                _value().asString().orElseThrow { XTwitterScraperInvalidDataException("Value is not a String") }
+                _value().asString().orElseThrow {
+                    XTwitterScraperInvalidDataException("Value is not a String")
+                }
 
             private var validated: Boolean = false
 
@@ -1440,7 +1659,18 @@ private constructor(
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(method, path, httpStatus, durationMs, ipAddress, userAgent, at, additionalProperties) }
+        private val hashCode: Int by lazy {
+            Objects.hash(
+                method,
+                path,
+                httpStatus,
+                durationMs,
+                ipAddress,
+                userAgent,
+                at,
+                additionalProperties,
+            )
+        }
 
         override fun hashCode(): Int = hashCode
 
@@ -1459,9 +1689,13 @@ private constructor(
 
         @JsonCreator
         private constructor(
-            @JsonProperty("authMethod") @ExcludeMissing authMethod: JsonField<AuthMethod> = JsonMissing.of(),
+            @JsonProperty("authMethod")
+            @ExcludeMissing
+            authMethod: JsonField<AuthMethod> = JsonMissing.of(),
             @JsonProperty("apiKey") @ExcludeMissing apiKey: JsonField<ApiKey> = JsonMissing.of(),
-            @JsonProperty("oauthClient") @ExcludeMissing oauthClient: JsonField<OauthClient> = JsonMissing.of(),
+            @JsonProperty("oauthClient")
+            @ExcludeMissing
+            oauthClient: JsonField<OauthClient> = JsonMissing.of(),
         ) : this(authMethod, apiKey, oauthClient, mutableMapOf())
 
         fun authMethod(): Optional<AuthMethod> = authMethod.getOptional("authMethod")
@@ -1472,13 +1706,17 @@ private constructor(
         fun oauthClient(): Optional<OauthClient> = oauthClient.getOptional("oauthClient")
 
         /** Returns the raw JSON value of [authMethod]. */
-        @JsonProperty("authMethod") @ExcludeMissing fun _authMethod(): JsonField<AuthMethod> = authMethod
+        @JsonProperty("authMethod")
+        @ExcludeMissing
+        fun _authMethod(): JsonField<AuthMethod> = authMethod
 
         /** Returns the raw JSON value of [apiKey]. */
         @JsonProperty("apiKey") @ExcludeMissing fun _apiKey(): JsonField<ApiKey> = apiKey
 
         /** Returns the raw JSON value of [oauthClient]. */
-        @JsonProperty("oauthClient") @ExcludeMissing fun _oauthClient(): JsonField<OauthClient> = oauthClient
+        @JsonProperty("oauthClient")
+        @ExcludeMissing
+        fun _oauthClient(): JsonField<OauthClient> = oauthClient
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1506,7 +1744,8 @@ private constructor(
             private var oauthClient: JsonField<OauthClient>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic internal fun from(caller: Caller) = apply {
+            @JvmSynthetic
+            internal fun from(caller: Caller) = apply {
                 authMethod = caller.authMethod
                 apiKey = caller.apiKey
                 oauthClient = caller.oauthClient
@@ -1519,7 +1758,9 @@ private constructor(
             fun authMethod(authMethod: Optional<AuthMethod>) = authMethod(authMethod.getOrNull())
 
             /** Sets [Builder.authMethod] to an arbitrary JSON value. */
-            fun authMethod(authMethod: JsonField<AuthMethod>) = apply { this.authMethod = authMethod }
+            fun authMethod(authMethod: JsonField<AuthMethod>) = apply {
+                this.authMethod = authMethod
+            }
 
             /** Name and prefix of the API key used. Never its value. */
             fun apiKey(apiKey: ApiKey?) = apiKey(JsonField.ofNullable(apiKey))
@@ -1530,13 +1771,17 @@ private constructor(
             /** Sets [Builder.apiKey] to an arbitrary JSON value. */
             fun apiKey(apiKey: JsonField<ApiKey>) = apply { this.apiKey = apiKey }
 
-            fun oauthClient(oauthClient: OauthClient?) = oauthClient(JsonField.ofNullable(oauthClient))
+            fun oauthClient(oauthClient: OauthClient?) =
+                oauthClient(JsonField.ofNullable(oauthClient))
 
             /** Alias for calling [Builder.oauthClient] with `oauthClient.orElse(null)`. */
-            fun oauthClient(oauthClient: Optional<OauthClient>) = oauthClient(oauthClient.getOrNull())
+            fun oauthClient(oauthClient: Optional<OauthClient>) =
+                oauthClient(oauthClient.getOrNull())
 
             /** Sets [Builder.oauthClient] to an arbitrary JSON value. */
-            fun oauthClient(oauthClient: JsonField<OauthClient>) = apply { this.oauthClient = oauthClient }
+            fun oauthClient(oauthClient: JsonField<OauthClient>) = apply {
+                this.oauthClient = oauthClient
+            }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -1576,9 +1821,11 @@ private constructor(
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types recursively.
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
          *
-         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
          */
         fun validate(): Caller = apply {
             if (validated) {
@@ -1599,12 +1846,14 @@ private constructor(
                 false
             }
 
-        @JvmSynthetic internal fun validity(): Int =
+        @JvmSynthetic
+        internal fun validity(): Int =
             (authMethod.asKnown().getOrNull()?.validity() ?: 0) +
                 (apiKey.asKnown().getOrNull()?.validity() ?: 0) +
                 (oauthClient.asKnown().getOrNull()?.validity() ?: 0)
 
-        class AuthMethod @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class AuthMethod @JsonCreator private constructor(private val value: JsonField<String>) :
+            Enum {
 
             /** Returns this class instance's raw value. */
             @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
@@ -1632,11 +1881,17 @@ private constructor(
                 API_KEY,
                 OAUTH,
                 SESSION,
-                /** An enum member indicating that [AuthMethod] was instantiated with an unknown value. */
+                /**
+                 * An enum member indicating that [AuthMethod] was instantiated with an unknown
+                 * value.
+                 */
                 _UNKNOWN,
             }
 
-            /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if unknown.
+             */
             fun value(): Value =
                 when (this) {
                     API_KEY -> Value.API_KEY
@@ -1648,7 +1903,8 @@ private constructor(
             /**
              * Returns an enum member corresponding to this class instance's value.
              *
-             * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a known member.
+             * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+             *   known member.
              */
             fun known(): Known =
                 when (this) {
@@ -1661,10 +1917,13 @@ private constructor(
             /**
              * Returns this class instance's primitive wire representation.
              *
-             * @throws XTwitterScraperInvalidDataException if this class instance's value does not have the expected primitive type.
+             * @throws XTwitterScraperInvalidDataException if this class instance's value does not
+             *   have the expected primitive type.
              */
             fun asString(): String =
-                _value().asString().orElseThrow { XTwitterScraperInvalidDataException("Value is not a String") }
+                _value().asString().orElseThrow {
+                    XTwitterScraperInvalidDataException("Value is not a String")
+                }
 
             private var validated: Boolean = false
 
@@ -1713,7 +1972,9 @@ private constructor(
             @JsonCreator
             private constructor(
                 @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("prefix") @ExcludeMissing prefix: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("prefix")
+                @ExcludeMissing
+                prefix: JsonField<String> = JsonMissing.of(),
             ) : this(name, prefix, mutableMapOf())
 
             fun name(): String = name.getRequired("name")
@@ -1751,7 +2012,8 @@ private constructor(
                 private var prefix: JsonField<String>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-                @JvmSynthetic internal fun from(apiKey: ApiKey) = apply {
+                @JvmSynthetic
+                internal fun from(apiKey: ApiKey) = apply {
                     name = apiKey.name
                     prefix = apiKey.prefix
                     additionalProperties = apiKey.additionalProperties.toMutableMap()
@@ -1776,11 +2038,14 @@ private constructor(
                     additionalProperties.put(key, value)
                 }
 
-                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                    this.additionalProperties.putAll(additionalProperties)
-                }
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
 
-                fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
 
                 fun removeAllAdditionalProperties(keys: Set<String>) = apply {
                     keys.forEach(::removeAdditionalProperty)
@@ -1804,9 +2069,11 @@ private constructor(
             private var validated: Boolean = false
 
             /**
-             * Validates that the types of all values in this object match their expected types recursively.
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
              *
-             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
              */
             fun validate(): ApiKey = apply {
                 if (validated) {
@@ -1826,7 +2093,8 @@ private constructor(
                     false
                 }
 
-            @JvmSynthetic internal fun validity(): Int =
+            @JvmSynthetic
+            internal fun validity(): Int =
                 (if (name.asKnown().isPresent) 1 else 0) +
                     (if (prefix.asKnown().isPresent) 1 else 0)
 
@@ -1898,7 +2166,8 @@ private constructor(
                 private var name: JsonField<String>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-                @JvmSynthetic internal fun from(oauthClient: OauthClient) = apply {
+                @JvmSynthetic
+                internal fun from(oauthClient: OauthClient) = apply {
                     id = oauthClient.id
                     name = oauthClient.name
                     additionalProperties = oauthClient.additionalProperties.toMutableMap()
@@ -1923,11 +2192,14 @@ private constructor(
                     additionalProperties.put(key, value)
                 }
 
-                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                    this.additionalProperties.putAll(additionalProperties)
-                }
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
 
-                fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
 
                 fun removeAllAdditionalProperties(keys: Set<String>) = apply {
                     keys.forEach(::removeAdditionalProperty)
@@ -1951,9 +2223,11 @@ private constructor(
             private var validated: Boolean = false
 
             /**
-             * Validates that the types of all values in this object match their expected types recursively.
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
              *
-             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
              */
             fun validate(): OauthClient = apply {
                 if (validated) {
@@ -1973,9 +2247,9 @@ private constructor(
                     false
                 }
 
-            @JvmSynthetic internal fun validity(): Int =
-                (if (id.asKnown().isPresent) 1 else 0) +
-                    (if (name.asKnown().isPresent) 1 else 0)
+            @JvmSynthetic
+            internal fun validity(): Int =
+                (if (id.asKnown().isPresent) 1 else 0) + (if (name.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -2008,7 +2282,9 @@ private constructor(
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(authMethod, apiKey, oauthClient, additionalProperties) }
+        private val hashCode: Int by lazy {
+            Objects.hash(authMethod, apiKey, oauthClient, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
@@ -2029,7 +2305,9 @@ private constructor(
         @JsonCreator
         private constructor(
             @JsonProperty("credits") @ExcludeMissing credits: JsonField<Long> = JsonMissing.of(),
-            @JsonProperty("balanceAfter") @ExcludeMissing balanceAfter: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("balanceAfter")
+            @ExcludeMissing
+            balanceAfter: JsonField<Long> = JsonMissing.of(),
             @JsonProperty("at") @ExcludeMissing at: JsonField<OffsetDateTime> = JsonMissing.of(),
         ) : this(credits, balanceAfter, at, mutableMapOf())
 
@@ -2043,7 +2321,9 @@ private constructor(
         @JsonProperty("credits") @ExcludeMissing fun _credits(): JsonField<Long> = credits
 
         /** Returns the raw JSON value of [balanceAfter]. */
-        @JsonProperty("balanceAfter") @ExcludeMissing fun _balanceAfter(): JsonField<Long> = balanceAfter
+        @JsonProperty("balanceAfter")
+        @ExcludeMissing
+        fun _balanceAfter(): JsonField<Long> = balanceAfter
 
         /** Returns the raw JSON value of [at]. */
         @JsonProperty("at") @ExcludeMissing fun _at(): JsonField<OffsetDateTime> = at
@@ -2074,7 +2354,8 @@ private constructor(
             private var at: JsonField<OffsetDateTime>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic internal fun from(charge: Charge) = apply {
+            @JvmSynthetic
+            internal fun from(charge: Charge) = apply {
                 credits = charge.credits
                 balanceAfter = charge.balanceAfter
                 at = charge.at
@@ -2089,7 +2370,9 @@ private constructor(
             fun balanceAfter(balanceAfter: Long) = balanceAfter(JsonField.of(balanceAfter))
 
             /** Sets [Builder.balanceAfter] to an arbitrary JSON value. */
-            fun balanceAfter(balanceAfter: JsonField<Long>) = apply { this.balanceAfter = balanceAfter }
+            fun balanceAfter(balanceAfter: JsonField<Long>) = apply {
+                this.balanceAfter = balanceAfter
+            }
 
             fun at(at: OffsetDateTime) = at(JsonField.of(at))
 
@@ -2134,9 +2417,11 @@ private constructor(
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types recursively.
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
          *
-         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
          */
         fun validate(): Charge = apply {
             if (validated) {
@@ -2157,7 +2442,8 @@ private constructor(
                 false
             }
 
-        @JvmSynthetic internal fun validity(): Int =
+        @JvmSynthetic
+        internal fun validity(): Int =
             (if (credits.asKnown().isPresent) 1 else 0) +
                 (if (balanceAfter.asKnown().isPresent) 1 else 0) +
                 (if (at.asKnown().isPresent) 1 else 0)
@@ -2174,7 +2460,9 @@ private constructor(
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(credits, balanceAfter, at, additionalProperties) }
+        private val hashCode: Int by lazy {
+            Objects.hash(credits, balanceAfter, at, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
@@ -2182,16 +2470,15 @@ private constructor(
             "Charge{credits=$credits, balanceAfter=$balanceAfter, at=$at, additionalProperties=$additionalProperties}"
     }
 
-    /** Fields of this kind of activity, such as its target. A field can hold JSON, such as the data of a monitor event or the payload of a webhook delivery. */
+    /**
+     * Fields of this kind of activity, such as its target. A field can hold JSON, such as the data
+     * of a monitor event or the payload of a webhook delivery.
+     */
     class Details
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
-        private val additionalProperties: MutableMap<String, JsonValue>,
-    ) {
+    private constructor(private val additionalProperties: MutableMap<String, JsonValue>) {
 
-        @JsonCreator
-        private constructor(
-        ) : this(mutableMapOf())
+        @JsonCreator private constructor() : this(mutableMapOf())
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -2216,7 +2503,8 @@ private constructor(
 
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic internal fun from(details: Details) = apply {
+            @JvmSynthetic
+            internal fun from(details: Details) = apply {
                 additionalProperties = details.additionalProperties.toMutableMap()
             }
 
@@ -2239,22 +2527,18 @@ private constructor(
                 keys.forEach(::removeAdditionalProperty)
             }
 
-            /**
-             * Returns an immutable instance of [Details].
-             *
-             */
-            fun build(): Details =
-                Details(
-                    additionalProperties.toMutableMap(),
-                )
+            /** Returns an immutable instance of [Details]. */
+            fun build(): Details = Details(additionalProperties.toMutableMap())
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types recursively.
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
          *
-         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
          */
         fun validate(): Details = apply {
             if (validated) {
@@ -2272,24 +2556,21 @@ private constructor(
                 false
             }
 
-        @JvmSynthetic internal fun validity(): Int =
-            0
+        @JvmSynthetic internal fun validity(): Int = 0
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
             }
 
-            return other is Details &&
-                additionalProperties == other.additionalProperties
+            return other is Details && additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "Details{additionalProperties=$additionalProperties}"
+        override fun toString() = "Details{additionalProperties=$additionalProperties}"
     }
 
     class Related
@@ -2308,7 +2589,9 @@ private constructor(
             @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
             @JsonProperty("type") @ExcludeMissing type: JsonField<String> = JsonMissing.of(),
             @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of(),
-            @JsonProperty("createdAt") @ExcludeMissing createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("createdAt")
+            @ExcludeMissing
+            createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
             @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
         ) : this(id, type, status, createdAt, url, mutableMapOf())
 
@@ -2332,7 +2615,9 @@ private constructor(
         @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<Status> = status
 
         /** Returns the raw JSON value of [createdAt]. */
-        @JsonProperty("createdAt") @ExcludeMissing fun _createdAt(): JsonField<OffsetDateTime> = createdAt
+        @JsonProperty("createdAt")
+        @ExcludeMissing
+        fun _createdAt(): JsonField<OffsetDateTime> = createdAt
 
         /** Returns the raw JSON value of [url]. */
         @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
@@ -2365,7 +2650,8 @@ private constructor(
             private var url: JsonField<String>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic internal fun from(related: Related) = apply {
+            @JvmSynthetic
+            internal fun from(related: Related) = apply {
                 id = related.id
                 type = related.type
                 status = related.status
@@ -2392,7 +2678,9 @@ private constructor(
             fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
             /** Sets [Builder.createdAt] to an arbitrary JSON value. */
-            fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
+            fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply {
+                this.createdAt = createdAt
+            }
 
             fun url(url: String) = url(JsonField.of(url))
 
@@ -2439,9 +2727,11 @@ private constructor(
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types recursively.
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
          *
-         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
          */
         fun validate(): Related = apply {
             if (validated) {
@@ -2464,7 +2754,8 @@ private constructor(
                 false
             }
 
-        @JvmSynthetic internal fun validity(): Int =
+        @JvmSynthetic
+        internal fun validity(): Int =
             (if (id.asKnown().isPresent) 1 else 0) +
                 (if (type.asKnown().isPresent) 1 else 0) +
                 (status.asKnown().getOrNull()?.validity() ?: 0) +
@@ -2503,11 +2794,16 @@ private constructor(
                 RUNNING,
                 FAILED,
                 CANCELED,
-                /** An enum member indicating that [Status] was instantiated with an unknown value. */
+                /**
+                 * An enum member indicating that [Status] was instantiated with an unknown value.
+                 */
                 _UNKNOWN,
             }
 
-            /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if unknown.
+             */
             fun value(): Value =
                 when (this) {
                     COMPLETED -> Value.COMPLETED
@@ -2520,7 +2816,8 @@ private constructor(
             /**
              * Returns an enum member corresponding to this class instance's value.
              *
-             * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a known member.
+             * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+             *   known member.
              */
             fun known(): Known =
                 when (this) {
@@ -2534,10 +2831,13 @@ private constructor(
             /**
              * Returns this class instance's primitive wire representation.
              *
-             * @throws XTwitterScraperInvalidDataException if this class instance's value does not have the expected primitive type.
+             * @throws XTwitterScraperInvalidDataException if this class instance's value does not
+             *   have the expected primitive type.
              */
             fun asString(): String =
-                _value().asString().orElseThrow { XTwitterScraperInvalidDataException("Value is not a String") }
+                _value().asString().orElseThrow {
+                    XTwitterScraperInvalidDataException("Value is not a String")
+                }
 
             private var validated: Boolean = false
 
@@ -2588,7 +2888,9 @@ private constructor(
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(id, type, status, createdAt, url, additionalProperties) }
+        private val hashCode: Int by lazy {
+            Objects.hash(id, type, status, createdAt, url, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
@@ -2618,7 +2920,24 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(object_, id, kind, type, status, url, requestId, timestamps, request, caller, charge, details, related, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            object_,
+            id,
+            kind,
+            type,
+            status,
+            url,
+            requestId,
+            timestamps,
+            request,
+            caller,
+            charge,
+            details,
+            related,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

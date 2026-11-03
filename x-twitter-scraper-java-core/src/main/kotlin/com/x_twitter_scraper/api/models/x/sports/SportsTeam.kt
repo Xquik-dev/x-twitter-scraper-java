@@ -35,6 +35,7 @@ private constructor(
     private val logos: JsonField<SportsTeamLogos>,
     private val xUserId: JsonField<String>,
     private val record: JsonField<SportsTeamRecord>,
+    private val recentGames: JsonField<List<SportsTeamGame>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -58,6 +59,9 @@ private constructor(
         @JsonProperty("record")
         @ExcludeMissing
         record: JsonField<SportsTeamRecord> = JsonMissing.of(),
+        @JsonProperty("recentGames")
+        @ExcludeMissing
+        recentGames: JsonField<List<SportsTeamGame>> = JsonMissing.of(),
     ) : this(
         id,
         name,
@@ -69,6 +73,7 @@ private constructor(
         logos,
         xUserId,
         record,
+        recentGames,
         mutableMapOf(),
     )
 
@@ -105,6 +110,12 @@ private constructor(
     /** The team's wins, losses & ties this season. X sends it only in college football games. */
     fun record(): Optional<SportsTeamRecord> = record.getOptional("record")
 
+    /**
+     * The team's recent games, newest first. Games without a kickoff time come last. X sends them
+     * only with the teams of a college football game. The list is empty elsewhere.
+     */
+    fun recentGames(): List<SportsTeamGame> = recentGames.getRequired("recentGames")
+
     /** Returns the raw JSON value of [id]. */
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
@@ -137,6 +148,11 @@ private constructor(
     /** Returns the raw JSON value of [record]. */
     @JsonProperty("record") @ExcludeMissing fun _record(): JsonField<SportsTeamRecord> = record
 
+    /** Returns the raw JSON value of [recentGames]. */
+    @JsonProperty("recentGames")
+    @ExcludeMissing
+    fun _recentGames(): JsonField<List<SportsTeamGame>> = recentGames
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -168,6 +184,7 @@ private constructor(
         private var logos: JsonField<SportsTeamLogos>? = null
         private var xUserId: JsonField<String>? = null
         private var record: JsonField<SportsTeamRecord>? = null
+        private var recentGames: JsonField<MutableList<SportsTeamGame>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -182,6 +199,7 @@ private constructor(
             logos = sportsTeam.logos
             xUserId = sportsTeam.xUserId
             record = sportsTeam.record
+            recentGames = sportsTeam.recentGames.map { it.toMutableList() }
             additionalProperties = sportsTeam.additionalProperties.toMutableMap()
         }
 
@@ -276,6 +294,25 @@ private constructor(
         /** Sets [Builder.record] to an arbitrary JSON value. */
         fun record(record: JsonField<SportsTeamRecord>) = apply { this.record = record }
 
+        /**
+         * The team's recent games, newest first. Games without a kickoff time come last. X sends
+         * them only with the teams of a college football game. The list is empty elsewhere.
+         */
+        fun recentGames(recentGames: List<SportsTeamGame>) = recentGames(JsonField.of(recentGames))
+
+        /** Sets [Builder.recentGames] to an arbitrary JSON value. */
+        fun recentGames(recentGames: JsonField<List<SportsTeamGame>>) = apply {
+            this.recentGames = recentGames.map { it.toMutableList() }
+        }
+
+        /** Adds a single [SportsTeamGame] to [recentGames]. */
+        fun addRecentGame(recentGame: SportsTeamGame) = apply {
+            recentGames =
+                (recentGames ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("recentGames", it).add(recentGame)
+                }
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -312,6 +349,7 @@ private constructor(
                 checkRequired("logos", logos),
                 checkRequired("xUserId", xUserId),
                 checkRequired("record", record),
+                checkRequired("recentGames", recentGames).map { it.toImmutable() },
                 additionalProperties.toMutableMap(),
             )
     }
@@ -339,6 +377,7 @@ private constructor(
         logos().validate()
         xUserId()
         record().ifPresent { it.validate() }
+        recentGames().forEach { it.validate() }
         validated = true
     }
 
@@ -361,7 +400,8 @@ private constructor(
             (colors.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (logos.asKnown().getOrNull()?.validity() ?: 0) +
             (if (xUserId.asKnown().isPresent) 1 else 0) +
-            (record.asKnown().getOrNull()?.validity() ?: 0)
+            (record.asKnown().getOrNull()?.validity() ?: 0) +
+            (recentGames.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -379,6 +419,7 @@ private constructor(
             logos == other.logos &&
             xUserId == other.xUserId &&
             record == other.record &&
+            recentGames == other.recentGames &&
             additionalProperties == other.additionalProperties
     }
 
@@ -394,6 +435,7 @@ private constructor(
             logos,
             xUserId,
             record,
+            recentGames,
             additionalProperties,
         )
     }
@@ -401,5 +443,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SportsTeam{id=$id, name=$name, shortName=$shortName, abbreviation=$abbreviation, alternateId=$alternateId, location=$location, colors=$colors, logos=$logos, xUserId=$xUserId, record=$record, additionalProperties=$additionalProperties}"
+        "SportsTeam{id=$id, name=$name, shortName=$shortName, abbreviation=$abbreviation, alternateId=$alternateId, location=$location, colors=$colors, logos=$logos, xUserId=$xUserId, record=$record, recentGames=$recentGames, additionalProperties=$additionalProperties}"
 }

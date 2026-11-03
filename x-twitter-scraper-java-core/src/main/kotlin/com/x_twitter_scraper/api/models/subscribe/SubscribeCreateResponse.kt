@@ -15,8 +15,10 @@ import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import com.x_twitter_scraper.api.models.Currency
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class SubscribeCreateResponse
@@ -25,6 +27,7 @@ private constructor(
     private val message: JsonField<String>,
     private val status: JsonField<Status>,
     private val url: JsonField<String>,
+    private val chargedCurrency: JsonField<Currency>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -33,7 +36,10 @@ private constructor(
         @JsonProperty("message") @ExcludeMissing message: JsonField<String> = JsonMissing.of(),
         @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of(),
         @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
-    ) : this(message, status, url, mutableMapOf())
+        @JsonProperty("chargedCurrency")
+        @ExcludeMissing
+        chargedCurrency: JsonField<Currency> = JsonMissing.of(),
+    ) : this(message, status, url, chargedCurrency, mutableMapOf())
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -52,6 +58,9 @@ private constructor(
      *   unexpectedly missing or null.
      */
     fun url(): String = url.getRequired("url")
+
+    /** Currency the checkout charges. Only a checkout_created answer has it. */
+    fun chargedCurrency(): Optional<Currency> = chargedCurrency.getOptional("chargedCurrency")
 
     /**
      * Returns the raw JSON value of [message].
@@ -73,6 +82,11 @@ private constructor(
      * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
+
+    /** Returns the raw JSON value of [chargedCurrency]. */
+    @JsonProperty("chargedCurrency")
+    @ExcludeMissing
+    fun _chargedCurrency(): JsonField<Currency> = chargedCurrency
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -107,6 +121,7 @@ private constructor(
         private var message: JsonField<String>? = null
         private var status: JsonField<Status>? = null
         private var url: JsonField<String>? = null
+        private var chargedCurrency: JsonField<Currency> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -114,6 +129,7 @@ private constructor(
             message = subscribeCreateResponse.message
             status = subscribeCreateResponse.status
             url = subscribeCreateResponse.url
+            chargedCurrency = subscribeCreateResponse.chargedCurrency
             additionalProperties = subscribeCreateResponse.additionalProperties.toMutableMap()
         }
 
@@ -131,6 +147,15 @@ private constructor(
 
         /** Sets [Builder.url] to an arbitrary JSON value. */
         fun url(url: JsonField<String>) = apply { this.url = url }
+
+        /** Currency the checkout charges. Only a checkout_created answer has it. */
+        fun chargedCurrency(chargedCurrency: Currency) =
+            chargedCurrency(JsonField.of(chargedCurrency))
+
+        /** Sets [Builder.chargedCurrency] to an arbitrary JSON value. */
+        fun chargedCurrency(chargedCurrency: JsonField<Currency>) = apply {
+            this.chargedCurrency = chargedCurrency
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -170,6 +195,7 @@ private constructor(
                 checkRequired("message", message),
                 checkRequired("status", status),
                 checkRequired("url", url),
+                chargedCurrency,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -192,6 +218,7 @@ private constructor(
         message()
         status().validate()
         url()
+        chargedCurrency().ifPresent { it.validate() }
         validated = true
     }
 
@@ -207,7 +234,8 @@ private constructor(
     internal fun validity(): Int =
         (if (message.asKnown().isPresent) 1 else 0) +
             (status.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (url.asKnown().isPresent) 1 else 0)
+            (if (url.asKnown().isPresent) 1 else 0) +
+            (chargedCurrency.asKnown().getOrNull()?.validity() ?: 0)
 
     class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -338,13 +366,16 @@ private constructor(
             message == other.message &&
             status == other.status &&
             url == other.url &&
+            chargedCurrency == other.chargedCurrency &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(message, status, url, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(message, status, url, chargedCurrency, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SubscribeCreateResponse{message=$message, status=$status, url=$url, additionalProperties=$additionalProperties}"
+        "SubscribeCreateResponse{message=$message, status=$status, url=$url, chargedCurrency=$chargedCurrency, additionalProperties=$additionalProperties}"
 }

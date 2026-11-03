@@ -78,7 +78,8 @@ private constructor(
         private var imageUrl: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(liveEventContext: LiveEventContext) = apply {
+        @JvmSynthetic
+        internal fun from(liveEventContext: LiveEventContext) = apply {
             title = liveEventContext.title
             url = liveEventContext.url
             imageUrl = liveEventContext.imageUrl
@@ -122,10 +123,7 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
-        /**
-         * Returns an immutable instance of [LiveEventContext].
-         *
-         */
+        /** Returns an immutable instance of [LiveEventContext]. */
         fun build(): LiveEventContext =
             LiveEventContext(
                 title,
@@ -140,7 +138,8 @@ private constructor(
     /**
      * Validates that the types of all values in this object match their expected types recursively.
      *
-     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
      */
     fun validate(): LiveEventContext = apply {
         if (validated) {
@@ -161,7 +160,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (title.asKnown().isPresent) 1 else 0) +
             (if (url.asKnown().isPresent) 1 else 0) +
             (if (imageUrl.asKnown().isPresent) 1 else 0)

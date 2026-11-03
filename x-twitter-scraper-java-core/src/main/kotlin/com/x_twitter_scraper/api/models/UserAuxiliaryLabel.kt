@@ -32,10 +32,16 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("badgeUrl") @ExcludeMissing badgeUrl: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("description") @ExcludeMissing description: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("description")
+        @ExcludeMissing
+        description: JsonField<String> = JsonMissing.of(),
         @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("userLabelDisplayType") @ExcludeMissing userLabelDisplayType: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("userLabelType") @ExcludeMissing userLabelType: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("userLabelDisplayType")
+        @ExcludeMissing
+        userLabelDisplayType: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("userLabelType")
+        @ExcludeMissing
+        userLabelType: JsonField<String> = JsonMissing.of(),
     ) : this(badgeUrl, description, url, userLabelDisplayType, userLabelType, mutableMapOf())
 
     fun badgeUrl(): Optional<String> = badgeUrl.getOptional("badgeUrl")
@@ -44,7 +50,8 @@ private constructor(
 
     fun url(): Optional<String> = url.getOptional("url")
 
-    fun userLabelDisplayType(): Optional<String> = userLabelDisplayType.getOptional("userLabelDisplayType")
+    fun userLabelDisplayType(): Optional<String> =
+        userLabelDisplayType.getOptional("userLabelDisplayType")
 
     fun userLabelType(): Optional<String> = userLabelType.getOptional("userLabelType")
 
@@ -58,10 +65,14 @@ private constructor(
     @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
 
     /** Returns the raw JSON value of [userLabelDisplayType]. */
-    @JsonProperty("userLabelDisplayType") @ExcludeMissing fun _userLabelDisplayType(): JsonField<String> = userLabelDisplayType
+    @JsonProperty("userLabelDisplayType")
+    @ExcludeMissing
+    fun _userLabelDisplayType(): JsonField<String> = userLabelDisplayType
 
     /** Returns the raw JSON value of [userLabelType]. */
-    @JsonProperty("userLabelType") @ExcludeMissing fun _userLabelType(): JsonField<String> = userLabelType
+    @JsonProperty("userLabelType")
+    @ExcludeMissing
+    fun _userLabelType(): JsonField<String> = userLabelType
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -91,7 +102,8 @@ private constructor(
         private var userLabelType: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(userAuxiliaryLabel: UserAuxiliaryLabel) = apply {
+        @JvmSynthetic
+        internal fun from(userAuxiliaryLabel: UserAuxiliaryLabel) = apply {
             badgeUrl = userAuxiliaryLabel.badgeUrl
             description = userAuxiliaryLabel.description
             url = userAuxiliaryLabel.url
@@ -115,15 +127,20 @@ private constructor(
         /** Sets [Builder.url] to an arbitrary JSON value. */
         fun url(url: JsonField<String>) = apply { this.url = url }
 
-        fun userLabelDisplayType(userLabelDisplayType: String) = userLabelDisplayType(JsonField.of(userLabelDisplayType))
+        fun userLabelDisplayType(userLabelDisplayType: String) =
+            userLabelDisplayType(JsonField.of(userLabelDisplayType))
 
         /** Sets [Builder.userLabelDisplayType] to an arbitrary JSON value. */
-        fun userLabelDisplayType(userLabelDisplayType: JsonField<String>) = apply { this.userLabelDisplayType = userLabelDisplayType }
+        fun userLabelDisplayType(userLabelDisplayType: JsonField<String>) = apply {
+            this.userLabelDisplayType = userLabelDisplayType
+        }
 
         fun userLabelType(userLabelType: String) = userLabelType(JsonField.of(userLabelType))
 
         /** Sets [Builder.userLabelType] to an arbitrary JSON value. */
-        fun userLabelType(userLabelType: JsonField<String>) = apply { this.userLabelType = userLabelType }
+        fun userLabelType(userLabelType: JsonField<String>) = apply {
+            this.userLabelType = userLabelType
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -144,10 +161,7 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
-        /**
-         * Returns an immutable instance of [UserAuxiliaryLabel].
-         *
-         */
+        /** Returns an immutable instance of [UserAuxiliaryLabel]. */
         fun build(): UserAuxiliaryLabel =
             UserAuxiliaryLabel(
                 badgeUrl,
@@ -164,7 +178,8 @@ private constructor(
     /**
      * Validates that the types of all values in this object match their expected types recursively.
      *
-     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
      */
     fun validate(): UserAuxiliaryLabel = apply {
         if (validated) {
@@ -187,7 +202,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (badgeUrl.asKnown().isPresent) 1 else 0) +
             (if (description.asKnown().isPresent) 1 else 0) +
             (if (url.asKnown().isPresent) 1 else 0) +
@@ -208,7 +224,16 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(badgeUrl, description, url, userLabelDisplayType, userLabelType, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            badgeUrl,
+            description,
+            url,
+            userLabelDisplayType,
+            userLabelType,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

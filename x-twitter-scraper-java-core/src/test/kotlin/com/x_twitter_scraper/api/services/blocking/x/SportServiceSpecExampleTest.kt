@@ -348,7 +348,8 @@ internal class SportServiceSpecExampleTest {
                     "wins": 7,
                     "losses": 1,
                     "ties": 0
-                  }
+                  },
+                  "recentGames": []
                 }
               }
             }
@@ -470,7 +471,8 @@ internal class SportServiceSpecExampleTest {
                     "wins": 7,
                     "losses": 1,
                     "ties": 0
-                  }
+                  },
+                  "recentGames": []
                 }
               },
               "players": {
@@ -493,7 +495,10 @@ internal class SportServiceSpecExampleTest {
                   "xUser": {
                     "id": "723177170382647296",
                     "username": "brockpurdy13",
-                    "blueVerified": true
+                    "blueVerified": true,
+                    "protected": null,
+                    "superFollowEligible": null,
+                    "labelType": null
                   }
                 }
               }
@@ -793,7 +798,8 @@ internal class SportServiceSpecExampleTest {
                     "wins": 7,
                     "losses": 1,
                     "ties": 0
-                  }
+                  },
+                  "recentGames": []
                 }
               },
               "players": {
@@ -816,7 +822,10 @@ internal class SportServiceSpecExampleTest {
                   "xUser": {
                     "id": "723177170382647296",
                     "username": "brockpurdy13",
-                    "blueVerified": true
+                    "blueVerified": true,
+                    "protected": null,
+                    "superFollowEligible": null,
+                    "labelType": null
                   }
                 }
               }
@@ -932,7 +941,8 @@ internal class SportServiceSpecExampleTest {
                     "wins": 7,
                     "losses": 1,
                     "ties": 0
-                  }
+                  },
+                  "recentGames": []
                 }
               },
               "players": {
@@ -955,7 +965,10 @@ internal class SportServiceSpecExampleTest {
                   "xUser": {
                     "id": "723177170382647296",
                     "username": "brockpurdy13",
-                    "blueVerified": true
+                    "blueVerified": true,
+                    "protected": null,
+                    "superFollowEligible": null,
+                    "labelType": null
                   }
                 }
               }
@@ -1019,7 +1032,8 @@ internal class SportServiceSpecExampleTest {
                     "wins": 7,
                     "losses": 1,
                     "ties": 0
-                  }
+                  },
+                  "recentGames": []
                 }
               }
             }
