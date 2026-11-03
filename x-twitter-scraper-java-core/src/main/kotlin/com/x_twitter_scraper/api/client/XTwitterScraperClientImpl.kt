@@ -8,6 +8,8 @@ import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.getPackageVersion
 import com.x_twitter_scraper.api.services.blocking.AccountService
 import com.x_twitter_scraper.api.services.blocking.AccountServiceImpl
+import com.x_twitter_scraper.api.services.blocking.ActivityService
+import com.x_twitter_scraper.api.services.blocking.ActivityServiceImpl
 import com.x_twitter_scraper.api.services.blocking.ComposeService
 import com.x_twitter_scraper.api.services.blocking.ComposeServiceImpl
 import com.x_twitter_scraper.api.services.blocking.CreditService
@@ -82,6 +84,8 @@ class XTwitterScraperClientImpl(private val clientOptions: ClientOptions) : XTwi
 
     private val draws: DrawService by lazy { DrawServiceImpl(clientOptionsWithUserAgent) }
 
+    private val activity: ActivityService by lazy { ActivityServiceImpl(clientOptionsWithUserAgent) }
+
     private val webhooks: WebhookService by lazy { WebhookServiceImpl(clientOptionsWithUserAgent) }
 
     private val x: XService by lazy { XServiceImpl(clientOptionsWithUserAgent) }
@@ -132,6 +136,9 @@ class XTwitterScraperClientImpl(private val clientOptions: ClientOptions) : XTwi
 
     /** Giveaway draws from tweet replies */
     override fun draws(): DrawService = draws
+
+    /** The account's activity log and the full record of each activity */
+    override fun activity(): ActivityService = activity
 
     /** Webhook endpoint management and delivery */
     override fun webhooks(): WebhookService = webhooks
@@ -194,6 +201,10 @@ class XTwitterScraperClientImpl(private val clientOptions: ClientOptions) : XTwi
             DrawServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val activity: ActivityService.WithRawResponse by lazy {
+            ActivityServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val webhooks: WebhookService.WithRawResponse by lazy {
             WebhookServiceImpl.WithRawResponseImpl(clientOptions)
         }
@@ -254,6 +265,9 @@ class XTwitterScraperClientImpl(private val clientOptions: ClientOptions) : XTwi
 
         /** Giveaway draws from tweet replies */
         override fun draws(): DrawService.WithRawResponse = draws
+
+        /** The account's activity log and the full record of each activity */
+        override fun activity(): ActivityService.WithRawResponse = activity
 
         /** Webhook endpoint management and delivery */
         override fun webhooks(): WebhookService.WithRawResponse = webhooks

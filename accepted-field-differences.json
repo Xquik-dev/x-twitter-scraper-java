@@ -342,5 +342,32 @@
     "differences": [
       "POST /api/v1/extractions/estimate response enum source"
     ]
+  },
+  {
+    "reason": "The SDK's EventType also holds the 10 post event types, so events and webhooks read post events as known values that pass response validation. Account monitors, keyword monitors and Telegram links share EventType, and the API rejects a post type there.",
+    "differences": [
+      "GET /api/v1/monitors response enum monitors[].eventTypes[]",
+      "GET /api/v1/monitors/keywords response enum monitors[].eventTypes[]",
+      "GET /api/v1/monitors/keywords/{id} response enum eventTypes[]",
+      "GET /api/v1/monitors/{id} response enum eventTypes[]",
+      "PATCH /api/v1/monitors/keywords/{id} request enum eventTypes[]",
+      "PATCH /api/v1/monitors/keywords/{id} response enum eventTypes[]",
+      "PATCH /api/v1/monitors/{id} request enum eventTypes[]",
+      "PATCH /api/v1/monitors/{id} response enum eventTypes[]",
+      "POST /api/v1/monitors request enum eventTypes[]",
+      "POST /api/v1/monitors response enum eventTypes[]",
+      "POST /api/v1/monitors/keywords request enum eventTypes[]",
+      "POST /api/v1/monitors/keywords response enum eventTypes[]",
+      "POST /api/v1/webhooks/telegram request enum eventTypes[]"
+    ]
+  },
+  {
+    "reason": "The API returns the post event fields on 1 event too, from the same formatter as the event list. The spec lists them only on Event, so EventDetail keeps them for post events.",
+    "differences": [
+      "GET /api/v1/events/{id} response extra authorId",
+      "GET /api/v1/events/{id} response extra authorUsername",
+      "GET /api/v1/events/{id} response extra postId",
+      "GET /api/v1/events/{id} response extra postUrl"
+    ]
   }
 ]

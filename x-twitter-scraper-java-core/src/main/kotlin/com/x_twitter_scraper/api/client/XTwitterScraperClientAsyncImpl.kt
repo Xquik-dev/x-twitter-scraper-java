@@ -8,6 +8,8 @@ import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.core.getPackageVersion
 import com.x_twitter_scraper.api.services.async.AccountServiceAsync
 import com.x_twitter_scraper.api.services.async.AccountServiceAsyncImpl
+import com.x_twitter_scraper.api.services.async.ActivityServiceAsync
+import com.x_twitter_scraper.api.services.async.ActivityServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.ComposeServiceAsync
 import com.x_twitter_scraper.api.services.async.ComposeServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.CreditServiceAsync
@@ -95,6 +97,8 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
 
     private val draws: DrawServiceAsync by lazy { DrawServiceAsyncImpl(clientOptionsWithUserAgent) }
 
+    private val activity: ActivityServiceAsync by lazy { ActivityServiceAsyncImpl(clientOptionsWithUserAgent) }
+
     private val webhooks: WebhookServiceAsync by lazy {
         WebhookServiceAsyncImpl(clientOptionsWithUserAgent)
     }
@@ -155,6 +159,9 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
 
     /** Giveaway draws from tweet replies */
     override fun draws(): DrawServiceAsync = draws
+
+    /** The account's activity log and the full record of each activity */
+    override fun activity(): ActivityServiceAsync = activity
 
     /** Webhook endpoint management and delivery */
     override fun webhooks(): WebhookServiceAsync = webhooks
@@ -217,6 +224,10 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
             DrawServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val activity: ActivityServiceAsync.WithRawResponse by lazy {
+            ActivityServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val webhooks: WebhookServiceAsync.WithRawResponse by lazy {
             WebhookServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
@@ -277,6 +288,9 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
 
         /** Giveaway draws from tweet replies */
         override fun draws(): DrawServiceAsync.WithRawResponse = draws
+
+        /** The account's activity log and the full record of each activity */
+        override fun activity(): ActivityServiceAsync.WithRawResponse = activity
 
         /** Webhook endpoint management and delivery */
         override fun webhooks(): WebhookServiceAsync.WithRawResponse = webhooks

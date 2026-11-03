@@ -67,6 +67,8 @@ import com.x_twitter_scraper.api.services.async.x.ProfileServiceAsync
 import com.x_twitter_scraper.api.services.async.x.ProfileServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.SpaceServiceAsync
 import com.x_twitter_scraper.api.services.async.x.SpaceServiceAsyncImpl
+import com.x_twitter_scraper.api.services.async.x.SportServiceAsync
+import com.x_twitter_scraper.api.services.async.x.SportServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.TweetServiceAsync
 import com.x_twitter_scraper.api.services.async.x.TweetServiceAsyncImpl
 import com.x_twitter_scraper.api.services.async.x.UserServiceAsync
@@ -132,6 +134,8 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
 
     private val spaces: SpaceServiceAsync by lazy { SpaceServiceAsyncImpl(clientOptions) }
 
+    private val sports: SportServiceAsync by lazy { SportServiceAsyncImpl(clientOptions) }
+
     override fun withRawResponse(): XServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): XServiceAsync =
@@ -187,6 +191,9 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
 
     /** X Space details, host, and speakers */
     override fun spaces(): SpaceServiceAsync = spaces
+
+    /** NFL & college football games, scoreboards, plays & box scores */
+    override fun sports(): SportServiceAsync = sports
 
     override fun autocompleteSearch(
         params: XAutocompleteSearchParams,
@@ -328,6 +335,10 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
             SpaceServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val sports: SportServiceAsync.WithRawResponse by lazy {
+            SportServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): XServiceAsync.WithRawResponse =
@@ -385,6 +396,9 @@ class XServiceAsyncImpl internal constructor(private val clientOptions: ClientOp
 
         /** X Space details, host, and speakers */
         override fun spaces(): SpaceServiceAsync.WithRawResponse = spaces
+
+        /** NFL & college football games, scoreboards, plays & box scores */
+        override fun sports(): SportServiceAsync.WithRawResponse = sports
 
         private val autocompleteSearchHandler: Handler<XAutocompleteSearchResponse> =
             jsonHandler<XAutocompleteSearchResponse>(clientOptions.jsonMapper)

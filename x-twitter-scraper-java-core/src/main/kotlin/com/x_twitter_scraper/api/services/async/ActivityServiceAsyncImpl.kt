@@ -1,0 +1,152 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
+package com.x_twitter_scraper.api.services.async
+
+import com.x_twitter_scraper.api.core.ClientOptions
+import com.x_twitter_scraper.api.core.RequestOptions
+import com.x_twitter_scraper.api.core.checkRequired
+import com.x_twitter_scraper.api.core.handlers.errorBodyHandler
+import com.x_twitter_scraper.api.core.handlers.errorHandler
+import com.x_twitter_scraper.api.core.handlers.jsonHandler
+import com.x_twitter_scraper.api.core.http.HttpMethod
+import com.x_twitter_scraper.api.core.http.HttpRequest
+import com.x_twitter_scraper.api.core.http.HttpResponse
+import com.x_twitter_scraper.api.core.http.HttpResponse.Handler
+import com.x_twitter_scraper.api.core.http.HttpResponseFor
+import com.x_twitter_scraper.api.core.http.json
+import com.x_twitter_scraper.api.core.http.parseable
+import com.x_twitter_scraper.api.core.prepareAsync
+import com.x_twitter_scraper.api.models.activity.ActivityExportParams
+import com.x_twitter_scraper.api.models.activity.ActivityListParams
+import com.x_twitter_scraper.api.models.activity.ActivityLogRow
+import com.x_twitter_scraper.api.models.activity.ActivityRetrieveParams
+import com.x_twitter_scraper.api.models.activity.ActivityRecord
+import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
+import kotlin.jvm.optionals.getOrNull
+
+/** The account's activity log and the full record of each activity */
+class ActivityServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
+    ActivityServiceAsync {
+
+    private val withRawResponse: ActivityServiceAsync.WithRawResponse by lazy {
+        WithRawResponseImpl(clientOptions)
+    }
+
+    override fun withRawResponse(): ActivityServiceAsync.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ActivityServiceAsync =
+        ActivityServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    override fun retrieve(
+        params: ActivityRetrieveParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<ActivityRecord> =
+        withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
+
+    override fun list(
+        params: ActivityListParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<List<ActivityLogRow>> =
+        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+
+    override fun export(
+        params: ActivityExportParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<HttpResponse> = withRawResponse().export(params, requestOptions)
+
+    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
+        ActivityServiceAsync.WithRawResponse {
+
+        private val errorHandler: Handler<HttpResponse> =
+            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): ActivityServiceAsync.WithRawResponse =
+            ActivityServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
+
+        private val retrieveHandler: Handler<ActivityRecord> =
+            jsonHandler<ActivityRecord>(clientOptions.jsonMapper)
+
+        override fun retrieve(
+            params: ActivityRetrieveParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<ActivityRecord>> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("activity", params._pathParam(0))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { retrieveHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val listHandler: Handler<List<ActivityLogRow>> =
+            jsonHandler<List<ActivityLogRow>>(clientOptions.jsonMapper)
+
+        override fun list(
+            params: ActivityListParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<List<ActivityLogRow>>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("activity")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { listHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.forEach { it.validate() }
+                                }
+                            }
+                    }
+                }
+        }
+
+        override fun export(
+            params: ActivityExportParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponse> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("activity")
+                    .putHeader("Accept", "application/octet-stream")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response -> errorHandler.handle(response) }
+        }
+    }
+}

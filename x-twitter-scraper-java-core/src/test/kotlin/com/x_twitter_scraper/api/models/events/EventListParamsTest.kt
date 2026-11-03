@@ -19,6 +19,7 @@ internal class EventListParamsTest {
             .keywordMonitorId("keywordMonitorId")
             .limit(1L)
             .monitorId("monitorId")
+            .postMonitorId("postMonitorId")
             .build()
     }
 
@@ -31,6 +32,7 @@ internal class EventListParamsTest {
                 .keywordMonitorId("keywordMonitorId")
                 .limit(1L)
                 .monitorId("monitorId")
+                .postMonitorId("postMonitorId")
                 .build()
 
         val queryParams = params._queryParams()
@@ -43,6 +45,7 @@ internal class EventListParamsTest {
                     .put("keywordMonitorId", "keywordMonitorId")
                     .put("limit", "1")
                     .put("monitorId", "monitorId")
+                    .put("postMonitorId", "postMonitorId")
                     .build()
             )
     }

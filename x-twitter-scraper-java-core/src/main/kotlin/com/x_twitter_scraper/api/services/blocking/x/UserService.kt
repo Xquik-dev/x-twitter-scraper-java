@@ -11,6 +11,7 @@ import com.x_twitter_scraper.api.core.http.HttpResponseFor
 import com.x_twitter_scraper.api.models.PaginatedTweets
 import com.x_twitter_scraper.api.models.PaginatedUsers
 import com.x_twitter_scraper.api.models.UserProfile
+import com.x_twitter_scraper.api.models.x.users.ShadowbanReport
 import com.x_twitter_scraper.api.models.x.users.UserRemoveFollowerParams
 import com.x_twitter_scraper.api.models.x.users.UserRemoveFollowerResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveAffiliatesParams
@@ -43,6 +44,7 @@ import com.x_twitter_scraper.api.models.x.users.UserRetrieveMentionsParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveRepliesParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveSearchParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveShadowbanParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveSimilarParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveSubscriptionsParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveTweetsParams
@@ -608,6 +610,39 @@ interface UserService {
     /** @see retrieveLive */
     fun retrieveLive(id: String, requestOptions: RequestOptions): UserRetrieveLiveResponse =
         retrieveLive(id, UserRetrieveLiveParams.none(), requestOptions)
+
+    /**
+     * Checks 1 X account for a search ban, a search suggestion ban & reply deboosting. It also says if the account is active, protected or suspended. Each profile, post, suggestion & reply in the answer costs 1 credit.
+     */
+    fun retrieveShadowban(id: String): ShadowbanReport =
+        retrieveShadowban(id, UserRetrieveShadowbanParams.none())
+
+    /** @see retrieveShadowban */
+    fun retrieveShadowban(
+        id: String,
+        params: UserRetrieveShadowbanParams = UserRetrieveShadowbanParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ShadowbanReport = retrieveShadowban(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see retrieveShadowban */
+    fun retrieveShadowban(
+        id: String,
+        params: UserRetrieveShadowbanParams = UserRetrieveShadowbanParams.none(),
+    ): ShadowbanReport = retrieveShadowban(id, params, RequestOptions.none())
+
+    /** @see retrieveShadowban */
+    fun retrieveShadowban(
+        params: UserRetrieveShadowbanParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ShadowbanReport
+
+    /** @see retrieveShadowban */
+    fun retrieveShadowban(params: UserRetrieveShadowbanParams): ShadowbanReport =
+        retrieveShadowban(params, RequestOptions.none())
+
+    /** @see retrieveShadowban */
+    fun retrieveShadowban(id: String, requestOptions: RequestOptions): ShadowbanReport =
+        retrieveShadowban(id, UserRetrieveShadowbanParams.none(), requestOptions)
 
     /** List media tweets posted by a user */
     fun retrieveMedia(id: String): PaginatedTweets =
@@ -1612,6 +1647,52 @@ interface UserService {
             requestOptions: RequestOptions,
         ): HttpResponseFor<UserRetrieveLiveResponse> =
             retrieveLive(id, UserRetrieveLiveParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /x/users/{id}/shadowban`, but is otherwise the same as
+         * [UserService.retrieveShadowban].
+         */
+        @MustBeClosed
+        fun retrieveShadowban(id: String): HttpResponseFor<ShadowbanReport> =
+            retrieveShadowban(id, UserRetrieveShadowbanParams.none())
+
+        /** @see retrieveShadowban */
+        @MustBeClosed
+        fun retrieveShadowban(
+            id: String,
+            params: UserRetrieveShadowbanParams = UserRetrieveShadowbanParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ShadowbanReport> =
+            retrieveShadowban(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see retrieveShadowban */
+        @MustBeClosed
+        fun retrieveShadowban(
+            id: String,
+            params: UserRetrieveShadowbanParams = UserRetrieveShadowbanParams.none(),
+        ): HttpResponseFor<ShadowbanReport> =
+            retrieveShadowban(id, params, RequestOptions.none())
+
+        /** @see retrieveShadowban */
+        @MustBeClosed
+        fun retrieveShadowban(
+            params: UserRetrieveShadowbanParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ShadowbanReport>
+
+        /** @see retrieveShadowban */
+        @MustBeClosed
+        fun retrieveShadowban(
+            params: UserRetrieveShadowbanParams
+        ): HttpResponseFor<ShadowbanReport> = retrieveShadowban(params, RequestOptions.none())
+
+        /** @see retrieveShadowban */
+        @MustBeClosed
+        fun retrieveShadowban(
+            id: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<ShadowbanReport> =
+            retrieveShadowban(id, UserRetrieveShadowbanParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /x/users/{id}/media`, but is otherwise the same as

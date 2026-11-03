@@ -9,6 +9,11 @@
 
 ### Features
 
+* `client.monitors().posts()` adds post monitors. It has `create`, `retrieve`, `update`, `list`, `delete` and `retrieveMetrics`.
+* `client.x().sports()` adds NFL & college football reads. It has `listGames`, `retrieveScoreboard`, `retrieveBoxScore`, `retrievePlays` and `retrieveAudience`.
+* Events read `postId`, `postUrl`, `authorId` and `authorUsername` on post events, and the `post` monitor type.
+* `EventListParams` filters by `postMonitorId`, and event data reads `metric`, `previousText` and `versionId`.
+* `EventType` adds the 10 post event types, such as `POST_REPLY_NEW`. Account and keyword monitors reject them.
 * Every request sends `X-Xquik-SDK: java` beside the platform headers it already sends.
 * Communities add the analytics read with `retrieveAnalytics`.
 * Posts, embedded posts and event posts return `softIntervention`, the label X shows under a post whose reach it limits.

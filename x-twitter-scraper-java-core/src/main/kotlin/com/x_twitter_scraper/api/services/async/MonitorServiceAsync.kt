@@ -17,6 +17,7 @@ import com.x_twitter_scraper.api.models.monitors.MonitorListResponse
 import com.x_twitter_scraper.api.models.monitors.MonitorRetrieveParams
 import com.x_twitter_scraper.api.models.monitors.MonitorUpdateParams
 import com.x_twitter_scraper.api.services.async.monitors.KeywordServiceAsync
+import com.x_twitter_scraper.api.services.async.monitors.PostServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -37,6 +38,9 @@ interface MonitorServiceAsync {
 
     /** X account monitoring with 1-second checks */
     fun keywords(): KeywordServiceAsync
+
+    /** X account monitoring with 1-second checks */
+    fun posts(): PostServiceAsync
 
     /**
      * Creates an account monitor. Monitors are unlimited. Active monitors check every 1 second and
@@ -182,6 +186,9 @@ interface MonitorServiceAsync {
 
         /** X account monitoring with 1-second checks */
         fun keywords(): KeywordServiceAsync.WithRawResponse
+
+        /** X account monitoring with 1-second checks */
+        fun posts(): PostServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /monitors`, but is otherwise the same as

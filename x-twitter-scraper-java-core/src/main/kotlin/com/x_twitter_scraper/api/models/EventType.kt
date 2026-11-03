@@ -9,7 +9,10 @@ import com.x_twitter_scraper.api.core.Enum
 import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 
-/** Type of monitor event fired when account activity occurs. */
+/**
+ * Type of monitor event. Post monitors send the post types, and account & keyword monitors send
+ * the others.
+ */
 class EventType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
     /** Returns this class instance's raw value. */
@@ -77,6 +80,26 @@ class EventType @JsonCreator private constructor(private val value: JsonField<St
 
         @JvmField val TWEET_DELETED = of("tweet.deleted")
 
+        @JvmField val POST_REPLY_NEW = of("post.reply.new")
+
+        @JvmField val POST_QUOTE_NEW = of("post.quote.new")
+
+        @JvmField val POST_LIKES_CHANGED = of("post.likes.changed")
+
+        @JvmField val POST_RETWEETS_CHANGED = of("post.retweets.changed")
+
+        @JvmField val POST_REPLIES_CHANGED = of("post.replies.changed")
+
+        @JvmField val POST_QUOTES_CHANGED = of("post.quotes.changed")
+
+        @JvmField val POST_BOOKMARKS_CHANGED = of("post.bookmarks.changed")
+
+        @JvmField val POST_VIEWS_CHANGED = of("post.views.changed")
+
+        @JvmField val POST_EDITED = of("post.edited")
+
+        @JvmField val POST_DELETED = of("post.deleted")
+
         @JvmStatic fun of(value: String) = EventType(JsonField.of(value))
     }
 
@@ -112,6 +135,16 @@ class EventType @JsonCreator private constructor(private val value: JsonField<St
         PROFILE_FOLLOWING_CHANGED,
         SPACE_STARTED,
         TWEET_DELETED,
+        POST_REPLY_NEW,
+        POST_QUOTE_NEW,
+        POST_LIKES_CHANGED,
+        POST_RETWEETS_CHANGED,
+        POST_REPLIES_CHANGED,
+        POST_QUOTES_CHANGED,
+        POST_BOOKMARKS_CHANGED,
+        POST_VIEWS_CHANGED,
+        POST_EDITED,
+        POST_DELETED,
     }
 
     /**
@@ -154,6 +187,16 @@ class EventType @JsonCreator private constructor(private val value: JsonField<St
         PROFILE_FOLLOWING_CHANGED,
         SPACE_STARTED,
         TWEET_DELETED,
+        POST_REPLY_NEW,
+        POST_QUOTE_NEW,
+        POST_LIKES_CHANGED,
+        POST_RETWEETS_CHANGED,
+        POST_REPLIES_CHANGED,
+        POST_QUOTES_CHANGED,
+        POST_BOOKMARKS_CHANGED,
+        POST_VIEWS_CHANGED,
+        POST_EDITED,
+        POST_DELETED,
         /** An enum member indicating that [EventType] was instantiated with an unknown value. */
         _UNKNOWN,
     }
@@ -194,6 +237,16 @@ class EventType @JsonCreator private constructor(private val value: JsonField<St
             PROFILE_PROTECTED_CHANGED -> Value.PROFILE_PROTECTED_CHANGED
             PROFILE_PINNED_TWEET_CHANGED -> Value.PROFILE_PINNED_TWEET_CHANGED
             PROFILE_UNAVAILABLE_CHANGED -> Value.PROFILE_UNAVAILABLE_CHANGED
+            POST_REPLY_NEW -> Value.POST_REPLY_NEW
+            POST_QUOTE_NEW -> Value.POST_QUOTE_NEW
+            POST_LIKES_CHANGED -> Value.POST_LIKES_CHANGED
+            POST_RETWEETS_CHANGED -> Value.POST_RETWEETS_CHANGED
+            POST_REPLIES_CHANGED -> Value.POST_REPLIES_CHANGED
+            POST_QUOTES_CHANGED -> Value.POST_QUOTES_CHANGED
+            POST_BOOKMARKS_CHANGED -> Value.POST_BOOKMARKS_CHANGED
+            POST_VIEWS_CHANGED -> Value.POST_VIEWS_CHANGED
+            POST_EDITED -> Value.POST_EDITED
+            POST_DELETED -> Value.POST_DELETED
             else -> Value._UNKNOWN
         }
 
@@ -235,6 +288,16 @@ class EventType @JsonCreator private constructor(private val value: JsonField<St
             PROFILE_PROTECTED_CHANGED -> Known.PROFILE_PROTECTED_CHANGED
             PROFILE_PINNED_TWEET_CHANGED -> Known.PROFILE_PINNED_TWEET_CHANGED
             PROFILE_UNAVAILABLE_CHANGED -> Known.PROFILE_UNAVAILABLE_CHANGED
+            POST_REPLY_NEW -> Known.POST_REPLY_NEW
+            POST_QUOTE_NEW -> Known.POST_QUOTE_NEW
+            POST_LIKES_CHANGED -> Known.POST_LIKES_CHANGED
+            POST_RETWEETS_CHANGED -> Known.POST_RETWEETS_CHANGED
+            POST_REPLIES_CHANGED -> Known.POST_REPLIES_CHANGED
+            POST_QUOTES_CHANGED -> Known.POST_QUOTES_CHANGED
+            POST_BOOKMARKS_CHANGED -> Known.POST_BOOKMARKS_CHANGED
+            POST_VIEWS_CHANGED -> Known.POST_VIEWS_CHANGED
+            POST_EDITED -> Known.POST_EDITED
+            POST_DELETED -> Known.POST_DELETED
             else -> throw XTwitterScraperInvalidDataException("Unknown EventType: $value")
         }
 
