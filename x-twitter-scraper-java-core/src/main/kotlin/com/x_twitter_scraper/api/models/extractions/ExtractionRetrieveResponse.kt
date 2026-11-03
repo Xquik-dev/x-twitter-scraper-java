@@ -1056,6 +1056,7 @@ private constructor(
         private val retweetCount: JsonField<Long>,
         private val viewCount: JsonField<Long>,
         private val enrichmentData: JsonField<SearchTweet.Scopes>,
+        private val verifiedType: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
         @JsonCreator
@@ -1115,6 +1116,9 @@ private constructor(
             @JsonProperty("enrichmentData")
             @ExcludeMissing
             enrichmentData: JsonField<SearchTweet.Scopes> = JsonMissing.of(),
+            @JsonProperty("verifiedType")
+            @ExcludeMissing
+            verifiedType: JsonField<String> = JsonMissing.of(),
         ) : this(
             id,
             xUserId,
@@ -1137,6 +1141,7 @@ private constructor(
             retweetCount,
             viewCount,
             enrichmentData,
+            verifiedType,
             mutableMapOf(),
         )
 
@@ -1204,6 +1209,12 @@ private constructor(
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun enrichmentData(): Optional<SearchTweet.Scopes> =
             enrichmentData.getOptional("enrichmentData")
+
+        /**
+         * Badge type X shows on the account, with outputPreset=flat, such as Business, Government
+         * or Blue. Absent when the account has none of these badges.
+         */
+        fun verifiedType(): Optional<String> = verifiedType.getOptional("verifiedType")
 
         /**
          * Returns the raw JSON value of [id].
@@ -1375,6 +1386,11 @@ private constructor(
         @ExcludeMissing
         fun _enrichmentData(): JsonField<SearchTweet.Scopes> = enrichmentData
 
+        /** Returns the raw JSON value of [verifiedType]. */
+        @JsonProperty("verifiedType")
+        @ExcludeMissing
+        fun _verifiedType(): JsonField<String> = verifiedType
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -1415,6 +1431,7 @@ private constructor(
             private var retweetCount: JsonField<Long> = JsonMissing.of()
             private var viewCount: JsonField<Long> = JsonMissing.of()
             private var enrichmentData: JsonField<SearchTweet.Scopes> = JsonMissing.of()
+            private var verifiedType: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -1440,6 +1457,7 @@ private constructor(
                 retweetCount = result.retweetCount
                 viewCount = result.viewCount
                 enrichmentData = result.enrichmentData
+                verifiedType = result.verifiedType
                 additionalProperties = result.additionalProperties.toMutableMap()
             }
 
@@ -1582,6 +1600,17 @@ private constructor(
                 this.enrichmentData = enrichmentData
             }
 
+            /**
+             * Badge type X shows on the account, with outputPreset=flat, such as Business,
+             * Government or Blue. Absent when the account has none of these badges.
+             */
+            fun verifiedType(verifiedType: String) = verifiedType(JsonField.of(verifiedType))
+
+            /** Sets [Builder.verifiedType] to an arbitrary JSON value. */
+            fun verifiedType(verifiedType: JsonField<String>) = apply {
+                this.verifiedType = verifiedType
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -1629,6 +1658,7 @@ private constructor(
                     retweetCount,
                     viewCount,
                     enrichmentData,
+                    verifiedType,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -1669,6 +1699,7 @@ private constructor(
             retweetCount()
             viewCount()
             enrichmentData().ifPresent { it.validate() }
+            verifiedType()
             validated = true
         }
 
@@ -1703,7 +1734,8 @@ private constructor(
                 (if (replyCount.asKnown().isPresent) 1 else 0) +
                 (if (retweetCount.asKnown().isPresent) 1 else 0) +
                 (if (viewCount.asKnown().isPresent) 1 else 0) +
-                (enrichmentData.asKnown().getOrNull()?.validity() ?: 0)
+                (enrichmentData.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (verifiedType.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -1731,6 +1763,7 @@ private constructor(
                 retweetCount == other.retweetCount &&
                 viewCount == other.viewCount &&
                 enrichmentData == other.enrichmentData &&
+                verifiedType == other.verifiedType &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -1757,6 +1790,7 @@ private constructor(
                 retweetCount,
                 viewCount,
                 enrichmentData,
+                verifiedType,
                 additionalProperties,
             )
         }
@@ -1764,7 +1798,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Result{id=$id, xUserId=$xUserId, xUsername=$xUsername, xDisplayName=$xDisplayName, xFollowersCount=$xFollowersCount, xVerified=$xVerified, xProfileImageUrl=$xProfileImageUrl, email=$email, tweetId=$tweetId, tweetUrl=$tweetUrl, tweetText=$tweetText, tweetCreatedAt=$tweetCreatedAt, createdAt=$createdAt, media=$media, bookmarkCount=$bookmarkCount, likeCount=$likeCount, quoteCount=$quoteCount, replyCount=$replyCount, retweetCount=$retweetCount, viewCount=$viewCount, enrichmentData=$enrichmentData, additionalProperties=$additionalProperties}"
+            "Result{id=$id, xUserId=$xUserId, xUsername=$xUsername, xDisplayName=$xDisplayName, xFollowersCount=$xFollowersCount, xVerified=$xVerified, xProfileImageUrl=$xProfileImageUrl, email=$email, tweetId=$tweetId, tweetUrl=$tweetUrl, tweetText=$tweetText, tweetCreatedAt=$tweetCreatedAt, createdAt=$createdAt, media=$media, bookmarkCount=$bookmarkCount, likeCount=$likeCount, quoteCount=$quoteCount, replyCount=$replyCount, retweetCount=$retweetCount, viewCount=$viewCount, enrichmentData=$enrichmentData, verifiedType=$verifiedType, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

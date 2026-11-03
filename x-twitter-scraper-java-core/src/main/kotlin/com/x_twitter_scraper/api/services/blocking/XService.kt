@@ -43,6 +43,7 @@ import com.x_twitter_scraper.api.services.blocking.x.ListService
 import com.x_twitter_scraper.api.services.blocking.x.MediaService
 import com.x_twitter_scraper.api.services.blocking.x.ProfileService
 import com.x_twitter_scraper.api.services.blocking.x.SpaceService
+import com.x_twitter_scraper.api.services.blocking.x.SportService
 import com.x_twitter_scraper.api.services.blocking.x.TweetService
 import com.x_twitter_scraper.api.services.blocking.x.UserService
 import com.x_twitter_scraper.api.services.blocking.x.WriteActionService
@@ -110,6 +111,9 @@ interface XService {
 
     /** X Space details, host, and speakers */
     fun spaces(): SpaceService
+
+    /** NFL & college football games, scoreboards, plays & box scores */
+    fun sports(): SportService
 
     /**
      * Returns the accounts, topics, hashtags & cashtags X suggests while someone types a search. X
@@ -394,6 +398,9 @@ interface XService {
 
         /** X Space details, host, and speakers */
         fun spaces(): SpaceService.WithRawResponse
+
+        /** NFL & college football games, scoreboards, plays & box scores */
+        fun sports(): SportService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /x/search/autocomplete`, but is otherwise the same

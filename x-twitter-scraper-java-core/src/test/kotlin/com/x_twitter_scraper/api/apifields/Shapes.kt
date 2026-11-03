@@ -16,7 +16,12 @@ internal data class Leaf(val values: List<String>? = null) : Shape
 
 internal data class Obj(val props: Map<String, Prop>, val open: Boolean = false) : Shape
 
-internal data class Arr(val items: Shape) : Shape
+internal enum class Container(val suffix: String) {
+    LIST("[]"),
+    MAP("{}"),
+}
+
+internal data class Many(val items: Shape, val container: Container = Container.LIST) : Shape
 
 internal data class Union(val variants: List<Shape>) : Shape
 
@@ -45,7 +50,7 @@ internal fun canon(
                 shape.props.mapValues { (_, p) -> p.copy(shape = canon(p.shape, defs, stack)) },
                 shape.open,
             )
-        is Arr -> Arr(canon(shape.items, defs, stack))
+        is Many -> shape.copy(items = canon(shape.items, defs, stack))
         is Union -> mergeUnion(shape.variants.map { canon(it, defs, stack) })
         else -> shape
     }
@@ -77,8 +82,10 @@ internal fun mergeUnion(all: List<Shape>): Shape {
     if (variants.any { it is Free }) return Free()
     val objects = variants.filterIsInstance<Obj>()
     if (objects.isNotEmpty()) return Obj(mergeProps(objects), objects.any { it.open })
-    val arrays = variants.filterIsInstance<Arr>()
-    if (arrays.isNotEmpty()) return Arr(mergeUnion(arrays.map { it.items }))
+    for (container in Container.entries) {
+        val same = variants.filterIsInstance<Many>().filter { it.container == container }
+        if (same.isNotEmpty()) return Many(mergeUnion(same.map { it.items }), container)
+    }
     val leaves = variants.filterIsInstance<Leaf>()
     if (leaves.isNotEmpty()) {
         return if (leaves.all { it.values != null }) leaf(leaves.flatMap { it.values.orEmpty() })
@@ -95,8 +102,9 @@ internal fun intersect(all: List<Shape>): Shape {
         val rest = parts.filter { it !is Union }
         return Union(unions.single().variants.map { intersect(rest + it) })
     }
-    if (parts.size > 1 && parts.all { it is Arr }) {
-        return Arr(intersect(parts.map { (it as Arr).items }))
+    val many = parts.filterIsInstance<Many>()
+    if (parts.size > 1 && many.size == parts.size && many.distinctBy { it.container }.size == 1) {
+        return Many(intersect(many.map { it.items }), many.first().container)
     }
     val objects = parts.filterIsInstance<Obj>()
     if (objects.isEmpty()) return parts.first()
@@ -162,8 +170,8 @@ private fun compareTree(
         }
         return
     }
-    if (spec is Arr && sdk is Arr) {
-        compareTree(spec.items, sdk.items, "$path[]", side, out)
+    if (spec is Many && sdk is Many && spec.container == sdk.container) {
+        compareTree(spec.items, sdk.items, path + spec.container.suffix, side, out)
         return
     }
     if (spec is Leaf && sdk is Leaf) {

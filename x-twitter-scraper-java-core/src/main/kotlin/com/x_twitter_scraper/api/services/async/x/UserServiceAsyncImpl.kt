@@ -21,6 +21,7 @@ import com.x_twitter_scraper.api.core.prepareAsync
 import com.x_twitter_scraper.api.models.PaginatedTweets
 import com.x_twitter_scraper.api.models.PaginatedUsers
 import com.x_twitter_scraper.api.models.UserProfile
+import com.x_twitter_scraper.api.models.x.users.ShadowbanReport
 import com.x_twitter_scraper.api.models.x.users.UserRemoveFollowerParams
 import com.x_twitter_scraper.api.models.x.users.UserRemoveFollowerResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveAffiliatesParams
@@ -53,6 +54,7 @@ import com.x_twitter_scraper.api.models.x.users.UserRetrieveMentionsParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveRepliesParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveSearchParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveShadowbanParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveSimilarParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveSubscriptionsParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveTweetsParams
@@ -184,6 +186,12 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
         requestOptions: RequestOptions,
     ): CompletableFuture<UserRetrieveLiveResponse> =
         withRawResponse().retrieveLive(params, requestOptions).thenApply { it.parse() }
+
+    override fun retrieveShadowban(
+        params: UserRetrieveShadowbanParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<ShadowbanReport> =
+        withRawResponse().retrieveShadowban(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieveMedia(
         params: UserRetrieveMediaParams,
@@ -776,6 +784,37 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     errorHandler.handle(response).parseable {
                         response
                             .use { retrieveLiveHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val retrieveShadowbanHandler: Handler<ShadowbanReport> =
+            jsonHandler<ShadowbanReport>(clientOptions.jsonMapper)
+
+        override fun retrieveShadowban(
+            params: UserRetrieveShadowbanParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<ShadowbanReport>> {
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "users", params._pathParam(0), "shadowban")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { retrieveShadowbanHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()
