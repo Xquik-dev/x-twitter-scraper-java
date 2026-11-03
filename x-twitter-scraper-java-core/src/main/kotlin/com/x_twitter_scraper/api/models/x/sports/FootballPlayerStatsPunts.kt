@@ -35,7 +35,9 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("attempts") @ExcludeMissing attempts: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("avgNetYards") @ExcludeMissing avgNetYards: JsonField<Double> = JsonMissing.of(),
+        @JsonProperty("avgNetYards")
+        @ExcludeMissing
+        avgNetYards: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("avgYards") @ExcludeMissing avgYards: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("inside20") @ExcludeMissing inside20: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("longest") @ExcludeMissing longest: JsonField<Long> = JsonMissing.of(),
@@ -107,7 +109,8 @@ private constructor(
         private var yards: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballPlayerStatsPunts: FootballPlayerStatsPunts) = apply {
+        @JvmSynthetic
+        internal fun from(footballPlayerStatsPunts: FootballPlayerStatsPunts) = apply {
             attempts = footballPlayerStatsPunts.attempts
             avgNetYards = footballPlayerStatsPunts.avgNetYards
             avgYards = footballPlayerStatsPunts.avgYards
@@ -243,7 +246,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (attempts.asKnown().isPresent) 1 else 0) +
             (if (avgNetYards.asKnown().isPresent) 1 else 0) +
             (if (avgYards.asKnown().isPresent) 1 else 0) +
@@ -266,7 +270,17 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(attempts, avgNetYards, avgYards, inside20, longest, yards, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            attempts,
+            avgNetYards,
+            avgYards,
+            inside20,
+            longest,
+            yards,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

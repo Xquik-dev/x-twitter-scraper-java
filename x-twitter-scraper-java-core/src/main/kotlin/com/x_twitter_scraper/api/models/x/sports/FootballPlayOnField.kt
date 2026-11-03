@@ -32,10 +32,16 @@ private constructor(
 
     @JsonCreator
     private constructor(
-        @JsonProperty("calledBack") @ExcludeMissing calledBack: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("penaltyOnField") @ExcludeMissing penaltyOnField: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("calledBack")
+        @ExcludeMissing
+        calledBack: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("penaltyOnField")
+        @ExcludeMissing
+        penaltyOnField: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("timeout") @ExcludeMissing timeout: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("underReview") @ExcludeMissing underReview: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("underReview")
+        @ExcludeMissing
+        underReview: JsonField<Boolean> = JsonMissing.of(),
     ) : this(calledBack, penaltyOnField, timeout, underReview, mutableMapOf())
 
     /** Whether a penalty called the play back. */
@@ -54,13 +60,17 @@ private constructor(
     @JsonProperty("calledBack") @ExcludeMissing fun _calledBack(): JsonField<Boolean> = calledBack
 
     /** Returns the raw JSON value of [penaltyOnField]. */
-    @JsonProperty("penaltyOnField") @ExcludeMissing fun _penaltyOnField(): JsonField<Boolean> = penaltyOnField
+    @JsonProperty("penaltyOnField")
+    @ExcludeMissing
+    fun _penaltyOnField(): JsonField<Boolean> = penaltyOnField
 
     /** Returns the raw JSON value of [timeout]. */
     @JsonProperty("timeout") @ExcludeMissing fun _timeout(): JsonField<Boolean> = timeout
 
     /** Returns the raw JSON value of [underReview]. */
-    @JsonProperty("underReview") @ExcludeMissing fun _underReview(): JsonField<Boolean> = underReview
+    @JsonProperty("underReview")
+    @ExcludeMissing
+    fun _underReview(): JsonField<Boolean> = underReview
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -89,7 +99,8 @@ private constructor(
         private var underReview: JsonField<Boolean>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballPlayOnField: FootballPlayOnField) = apply {
+        @JvmSynthetic
+        internal fun from(footballPlayOnField: FootballPlayOnField) = apply {
             calledBack = footballPlayOnField.calledBack
             penaltyOnField = footballPlayOnField.penaltyOnField
             timeout = footballPlayOnField.timeout
@@ -108,14 +119,18 @@ private constructor(
         fun calledBack(calledBack: JsonField<Boolean>) = apply { this.calledBack = calledBack }
 
         /** Whether a flag was thrown. */
-        fun penaltyOnField(penaltyOnField: Boolean?) = penaltyOnField(JsonField.ofNullable(penaltyOnField))
+        fun penaltyOnField(penaltyOnField: Boolean?) =
+            penaltyOnField(JsonField.ofNullable(penaltyOnField))
 
         fun penaltyOnField(penaltyOnField: Boolean) = penaltyOnField(penaltyOnField as Boolean?)
 
-        fun penaltyOnField(penaltyOnField: Optional<Boolean>) = penaltyOnField(penaltyOnField.getOrNull())
+        fun penaltyOnField(penaltyOnField: Optional<Boolean>) =
+            penaltyOnField(penaltyOnField.getOrNull())
 
         /** Sets [Builder.penaltyOnField] to an arbitrary JSON value. */
-        fun penaltyOnField(penaltyOnField: JsonField<Boolean>) = apply { this.penaltyOnField = penaltyOnField }
+        fun penaltyOnField(penaltyOnField: JsonField<Boolean>) = apply {
+            this.penaltyOnField = penaltyOnField
+        }
 
         /** Whether a timeout followed the play. */
         fun timeout(timeout: Boolean?) = timeout(JsonField.ofNullable(timeout))
@@ -199,7 +214,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (calledBack.asKnown().isPresent) 1 else 0) +
             (if (penaltyOnField.asKnown().isPresent) 1 else 0) +
             (if (timeout.asKnown().isPresent) 1 else 0) +
@@ -218,7 +234,9 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(calledBack, penaltyOnField, timeout, underReview, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(calledBack, penaltyOnField, timeout, underReview, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

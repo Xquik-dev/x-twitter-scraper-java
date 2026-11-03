@@ -4,21 +4,18 @@
 
 package com.x_twitter_scraper.api.models.x.users
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter
-import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.x_twitter_scraper.api.core.Enum
-import com.x_twitter_scraper.api.core.ExcludeMissing
 import com.x_twitter_scraper.api.core.JsonField
-import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
-import java.util.Collections
-import java.util.Objects
 
-/** Pass means X shows the account there, and fail means it doesn't. Unknown means the check had nothing to test or X didn't answer. */
-class ShadowbanVerdict @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+/**
+ * Pass means X shows the account there, and fail means it doesn't. Unknown means the check had
+ * nothing to test or X didn't answer.
+ */
+class ShadowbanVerdict @JsonCreator private constructor(private val value: JsonField<String>) :
+    Enum {
 
     /** Returns this class instance's raw value. */
     @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
@@ -46,11 +43,16 @@ class ShadowbanVerdict @JsonCreator private constructor(private val value: JsonF
         PASS,
         FAIL,
         UNKNOWN,
-        /** An enum member indicating that [ShadowbanVerdict] was instantiated with an unknown value. */
+        /**
+         * An enum member indicating that [ShadowbanVerdict] was instantiated with an unknown value.
+         */
         _UNKNOWN,
     }
 
-    /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+    /**
+     * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if
+     * unknown.
+     */
     fun value(): Value =
         when (this) {
             PASS -> Value.PASS
@@ -62,7 +64,8 @@ class ShadowbanVerdict @JsonCreator private constructor(private val value: JsonF
     /**
      * Returns an enum member corresponding to this class instance's value.
      *
-     * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a known member.
+     * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a known
+     *   member.
      */
     fun known(): Known =
         when (this) {
@@ -75,10 +78,13 @@ class ShadowbanVerdict @JsonCreator private constructor(private val value: JsonF
     /**
      * Returns this class instance's primitive wire representation.
      *
-     * @throws XTwitterScraperInvalidDataException if this class instance's value does not have the expected primitive type.
+     * @throws XTwitterScraperInvalidDataException if this class instance's value does not have the
+     *   expected primitive type.
      */
     fun asString(): String =
-        _value().asString().orElseThrow { XTwitterScraperInvalidDataException("Value is not a String") }
+        _value().asString().orElseThrow {
+            XTwitterScraperInvalidDataException("Value is not a String")
+        }
 
     private var validated: Boolean = false
 

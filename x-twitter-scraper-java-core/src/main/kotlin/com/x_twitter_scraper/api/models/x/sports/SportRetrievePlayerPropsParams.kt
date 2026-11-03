@@ -12,7 +12,10 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Returns the player prop lines & American odds X shows for 1 NFL game. X lists props before & during a game. Other games return no categories. Each request costs 1 credit. */
+/**
+ * Returns the player prop lines & American odds X shows for 1 NFL game. X lists props before &
+ * during a game. Other games return no categories. Each request costs 1 credit.
+ */
 class SportRetrievePlayerPropsParams
 private constructor(
     private val league: String,
@@ -23,16 +26,32 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** nfl, in any case. X has no college rosters or props, so ncaafb gets a free 400 `unsupported_league`. Another value gets a free 400 `invalid_league`. Both come before X is read. */
+    /**
+     * nfl, in any case. X has no college rosters or props, so ncaafb gets a free 400
+     * `unsupported_league`. Another value gets a free 400 `invalid_league`. Both come before X is
+     * read.
+     */
     fun league(): String = league
 
-    /** Game ID, a number up to 19 digits. GET /x/sports/{league}/games lists them. Another value gets a free 400 `invalid_game_id` before X is read. */
+    /**
+     * Game ID, a number up to 19 digits. GET /x/sports/{league}/games lists them. Another value
+     * gets a free 400 `invalid_game_id` before X is read.
+     */
     fun id(): Optional<String> = Optional.ofNullable(id)
 
-    /** Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. A required getter throws when you leave its field out, and response validation fails. */
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+     * author.username. A list keeps the field in each item. Case & underscores do not matter. A row
+     * that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name
+     * answers 400 unknown_field with the valid names, before any read. The price stays the same. A
+     * required getter throws when you leave its field out, and response validation fails.
+     */
     fun fields(): Optional<String> = Optional.ofNullable(fields)
 
-    /** Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. */
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+     * fields, it drops from the kept fields.
+     */
     fun omit(): Optional<String> = Optional.ofNullable(omit)
 
     /** Additional headers to send with the request. */
@@ -46,7 +65,8 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [SportRetrievePlayerPropsParams].
+         * Returns a mutable builder for constructing an instance of
+         * [SportRetrievePlayerPropsParams].
          *
          * The following fields are required:
          * ```java
@@ -66,7 +86,8 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        @JvmSynthetic internal fun from(sportRetrievePlayerPropsParams: SportRetrievePlayerPropsParams) = apply {
+        @JvmSynthetic
+        internal fun from(sportRetrievePlayerPropsParams: SportRetrievePlayerPropsParams) = apply {
             league = sportRetrievePlayerPropsParams.league
             id = sportRetrievePlayerPropsParams.id
             fields = sportRetrievePlayerPropsParams.fields
@@ -75,27 +96,43 @@ private constructor(
             additionalQueryParams = sportRetrievePlayerPropsParams.additionalQueryParams.toBuilder()
         }
 
-        /** nfl, in any case. X has no college rosters or props, so ncaafb gets a free 400 `unsupported_league`. Another value gets a free 400 `invalid_league`. Both come before X is read. */
+        /**
+         * nfl, in any case. X has no college rosters or props, so ncaafb gets a free 400
+         * `unsupported_league`. Another value gets a free 400 `invalid_league`. Both come before X
+         * is read.
+         */
         fun league(league: String) = apply { this.league = league }
 
-        /** Game ID, a number up to 19 digits. GET /x/sports/{league}/games lists them. Another value gets a free 400 `invalid_game_id` before X is read. */
+        /**
+         * Game ID, a number up to 19 digits. GET /x/sports/{league}/games lists them. Another value
+         * gets a free 400 `invalid_game_id` before X is read.
+         */
         fun id(id: String?) = apply { this.id = id }
 
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
 
-        /** Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. A required getter throws when you leave its field out, and response validation fails. */
+        /**
+         * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+         * author.username. A list keeps the field in each item. Case & underscores do not matter. A
+         * row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An
+         * unknown name answers 400 unknown_field with the valid names, before any read. The price
+         * stays the same. A required getter throws when you leave its field out, and response
+         * validation fails.
+         */
         fun fields(fields: String?) = apply { this.fields = fields }
 
         /** Alias for calling [Builder.fields] with `fields.orElse(null)`. */
         fun fields(fields: Optional<String>) = fields(fields.getOrNull())
 
-        /** Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. */
+        /**
+         * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+         * fields, it drops from the kept fields.
+         */
         fun omit(omit: String?) = apply { this.omit = omit }
 
         /** Alias for calling [Builder.omit] with `omit.orElse(null)`. */
         fun omit(omit: Optional<String>) = omit(omit.getOrNull())
-
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()

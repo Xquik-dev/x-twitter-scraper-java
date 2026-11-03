@@ -60,7 +60,9 @@ private constructor(
 
     companion object {
 
-        /** Returns a mutable builder for constructing an instance of [FootballTeamTotalsThirdDowns]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [FootballTeamTotalsThirdDowns].
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -71,7 +73,8 @@ private constructor(
         private var successes: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballTeamTotalsThirdDowns: FootballTeamTotalsThirdDowns) = apply {
+        @JvmSynthetic
+        internal fun from(footballTeamTotalsThirdDowns: FootballTeamTotalsThirdDowns) = apply {
             attempts = footballTeamTotalsThirdDowns.attempts
             successes = footballTeamTotalsThirdDowns.successes
             additionalProperties = footballTeamTotalsThirdDowns.additionalProperties.toMutableMap()
@@ -155,9 +158,9 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
-        (if (attempts.asKnown().isPresent) 1 else 0) +
-            (if (successes.asKnown().isPresent) 1 else 0)
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (attempts.asKnown().isPresent) 1 else 0) + (if (successes.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

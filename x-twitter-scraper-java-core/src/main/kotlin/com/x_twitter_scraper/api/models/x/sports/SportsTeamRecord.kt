@@ -80,7 +80,8 @@ private constructor(
         private var ties: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(sportsTeamRecord: SportsTeamRecord) = apply {
+        @JvmSynthetic
+        internal fun from(sportsTeamRecord: SportsTeamRecord) = apply {
             wins = sportsTeamRecord.wins
             losses = sportsTeamRecord.losses
             ties = sportsTeamRecord.ties
@@ -177,7 +178,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (wins.asKnown().isPresent) 1 else 0) +
             (if (losses.asKnown().isPresent) 1 else 0) +
             (if (ties.asKnown().isPresent) 1 else 0)

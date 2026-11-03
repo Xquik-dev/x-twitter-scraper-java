@@ -59,8 +59,7 @@ private constructor(
             id = postDeleteParams.id
             additionalHeaders = postDeleteParams.additionalHeaders.toBuilder()
             additionalQueryParams = postDeleteParams.additionalQueryParams.toBuilder()
-            additionalBodyProperties =
-                postDeleteParams.additionalBodyProperties.toMutableMap()
+            additionalBodyProperties = postDeleteParams.additionalBodyProperties.toMutableMap()
         }
 
         fun id(id: String?) = apply { this.id = id }

@@ -612,7 +612,9 @@ interface UserService {
         retrieveLive(id, UserRetrieveLiveParams.none(), requestOptions)
 
     /**
-     * Checks 1 X account for a search ban, a search suggestion ban & reply deboosting. It also says if the account is active, protected or suspended. Each profile, post, suggestion & reply in the answer costs 1 credit.
+     * Checks 1 X account for a search ban, a search suggestion ban & reply deboosting. It also says
+     * if the account is active, protected or suspended. Each profile, post, suggestion & reply in
+     * the answer costs 1 credit.
      */
     fun retrieveShadowban(id: String): ShadowbanReport =
         retrieveShadowban(id, UserRetrieveShadowbanParams.none())
@@ -1649,8 +1651,8 @@ interface UserService {
             retrieveLive(id, UserRetrieveLiveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /x/users/{id}/shadowban`, but is otherwise the same as
-         * [UserService.retrieveShadowban].
+         * Returns a raw HTTP response for `get /x/users/{id}/shadowban`, but is otherwise the same
+         * as [UserService.retrieveShadowban].
          */
         @MustBeClosed
         fun retrieveShadowban(id: String): HttpResponseFor<ShadowbanReport> =
@@ -1670,8 +1672,7 @@ interface UserService {
         fun retrieveShadowban(
             id: String,
             params: UserRetrieveShadowbanParams = UserRetrieveShadowbanParams.none(),
-        ): HttpResponseFor<ShadowbanReport> =
-            retrieveShadowban(id, params, RequestOptions.none())
+        ): HttpResponseFor<ShadowbanReport> = retrieveShadowban(id, params, RequestOptions.none())
 
         /** @see retrieveShadowban */
         @MustBeClosed

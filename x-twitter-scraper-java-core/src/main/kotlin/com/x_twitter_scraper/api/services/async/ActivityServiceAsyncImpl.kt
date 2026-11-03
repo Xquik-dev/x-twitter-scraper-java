@@ -15,14 +15,12 @@ import com.x_twitter_scraper.api.core.http.HttpRequest
 import com.x_twitter_scraper.api.core.http.HttpResponse
 import com.x_twitter_scraper.api.core.http.HttpResponse.Handler
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
-import com.x_twitter_scraper.api.core.http.json
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepareAsync
-import com.x_twitter_scraper.api.models.activity.ActivityExportParams
 import com.x_twitter_scraper.api.models.activity.ActivityListParams
 import com.x_twitter_scraper.api.models.activity.ActivityLogRow
-import com.x_twitter_scraper.api.models.activity.ActivityRetrieveParams
 import com.x_twitter_scraper.api.models.activity.ActivityRecord
+import com.x_twitter_scraper.api.models.activity.ActivityRetrieveParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -51,11 +49,6 @@ class ActivityServiceAsyncImpl internal constructor(private val clientOptions: C
         requestOptions: RequestOptions,
     ): CompletableFuture<List<ActivityLogRow>> =
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
-
-    override fun export(
-        params: ActivityExportParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<HttpResponse> = withRawResponse().export(params, requestOptions)
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         ActivityServiceAsync.WithRawResponse {
@@ -129,24 +122,6 @@ class ActivityServiceAsyncImpl internal constructor(private val clientOptions: C
                             }
                     }
                 }
-        }
-
-        override fun export(
-            params: ActivityExportParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponse> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("activity")
-                    .putHeader("Accept", "application/octet-stream")
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response -> errorHandler.handle(response) }
         }
     }
 }

@@ -32,10 +32,18 @@ private constructor(
 
     @JsonCreator
     private constructor(
-        @JsonProperty("defenseSuccesses") @ExcludeMissing defenseSuccesses: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("passSuccesses") @ExcludeMissing passSuccesses: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("rushSuccesses") @ExcludeMissing rushSuccesses: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("turnoverSuccesses") @ExcludeMissing turnoverSuccesses: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("defenseSuccesses")
+        @ExcludeMissing
+        defenseSuccesses: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("passSuccesses")
+        @ExcludeMissing
+        passSuccesses: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("rushSuccesses")
+        @ExcludeMissing
+        rushSuccesses: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("turnoverSuccesses")
+        @ExcludeMissing
+        turnoverSuccesses: JsonField<Long> = JsonMissing.of(),
     ) : this(defenseSuccesses, passSuccesses, rushSuccesses, turnoverSuccesses, mutableMapOf())
 
     /** Defensive 2-point returns. */
@@ -51,16 +59,24 @@ private constructor(
     fun turnoverSuccesses(): Optional<Long> = turnoverSuccesses.getOptional("turnoverSuccesses")
 
     /** Returns the raw JSON value of [defenseSuccesses]. */
-    @JsonProperty("defenseSuccesses") @ExcludeMissing fun _defenseSuccesses(): JsonField<Long> = defenseSuccesses
+    @JsonProperty("defenseSuccesses")
+    @ExcludeMissing
+    fun _defenseSuccesses(): JsonField<Long> = defenseSuccesses
 
     /** Returns the raw JSON value of [passSuccesses]. */
-    @JsonProperty("passSuccesses") @ExcludeMissing fun _passSuccesses(): JsonField<Long> = passSuccesses
+    @JsonProperty("passSuccesses")
+    @ExcludeMissing
+    fun _passSuccesses(): JsonField<Long> = passSuccesses
 
     /** Returns the raw JSON value of [rushSuccesses]. */
-    @JsonProperty("rushSuccesses") @ExcludeMissing fun _rushSuccesses(): JsonField<Long> = rushSuccesses
+    @JsonProperty("rushSuccesses")
+    @ExcludeMissing
+    fun _rushSuccesses(): JsonField<Long> = rushSuccesses
 
     /** Returns the raw JSON value of [turnoverSuccesses]. */
-    @JsonProperty("turnoverSuccesses") @ExcludeMissing fun _turnoverSuccesses(): JsonField<Long> = turnoverSuccesses
+    @JsonProperty("turnoverSuccesses")
+    @ExcludeMissing
+    fun _turnoverSuccesses(): JsonField<Long> = turnoverSuccesses
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -76,7 +92,10 @@ private constructor(
 
     companion object {
 
-        /** Returns a mutable builder for constructing an instance of [FootballPlayerStatsConversions]. */
+        /**
+         * Returns a mutable builder for constructing an instance of
+         * [FootballPlayerStatsConversions].
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -89,23 +108,29 @@ private constructor(
         private var turnoverSuccesses: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballPlayerStatsConversions: FootballPlayerStatsConversions) = apply {
+        @JvmSynthetic
+        internal fun from(footballPlayerStatsConversions: FootballPlayerStatsConversions) = apply {
             defenseSuccesses = footballPlayerStatsConversions.defenseSuccesses
             passSuccesses = footballPlayerStatsConversions.passSuccesses
             rushSuccesses = footballPlayerStatsConversions.rushSuccesses
             turnoverSuccesses = footballPlayerStatsConversions.turnoverSuccesses
-            additionalProperties = footballPlayerStatsConversions.additionalProperties.toMutableMap()
+            additionalProperties =
+                footballPlayerStatsConversions.additionalProperties.toMutableMap()
         }
 
         /** Defensive 2-point returns. */
-        fun defenseSuccesses(defenseSuccesses: Long?) = defenseSuccesses(JsonField.ofNullable(defenseSuccesses))
+        fun defenseSuccesses(defenseSuccesses: Long?) =
+            defenseSuccesses(JsonField.ofNullable(defenseSuccesses))
 
         fun defenseSuccesses(defenseSuccesses: Long) = defenseSuccesses(defenseSuccesses as Long?)
 
-        fun defenseSuccesses(defenseSuccesses: Optional<Long>) = defenseSuccesses(defenseSuccesses.getOrNull())
+        fun defenseSuccesses(defenseSuccesses: Optional<Long>) =
+            defenseSuccesses(defenseSuccesses.getOrNull())
 
         /** Sets [Builder.defenseSuccesses] to an arbitrary JSON value. */
-        fun defenseSuccesses(defenseSuccesses: JsonField<Long>) = apply { this.defenseSuccesses = defenseSuccesses }
+        fun defenseSuccesses(defenseSuccesses: JsonField<Long>) = apply {
+            this.defenseSuccesses = defenseSuccesses
+        }
 
         /** 2-point conversions by pass. */
         fun passSuccesses(passSuccesses: Long?) = passSuccesses(JsonField.ofNullable(passSuccesses))
@@ -115,7 +140,9 @@ private constructor(
         fun passSuccesses(passSuccesses: Optional<Long>) = passSuccesses(passSuccesses.getOrNull())
 
         /** Sets [Builder.passSuccesses] to an arbitrary JSON value. */
-        fun passSuccesses(passSuccesses: JsonField<Long>) = apply { this.passSuccesses = passSuccesses }
+        fun passSuccesses(passSuccesses: JsonField<Long>) = apply {
+            this.passSuccesses = passSuccesses
+        }
 
         /** 2-point conversions by rush. */
         fun rushSuccesses(rushSuccesses: Long?) = rushSuccesses(JsonField.ofNullable(rushSuccesses))
@@ -125,17 +152,24 @@ private constructor(
         fun rushSuccesses(rushSuccesses: Optional<Long>) = rushSuccesses(rushSuccesses.getOrNull())
 
         /** Sets [Builder.rushSuccesses] to an arbitrary JSON value. */
-        fun rushSuccesses(rushSuccesses: JsonField<Long>) = apply { this.rushSuccesses = rushSuccesses }
+        fun rushSuccesses(rushSuccesses: JsonField<Long>) = apply {
+            this.rushSuccesses = rushSuccesses
+        }
 
         /** 2-point conversions after a turnover. */
-        fun turnoverSuccesses(turnoverSuccesses: Long?) = turnoverSuccesses(JsonField.ofNullable(turnoverSuccesses))
+        fun turnoverSuccesses(turnoverSuccesses: Long?) =
+            turnoverSuccesses(JsonField.ofNullable(turnoverSuccesses))
 
-        fun turnoverSuccesses(turnoverSuccesses: Long) = turnoverSuccesses(turnoverSuccesses as Long?)
+        fun turnoverSuccesses(turnoverSuccesses: Long) =
+            turnoverSuccesses(turnoverSuccesses as Long?)
 
-        fun turnoverSuccesses(turnoverSuccesses: Optional<Long>) = turnoverSuccesses(turnoverSuccesses.getOrNull())
+        fun turnoverSuccesses(turnoverSuccesses: Optional<Long>) =
+            turnoverSuccesses(turnoverSuccesses.getOrNull())
 
         /** Sets [Builder.turnoverSuccesses] to an arbitrary JSON value. */
-        fun turnoverSuccesses(turnoverSuccesses: JsonField<Long>) = apply { this.turnoverSuccesses = turnoverSuccesses }
+        fun turnoverSuccesses(turnoverSuccesses: JsonField<Long>) = apply {
+            this.turnoverSuccesses = turnoverSuccesses
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -199,7 +233,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (defenseSuccesses.asKnown().isPresent) 1 else 0) +
             (if (passSuccesses.asKnown().isPresent) 1 else 0) +
             (if (rushSuccesses.asKnown().isPresent) 1 else 0) +
@@ -218,7 +253,15 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(defenseSuccesses, passSuccesses, rushSuccesses, turnoverSuccesses, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            defenseSuccesses,
+            passSuccesses,
+            rushSuccesses,
+            turnoverSuccesses,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

@@ -89,7 +89,8 @@ private constructor(
         private var small: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballPlayerHeadshots: FootballPlayerHeadshots) = apply {
+        @JvmSynthetic
+        internal fun from(footballPlayerHeadshots: FootballPlayerHeadshots) = apply {
             original = footballPlayerHeadshots.original
             large = footballPlayerHeadshots.large
             medium = footballPlayerHeadshots.medium
@@ -191,7 +192,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (original.asKnown().isPresent) 1 else 0) +
             (if (large.asKnown().isPresent) 1 else 0) +
             (if (medium.asKnown().isPresent) 1 else 0) +
@@ -210,7 +212,9 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(original, large, medium, small, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(original, large, medium, small, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

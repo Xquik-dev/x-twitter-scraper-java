@@ -33,7 +33,9 @@ private constructor(
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
         @JsonProperty("username") @ExcludeMissing username: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("blueVerified") @ExcludeMissing blueVerified: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("blueVerified")
+        @ExcludeMissing
+        blueVerified: JsonField<Boolean> = JsonMissing.of(),
     ) : this(id, username, blueVerified, mutableMapOf())
 
     /** The account's user ID. */
@@ -52,7 +54,9 @@ private constructor(
     @JsonProperty("username") @ExcludeMissing fun _username(): JsonField<String> = username
 
     /** Returns the raw JSON value of [blueVerified]. */
-    @JsonProperty("blueVerified") @ExcludeMissing fun _blueVerified(): JsonField<Boolean> = blueVerified
+    @JsonProperty("blueVerified")
+    @ExcludeMissing
+    fun _blueVerified(): JsonField<Boolean> = blueVerified
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -80,7 +84,8 @@ private constructor(
         private var blueVerified: JsonField<Boolean>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballPlayerXUser: FootballPlayerXUser) = apply {
+        @JvmSynthetic
+        internal fun from(footballPlayerXUser: FootballPlayerXUser) = apply {
             id = footballPlayerXUser.id
             username = footballPlayerXUser.username
             blueVerified = footballPlayerXUser.blueVerified
@@ -109,7 +114,9 @@ private constructor(
         fun blueVerified(blueVerified: Optional<Boolean>) = blueVerified(blueVerified.getOrNull())
 
         /** Sets [Builder.blueVerified] to an arbitrary JSON value. */
-        fun blueVerified(blueVerified: JsonField<Boolean>) = apply { this.blueVerified = blueVerified }
+        fun blueVerified(blueVerified: JsonField<Boolean>) = apply {
+            this.blueVerified = blueVerified
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -171,7 +178,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (username.asKnown().isPresent) 1 else 0) +
             (if (blueVerified.asKnown().isPresent) 1 else 0)
@@ -188,7 +196,9 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, username, blueVerified, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(id, username, blueVerified, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

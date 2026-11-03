@@ -77,7 +77,9 @@ private constructor(
      *
      * Unlike [monitors], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("monitors") @ExcludeMissing fun _monitors(): JsonField<List<PostMonitor>> = monitors
+    @JsonProperty("monitors")
+    @ExcludeMissing
+    fun _monitors(): JsonField<List<PostMonitor>> = monitors
 
     /**
      * Returns the raw JSON value of [total].

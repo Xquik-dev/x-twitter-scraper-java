@@ -207,7 +207,8 @@ internal class ShapesTest {
     private fun recordsDifferences(records: String, sdkRecords: TypeReference<*>): List<String> {
         val shapes = SdkShapes()
         val sdk = Obj(mapOf("records" to Prop(false, false, shapes.type(sdkRecords.type))))
-        val spec = specOperation(json("""{"type": "object", "properties": {"records": $records}}"""))
+        val spec =
+            specOperation(json("""{"type": "object", "properties": {"records": $records}}"""))
         return compare(spec, sdk, defs = shapes.defs)
     }
 

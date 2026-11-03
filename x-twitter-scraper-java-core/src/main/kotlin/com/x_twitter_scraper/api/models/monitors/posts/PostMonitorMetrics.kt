@@ -32,7 +32,9 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("hours") @ExcludeMissing hours: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("buckets") @ExcludeMissing buckets: JsonField<List<PostMonitorMetricsBucket>> = JsonMissing.of(),
+        @JsonProperty("buckets")
+        @ExcludeMissing
+        buckets: JsonField<List<PostMonitorMetricsBucket>> = JsonMissing.of(),
     ) : this(hours, buckets, mutableMapOf())
 
     fun hours(): Long = hours.getRequired("hours")
@@ -43,7 +45,9 @@ private constructor(
     @JsonProperty("hours") @ExcludeMissing fun _hours(): JsonField<Long> = hours
 
     /** Returns the raw JSON value of [buckets]. */
-    @JsonProperty("buckets") @ExcludeMissing fun _buckets(): JsonField<List<PostMonitorMetricsBucket>> = buckets
+    @JsonProperty("buckets")
+    @ExcludeMissing
+    fun _buckets(): JsonField<List<PostMonitorMetricsBucket>> = buckets
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -70,7 +74,8 @@ private constructor(
         private var buckets: JsonField<MutableList<PostMonitorMetricsBucket>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(postMonitorMetrics: PostMonitorMetrics) = apply {
+        @JvmSynthetic
+        internal fun from(postMonitorMetrics: PostMonitorMetrics) = apply {
             hours = postMonitorMetrics.hours
             buckets = postMonitorMetrics.buckets.map { it.toMutableList() }
             additionalProperties = postMonitorMetrics.additionalProperties.toMutableMap()
@@ -84,7 +89,9 @@ private constructor(
         fun buckets(buckets: List<PostMonitorMetricsBucket>) = buckets(JsonField.of(buckets))
 
         /** Sets [Builder.buckets] to an arbitrary JSON value. */
-        fun buckets(buckets: JsonField<List<PostMonitorMetricsBucket>>) = apply { this.buckets = buckets.map { it.toMutableList() } }
+        fun buckets(buckets: JsonField<List<PostMonitorMetricsBucket>>) = apply {
+            this.buckets = buckets.map { it.toMutableList() }
+        }
 
         /** Adds a single [PostMonitorMetricsBucket] to [buckets]. */
         fun addBucket(bucket: PostMonitorMetricsBucket) = apply {
@@ -152,7 +159,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (hours.asKnown().isPresent) 1 else 0) +
             (buckets.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 

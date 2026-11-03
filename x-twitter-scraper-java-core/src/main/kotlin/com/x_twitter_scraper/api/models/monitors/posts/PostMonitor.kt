@@ -53,18 +53,52 @@ private constructor(
         @JsonProperty("postId") @ExcludeMissing postId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("postUrl") @ExcludeMissing postUrl: JsonField<String> = JsonMissing.of(),
         @JsonProperty("authorId") @ExcludeMissing authorId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("authorUsername") @ExcludeMissing authorUsername: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("authorName") @ExcludeMissing authorName: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("authorUsername")
+        @ExcludeMissing
+        authorUsername: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("authorName")
+        @ExcludeMissing
+        authorName: JsonField<String> = JsonMissing.of(),
         @JsonProperty("text") @ExcludeMissing text: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("postedAt") @ExcludeMissing postedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-        @JsonProperty("eventTypes") @ExcludeMissing eventTypes: JsonField<List<EventType>> = JsonMissing.of(),
+        @JsonProperty("postedAt")
+        @ExcludeMissing
+        postedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("eventTypes")
+        @ExcludeMissing
+        eventTypes: JsonField<List<EventType>> = JsonMissing.of(),
         @JsonProperty("isActive") @ExcludeMissing isActive: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("createdAt") @ExcludeMissing createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-        @JsonProperty("nextBillingAt") @ExcludeMissing nextBillingAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-        @JsonProperty("pausedReason") @ExcludeMissing pausedReason: JsonField<PausedReason> = JsonMissing.of(),
-        @JsonProperty("pausedAt") @ExcludeMissing pausedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("createdAt")
+        @ExcludeMissing
+        createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("nextBillingAt")
+        @ExcludeMissing
+        nextBillingAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("pausedReason")
+        @ExcludeMissing
+        pausedReason: JsonField<PausedReason> = JsonMissing.of(),
+        @JsonProperty("pausedAt")
+        @ExcludeMissing
+        pausedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("metrics") @ExcludeMissing metrics: JsonField<PostMetrics> = JsonMissing.of(),
-    ) : this(id, name, postId, postUrl, authorId, authorUsername, authorName, text, postedAt, eventTypes, isActive, createdAt, nextBillingAt, pausedReason, pausedAt, metrics, mutableMapOf())
+    ) : this(
+        id,
+        name,
+        postId,
+        postUrl,
+        authorId,
+        authorUsername,
+        authorName,
+        text,
+        postedAt,
+        eventTypes,
+        isActive,
+        createdAt,
+        nextBillingAt,
+        pausedReason,
+        pausedAt,
+        metrics,
+        mutableMapOf(),
+    )
 
     fun id(): String = id.getRequired("id")
 
@@ -88,7 +122,10 @@ private constructor(
 
     fun postedAt(): OffsetDateTime = postedAt.getRequired("postedAt")
 
-    /** Post event types to send. Without it, a monitor sends new replies, new quotes, like & retweet changes, edits & deletion. */
+    /**
+     * Post event types to send. Without it, a monitor sends new replies, new quotes, like & retweet
+     * changes, edits & deletion.
+     */
     fun eventTypes(): List<EventType> = eventTypes.getRequired("eventTypes")
 
     fun isActive(): Boolean = isActive.getRequired("isActive")
@@ -98,7 +135,11 @@ private constructor(
     /** Next hourly credit charge time for this post monitor. */
     fun nextBillingAt(): OffsetDateTime = nextBillingAt.getRequired("nextBillingAt")
 
-    /** Why Xquik paused this post monitor. insufficient_credits means the balance could not pay an hour, so add credits & resume. The other 3 mean X stopped showing the post. Absent when the monitor is active or you paused it yourself. */
+    /**
+     * Why Xquik paused this post monitor. insufficient_credits means the balance could not pay an
+     * hour, so add credits & resume. The other 3 mean X stopped showing the post. Absent when the
+     * monitor is active or you paused it yourself.
+     */
     fun pausedReason(): Optional<PausedReason> = pausedReason.getOptional("pausedReason")
 
     /** When Xquik paused this post monitor. */
@@ -123,7 +164,9 @@ private constructor(
     @JsonProperty("authorId") @ExcludeMissing fun _authorId(): JsonField<String> = authorId
 
     /** Returns the raw JSON value of [authorUsername]. */
-    @JsonProperty("authorUsername") @ExcludeMissing fun _authorUsername(): JsonField<String> = authorUsername
+    @JsonProperty("authorUsername")
+    @ExcludeMissing
+    fun _authorUsername(): JsonField<String> = authorUsername
 
     /** Returns the raw JSON value of [authorName]. */
     @JsonProperty("authorName") @ExcludeMissing fun _authorName(): JsonField<String> = authorName
@@ -135,19 +178,27 @@ private constructor(
     @JsonProperty("postedAt") @ExcludeMissing fun _postedAt(): JsonField<OffsetDateTime> = postedAt
 
     /** Returns the raw JSON value of [eventTypes]. */
-    @JsonProperty("eventTypes") @ExcludeMissing fun _eventTypes(): JsonField<List<EventType>> = eventTypes
+    @JsonProperty("eventTypes")
+    @ExcludeMissing
+    fun _eventTypes(): JsonField<List<EventType>> = eventTypes
 
     /** Returns the raw JSON value of [isActive]. */
     @JsonProperty("isActive") @ExcludeMissing fun _isActive(): JsonField<Boolean> = isActive
 
     /** Returns the raw JSON value of [createdAt]. */
-    @JsonProperty("createdAt") @ExcludeMissing fun _createdAt(): JsonField<OffsetDateTime> = createdAt
+    @JsonProperty("createdAt")
+    @ExcludeMissing
+    fun _createdAt(): JsonField<OffsetDateTime> = createdAt
 
     /** Returns the raw JSON value of [nextBillingAt]. */
-    @JsonProperty("nextBillingAt") @ExcludeMissing fun _nextBillingAt(): JsonField<OffsetDateTime> = nextBillingAt
+    @JsonProperty("nextBillingAt")
+    @ExcludeMissing
+    fun _nextBillingAt(): JsonField<OffsetDateTime> = nextBillingAt
 
     /** Returns the raw JSON value of [pausedReason]. */
-    @JsonProperty("pausedReason") @ExcludeMissing fun _pausedReason(): JsonField<PausedReason> = pausedReason
+    @JsonProperty("pausedReason")
+    @ExcludeMissing
+    fun _pausedReason(): JsonField<PausedReason> = pausedReason
 
     /** Returns the raw JSON value of [pausedAt]. */
     @JsonProperty("pausedAt") @ExcludeMissing fun _pausedAt(): JsonField<OffsetDateTime> = pausedAt
@@ -194,7 +245,8 @@ private constructor(
         private var metrics: JsonField<PostMetrics>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(postMonitor: PostMonitor) = apply {
+        @JvmSynthetic
+        internal fun from(postMonitor: PostMonitor) = apply {
             id = postMonitor.id
             name = postMonitor.name
             postId = postMonitor.postId
@@ -245,7 +297,9 @@ private constructor(
         fun authorUsername(authorUsername: String) = authorUsername(JsonField.of(authorUsername))
 
         /** Sets [Builder.authorUsername] to an arbitrary JSON value. */
-        fun authorUsername(authorUsername: JsonField<String>) = apply { this.authorUsername = authorUsername }
+        fun authorUsername(authorUsername: JsonField<String>) = apply {
+            this.authorUsername = authorUsername
+        }
 
         fun authorName(authorName: String) = authorName(JsonField.of(authorName))
 
@@ -263,11 +317,16 @@ private constructor(
         /** Sets [Builder.postedAt] to an arbitrary JSON value. */
         fun postedAt(postedAt: JsonField<OffsetDateTime>) = apply { this.postedAt = postedAt }
 
-        /** Post event types to send. Without it, a monitor sends new replies, new quotes, like & retweet changes, edits & deletion. */
+        /**
+         * Post event types to send. Without it, a monitor sends new replies, new quotes, like &
+         * retweet changes, edits & deletion.
+         */
         fun eventTypes(eventTypes: List<EventType>) = eventTypes(JsonField.of(eventTypes))
 
         /** Sets [Builder.eventTypes] to an arbitrary JSON value. */
-        fun eventTypes(eventTypes: JsonField<List<EventType>>) = apply { this.eventTypes = eventTypes.map { it.toMutableList() } }
+        fun eventTypes(eventTypes: JsonField<List<EventType>>) = apply {
+            this.eventTypes = eventTypes.map { it.toMutableList() }
+        }
 
         /** Adds a single [EventType] to [eventTypes]. */
         fun addEventType(eventType: EventType) = apply {
@@ -288,16 +347,25 @@ private constructor(
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
         /** Next hourly credit charge time for this post monitor. */
-        fun nextBillingAt(nextBillingAt: OffsetDateTime) = nextBillingAt(JsonField.of(nextBillingAt))
+        fun nextBillingAt(nextBillingAt: OffsetDateTime) =
+            nextBillingAt(JsonField.of(nextBillingAt))
 
         /** Sets [Builder.nextBillingAt] to an arbitrary JSON value. */
-        fun nextBillingAt(nextBillingAt: JsonField<OffsetDateTime>) = apply { this.nextBillingAt = nextBillingAt }
+        fun nextBillingAt(nextBillingAt: JsonField<OffsetDateTime>) = apply {
+            this.nextBillingAt = nextBillingAt
+        }
 
-        /** Why Xquik paused this post monitor. insufficient_credits means the balance could not pay an hour, so add credits & resume. The other 3 mean X stopped showing the post. Absent when the monitor is active or you paused it yourself. */
+        /**
+         * Why Xquik paused this post monitor. insufficient_credits means the balance could not pay
+         * an hour, so add credits & resume. The other 3 mean X stopped showing the post. Absent
+         * when the monitor is active or you paused it yourself.
+         */
         fun pausedReason(pausedReason: PausedReason) = pausedReason(JsonField.of(pausedReason))
 
         /** Sets [Builder.pausedReason] to an arbitrary JSON value. */
-        fun pausedReason(pausedReason: JsonField<PausedReason>) = apply { this.pausedReason = pausedReason }
+        fun pausedReason(pausedReason: JsonField<PausedReason>) = apply {
+            this.pausedReason = pausedReason
+        }
 
         /** When Xquik paused this post monitor. */
         fun pausedAt(pausedAt: OffsetDateTime) = pausedAt(JsonField.of(pausedAt))
@@ -397,7 +465,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             (if (postId.asKnown().isPresent) 1 else 0) +
@@ -440,15 +509,34 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, name, postId, postUrl, authorId, authorUsername, authorName, text, postedAt, eventTypes, isActive, createdAt, nextBillingAt, pausedReason, pausedAt, metrics, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            id,
+            name,
+            postId,
+            postUrl,
+            authorId,
+            authorUsername,
+            authorName,
+            text,
+            postedAt,
+            eventTypes,
+            isActive,
+            createdAt,
+            nextBillingAt,
+            pausedReason,
+            pausedAt,
+            metrics,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
         "PostMonitor{id=$id, name=$name, postId=$postId, postUrl=$postUrl, authorId=$authorId, authorUsername=$authorUsername, authorName=$authorName, text=$text, postedAt=$postedAt, eventTypes=$eventTypes, isActive=$isActive, createdAt=$createdAt, nextBillingAt=$nextBillingAt, pausedReason=$pausedReason, pausedAt=$pausedAt, metrics=$metrics, additionalProperties=$additionalProperties}"
 
-    class EventType @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class EventType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /** Returns this class instance's raw value. */
         @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
@@ -504,11 +592,16 @@ private constructor(
             POST_VIEWS_CHANGED,
             POST_EDITED,
             POST_DELETED,
-            /** An enum member indicating that [EventType] was instantiated with an unknown value. */
+            /**
+             * An enum member indicating that [EventType] was instantiated with an unknown value.
+             */
             _UNKNOWN,
         }
 
-        /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if unknown.
+         */
         fun value(): Value =
             when (this) {
                 POST_REPLY_NEW -> Value.POST_REPLY_NEW
@@ -624,11 +717,16 @@ private constructor(
             X_POST_DELETED,
             X_POST_PROTECTED,
             X_POST_UNAVAILABLE,
-            /** An enum member indicating that [PausedReason] was instantiated with an unknown value. */
+            /**
+             * An enum member indicating that [PausedReason] was instantiated with an unknown value.
+             */
             _UNKNOWN,
         }
 
-        /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if unknown.
+         */
         fun value(): Value =
             when (this) {
                 INSUFFICIENT_CREDITS -> Value.INSUFFICIENT_CREDITS

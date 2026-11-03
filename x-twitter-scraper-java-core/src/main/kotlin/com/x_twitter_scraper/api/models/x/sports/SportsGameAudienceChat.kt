@@ -32,8 +32,12 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("available") @ExcludeMissing available: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("broadcastId") @ExcludeMissing broadcastId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("opensIn") @ExcludeMissing opensIn: JsonField<SportsGameAudienceChatOpensIn> = JsonMissing.of(),
+        @JsonProperty("broadcastId")
+        @ExcludeMissing
+        broadcastId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("opensIn")
+        @ExcludeMissing
+        opensIn: JsonField<SportsGameAudienceChatOpensIn> = JsonMissing.of(),
     ) : this(available, broadcastId, opensIn, mutableMapOf())
 
     /** Whether the chat is open now. */
@@ -52,7 +56,9 @@ private constructor(
     @JsonProperty("broadcastId") @ExcludeMissing fun _broadcastId(): JsonField<String> = broadcastId
 
     /** Returns the raw JSON value of [opensIn]. */
-    @JsonProperty("opensIn") @ExcludeMissing fun _opensIn(): JsonField<SportsGameAudienceChatOpensIn> = opensIn
+    @JsonProperty("opensIn")
+    @ExcludeMissing
+    fun _opensIn(): JsonField<SportsGameAudienceChatOpensIn> = opensIn
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -80,7 +86,8 @@ private constructor(
         private var opensIn: JsonField<SportsGameAudienceChatOpensIn>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(sportsGameAudienceChat: SportsGameAudienceChat) = apply {
+        @JvmSynthetic
+        internal fun from(sportsGameAudienceChat: SportsGameAudienceChat) = apply {
             available = sportsGameAudienceChat.available
             broadcastId = sportsGameAudienceChat.broadcastId
             opensIn = sportsGameAudienceChat.opensIn
@@ -106,12 +113,15 @@ private constructor(
         fun broadcastId(broadcastId: JsonField<String>) = apply { this.broadcastId = broadcastId }
 
         /** Time left until the chat opens. Null while it is open & after the game. */
-        fun opensIn(opensIn: SportsGameAudienceChatOpensIn?) = opensIn(JsonField.ofNullable(opensIn))
+        fun opensIn(opensIn: SportsGameAudienceChatOpensIn?) =
+            opensIn(JsonField.ofNullable(opensIn))
 
         fun opensIn(opensIn: Optional<SportsGameAudienceChatOpensIn>) = opensIn(opensIn.getOrNull())
 
         /** Sets [Builder.opensIn] to an arbitrary JSON value. */
-        fun opensIn(opensIn: JsonField<SportsGameAudienceChatOpensIn>) = apply { this.opensIn = opensIn }
+        fun opensIn(opensIn: JsonField<SportsGameAudienceChatOpensIn>) = apply {
+            this.opensIn = opensIn
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -173,7 +183,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (available.asKnown().isPresent) 1 else 0) +
             (if (broadcastId.asKnown().isPresent) 1 else 0) +
             (opensIn.asKnown().getOrNull()?.validity() ?: 0)
@@ -190,7 +201,9 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(available, broadcastId, opensIn, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(available, broadcastId, opensIn, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

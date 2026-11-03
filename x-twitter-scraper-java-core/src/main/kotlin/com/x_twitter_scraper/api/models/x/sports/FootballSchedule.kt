@@ -34,8 +34,12 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("league") @ExcludeMissing league: JsonField<League> = JsonMissing.of(),
-        @JsonProperty("games") @ExcludeMissing games: JsonField<List<FootballScheduleGame>> = JsonMissing.of(),
-        @JsonProperty("teams") @ExcludeMissing teams: JsonField<Map<String, SportsTeam>> = JsonMissing.of(),
+        @JsonProperty("games")
+        @ExcludeMissing
+        games: JsonField<List<FootballScheduleGame>> = JsonMissing.of(),
+        @JsonProperty("teams")
+        @ExcludeMissing
+        teams: JsonField<Map<String, SportsTeam>> = JsonMissing.of(),
     ) : this(league, games, teams, mutableMapOf())
 
     /** The league whose games this list holds. */
@@ -51,7 +55,9 @@ private constructor(
     @JsonProperty("league") @ExcludeMissing fun _league(): JsonField<League> = league
 
     /** Returns the raw JSON value of [games]. */
-    @JsonProperty("games") @ExcludeMissing fun _games(): JsonField<List<FootballScheduleGame>> = games
+    @JsonProperty("games")
+    @ExcludeMissing
+    fun _games(): JsonField<List<FootballScheduleGame>> = games
 
     /** Returns the raw JSON value of [teams]. */
     @JsonProperty("teams") @ExcludeMissing fun _teams(): JsonField<Map<String, SportsTeam>> = teams
@@ -82,7 +88,8 @@ private constructor(
         private var teams: JsonField<Map<String, SportsTeam>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballSchedule: FootballSchedule) = apply {
+        @JvmSynthetic
+        internal fun from(footballSchedule: FootballSchedule) = apply {
             league = footballSchedule.league
             games = footballSchedule.games.map { it.toMutableList() }
             teams = footballSchedule.teams
@@ -99,7 +106,9 @@ private constructor(
         fun games(games: List<FootballScheduleGame>) = games(JsonField.of(games))
 
         /** Sets [Builder.games] to an arbitrary JSON value. */
-        fun games(games: JsonField<List<FootballScheduleGame>>) = apply { this.games = games.map { it.toMutableList() } }
+        fun games(games: JsonField<List<FootballScheduleGame>>) = apply {
+            this.games = games.map { it.toMutableList() }
+        }
 
         /** Adds a single [FootballScheduleGame] to [games]. */
         fun addGame(game: FootballScheduleGame) = apply {
@@ -175,7 +184,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (league.asKnown().getOrNull()?.validity() ?: 0) +
             (games.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (teams.asKnown().getOrNull()?.values?.sumOf { it.validity() } ?: 0)
@@ -199,8 +209,7 @@ private constructor(
     override fun toString() =
         "FootballSchedule{league=$league, games=$games, teams=$teams, additionalProperties=$additionalProperties}"
 
-    class League @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class League @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /** Returns this class instance's raw value. */
         @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
@@ -228,7 +237,10 @@ private constructor(
             _UNKNOWN,
         }
 
-        /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if unknown.
+         */
         fun value(): Value =
             when (this) {
                 NFL -> Value.NFL

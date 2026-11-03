@@ -34,8 +34,12 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("teamId") @ExcludeMissing teamId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("totals") @ExcludeMissing totals: JsonField<FootballTeamTotals> = JsonMissing.of(),
-        @JsonProperty("players") @ExcludeMissing players: JsonField<List<FootballPlayerStats>> = JsonMissing.of(),
+        @JsonProperty("totals")
+        @ExcludeMissing
+        totals: JsonField<FootballTeamTotals> = JsonMissing.of(),
+        @JsonProperty("players")
+        @ExcludeMissing
+        players: JsonField<List<FootballPlayerStats>> = JsonMissing.of(),
     ) : this(teamId, totals, players, mutableMapOf())
 
     /** The team these totals belong to, a key of teams. */
@@ -54,7 +58,9 @@ private constructor(
     @JsonProperty("totals") @ExcludeMissing fun _totals(): JsonField<FootballTeamTotals> = totals
 
     /** Returns the raw JSON value of [players]. */
-    @JsonProperty("players") @ExcludeMissing fun _players(): JsonField<List<FootballPlayerStats>> = players
+    @JsonProperty("players")
+    @ExcludeMissing
+    fun _players(): JsonField<List<FootballPlayerStats>> = players
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -82,7 +88,8 @@ private constructor(
         private var players: JsonField<MutableList<FootballPlayerStats>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballTeamBox: FootballTeamBox) = apply {
+        @JvmSynthetic
+        internal fun from(footballTeamBox: FootballTeamBox) = apply {
             teamId = footballTeamBox.teamId
             totals = footballTeamBox.totals
             players = footballTeamBox.players.map { it.toMutableList() }
@@ -109,7 +116,9 @@ private constructor(
         fun players(players: List<FootballPlayerStats>) = players(JsonField.of(players))
 
         /** Sets [Builder.players] to an arbitrary JSON value. */
-        fun players(players: JsonField<List<FootballPlayerStats>>) = apply { this.players = players.map { it.toMutableList() } }
+        fun players(players: JsonField<List<FootballPlayerStats>>) = apply {
+            this.players = players.map { it.toMutableList() }
+        }
 
         /** Adds a single [FootballPlayerStats] to [players]. */
         fun addPlayer(player: FootballPlayerStats) = apply {
@@ -179,7 +188,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (teamId.asKnown().isPresent) 1 else 0) +
             (totals.asKnown().getOrNull()?.validity() ?: 0) +
             (players.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
@@ -196,7 +206,9 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(teamId, totals, players, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(teamId, totals, players, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

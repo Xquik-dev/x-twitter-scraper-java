@@ -79,7 +79,8 @@ private constructor(
         private var b: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(sportsTeamColor: SportsTeamColor) = apply {
+        @JvmSynthetic
+        internal fun from(sportsTeamColor: SportsTeamColor) = apply {
             r = sportsTeamColor.r
             g = sportsTeamColor.g
             b = sportsTeamColor.b
@@ -176,7 +177,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (r.asKnown().isPresent) 1 else 0) +
             (if (g.asKnown().isPresent) 1 else 0) +
             (if (b.asKnown().isPresent) 1 else 0)

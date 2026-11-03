@@ -326,7 +326,8 @@ private constructor(
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
-        fun eventTypes(): Optional<List<PostMonitor.EventType>> = eventTypes.getOptional("eventTypes")
+        fun eventTypes(): Optional<List<PostMonitor.EventType>> =
+            eventTypes.getOptional("eventTypes")
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun isActive(): Optional<Boolean> = isActive.getOptional("isActive")

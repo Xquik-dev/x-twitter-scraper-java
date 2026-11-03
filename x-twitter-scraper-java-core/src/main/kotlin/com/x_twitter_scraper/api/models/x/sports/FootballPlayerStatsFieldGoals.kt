@@ -68,7 +68,10 @@ private constructor(
 
     companion object {
 
-        /** Returns a mutable builder for constructing an instance of [FootballPlayerStatsFieldGoals]. */
+        /**
+         * Returns a mutable builder for constructing an instance of
+         * [FootballPlayerStatsFieldGoals].
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -80,7 +83,8 @@ private constructor(
         private var made: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballPlayerStatsFieldGoals: FootballPlayerStatsFieldGoals) = apply {
+        @JvmSynthetic
+        internal fun from(footballPlayerStatsFieldGoals: FootballPlayerStatsFieldGoals) = apply {
             attempts = footballPlayerStatsFieldGoals.attempts
             longest = footballPlayerStatsFieldGoals.longest
             made = footballPlayerStatsFieldGoals.made
@@ -177,7 +181,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (attempts.asKnown().isPresent) 1 else 0) +
             (if (longest.asKnown().isPresent) 1 else 0) +
             (if (made.asKnown().isPresent) 1 else 0)
@@ -194,7 +199,9 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(attempts, longest, made, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(attempts, longest, made, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

@@ -38,8 +38,12 @@ private constructor(
         @JsonProperty("rank") @ExcludeMissing rank: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("line") @ExcludeMissing line: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("odds") @ExcludeMissing odds: JsonField<Double> = JsonMissing.of(),
-        @JsonProperty("alternateOdds") @ExcludeMissing alternateOdds: JsonField<Double> = JsonMissing.of(),
-        @JsonProperty("openForBetting") @ExcludeMissing openForBetting: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("alternateOdds")
+        @ExcludeMissing
+        alternateOdds: JsonField<Double> = JsonMissing.of(),
+        @JsonProperty("openForBetting")
+        @ExcludeMissing
+        openForBetting: JsonField<Boolean> = JsonMissing.of(),
     ) : this(playerId, rank, line, odds, alternateOdds, openForBetting, mutableMapOf())
 
     /** The player the line is for, a key of players. */
@@ -48,7 +52,10 @@ private constructor(
     /** The line's place in its category, from 1. */
     fun rank(): Optional<Double> = rank.getOptional("rank")
 
-    /** The line the odds price, such as 248.5 yards. Null when the prop has no line, such as the first touchdown scorer. */
+    /**
+     * The line the odds price, such as 248.5 yards. Null when the prop has no line, such as the
+     * first touchdown scorer.
+     */
     fun line(): Optional<Double> = line.getOptional("line")
 
     /** The American odds X shows first, such as -115 or 240. */
@@ -73,10 +80,14 @@ private constructor(
     @JsonProperty("odds") @ExcludeMissing fun _odds(): JsonField<Double> = odds
 
     /** Returns the raw JSON value of [alternateOdds]. */
-    @JsonProperty("alternateOdds") @ExcludeMissing fun _alternateOdds(): JsonField<Double> = alternateOdds
+    @JsonProperty("alternateOdds")
+    @ExcludeMissing
+    fun _alternateOdds(): JsonField<Double> = alternateOdds
 
     /** Returns the raw JSON value of [openForBetting]. */
-    @JsonProperty("openForBetting") @ExcludeMissing fun _openForBetting(): JsonField<Boolean> = openForBetting
+    @JsonProperty("openForBetting")
+    @ExcludeMissing
+    fun _openForBetting(): JsonField<Boolean> = openForBetting
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -107,7 +118,8 @@ private constructor(
         private var openForBetting: JsonField<Boolean>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballPlayerProp: FootballPlayerProp) = apply {
+        @JvmSynthetic
+        internal fun from(footballPlayerProp: FootballPlayerProp) = apply {
             playerId = footballPlayerProp.playerId
             rank = footballPlayerProp.rank
             line = footballPlayerProp.line
@@ -142,7 +154,10 @@ private constructor(
         /** Sets [Builder.rank] to an arbitrary JSON value. */
         fun rank(rank: JsonField<Double>) = apply { this.rank = rank }
 
-        /** The line the odds price, such as 248.5 yards. Null when the prop has no line, such as the first touchdown scorer. */
+        /**
+         * The line the odds price, such as 248.5 yards. Null when the prop has no line, such as the
+         * first touchdown scorer.
+         */
         fun line(line: Double?) = line(JsonField.ofNullable(line))
 
         /**
@@ -175,7 +190,8 @@ private constructor(
         fun odds(odds: JsonField<Double>) = apply { this.odds = odds }
 
         /** The American odds X shows second. Null for a prop with 1 price. */
-        fun alternateOdds(alternateOdds: Double?) = alternateOdds(JsonField.ofNullable(alternateOdds))
+        fun alternateOdds(alternateOdds: Double?) =
+            alternateOdds(JsonField.ofNullable(alternateOdds))
 
         /**
          * Alias for [Builder.alternateOdds].
@@ -185,13 +201,17 @@ private constructor(
         fun alternateOdds(alternateOdds: Double) = alternateOdds(alternateOdds as Double?)
 
         /** Alias for calling [Builder.alternateOdds] with `alternateOdds.orElse(null)`. */
-        fun alternateOdds(alternateOdds: Optional<Double>) = alternateOdds(alternateOdds.getOrNull())
+        fun alternateOdds(alternateOdds: Optional<Double>) =
+            alternateOdds(alternateOdds.getOrNull())
 
         /** Sets [Builder.alternateOdds] to an arbitrary JSON value. */
-        fun alternateOdds(alternateOdds: JsonField<Double>) = apply { this.alternateOdds = alternateOdds }
+        fun alternateOdds(alternateOdds: JsonField<Double>) = apply {
+            this.alternateOdds = alternateOdds
+        }
 
         /** Whether the sportsbook takes bets on the line. */
-        fun openForBetting(openForBetting: Boolean?) = openForBetting(JsonField.ofNullable(openForBetting))
+        fun openForBetting(openForBetting: Boolean?) =
+            openForBetting(JsonField.ofNullable(openForBetting))
 
         /**
          * Alias for [Builder.openForBetting].
@@ -201,10 +221,13 @@ private constructor(
         fun openForBetting(openForBetting: Boolean) = openForBetting(openForBetting as Boolean?)
 
         /** Alias for calling [Builder.openForBetting] with `openForBetting.orElse(null)`. */
-        fun openForBetting(openForBetting: Optional<Boolean>) = openForBetting(openForBetting.getOrNull())
+        fun openForBetting(openForBetting: Optional<Boolean>) =
+            openForBetting(openForBetting.getOrNull())
 
         /** Sets [Builder.openForBetting] to an arbitrary JSON value. */
-        fun openForBetting(openForBetting: JsonField<Boolean>) = apply { this.openForBetting = openForBetting }
+        fun openForBetting(openForBetting: JsonField<Boolean>) = apply {
+            this.openForBetting = openForBetting
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -249,7 +272,8 @@ private constructor(
     /**
      * Validates that the types of all values in this object match their expected types recursively.
      *
-     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
      */
     fun validate(): FootballPlayerProp = apply {
         if (validated) {
@@ -273,7 +297,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (playerId.asKnown().isPresent) 1 else 0) +
             (if (rank.asKnown().isPresent) 1 else 0) +
             (if (line.asKnown().isPresent) 1 else 0) +
@@ -296,7 +321,17 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(playerId, rank, line, odds, alternateOdds, openForBetting, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            playerId,
+            rank,
+            line,
+            odds,
+            alternateOdds,
+            openForBetting,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

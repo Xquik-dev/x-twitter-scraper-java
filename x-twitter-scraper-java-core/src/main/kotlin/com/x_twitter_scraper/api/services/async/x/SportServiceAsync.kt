@@ -87,8 +87,7 @@ interface SportServiceAsync {
     fun retrieveScoreboard(
         id: String,
         params: SportRetrieveScoreboardParams,
-    ): CompletableFuture<FootballScoreboard> =
-        retrieveScoreboard(id, params, RequestOptions.none())
+    ): CompletableFuture<FootballScoreboard> = retrieveScoreboard(id, params, RequestOptions.none())
 
     /** @see retrieveScoreboard */
     fun retrieveScoreboard(
@@ -117,8 +116,7 @@ interface SportServiceAsync {
     fun retrieveBoxScore(
         id: String,
         params: SportRetrieveBoxScoreParams,
-    ): CompletableFuture<FootballBoxScore> =
-        retrieveBoxScore(id, params, RequestOptions.none())
+    ): CompletableFuture<FootballBoxScore> = retrieveBoxScore(id, params, RequestOptions.none())
 
     /** @see retrieveBoxScore */
     fun retrieveBoxScore(
@@ -145,8 +143,7 @@ interface SportServiceAsync {
     fun retrievePlays(
         id: String,
         params: SportRetrievePlaysParams,
-    ): CompletableFuture<FootballPlays> =
-        retrievePlays(id, params, RequestOptions.none())
+    ): CompletableFuture<FootballPlays> = retrievePlays(id, params, RequestOptions.none())
 
     /** @see retrievePlays */
     fun retrievePlays(
@@ -173,8 +170,7 @@ interface SportServiceAsync {
     fun retrieveAudience(
         id: String,
         params: SportRetrieveAudienceParams,
-    ): CompletableFuture<SportsGameAudience> =
-        retrieveAudience(id, params, RequestOptions.none())
+    ): CompletableFuture<SportsGameAudience> = retrieveAudience(id, params, RequestOptions.none())
 
     /** @see retrieveAudience */
     fun retrieveAudience(
@@ -196,13 +192,13 @@ interface SportServiceAsync {
     ): CompletableFuture<SportsGameAudience>
 
     /**
-     * Returns both teams' players for 1 NFL game. Each player has a jersey, position, headshot & X account. Each request costs 1 credit.
+     * Returns both teams' players for 1 NFL game. Each player has a jersey, position, headshot & X
+     * account. Each request costs 1 credit.
      */
     fun retrieveRoster(
         id: String,
         params: SportRetrieveRosterParams,
-    ): CompletableFuture<FootballRoster> =
-        retrieveRoster(id, params, RequestOptions.none())
+    ): CompletableFuture<FootballRoster> = retrieveRoster(id, params, RequestOptions.none())
 
     /** @see retrieveRoster */
     fun retrieveRoster(
@@ -213,9 +209,8 @@ interface SportServiceAsync {
         retrieveRoster(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveRoster */
-    fun retrieveRoster(
-        params: SportRetrieveRosterParams
-    ): CompletableFuture<FootballRoster> = retrieveRoster(params, RequestOptions.none())
+    fun retrieveRoster(params: SportRetrieveRosterParams): CompletableFuture<FootballRoster> =
+        retrieveRoster(params, RequestOptions.none())
 
     /** @see retrieveRoster */
     fun retrieveRoster(
@@ -224,13 +219,13 @@ interface SportServiceAsync {
     ): CompletableFuture<FootballRoster>
 
     /**
-     * Returns the player prop lines & American odds X shows for 1 NFL game. X lists props before & during a game. Other games return no categories. Each request costs 1 credit.
+     * Returns the player prop lines & American odds X shows for 1 NFL game. X lists props before &
+     * during a game. Other games return no categories. Each request costs 1 credit.
      */
     fun retrievePlayerProps(
         id: String,
         params: SportRetrievePlayerPropsParams,
-    ): CompletableFuture<FootballProps> =
-        retrievePlayerProps(id, params, RequestOptions.none())
+    ): CompletableFuture<FootballProps> = retrievePlayerProps(id, params, RequestOptions.none())
 
     /** @see retrievePlayerProps */
     fun retrievePlayerProps(
@@ -252,13 +247,13 @@ interface SportServiceAsync {
     ): CompletableFuture<FootballProps>
 
     /**
-     * Returns a game's top or latest posts, plus an X search you can run for more. Works before, during & after the game. Pages hold up to 20 posts, & each post costs 1 credit.
+     * Returns a game's top or latest posts, plus an X search you can run for more. Works before,
+     * during & after the game. Pages hold up to 20 posts, & each post costs 1 credit.
      */
     fun listPosts(
         id: String,
         params: SportListPostsParams,
-    ): CompletableFuture<SportsGamePosts> =
-        listPosts(id, params, RequestOptions.none())
+    ): CompletableFuture<SportsGamePosts> = listPosts(id, params, RequestOptions.none())
 
     /** @see listPosts */
     fun listPosts(
@@ -269,9 +264,8 @@ interface SportServiceAsync {
         listPosts(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see listPosts */
-    fun listPosts(
-        params: SportListPostsParams
-    ): CompletableFuture<SportsGamePosts> = listPosts(params, RequestOptions.none())
+    fun listPosts(params: SportListPostsParams): CompletableFuture<SportsGamePosts> =
+        listPosts(params, RequestOptions.none())
 
     /** @see listPosts */
     fun listPosts(
@@ -279,9 +273,7 @@ interface SportServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<SportsGamePosts>
 
-    /**
-     * A view of [SportServiceAsync] that provides access to raw HTTP responses for each method.
-     */
+    /** A view of [SportServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         /**

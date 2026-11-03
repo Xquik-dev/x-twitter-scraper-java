@@ -61,8 +61,7 @@ interface PostServiceAsync {
         id: String,
         params: PostRetrieveParams = PostRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PostMonitor> =
-        retrieve(params.toBuilder().id(id).build(), requestOptions)
+    ): CompletableFuture<PostMonitor> = retrieve(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieve */
     fun retrieve(
@@ -84,23 +83,20 @@ interface PostServiceAsync {
     fun retrieve(
         id: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<PostMonitor> =
-        retrieve(id, PostRetrieveParams.none(), requestOptions)
+    ): CompletableFuture<PostMonitor> = retrieve(id, PostRetrieveParams.none(), requestOptions)
 
     /**
      * Updates a post monitor's label, event types or active state. Turning a paused monitor on
      * reads the post first, & answers 409 while X hides it.
      */
-    fun update(id: String): CompletableFuture<PostMonitor> =
-        update(id, PostUpdateParams.none())
+    fun update(id: String): CompletableFuture<PostMonitor> = update(id, PostUpdateParams.none())
 
     /** @see update */
     fun update(
         id: String,
         params: PostUpdateParams = PostUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PostMonitor> =
-        update(params.toBuilder().id(id).build(), requestOptions)
+    ): CompletableFuture<PostMonitor> = update(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see update */
     fun update(
@@ -122,8 +118,7 @@ interface PostServiceAsync {
     fun update(
         id: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<PostMonitor> =
-        update(id, PostUpdateParams.none(), requestOptions)
+    ): CompletableFuture<PostMonitor> = update(id, PostUpdateParams.none(), requestOptions)
 
     /**
      * Returns post monitors with each post's 6 metrics, their current values & gains since tracking
@@ -138,9 +133,8 @@ interface PostServiceAsync {
     ): CompletableFuture<PostListResponse>
 
     /** @see list */
-    fun list(
-        params: PostListParams = PostListParams.none()
-    ): CompletableFuture<PostListResponse> = list(params, RequestOptions.none())
+    fun list(params: PostListParams = PostListParams.none()): CompletableFuture<PostListResponse> =
+        list(params, RequestOptions.none())
 
     /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<PostListResponse> =
@@ -181,8 +175,7 @@ interface PostServiceAsync {
     fun delete(
         id: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<PostDeleteResponse> =
-        delete(id, PostDeleteParams.none(), requestOptions)
+    ): CompletableFuture<PostDeleteResponse> = delete(id, PostDeleteParams.none(), requestOptions)
 
     /**
      * Returns 1 bucket per hour with each metric's value at the hour's end & its gain over that
@@ -223,9 +216,7 @@ interface PostServiceAsync {
     ): CompletableFuture<PostMonitorMetrics> =
         retrieveMetrics(id, PostRetrieveMetricsParams.none(), requestOptions)
 
-    /**
-     * A view of [PostServiceAsync] that provides access to raw HTTP responses for each method.
-     */
+    /** A view of [PostServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         /**
@@ -233,17 +224,13 @@ interface PostServiceAsync {
          *
          * The original service is not modified.
          */
-        fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): PostServiceAsync.WithRawResponse
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): PostServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /monitors/posts`, but is otherwise the same as
          * [PostServiceAsync.create].
          */
-        fun create(
-            params: PostCreateParams
-        ): CompletableFuture<HttpResponseFor<PostMonitor>> =
+        fun create(params: PostCreateParams): CompletableFuture<HttpResponseFor<PostMonitor>> =
             create(params, RequestOptions.none())
 
         /** @see create */
@@ -253,8 +240,8 @@ interface PostServiceAsync {
         ): CompletableFuture<HttpResponseFor<PostMonitor>>
 
         /**
-         * Returns a raw HTTP response for `get /monitors/posts/{id}`, but is otherwise the same
-         * as [PostServiceAsync.retrieve].
+         * Returns a raw HTTP response for `get /monitors/posts/{id}`, but is otherwise the same as
+         * [PostServiceAsync.retrieve].
          */
         fun retrieve(id: String): CompletableFuture<HttpResponseFor<PostMonitor>> =
             retrieve(id, PostRetrieveParams.none())
@@ -281,9 +268,7 @@ interface PostServiceAsync {
         ): CompletableFuture<HttpResponseFor<PostMonitor>>
 
         /** @see retrieve */
-        fun retrieve(
-            params: PostRetrieveParams
-        ): CompletableFuture<HttpResponseFor<PostMonitor>> =
+        fun retrieve(params: PostRetrieveParams): CompletableFuture<HttpResponseFor<PostMonitor>> =
             retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
@@ -294,8 +279,8 @@ interface PostServiceAsync {
             retrieve(id, PostRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `patch /monitors/posts/{id}`, but is otherwise the
-         * same as [PostServiceAsync.update].
+         * Returns a raw HTTP response for `patch /monitors/posts/{id}`, but is otherwise the same
+         * as [PostServiceAsync.update].
          */
         fun update(id: String): CompletableFuture<HttpResponseFor<PostMonitor>> =
             update(id, PostUpdateParams.none())
@@ -322,9 +307,7 @@ interface PostServiceAsync {
         ): CompletableFuture<HttpResponseFor<PostMonitor>>
 
         /** @see update */
-        fun update(
-            params: PostUpdateParams
-        ): CompletableFuture<HttpResponseFor<PostMonitor>> =
+        fun update(params: PostUpdateParams): CompletableFuture<HttpResponseFor<PostMonitor>> =
             update(params, RequestOptions.none())
 
         /** @see update */
@@ -360,8 +343,8 @@ interface PostServiceAsync {
             list(PostListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /monitors/posts/{id}`, but is otherwise the
-         * same as [PostServiceAsync.delete].
+         * Returns a raw HTTP response for `delete /monitors/posts/{id}`, but is otherwise the same
+         * as [PostServiceAsync.delete].
          */
         fun delete(id: String): CompletableFuture<HttpResponseFor<PostDeleteResponse>> =
             delete(id, PostDeleteParams.none())

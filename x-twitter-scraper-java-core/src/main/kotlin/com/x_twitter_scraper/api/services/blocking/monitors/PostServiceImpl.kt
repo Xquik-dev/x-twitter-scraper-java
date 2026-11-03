@@ -32,8 +32,7 @@ import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 /** X account monitoring with 1-second checks */
-class PostServiceImpl internal constructor(private val clientOptions: ClientOptions) :
-    PostService {
+class PostServiceImpl internal constructor(private val clientOptions: ClientOptions) : PostService {
 
     private val withRawResponse: PostService.WithRawResponse by lazy {
         WithRawResponseImpl(clientOptions)

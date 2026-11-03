@@ -33,7 +33,9 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("total") @ExcludeMissing total: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("teams") @ExcludeMissing teams: JsonField<List<SportsGameAudienceTeamPick>> = JsonMissing.of(),
+        @JsonProperty("teams")
+        @ExcludeMissing
+        teams: JsonField<List<SportsGameAudienceTeamPick>> = JsonMissing.of(),
     ) : this(total, teams, mutableMapOf())
 
     /** Picks for every team in the game. */
@@ -46,7 +48,9 @@ private constructor(
     @JsonProperty("total") @ExcludeMissing fun _total(): JsonField<Long> = total
 
     /** Returns the raw JSON value of [teams]. */
-    @JsonProperty("teams") @ExcludeMissing fun _teams(): JsonField<List<SportsGameAudienceTeamPick>> = teams
+    @JsonProperty("teams")
+    @ExcludeMissing
+    fun _teams(): JsonField<List<SportsGameAudienceTeamPick>> = teams
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -62,7 +66,9 @@ private constructor(
 
     companion object {
 
-        /** Returns a mutable builder for constructing an instance of [SportsGameAudienceTeamPicks]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [SportsGameAudienceTeamPicks].
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -73,7 +79,8 @@ private constructor(
         private var teams: JsonField<MutableList<SportsGameAudienceTeamPick>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(sportsGameAudienceTeamPicks: SportsGameAudienceTeamPicks) = apply {
+        @JvmSynthetic
+        internal fun from(sportsGameAudienceTeamPicks: SportsGameAudienceTeamPicks) = apply {
             total = sportsGameAudienceTeamPicks.total
             teams = sportsGameAudienceTeamPicks.teams.map { it.toMutableList() }
             additionalProperties = sportsGameAudienceTeamPicks.additionalProperties.toMutableMap()
@@ -93,7 +100,9 @@ private constructor(
         fun teams(teams: List<SportsGameAudienceTeamPick>) = teams(JsonField.of(teams))
 
         /** Sets [Builder.teams] to an arbitrary JSON value. */
-        fun teams(teams: JsonField<List<SportsGameAudienceTeamPick>>) = apply { this.teams = teams.map { it.toMutableList() } }
+        fun teams(teams: JsonField<List<SportsGameAudienceTeamPick>>) = apply {
+            this.teams = teams.map { it.toMutableList() }
+        }
 
         /** Adds a single [SportsGameAudienceTeamPick] to [teams]. */
         fun addTeam(team: SportsGameAudienceTeamPick) = apply {
@@ -161,7 +170,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (total.asKnown().isPresent) 1 else 0) +
             (teams.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 

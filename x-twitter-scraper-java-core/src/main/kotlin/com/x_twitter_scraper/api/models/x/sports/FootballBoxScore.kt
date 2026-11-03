@@ -38,8 +38,12 @@ private constructor(
         @JsonProperty("league") @ExcludeMissing league: JsonField<League> = JsonMissing.of(),
         @JsonProperty("home") @ExcludeMissing home: JsonField<FootballTeamBox> = JsonMissing.of(),
         @JsonProperty("away") @ExcludeMissing away: JsonField<FootballTeamBox> = JsonMissing.of(),
-        @JsonProperty("teams") @ExcludeMissing teams: JsonField<Map<String, SportsTeam>> = JsonMissing.of(),
-        @JsonProperty("players") @ExcludeMissing players: JsonField<Map<String, FootballPlayer>> = JsonMissing.of(),
+        @JsonProperty("teams")
+        @ExcludeMissing
+        teams: JsonField<Map<String, SportsTeam>> = JsonMissing.of(),
+        @JsonProperty("players")
+        @ExcludeMissing
+        players: JsonField<Map<String, FootballPlayer>> = JsonMissing.of(),
     ) : this(id, league, home, away, teams, players, mutableMapOf())
 
     /** The ID of the game this box score covers. */
@@ -76,7 +80,9 @@ private constructor(
     @JsonProperty("teams") @ExcludeMissing fun _teams(): JsonField<Map<String, SportsTeam>> = teams
 
     /** Returns the raw JSON value of [players]. */
-    @JsonProperty("players") @ExcludeMissing fun _players(): JsonField<Map<String, FootballPlayer>> = players
+    @JsonProperty("players")
+    @ExcludeMissing
+    fun _players(): JsonField<Map<String, FootballPlayer>> = players
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -107,7 +113,8 @@ private constructor(
         private var players: JsonField<Map<String, FootballPlayer>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballBoxScore: FootballBoxScore) = apply {
+        @JvmSynthetic
+        internal fun from(footballBoxScore: FootballBoxScore) = apply {
             id = footballBoxScore.id
             league = footballBoxScore.league
             home = footballBoxScore.home
@@ -151,7 +158,9 @@ private constructor(
         fun players(players: Map<String, FootballPlayer>) = players(JsonField.of(players))
 
         /** Sets [Builder.players] to an arbitrary JSON value. */
-        fun players(players: JsonField<Map<String, FootballPlayer>>) = apply { this.players = players }
+        fun players(players: JsonField<Map<String, FootballPlayer>>) = apply {
+            this.players = players
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -219,7 +228,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (league.asKnown().getOrNull()?.validity() ?: 0) +
             (home.asKnown().getOrNull()?.validity() ?: 0) +
@@ -242,15 +252,16 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, league, home, away, teams, players, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(id, league, home, away, teams, players, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
         "FootballBoxScore{id=$id, league=$league, home=$home, away=$away, teams=$teams, players=$players, additionalProperties=$additionalProperties}"
 
-    class League @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class League @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /** Returns this class instance's raw value. */
         @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
@@ -278,7 +289,10 @@ private constructor(
             _UNKNOWN,
         }
 
-        /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if unknown.
+         */
         fun value(): Value =
             when (this) {
                 NFL -> Value.NFL

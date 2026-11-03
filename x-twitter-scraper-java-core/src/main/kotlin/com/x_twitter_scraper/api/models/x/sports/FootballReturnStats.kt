@@ -98,7 +98,8 @@ private constructor(
         private var yards: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballReturnStats: FootballReturnStats) = apply {
+        @JvmSynthetic
+        internal fun from(footballReturnStats: FootballReturnStats) = apply {
             avgYards = footballReturnStats.avgYards
             longest = footballReturnStats.longest
             returns = footballReturnStats.returns
@@ -221,7 +222,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (avgYards.asKnown().isPresent) 1 else 0) +
             (if (longest.asKnown().isPresent) 1 else 0) +
             (if (returns.asKnown().isPresent) 1 else 0) +
@@ -242,7 +244,9 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(avgYards, longest, returns, touchdowns, yards, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(avgYards, longest, returns, touchdowns, yards, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

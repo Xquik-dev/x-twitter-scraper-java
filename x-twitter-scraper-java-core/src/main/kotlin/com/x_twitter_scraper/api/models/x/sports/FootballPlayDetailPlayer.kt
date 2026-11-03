@@ -30,7 +30,9 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("playerId") @ExcludeMissing playerId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("playerRole") @ExcludeMissing playerRole: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("playerRole")
+        @ExcludeMissing
+        playerRole: JsonField<String> = JsonMissing.of(),
     ) : this(playerId, playerRole, mutableMapOf())
 
     /** The player, a key of players. */
@@ -70,7 +72,8 @@ private constructor(
         private var playerRole: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballPlayDetailPlayer: FootballPlayDetailPlayer) = apply {
+        @JvmSynthetic
+        internal fun from(footballPlayDetailPlayer: FootballPlayDetailPlayer) = apply {
             playerId = footballPlayDetailPlayer.playerId
             playerRole = footballPlayDetailPlayer.playerRole
             additionalProperties = footballPlayDetailPlayer.additionalProperties.toMutableMap()
@@ -150,7 +153,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (playerId.asKnown().isPresent) 1 else 0) +
             (if (playerRole.asKnown().isPresent) 1 else 0)
 

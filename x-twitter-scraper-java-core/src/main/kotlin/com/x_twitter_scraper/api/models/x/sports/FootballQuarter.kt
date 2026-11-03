@@ -37,7 +37,9 @@ private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
         @JsonProperty("number") @ExcludeMissing number: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("sequence") @ExcludeMissing sequence: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("drives") @ExcludeMissing drives: JsonField<List<FootballDrive>> = JsonMissing.of(),
+        @JsonProperty("drives")
+        @ExcludeMissing
+        drives: JsonField<List<FootballDrive>> = JsonMissing.of(),
     ) : this(id, number, sequence, drives, mutableMapOf())
 
     /** X's ID for the quarter within the game. */
@@ -91,7 +93,8 @@ private constructor(
         private var drives: JsonField<MutableList<FootballDrive>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballQuarter: FootballQuarter) = apply {
+        @JvmSynthetic
+        internal fun from(footballQuarter: FootballQuarter) = apply {
             id = footballQuarter.id
             number = footballQuarter.number
             sequence = footballQuarter.sequence
@@ -131,7 +134,9 @@ private constructor(
         fun drives(drives: List<FootballDrive>) = drives(JsonField.of(drives))
 
         /** Sets [Builder.drives] to an arbitrary JSON value. */
-        fun drives(drives: JsonField<List<FootballDrive>>) = apply { this.drives = drives.map { it.toMutableList() } }
+        fun drives(drives: JsonField<List<FootballDrive>>) = apply {
+            this.drives = drives.map { it.toMutableList() }
+        }
 
         /** Adds a single [FootballDrive] to [drives]. */
         fun addDrive(drive: FootballDrive) = apply {
@@ -203,7 +208,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (number.asKnown().isPresent) 1 else 0) +
             (if (sequence.asKnown().isPresent) 1 else 0) +
@@ -222,7 +228,9 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, number, sequence, drives, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(id, number, sequence, drives, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

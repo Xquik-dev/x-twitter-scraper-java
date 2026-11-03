@@ -36,13 +36,30 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("combined") @ExcludeMissing combined: JsonField<Double> = JsonMissing.of(),
-        @JsonProperty("forcedFumbles") @ExcludeMissing forcedFumbles: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("interceptions") @ExcludeMissing interceptions: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("passesDefended") @ExcludeMissing passesDefended: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("forcedFumbles")
+        @ExcludeMissing
+        forcedFumbles: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("interceptions")
+        @ExcludeMissing
+        interceptions: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("passesDefended")
+        @ExcludeMissing
+        passesDefended: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("sacks") @ExcludeMissing sacks: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("tackles") @ExcludeMissing tackles: JsonField<Double> = JsonMissing.of(),
-        @JsonProperty("tacklesForLoss") @ExcludeMissing tacklesForLoss: JsonField<Double> = JsonMissing.of(),
-    ) : this(combined, forcedFumbles, interceptions, passesDefended, sacks, tackles, tacklesForLoss, mutableMapOf())
+        @JsonProperty("tacklesForLoss")
+        @ExcludeMissing
+        tacklesForLoss: JsonField<Double> = JsonMissing.of(),
+    ) : this(
+        combined,
+        forcedFumbles,
+        interceptions,
+        passesDefended,
+        sacks,
+        tackles,
+        tacklesForLoss,
+        mutableMapOf(),
+    )
 
     /** Solo & assisted tackles together. */
     fun combined(): Optional<Double> = combined.getOptional("combined")
@@ -69,13 +86,19 @@ private constructor(
     @JsonProperty("combined") @ExcludeMissing fun _combined(): JsonField<Double> = combined
 
     /** Returns the raw JSON value of [forcedFumbles]. */
-    @JsonProperty("forcedFumbles") @ExcludeMissing fun _forcedFumbles(): JsonField<Long> = forcedFumbles
+    @JsonProperty("forcedFumbles")
+    @ExcludeMissing
+    fun _forcedFumbles(): JsonField<Long> = forcedFumbles
 
     /** Returns the raw JSON value of [interceptions]. */
-    @JsonProperty("interceptions") @ExcludeMissing fun _interceptions(): JsonField<Long> = interceptions
+    @JsonProperty("interceptions")
+    @ExcludeMissing
+    fun _interceptions(): JsonField<Long> = interceptions
 
     /** Returns the raw JSON value of [passesDefended]. */
-    @JsonProperty("passesDefended") @ExcludeMissing fun _passesDefended(): JsonField<Long> = passesDefended
+    @JsonProperty("passesDefended")
+    @ExcludeMissing
+    fun _passesDefended(): JsonField<Long> = passesDefended
 
     /** Returns the raw JSON value of [sacks]. */
     @JsonProperty("sacks") @ExcludeMissing fun _sacks(): JsonField<Double> = sacks
@@ -84,7 +107,9 @@ private constructor(
     @JsonProperty("tackles") @ExcludeMissing fun _tackles(): JsonField<Double> = tackles
 
     /** Returns the raw JSON value of [tacklesForLoss]. */
-    @JsonProperty("tacklesForLoss") @ExcludeMissing fun _tacklesForLoss(): JsonField<Double> = tacklesForLoss
+    @JsonProperty("tacklesForLoss")
+    @ExcludeMissing
+    fun _tacklesForLoss(): JsonField<Double> = tacklesForLoss
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -100,7 +125,9 @@ private constructor(
 
     companion object {
 
-        /** Returns a mutable builder for constructing an instance of [FootballPlayerStatsDefense]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [FootballPlayerStatsDefense].
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -116,7 +143,8 @@ private constructor(
         private var tacklesForLoss: JsonField<Double>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballPlayerStatsDefense: FootballPlayerStatsDefense) = apply {
+        @JvmSynthetic
+        internal fun from(footballPlayerStatsDefense: FootballPlayerStatsDefense) = apply {
             combined = footballPlayerStatsDefense.combined
             forcedFumbles = footballPlayerStatsDefense.forcedFumbles
             interceptions = footballPlayerStatsDefense.interceptions
@@ -145,7 +173,9 @@ private constructor(
         fun forcedFumbles(forcedFumbles: Optional<Long>) = forcedFumbles(forcedFumbles.getOrNull())
 
         /** Sets [Builder.forcedFumbles] to an arbitrary JSON value. */
-        fun forcedFumbles(forcedFumbles: JsonField<Long>) = apply { this.forcedFumbles = forcedFumbles }
+        fun forcedFumbles(forcedFumbles: JsonField<Long>) = apply {
+            this.forcedFumbles = forcedFumbles
+        }
 
         /** Interceptions. */
         fun interceptions(interceptions: Long?) = interceptions(JsonField.ofNullable(interceptions))
@@ -155,17 +185,23 @@ private constructor(
         fun interceptions(interceptions: Optional<Long>) = interceptions(interceptions.getOrNull())
 
         /** Sets [Builder.interceptions] to an arbitrary JSON value. */
-        fun interceptions(interceptions: JsonField<Long>) = apply { this.interceptions = interceptions }
+        fun interceptions(interceptions: JsonField<Long>) = apply {
+            this.interceptions = interceptions
+        }
 
         /** Passes defended. */
-        fun passesDefended(passesDefended: Long?) = passesDefended(JsonField.ofNullable(passesDefended))
+        fun passesDefended(passesDefended: Long?) =
+            passesDefended(JsonField.ofNullable(passesDefended))
 
         fun passesDefended(passesDefended: Long) = passesDefended(passesDefended as Long?)
 
-        fun passesDefended(passesDefended: Optional<Long>) = passesDefended(passesDefended.getOrNull())
+        fun passesDefended(passesDefended: Optional<Long>) =
+            passesDefended(passesDefended.getOrNull())
 
         /** Sets [Builder.passesDefended] to an arbitrary JSON value. */
-        fun passesDefended(passesDefended: JsonField<Long>) = apply { this.passesDefended = passesDefended }
+        fun passesDefended(passesDefended: JsonField<Long>) = apply {
+            this.passesDefended = passesDefended
+        }
 
         /** Sacks, with a shared sack as 0.5. */
         fun sacks(sacks: Double?) = sacks(JsonField.ofNullable(sacks))
@@ -188,14 +224,18 @@ private constructor(
         fun tackles(tackles: JsonField<Double>) = apply { this.tackles = tackles }
 
         /** Tackles for a loss. */
-        fun tacklesForLoss(tacklesForLoss: Double?) = tacklesForLoss(JsonField.ofNullable(tacklesForLoss))
+        fun tacklesForLoss(tacklesForLoss: Double?) =
+            tacklesForLoss(JsonField.ofNullable(tacklesForLoss))
 
         fun tacklesForLoss(tacklesForLoss: Double) = tacklesForLoss(tacklesForLoss as Double?)
 
-        fun tacklesForLoss(tacklesForLoss: Optional<Double>) = tacklesForLoss(tacklesForLoss.getOrNull())
+        fun tacklesForLoss(tacklesForLoss: Optional<Double>) =
+            tacklesForLoss(tacklesForLoss.getOrNull())
 
         /** Sets [Builder.tacklesForLoss] to an arbitrary JSON value. */
-        fun tacklesForLoss(tacklesForLoss: JsonField<Double>) = apply { this.tacklesForLoss = tacklesForLoss }
+        fun tacklesForLoss(tacklesForLoss: JsonField<Double>) = apply {
+            this.tacklesForLoss = tacklesForLoss
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -265,7 +305,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (combined.asKnown().isPresent) 1 else 0) +
             (if (forcedFumbles.asKnown().isPresent) 1 else 0) +
             (if (interceptions.asKnown().isPresent) 1 else 0) +
@@ -290,7 +331,18 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(combined, forcedFumbles, interceptions, passesDefended, sacks, tackles, tacklesForLoss, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            combined,
+            forcedFumbles,
+            interceptions,
+            passesDefended,
+            sacks,
+            tackles,
+            tacklesForLoss,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

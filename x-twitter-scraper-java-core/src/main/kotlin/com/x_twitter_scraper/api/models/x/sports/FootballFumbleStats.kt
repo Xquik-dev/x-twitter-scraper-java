@@ -32,27 +32,37 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("lost") @ExcludeMissing lost: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("opponentRecoveryTouchdowns") @ExcludeMissing opponentRecoveryTouchdowns: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("ownRecoveryTouchdowns") @ExcludeMissing ownRecoveryTouchdowns: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("opponentRecoveryTouchdowns")
+        @ExcludeMissing
+        opponentRecoveryTouchdowns: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("ownRecoveryTouchdowns")
+        @ExcludeMissing
+        ownRecoveryTouchdowns: JsonField<Long> = JsonMissing.of(),
     ) : this(lost, opponentRecoveryTouchdowns, ownRecoveryTouchdowns, mutableMapOf())
 
     /** Fumbles the other team recovered. */
     fun lost(): Optional<Long> = lost.getOptional("lost")
 
     /** Touchdowns scored after recovering the other team's fumble. */
-    fun opponentRecoveryTouchdowns(): Optional<Long> = opponentRecoveryTouchdowns.getOptional("opponentRecoveryTouchdowns")
+    fun opponentRecoveryTouchdowns(): Optional<Long> =
+        opponentRecoveryTouchdowns.getOptional("opponentRecoveryTouchdowns")
 
     /** Touchdowns scored after recovering an own fumble. */
-    fun ownRecoveryTouchdowns(): Optional<Long> = ownRecoveryTouchdowns.getOptional("ownRecoveryTouchdowns")
+    fun ownRecoveryTouchdowns(): Optional<Long> =
+        ownRecoveryTouchdowns.getOptional("ownRecoveryTouchdowns")
 
     /** Returns the raw JSON value of [lost]. */
     @JsonProperty("lost") @ExcludeMissing fun _lost(): JsonField<Long> = lost
 
     /** Returns the raw JSON value of [opponentRecoveryTouchdowns]. */
-    @JsonProperty("opponentRecoveryTouchdowns") @ExcludeMissing fun _opponentRecoveryTouchdowns(): JsonField<Long> = opponentRecoveryTouchdowns
+    @JsonProperty("opponentRecoveryTouchdowns")
+    @ExcludeMissing
+    fun _opponentRecoveryTouchdowns(): JsonField<Long> = opponentRecoveryTouchdowns
 
     /** Returns the raw JSON value of [ownRecoveryTouchdowns]. */
-    @JsonProperty("ownRecoveryTouchdowns") @ExcludeMissing fun _ownRecoveryTouchdowns(): JsonField<Long> = ownRecoveryTouchdowns
+    @JsonProperty("ownRecoveryTouchdowns")
+    @ExcludeMissing
+    fun _ownRecoveryTouchdowns(): JsonField<Long> = ownRecoveryTouchdowns
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -80,7 +90,8 @@ private constructor(
         private var ownRecoveryTouchdowns: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballFumbleStats: FootballFumbleStats) = apply {
+        @JvmSynthetic
+        internal fun from(footballFumbleStats: FootballFumbleStats) = apply {
             lost = footballFumbleStats.lost
             opponentRecoveryTouchdowns = footballFumbleStats.opponentRecoveryTouchdowns
             ownRecoveryTouchdowns = footballFumbleStats.ownRecoveryTouchdowns
@@ -98,24 +109,34 @@ private constructor(
         fun lost(lost: JsonField<Long>) = apply { this.lost = lost }
 
         /** Touchdowns scored after recovering the other team's fumble. */
-        fun opponentRecoveryTouchdowns(opponentRecoveryTouchdowns: Long?) = opponentRecoveryTouchdowns(JsonField.ofNullable(opponentRecoveryTouchdowns))
+        fun opponentRecoveryTouchdowns(opponentRecoveryTouchdowns: Long?) =
+            opponentRecoveryTouchdowns(JsonField.ofNullable(opponentRecoveryTouchdowns))
 
-        fun opponentRecoveryTouchdowns(opponentRecoveryTouchdowns: Long) = opponentRecoveryTouchdowns(opponentRecoveryTouchdowns as Long?)
+        fun opponentRecoveryTouchdowns(opponentRecoveryTouchdowns: Long) =
+            opponentRecoveryTouchdowns(opponentRecoveryTouchdowns as Long?)
 
-        fun opponentRecoveryTouchdowns(opponentRecoveryTouchdowns: Optional<Long>) = opponentRecoveryTouchdowns(opponentRecoveryTouchdowns.getOrNull())
+        fun opponentRecoveryTouchdowns(opponentRecoveryTouchdowns: Optional<Long>) =
+            opponentRecoveryTouchdowns(opponentRecoveryTouchdowns.getOrNull())
 
         /** Sets [Builder.opponentRecoveryTouchdowns] to an arbitrary JSON value. */
-        fun opponentRecoveryTouchdowns(opponentRecoveryTouchdowns: JsonField<Long>) = apply { this.opponentRecoveryTouchdowns = opponentRecoveryTouchdowns }
+        fun opponentRecoveryTouchdowns(opponentRecoveryTouchdowns: JsonField<Long>) = apply {
+            this.opponentRecoveryTouchdowns = opponentRecoveryTouchdowns
+        }
 
         /** Touchdowns scored after recovering an own fumble. */
-        fun ownRecoveryTouchdowns(ownRecoveryTouchdowns: Long?) = ownRecoveryTouchdowns(JsonField.ofNullable(ownRecoveryTouchdowns))
+        fun ownRecoveryTouchdowns(ownRecoveryTouchdowns: Long?) =
+            ownRecoveryTouchdowns(JsonField.ofNullable(ownRecoveryTouchdowns))
 
-        fun ownRecoveryTouchdowns(ownRecoveryTouchdowns: Long) = ownRecoveryTouchdowns(ownRecoveryTouchdowns as Long?)
+        fun ownRecoveryTouchdowns(ownRecoveryTouchdowns: Long) =
+            ownRecoveryTouchdowns(ownRecoveryTouchdowns as Long?)
 
-        fun ownRecoveryTouchdowns(ownRecoveryTouchdowns: Optional<Long>) = ownRecoveryTouchdowns(ownRecoveryTouchdowns.getOrNull())
+        fun ownRecoveryTouchdowns(ownRecoveryTouchdowns: Optional<Long>) =
+            ownRecoveryTouchdowns(ownRecoveryTouchdowns.getOrNull())
 
         /** Sets [Builder.ownRecoveryTouchdowns] to an arbitrary JSON value. */
-        fun ownRecoveryTouchdowns(ownRecoveryTouchdowns: JsonField<Long>) = apply { this.ownRecoveryTouchdowns = ownRecoveryTouchdowns }
+        fun ownRecoveryTouchdowns(ownRecoveryTouchdowns: JsonField<Long>) = apply {
+            this.ownRecoveryTouchdowns = ownRecoveryTouchdowns
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -177,7 +198,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (lost.asKnown().isPresent) 1 else 0) +
             (if (opponentRecoveryTouchdowns.asKnown().isPresent) 1 else 0) +
             (if (ownRecoveryTouchdowns.asKnown().isPresent) 1 else 0)
@@ -194,7 +216,9 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(lost, opponentRecoveryTouchdowns, ownRecoveryTouchdowns, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(lost, opponentRecoveryTouchdowns, ownRecoveryTouchdowns, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

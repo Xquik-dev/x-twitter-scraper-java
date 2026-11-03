@@ -677,7 +677,9 @@ interface UserServiceAsync {
         retrieveLive(id, UserRetrieveLiveParams.none(), requestOptions)
 
     /**
-     * Checks 1 X account for a search ban, a search suggestion ban & reply deboosting. It also says if the account is active, protected or suspended. Each profile, post, suggestion & reply in the answer costs 1 credit.
+     * Checks 1 X account for a search ban, a search suggestion ban & reply deboosting. It also says
+     * if the account is active, protected or suspended. Each profile, post, suggestion & reply in
+     * the answer costs 1 credit.
      */
     fun retrieveShadowban(id: String): CompletableFuture<ShadowbanReport> =
         retrieveShadowban(id, UserRetrieveShadowbanParams.none())
@@ -1687,8 +1689,8 @@ interface UserServiceAsync {
             retrieveLive(id, UserRetrieveLiveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /x/users/{id}/shadowban`, but is otherwise the same as
-         * [UserServiceAsync.retrieveShadowban].
+         * Returns a raw HTTP response for `get /x/users/{id}/shadowban`, but is otherwise the same
+         * as [UserServiceAsync.retrieveShadowban].
          */
         fun retrieveShadowban(id: String): CompletableFuture<HttpResponseFor<ShadowbanReport>> =
             retrieveShadowban(id, UserRetrieveShadowbanParams.none())

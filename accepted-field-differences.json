@@ -369,5 +369,11 @@
       "GET /api/v1/events/{id} response extra postId",
       "GET /api/v1/events/{id} response extra postUrl"
     ]
+  },
+  {
+    "reason": "list returns the rows as JSON, so it takes only the json format. The file formats return a file, which the typed list response cannot hold.",
+    "differences": [
+      "GET /api/v1/activity request enum format"
+    ]
   }
 ]

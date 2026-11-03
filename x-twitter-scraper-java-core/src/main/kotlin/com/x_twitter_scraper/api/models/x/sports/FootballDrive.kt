@@ -47,16 +47,37 @@ private constructor(
         @JsonProperty("sequence") @ExcludeMissing sequence: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("offense") @ExcludeMissing offense: JsonField<String> = JsonMissing.of(),
         @JsonProperty("defense") @ExcludeMissing defense: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("startClock") @ExcludeMissing startClock: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("startClock")
+        @ExcludeMissing
+        startClock: JsonField<String> = JsonMissing.of(),
         @JsonProperty("endClock") @ExcludeMissing endClock: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("startReason") @ExcludeMissing startReason: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("startReason")
+        @ExcludeMissing
+        startReason: JsonField<String> = JsonMissing.of(),
         @JsonProperty("endReason") @ExcludeMissing endReason: JsonField<String> = JsonMissing.of(),
         @JsonProperty("playCount") @ExcludeMissing playCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("firstDowns") @ExcludeMissing firstDowns: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("netYards") @ExcludeMissing netYards: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("scoring") @ExcludeMissing scoring: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("plays") @ExcludeMissing plays: JsonField<List<FootballPlay>> = JsonMissing.of(),
-    ) : this(id, sequence, offense, defense, startClock, endClock, startReason, endReason, playCount, firstDowns, netYards, scoring, plays, mutableMapOf())
+        @JsonProperty("plays")
+        @ExcludeMissing
+        plays: JsonField<List<FootballPlay>> = JsonMissing.of(),
+    ) : this(
+        id,
+        sequence,
+        offense,
+        defense,
+        startClock,
+        endClock,
+        startReason,
+        endReason,
+        playCount,
+        firstDowns,
+        netYards,
+        scoring,
+        plays,
+        mutableMapOf(),
+    )
 
     /** X's ID for the drive within the game. */
     fun id(): Optional<String> = id.getOptional("id")
@@ -172,7 +193,8 @@ private constructor(
         private var plays: JsonField<MutableList<FootballPlay>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballDrive: FootballDrive) = apply {
+        @JvmSynthetic
+        internal fun from(footballDrive: FootballDrive) = apply {
             id = footballDrive.id
             sequence = footballDrive.sequence
             offense = footballDrive.offense
@@ -207,7 +229,9 @@ private constructor(
         /** Sets [Builder.sequence] to an arbitrary JSON value. */
         fun sequence(sequence: JsonField<Long>) = apply { this.sequence = sequence }
 
-        /** The team that drove. Home or Away in NFL games, the team's alternateId in college games. */
+        /**
+         * The team that drove. Home or Away in NFL games, the team's alternateId in college games.
+         */
         fun offense(offense: String?) = offense(JsonField.ofNullable(offense))
 
         fun offense(offense: Optional<String>) = offense(offense.getOrNull())
@@ -215,7 +239,9 @@ private constructor(
         /** Sets [Builder.offense] to an arbitrary JSON value. */
         fun offense(offense: JsonField<String>) = apply { this.offense = offense }
 
-        /** The team on defense. Home or Away in NFL games, the team's alternateId in college games. */
+        /**
+         * The team on defense. Home or Away in NFL games, the team's alternateId in college games.
+         */
         fun defense(defense: String?) = defense(JsonField.ofNullable(defense))
 
         fun defense(defense: Optional<String>) = defense(defense.getOrNull())
@@ -299,7 +325,9 @@ private constructor(
         fun plays(plays: List<FootballPlay>) = plays(JsonField.of(plays))
 
         /** Sets [Builder.plays] to an arbitrary JSON value. */
-        fun plays(plays: JsonField<List<FootballPlay>>) = apply { this.plays = plays.map { it.toMutableList() } }
+        fun plays(plays: JsonField<List<FootballPlay>>) = apply {
+            this.plays = plays.map { it.toMutableList() }
+        }
 
         /** Adds a single [FootballPlay] to [plays]. */
         fun addPlay(play: FootballPlay) = apply {
@@ -389,7 +417,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (sequence.asKnown().isPresent) 1 else 0) +
             (if (offense.asKnown().isPresent) 1 else 0) +
@@ -426,7 +455,24 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, sequence, offense, defense, startClock, endClock, startReason, endReason, playCount, firstDowns, netYards, scoring, plays, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            id,
+            sequence,
+            offense,
+            defense,
+            startClock,
+            endClock,
+            startReason,
+            endReason,
+            playCount,
+            firstDowns,
+            netYards,
+            scoring,
+            plays,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

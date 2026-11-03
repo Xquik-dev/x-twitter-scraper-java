@@ -73,10 +73,7 @@ private constructor(
 
         @JvmStatic fun none(): SportListGamesParams = builder().build()
 
-        /**
-         * Returns a mutable builder for constructing an instance of
-         * [SportListGamesParams].
-         */
+        /** Returns a mutable builder for constructing an instance of [SportListGamesParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -93,18 +90,16 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(sportListGamesParams: SportListGamesParams) =
-            apply {
-                league = sportListGamesParams.league
-                from = sportListGamesParams.from
-                to = sportListGamesParams.to
-                team = sportListGamesParams.team
-                fields = sportListGamesParams.fields
-                omit = sportListGamesParams.omit
-                additionalHeaders = sportListGamesParams.additionalHeaders.toBuilder()
-                additionalQueryParams =
-                    sportListGamesParams.additionalQueryParams.toBuilder()
-            }
+        internal fun from(sportListGamesParams: SportListGamesParams) = apply {
+            league = sportListGamesParams.league
+            from = sportListGamesParams.from
+            to = sportListGamesParams.to
+            team = sportListGamesParams.team
+            fields = sportListGamesParams.fields
+            omit = sportListGamesParams.omit
+            additionalHeaders = sportListGamesParams.additionalHeaders.toBuilder()
+            additionalQueryParams = sportListGamesParams.additionalQueryParams.toBuilder()
+        }
 
         fun league(league: String?) = apply { this.league = league }
 

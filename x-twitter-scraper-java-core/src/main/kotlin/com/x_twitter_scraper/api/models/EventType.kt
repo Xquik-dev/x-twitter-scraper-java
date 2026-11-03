@@ -10,8 +10,8 @@ import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 
 /**
- * Type of monitor event. Post monitors send the post types, and account & keyword monitors send
- * the others.
+ * Type of monitor event. Post monitors send the post types, and account & keyword monitors send the
+ * others.
  */
 class EventType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 

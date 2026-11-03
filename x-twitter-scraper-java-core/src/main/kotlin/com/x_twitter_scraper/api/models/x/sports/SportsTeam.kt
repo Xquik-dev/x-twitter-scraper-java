@@ -43,14 +43,34 @@ private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
         @JsonProperty("shortName") @ExcludeMissing shortName: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("abbreviation") @ExcludeMissing abbreviation: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("alternateId") @ExcludeMissing alternateId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("abbreviation")
+        @ExcludeMissing
+        abbreviation: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("alternateId")
+        @ExcludeMissing
+        alternateId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("location") @ExcludeMissing location: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("colors") @ExcludeMissing colors: JsonField<List<SportsTeamColor>> = JsonMissing.of(),
+        @JsonProperty("colors")
+        @ExcludeMissing
+        colors: JsonField<List<SportsTeamColor>> = JsonMissing.of(),
         @JsonProperty("logos") @ExcludeMissing logos: JsonField<SportsTeamLogos> = JsonMissing.of(),
         @JsonProperty("xUserId") @ExcludeMissing xUserId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("record") @ExcludeMissing record: JsonField<SportsTeamRecord> = JsonMissing.of(),
-    ) : this(id, name, shortName, abbreviation, alternateId, location, colors, logos, xUserId, record, mutableMapOf())
+        @JsonProperty("record")
+        @ExcludeMissing
+        record: JsonField<SportsTeamRecord> = JsonMissing.of(),
+    ) : this(
+        id,
+        name,
+        shortName,
+        abbreviation,
+        alternateId,
+        location,
+        colors,
+        logos,
+        xUserId,
+        record,
+        mutableMapOf(),
+    )
 
     /** The team ID that games & players refer to. */
     fun id(): String = id.getRequired("id")
@@ -67,7 +87,10 @@ private constructor(
     /** Another ID X keeps for the team. */
     fun alternateId(): Optional<String> = alternateId.getOptional("alternateId")
 
-    /** The school or place the team plays for. X sends it in college football schedules & in a game's audience. */
+    /**
+     * The school or place the team plays for. X sends it in college football schedules & in a
+     * game's audience.
+     */
     fun location(): Optional<String> = location.getOptional("location")
 
     /** The team's colors, as red, green & blue from 0 to 255. */
@@ -92,7 +115,9 @@ private constructor(
     @JsonProperty("shortName") @ExcludeMissing fun _shortName(): JsonField<String> = shortName
 
     /** Returns the raw JSON value of [abbreviation]. */
-    @JsonProperty("abbreviation") @ExcludeMissing fun _abbreviation(): JsonField<String> = abbreviation
+    @JsonProperty("abbreviation")
+    @ExcludeMissing
+    fun _abbreviation(): JsonField<String> = abbreviation
 
     /** Returns the raw JSON value of [alternateId]. */
     @JsonProperty("alternateId") @ExcludeMissing fun _alternateId(): JsonField<String> = alternateId
@@ -145,7 +170,8 @@ private constructor(
         private var record: JsonField<SportsTeamRecord>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(sportsTeam: SportsTeam) = apply {
+        @JvmSynthetic
+        internal fun from(sportsTeam: SportsTeam) = apply {
             id = sportsTeam.id
             name = sportsTeam.name
             shortName = sportsTeam.shortName
@@ -187,7 +213,9 @@ private constructor(
         fun abbreviation(abbreviation: Optional<String>) = abbreviation(abbreviation.getOrNull())
 
         /** Sets [Builder.abbreviation] to an arbitrary JSON value. */
-        fun abbreviation(abbreviation: JsonField<String>) = apply { this.abbreviation = abbreviation }
+        fun abbreviation(abbreviation: JsonField<String>) = apply {
+            this.abbreviation = abbreviation
+        }
 
         /** Another ID X keeps for the team. */
         fun alternateId(alternateId: String?) = alternateId(JsonField.ofNullable(alternateId))
@@ -197,7 +225,10 @@ private constructor(
         /** Sets [Builder.alternateId] to an arbitrary JSON value. */
         fun alternateId(alternateId: JsonField<String>) = apply { this.alternateId = alternateId }
 
-        /** The school or place the team plays for. X sends it in college football schedules & in a game's audience. */
+        /**
+         * The school or place the team plays for. X sends it in college football schedules & in a
+         * game's audience.
+         */
         fun location(location: String?) = location(JsonField.ofNullable(location))
 
         fun location(location: Optional<String>) = location(location.getOrNull())
@@ -209,7 +240,9 @@ private constructor(
         fun colors(colors: List<SportsTeamColor>) = colors(JsonField.of(colors))
 
         /** Sets [Builder.colors] to an arbitrary JSON value. */
-        fun colors(colors: JsonField<List<SportsTeamColor>>) = apply { this.colors = colors.map { it.toMutableList() } }
+        fun colors(colors: JsonField<List<SportsTeamColor>>) = apply {
+            this.colors = colors.map { it.toMutableList() }
+        }
 
         /** Adds a single [SportsTeamColor] to [colors]. */
         fun addColor(color: SportsTeamColor) = apply {
@@ -233,7 +266,9 @@ private constructor(
         /** Sets [Builder.xUserId] to an arbitrary JSON value. */
         fun xUserId(xUserId: JsonField<String>) = apply { this.xUserId = xUserId }
 
-        /** The team's wins, losses & ties this season. X sends it only in college football games. */
+        /**
+         * The team's wins, losses & ties this season. X sends it only in college football games.
+         */
         fun record(record: SportsTeamRecord?) = record(JsonField.ofNullable(record))
 
         fun record(record: Optional<SportsTeamRecord>) = record(record.getOrNull())
@@ -315,7 +350,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             (if (shortName.asKnown().isPresent) 1 else 0) +
@@ -346,7 +382,21 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, name, shortName, abbreviation, alternateId, location, colors, logos, xUserId, record, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            id,
+            name,
+            shortName,
+            abbreviation,
+            alternateId,
+            location,
+            colors,
+            logos,
+            xUserId,
+            record,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

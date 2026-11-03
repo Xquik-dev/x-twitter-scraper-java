@@ -29,7 +29,7 @@ private constructor(
 
     @JsonCreator
     private constructor(
-        @JsonProperty("type") @ExcludeMissing type: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonField<String> = JsonMissing.of()
     ) : this(type, mutableMapOf())
 
     /** X's name for the period, such as Quarter. */
@@ -62,7 +62,8 @@ private constructor(
         private var type: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballSchedulePeriod: FootballSchedulePeriod) = apply {
+        @JvmSynthetic
+        internal fun from(footballSchedulePeriod: FootballSchedulePeriod) = apply {
             type = footballSchedulePeriod.type
             additionalProperties = footballSchedulePeriod.additionalProperties.toMutableMap()
         }
@@ -131,8 +132,7 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
-        (if (type.asKnown().isPresent) 1 else 0)
+    @JvmSynthetic internal fun validity(): Int = (if (type.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

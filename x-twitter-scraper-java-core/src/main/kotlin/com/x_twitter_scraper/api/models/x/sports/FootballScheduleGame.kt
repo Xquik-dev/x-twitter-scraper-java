@@ -44,18 +44,42 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("seasonType") @ExcludeMissing seasonType: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("seasonType")
+        @ExcludeMissing
+        seasonType: JsonField<String> = JsonMissing.of(),
         @JsonProperty("week") @ExcludeMissing week: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("startsAt") @ExcludeMissing startsAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("startsAt")
+        @ExcludeMissing
+        startsAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("status") @ExcludeMissing status: JsonField<String> = JsonMissing.of(),
         @JsonProperty("clock") @ExcludeMissing clock: JsonField<String> = JsonMissing.of(),
         @JsonProperty("quarter") @ExcludeMissing quarter: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("home") @ExcludeMissing home: JsonField<FootballTeamScore> = JsonMissing.of(),
         @JsonProperty("away") @ExcludeMissing away: JsonField<FootballTeamScore> = JsonMissing.of(),
-        @JsonProperty("teamIds") @ExcludeMissing teamIds: JsonField<List<String>> = JsonMissing.of(),
-        @JsonProperty("periods") @ExcludeMissing periods: JsonField<List<FootballSchedulePeriod>> = JsonMissing.of(),
-        @JsonProperty("odds") @ExcludeMissing odds: JsonField<FootballScheduleGameOdds> = JsonMissing.of(),
-    ) : this(id, seasonType, week, startsAt, status, clock, quarter, home, away, teamIds, periods, odds, mutableMapOf())
+        @JsonProperty("teamIds")
+        @ExcludeMissing
+        teamIds: JsonField<List<String>> = JsonMissing.of(),
+        @JsonProperty("periods")
+        @ExcludeMissing
+        periods: JsonField<List<FootballSchedulePeriod>> = JsonMissing.of(),
+        @JsonProperty("odds")
+        @ExcludeMissing
+        odds: JsonField<FootballScheduleGameOdds> = JsonMissing.of(),
+    ) : this(
+        id,
+        seasonType,
+        week,
+        startsAt,
+        status,
+        clock,
+        quarter,
+        home,
+        away,
+        teamIds,
+        periods,
+        odds,
+        mutableMapOf(),
+    )
 
     /** The game ID the other sports routes take. */
     fun id(): String = id.getRequired("id")
@@ -124,7 +148,9 @@ private constructor(
     @JsonProperty("teamIds") @ExcludeMissing fun _teamIds(): JsonField<List<String>> = teamIds
 
     /** Returns the raw JSON value of [periods]. */
-    @JsonProperty("periods") @ExcludeMissing fun _periods(): JsonField<List<FootballSchedulePeriod>> = periods
+    @JsonProperty("periods")
+    @ExcludeMissing
+    fun _periods(): JsonField<List<FootballSchedulePeriod>> = periods
 
     /** Returns the raw JSON value of [odds]. */
     @JsonProperty("odds") @ExcludeMissing fun _odds(): JsonField<FootballScheduleGameOdds> = odds
@@ -164,7 +190,8 @@ private constructor(
         private var odds: JsonField<FootballScheduleGameOdds>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballScheduleGame: FootballScheduleGame) = apply {
+        @JvmSynthetic
+        internal fun from(footballScheduleGame: FootballScheduleGame) = apply {
             id = footballScheduleGame.id
             seasonType = footballScheduleGame.seasonType
             week = footballScheduleGame.week
@@ -254,7 +281,9 @@ private constructor(
         fun teamIds(teamIds: List<String>) = teamIds(JsonField.of(teamIds))
 
         /** Sets [Builder.teamIds] to an arbitrary JSON value. */
-        fun teamIds(teamIds: JsonField<List<String>>) = apply { this.teamIds = teamIds.map { it.toMutableList() } }
+        fun teamIds(teamIds: JsonField<List<String>>) = apply {
+            this.teamIds = teamIds.map { it.toMutableList() }
+        }
 
         /** Adds a single [String] to [teamIds]. */
         fun addTeamId(teamId: String) = apply {
@@ -268,7 +297,9 @@ private constructor(
         fun periods(periods: List<FootballSchedulePeriod>) = periods(JsonField.of(periods))
 
         /** Sets [Builder.periods] to an arbitrary JSON value. */
-        fun periods(periods: JsonField<List<FootballSchedulePeriod>>) = apply { this.periods = periods.map { it.toMutableList() } }
+        fun periods(periods: JsonField<List<FootballSchedulePeriod>>) = apply {
+            this.periods = periods.map { it.toMutableList() }
+        }
 
         /** Adds a single [FootballSchedulePeriod] to [periods]. */
         fun addPeriod(period: FootballSchedulePeriod) = apply {
@@ -364,7 +395,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (seasonType.asKnown().isPresent) 1 else 0) +
             (if (week.asKnown().isPresent) 1 else 0) +
@@ -399,7 +431,23 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, seasonType, week, startsAt, status, clock, quarter, home, away, teamIds, periods, odds, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            id,
+            seasonType,
+            week,
+            startsAt,
+            status,
+            clock,
+            quarter,
+            home,
+            away,
+            teamIds,
+            periods,
+            odds,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

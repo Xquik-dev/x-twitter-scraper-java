@@ -37,10 +37,18 @@ private constructor(
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
         @JsonProperty("league") @ExcludeMissing league: JsonField<League> = JsonMissing.of(),
-        @JsonProperty("viewers") @ExcludeMissing viewers: JsonField<SportsGameAudienceViewers> = JsonMissing.of(),
-        @JsonProperty("teamPicks") @ExcludeMissing teamPicks: JsonField<SportsGameAudienceTeamPicks> = JsonMissing.of(),
-        @JsonProperty("chat") @ExcludeMissing chat: JsonField<SportsGameAudienceChat> = JsonMissing.of(),
-        @JsonProperty("teams") @ExcludeMissing teams: JsonField<Map<String, SportsTeam>> = JsonMissing.of(),
+        @JsonProperty("viewers")
+        @ExcludeMissing
+        viewers: JsonField<SportsGameAudienceViewers> = JsonMissing.of(),
+        @JsonProperty("teamPicks")
+        @ExcludeMissing
+        teamPicks: JsonField<SportsGameAudienceTeamPicks> = JsonMissing.of(),
+        @JsonProperty("chat")
+        @ExcludeMissing
+        chat: JsonField<SportsGameAudienceChat> = JsonMissing.of(),
+        @JsonProperty("teams")
+        @ExcludeMissing
+        teams: JsonField<Map<String, SportsTeam>> = JsonMissing.of(),
     ) : this(id, league, viewers, teamPicks, chat, teams, mutableMapOf())
 
     /** The ID of the game, from your request. */
@@ -49,7 +57,9 @@ private constructor(
     /** The game's league, from your request. */
     fun league(): League = league.getRequired("league")
 
-    /** People watching the game on X at X's last count. Null before X counts any, as before kickoff. */
+    /**
+     * People watching the game on X at X's last count. Null before X counts any, as before kickoff.
+     */
     fun viewers(): Optional<SportsGameAudienceViewers> = viewers.getOptional("viewers")
 
     /** How many people on X picked a team to root for. */
@@ -58,7 +68,10 @@ private constructor(
     /** The game's live chat on X. */
     fun chat(): SportsGameAudienceChat = chat.getRequired("chat")
 
-    /** The game's teams, by team ID. X's team picker sends no short name, alternate ID, X account or record, so those are null. */
+    /**
+     * The game's teams, by team ID. X's team picker sends no short name, alternate ID, X account or
+     * record, so those are null.
+     */
     fun teams(): Map<String, SportsTeam> = teams.getRequired("teams")
 
     /** Returns the raw JSON value of [id]. */
@@ -68,10 +81,14 @@ private constructor(
     @JsonProperty("league") @ExcludeMissing fun _league(): JsonField<League> = league
 
     /** Returns the raw JSON value of [viewers]. */
-    @JsonProperty("viewers") @ExcludeMissing fun _viewers(): JsonField<SportsGameAudienceViewers> = viewers
+    @JsonProperty("viewers")
+    @ExcludeMissing
+    fun _viewers(): JsonField<SportsGameAudienceViewers> = viewers
 
     /** Returns the raw JSON value of [teamPicks]. */
-    @JsonProperty("teamPicks") @ExcludeMissing fun _teamPicks(): JsonField<SportsGameAudienceTeamPicks> = teamPicks
+    @JsonProperty("teamPicks")
+    @ExcludeMissing
+    fun _teamPicks(): JsonField<SportsGameAudienceTeamPicks> = teamPicks
 
     /** Returns the raw JSON value of [chat]. */
     @JsonProperty("chat") @ExcludeMissing fun _chat(): JsonField<SportsGameAudienceChat> = chat
@@ -108,7 +125,8 @@ private constructor(
         private var teams: JsonField<Map<String, SportsTeam>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(sportsGameAudience: SportsGameAudience) = apply {
+        @JvmSynthetic
+        internal fun from(sportsGameAudience: SportsGameAudience) = apply {
             id = sportsGameAudience.id
             league = sportsGameAudience.league
             viewers = sportsGameAudience.viewers
@@ -130,19 +148,26 @@ private constructor(
         /** Sets [Builder.league] to an arbitrary JSON value. */
         fun league(league: JsonField<League>) = apply { this.league = league }
 
-        /** People watching the game on X at X's last count. Null before X counts any, as before kickoff. */
+        /**
+         * People watching the game on X at X's last count. Null before X counts any, as before
+         * kickoff.
+         */
         fun viewers(viewers: SportsGameAudienceViewers?) = viewers(JsonField.ofNullable(viewers))
 
         fun viewers(viewers: Optional<SportsGameAudienceViewers>) = viewers(viewers.getOrNull())
 
         /** Sets [Builder.viewers] to an arbitrary JSON value. */
-        fun viewers(viewers: JsonField<SportsGameAudienceViewers>) = apply { this.viewers = viewers }
+        fun viewers(viewers: JsonField<SportsGameAudienceViewers>) = apply {
+            this.viewers = viewers
+        }
 
         /** How many people on X picked a team to root for. */
         fun teamPicks(teamPicks: SportsGameAudienceTeamPicks) = teamPicks(JsonField.of(teamPicks))
 
         /** Sets [Builder.teamPicks] to an arbitrary JSON value. */
-        fun teamPicks(teamPicks: JsonField<SportsGameAudienceTeamPicks>) = apply { this.teamPicks = teamPicks }
+        fun teamPicks(teamPicks: JsonField<SportsGameAudienceTeamPicks>) = apply {
+            this.teamPicks = teamPicks
+        }
 
         /** The game's live chat on X. */
         fun chat(chat: SportsGameAudienceChat) = chat(JsonField.of(chat))
@@ -150,7 +175,10 @@ private constructor(
         /** Sets [Builder.chat] to an arbitrary JSON value. */
         fun chat(chat: JsonField<SportsGameAudienceChat>) = apply { this.chat = chat }
 
-        /** The game's teams, by team ID. X's team picker sends no short name, alternate ID, X account or record, so those are null. */
+        /**
+         * The game's teams, by team ID. X's team picker sends no short name, alternate ID, X
+         * account or record, so those are null.
+         */
         fun teams(teams: Map<String, SportsTeam>) = teams(JsonField.of(teams))
 
         /** Sets [Builder.teams] to an arbitrary JSON value. */
@@ -222,7 +250,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (league.asKnown().getOrNull()?.validity() ?: 0) +
             (viewers.asKnown().getOrNull()?.validity() ?: 0) +
@@ -245,15 +274,16 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, league, viewers, teamPicks, chat, teams, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(id, league, viewers, teamPicks, chat, teams, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
         "SportsGameAudience{id=$id, league=$league, viewers=$viewers, teamPicks=$teamPicks, chat=$chat, teams=$teams, additionalProperties=$additionalProperties}"
 
-    class League @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class League @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /** Returns this class instance's raw value. */
         @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
@@ -281,7 +311,10 @@ private constructor(
             _UNKNOWN,
         }
 
-        /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if unknown.
+         */
         fun value(): Value =
             when (this) {
                 NFL -> Value.NFL

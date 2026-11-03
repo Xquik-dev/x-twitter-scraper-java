@@ -30,7 +30,9 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("at") @ExcludeMissing at: JsonField<OffsetDateTime> = JsonMissing.of(),
-        @JsonProperty("metrics") @ExcludeMissing metrics: JsonField<PostMonitorMetricsBucketMetrics> = JsonMissing.of(),
+        @JsonProperty("metrics")
+        @ExcludeMissing
+        metrics: JsonField<PostMonitorMetricsBucketMetrics> = JsonMissing.of(),
     ) : this(at, metrics, mutableMapOf())
 
     /** Start of the hour. */
@@ -42,7 +44,9 @@ private constructor(
     @JsonProperty("at") @ExcludeMissing fun _at(): JsonField<OffsetDateTime> = at
 
     /** Returns the raw JSON value of [metrics]. */
-    @JsonProperty("metrics") @ExcludeMissing fun _metrics(): JsonField<PostMonitorMetricsBucketMetrics> = metrics
+    @JsonProperty("metrics")
+    @ExcludeMissing
+    fun _metrics(): JsonField<PostMonitorMetricsBucketMetrics> = metrics
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -69,7 +73,8 @@ private constructor(
         private var metrics: JsonField<PostMonitorMetricsBucketMetrics>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(postMonitorMetricsBucket: PostMonitorMetricsBucket) = apply {
+        @JvmSynthetic
+        internal fun from(postMonitorMetricsBucket: PostMonitorMetricsBucket) = apply {
             at = postMonitorMetricsBucket.at
             metrics = postMonitorMetricsBucket.metrics
             additionalProperties = postMonitorMetricsBucket.additionalProperties.toMutableMap()
@@ -84,7 +89,9 @@ private constructor(
         fun metrics(metrics: PostMonitorMetricsBucketMetrics) = metrics(JsonField.of(metrics))
 
         /** Sets [Builder.metrics] to an arbitrary JSON value. */
-        fun metrics(metrics: JsonField<PostMonitorMetricsBucketMetrics>) = apply { this.metrics = metrics }
+        fun metrics(metrics: JsonField<PostMonitorMetricsBucketMetrics>) = apply {
+            this.metrics = metrics
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -144,9 +151,9 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
-        (if (at.asKnown().isPresent) 1 else 0) +
-            (metrics.asKnown().getOrNull()?.validity() ?: 0)
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (at.asKnown().isPresent) 1 else 0) + (metrics.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

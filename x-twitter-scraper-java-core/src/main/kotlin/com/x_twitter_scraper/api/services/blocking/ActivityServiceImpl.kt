@@ -15,19 +15,18 @@ import com.x_twitter_scraper.api.core.http.HttpRequest
 import com.x_twitter_scraper.api.core.http.HttpResponse
 import com.x_twitter_scraper.api.core.http.HttpResponse.Handler
 import com.x_twitter_scraper.api.core.http.HttpResponseFor
-import com.x_twitter_scraper.api.core.http.json
 import com.x_twitter_scraper.api.core.http.parseable
 import com.x_twitter_scraper.api.core.prepare
-import com.x_twitter_scraper.api.models.activity.ActivityExportParams
 import com.x_twitter_scraper.api.models.activity.ActivityListParams
 import com.x_twitter_scraper.api.models.activity.ActivityLogRow
-import com.x_twitter_scraper.api.models.activity.ActivityRetrieveParams
 import com.x_twitter_scraper.api.models.activity.ActivityRecord
+import com.x_twitter_scraper.api.models.activity.ActivityRetrieveParams
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 /** The account's activity log and the full record of each activity */
-class ActivityServiceImpl internal constructor(private val clientOptions: ClientOptions) : ActivityService {
+class ActivityServiceImpl internal constructor(private val clientOptions: ClientOptions) :
+    ActivityService {
 
     private val withRawResponse: ActivityService.WithRawResponse by lazy {
         WithRawResponseImpl(clientOptions)
@@ -43,11 +42,10 @@ class ActivityServiceImpl internal constructor(private val clientOptions: Client
         requestOptions: RequestOptions,
     ): ActivityRecord = withRawResponse().retrieve(params, requestOptions).parse()
 
-    override fun list(params: ActivityListParams, requestOptions: RequestOptions): List<ActivityLogRow> =
-        withRawResponse().list(params, requestOptions).parse()
-
-    override fun export(params: ActivityExportParams, requestOptions: RequestOptions): HttpResponse =
-        withRawResponse().export(params, requestOptions)
+    override fun list(
+        params: ActivityListParams,
+        requestOptions: RequestOptions,
+    ): List<ActivityLogRow> = withRawResponse().list(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         ActivityService.WithRawResponse {
@@ -115,23 +113,6 @@ class ActivityServiceImpl internal constructor(private val clientOptions: Client
                         }
                     }
             }
-        }
-
-        override fun export(
-            params: ActivityExportParams,
-            requestOptions: RequestOptions,
-        ): HttpResponse {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("activity")
-                    .putHeader("Accept", "application/octet-stream")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response)
         }
     }
 }

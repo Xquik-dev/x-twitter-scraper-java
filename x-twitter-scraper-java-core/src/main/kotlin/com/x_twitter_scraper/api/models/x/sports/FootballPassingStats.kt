@@ -40,15 +40,31 @@ private constructor(
     private constructor(
         @JsonProperty("attempts") @ExcludeMissing attempts: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("avgYards") @ExcludeMissing avgYards: JsonField<Double> = JsonMissing.of(),
-        @JsonProperty("completions") @ExcludeMissing completions: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("interceptions") @ExcludeMissing interceptions: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("completions")
+        @ExcludeMissing
+        completions: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("interceptions")
+        @ExcludeMissing
+        interceptions: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("netYards") @ExcludeMissing netYards: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("rating") @ExcludeMissing rating: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("sackYards") @ExcludeMissing sackYards: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("sacks") @ExcludeMissing sacks: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("touchdowns") @ExcludeMissing touchdowns: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("yards") @ExcludeMissing yards: JsonField<Long> = JsonMissing.of(),
-    ) : this(attempts, avgYards, completions, interceptions, netYards, rating, sackYards, sacks, touchdowns, yards, mutableMapOf())
+    ) : this(
+        attempts,
+        avgYards,
+        completions,
+        interceptions,
+        netYards,
+        rating,
+        sackYards,
+        sacks,
+        touchdowns,
+        yards,
+        mutableMapOf(),
+    )
 
     /** Passes thrown. */
     fun attempts(): Optional<Long> = attempts.getOptional("attempts")
@@ -90,7 +106,9 @@ private constructor(
     @JsonProperty("completions") @ExcludeMissing fun _completions(): JsonField<Long> = completions
 
     /** Returns the raw JSON value of [interceptions]. */
-    @JsonProperty("interceptions") @ExcludeMissing fun _interceptions(): JsonField<Long> = interceptions
+    @JsonProperty("interceptions")
+    @ExcludeMissing
+    fun _interceptions(): JsonField<Long> = interceptions
 
     /** Returns the raw JSON value of [netYards]. */
     @JsonProperty("netYards") @ExcludeMissing fun _netYards(): JsonField<Long> = netYards
@@ -143,7 +161,8 @@ private constructor(
         private var yards: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballPassingStats: FootballPassingStats) = apply {
+        @JvmSynthetic
+        internal fun from(footballPassingStats: FootballPassingStats) = apply {
             attempts = footballPassingStats.attempts
             avgYards = footballPassingStats.avgYards
             completions = footballPassingStats.completions
@@ -195,7 +214,9 @@ private constructor(
         fun interceptions(interceptions: Optional<Long>) = interceptions(interceptions.getOrNull())
 
         /** Sets [Builder.interceptions] to an arbitrary JSON value. */
-        fun interceptions(interceptions: JsonField<Long>) = apply { this.interceptions = interceptions }
+        fun interceptions(interceptions: JsonField<Long>) = apply {
+            this.interceptions = interceptions
+        }
 
         /** Passing yards minus sack yards. */
         fun netYards(netYards: Long?) = netYards(JsonField.ofNullable(netYards))
@@ -331,7 +352,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (attempts.asKnown().isPresent) 1 else 0) +
             (if (avgYards.asKnown().isPresent) 1 else 0) +
             (if (completions.asKnown().isPresent) 1 else 0) +
@@ -362,7 +384,21 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(attempts, avgYards, completions, interceptions, netYards, rating, sackYards, sacks, touchdowns, yards, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            attempts,
+            avgYards,
+            completions,
+            interceptions,
+            netYards,
+            rating,
+            sackYards,
+            sacks,
+            touchdowns,
+            yards,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

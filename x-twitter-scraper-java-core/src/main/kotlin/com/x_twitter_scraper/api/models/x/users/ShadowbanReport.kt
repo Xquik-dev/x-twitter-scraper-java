@@ -22,7 +22,11 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Says whether X limits 1 account in search, search suggestions or reply threads. Each check holds a verdict, its reason & the evidence it read. Evidence is null for a check that couldn't read the account. */
+/**
+ * Says whether X limits 1 account in search, search suggestions or reply threads. Each check holds
+ * a verdict, its reason & the evidence it read. Evidence is null for a check that couldn't read the
+ * account.
+ */
 class ShadowbanReport
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -92,7 +96,8 @@ private constructor(
         private var checks: JsonField<Checks>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(shadowbanReport: ShadowbanReport) = apply {
+        @JvmSynthetic
+        internal fun from(shadowbanReport: ShadowbanReport) = apply {
             username = shadowbanReport.username
             userId = shadowbanReport.userId
             account = shadowbanReport.account
@@ -171,7 +176,8 @@ private constructor(
     /**
      * Validates that the types of all values in this object match their expected types recursively.
      *
-     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
      */
     fun validate(): ShadowbanReport = apply {
         if (validated) {
@@ -193,7 +199,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (username.asKnown().isPresent) 1 else 0) +
             (if (userId.asKnown().isPresent) 1 else 0) +
             (account.asKnown().getOrNull()?.validity() ?: 0) +
@@ -232,7 +239,10 @@ private constructor(
             _UNKNOWN,
         }
 
-        /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if unknown.
+         */
         fun value(): Value =
             when (this) {
                 ACTIVE -> Value.ACTIVE
@@ -244,7 +254,8 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value.
          *
-         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a known member.
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
          */
         fun known(): Known =
             when (this) {
@@ -257,10 +268,13 @@ private constructor(
         /**
          * Returns this class instance's primitive wire representation.
          *
-         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have the expected primitive type.
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow { XTwitterScraperInvalidDataException("Value is not a String") }
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
 
         private var validated: Boolean = false
 
@@ -312,20 +326,31 @@ private constructor(
         private constructor(
             @JsonProperty("account") @ExcludeMissing account: JsonField<Account> = JsonMissing.of(),
             @JsonProperty("search") @ExcludeMissing search: JsonField<Search> = JsonMissing.of(),
-            @JsonProperty("suggestion") @ExcludeMissing suggestion: JsonField<Suggestion> = JsonMissing.of(),
+            @JsonProperty("suggestion")
+            @ExcludeMissing
+            suggestion: JsonField<Suggestion> = JsonMissing.of(),
             @JsonProperty("replies") @ExcludeMissing replies: JsonField<Replies> = JsonMissing.of(),
         ) : this(account, search, suggestion, replies, mutableMapOf())
 
         /** Passes an active or protected account & fails a suspended one. */
         fun account(): Account = account.getRequired("account")
 
-        /** Looks for the account's recent posts in X search, sorted by Latest. `listed` passes & `missing` fails. */
+        /**
+         * Looks for the account's recent posts in X search, sorted by Latest. `listed` passes &
+         * `missing` fails.
+         */
         fun search(): Search = search.getRequired("search")
 
-        /** Looks for the account among the accounts X suggests for its username. `suggested` passes & `not_suggested` fails. */
+        /**
+         * Looks for the account among the accounts X suggests for its username. `suggested` passes
+         * & `not_suggested` fails.
+         */
         fun suggestion(): Suggestion = suggestion.getRequired("suggestion")
 
-        /** Opens the threads of up to 3 recent replies to other accounts. `in_thread` passes. X ranks replies for each viewer, so `more_replies` can't tell. */
+        /**
+         * Opens the threads of up to 3 recent replies to other accounts. `in_thread` passes. X
+         * ranks replies for each viewer, so `more_replies` can't tell.
+         */
         fun replies(): Replies = replies.getRequired("replies")
 
         /** Returns the raw JSON value of [account]. */
@@ -335,7 +360,9 @@ private constructor(
         @JsonProperty("search") @ExcludeMissing fun _search(): JsonField<Search> = search
 
         /** Returns the raw JSON value of [suggestion]. */
-        @JsonProperty("suggestion") @ExcludeMissing fun _suggestion(): JsonField<Suggestion> = suggestion
+        @JsonProperty("suggestion")
+        @ExcludeMissing
+        fun _suggestion(): JsonField<Suggestion> = suggestion
 
         /** Returns the raw JSON value of [replies]. */
         @JsonProperty("replies") @ExcludeMissing fun _replies(): JsonField<Replies> = replies
@@ -367,7 +394,8 @@ private constructor(
             private var replies: JsonField<Replies>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic internal fun from(checks: Checks) = apply {
+            @JvmSynthetic
+            internal fun from(checks: Checks) = apply {
                 account = checks.account
                 search = checks.search
                 suggestion = checks.suggestion
@@ -381,19 +409,30 @@ private constructor(
             /** Sets [Builder.account] to an arbitrary JSON value. */
             fun account(account: JsonField<Account>) = apply { this.account = account }
 
-            /** Looks for the account's recent posts in X search, sorted by Latest. `listed` passes & `missing` fails. */
+            /**
+             * Looks for the account's recent posts in X search, sorted by Latest. `listed` passes &
+             * `missing` fails.
+             */
             fun search(search: Search) = search(JsonField.of(search))
 
             /** Sets [Builder.search] to an arbitrary JSON value. */
             fun search(search: JsonField<Search>) = apply { this.search = search }
 
-            /** Looks for the account among the accounts X suggests for its username. `suggested` passes & `not_suggested` fails. */
+            /**
+             * Looks for the account among the accounts X suggests for its username. `suggested`
+             * passes & `not_suggested` fails.
+             */
             fun suggestion(suggestion: Suggestion) = suggestion(JsonField.of(suggestion))
 
             /** Sets [Builder.suggestion] to an arbitrary JSON value. */
-            fun suggestion(suggestion: JsonField<Suggestion>) = apply { this.suggestion = suggestion }
+            fun suggestion(suggestion: JsonField<Suggestion>) = apply {
+                this.suggestion = suggestion
+            }
 
-            /** Opens the threads of up to 3 recent replies to other accounts. `in_thread` passes. X ranks replies for each viewer, so `more_replies` can't tell. */
+            /**
+             * Opens the threads of up to 3 recent replies to other accounts. `in_thread` passes. X
+             * ranks replies for each viewer, so `more_replies` can't tell.
+             */
             fun replies(replies: Replies) = replies(JsonField.of(replies))
 
             /** Sets [Builder.replies] to an arbitrary JSON value. */
@@ -438,9 +477,11 @@ private constructor(
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types recursively.
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
          *
-         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
          */
         fun validate(): Checks = apply {
             if (validated) {
@@ -462,7 +503,8 @@ private constructor(
                 false
             }
 
-        @JvmSynthetic internal fun validity(): Int =
+        @JvmSynthetic
+        internal fun validity(): Int =
             (account.asKnown().getOrNull()?.validity() ?: 0) +
                 (search.asKnown().getOrNull()?.validity() ?: 0) +
                 (suggestion.asKnown().getOrNull()?.validity() ?: 0) +
@@ -480,12 +522,21 @@ private constructor(
 
             @JsonCreator
             private constructor(
-                @JsonProperty("verdict") @ExcludeMissing verdict: JsonField<ShadowbanVerdict> = JsonMissing.of(),
-                @JsonProperty("reason") @ExcludeMissing reason: JsonField<Reason> = JsonMissing.of(),
-                @JsonProperty("evidence") @ExcludeMissing evidence: JsonField<Evidence> = JsonMissing.of(),
+                @JsonProperty("verdict")
+                @ExcludeMissing
+                verdict: JsonField<ShadowbanVerdict> = JsonMissing.of(),
+                @JsonProperty("reason")
+                @ExcludeMissing
+                reason: JsonField<Reason> = JsonMissing.of(),
+                @JsonProperty("evidence")
+                @ExcludeMissing
+                evidence: JsonField<Evidence> = JsonMissing.of(),
             ) : this(verdict, reason, evidence, mutableMapOf())
 
-            /** Pass means X shows the account there, and fail means it doesn't. Unknown means the check had nothing to test or X didn't answer. */
+            /**
+             * Pass means X shows the account there, and fail means it doesn't. Unknown means the
+             * check had nothing to test or X didn't answer.
+             */
             fun verdict(): ShadowbanVerdict = verdict.getRequired("verdict")
 
             /** State of the account on X. */
@@ -495,13 +546,17 @@ private constructor(
             fun evidence(): Evidence = evidence.getRequired("evidence")
 
             /** Returns the raw JSON value of [verdict]. */
-            @JsonProperty("verdict") @ExcludeMissing fun _verdict(): JsonField<ShadowbanVerdict> = verdict
+            @JsonProperty("verdict")
+            @ExcludeMissing
+            fun _verdict(): JsonField<ShadowbanVerdict> = verdict
 
             /** Returns the raw JSON value of [reason]. */
             @JsonProperty("reason") @ExcludeMissing fun _reason(): JsonField<Reason> = reason
 
             /** Returns the raw JSON value of [evidence]. */
-            @JsonProperty("evidence") @ExcludeMissing fun _evidence(): JsonField<Evidence> = evidence
+            @JsonProperty("evidence")
+            @ExcludeMissing
+            fun _evidence(): JsonField<Evidence> = evidence
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -529,14 +584,18 @@ private constructor(
                 private var evidence: JsonField<Evidence>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-                @JvmSynthetic internal fun from(account: Account) = apply {
+                @JvmSynthetic
+                internal fun from(account: Account) = apply {
                     verdict = account.verdict
                     reason = account.reason
                     evidence = account.evidence
                     additionalProperties = account.additionalProperties.toMutableMap()
                 }
 
-                /** Pass means X shows the account there, and fail means it doesn't. Unknown means the check had nothing to test or X didn't answer. */
+                /**
+                 * Pass means X shows the account there, and fail means it doesn't. Unknown means
+                 * the check had nothing to test or X didn't answer.
+                 */
                 fun verdict(verdict: ShadowbanVerdict) = verdict(JsonField.of(verdict))
 
                 /** Sets [Builder.verdict] to an arbitrary JSON value. */
@@ -563,11 +622,14 @@ private constructor(
                     additionalProperties.put(key, value)
                 }
 
-                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                    this.additionalProperties.putAll(additionalProperties)
-                }
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
 
-                fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
 
                 fun removeAllAdditionalProperties(keys: Set<String>) = apply {
                     keys.forEach(::removeAdditionalProperty)
@@ -592,9 +654,11 @@ private constructor(
             private var validated: Boolean = false
 
             /**
-             * Validates that the types of all values in this object match their expected types recursively.
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
              *
-             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
              */
             fun validate(): Account = apply {
                 if (validated) {
@@ -615,13 +679,15 @@ private constructor(
                     false
                 }
 
-            @JvmSynthetic internal fun validity(): Int =
+            @JvmSynthetic
+            internal fun validity(): Int =
                 (verdict.asKnown().getOrNull()?.validity() ?: 0) +
                     (reason.asKnown().getOrNull()?.validity() ?: 0) +
                     (evidence.asKnown().getOrNull()?.validity() ?: 0)
 
             /** State of the account on X. */
-            class Reason @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+            class Reason @JsonCreator private constructor(private val value: JsonField<String>) :
+                Enum {
 
                 /** Returns this class instance's raw value. */
                 @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
@@ -649,11 +715,17 @@ private constructor(
                     ACTIVE,
                     PROTECTED,
                     SUSPENDED,
-                    /** An enum member indicating that [Reason] was instantiated with an unknown value. */
+                    /**
+                     * An enum member indicating that [Reason] was instantiated with an unknown
+                     * value.
+                     */
                     _UNKNOWN,
                 }
 
-                /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+                /**
+                 * Returns an enum member corresponding to this class instance's value, or
+                 * [Value._UNKNOWN] if unknown.
+                 */
                 fun value(): Value =
                     when (this) {
                         ACTIVE -> Value.ACTIVE
@@ -665,7 +737,8 @@ private constructor(
                 /**
                  * Returns an enum member corresponding to this class instance's value.
                  *
-                 * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a known member.
+                 * @throws XTwitterScraperInvalidDataException if this class instance's value is a
+                 *   not a known member.
                  */
                 fun known(): Known =
                     when (this) {
@@ -678,10 +751,13 @@ private constructor(
                 /**
                  * Returns this class instance's primitive wire representation.
                  *
-                 * @throws XTwitterScraperInvalidDataException if this class instance's value does not have the expected primitive type.
+                 * @throws XTwitterScraperInvalidDataException if this class instance's value does
+                 *   not have the expected primitive type.
                  */
                 fun asString(): String =
-                    _value().asString().orElseThrow { XTwitterScraperInvalidDataException("Value is not a String") }
+                    _value().asString().orElseThrow {
+                        XTwitterScraperInvalidDataException("Value is not a String")
+                    }
 
                 private var validated: Boolean = false
 
@@ -728,14 +804,18 @@ private constructor(
 
                 @JsonCreator
                 private constructor(
-                    @JsonProperty("profileUrl") @ExcludeMissing profileUrl: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("profileUrl")
+                    @ExcludeMissing
+                    profileUrl: JsonField<String> = JsonMissing.of()
                 ) : this(profileUrl, mutableMapOf())
 
                 /** Profile of the account on X. */
                 fun profileUrl(): String = profileUrl.getRequired("profileUrl")
 
                 /** Returns the raw JSON value of [profileUrl]. */
-                @JsonProperty("profileUrl") @ExcludeMissing fun _profileUrl(): JsonField<String> = profileUrl
+                @JsonProperty("profileUrl")
+                @ExcludeMissing
+                fun _profileUrl(): JsonField<String> = profileUrl
 
                 @JsonAnySetter
                 private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -761,7 +841,8 @@ private constructor(
                     private var profileUrl: JsonField<String>? = null
                     private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-                    @JvmSynthetic internal fun from(evidence: Evidence) = apply {
+                    @JvmSynthetic
+                    internal fun from(evidence: Evidence) = apply {
                         profileUrl = evidence.profileUrl
                         additionalProperties = evidence.additionalProperties.toMutableMap()
                     }
@@ -770,7 +851,9 @@ private constructor(
                     fun profileUrl(profileUrl: String) = profileUrl(JsonField.of(profileUrl))
 
                     /** Sets [Builder.profileUrl] to an arbitrary JSON value. */
-                    fun profileUrl(profileUrl: JsonField<String>) = apply { this.profileUrl = profileUrl }
+                    fun profileUrl(profileUrl: JsonField<String>) = apply {
+                        this.profileUrl = profileUrl
+                    }
 
                     fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                         this.additionalProperties.clear()
@@ -781,11 +864,14 @@ private constructor(
                         additionalProperties.put(key, value)
                     }
 
-                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                        this.additionalProperties.putAll(additionalProperties)
-                    }
+                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.putAll(additionalProperties)
+                        }
 
-                    fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+                    fun removeAdditionalProperty(key: String) = apply {
+                        additionalProperties.remove(key)
+                    }
 
                     fun removeAllAdditionalProperties(keys: Set<String>) = apply {
                         keys.forEach(::removeAdditionalProperty)
@@ -808,9 +894,11 @@ private constructor(
                 private var validated: Boolean = false
 
                 /**
-                 * Validates that the types of all values in this object match their expected types recursively.
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
                  *
-                 * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+                 * @throws XTwitterScraperInvalidDataException if any value type in this object
+                 *   doesn't match its expected type.
                  */
                 fun validate(): Evidence = apply {
                     if (validated) {
@@ -829,8 +917,8 @@ private constructor(
                         false
                     }
 
-                @JvmSynthetic internal fun validity(): Int =
-                    (if (profileUrl.asKnown().isPresent) 1 else 0)
+                @JvmSynthetic
+                internal fun validity(): Int = (if (profileUrl.asKnown().isPresent) 1 else 0)
 
                 override fun equals(other: Any?): Boolean {
                     if (this === other) {
@@ -862,7 +950,9 @@ private constructor(
                     additionalProperties == other.additionalProperties
             }
 
-            private val hashCode: Int by lazy { Objects.hash(verdict, reason, evidence, additionalProperties) }
+            private val hashCode: Int by lazy {
+                Objects.hash(verdict, reason, evidence, additionalProperties)
+            }
 
             override fun hashCode(): Int = hashCode
 
@@ -870,7 +960,10 @@ private constructor(
                 "Account{verdict=$verdict, reason=$reason, evidence=$evidence, additionalProperties=$additionalProperties}"
         }
 
-        /** Looks for the account's recent posts in X search, sorted by Latest. `listed` passes & `missing` fails. */
+        /**
+         * Looks for the account's recent posts in X search, sorted by Latest. `listed` passes &
+         * `missing` fails.
+         */
         class Search
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
@@ -882,28 +975,44 @@ private constructor(
 
             @JsonCreator
             private constructor(
-                @JsonProperty("verdict") @ExcludeMissing verdict: JsonField<ShadowbanVerdict> = JsonMissing.of(),
-                @JsonProperty("reason") @ExcludeMissing reason: JsonField<Reason> = JsonMissing.of(),
-                @JsonProperty("evidence") @ExcludeMissing evidence: JsonField<Evidence> = JsonMissing.of(),
+                @JsonProperty("verdict")
+                @ExcludeMissing
+                verdict: JsonField<ShadowbanVerdict> = JsonMissing.of(),
+                @JsonProperty("reason")
+                @ExcludeMissing
+                reason: JsonField<Reason> = JsonMissing.of(),
+                @JsonProperty("evidence")
+                @ExcludeMissing
+                evidence: JsonField<Evidence> = JsonMissing.of(),
             ) : this(verdict, reason, evidence, mutableMapOf())
 
-            /** Pass means X shows the account there, and fail means it doesn't. Unknown means the check had nothing to test or X didn't answer. */
+            /**
+             * Pass means X shows the account there, and fail means it doesn't. Unknown means the
+             * check had nothing to test or X didn't answer.
+             */
             fun verdict(): ShadowbanVerdict = verdict.getRequired("verdict")
 
-            /** `listed` means search shows its posts & `missing` means it shows none. `no_recent_posts` means the account has no recent post to look for. */
+            /**
+             * `listed` means search shows its posts & `missing` means it shows none.
+             * `no_recent_posts` means the account has no recent post to look for.
+             */
             fun reason(): Reason = reason.getRequired("reason")
 
             /** The search & the posts it looked for. */
             fun evidence(): Optional<Evidence> = evidence.getOptional("evidence")
 
             /** Returns the raw JSON value of [verdict]. */
-            @JsonProperty("verdict") @ExcludeMissing fun _verdict(): JsonField<ShadowbanVerdict> = verdict
+            @JsonProperty("verdict")
+            @ExcludeMissing
+            fun _verdict(): JsonField<ShadowbanVerdict> = verdict
 
             /** Returns the raw JSON value of [reason]. */
             @JsonProperty("reason") @ExcludeMissing fun _reason(): JsonField<Reason> = reason
 
             /** Returns the raw JSON value of [evidence]. */
-            @JsonProperty("evidence") @ExcludeMissing fun _evidence(): JsonField<Evidence> = evidence
+            @JsonProperty("evidence")
+            @ExcludeMissing
+            fun _evidence(): JsonField<Evidence> = evidence
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -931,20 +1040,27 @@ private constructor(
                 private var evidence: JsonField<Evidence>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-                @JvmSynthetic internal fun from(search: Search) = apply {
+                @JvmSynthetic
+                internal fun from(search: Search) = apply {
                     verdict = search.verdict
                     reason = search.reason
                     evidence = search.evidence
                     additionalProperties = search.additionalProperties.toMutableMap()
                 }
 
-                /** Pass means X shows the account there, and fail means it doesn't. Unknown means the check had nothing to test or X didn't answer. */
+                /**
+                 * Pass means X shows the account there, and fail means it doesn't. Unknown means
+                 * the check had nothing to test or X didn't answer.
+                 */
                 fun verdict(verdict: ShadowbanVerdict) = verdict(JsonField.of(verdict))
 
                 /** Sets [Builder.verdict] to an arbitrary JSON value. */
                 fun verdict(verdict: JsonField<ShadowbanVerdict>) = apply { this.verdict = verdict }
 
-                /** `listed` means search shows its posts & `missing` means it shows none. `no_recent_posts` means the account has no recent post to look for. */
+                /**
+                 * `listed` means search shows its posts & `missing` means it shows none.
+                 * `no_recent_posts` means the account has no recent post to look for.
+                 */
                 fun reason(reason: Reason) = reason(JsonField.of(reason))
 
                 /** Sets [Builder.reason] to an arbitrary JSON value. */
@@ -968,11 +1084,14 @@ private constructor(
                     additionalProperties.put(key, value)
                 }
 
-                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                    this.additionalProperties.putAll(additionalProperties)
-                }
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
 
-                fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
 
                 fun removeAllAdditionalProperties(keys: Set<String>) = apply {
                     keys.forEach(::removeAdditionalProperty)
@@ -997,9 +1116,11 @@ private constructor(
             private var validated: Boolean = false
 
             /**
-             * Validates that the types of all values in this object match their expected types recursively.
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
              *
-             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
              */
             fun validate(): Search = apply {
                 if (validated) {
@@ -1020,13 +1141,18 @@ private constructor(
                     false
                 }
 
-            @JvmSynthetic internal fun validity(): Int =
+            @JvmSynthetic
+            internal fun validity(): Int =
                 (verdict.asKnown().getOrNull()?.validity() ?: 0) +
                     (reason.asKnown().getOrNull()?.validity() ?: 0) +
                     (evidence.asKnown().getOrNull()?.validity() ?: 0)
 
-            /** `listed` means search shows its posts & `missing` means it shows none. `no_recent_posts` means the account has no recent post to look for. */
-            class Reason @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+            /**
+             * `listed` means search shows its posts & `missing` means it shows none.
+             * `no_recent_posts` means the account has no recent post to look for.
+             */
+            class Reason @JsonCreator private constructor(private val value: JsonField<String>) :
+                Enum {
 
                 /** Returns this class instance's raw value. */
                 @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
@@ -1066,11 +1192,17 @@ private constructor(
                     UNAVAILABLE,
                     PROTECTED,
                     SUSPENDED,
-                    /** An enum member indicating that [Reason] was instantiated with an unknown value. */
+                    /**
+                     * An enum member indicating that [Reason] was instantiated with an unknown
+                     * value.
+                     */
                     _UNKNOWN,
                 }
 
-                /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+                /**
+                 * Returns an enum member corresponding to this class instance's value, or
+                 * [Value._UNKNOWN] if unknown.
+                 */
                 fun value(): Value =
                     when (this) {
                         LISTED -> Value.LISTED
@@ -1085,7 +1217,8 @@ private constructor(
                 /**
                  * Returns an enum member corresponding to this class instance's value.
                  *
-                 * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a known member.
+                 * @throws XTwitterScraperInvalidDataException if this class instance's value is a
+                 *   not a known member.
                  */
                 fun known(): Known =
                     when (this) {
@@ -1101,10 +1234,13 @@ private constructor(
                 /**
                  * Returns this class instance's primitive wire representation.
                  *
-                 * @throws XTwitterScraperInvalidDataException if this class instance's value does not have the expected primitive type.
+                 * @throws XTwitterScraperInvalidDataException if this class instance's value does
+                 *   not have the expected primitive type.
                  */
                 fun asString(): String =
-                    _value().asString().orElseThrow { XTwitterScraperInvalidDataException("Value is not a String") }
+                    _value().asString().orElseThrow {
+                        XTwitterScraperInvalidDataException("Value is not a String")
+                    }
 
                 private var validated: Boolean = false
 
@@ -1154,10 +1290,18 @@ private constructor(
 
                 @JsonCreator
                 private constructor(
-                    @JsonProperty("query") @ExcludeMissing query: JsonField<String> = JsonMissing.of(),
-                    @JsonProperty("searchUrl") @ExcludeMissing searchUrl: JsonField<String> = JsonMissing.of(),
-                    @JsonProperty("recentPostIds") @ExcludeMissing recentPostIds: JsonField<List<String>> = JsonMissing.of(),
-                    @JsonProperty("foundPostIds") @ExcludeMissing foundPostIds: JsonField<List<String>> = JsonMissing.of(),
+                    @JsonProperty("query")
+                    @ExcludeMissing
+                    query: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("searchUrl")
+                    @ExcludeMissing
+                    searchUrl: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("recentPostIds")
+                    @ExcludeMissing
+                    recentPostIds: JsonField<List<String>> = JsonMissing.of(),
+                    @JsonProperty("foundPostIds")
+                    @ExcludeMissing
+                    foundPostIds: JsonField<List<String>> = JsonMissing.of(),
                 ) : this(query, searchUrl, recentPostIds, foundPostIds, mutableMapOf())
 
                 /** The search it ran. */
@@ -1176,13 +1320,19 @@ private constructor(
                 @JsonProperty("query") @ExcludeMissing fun _query(): JsonField<String> = query
 
                 /** Returns the raw JSON value of [searchUrl]. */
-                @JsonProperty("searchUrl") @ExcludeMissing fun _searchUrl(): JsonField<String> = searchUrl
+                @JsonProperty("searchUrl")
+                @ExcludeMissing
+                fun _searchUrl(): JsonField<String> = searchUrl
 
                 /** Returns the raw JSON value of [recentPostIds]. */
-                @JsonProperty("recentPostIds") @ExcludeMissing fun _recentPostIds(): JsonField<List<String>> = recentPostIds
+                @JsonProperty("recentPostIds")
+                @ExcludeMissing
+                fun _recentPostIds(): JsonField<List<String>> = recentPostIds
 
                 /** Returns the raw JSON value of [foundPostIds]. */
-                @JsonProperty("foundPostIds") @ExcludeMissing fun _foundPostIds(): JsonField<List<String>> = foundPostIds
+                @JsonProperty("foundPostIds")
+                @ExcludeMissing
+                fun _foundPostIds(): JsonField<List<String>> = foundPostIds
 
                 @JsonAnySetter
                 private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1211,7 +1361,8 @@ private constructor(
                     private var foundPostIds: JsonField<MutableList<String>>? = null
                     private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-                    @JvmSynthetic internal fun from(evidence: Evidence) = apply {
+                    @JvmSynthetic
+                    internal fun from(evidence: Evidence) = apply {
                         query = evidence.query
                         searchUrl = evidence.searchUrl
                         recentPostIds = evidence.recentPostIds.map { it.toMutableList() }
@@ -1229,13 +1380,18 @@ private constructor(
                     fun searchUrl(searchUrl: String) = searchUrl(JsonField.of(searchUrl))
 
                     /** Sets [Builder.searchUrl] to an arbitrary JSON value. */
-                    fun searchUrl(searchUrl: JsonField<String>) = apply { this.searchUrl = searchUrl }
+                    fun searchUrl(searchUrl: JsonField<String>) = apply {
+                        this.searchUrl = searchUrl
+                    }
 
                     /** Up to 5 recent posts of the account. */
-                    fun recentPostIds(recentPostIds: List<String>) = recentPostIds(JsonField.of(recentPostIds))
+                    fun recentPostIds(recentPostIds: List<String>) =
+                        recentPostIds(JsonField.of(recentPostIds))
 
                     /** Sets [Builder.recentPostIds] to an arbitrary JSON value. */
-                    fun recentPostIds(recentPostIds: JsonField<List<String>>) = apply { this.recentPostIds = recentPostIds.map { it.toMutableList() } }
+                    fun recentPostIds(recentPostIds: JsonField<List<String>>) = apply {
+                        this.recentPostIds = recentPostIds.map { it.toMutableList() }
+                    }
 
                     /** Adds a single [String] to [recentPostIds]. */
                     fun addRecentPostId(recentPostId: String) = apply {
@@ -1246,10 +1402,13 @@ private constructor(
                     }
 
                     /** Up to 5 posts of the account that search showed. */
-                    fun foundPostIds(foundPostIds: List<String>) = foundPostIds(JsonField.of(foundPostIds))
+                    fun foundPostIds(foundPostIds: List<String>) =
+                        foundPostIds(JsonField.of(foundPostIds))
 
                     /** Sets [Builder.foundPostIds] to an arbitrary JSON value. */
-                    fun foundPostIds(foundPostIds: JsonField<List<String>>) = apply { this.foundPostIds = foundPostIds.map { it.toMutableList() } }
+                    fun foundPostIds(foundPostIds: JsonField<List<String>>) = apply {
+                        this.foundPostIds = foundPostIds.map { it.toMutableList() }
+                    }
 
                     /** Adds a single [String] to [foundPostIds]. */
                     fun addFoundPostId(foundPostId: String) = apply {
@@ -1268,11 +1427,14 @@ private constructor(
                         additionalProperties.put(key, value)
                     }
 
-                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                        this.additionalProperties.putAll(additionalProperties)
-                    }
+                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.putAll(additionalProperties)
+                        }
 
-                    fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+                    fun removeAdditionalProperty(key: String) = apply {
+                        additionalProperties.remove(key)
+                    }
 
                     fun removeAllAdditionalProperties(keys: Set<String>) = apply {
                         keys.forEach(::removeAdditionalProperty)
@@ -1298,9 +1460,11 @@ private constructor(
                 private var validated: Boolean = false
 
                 /**
-                 * Validates that the types of all values in this object match their expected types recursively.
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
                  *
-                 * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+                 * @throws XTwitterScraperInvalidDataException if any value type in this object
+                 *   doesn't match its expected type.
                  */
                 fun validate(): Evidence = apply {
                     if (validated) {
@@ -1322,7 +1486,8 @@ private constructor(
                         false
                     }
 
-                @JvmSynthetic internal fun validity(): Int =
+                @JvmSynthetic
+                internal fun validity(): Int =
                     (if (query.asKnown().isPresent) 1 else 0) +
                         (if (searchUrl.asKnown().isPresent) 1 else 0) +
                         (recentPostIds.asKnown().getOrNull()?.size ?: 0) +
@@ -1341,7 +1506,15 @@ private constructor(
                         additionalProperties == other.additionalProperties
                 }
 
-                private val hashCode: Int by lazy { Objects.hash(query, searchUrl, recentPostIds, foundPostIds, additionalProperties) }
+                private val hashCode: Int by lazy {
+                    Objects.hash(
+                        query,
+                        searchUrl,
+                        recentPostIds,
+                        foundPostIds,
+                        additionalProperties,
+                    )
+                }
 
                 override fun hashCode(): Int = hashCode
 
@@ -1361,7 +1534,9 @@ private constructor(
                     additionalProperties == other.additionalProperties
             }
 
-            private val hashCode: Int by lazy { Objects.hash(verdict, reason, evidence, additionalProperties) }
+            private val hashCode: Int by lazy {
+                Objects.hash(verdict, reason, evidence, additionalProperties)
+            }
 
             override fun hashCode(): Int = hashCode
 
@@ -1369,7 +1544,10 @@ private constructor(
                 "Search{verdict=$verdict, reason=$reason, evidence=$evidence, additionalProperties=$additionalProperties}"
         }
 
-        /** Looks for the account among the accounts X suggests for its username. `suggested` passes & `not_suggested` fails. */
+        /**
+         * Looks for the account among the accounts X suggests for its username. `suggested` passes
+         * & `not_suggested` fails.
+         */
         class Suggestion
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
@@ -1381,12 +1559,21 @@ private constructor(
 
             @JsonCreator
             private constructor(
-                @JsonProperty("verdict") @ExcludeMissing verdict: JsonField<ShadowbanVerdict> = JsonMissing.of(),
-                @JsonProperty("reason") @ExcludeMissing reason: JsonField<Reason> = JsonMissing.of(),
-                @JsonProperty("evidence") @ExcludeMissing evidence: JsonField<Evidence> = JsonMissing.of(),
+                @JsonProperty("verdict")
+                @ExcludeMissing
+                verdict: JsonField<ShadowbanVerdict> = JsonMissing.of(),
+                @JsonProperty("reason")
+                @ExcludeMissing
+                reason: JsonField<Reason> = JsonMissing.of(),
+                @JsonProperty("evidence")
+                @ExcludeMissing
+                evidence: JsonField<Evidence> = JsonMissing.of(),
             ) : this(verdict, reason, evidence, mutableMapOf())
 
-            /** Pass means X shows the account there, and fail means it doesn't. Unknown means the check had nothing to test or X didn't answer. */
+            /**
+             * Pass means X shows the account there, and fail means it doesn't. Unknown means the
+             * check had nothing to test or X didn't answer.
+             */
             fun verdict(): ShadowbanVerdict = verdict.getRequired("verdict")
 
             /** `suggested` means X suggests the account for its username. */
@@ -1396,13 +1583,17 @@ private constructor(
             fun evidence(): Optional<Evidence> = evidence.getOptional("evidence")
 
             /** Returns the raw JSON value of [verdict]. */
-            @JsonProperty("verdict") @ExcludeMissing fun _verdict(): JsonField<ShadowbanVerdict> = verdict
+            @JsonProperty("verdict")
+            @ExcludeMissing
+            fun _verdict(): JsonField<ShadowbanVerdict> = verdict
 
             /** Returns the raw JSON value of [reason]. */
             @JsonProperty("reason") @ExcludeMissing fun _reason(): JsonField<Reason> = reason
 
             /** Returns the raw JSON value of [evidence]. */
-            @JsonProperty("evidence") @ExcludeMissing fun _evidence(): JsonField<Evidence> = evidence
+            @JsonProperty("evidence")
+            @ExcludeMissing
+            fun _evidence(): JsonField<Evidence> = evidence
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1430,14 +1621,18 @@ private constructor(
                 private var evidence: JsonField<Evidence>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-                @JvmSynthetic internal fun from(suggestion: Suggestion) = apply {
+                @JvmSynthetic
+                internal fun from(suggestion: Suggestion) = apply {
                     verdict = suggestion.verdict
                     reason = suggestion.reason
                     evidence = suggestion.evidence
                     additionalProperties = suggestion.additionalProperties.toMutableMap()
                 }
 
-                /** Pass means X shows the account there, and fail means it doesn't. Unknown means the check had nothing to test or X didn't answer. */
+                /**
+                 * Pass means X shows the account there, and fail means it doesn't. Unknown means
+                 * the check had nothing to test or X didn't answer.
+                 */
                 fun verdict(verdict: ShadowbanVerdict) = verdict(JsonField.of(verdict))
 
                 /** Sets [Builder.verdict] to an arbitrary JSON value. */
@@ -1467,11 +1662,14 @@ private constructor(
                     additionalProperties.put(key, value)
                 }
 
-                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                    this.additionalProperties.putAll(additionalProperties)
-                }
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
 
-                fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
 
                 fun removeAllAdditionalProperties(keys: Set<String>) = apply {
                     keys.forEach(::removeAdditionalProperty)
@@ -1496,9 +1694,11 @@ private constructor(
             private var validated: Boolean = false
 
             /**
-             * Validates that the types of all values in this object match their expected types recursively.
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
              *
-             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
              */
             fun validate(): Suggestion = apply {
                 if (validated) {
@@ -1519,13 +1719,15 @@ private constructor(
                     false
                 }
 
-            @JvmSynthetic internal fun validity(): Int =
+            @JvmSynthetic
+            internal fun validity(): Int =
                 (verdict.asKnown().getOrNull()?.validity() ?: 0) +
                     (reason.asKnown().getOrNull()?.validity() ?: 0) +
                     (evidence.asKnown().getOrNull()?.validity() ?: 0)
 
             /** `suggested` means X suggests the account for its username. */
-            class Reason @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+            class Reason @JsonCreator private constructor(private val value: JsonField<String>) :
+                Enum {
 
                 /** Returns this class instance's raw value. */
                 @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
@@ -1557,11 +1759,17 @@ private constructor(
                     NOT_SUGGESTED,
                     UNAVAILABLE,
                     SUSPENDED,
-                    /** An enum member indicating that [Reason] was instantiated with an unknown value. */
+                    /**
+                     * An enum member indicating that [Reason] was instantiated with an unknown
+                     * value.
+                     */
                     _UNKNOWN,
                 }
 
-                /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+                /**
+                 * Returns an enum member corresponding to this class instance's value, or
+                 * [Value._UNKNOWN] if unknown.
+                 */
                 fun value(): Value =
                     when (this) {
                         SUGGESTED -> Value.SUGGESTED
@@ -1574,7 +1782,8 @@ private constructor(
                 /**
                  * Returns an enum member corresponding to this class instance's value.
                  *
-                 * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a known member.
+                 * @throws XTwitterScraperInvalidDataException if this class instance's value is a
+                 *   not a known member.
                  */
                 fun known(): Known =
                     when (this) {
@@ -1588,10 +1797,13 @@ private constructor(
                 /**
                  * Returns this class instance's primitive wire representation.
                  *
-                 * @throws XTwitterScraperInvalidDataException if this class instance's value does not have the expected primitive type.
+                 * @throws XTwitterScraperInvalidDataException if this class instance's value does
+                 *   not have the expected primitive type.
                  */
                 fun asString(): String =
-                    _value().asString().orElseThrow { XTwitterScraperInvalidDataException("Value is not a String") }
+                    _value().asString().orElseThrow {
+                        XTwitterScraperInvalidDataException("Value is not a String")
+                    }
 
                 private var validated: Boolean = false
 
@@ -1639,21 +1851,28 @@ private constructor(
 
                 @JsonCreator
                 private constructor(
-                    @JsonProperty("query") @ExcludeMissing query: JsonField<String> = JsonMissing.of(),
-                    @JsonProperty("suggestedUsernames") @ExcludeMissing suggestedUsernames: JsonField<List<String>> = JsonMissing.of(),
+                    @JsonProperty("query")
+                    @ExcludeMissing
+                    query: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("suggestedUsernames")
+                    @ExcludeMissing
+                    suggestedUsernames: JsonField<List<String>> = JsonMissing.of(),
                 ) : this(query, suggestedUsernames, mutableMapOf())
 
                 /** The username it typed. */
                 fun query(): String = query.getRequired("query")
 
                 /** Up to 10 accounts X suggested, in its order. */
-                fun suggestedUsernames(): List<String> = suggestedUsernames.getRequired("suggestedUsernames")
+                fun suggestedUsernames(): List<String> =
+                    suggestedUsernames.getRequired("suggestedUsernames")
 
                 /** Returns the raw JSON value of [query]. */
                 @JsonProperty("query") @ExcludeMissing fun _query(): JsonField<String> = query
 
                 /** Returns the raw JSON value of [suggestedUsernames]. */
-                @JsonProperty("suggestedUsernames") @ExcludeMissing fun _suggestedUsernames(): JsonField<List<String>> = suggestedUsernames
+                @JsonProperty("suggestedUsernames")
+                @ExcludeMissing
+                fun _suggestedUsernames(): JsonField<List<String>> = suggestedUsernames
 
                 @JsonAnySetter
                 private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1680,7 +1899,8 @@ private constructor(
                     private var suggestedUsernames: JsonField<MutableList<String>>? = null
                     private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-                    @JvmSynthetic internal fun from(evidence: Evidence) = apply {
+                    @JvmSynthetic
+                    internal fun from(evidence: Evidence) = apply {
                         query = evidence.query
                         suggestedUsernames = evidence.suggestedUsernames.map { it.toMutableList() }
                         additionalProperties = evidence.additionalProperties.toMutableMap()
@@ -1693,10 +1913,13 @@ private constructor(
                     fun query(query: JsonField<String>) = apply { this.query = query }
 
                     /** Up to 10 accounts X suggested, in its order. */
-                    fun suggestedUsernames(suggestedUsernames: List<String>) = suggestedUsernames(JsonField.of(suggestedUsernames))
+                    fun suggestedUsernames(suggestedUsernames: List<String>) =
+                        suggestedUsernames(JsonField.of(suggestedUsernames))
 
                     /** Sets [Builder.suggestedUsernames] to an arbitrary JSON value. */
-                    fun suggestedUsernames(suggestedUsernames: JsonField<List<String>>) = apply { this.suggestedUsernames = suggestedUsernames.map { it.toMutableList() } }
+                    fun suggestedUsernames(suggestedUsernames: JsonField<List<String>>) = apply {
+                        this.suggestedUsernames = suggestedUsernames.map { it.toMutableList() }
+                    }
 
                     /** Adds a single [String] to [suggestedUsernames]. */
                     fun addSuggestedUsername(suggestedUsername: String) = apply {
@@ -1715,11 +1938,14 @@ private constructor(
                         additionalProperties.put(key, value)
                     }
 
-                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                        this.additionalProperties.putAll(additionalProperties)
-                    }
+                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.putAll(additionalProperties)
+                        }
 
-                    fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+                    fun removeAdditionalProperty(key: String) = apply {
+                        additionalProperties.remove(key)
+                    }
 
                     fun removeAllAdditionalProperties(keys: Set<String>) = apply {
                         keys.forEach(::removeAdditionalProperty)
@@ -1735,7 +1961,9 @@ private constructor(
                     fun build(): Evidence =
                         Evidence(
                             checkRequired("query", query),
-                            checkRequired("suggestedUsernames", suggestedUsernames).map { it.toImmutable() },
+                            checkRequired("suggestedUsernames", suggestedUsernames).map {
+                                it.toImmutable()
+                            },
                             additionalProperties.toMutableMap(),
                         )
                 }
@@ -1743,9 +1971,11 @@ private constructor(
                 private var validated: Boolean = false
 
                 /**
-                 * Validates that the types of all values in this object match their expected types recursively.
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
                  *
-                 * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+                 * @throws XTwitterScraperInvalidDataException if any value type in this object
+                 *   doesn't match its expected type.
                  */
                 fun validate(): Evidence = apply {
                     if (validated) {
@@ -1765,7 +1995,8 @@ private constructor(
                         false
                     }
 
-                @JvmSynthetic internal fun validity(): Int =
+                @JvmSynthetic
+                internal fun validity(): Int =
                     (if (query.asKnown().isPresent) 1 else 0) +
                         (suggestedUsernames.asKnown().getOrNull()?.size ?: 0)
 
@@ -1780,7 +2011,9 @@ private constructor(
                         additionalProperties == other.additionalProperties
                 }
 
-                private val hashCode: Int by lazy { Objects.hash(query, suggestedUsernames, additionalProperties) }
+                private val hashCode: Int by lazy {
+                    Objects.hash(query, suggestedUsernames, additionalProperties)
+                }
 
                 override fun hashCode(): Int = hashCode
 
@@ -1800,7 +2033,9 @@ private constructor(
                     additionalProperties == other.additionalProperties
             }
 
-            private val hashCode: Int by lazy { Objects.hash(verdict, reason, evidence, additionalProperties) }
+            private val hashCode: Int by lazy {
+                Objects.hash(verdict, reason, evidence, additionalProperties)
+            }
 
             override fun hashCode(): Int = hashCode
 
@@ -1808,7 +2043,10 @@ private constructor(
                 "Suggestion{verdict=$verdict, reason=$reason, evidence=$evidence, additionalProperties=$additionalProperties}"
         }
 
-        /** Opens the threads of up to 3 recent replies to other accounts. `in_thread` passes. X ranks replies for each viewer, so `more_replies` can't tell. */
+        /**
+         * Opens the threads of up to 3 recent replies to other accounts. `in_thread` passes. X
+         * ranks replies for each viewer, so `more_replies` can't tell.
+         */
         class Replies
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
@@ -1820,28 +2058,44 @@ private constructor(
 
             @JsonCreator
             private constructor(
-                @JsonProperty("verdict") @ExcludeMissing verdict: JsonField<ShadowbanVerdict> = JsonMissing.of(),
-                @JsonProperty("reason") @ExcludeMissing reason: JsonField<Reason> = JsonMissing.of(),
-                @JsonProperty("evidence") @ExcludeMissing evidence: JsonField<Evidence> = JsonMissing.of(),
+                @JsonProperty("verdict")
+                @ExcludeMissing
+                verdict: JsonField<ShadowbanVerdict> = JsonMissing.of(),
+                @JsonProperty("reason")
+                @ExcludeMissing
+                reason: JsonField<Reason> = JsonMissing.of(),
+                @JsonProperty("evidence")
+                @ExcludeMissing
+                evidence: JsonField<Evidence> = JsonMissing.of(),
             ) : this(verdict, reason, evidence, mutableMapOf())
 
-            /** Pass means X shows the account there, and fail means it doesn't. Unknown means the check had nothing to test or X didn't answer. */
+            /**
+             * Pass means X shows the account there, and fail means it doesn't. Unknown means the
+             * check had nothing to test or X didn't answer.
+             */
             fun verdict(): ShadowbanVerdict = verdict.getRequired("verdict")
 
-            /** `more_replies` means X put a reply behind its hidden replies prompt. `not_found` means no reply showed on the pages the check read. */
+            /**
+             * `more_replies` means X put a reply behind its hidden replies prompt. `not_found`
+             * means no reply showed on the pages the check read.
+             */
             fun reason(): Reason = reason.getRequired("reason")
 
             /** Each reply it opened & where it showed. */
             fun evidence(): Optional<Evidence> = evidence.getOptional("evidence")
 
             /** Returns the raw JSON value of [verdict]. */
-            @JsonProperty("verdict") @ExcludeMissing fun _verdict(): JsonField<ShadowbanVerdict> = verdict
+            @JsonProperty("verdict")
+            @ExcludeMissing
+            fun _verdict(): JsonField<ShadowbanVerdict> = verdict
 
             /** Returns the raw JSON value of [reason]. */
             @JsonProperty("reason") @ExcludeMissing fun _reason(): JsonField<Reason> = reason
 
             /** Returns the raw JSON value of [evidence]. */
-            @JsonProperty("evidence") @ExcludeMissing fun _evidence(): JsonField<Evidence> = evidence
+            @JsonProperty("evidence")
+            @ExcludeMissing
+            fun _evidence(): JsonField<Evidence> = evidence
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1869,20 +2123,27 @@ private constructor(
                 private var evidence: JsonField<Evidence>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-                @JvmSynthetic internal fun from(replies: Replies) = apply {
+                @JvmSynthetic
+                internal fun from(replies: Replies) = apply {
                     verdict = replies.verdict
                     reason = replies.reason
                     evidence = replies.evidence
                     additionalProperties = replies.additionalProperties.toMutableMap()
                 }
 
-                /** Pass means X shows the account there, and fail means it doesn't. Unknown means the check had nothing to test or X didn't answer. */
+                /**
+                 * Pass means X shows the account there, and fail means it doesn't. Unknown means
+                 * the check had nothing to test or X didn't answer.
+                 */
                 fun verdict(verdict: ShadowbanVerdict) = verdict(JsonField.of(verdict))
 
                 /** Sets [Builder.verdict] to an arbitrary JSON value. */
                 fun verdict(verdict: JsonField<ShadowbanVerdict>) = apply { this.verdict = verdict }
 
-                /** `more_replies` means X put a reply behind its hidden replies prompt. `not_found` means no reply showed on the pages the check read. */
+                /**
+                 * `more_replies` means X put a reply behind its hidden replies prompt. `not_found`
+                 * means no reply showed on the pages the check read.
+                 */
                 fun reason(reason: Reason) = reason(JsonField.of(reason))
 
                 /** Sets [Builder.reason] to an arbitrary JSON value. */
@@ -1906,11 +2167,14 @@ private constructor(
                     additionalProperties.put(key, value)
                 }
 
-                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                    this.additionalProperties.putAll(additionalProperties)
-                }
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
 
-                fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
 
                 fun removeAllAdditionalProperties(keys: Set<String>) = apply {
                     keys.forEach(::removeAdditionalProperty)
@@ -1935,9 +2199,11 @@ private constructor(
             private var validated: Boolean = false
 
             /**
-             * Validates that the types of all values in this object match their expected types recursively.
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
              *
-             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
              */
             fun validate(): Replies = apply {
                 if (validated) {
@@ -1958,13 +2224,18 @@ private constructor(
                     false
                 }
 
-            @JvmSynthetic internal fun validity(): Int =
+            @JvmSynthetic
+            internal fun validity(): Int =
                 (verdict.asKnown().getOrNull()?.validity() ?: 0) +
                     (reason.asKnown().getOrNull()?.validity() ?: 0) +
                     (evidence.asKnown().getOrNull()?.validity() ?: 0)
 
-            /** `more_replies` means X put a reply behind its hidden replies prompt. `not_found` means no reply showed on the pages the check read. */
-            class Reason @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+            /**
+             * `more_replies` means X put a reply behind its hidden replies prompt. `not_found`
+             * means no reply showed on the pages the check read.
+             */
+            class Reason @JsonCreator private constructor(private val value: JsonField<String>) :
+                Enum {
 
                 /** Returns this class instance's raw value. */
                 @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
@@ -2008,11 +2279,17 @@ private constructor(
                     UNAVAILABLE,
                     PROTECTED,
                     SUSPENDED,
-                    /** An enum member indicating that [Reason] was instantiated with an unknown value. */
+                    /**
+                     * An enum member indicating that [Reason] was instantiated with an unknown
+                     * value.
+                     */
                     _UNKNOWN,
                 }
 
-                /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+                /**
+                 * Returns an enum member corresponding to this class instance's value, or
+                 * [Value._UNKNOWN] if unknown.
+                 */
                 fun value(): Value =
                     when (this) {
                         IN_THREAD -> Value.IN_THREAD
@@ -2028,7 +2305,8 @@ private constructor(
                 /**
                  * Returns an enum member corresponding to this class instance's value.
                  *
-                 * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a known member.
+                 * @throws XTwitterScraperInvalidDataException if this class instance's value is a
+                 *   not a known member.
                  */
                 fun known(): Known =
                     when (this) {
@@ -2045,10 +2323,13 @@ private constructor(
                 /**
                  * Returns this class instance's primitive wire representation.
                  *
-                 * @throws XTwitterScraperInvalidDataException if this class instance's value does not have the expected primitive type.
+                 * @throws XTwitterScraperInvalidDataException if this class instance's value does
+                 *   not have the expected primitive type.
                  */
                 fun asString(): String =
-                    _value().asString().orElseThrow { XTwitterScraperInvalidDataException("Value is not a String") }
+                    _value().asString().orElseThrow {
+                        XTwitterScraperInvalidDataException("Value is not a String")
+                    }
 
                 private var validated: Boolean = false
 
@@ -2095,14 +2376,18 @@ private constructor(
 
                 @JsonCreator
                 private constructor(
-                    @JsonProperty("replies") @ExcludeMissing replies: JsonField<List<Reply>> = JsonMissing.of(),
+                    @JsonProperty("replies")
+                    @ExcludeMissing
+                    replies: JsonField<List<Reply>> = JsonMissing.of()
                 ) : this(replies, mutableMapOf())
 
                 /** Up to 3 replies, newest first. */
                 fun replies(): List<Reply> = replies.getRequired("replies")
 
                 /** Returns the raw JSON value of [replies]. */
-                @JsonProperty("replies") @ExcludeMissing fun _replies(): JsonField<List<Reply>> = replies
+                @JsonProperty("replies")
+                @ExcludeMissing
+                fun _replies(): JsonField<List<Reply>> = replies
 
                 @JsonAnySetter
                 private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -2128,7 +2413,8 @@ private constructor(
                     private var replies: JsonField<MutableList<Reply>>? = null
                     private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-                    @JvmSynthetic internal fun from(evidence: Evidence) = apply {
+                    @JvmSynthetic
+                    internal fun from(evidence: Evidence) = apply {
                         replies = evidence.replies.map { it.toMutableList() }
                         additionalProperties = evidence.additionalProperties.toMutableMap()
                     }
@@ -2137,7 +2423,9 @@ private constructor(
                     fun replies(replies: List<Reply>) = replies(JsonField.of(replies))
 
                     /** Sets [Builder.replies] to an arbitrary JSON value. */
-                    fun replies(replies: JsonField<List<Reply>>) = apply { this.replies = replies.map { it.toMutableList() } }
+                    fun replies(replies: JsonField<List<Reply>>) = apply {
+                        this.replies = replies.map { it.toMutableList() }
+                    }
 
                     /** Adds a single [Reply] to [replies]. */
                     fun addReply(reply: Reply) = apply {
@@ -2156,11 +2444,14 @@ private constructor(
                         additionalProperties.put(key, value)
                     }
 
-                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                        this.additionalProperties.putAll(additionalProperties)
-                    }
+                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.putAll(additionalProperties)
+                        }
 
-                    fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+                    fun removeAdditionalProperty(key: String) = apply {
+                        additionalProperties.remove(key)
+                    }
 
                     fun removeAllAdditionalProperties(keys: Set<String>) = apply {
                         keys.forEach(::removeAdditionalProperty)
@@ -2183,9 +2474,11 @@ private constructor(
                 private var validated: Boolean = false
 
                 /**
-                 * Validates that the types of all values in this object match their expected types recursively.
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
                  *
-                 * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+                 * @throws XTwitterScraperInvalidDataException if any value type in this object
+                 *   doesn't match its expected type.
                  */
                 fun validate(): Evidence = apply {
                     if (validated) {
@@ -2204,8 +2497,9 @@ private constructor(
                         false
                     }
 
-                @JvmSynthetic internal fun validity(): Int =
-                    (replies.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+                @JvmSynthetic
+                internal fun validity(): Int =
+                    (replies.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 
                 class Reply
                 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -2220,11 +2514,21 @@ private constructor(
 
                     @JsonCreator
                     private constructor(
-                        @JsonProperty("replyId") @ExcludeMissing replyId: JsonField<String> = JsonMissing.of(),
-                        @JsonProperty("replyUrl") @ExcludeMissing replyUrl: JsonField<String> = JsonMissing.of(),
-                        @JsonProperty("parentId") @ExcludeMissing parentId: JsonField<String> = JsonMissing.of(),
-                        @JsonProperty("parentUrl") @ExcludeMissing parentUrl: JsonField<String> = JsonMissing.of(),
-                        @JsonProperty("placement") @ExcludeMissing placement: JsonField<Placement> = JsonMissing.of(),
+                        @JsonProperty("replyId")
+                        @ExcludeMissing
+                        replyId: JsonField<String> = JsonMissing.of(),
+                        @JsonProperty("replyUrl")
+                        @ExcludeMissing
+                        replyUrl: JsonField<String> = JsonMissing.of(),
+                        @JsonProperty("parentId")
+                        @ExcludeMissing
+                        parentId: JsonField<String> = JsonMissing.of(),
+                        @JsonProperty("parentUrl")
+                        @ExcludeMissing
+                        parentUrl: JsonField<String> = JsonMissing.of(),
+                        @JsonProperty("placement")
+                        @ExcludeMissing
+                        placement: JsonField<Placement> = JsonMissing.of(),
                     ) : this(replyId, replyUrl, parentId, parentUrl, placement, mutableMapOf())
 
                     /** ID of the reply. */
@@ -2239,23 +2543,36 @@ private constructor(
                     /** The thread of that post on X. */
                     fun parentUrl(): String = parentUrl.getRequired("parentUrl")
 
-                    /** `thread` means the reply shows in the thread. `more_replies` means it shows only behind X's hidden replies prompt. */
+                    /**
+                     * `thread` means the reply shows in the thread. `more_replies` means it shows
+                     * only behind X's hidden replies prompt.
+                     */
                     fun placement(): Placement = placement.getRequired("placement")
 
                     /** Returns the raw JSON value of [replyId]. */
-                    @JsonProperty("replyId") @ExcludeMissing fun _replyId(): JsonField<String> = replyId
+                    @JsonProperty("replyId")
+                    @ExcludeMissing
+                    fun _replyId(): JsonField<String> = replyId
 
                     /** Returns the raw JSON value of [replyUrl]. */
-                    @JsonProperty("replyUrl") @ExcludeMissing fun _replyUrl(): JsonField<String> = replyUrl
+                    @JsonProperty("replyUrl")
+                    @ExcludeMissing
+                    fun _replyUrl(): JsonField<String> = replyUrl
 
                     /** Returns the raw JSON value of [parentId]. */
-                    @JsonProperty("parentId") @ExcludeMissing fun _parentId(): JsonField<String> = parentId
+                    @JsonProperty("parentId")
+                    @ExcludeMissing
+                    fun _parentId(): JsonField<String> = parentId
 
                     /** Returns the raw JSON value of [parentUrl]. */
-                    @JsonProperty("parentUrl") @ExcludeMissing fun _parentUrl(): JsonField<String> = parentUrl
+                    @JsonProperty("parentUrl")
+                    @ExcludeMissing
+                    fun _parentUrl(): JsonField<String> = parentUrl
 
                     /** Returns the raw JSON value of [placement]. */
-                    @JsonProperty("placement") @ExcludeMissing fun _placement(): JsonField<Placement> = placement
+                    @JsonProperty("placement")
+                    @ExcludeMissing
+                    fun _placement(): JsonField<Placement> = placement
 
                     @JsonAnySetter
                     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -2283,9 +2600,11 @@ private constructor(
                         private var parentId: JsonField<String>? = null
                         private var parentUrl: JsonField<String>? = null
                         private var placement: JsonField<Placement>? = null
-                        private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+                        private var additionalProperties: MutableMap<String, JsonValue> =
+                            mutableMapOf()
 
-                        @JvmSynthetic internal fun from(reply: Reply) = apply {
+                        @JvmSynthetic
+                        internal fun from(reply: Reply) = apply {
                             replyId = reply.replyId
                             replyUrl = reply.replyUrl
                             parentId = reply.parentId
@@ -2304,40 +2623,56 @@ private constructor(
                         fun replyUrl(replyUrl: String) = replyUrl(JsonField.of(replyUrl))
 
                         /** Sets [Builder.replyUrl] to an arbitrary JSON value. */
-                        fun replyUrl(replyUrl: JsonField<String>) = apply { this.replyUrl = replyUrl }
+                        fun replyUrl(replyUrl: JsonField<String>) = apply {
+                            this.replyUrl = replyUrl
+                        }
 
                         /** ID of the post it replies to. */
                         fun parentId(parentId: String) = parentId(JsonField.of(parentId))
 
                         /** Sets [Builder.parentId] to an arbitrary JSON value. */
-                        fun parentId(parentId: JsonField<String>) = apply { this.parentId = parentId }
+                        fun parentId(parentId: JsonField<String>) = apply {
+                            this.parentId = parentId
+                        }
 
                         /** The thread of that post on X. */
                         fun parentUrl(parentUrl: String) = parentUrl(JsonField.of(parentUrl))
 
                         /** Sets [Builder.parentUrl] to an arbitrary JSON value. */
-                        fun parentUrl(parentUrl: JsonField<String>) = apply { this.parentUrl = parentUrl }
+                        fun parentUrl(parentUrl: JsonField<String>) = apply {
+                            this.parentUrl = parentUrl
+                        }
 
-                        /** `thread` means the reply shows in the thread. `more_replies` means it shows only behind X's hidden replies prompt. */
+                        /**
+                         * `thread` means the reply shows in the thread. `more_replies` means it
+                         * shows only behind X's hidden replies prompt.
+                         */
                         fun placement(placement: Placement) = placement(JsonField.of(placement))
 
                         /** Sets [Builder.placement] to an arbitrary JSON value. */
-                        fun placement(placement: JsonField<Placement>) = apply { this.placement = placement }
-
-                        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                            this.additionalProperties.clear()
-                            putAllAdditionalProperties(additionalProperties)
+                        fun placement(placement: JsonField<Placement>) = apply {
+                            this.placement = placement
                         }
+
+                        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                            apply {
+                                this.additionalProperties.clear()
+                                putAllAdditionalProperties(additionalProperties)
+                            }
 
                         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
                             additionalProperties.put(key, value)
                         }
 
-                        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                        fun putAllAdditionalProperties(
+                            additionalProperties: Map<String, JsonValue>
+                        ) = apply {
                             this.additionalProperties.putAll(additionalProperties)
                         }
 
-                        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+                        fun removeAdditionalProperty(key: String) = apply {
+                            additionalProperties.remove(key)
+                        }
 
                         fun removeAllAdditionalProperties(keys: Set<String>) = apply {
                             keys.forEach(::removeAdditionalProperty)
@@ -2364,9 +2699,11 @@ private constructor(
                     private var validated: Boolean = false
 
                     /**
-                     * Validates that the types of all values in this object match their expected types recursively.
+                     * Validates that the types of all values in this object match their expected
+                     * types recursively.
                      *
-                     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+                     * @throws XTwitterScraperInvalidDataException if any value type in this object
+                     *   doesn't match its expected type.
                      */
                     fun validate(): Reply = apply {
                         if (validated) {
@@ -2389,18 +2726,25 @@ private constructor(
                             false
                         }
 
-                    @JvmSynthetic internal fun validity(): Int =
+                    @JvmSynthetic
+                    internal fun validity(): Int =
                         (if (replyId.asKnown().isPresent) 1 else 0) +
                             (if (replyUrl.asKnown().isPresent) 1 else 0) +
                             (if (parentId.asKnown().isPresent) 1 else 0) +
                             (if (parentUrl.asKnown().isPresent) 1 else 0) +
                             (placement.asKnown().getOrNull()?.validity() ?: 0)
 
-                    /** `thread` means the reply shows in the thread. `more_replies` means it shows only behind X's hidden replies prompt. */
-                    class Placement @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+                    /**
+                     * `thread` means the reply shows in the thread. `more_replies` means it shows
+                     * only behind X's hidden replies prompt.
+                     */
+                    class Placement
+                    @JsonCreator
+                    private constructor(private val value: JsonField<String>) : Enum {
 
                         /** Returns this class instance's raw value. */
-                        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+                        @com.fasterxml.jackson.annotation.JsonValue
+                        fun _value(): JsonField<String> = value
 
                         companion object {
 
@@ -2420,16 +2764,25 @@ private constructor(
                             NOT_FOUND,
                         }
 
-                        /** An enum containing [Placement]'s known values, as well as an [_UNKNOWN] member. */
+                        /**
+                         * An enum containing [Placement]'s known values, as well as an [_UNKNOWN]
+                         * member.
+                         */
                         enum class Value {
                             THREAD,
                             MORE_REPLIES,
                             NOT_FOUND,
-                            /** An enum member indicating that [Placement] was instantiated with an unknown value. */
+                            /**
+                             * An enum member indicating that [Placement] was instantiated with an
+                             * unknown value.
+                             */
                             _UNKNOWN,
                         }
 
-                        /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+                        /**
+                         * Returns an enum member corresponding to this class instance's value, or
+                         * [Value._UNKNOWN] if unknown.
+                         */
                         fun value(): Value =
                             when (this) {
                                 THREAD -> Value.THREAD
@@ -2441,23 +2794,30 @@ private constructor(
                         /**
                          * Returns an enum member corresponding to this class instance's value.
                          *
-                         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a known member.
+                         * @throws XTwitterScraperInvalidDataException if this class instance's
+                         *   value is a not a known member.
                          */
                         fun known(): Known =
                             when (this) {
                                 THREAD -> Known.THREAD
                                 MORE_REPLIES -> Known.MORE_REPLIES
                                 NOT_FOUND -> Known.NOT_FOUND
-                                else -> throw XTwitterScraperInvalidDataException("Unknown Placement: $value")
+                                else ->
+                                    throw XTwitterScraperInvalidDataException(
+                                        "Unknown Placement: $value"
+                                    )
                             }
 
                         /**
                          * Returns this class instance's primitive wire representation.
                          *
-                         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have the expected primitive type.
+                         * @throws XTwitterScraperInvalidDataException if this class instance's
+                         *   value does not have the expected primitive type.
                          */
                         fun asString(): String =
-                            _value().asString().orElseThrow { XTwitterScraperInvalidDataException("Value is not a String") }
+                            _value().asString().orElseThrow {
+                                XTwitterScraperInvalidDataException("Value is not a String")
+                            }
 
                         private var validated: Boolean = false
 
@@ -2479,7 +2839,8 @@ private constructor(
                                 false
                             }
 
-                        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+                        @JvmSynthetic
+                        internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
                         override fun equals(other: Any?): Boolean {
                             if (this === other) {
@@ -2508,7 +2869,16 @@ private constructor(
                             additionalProperties == other.additionalProperties
                     }
 
-                    private val hashCode: Int by lazy { Objects.hash(replyId, replyUrl, parentId, parentUrl, placement, additionalProperties) }
+                    private val hashCode: Int by lazy {
+                        Objects.hash(
+                            replyId,
+                            replyUrl,
+                            parentId,
+                            parentUrl,
+                            placement,
+                            additionalProperties,
+                        )
+                    }
 
                     override fun hashCode(): Int = hashCode
 
@@ -2546,7 +2916,9 @@ private constructor(
                     additionalProperties == other.additionalProperties
             }
 
-            private val hashCode: Int by lazy { Objects.hash(verdict, reason, evidence, additionalProperties) }
+            private val hashCode: Int by lazy {
+                Objects.hash(verdict, reason, evidence, additionalProperties)
+            }
 
             override fun hashCode(): Int = hashCode
 
@@ -2567,7 +2939,9 @@ private constructor(
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(account, search, suggestion, replies, additionalProperties) }
+        private val hashCode: Int by lazy {
+            Objects.hash(account, search, suggestion, replies, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
@@ -2588,7 +2962,9 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(username, userId, account, checks, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(username, userId, account, checks, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

@@ -38,9 +38,15 @@ private constructor(
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
         @JsonProperty("league") @ExcludeMissing league: JsonField<League> = JsonMissing.of(),
-        @JsonProperty("sportsbookUrl") @ExcludeMissing sportsbookUrl: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("categories") @ExcludeMissing categories: JsonField<List<FootballPropCategory>> = JsonMissing.of(),
-        @JsonProperty("players") @ExcludeMissing players: JsonField<Map<String, FootballPlayer>> = JsonMissing.of(),
+        @JsonProperty("sportsbookUrl")
+        @ExcludeMissing
+        sportsbookUrl: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("categories")
+        @ExcludeMissing
+        categories: JsonField<List<FootballPropCategory>> = JsonMissing.of(),
+        @JsonProperty("players")
+        @ExcludeMissing
+        players: JsonField<Map<String, FootballPlayer>> = JsonMissing.of(),
     ) : this(id, league, sportsbookUrl, categories, players, mutableMapOf())
 
     /** The ID of the game these props cover. */
@@ -55,7 +61,10 @@ private constructor(
     /** Each kind of prop, such as passing yards, in X's order. A game without props has none. */
     fun categories(): List<FootballPropCategory> = categories.getRequired("categories")
 
-    /** The players these props name, by player ID. X sends only each player's name, jersey & team, so other fields are null. */
+    /**
+     * The players these props name, by player ID. X sends only each player's name, jersey & team,
+     * so other fields are null.
+     */
     fun players(): Map<String, FootballPlayer> = players.getRequired("players")
 
     /** Returns the raw JSON value of [id]. */
@@ -65,13 +74,19 @@ private constructor(
     @JsonProperty("league") @ExcludeMissing fun _league(): JsonField<League> = league
 
     /** Returns the raw JSON value of [sportsbookUrl]. */
-    @JsonProperty("sportsbookUrl") @ExcludeMissing fun _sportsbookUrl(): JsonField<String> = sportsbookUrl
+    @JsonProperty("sportsbookUrl")
+    @ExcludeMissing
+    fun _sportsbookUrl(): JsonField<String> = sportsbookUrl
 
     /** Returns the raw JSON value of [categories]. */
-    @JsonProperty("categories") @ExcludeMissing fun _categories(): JsonField<List<FootballPropCategory>> = categories
+    @JsonProperty("categories")
+    @ExcludeMissing
+    fun _categories(): JsonField<List<FootballPropCategory>> = categories
 
     /** Returns the raw JSON value of [players]. */
-    @JsonProperty("players") @ExcludeMissing fun _players(): JsonField<Map<String, FootballPlayer>> = players
+    @JsonProperty("players")
+    @ExcludeMissing
+    fun _players(): JsonField<Map<String, FootballPlayer>> = players
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -101,7 +116,8 @@ private constructor(
         private var players: JsonField<Map<String, FootballPlayer>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballProps: FootballProps) = apply {
+        @JvmSynthetic
+        internal fun from(footballProps: FootballProps) = apply {
             id = footballProps.id
             league = footballProps.league
             sportsbookUrl = footballProps.sportsbookUrl
@@ -123,19 +139,28 @@ private constructor(
         fun league(league: JsonField<League>) = apply { this.league = league }
 
         /** The sportsbook page X links for these props. */
-        fun sportsbookUrl(sportsbookUrl: String?) = sportsbookUrl(JsonField.ofNullable(sportsbookUrl))
+        fun sportsbookUrl(sportsbookUrl: String?) =
+            sportsbookUrl(JsonField.ofNullable(sportsbookUrl))
 
         /** Alias for calling [Builder.sportsbookUrl] with `sportsbookUrl.orElse(null)`. */
-        fun sportsbookUrl(sportsbookUrl: Optional<String>) = sportsbookUrl(sportsbookUrl.getOrNull())
+        fun sportsbookUrl(sportsbookUrl: Optional<String>) =
+            sportsbookUrl(sportsbookUrl.getOrNull())
 
         /** Sets [Builder.sportsbookUrl] to an arbitrary JSON value. */
-        fun sportsbookUrl(sportsbookUrl: JsonField<String>) = apply { this.sportsbookUrl = sportsbookUrl }
+        fun sportsbookUrl(sportsbookUrl: JsonField<String>) = apply {
+            this.sportsbookUrl = sportsbookUrl
+        }
 
-        /** Each kind of prop, such as passing yards, in X's order. A game without props has none. */
-        fun categories(categories: List<FootballPropCategory>) = categories(JsonField.of(categories))
+        /**
+         * Each kind of prop, such as passing yards, in X's order. A game without props has none.
+         */
+        fun categories(categories: List<FootballPropCategory>) =
+            categories(JsonField.of(categories))
 
         /** Sets [Builder.categories] to an arbitrary JSON value. */
-        fun categories(categories: JsonField<List<FootballPropCategory>>) = apply { this.categories = categories.map { it.toMutableList() } }
+        fun categories(categories: JsonField<List<FootballPropCategory>>) = apply {
+            this.categories = categories.map { it.toMutableList() }
+        }
 
         /** Adds a single [FootballPropCategory] to [categories]. */
         fun addCategory(category: FootballPropCategory) = apply {
@@ -145,11 +170,16 @@ private constructor(
                 }
         }
 
-        /** The players these props name, by player ID. X sends only each player's name, jersey & team, so other fields are null. */
+        /**
+         * The players these props name, by player ID. X sends only each player's name, jersey &
+         * team, so other fields are null.
+         */
         fun players(players: Map<String, FootballPlayer>) = players(JsonField.of(players))
 
         /** Sets [Builder.players] to an arbitrary JSON value. */
-        fun players(players: JsonField<Map<String, FootballPlayer>>) = apply { this.players = players }
+        fun players(players: JsonField<Map<String, FootballPlayer>>) = apply {
+            this.players = players
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -193,7 +223,8 @@ private constructor(
     /**
      * Validates that the types of all values in this object match their expected types recursively.
      *
-     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
      */
     fun validate(): FootballProps = apply {
         if (validated) {
@@ -216,12 +247,13 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (league.asKnown().getOrNull()?.validity() ?: 0) +
             (if (sportsbookUrl.asKnown().isPresent) 1 else 0) +
-            (categories.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (players.asKnown().getOrNull()?.values?.sumOf { it.validity().toInt() } ?: 0)
+            (categories.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
+            (players.asKnown().getOrNull()?.values?.sumOf { it.validity() } ?: 0)
 
     /** The league of the game these props cover. */
     class League @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -238,7 +270,7 @@ private constructor(
 
         /** An enum containing [League]'s known values. */
         enum class Known {
-            NFL,
+            NFL
         }
 
         /** An enum containing [League]'s known values, as well as an [_UNKNOWN] member. */
@@ -248,7 +280,10 @@ private constructor(
             _UNKNOWN,
         }
 
-        /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if unknown.
+         */
         fun value(): Value =
             when (this) {
                 NFL -> Value.NFL
@@ -258,7 +293,8 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value.
          *
-         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a known member.
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
          */
         fun known(): Known =
             when (this) {
@@ -269,10 +305,13 @@ private constructor(
         /**
          * Returns this class instance's primitive wire representation.
          *
-         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have the expected primitive type.
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow { XTwitterScraperInvalidDataException("Value is not a String") }
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
 
         private var validated: Boolean = false
 
@@ -323,7 +362,9 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, league, sportsbookUrl, categories, players, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(id, league, sportsbookUrl, categories, players, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

@@ -80,7 +80,8 @@ private constructor(
         private var points: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballPlayScore: FootballPlayScore) = apply {
+        @JvmSynthetic
+        internal fun from(footballPlayScore: FootballPlayScore) = apply {
             homePoints = footballPlayScore.homePoints
             awayPoints = footballPlayScore.awayPoints
             points = footballPlayScore.points
@@ -177,7 +178,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (homePoints.asKnown().isPresent) 1 else 0) +
             (if (awayPoints.asKnown().isPresent) 1 else 0) +
             (if (points.asKnown().isPresent) 1 else 0)
@@ -194,7 +196,9 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(homePoints, awayPoints, points, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(homePoints, awayPoints, points, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

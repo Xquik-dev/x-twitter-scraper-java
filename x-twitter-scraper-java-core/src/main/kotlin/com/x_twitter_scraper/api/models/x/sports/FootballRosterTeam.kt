@@ -32,7 +32,9 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("teamId") @ExcludeMissing teamId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("playerIds") @ExcludeMissing playerIds: JsonField<List<String>> = JsonMissing.of(),
+        @JsonProperty("playerIds")
+        @ExcludeMissing
+        playerIds: JsonField<List<String>> = JsonMissing.of(),
     ) : this(teamId, playerIds, mutableMapOf())
 
     /** The team this roster belongs to, a key of teams. */
@@ -72,7 +74,8 @@ private constructor(
         private var playerIds: JsonField<MutableList<String>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballRosterTeam: FootballRosterTeam) = apply {
+        @JvmSynthetic
+        internal fun from(footballRosterTeam: FootballRosterTeam) = apply {
             teamId = footballRosterTeam.teamId
             playerIds = footballRosterTeam.playerIds.map { it.toMutableList() }
             additionalProperties = footballRosterTeam.additionalProperties.toMutableMap()
@@ -88,7 +91,9 @@ private constructor(
         fun playerIds(playerIds: List<String>) = playerIds(JsonField.of(playerIds))
 
         /** Sets [Builder.playerIds] to an arbitrary JSON value. */
-        fun playerIds(playerIds: JsonField<List<String>>) = apply { this.playerIds = playerIds.map { it.toMutableList() } }
+        fun playerIds(playerIds: JsonField<List<String>>) = apply {
+            this.playerIds = playerIds.map { it.toMutableList() }
+        }
 
         /** Adds a single [String] to [playerIds]. */
         fun addPlayerId(playerId: String) = apply {
@@ -137,7 +142,8 @@ private constructor(
     /**
      * Validates that the types of all values in this object match their expected types recursively.
      *
-     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
      */
     fun validate(): FootballRosterTeam = apply {
         if (validated) {
@@ -157,9 +163,9 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
-        (if (teamId.asKnown().isPresent) 1 else 0) +
-            (playerIds.asKnown().getOrNull()?.size ?: 0)
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (teamId.asKnown().isPresent) 1 else 0) + (playerIds.asKnown().getOrNull()?.size ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

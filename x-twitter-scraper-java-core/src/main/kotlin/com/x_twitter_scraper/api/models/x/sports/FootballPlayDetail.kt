@@ -39,11 +39,17 @@ private constructor(
     private constructor(
         @JsonProperty("sequence") @ExcludeMissing sequence: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("category") @ExcludeMissing category: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("description") @ExcludeMissing description: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("description")
+        @ExcludeMissing
+        description: JsonField<String> = JsonMissing.of(),
         @JsonProperty("direction") @ExcludeMissing direction: JsonField<String> = JsonMissing.of(),
         @JsonProperty("yards") @ExcludeMissing yards: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("players") @ExcludeMissing players: JsonField<List<FootballPlayDetailPlayer>> = JsonMissing.of(),
-        @JsonProperty("penalty") @ExcludeMissing penalty: JsonField<FootballPlayDetailPenalty> = JsonMissing.of(),
+        @JsonProperty("players")
+        @ExcludeMissing
+        players: JsonField<List<FootballPlayDetailPlayer>> = JsonMissing.of(),
+        @JsonProperty("penalty")
+        @ExcludeMissing
+        penalty: JsonField<FootballPlayDetailPenalty> = JsonMissing.of(),
     ) : this(sequence, category, description, direction, yards, players, penalty, mutableMapOf())
 
     /** The step's place in the play, from 1. */
@@ -83,10 +89,14 @@ private constructor(
     @JsonProperty("yards") @ExcludeMissing fun _yards(): JsonField<Long> = yards
 
     /** Returns the raw JSON value of [players]. */
-    @JsonProperty("players") @ExcludeMissing fun _players(): JsonField<List<FootballPlayDetailPlayer>> = players
+    @JsonProperty("players")
+    @ExcludeMissing
+    fun _players(): JsonField<List<FootballPlayDetailPlayer>> = players
 
     /** Returns the raw JSON value of [penalty]. */
-    @JsonProperty("penalty") @ExcludeMissing fun _penalty(): JsonField<FootballPlayDetailPenalty> = penalty
+    @JsonProperty("penalty")
+    @ExcludeMissing
+    fun _penalty(): JsonField<FootballPlayDetailPenalty> = penalty
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -118,7 +128,8 @@ private constructor(
         private var penalty: JsonField<FootballPlayDetailPenalty>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballPlayDetail: FootballPlayDetail) = apply {
+        @JvmSynthetic
+        internal fun from(footballPlayDetail: FootballPlayDetail) = apply {
             sequence = footballPlayDetail.sequence
             category = footballPlayDetail.category
             description = footballPlayDetail.description
@@ -177,7 +188,9 @@ private constructor(
         fun players(players: List<FootballPlayDetailPlayer>) = players(JsonField.of(players))
 
         /** Sets [Builder.players] to an arbitrary JSON value. */
-        fun players(players: JsonField<List<FootballPlayDetailPlayer>>) = apply { this.players = players.map { it.toMutableList() } }
+        fun players(players: JsonField<List<FootballPlayDetailPlayer>>) = apply {
+            this.players = players.map { it.toMutableList() }
+        }
 
         /** Adds a single [FootballPlayDetailPlayer] to [players]. */
         fun addPlayer(player: FootballPlayDetailPlayer) = apply {
@@ -193,7 +206,9 @@ private constructor(
         fun penalty(penalty: Optional<FootballPlayDetailPenalty>) = penalty(penalty.getOrNull())
 
         /** Sets [Builder.penalty] to an arbitrary JSON value. */
-        fun penalty(penalty: JsonField<FootballPlayDetailPenalty>) = apply { this.penalty = penalty }
+        fun penalty(penalty: JsonField<FootballPlayDetailPenalty>) = apply {
+            this.penalty = penalty
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -263,7 +278,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (sequence.asKnown().isPresent) 1 else 0) +
             (if (category.asKnown().isPresent) 1 else 0) +
             (if (description.asKnown().isPresent) 1 else 0) +
@@ -288,7 +304,18 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(sequence, category, description, direction, yards, players, penalty, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            sequence,
+            category,
+            description,
+            direction,
+            yards,
+            players,
+            penalty,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

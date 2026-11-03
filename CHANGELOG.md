@@ -10,7 +10,9 @@
 ### Features
 
 * `client.monitors().posts()` adds post monitors. It has `create`, `retrieve`, `update`, `list`, `delete` and `retrieveMetrics`.
-* `client.x().sports()` adds NFL & college football reads. It has `listGames`, `retrieveScoreboard`, `retrieveBoxScore`, `retrievePlays` and `retrieveAudience`.
+* `client.x().sports()` adds NFL & college football reads. It has `listGames`, `retrieveScoreboard`, `retrieveBoxScore`, `retrievePlays`, `retrieveAudience`, `retrieveRoster`, `retrievePlayerProps` and `listPosts`.
+* `client.activity()` adds the activity log. `list` returns the account's activity rows, and `retrieve` returns the full record of 1 activity.
+* `client.x().users()` adds `retrieveShadowban`, which checks 1 account for a search ban, a search suggestion ban and reply deboosting.
 * Events read `postId`, `postUrl`, `authorId` and `authorUsername` on post events, and the `post` monitor type.
 * `EventListParams` filters by `postMonitorId`, and event data reads `metric`, `previousText` and `versionId`.
 * `EventType` adds the 10 post event types, such as `POST_REPLY_NEW`. Account and keyword monitors reject them.

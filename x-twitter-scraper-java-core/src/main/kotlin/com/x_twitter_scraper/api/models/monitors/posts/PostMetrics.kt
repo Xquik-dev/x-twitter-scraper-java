@@ -33,30 +33,60 @@ private constructor(
 
     @JsonCreator
     private constructor(
-        @JsonProperty("views") @ExcludeMissing views: JsonField<PostMetricReading> = JsonMissing.of(),
-        @JsonProperty("likes") @ExcludeMissing likes: JsonField<PostMetricReading> = JsonMissing.of(),
-        @JsonProperty("retweets") @ExcludeMissing retweets: JsonField<PostMetricReading> = JsonMissing.of(),
-        @JsonProperty("replies") @ExcludeMissing replies: JsonField<PostMetricReading> = JsonMissing.of(),
-        @JsonProperty("quotes") @ExcludeMissing quotes: JsonField<PostMetricReading> = JsonMissing.of(),
-        @JsonProperty("bookmarks") @ExcludeMissing bookmarks: JsonField<PostMetricReading> = JsonMissing.of(),
+        @JsonProperty("views")
+        @ExcludeMissing
+        views: JsonField<PostMetricReading> = JsonMissing.of(),
+        @JsonProperty("likes")
+        @ExcludeMissing
+        likes: JsonField<PostMetricReading> = JsonMissing.of(),
+        @JsonProperty("retweets")
+        @ExcludeMissing
+        retweets: JsonField<PostMetricReading> = JsonMissing.of(),
+        @JsonProperty("replies")
+        @ExcludeMissing
+        replies: JsonField<PostMetricReading> = JsonMissing.of(),
+        @JsonProperty("quotes")
+        @ExcludeMissing
+        quotes: JsonField<PostMetricReading> = JsonMissing.of(),
+        @JsonProperty("bookmarks")
+        @ExcludeMissing
+        bookmarks: JsonField<PostMetricReading> = JsonMissing.of(),
     ) : this(views, likes, retweets, replies, quotes, bookmarks, mutableMapOf())
 
-    /** A metric's current value & its gain since tracking began. Both are null when X shows no count, as for views on old posts. */
+    /**
+     * A metric's current value & its gain since tracking began. Both are null when X shows no
+     * count, as for views on old posts.
+     */
     fun views(): PostMetricReading = views.getRequired("views")
 
-    /** A metric's current value & its gain since tracking began. Both are null when X shows no count, as for views on old posts. */
+    /**
+     * A metric's current value & its gain since tracking began. Both are null when X shows no
+     * count, as for views on old posts.
+     */
     fun likes(): PostMetricReading = likes.getRequired("likes")
 
-    /** A metric's current value & its gain since tracking began. Both are null when X shows no count, as for views on old posts. */
+    /**
+     * A metric's current value & its gain since tracking began. Both are null when X shows no
+     * count, as for views on old posts.
+     */
     fun retweets(): PostMetricReading = retweets.getRequired("retweets")
 
-    /** A metric's current value & its gain since tracking began. Both are null when X shows no count, as for views on old posts. */
+    /**
+     * A metric's current value & its gain since tracking began. Both are null when X shows no
+     * count, as for views on old posts.
+     */
     fun replies(): PostMetricReading = replies.getRequired("replies")
 
-    /** A metric's current value & its gain since tracking began. Both are null when X shows no count, as for views on old posts. */
+    /**
+     * A metric's current value & its gain since tracking began. Both are null when X shows no
+     * count, as for views on old posts.
+     */
     fun quotes(): PostMetricReading = quotes.getRequired("quotes")
 
-    /** A metric's current value & its gain since tracking began. Both are null when X shows no count, as for views on old posts. */
+    /**
+     * A metric's current value & its gain since tracking began. Both are null when X shows no
+     * count, as for views on old posts.
+     */
     fun bookmarks(): PostMetricReading = bookmarks.getRequired("bookmarks")
 
     /** Returns the raw JSON value of [views]. */
@@ -66,7 +96,9 @@ private constructor(
     @JsonProperty("likes") @ExcludeMissing fun _likes(): JsonField<PostMetricReading> = likes
 
     /** Returns the raw JSON value of [retweets]. */
-    @JsonProperty("retweets") @ExcludeMissing fun _retweets(): JsonField<PostMetricReading> = retweets
+    @JsonProperty("retweets")
+    @ExcludeMissing
+    fun _retweets(): JsonField<PostMetricReading> = retweets
 
     /** Returns the raw JSON value of [replies]. */
     @JsonProperty("replies") @ExcludeMissing fun _replies(): JsonField<PostMetricReading> = replies
@@ -75,7 +107,9 @@ private constructor(
     @JsonProperty("quotes") @ExcludeMissing fun _quotes(): JsonField<PostMetricReading> = quotes
 
     /** Returns the raw JSON value of [bookmarks]. */
-    @JsonProperty("bookmarks") @ExcludeMissing fun _bookmarks(): JsonField<PostMetricReading> = bookmarks
+    @JsonProperty("bookmarks")
+    @ExcludeMissing
+    fun _bookmarks(): JsonField<PostMetricReading> = bookmarks
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -106,7 +140,8 @@ private constructor(
         private var bookmarks: JsonField<PostMetricReading>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(postMetrics: PostMetrics) = apply {
+        @JvmSynthetic
+        internal fun from(postMetrics: PostMetrics) = apply {
             views = postMetrics.views
             likes = postMetrics.likes
             retweets = postMetrics.retweets
@@ -116,41 +151,61 @@ private constructor(
             additionalProperties = postMetrics.additionalProperties.toMutableMap()
         }
 
-        /** A metric's current value & its gain since tracking began. Both are null when X shows no count, as for views on old posts. */
+        /**
+         * A metric's current value & its gain since tracking began. Both are null when X shows no
+         * count, as for views on old posts.
+         */
         fun views(views: PostMetricReading) = views(JsonField.of(views))
 
         /** Sets [Builder.views] to an arbitrary JSON value. */
         fun views(views: JsonField<PostMetricReading>) = apply { this.views = views }
 
-        /** A metric's current value & its gain since tracking began. Both are null when X shows no count, as for views on old posts. */
+        /**
+         * A metric's current value & its gain since tracking began. Both are null when X shows no
+         * count, as for views on old posts.
+         */
         fun likes(likes: PostMetricReading) = likes(JsonField.of(likes))
 
         /** Sets [Builder.likes] to an arbitrary JSON value. */
         fun likes(likes: JsonField<PostMetricReading>) = apply { this.likes = likes }
 
-        /** A metric's current value & its gain since tracking began. Both are null when X shows no count, as for views on old posts. */
+        /**
+         * A metric's current value & its gain since tracking began. Both are null when X shows no
+         * count, as for views on old posts.
+         */
         fun retweets(retweets: PostMetricReading) = retweets(JsonField.of(retweets))
 
         /** Sets [Builder.retweets] to an arbitrary JSON value. */
         fun retweets(retweets: JsonField<PostMetricReading>) = apply { this.retweets = retweets }
 
-        /** A metric's current value & its gain since tracking began. Both are null when X shows no count, as for views on old posts. */
+        /**
+         * A metric's current value & its gain since tracking began. Both are null when X shows no
+         * count, as for views on old posts.
+         */
         fun replies(replies: PostMetricReading) = replies(JsonField.of(replies))
 
         /** Sets [Builder.replies] to an arbitrary JSON value. */
         fun replies(replies: JsonField<PostMetricReading>) = apply { this.replies = replies }
 
-        /** A metric's current value & its gain since tracking began. Both are null when X shows no count, as for views on old posts. */
+        /**
+         * A metric's current value & its gain since tracking began. Both are null when X shows no
+         * count, as for views on old posts.
+         */
         fun quotes(quotes: PostMetricReading) = quotes(JsonField.of(quotes))
 
         /** Sets [Builder.quotes] to an arbitrary JSON value. */
         fun quotes(quotes: JsonField<PostMetricReading>) = apply { this.quotes = quotes }
 
-        /** A metric's current value & its gain since tracking began. Both are null when X shows no count, as for views on old posts. */
+        /**
+         * A metric's current value & its gain since tracking began. Both are null when X shows no
+         * count, as for views on old posts.
+         */
         fun bookmarks(bookmarks: PostMetricReading) = bookmarks(JsonField.of(bookmarks))
 
         /** Sets [Builder.bookmarks] to an arbitrary JSON value. */
-        fun bookmarks(bookmarks: JsonField<PostMetricReading>) = apply { this.bookmarks = bookmarks }
+        fun bookmarks(bookmarks: JsonField<PostMetricReading>) = apply {
+            this.bookmarks = bookmarks
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -218,7 +273,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (views.asKnown().getOrNull()?.validity() ?: 0) +
             (likes.asKnown().getOrNull()?.validity() ?: 0) +
             (retweets.asKnown().getOrNull()?.validity() ?: 0) +
@@ -241,7 +297,9 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(views, likes, retweets, replies, quotes, bookmarks, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(views, likes, retweets, replies, quotes, bookmarks, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

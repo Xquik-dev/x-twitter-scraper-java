@@ -68,7 +68,10 @@ private constructor(
 
     companion object {
 
-        /** Returns a mutable builder for constructing an instance of [SportsGameAudienceChatOpensIn]. */
+        /**
+         * Returns a mutable builder for constructing an instance of
+         * [SportsGameAudienceChatOpensIn].
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -80,7 +83,8 @@ private constructor(
         private var minutes: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(sportsGameAudienceChatOpensIn: SportsGameAudienceChatOpensIn) = apply {
+        @JvmSynthetic
+        internal fun from(sportsGameAudienceChatOpensIn: SportsGameAudienceChatOpensIn) = apply {
             days = sportsGameAudienceChatOpensIn.days
             hours = sportsGameAudienceChatOpensIn.hours
             minutes = sportsGameAudienceChatOpensIn.minutes
@@ -177,7 +181,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (days.asKnown().isPresent) 1 else 0) +
             (if (hours.asKnown().isPresent) 1 else 0) +
             (if (minutes.asKnown().isPresent) 1 else 0)

@@ -82,16 +82,14 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(sportRetrieveScoreboardParams: SportRetrieveScoreboardParams) =
-            apply {
-                league = sportRetrieveScoreboardParams.league
-                id = sportRetrieveScoreboardParams.id
-                fields = sportRetrieveScoreboardParams.fields
-                omit = sportRetrieveScoreboardParams.omit
-                additionalHeaders = sportRetrieveScoreboardParams.additionalHeaders.toBuilder()
-                additionalQueryParams =
-                    sportRetrieveScoreboardParams.additionalQueryParams.toBuilder()
-            }
+        internal fun from(sportRetrieveScoreboardParams: SportRetrieveScoreboardParams) = apply {
+            league = sportRetrieveScoreboardParams.league
+            id = sportRetrieveScoreboardParams.id
+            fields = sportRetrieveScoreboardParams.fields
+            omit = sportRetrieveScoreboardParams.omit
+            additionalHeaders = sportRetrieveScoreboardParams.additionalHeaders.toBuilder()
+            additionalQueryParams = sportRetrieveScoreboardParams.additionalQueryParams.toBuilder()
+        }
 
         /**
          * nfl for the NFL or ncaafb for college football, in any case. Another value gets a free

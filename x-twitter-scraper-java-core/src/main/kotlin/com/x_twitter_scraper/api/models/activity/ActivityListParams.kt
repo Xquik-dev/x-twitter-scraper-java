@@ -15,7 +15,12 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Returns the account's activity log, newest first, with the Activity page's filters. It covers write actions, extractions, monitor changes and events, webhooks, giveaways, media, support, API keys, X account connections and billing. Pick a file format to get the same rows as a CSV, Excel, Markdown, PDF or text file. */
+/**
+ * Returns the account's activity log, newest first, with the Activity page's filters. It covers
+ * write actions, extractions, monitor changes and events, webhooks, giveaways, media, support, API
+ * keys, X account connections and billing. Pick a file format to get the same rows as a CSV, Excel,
+ * Markdown, PDF or text file.
+ */
 class ActivityListParams
 private constructor(
     private val format: Format?,
@@ -35,7 +40,10 @@ private constructor(
     /** Most rows to return. */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
-    /** Activity group, like the Activity page's tabs. `all` by default, or `actions`, `extractions`, `monitors`, `webhooks` or `billing`. */
+    /**
+     * Activity group, like the Activity page's tabs. `all` by default, or `actions`, `extractions`,
+     * `monitors`, `webhooks` or `billing`.
+     */
     fun category(): Optional<String> = Optional.ofNullable(category)
 
     /** Comma-separated statuses. */
@@ -62,9 +70,7 @@ private constructor(
 
         @JvmStatic fun none(): ActivityListParams = builder().build()
 
-        /**
-         * Returns a mutable builder for constructing an instance of [ActivityListParams].
-         */
+        /** Returns a mutable builder for constructing an instance of [ActivityListParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -81,7 +87,8 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        @JvmSynthetic internal fun from(activityListParams: ActivityListParams) = apply {
+        @JvmSynthetic
+        internal fun from(activityListParams: ActivityListParams) = apply {
             format = activityListParams.format
             limit = activityListParams.limit
             category = activityListParams.category
@@ -112,7 +119,10 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
 
-        /** Activity group, like the Activity page's tabs. `all` by default, or `actions`, `extractions`, `monitors`, `webhooks` or `billing`. */
+        /**
+         * Activity group, like the Activity page's tabs. `all` by default, or `actions`,
+         * `extractions`, `monitors`, `webhooks` or `billing`.
+         */
         fun category(category: String?) = apply { this.category = category }
 
         /** Alias for calling [Builder.category] with `category.orElse(null)`. */
@@ -141,7 +151,6 @@ private constructor(
 
         /** Alias for calling [Builder.until] with `until.orElse(null)`. */
         fun until(until: Optional<String>) = until(until.getOrNull())
-
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -296,7 +305,7 @@ private constructor(
 
         /** An enum containing [Format]'s known values. */
         enum class Known {
-            JSON,
+            JSON
         }
 
         /** An enum containing [Format]'s known values, as well as an [_UNKNOWN] member. */
@@ -306,7 +315,10 @@ private constructor(
             _UNKNOWN,
         }
 
-        /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if unknown.
+         */
         fun value(): Value =
             when (this) {
                 JSON -> Value.JSON
@@ -316,7 +328,8 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value.
          *
-         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a known member.
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
          */
         fun known(): Known =
             when (this) {
@@ -327,10 +340,13 @@ private constructor(
         /**
          * Returns this class instance's primitive wire representation.
          *
-         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have the expected primitive type.
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow { XTwitterScraperInvalidDataException("Value is not a String") }
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
 
         private var validated: Boolean = false
 
@@ -385,7 +401,17 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(format, limit, category, status, q, since, until, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            format,
+            limit,
+            category,
+            status,
+            q,
+            since,
+            until,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
         "ActivityListParams{format=$format, limit=$limit, category=$category, status=$status, q=$q, since=$since, until=$until, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

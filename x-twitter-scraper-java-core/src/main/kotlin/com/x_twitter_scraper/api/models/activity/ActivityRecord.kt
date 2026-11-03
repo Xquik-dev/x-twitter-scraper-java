@@ -38,7 +38,7 @@ private constructor(
     private val request: JsonField<Request>,
     private val caller: JsonField<Caller>,
     private val charge: JsonField<Charge>,
-    private val details: JsonValue,
+    private val details: JsonField<Details>,
     private val related: JsonField<List<Related>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -56,7 +56,7 @@ private constructor(
         @JsonProperty("request") @ExcludeMissing request: JsonField<Request> = JsonMissing.of(),
         @JsonProperty("caller") @ExcludeMissing caller: JsonField<Caller> = JsonMissing.of(),
         @JsonProperty("charge") @ExcludeMissing charge: JsonField<Charge> = JsonMissing.of(),
-        @JsonProperty("details") @ExcludeMissing details: JsonValue = JsonMissing.of(),
+        @JsonProperty("details") @ExcludeMissing details: JsonField<Details> = JsonMissing.of(),
         @JsonProperty("related") @ExcludeMissing related: JsonField<List<Related>> = JsonMissing.of(),
     ) : this(object_, id, kind, type, status, url, requestId, timestamps, request, caller, charge, details, related, mutableMapOf())
 
@@ -88,6 +88,9 @@ private constructor(
 
     /** Credits charged for this activity. */
     fun charge(): Optional<Charge> = charge.getOptional("charge")
+
+    /** Fields of this kind of activity, such as its target. A field can hold JSON, such as the data of a monitor event or the payload of a webhook delivery. */
+    fun details(): Details = details.getRequired("details")
 
     /** Up to 5 other activities on the same subject within 7 days, newest first. */
     fun related(): List<Related> = related.getRequired("related")
@@ -125,8 +128,8 @@ private constructor(
     /** Returns the raw JSON value of [charge]. */
     @JsonProperty("charge") @ExcludeMissing fun _charge(): JsonField<Charge> = charge
 
-    /** Fields of this kind of activity, such as its target. A field can hold JSON, such as the data of a monitor event or the payload of a webhook delivery. */
-    @JsonProperty("details") @ExcludeMissing fun _details(): JsonValue = details
+    /** Returns the raw JSON value of [details]. */
+    @JsonProperty("details") @ExcludeMissing fun _details(): JsonField<Details> = details
 
     /** Returns the raw JSON value of [related]. */
     @JsonProperty("related") @ExcludeMissing fun _related(): JsonField<List<Related>> = related
@@ -163,7 +166,7 @@ private constructor(
         private var request: JsonField<Request>? = null
         private var caller: JsonField<Caller>? = null
         private var charge: JsonField<Charge>? = null
-        private var details: JsonValue = JsonMissing.of()
+        private var details: JsonField<Details>? = null
         private var related: JsonField<MutableList<Related>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -256,7 +259,10 @@ private constructor(
         fun charge(charge: JsonField<Charge>) = apply { this.charge = charge }
 
         /** Fields of this kind of activity, such as its target. A field can hold JSON, such as the data of a monitor event or the payload of a webhook delivery. */
-        fun details(details: JsonValue) = apply { this.details = details }
+        fun details(details: Details) = details(JsonField.of(details))
+
+        /** Sets [Builder.details] to an arbitrary JSON value. */
+        fun details(details: JsonField<Details>) = apply { this.details = details }
 
         /** Up to 5 other activities on the same subject within 7 days, newest first. */
         fun related(related: List<Related>) = related(JsonField.of(related))
@@ -311,7 +317,7 @@ private constructor(
                 checkRequired("request", request),
                 checkRequired("caller", caller),
                 checkRequired("charge", charge),
-                details,
+                checkRequired("details", details),
                 checkRequired("related", related).map { it.toImmutable() },
                 additionalProperties.toMutableMap(),
             )
@@ -340,6 +346,7 @@ private constructor(
         request().ifPresent { it.validate() }
         caller().validate()
         charge().ifPresent { it.validate() }
+        details().validate()
         related().forEach { it.validate() }
         validated = true
     }
@@ -364,7 +371,8 @@ private constructor(
             (request.asKnown().getOrNull()?.validity() ?: 0) +
             (caller.asKnown().getOrNull()?.validity() ?: 0) +
             (charge.asKnown().getOrNull()?.validity() ?: 0) +
-            (related.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+            (details.asKnown().getOrNull()?.validity() ?: 0) +
+            (related.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 
     class Object @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -2172,6 +2180,116 @@ private constructor(
 
         override fun toString() =
             "Charge{credits=$credits, balanceAfter=$balanceAfter, at=$at, additionalProperties=$additionalProperties}"
+    }
+
+    /** Fields of this kind of activity, such as its target. A field can hold JSON, such as the data of a monitor event or the payload of a webhook delivery. */
+    class Details
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+        ) : this(mutableMapOf())
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [Details]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Details]. */
+        class Builder internal constructor() {
+
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic internal fun from(details: Details) = apply {
+                additionalProperties = details.additionalProperties.toMutableMap()
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Details].
+             *
+             */
+            fun build(): Details =
+                Details(
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types recursively.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+         */
+        fun validate(): Details = apply {
+            if (validated) {
+                return@apply
+            }
+
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        @JvmSynthetic internal fun validity(): Int =
+            0
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Details &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "Details{additionalProperties=$additionalProperties}"
     }
 
     class Related

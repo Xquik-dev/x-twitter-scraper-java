@@ -16,7 +16,10 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Returns a game's top or latest posts, plus an X search you can run for more. Works before, during & after the game. Pages hold up to 20 posts, & each post costs 1 credit. */
+/**
+ * Returns a game's top or latest posts, plus an X search you can run for more. Works before, during
+ * & after the game. Pages hold up to 20 posts, & each post costs 1 credit.
+ */
 class SportListPostsParams
 private constructor(
     private val league: String,
@@ -30,25 +33,50 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** nfl for the NFL or ncaafb for college football, in any case. Another value gets a free 400 `invalid_league` before X is read. */
+    /**
+     * nfl for the NFL or ncaafb for college football, in any case. Another value gets a free 400
+     * `invalid_league` before X is read.
+     */
     fun league(): String = league
 
-    /** Game ID, a number up to 19 digits. GET /x/sports/{league}/games lists them. Another value gets a free 400 `invalid_game_id` before X is read. */
+    /**
+     * Game ID, a number up to 19 digits. GET /x/sports/{league}/games lists them. Another value
+     * gets a free 400 `invalid_game_id` before X is read.
+     */
     fun id(): Optional<String> = Optional.ofNullable(id)
 
-    /** Top for the posts X ranks highest, or Latest for the newest. Any case works, & so do Relevance & Recency. Alias order or sort. Send the same value with each cursor. */
+    /**
+     * Top for the posts X ranks highest, or Latest for the newest. Any case works, & so do
+     * Relevance & Recency. Alias order or sort. Send the same value with each cursor.
+     */
     fun queryType(): Optional<QueryType> = Optional.ofNullable(queryType)
 
-    /** Pagination cursor for collection results. Also read as next_cursor, next_token, pagination_token or continuation_token. */
+    /**
+     * Pagination cursor for collection results. Also read as next_cursor, next_token,
+     * pagination_token or continuation_token.
+     */
     fun cursor(): Optional<String> = Optional.ofNullable(cursor)
 
-    /** Items per page (1-100, default 20). Source, filters or credits can return fewer. Follow next_cursor for more pages. Its aliases are limit, count, max_results, maxItems, max_items & per_page. */
+    /**
+     * Items per page (1-100, default 20). Source, filters or credits can return fewer. Follow
+     * next_cursor for more pages. Its aliases are limit, count, max_results, maxItems, max_items &
+     * per_page.
+     */
     fun pageSize(): Optional<Long> = Optional.ofNullable(pageSize)
 
-    /** Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. A required getter throws when you leave its field out, and response validation fails. */
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+     * author.username. A list keeps the field in each item. Case & underscores do not matter. A row
+     * that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name
+     * answers 400 unknown_field with the valid names, before any read. The price stays the same. A
+     * required getter throws when you leave its field out, and response validation fails.
+     */
     fun fields(): Optional<String> = Optional.ofNullable(fields)
 
-    /** Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. */
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+     * fields, it drops from the kept fields.
+     */
     fun omit(): Optional<String> = Optional.ofNullable(omit)
 
     /** Additional headers to send with the request. */
@@ -85,7 +113,8 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        @JvmSynthetic internal fun from(sportListPostsParams: SportListPostsParams) = apply {
+        @JvmSynthetic
+        internal fun from(sportListPostsParams: SportListPostsParams) = apply {
             league = sportListPostsParams.league
             id = sportListPostsParams.id
             queryType = sportListPostsParams.queryType
@@ -97,28 +126,44 @@ private constructor(
             additionalQueryParams = sportListPostsParams.additionalQueryParams.toBuilder()
         }
 
-        /** nfl for the NFL or ncaafb for college football, in any case. Another value gets a free 400 `invalid_league` before X is read. */
+        /**
+         * nfl for the NFL or ncaafb for college football, in any case. Another value gets a free
+         * 400 `invalid_league` before X is read.
+         */
         fun league(league: String) = apply { this.league = league }
 
-        /** Game ID, a number up to 19 digits. GET /x/sports/{league}/games lists them. Another value gets a free 400 `invalid_game_id` before X is read. */
+        /**
+         * Game ID, a number up to 19 digits. GET /x/sports/{league}/games lists them. Another value
+         * gets a free 400 `invalid_game_id` before X is read.
+         */
         fun id(id: String?) = apply { this.id = id }
 
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
 
-        /** Top for the posts X ranks highest, or Latest for the newest. Any case works, & so do Relevance & Recency. Alias order or sort. Send the same value with each cursor. */
+        /**
+         * Top for the posts X ranks highest, or Latest for the newest. Any case works, & so do
+         * Relevance & Recency. Alias order or sort. Send the same value with each cursor.
+         */
         fun queryType(queryType: QueryType?) = apply { this.queryType = queryType }
 
         /** Alias for calling [Builder.queryType] with `queryType.orElse(null)`. */
         fun queryType(queryType: Optional<QueryType>) = queryType(queryType.getOrNull())
 
-        /** Pagination cursor for collection results. Also read as next_cursor, next_token, pagination_token or continuation_token. */
+        /**
+         * Pagination cursor for collection results. Also read as next_cursor, next_token,
+         * pagination_token or continuation_token.
+         */
         fun cursor(cursor: String?) = apply { this.cursor = cursor }
 
         /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
         fun cursor(cursor: Optional<String>) = cursor(cursor.getOrNull())
 
-        /** Items per page (1-100, default 20). Source, filters or credits can return fewer. Follow next_cursor for more pages. Its aliases are limit, count, max_results, maxItems, max_items & per_page. */
+        /**
+         * Items per page (1-100, default 20). Source, filters or credits can return fewer. Follow
+         * next_cursor for more pages. Its aliases are limit, count, max_results, maxItems,
+         * max_items & per_page.
+         */
         fun pageSize(pageSize: Long?) = apply { this.pageSize = pageSize }
 
         /**
@@ -131,18 +176,27 @@ private constructor(
         /** Alias for calling [Builder.pageSize] with `pageSize.orElse(null)`. */
         fun pageSize(pageSize: Optional<Long>) = pageSize(pageSize.getOrNull())
 
-        /** Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. A required getter throws when you leave its field out, and response validation fails. */
+        /**
+         * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+         * author.username. A list keeps the field in each item. Case & underscores do not matter. A
+         * row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An
+         * unknown name answers 400 unknown_field with the valid names, before any read. The price
+         * stays the same. A required getter throws when you leave its field out, and response
+         * validation fails.
+         */
         fun fields(fields: String?) = apply { this.fields = fields }
 
         /** Alias for calling [Builder.fields] with `fields.orElse(null)`. */
         fun fields(fields: Optional<String>) = fields(fields.getOrNull())
 
-        /** Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. */
+        /**
+         * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+         * fields, it drops from the kept fields.
+         */
         fun omit(omit: String?) = apply { this.omit = omit }
 
         /** Alias for calling [Builder.omit] with `omit.orElse(null)`. */
         fun omit(omit: Optional<String>) = omit(omit.getOrNull())
-
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -289,7 +343,10 @@ private constructor(
             }
             .build()
 
-    /** Top for the posts X ranks highest, or Latest for the newest. Any case works, & so do Relevance & Recency. Alias order or sort. Send the same value with each cursor. */
+    /**
+     * Top for the posts X ranks highest, or Latest for the newest. Any case works, & so do
+     * Relevance & Recency. Alias order or sort. Send the same value with each cursor.
+     */
     class QueryType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /** Returns this class instance's raw value. */
@@ -314,11 +371,16 @@ private constructor(
         enum class Value {
             TOP,
             LATEST,
-            /** An enum member indicating that [QueryType] was instantiated with an unknown value. */
+            /**
+             * An enum member indicating that [QueryType] was instantiated with an unknown value.
+             */
             _UNKNOWN,
         }
 
-        /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if unknown.
+         */
         fun value(): Value =
             when (this) {
                 TOP -> Value.TOP
@@ -329,7 +391,8 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value.
          *
-         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a known member.
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
          */
         fun known(): Known =
             when (this) {
@@ -341,10 +404,13 @@ private constructor(
         /**
          * Returns this class instance's primitive wire representation.
          *
-         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have the expected primitive type.
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow { XTwitterScraperInvalidDataException("Value is not a String") }
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
 
         private var validated: Boolean = false
 
@@ -399,7 +465,17 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(league, id, queryType, cursor, pageSize, fields, omit, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            league,
+            id,
+            queryType,
+            cursor,
+            pageSize,
+            fields,
+            omit,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
         "SportListPostsParams{league=$league, id=$id, queryType=$queryType, cursor=$cursor, pageSize=$pageSize, fields=$fields, omit=$omit, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

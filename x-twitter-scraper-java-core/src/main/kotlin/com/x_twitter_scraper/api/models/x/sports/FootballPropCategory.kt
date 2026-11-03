@@ -37,7 +37,9 @@ private constructor(
         @JsonProperty("key") @ExcludeMissing key: JsonField<String> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
         @JsonProperty("rank") @ExcludeMissing rank: JsonField<Double> = JsonMissing.of(),
-        @JsonProperty("props") @ExcludeMissing props: JsonField<List<FootballPlayerProp>> = JsonMissing.of(),
+        @JsonProperty("props")
+        @ExcludeMissing
+        props: JsonField<List<FootballPlayerProp>> = JsonMissing.of(),
     ) : this(key, name, rank, props, mutableMapOf())
 
     /** X's key for the prop, such as passing_yards. */
@@ -91,7 +93,8 @@ private constructor(
         private var props: JsonField<MutableList<FootballPlayerProp>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballPropCategory: FootballPropCategory) = apply {
+        @JvmSynthetic
+        internal fun from(footballPropCategory: FootballPropCategory) = apply {
             key = footballPropCategory.key
             name = footballPropCategory.name
             rank = footballPropCategory.rank
@@ -137,7 +140,9 @@ private constructor(
         fun props(props: List<FootballPlayerProp>) = props(JsonField.of(props))
 
         /** Sets [Builder.props] to an arbitrary JSON value. */
-        fun props(props: JsonField<List<FootballPlayerProp>>) = apply { this.props = props.map { it.toMutableList() } }
+        fun props(props: JsonField<List<FootballPlayerProp>>) = apply {
+            this.props = props.map { it.toMutableList() }
+        }
 
         /** Adds a single [FootballPlayerProp] to [props]. */
         fun addProp(prop: FootballPlayerProp) = apply {
@@ -188,7 +193,8 @@ private constructor(
     /**
      * Validates that the types of all values in this object match their expected types recursively.
      *
-     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
      */
     fun validate(): FootballPropCategory = apply {
         if (validated) {
@@ -210,11 +216,12 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (key.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             (if (rank.asKnown().isPresent) 1 else 0) +
-            (props.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+            (props.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

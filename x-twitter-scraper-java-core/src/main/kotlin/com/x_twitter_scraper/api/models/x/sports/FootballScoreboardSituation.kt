@@ -36,8 +36,12 @@ private constructor(
         @JsonProperty("down") @ExcludeMissing down: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("yardsToGo") @ExcludeMissing yardsToGo: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("yardline") @ExcludeMissing yardline: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("yardlineTeamId") @ExcludeMissing yardlineTeamId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("possessionTeamId") @ExcludeMissing possessionTeamId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("yardlineTeamId")
+        @ExcludeMissing
+        yardlineTeamId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("possessionTeamId")
+        @ExcludeMissing
+        possessionTeamId: JsonField<String> = JsonMissing.of(),
     ) : this(down, yardsToGo, yardline, yardlineTeamId, possessionTeamId, mutableMapOf())
 
     /** The current down, from 1 to 4. */
@@ -65,10 +69,14 @@ private constructor(
     @JsonProperty("yardline") @ExcludeMissing fun _yardline(): JsonField<Long> = yardline
 
     /** Returns the raw JSON value of [yardlineTeamId]. */
-    @JsonProperty("yardlineTeamId") @ExcludeMissing fun _yardlineTeamId(): JsonField<String> = yardlineTeamId
+    @JsonProperty("yardlineTeamId")
+    @ExcludeMissing
+    fun _yardlineTeamId(): JsonField<String> = yardlineTeamId
 
     /** Returns the raw JSON value of [possessionTeamId]. */
-    @JsonProperty("possessionTeamId") @ExcludeMissing fun _possessionTeamId(): JsonField<String> = possessionTeamId
+    @JsonProperty("possessionTeamId")
+    @ExcludeMissing
+    fun _possessionTeamId(): JsonField<String> = possessionTeamId
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -84,7 +92,9 @@ private constructor(
 
     companion object {
 
-        /** Returns a mutable builder for constructing an instance of [FootballScoreboardSituation]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [FootballScoreboardSituation].
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -98,7 +108,8 @@ private constructor(
         private var possessionTeamId: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballScoreboardSituation: FootballScoreboardSituation) = apply {
+        @JvmSynthetic
+        internal fun from(footballScoreboardSituation: FootballScoreboardSituation) = apply {
             down = footballScoreboardSituation.down
             yardsToGo = footballScoreboardSituation.yardsToGo
             yardline = footballScoreboardSituation.yardline
@@ -138,20 +149,28 @@ private constructor(
         fun yardline(yardline: JsonField<Long>) = apply { this.yardline = yardline }
 
         /** The team whose half the ball is in, a key of teams. */
-        fun yardlineTeamId(yardlineTeamId: String?) = yardlineTeamId(JsonField.ofNullable(yardlineTeamId))
+        fun yardlineTeamId(yardlineTeamId: String?) =
+            yardlineTeamId(JsonField.ofNullable(yardlineTeamId))
 
-        fun yardlineTeamId(yardlineTeamId: Optional<String>) = yardlineTeamId(yardlineTeamId.getOrNull())
+        fun yardlineTeamId(yardlineTeamId: Optional<String>) =
+            yardlineTeamId(yardlineTeamId.getOrNull())
 
         /** Sets [Builder.yardlineTeamId] to an arbitrary JSON value. */
-        fun yardlineTeamId(yardlineTeamId: JsonField<String>) = apply { this.yardlineTeamId = yardlineTeamId }
+        fun yardlineTeamId(yardlineTeamId: JsonField<String>) = apply {
+            this.yardlineTeamId = yardlineTeamId
+        }
 
         /** The team with the ball, a key of teams. */
-        fun possessionTeamId(possessionTeamId: String?) = possessionTeamId(JsonField.ofNullable(possessionTeamId))
+        fun possessionTeamId(possessionTeamId: String?) =
+            possessionTeamId(JsonField.ofNullable(possessionTeamId))
 
-        fun possessionTeamId(possessionTeamId: Optional<String>) = possessionTeamId(possessionTeamId.getOrNull())
+        fun possessionTeamId(possessionTeamId: Optional<String>) =
+            possessionTeamId(possessionTeamId.getOrNull())
 
         /** Sets [Builder.possessionTeamId] to an arbitrary JSON value. */
-        fun possessionTeamId(possessionTeamId: JsonField<String>) = apply { this.possessionTeamId = possessionTeamId }
+        fun possessionTeamId(possessionTeamId: JsonField<String>) = apply {
+            this.possessionTeamId = possessionTeamId
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -217,7 +236,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (down.asKnown().isPresent) 1 else 0) +
             (if (yardsToGo.asKnown().isPresent) 1 else 0) +
             (if (yardline.asKnown().isPresent) 1 else 0) +
@@ -238,7 +258,16 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(down, yardsToGo, yardline, yardlineTeamId, possessionTeamId, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            down,
+            yardsToGo,
+            yardline,
+            yardlineTeamId,
+            possessionTeamId,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

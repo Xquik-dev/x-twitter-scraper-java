@@ -36,8 +36,12 @@ private constructor(
         @JsonProperty("down") @ExcludeMissing down: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("yardsToGo") @ExcludeMissing yardsToGo: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("yardline") @ExcludeMissing yardline: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("yardlineSide") @ExcludeMissing yardlineSide: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("possession") @ExcludeMissing possession: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("yardlineSide")
+        @ExcludeMissing
+        yardlineSide: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("possession")
+        @ExcludeMissing
+        possession: JsonField<String> = JsonMissing.of(),
     ) : this(down, yardsToGo, yardline, yardlineSide, possession, mutableMapOf())
 
     /** The down, from 1 to 4. */
@@ -49,10 +53,15 @@ private constructor(
     /** The yard line of the ball. */
     fun yardline(): Optional<Long> = yardline.getOptional("yardline")
 
-    /** Whose half the ball was in. Home or Away in NFL games, the team's alternateId in college games. */
+    /**
+     * Whose half the ball was in. Home or Away in NFL games, the team's alternateId in college
+     * games.
+     */
     fun yardlineSide(): Optional<String> = yardlineSide.getOptional("yardlineSide")
 
-    /** The team with the ball. Home or Away in NFL games, the team's alternateId in college games. */
+    /**
+     * The team with the ball. Home or Away in NFL games, the team's alternateId in college games.
+     */
     fun possession(): Optional<String> = possession.getOptional("possession")
 
     /** Returns the raw JSON value of [down]. */
@@ -65,7 +74,9 @@ private constructor(
     @JsonProperty("yardline") @ExcludeMissing fun _yardline(): JsonField<Long> = yardline
 
     /** Returns the raw JSON value of [yardlineSide]. */
-    @JsonProperty("yardlineSide") @ExcludeMissing fun _yardlineSide(): JsonField<String> = yardlineSide
+    @JsonProperty("yardlineSide")
+    @ExcludeMissing
+    fun _yardlineSide(): JsonField<String> = yardlineSide
 
     /** Returns the raw JSON value of [possession]. */
     @JsonProperty("possession") @ExcludeMissing fun _possession(): JsonField<String> = possession
@@ -98,7 +109,8 @@ private constructor(
         private var possession: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballPlayStart: FootballPlayStart) = apply {
+        @JvmSynthetic
+        internal fun from(footballPlayStart: FootballPlayStart) = apply {
             down = footballPlayStart.down
             yardsToGo = footballPlayStart.yardsToGo
             yardline = footballPlayStart.yardline
@@ -137,15 +149,23 @@ private constructor(
         /** Sets [Builder.yardline] to an arbitrary JSON value. */
         fun yardline(yardline: JsonField<Long>) = apply { this.yardline = yardline }
 
-        /** Whose half the ball was in. Home or Away in NFL games, the team's alternateId in college games. */
+        /**
+         * Whose half the ball was in. Home or Away in NFL games, the team's alternateId in college
+         * games.
+         */
         fun yardlineSide(yardlineSide: String?) = yardlineSide(JsonField.ofNullable(yardlineSide))
 
         fun yardlineSide(yardlineSide: Optional<String>) = yardlineSide(yardlineSide.getOrNull())
 
         /** Sets [Builder.yardlineSide] to an arbitrary JSON value. */
-        fun yardlineSide(yardlineSide: JsonField<String>) = apply { this.yardlineSide = yardlineSide }
+        fun yardlineSide(yardlineSide: JsonField<String>) = apply {
+            this.yardlineSide = yardlineSide
+        }
 
-        /** The team with the ball. Home or Away in NFL games, the team's alternateId in college games. */
+        /**
+         * The team with the ball. Home or Away in NFL games, the team's alternateId in college
+         * games.
+         */
         fun possession(possession: String?) = possession(JsonField.ofNullable(possession))
 
         fun possession(possession: Optional<String>) = possession(possession.getOrNull())
@@ -217,7 +237,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (down.asKnown().isPresent) 1 else 0) +
             (if (yardsToGo.asKnown().isPresent) 1 else 0) +
             (if (yardline.asKnown().isPresent) 1 else 0) +
@@ -238,7 +259,9 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(down, yardsToGo, yardline, yardlineSide, possession, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(down, yardsToGo, yardline, yardlineSide, possession, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

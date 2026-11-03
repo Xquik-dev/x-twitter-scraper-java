@@ -40,11 +40,21 @@ private constructor(
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
         @JsonProperty("league") @ExcludeMissing league: JsonField<League> = JsonMissing.of(),
-        @JsonProperty("homeTeamId") @ExcludeMissing homeTeamId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("awayTeamId") @ExcludeMissing awayTeamId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("quarters") @ExcludeMissing quarters: JsonField<List<FootballQuarter>> = JsonMissing.of(),
-        @JsonProperty("teams") @ExcludeMissing teams: JsonField<Map<String, SportsTeam>> = JsonMissing.of(),
-        @JsonProperty("players") @ExcludeMissing players: JsonField<Map<String, FootballPlayer>> = JsonMissing.of(),
+        @JsonProperty("homeTeamId")
+        @ExcludeMissing
+        homeTeamId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("awayTeamId")
+        @ExcludeMissing
+        awayTeamId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("quarters")
+        @ExcludeMissing
+        quarters: JsonField<List<FootballQuarter>> = JsonMissing.of(),
+        @JsonProperty("teams")
+        @ExcludeMissing
+        teams: JsonField<Map<String, SportsTeam>> = JsonMissing.of(),
+        @JsonProperty("players")
+        @ExcludeMissing
+        players: JsonField<Map<String, FootballPlayer>> = JsonMissing.of(),
     ) : this(id, league, homeTeamId, awayTeamId, quarters, teams, players, mutableMapOf())
 
     /** The ID of the game these plays come from. */
@@ -81,13 +91,17 @@ private constructor(
     @JsonProperty("awayTeamId") @ExcludeMissing fun _awayTeamId(): JsonField<String> = awayTeamId
 
     /** Returns the raw JSON value of [quarters]. */
-    @JsonProperty("quarters") @ExcludeMissing fun _quarters(): JsonField<List<FootballQuarter>> = quarters
+    @JsonProperty("quarters")
+    @ExcludeMissing
+    fun _quarters(): JsonField<List<FootballQuarter>> = quarters
 
     /** Returns the raw JSON value of [teams]. */
     @JsonProperty("teams") @ExcludeMissing fun _teams(): JsonField<Map<String, SportsTeam>> = teams
 
     /** Returns the raw JSON value of [players]. */
-    @JsonProperty("players") @ExcludeMissing fun _players(): JsonField<Map<String, FootballPlayer>> = players
+    @JsonProperty("players")
+    @ExcludeMissing
+    fun _players(): JsonField<Map<String, FootballPlayer>> = players
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -119,7 +133,8 @@ private constructor(
         private var players: JsonField<Map<String, FootballPlayer>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballPlays: FootballPlays) = apply {
+        @JvmSynthetic
+        internal fun from(footballPlays: FootballPlays) = apply {
             id = footballPlays.id
             league = footballPlays.league
             homeTeamId = footballPlays.homeTeamId
@@ -162,7 +177,9 @@ private constructor(
         fun quarters(quarters: List<FootballQuarter>) = quarters(JsonField.of(quarters))
 
         /** Sets [Builder.quarters] to an arbitrary JSON value. */
-        fun quarters(quarters: JsonField<List<FootballQuarter>>) = apply { this.quarters = quarters.map { it.toMutableList() } }
+        fun quarters(quarters: JsonField<List<FootballQuarter>>) = apply {
+            this.quarters = quarters.map { it.toMutableList() }
+        }
 
         /** Adds a single [FootballQuarter] to [quarters]. */
         fun addQuarter(quarter: FootballQuarter) = apply {
@@ -182,7 +199,9 @@ private constructor(
         fun players(players: Map<String, FootballPlayer>) = players(JsonField.of(players))
 
         /** Sets [Builder.players] to an arbitrary JSON value. */
-        fun players(players: JsonField<Map<String, FootballPlayer>>) = apply { this.players = players }
+        fun players(players: JsonField<Map<String, FootballPlayer>>) = apply {
+            this.players = players
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -252,7 +271,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (league.asKnown().getOrNull()?.validity() ?: 0) +
             (if (homeTeamId.asKnown().isPresent) 1 else 0) +
@@ -277,15 +297,25 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, league, homeTeamId, awayTeamId, quarters, teams, players, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            id,
+            league,
+            homeTeamId,
+            awayTeamId,
+            quarters,
+            teams,
+            players,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
         "FootballPlays{id=$id, league=$league, homeTeamId=$homeTeamId, awayTeamId=$awayTeamId, quarters=$quarters, teams=$teams, players=$players, additionalProperties=$additionalProperties}"
 
-    class League @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class League @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /** Returns this class instance's raw value. */
         @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
@@ -313,7 +343,10 @@ private constructor(
             _UNKNOWN,
         }
 
-        /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if unknown.
+         */
         fun value(): Value =
             when (this) {
                 NFL -> Value.NFL

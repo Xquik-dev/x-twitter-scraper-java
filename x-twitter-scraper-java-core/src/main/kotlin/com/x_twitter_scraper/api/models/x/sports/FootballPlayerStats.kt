@@ -42,19 +42,58 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("playerId") @ExcludeMissing playerId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("passing") @ExcludeMissing passing: JsonField<FootballPassingStats> = JsonMissing.of(),
-        @JsonProperty("rushing") @ExcludeMissing rushing: JsonField<FootballRushingStats> = JsonMissing.of(),
-        @JsonProperty("receiving") @ExcludeMissing receiving: JsonField<FootballPlayerStatsReceiving> = JsonMissing.of(),
-        @JsonProperty("defense") @ExcludeMissing defense: JsonField<FootballPlayerStatsDefense> = JsonMissing.of(),
-        @JsonProperty("fumbles") @ExcludeMissing fumbles: JsonField<FootballFumbleStats> = JsonMissing.of(),
-        @JsonProperty("kickReturns") @ExcludeMissing kickReturns: JsonField<FootballReturnStats> = JsonMissing.of(),
-        @JsonProperty("puntReturns") @ExcludeMissing puntReturns: JsonField<FootballReturnStats> = JsonMissing.of(),
-        @JsonProperty("interceptionReturns") @ExcludeMissing interceptionReturns: JsonField<FootballReturnStats> = JsonMissing.of(),
-        @JsonProperty("punts") @ExcludeMissing punts: JsonField<FootballPlayerStatsPunts> = JsonMissing.of(),
-        @JsonProperty("fieldGoals") @ExcludeMissing fieldGoals: JsonField<FootballPlayerStatsFieldGoals> = JsonMissing.of(),
-        @JsonProperty("extraPoints") @ExcludeMissing extraPoints: JsonField<FootballPlayerStatsExtraPoints> = JsonMissing.of(),
-        @JsonProperty("conversions") @ExcludeMissing conversions: JsonField<FootballPlayerStatsConversions> = JsonMissing.of(),
-    ) : this(playerId, passing, rushing, receiving, defense, fumbles, kickReturns, puntReturns, interceptionReturns, punts, fieldGoals, extraPoints, conversions, mutableMapOf())
+        @JsonProperty("passing")
+        @ExcludeMissing
+        passing: JsonField<FootballPassingStats> = JsonMissing.of(),
+        @JsonProperty("rushing")
+        @ExcludeMissing
+        rushing: JsonField<FootballRushingStats> = JsonMissing.of(),
+        @JsonProperty("receiving")
+        @ExcludeMissing
+        receiving: JsonField<FootballPlayerStatsReceiving> = JsonMissing.of(),
+        @JsonProperty("defense")
+        @ExcludeMissing
+        defense: JsonField<FootballPlayerStatsDefense> = JsonMissing.of(),
+        @JsonProperty("fumbles")
+        @ExcludeMissing
+        fumbles: JsonField<FootballFumbleStats> = JsonMissing.of(),
+        @JsonProperty("kickReturns")
+        @ExcludeMissing
+        kickReturns: JsonField<FootballReturnStats> = JsonMissing.of(),
+        @JsonProperty("puntReturns")
+        @ExcludeMissing
+        puntReturns: JsonField<FootballReturnStats> = JsonMissing.of(),
+        @JsonProperty("interceptionReturns")
+        @ExcludeMissing
+        interceptionReturns: JsonField<FootballReturnStats> = JsonMissing.of(),
+        @JsonProperty("punts")
+        @ExcludeMissing
+        punts: JsonField<FootballPlayerStatsPunts> = JsonMissing.of(),
+        @JsonProperty("fieldGoals")
+        @ExcludeMissing
+        fieldGoals: JsonField<FootballPlayerStatsFieldGoals> = JsonMissing.of(),
+        @JsonProperty("extraPoints")
+        @ExcludeMissing
+        extraPoints: JsonField<FootballPlayerStatsExtraPoints> = JsonMissing.of(),
+        @JsonProperty("conversions")
+        @ExcludeMissing
+        conversions: JsonField<FootballPlayerStatsConversions> = JsonMissing.of(),
+    ) : this(
+        playerId,
+        passing,
+        rushing,
+        receiving,
+        defense,
+        fumbles,
+        kickReturns,
+        puntReturns,
+        interceptionReturns,
+        punts,
+        fieldGoals,
+        extraPoints,
+        conversions,
+        mutableMapOf(),
+    )
 
     /** The player these stats belong to, a key of players. */
     fun playerId(): Optional<String> = playerId.getOptional("playerId")
@@ -81,7 +120,8 @@ private constructor(
     fun puntReturns(): Optional<FootballReturnStats> = puntReturns.getOptional("puntReturns")
 
     /** Kick, punt or interception return stats. */
-    fun interceptionReturns(): Optional<FootballReturnStats> = interceptionReturns.getOptional("interceptionReturns")
+    fun interceptionReturns(): Optional<FootballReturnStats> =
+        interceptionReturns.getOptional("interceptionReturns")
 
     /** Punting stats. */
     fun punts(): Optional<FootballPlayerStatsPunts> = punts.getOptional("punts")
@@ -90,49 +130,73 @@ private constructor(
     fun fieldGoals(): Optional<FootballPlayerStatsFieldGoals> = fieldGoals.getOptional("fieldGoals")
 
     /** Extra point kicks. */
-    fun extraPoints(): Optional<FootballPlayerStatsExtraPoints> = extraPoints.getOptional("extraPoints")
+    fun extraPoints(): Optional<FootballPlayerStatsExtraPoints> =
+        extraPoints.getOptional("extraPoints")
 
     /** 2-point conversions. */
-    fun conversions(): Optional<FootballPlayerStatsConversions> = conversions.getOptional("conversions")
+    fun conversions(): Optional<FootballPlayerStatsConversions> =
+        conversions.getOptional("conversions")
 
     /** Returns the raw JSON value of [playerId]. */
     @JsonProperty("playerId") @ExcludeMissing fun _playerId(): JsonField<String> = playerId
 
     /** Returns the raw JSON value of [passing]. */
-    @JsonProperty("passing") @ExcludeMissing fun _passing(): JsonField<FootballPassingStats> = passing
+    @JsonProperty("passing")
+    @ExcludeMissing
+    fun _passing(): JsonField<FootballPassingStats> = passing
 
     /** Returns the raw JSON value of [rushing]. */
-    @JsonProperty("rushing") @ExcludeMissing fun _rushing(): JsonField<FootballRushingStats> = rushing
+    @JsonProperty("rushing")
+    @ExcludeMissing
+    fun _rushing(): JsonField<FootballRushingStats> = rushing
 
     /** Returns the raw JSON value of [receiving]. */
-    @JsonProperty("receiving") @ExcludeMissing fun _receiving(): JsonField<FootballPlayerStatsReceiving> = receiving
+    @JsonProperty("receiving")
+    @ExcludeMissing
+    fun _receiving(): JsonField<FootballPlayerStatsReceiving> = receiving
 
     /** Returns the raw JSON value of [defense]. */
-    @JsonProperty("defense") @ExcludeMissing fun _defense(): JsonField<FootballPlayerStatsDefense> = defense
+    @JsonProperty("defense")
+    @ExcludeMissing
+    fun _defense(): JsonField<FootballPlayerStatsDefense> = defense
 
     /** Returns the raw JSON value of [fumbles]. */
-    @JsonProperty("fumbles") @ExcludeMissing fun _fumbles(): JsonField<FootballFumbleStats> = fumbles
+    @JsonProperty("fumbles")
+    @ExcludeMissing
+    fun _fumbles(): JsonField<FootballFumbleStats> = fumbles
 
     /** Returns the raw JSON value of [kickReturns]. */
-    @JsonProperty("kickReturns") @ExcludeMissing fun _kickReturns(): JsonField<FootballReturnStats> = kickReturns
+    @JsonProperty("kickReturns")
+    @ExcludeMissing
+    fun _kickReturns(): JsonField<FootballReturnStats> = kickReturns
 
     /** Returns the raw JSON value of [puntReturns]. */
-    @JsonProperty("puntReturns") @ExcludeMissing fun _puntReturns(): JsonField<FootballReturnStats> = puntReturns
+    @JsonProperty("puntReturns")
+    @ExcludeMissing
+    fun _puntReturns(): JsonField<FootballReturnStats> = puntReturns
 
     /** Returns the raw JSON value of [interceptionReturns]. */
-    @JsonProperty("interceptionReturns") @ExcludeMissing fun _interceptionReturns(): JsonField<FootballReturnStats> = interceptionReturns
+    @JsonProperty("interceptionReturns")
+    @ExcludeMissing
+    fun _interceptionReturns(): JsonField<FootballReturnStats> = interceptionReturns
 
     /** Returns the raw JSON value of [punts]. */
     @JsonProperty("punts") @ExcludeMissing fun _punts(): JsonField<FootballPlayerStatsPunts> = punts
 
     /** Returns the raw JSON value of [fieldGoals]. */
-    @JsonProperty("fieldGoals") @ExcludeMissing fun _fieldGoals(): JsonField<FootballPlayerStatsFieldGoals> = fieldGoals
+    @JsonProperty("fieldGoals")
+    @ExcludeMissing
+    fun _fieldGoals(): JsonField<FootballPlayerStatsFieldGoals> = fieldGoals
 
     /** Returns the raw JSON value of [extraPoints]. */
-    @JsonProperty("extraPoints") @ExcludeMissing fun _extraPoints(): JsonField<FootballPlayerStatsExtraPoints> = extraPoints
+    @JsonProperty("extraPoints")
+    @ExcludeMissing
+    fun _extraPoints(): JsonField<FootballPlayerStatsExtraPoints> = extraPoints
 
     /** Returns the raw JSON value of [conversions]. */
-    @JsonProperty("conversions") @ExcludeMissing fun _conversions(): JsonField<FootballPlayerStatsConversions> = conversions
+    @JsonProperty("conversions")
+    @ExcludeMissing
+    fun _conversions(): JsonField<FootballPlayerStatsConversions> = conversions
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -170,7 +234,8 @@ private constructor(
         private var conversions: JsonField<FootballPlayerStatsConversions> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballPlayerStats: FootballPlayerStats) = apply {
+        @JvmSynthetic
+        internal fun from(footballPlayerStats: FootballPlayerStats) = apply {
             playerId = footballPlayerStats.playerId
             passing = footballPlayerStats.passing
             rushing = footballPlayerStats.rushing
@@ -211,13 +276,17 @@ private constructor(
         fun receiving(receiving: FootballPlayerStatsReceiving) = receiving(JsonField.of(receiving))
 
         /** Sets [Builder.receiving] to an arbitrary JSON value. */
-        fun receiving(receiving: JsonField<FootballPlayerStatsReceiving>) = apply { this.receiving = receiving }
+        fun receiving(receiving: JsonField<FootballPlayerStatsReceiving>) = apply {
+            this.receiving = receiving
+        }
 
         /** Defensive stats. */
         fun defense(defense: FootballPlayerStatsDefense) = defense(JsonField.of(defense))
 
         /** Sets [Builder.defense] to an arbitrary JSON value. */
-        fun defense(defense: JsonField<FootballPlayerStatsDefense>) = apply { this.defense = defense }
+        fun defense(defense: JsonField<FootballPlayerStatsDefense>) = apply {
+            this.defense = defense
+        }
 
         /** Fumble stats. */
         fun fumbles(fumbles: FootballFumbleStats) = fumbles(JsonField.of(fumbles))
@@ -229,19 +298,26 @@ private constructor(
         fun kickReturns(kickReturns: FootballReturnStats) = kickReturns(JsonField.of(kickReturns))
 
         /** Sets [Builder.kickReturns] to an arbitrary JSON value. */
-        fun kickReturns(kickReturns: JsonField<FootballReturnStats>) = apply { this.kickReturns = kickReturns }
+        fun kickReturns(kickReturns: JsonField<FootballReturnStats>) = apply {
+            this.kickReturns = kickReturns
+        }
 
         /** Kick, punt or interception return stats. */
         fun puntReturns(puntReturns: FootballReturnStats) = puntReturns(JsonField.of(puntReturns))
 
         /** Sets [Builder.puntReturns] to an arbitrary JSON value. */
-        fun puntReturns(puntReturns: JsonField<FootballReturnStats>) = apply { this.puntReturns = puntReturns }
+        fun puntReturns(puntReturns: JsonField<FootballReturnStats>) = apply {
+            this.puntReturns = puntReturns
+        }
 
         /** Kick, punt or interception return stats. */
-        fun interceptionReturns(interceptionReturns: FootballReturnStats) = interceptionReturns(JsonField.of(interceptionReturns))
+        fun interceptionReturns(interceptionReturns: FootballReturnStats) =
+            interceptionReturns(JsonField.of(interceptionReturns))
 
         /** Sets [Builder.interceptionReturns] to an arbitrary JSON value. */
-        fun interceptionReturns(interceptionReturns: JsonField<FootballReturnStats>) = apply { this.interceptionReturns = interceptionReturns }
+        fun interceptionReturns(interceptionReturns: JsonField<FootballReturnStats>) = apply {
+            this.interceptionReturns = interceptionReturns
+        }
 
         /** Punting stats. */
         fun punts(punts: FootballPlayerStatsPunts) = punts(JsonField.of(punts))
@@ -250,22 +326,31 @@ private constructor(
         fun punts(punts: JsonField<FootballPlayerStatsPunts>) = apply { this.punts = punts }
 
         /** Field goal stats. */
-        fun fieldGoals(fieldGoals: FootballPlayerStatsFieldGoals) = fieldGoals(JsonField.of(fieldGoals))
+        fun fieldGoals(fieldGoals: FootballPlayerStatsFieldGoals) =
+            fieldGoals(JsonField.of(fieldGoals))
 
         /** Sets [Builder.fieldGoals] to an arbitrary JSON value. */
-        fun fieldGoals(fieldGoals: JsonField<FootballPlayerStatsFieldGoals>) = apply { this.fieldGoals = fieldGoals }
+        fun fieldGoals(fieldGoals: JsonField<FootballPlayerStatsFieldGoals>) = apply {
+            this.fieldGoals = fieldGoals
+        }
 
         /** Extra point kicks. */
-        fun extraPoints(extraPoints: FootballPlayerStatsExtraPoints) = extraPoints(JsonField.of(extraPoints))
+        fun extraPoints(extraPoints: FootballPlayerStatsExtraPoints) =
+            extraPoints(JsonField.of(extraPoints))
 
         /** Sets [Builder.extraPoints] to an arbitrary JSON value. */
-        fun extraPoints(extraPoints: JsonField<FootballPlayerStatsExtraPoints>) = apply { this.extraPoints = extraPoints }
+        fun extraPoints(extraPoints: JsonField<FootballPlayerStatsExtraPoints>) = apply {
+            this.extraPoints = extraPoints
+        }
 
         /** 2-point conversions. */
-        fun conversions(conversions: FootballPlayerStatsConversions) = conversions(JsonField.of(conversions))
+        fun conversions(conversions: FootballPlayerStatsConversions) =
+            conversions(JsonField.of(conversions))
 
         /** Sets [Builder.conversions] to an arbitrary JSON value. */
-        fun conversions(conversions: JsonField<FootballPlayerStatsConversions>) = apply { this.conversions = conversions }
+        fun conversions(conversions: JsonField<FootballPlayerStatsConversions>) = apply {
+            this.conversions = conversions
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -347,7 +432,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (playerId.asKnown().isPresent) 1 else 0) +
             (passing.asKnown().getOrNull()?.validity() ?: 0) +
             (rushing.asKnown().getOrNull()?.validity() ?: 0) +
@@ -384,7 +470,24 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(playerId, passing, rushing, receiving, defense, fumbles, kickReturns, puntReturns, interceptionReturns, punts, fieldGoals, extraPoints, conversions, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            playerId,
+            passing,
+            rushing,
+            receiving,
+            defense,
+            fumbles,
+            kickReturns,
+            puntReturns,
+            interceptionReturns,
+            punts,
+            fieldGoals,
+            extraPoints,
+            conversions,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

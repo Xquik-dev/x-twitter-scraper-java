@@ -19,7 +19,10 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** A metric's current value & its gain since tracking began. Both are null when X shows no count, as for views on old posts. */
+/**
+ * A metric's current value & its gain since tracking began. Both are null when X shows no count, as
+ * for views on old posts.
+ */
 class PostMetricReading
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -69,7 +72,8 @@ private constructor(
         private var gain: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(postMetricReading: PostMetricReading) = apply {
+        @JvmSynthetic
+        internal fun from(postMetricReading: PostMetricReading) = apply {
             current = postMetricReading.current
             gain = postMetricReading.gain
             additionalProperties = postMetricReading.additionalProperties.toMutableMap()
@@ -151,9 +155,9 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
-        (if (current.asKnown().isPresent) 1 else 0) +
-            (if (gain.asKnown().isPresent) 1 else 0)
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (current.asKnown().isPresent) 1 else 0) + (if (gain.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

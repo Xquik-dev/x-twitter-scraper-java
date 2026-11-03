@@ -40,8 +40,7 @@ interface PostService {
      * 30 credits an hour with events & webhook deliveries included. That hourly price is a
      * monitor's only charge. Creation needs the credits of the first hour & reads the post once.
      */
-    fun create(params: PostCreateParams): PostMonitor =
-        create(params, RequestOptions.none())
+    fun create(params: PostCreateParams): PostMonitor = create(params, RequestOptions.none())
 
     /** @see create */
     fun create(
@@ -75,8 +74,7 @@ interface PostService {
     ): PostMonitor
 
     /** @see retrieve */
-    fun retrieve(params: PostRetrieveParams): PostMonitor =
-        retrieve(params, RequestOptions.none())
+    fun retrieve(params: PostRetrieveParams): PostMonitor = retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
     fun retrieve(id: String, requestOptions: RequestOptions): PostMonitor =
@@ -108,8 +106,7 @@ interface PostService {
     ): PostMonitor
 
     /** @see update */
-    fun update(params: PostUpdateParams): PostMonitor =
-        update(params, RequestOptions.none())
+    fun update(params: PostUpdateParams): PostMonitor = update(params, RequestOptions.none())
 
     /** @see update */
     fun update(id: String, requestOptions: RequestOptions): PostMonitor =
@@ -139,8 +136,7 @@ interface PostService {
      * Stops 1 post monitor, then removes its stored events & metric history in bounded batches.
      * Poll statusUrl until the monitor returns 404.
      */
-    fun delete(id: String): PostDeleteResponse =
-        delete(id, PostDeleteParams.none())
+    fun delete(id: String): PostDeleteResponse = delete(id, PostDeleteParams.none())
 
     /** @see delete */
     fun delete(
@@ -162,8 +158,7 @@ interface PostService {
     ): PostDeleteResponse
 
     /** @see delete */
-    fun delete(params: PostDeleteParams): PostDeleteResponse =
-        delete(params, RequestOptions.none())
+    fun delete(params: PostDeleteParams): PostDeleteResponse = delete(params, RequestOptions.none())
 
     /** @see delete */
     fun delete(id: String, requestOptions: RequestOptions): PostDeleteResponse =
@@ -230,8 +225,8 @@ interface PostService {
         ): HttpResponseFor<PostMonitor>
 
         /**
-         * Returns a raw HTTP response for `get /monitors/posts/{id}`, but is otherwise the same
-         * as [PostService.retrieve].
+         * Returns a raw HTTP response for `get /monitors/posts/{id}`, but is otherwise the same as
+         * [PostService.retrieve].
          */
         @MustBeClosed
         fun retrieve(id: String): HttpResponseFor<PostMonitor> =
@@ -270,16 +265,14 @@ interface PostService {
         fun retrieve(
             id: String,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<PostMonitor> =
-            retrieve(id, PostRetrieveParams.none(), requestOptions)
+        ): HttpResponseFor<PostMonitor> = retrieve(id, PostRetrieveParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `patch /monitors/posts/{id}`, but is otherwise the
-         * same as [PostService.update].
+         * Returns a raw HTTP response for `patch /monitors/posts/{id}`, but is otherwise the same
+         * as [PostService.update].
          */
         @MustBeClosed
-        fun update(id: String): HttpResponseFor<PostMonitor> =
-            update(id, PostUpdateParams.none())
+        fun update(id: String): HttpResponseFor<PostMonitor> = update(id, PostUpdateParams.none())
 
         /** @see update */
         @MustBeClosed
@@ -287,8 +280,7 @@ interface PostService {
             id: String,
             params: PostUpdateParams = PostUpdateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<PostMonitor> =
-            update(params.toBuilder().id(id).build(), requestOptions)
+        ): HttpResponseFor<PostMonitor> = update(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see update */
         @MustBeClosed
@@ -314,15 +306,13 @@ interface PostService {
         fun update(
             id: String,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<PostMonitor> =
-            update(id, PostUpdateParams.none(), requestOptions)
+        ): HttpResponseFor<PostMonitor> = update(id, PostUpdateParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /monitors/posts`, but is otherwise the same as
          * [PostService.list].
          */
-        @MustBeClosed
-        fun list(): HttpResponseFor<PostListResponse> = list(PostListParams.none())
+        @MustBeClosed fun list(): HttpResponseFor<PostListResponse> = list(PostListParams.none())
 
         /** @see list */
         @MustBeClosed
@@ -343,8 +333,8 @@ interface PostService {
             list(PostListParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `delete /monitors/posts/{id}`, but is otherwise the
-         * same as [PostService.delete].
+         * Returns a raw HTTP response for `delete /monitors/posts/{id}`, but is otherwise the same
+         * as [PostService.delete].
          */
         @MustBeClosed
         fun delete(id: String): HttpResponseFor<PostDeleteResponse> =
@@ -364,8 +354,7 @@ interface PostService {
         fun delete(
             id: String,
             params: PostDeleteParams = PostDeleteParams.none(),
-        ): HttpResponseFor<PostDeleteResponse> =
-            delete(id, params, RequestOptions.none())
+        ): HttpResponseFor<PostDeleteResponse> = delete(id, params, RequestOptions.none())
 
         /** @see delete */
         @MustBeClosed
@@ -376,17 +365,15 @@ interface PostService {
 
         /** @see delete */
         @MustBeClosed
-        fun delete(
-            params: PostDeleteParams
-        ): HttpResponseFor<PostDeleteResponse> = delete(params, RequestOptions.none())
+        fun delete(params: PostDeleteParams): HttpResponseFor<PostDeleteResponse> =
+            delete(params, RequestOptions.none())
 
         /** @see delete */
         @MustBeClosed
         fun delete(
             id: String,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<PostDeleteResponse> =
-            delete(id, PostDeleteParams.none(), requestOptions)
+        ): HttpResponseFor<PostDeleteResponse> = delete(id, PostDeleteParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /monitors/posts/{id}/metrics`, but is otherwise the

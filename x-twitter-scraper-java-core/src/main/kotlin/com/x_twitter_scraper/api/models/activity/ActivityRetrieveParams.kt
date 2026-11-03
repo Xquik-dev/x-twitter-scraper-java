@@ -11,7 +11,13 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Returns 1 activity of the account with its full technical record. It covers every kind of activity the Activity log shows. The record holds the request, the caller, the charge, every timestamp in UTC and related activity. It never holds an API key value, a webhook secret or another account's data. Only a signed-in dashboard session sees an `api_key` record, so an API key or an OAuth app gets 404 for its ID. */
+/**
+ * Returns 1 activity of the account with its full technical record. It covers every kind of
+ * activity the Activity log shows. The record holds the request, the caller, the charge, every
+ * timestamp in UTC and related activity. It never holds an API key value, a webhook secret or
+ * another account's data. Only a signed-in dashboard session sees an `api_key` record, so an API
+ * key or an OAuth app gets 404 for its ID.
+ */
 class ActivityRetrieveParams
 private constructor(
     private val id: String?,
@@ -19,7 +25,10 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** Activity ID. It is the id of an Activity log row and the last part of the dashboard's activity page URL. */
+    /**
+     * Activity ID. It is the id of an Activity log row and the last part of the dashboard's
+     * activity page URL.
+     */
     fun id(): Optional<String> = Optional.ofNullable(id)
 
     /** Additional headers to send with the request. */
@@ -34,9 +43,7 @@ private constructor(
 
         @JvmStatic fun none(): ActivityRetrieveParams = builder().build()
 
-        /**
-         * Returns a mutable builder for constructing an instance of [ActivityRetrieveParams].
-         */
+        /** Returns a mutable builder for constructing an instance of [ActivityRetrieveParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -47,18 +54,21 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        @JvmSynthetic internal fun from(activityRetrieveParams: ActivityRetrieveParams) = apply {
+        @JvmSynthetic
+        internal fun from(activityRetrieveParams: ActivityRetrieveParams) = apply {
             id = activityRetrieveParams.id
             additionalHeaders = activityRetrieveParams.additionalHeaders.toBuilder()
             additionalQueryParams = activityRetrieveParams.additionalQueryParams.toBuilder()
         }
 
-        /** Activity ID. It is the id of an Activity log row and the last part of the dashboard's activity page URL. */
+        /**
+         * Activity ID. It is the id of an Activity log row and the last part of the dashboard's
+         * activity page URL.
+         */
         fun id(id: String?) = apply { this.id = id }
 
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
-
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -197,8 +207,7 @@ private constructor(
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(id, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int = Objects.hash(id, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "ActivityRetrieveParams{id=$id, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

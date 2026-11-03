@@ -87,8 +87,7 @@ interface SportService {
         id: String,
         params: SportRetrieveScoreboardParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): FootballScoreboard =
-        retrieveScoreboard(params.toBuilder().id(id).build(), requestOptions)
+    ): FootballScoreboard = retrieveScoreboard(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveScoreboard */
     fun retrieveScoreboard(params: SportRetrieveScoreboardParams): FootballScoreboard =
@@ -113,8 +112,7 @@ interface SportService {
         id: String,
         params: SportRetrieveBoxScoreParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): FootballBoxScore =
-        retrieveBoxScore(params.toBuilder().id(id).build(), requestOptions)
+    ): FootballBoxScore = retrieveBoxScore(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveBoxScore */
     fun retrieveBoxScore(params: SportRetrieveBoxScoreParams): FootballBoxScore =
@@ -138,8 +136,7 @@ interface SportService {
         id: String,
         params: SportRetrievePlaysParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): FootballPlays =
-        retrievePlays(params.toBuilder().id(id).build(), requestOptions)
+    ): FootballPlays = retrievePlays(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrievePlays */
     fun retrievePlays(params: SportRetrievePlaysParams): FootballPlays =
@@ -163,8 +160,7 @@ interface SportService {
         id: String,
         params: SportRetrieveAudienceParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): SportsGameAudience =
-        retrieveAudience(params.toBuilder().id(id).build(), requestOptions)
+    ): SportsGameAudience = retrieveAudience(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveAudience */
     fun retrieveAudience(params: SportRetrieveAudienceParams): SportsGameAudience =
@@ -177,7 +173,8 @@ interface SportService {
     ): SportsGameAudience
 
     /**
-     * Returns both teams' players for 1 NFL game. Each player has a jersey, position, headshot & X account. Each request costs 1 credit.
+     * Returns both teams' players for 1 NFL game. Each player has a jersey, position, headshot & X
+     * account. Each request costs 1 credit.
      */
     fun retrieveRoster(id: String, params: SportRetrieveRosterParams): FootballRoster =
         retrieveRoster(id, params, RequestOptions.none())
@@ -187,8 +184,7 @@ interface SportService {
         id: String,
         params: SportRetrieveRosterParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): FootballRoster =
-        retrieveRoster(params.toBuilder().id(id).build(), requestOptions)
+    ): FootballRoster = retrieveRoster(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieveRoster */
     fun retrieveRoster(params: SportRetrieveRosterParams): FootballRoster =
@@ -201,7 +197,8 @@ interface SportService {
     ): FootballRoster
 
     /**
-     * Returns the player prop lines & American odds X shows for 1 NFL game. X lists props before & during a game. Other games return no categories. Each request costs 1 credit.
+     * Returns the player prop lines & American odds X shows for 1 NFL game. X lists props before &
+     * during a game. Other games return no categories. Each request costs 1 credit.
      */
     fun retrievePlayerProps(id: String, params: SportRetrievePlayerPropsParams): FootballProps =
         retrievePlayerProps(id, params, RequestOptions.none())
@@ -211,8 +208,7 @@ interface SportService {
         id: String,
         params: SportRetrievePlayerPropsParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): FootballProps =
-        retrievePlayerProps(params.toBuilder().id(id).build(), requestOptions)
+    ): FootballProps = retrievePlayerProps(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrievePlayerProps */
     fun retrievePlayerProps(params: SportRetrievePlayerPropsParams): FootballProps =
@@ -225,7 +221,8 @@ interface SportService {
     ): FootballProps
 
     /**
-     * Returns a game's top or latest posts, plus an X search you can run for more. Works before, during & after the game. Pages hold up to 20 posts, & each post costs 1 credit.
+     * Returns a game's top or latest posts, plus an X search you can run for more. Works before,
+     * during & after the game. Pages hold up to 20 posts, & each post costs 1 credit.
      */
     fun listPosts(id: String, params: SportListPostsParams): SportsGamePosts =
         listPosts(id, params, RequestOptions.none())
@@ -235,8 +232,7 @@ interface SportService {
         id: String,
         params: SportListPostsParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): SportsGamePosts =
-        listPosts(params.toBuilder().id(id).build(), requestOptions)
+    ): SportsGamePosts = listPosts(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see listPosts */
     fun listPosts(params: SportListPostsParams): SportsGamePosts =
@@ -343,8 +339,7 @@ interface SportService {
         fun retrieveBoxScore(
             id: String,
             params: SportRetrieveBoxScoreParams,
-        ): HttpResponseFor<FootballBoxScore> =
-            retrieveBoxScore(id, params, RequestOptions.none())
+        ): HttpResponseFor<FootballBoxScore> = retrieveBoxScore(id, params, RequestOptions.none())
 
         /** @see retrieveBoxScore */
         @MustBeClosed
@@ -376,8 +371,7 @@ interface SportService {
         fun retrievePlays(
             id: String,
             params: SportRetrievePlaysParams,
-        ): HttpResponseFor<FootballPlays> =
-            retrievePlays(id, params, RequestOptions.none())
+        ): HttpResponseFor<FootballPlays> = retrievePlays(id, params, RequestOptions.none())
 
         /** @see retrievePlays */
         @MustBeClosed
@@ -408,8 +402,7 @@ interface SportService {
         fun retrieveAudience(
             id: String,
             params: SportRetrieveAudienceParams,
-        ): HttpResponseFor<SportsGameAudience> =
-            retrieveAudience(id, params, RequestOptions.none())
+        ): HttpResponseFor<SportsGameAudience> = retrieveAudience(id, params, RequestOptions.none())
 
         /** @see retrieveAudience */
         @MustBeClosed
@@ -441,8 +434,7 @@ interface SportService {
         fun retrieveRoster(
             id: String,
             params: SportRetrieveRosterParams,
-        ): HttpResponseFor<FootballRoster> =
-            retrieveRoster(id, params, RequestOptions.none())
+        ): HttpResponseFor<FootballRoster> = retrieveRoster(id, params, RequestOptions.none())
 
         /** @see retrieveRoster */
         @MustBeClosed
@@ -455,9 +447,8 @@ interface SportService {
 
         /** @see retrieveRoster */
         @MustBeClosed
-        fun retrieveRoster(
-            params: SportRetrieveRosterParams
-        ): HttpResponseFor<FootballRoster> = retrieveRoster(params, RequestOptions.none())
+        fun retrieveRoster(params: SportRetrieveRosterParams): HttpResponseFor<FootballRoster> =
+            retrieveRoster(params, RequestOptions.none())
 
         /** @see retrieveRoster */
         @MustBeClosed
@@ -474,8 +465,7 @@ interface SportService {
         fun retrievePlayerProps(
             id: String,
             params: SportRetrievePlayerPropsParams,
-        ): HttpResponseFor<FootballProps> =
-            retrievePlayerProps(id, params, RequestOptions.none())
+        ): HttpResponseFor<FootballProps> = retrievePlayerProps(id, params, RequestOptions.none())
 
         /** @see retrievePlayerProps */
         @MustBeClosed
@@ -507,8 +497,7 @@ interface SportService {
         fun listPosts(
             id: String,
             params: SportListPostsParams,
-        ): HttpResponseFor<SportsGamePosts> =
-            listPosts(id, params, RequestOptions.none())
+        ): HttpResponseFor<SportsGamePosts> = listPosts(id, params, RequestOptions.none())
 
         /** @see listPosts */
         @MustBeClosed
@@ -521,9 +510,8 @@ interface SportService {
 
         /** @see listPosts */
         @MustBeClosed
-        fun listPosts(
-            params: SportListPostsParams
-        ): HttpResponseFor<SportsGamePosts> = listPosts(params, RequestOptions.none())
+        fun listPosts(params: SportListPostsParams): HttpResponseFor<SportsGamePosts> =
+            listPosts(params, RequestOptions.none())
 
         /** @see listPosts */
         @MustBeClosed

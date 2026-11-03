@@ -52,21 +52,54 @@ private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
         @JsonProperty("league") @ExcludeMissing league: JsonField<League> = JsonMissing.of(),
         @JsonProperty("seasonId") @ExcludeMissing seasonId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("seasonType") @ExcludeMissing seasonType: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("seasonType")
+        @ExcludeMissing
+        seasonType: JsonField<String> = JsonMissing.of(),
         @JsonProperty("week") @ExcludeMissing week: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("startsAt") @ExcludeMissing startsAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("startsAt")
+        @ExcludeMissing
+        startsAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("venue") @ExcludeMissing venue: JsonField<String> = JsonMissing.of(),
         @JsonProperty("status") @ExcludeMissing status: JsonField<String> = JsonMissing.of(),
         @JsonProperty("clock") @ExcludeMissing clock: JsonField<String> = JsonMissing.of(),
         @JsonProperty("quarter") @ExcludeMissing quarter: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("situation") @ExcludeMissing situation: JsonField<FootballScoreboardSituation> = JsonMissing.of(),
+        @JsonProperty("situation")
+        @ExcludeMissing
+        situation: JsonField<FootballScoreboardSituation> = JsonMissing.of(),
         @JsonProperty("home") @ExcludeMissing home: JsonField<FootballSide> = JsonMissing.of(),
         @JsonProperty("away") @ExcludeMissing away: JsonField<FootballSide> = JsonMissing.of(),
-        @JsonProperty("periods") @ExcludeMissing periods: JsonField<List<FootballPeriod>> = JsonMissing.of(),
-        @JsonProperty("lastPlay") @ExcludeMissing lastPlay: JsonField<FootballPlay> = JsonMissing.of(),
-        @JsonProperty("teams") @ExcludeMissing teams: JsonField<Map<String, SportsTeam>> = JsonMissing.of(),
-        @JsonProperty("players") @ExcludeMissing players: JsonField<Map<String, FootballPlayer>> = JsonMissing.of(),
-    ) : this(id, league, seasonId, seasonType, week, startsAt, venue, status, clock, quarter, situation, home, away, periods, lastPlay, teams, players, mutableMapOf())
+        @JsonProperty("periods")
+        @ExcludeMissing
+        periods: JsonField<List<FootballPeriod>> = JsonMissing.of(),
+        @JsonProperty("lastPlay")
+        @ExcludeMissing
+        lastPlay: JsonField<FootballPlay> = JsonMissing.of(),
+        @JsonProperty("teams")
+        @ExcludeMissing
+        teams: JsonField<Map<String, SportsTeam>> = JsonMissing.of(),
+        @JsonProperty("players")
+        @ExcludeMissing
+        players: JsonField<Map<String, FootballPlayer>> = JsonMissing.of(),
+    ) : this(
+        id,
+        league,
+        seasonId,
+        seasonType,
+        week,
+        startsAt,
+        venue,
+        status,
+        clock,
+        quarter,
+        situation,
+        home,
+        away,
+        periods,
+        lastPlay,
+        teams,
+        players,
+        mutableMapOf(),
+    )
 
     /** The game ID from your request. */
     fun id(): String = id.getRequired("id")
@@ -150,7 +183,9 @@ private constructor(
     @JsonProperty("quarter") @ExcludeMissing fun _quarter(): JsonField<Long> = quarter
 
     /** Returns the raw JSON value of [situation]. */
-    @JsonProperty("situation") @ExcludeMissing fun _situation(): JsonField<FootballScoreboardSituation> = situation
+    @JsonProperty("situation")
+    @ExcludeMissing
+    fun _situation(): JsonField<FootballScoreboardSituation> = situation
 
     /** Returns the raw JSON value of [home]. */
     @JsonProperty("home") @ExcludeMissing fun _home(): JsonField<FootballSide> = home
@@ -159,7 +194,9 @@ private constructor(
     @JsonProperty("away") @ExcludeMissing fun _away(): JsonField<FootballSide> = away
 
     /** Returns the raw JSON value of [periods]. */
-    @JsonProperty("periods") @ExcludeMissing fun _periods(): JsonField<List<FootballPeriod>> = periods
+    @JsonProperty("periods")
+    @ExcludeMissing
+    fun _periods(): JsonField<List<FootballPeriod>> = periods
 
     /** Returns the raw JSON value of [lastPlay]. */
     @JsonProperty("lastPlay") @ExcludeMissing fun _lastPlay(): JsonField<FootballPlay> = lastPlay
@@ -168,7 +205,9 @@ private constructor(
     @JsonProperty("teams") @ExcludeMissing fun _teams(): JsonField<Map<String, SportsTeam>> = teams
 
     /** Returns the raw JSON value of [players]. */
-    @JsonProperty("players") @ExcludeMissing fun _players(): JsonField<Map<String, FootballPlayer>> = players
+    @JsonProperty("players")
+    @ExcludeMissing
+    fun _players(): JsonField<Map<String, FootballPlayer>> = players
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -210,7 +249,8 @@ private constructor(
         private var players: JsonField<Map<String, FootballPlayer>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballScoreboard: FootballScoreboard) = apply {
+        @JvmSynthetic
+        internal fun from(footballScoreboard: FootballScoreboard) = apply {
             id = footballScoreboard.id
             league = footballScoreboard.league
             seasonId = footballScoreboard.seasonId
@@ -312,12 +352,16 @@ private constructor(
         fun quarter(quarter: JsonField<Long>) = apply { this.quarter = quarter }
 
         /** Down & distance now, or null before kickoff. */
-        fun situation(situation: FootballScoreboardSituation?) = situation(JsonField.ofNullable(situation))
+        fun situation(situation: FootballScoreboardSituation?) =
+            situation(JsonField.ofNullable(situation))
 
-        fun situation(situation: Optional<FootballScoreboardSituation>) = situation(situation.getOrNull())
+        fun situation(situation: Optional<FootballScoreboardSituation>) =
+            situation(situation.getOrNull())
 
         /** Sets [Builder.situation] to an arbitrary JSON value. */
-        fun situation(situation: JsonField<FootballScoreboardSituation>) = apply { this.situation = situation }
+        fun situation(situation: JsonField<FootballScoreboardSituation>) = apply {
+            this.situation = situation
+        }
 
         /** A team's side of a scoreboard. */
         fun home(home: FootballSide) = home(JsonField.of(home))
@@ -335,7 +379,9 @@ private constructor(
         fun periods(periods: List<FootballPeriod>) = periods(JsonField.of(periods))
 
         /** Sets [Builder.periods] to an arbitrary JSON value. */
-        fun periods(periods: JsonField<List<FootballPeriod>>) = apply { this.periods = periods.map { it.toMutableList() } }
+        fun periods(periods: JsonField<List<FootballPeriod>>) = apply {
+            this.periods = periods.map { it.toMutableList() }
+        }
 
         /** Adds a single [FootballPeriod] to [periods]. */
         fun addPeriod(period: FootballPeriod) = apply {
@@ -363,7 +409,9 @@ private constructor(
         fun players(players: Map<String, FootballPlayer>) = players(JsonField.of(players))
 
         /** Sets [Builder.players] to an arbitrary JSON value. */
-        fun players(players: JsonField<Map<String, FootballPlayer>>) = apply { this.players = players }
+        fun players(players: JsonField<Map<String, FootballPlayer>>) = apply {
+            this.players = players
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -453,7 +501,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (league.asKnown().getOrNull()?.validity() ?: 0) +
             (if (seasonId.asKnown().isPresent) 1 else 0) +
@@ -498,15 +547,35 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, league, seasonId, seasonType, week, startsAt, venue, status, clock, quarter, situation, home, away, periods, lastPlay, teams, players, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            id,
+            league,
+            seasonId,
+            seasonType,
+            week,
+            startsAt,
+            venue,
+            status,
+            clock,
+            quarter,
+            situation,
+            home,
+            away,
+            periods,
+            lastPlay,
+            teams,
+            players,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
         "FootballScoreboard{id=$id, league=$league, seasonId=$seasonId, seasonType=$seasonType, week=$week, startsAt=$startsAt, venue=$venue, status=$status, clock=$clock, quarter=$quarter, situation=$situation, home=$home, away=$away, periods=$periods, lastPlay=$lastPlay, teams=$teams, players=$players, additionalProperties=$additionalProperties}"
 
-    class League @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class League @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /** Returns this class instance's raw value. */
         @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
@@ -534,7 +603,10 @@ private constructor(
             _UNKNOWN,
         }
 
-        /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if unknown.
+         */
         fun value(): Value =
             when (this) {
                 NFL -> Value.NFL

@@ -11,7 +11,14 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Checks 1 X account for a search ban, a search suggestion ban & reply deboosting. It also says if the account is active, protected or suspended. Each check answers pass, fail or unknown, with its reason & the posts, suggestions or replies it read. The reply check answers pass or unknown, since X ranks replies for each viewer. A protected account gets the suggestion check only, and a suspended account gets the account check only. Each profile, post, suggestion & reply in the answer costs 1 credit. */
+/**
+ * Checks 1 X account for a search ban, a search suggestion ban & reply deboosting. It also says if
+ * the account is active, protected or suspended. Each check answers pass, fail or unknown, with its
+ * reason & the posts, suggestions or replies it read. The reply check answers pass or unknown,
+ * since X ranks replies for each viewer. A protected account gets the suggestion check only, and a
+ * suspended account gets the account check only. Each profile, post, suggestion & reply in the
+ * answer costs 1 credit.
+ */
 class UserRetrieveShadowbanParams
 private constructor(
     private val id: String?,
@@ -21,13 +28,26 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** User ID, username with or without @, or URL-encoded profile URL, such as x.com/nasa or x.com/i/user/11348282. A number is a user ID. Writes look up a username's ID before sending. Anything else gets 400 `invalid_user_id`. */
+    /**
+     * User ID, username with or without @, or URL-encoded profile URL, such as x.com/nasa or
+     * x.com/i/user/11348282. A number is a user ID. Writes look up a username's ID before sending.
+     * Anything else gets 400 `invalid_user_id`.
+     */
     fun id(): Optional<String> = Optional.ofNullable(id)
 
-    /** Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. A required getter throws when you leave its field out, and response validation fails. */
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+     * author.username. A list keeps the field in each item. Case & underscores do not matter. A row
+     * that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name
+     * answers 400 unknown_field with the valid names, before any read. The price stays the same. A
+     * required getter throws when you leave its field out, and response validation fails.
+     */
     fun fields(): Optional<String> = Optional.ofNullable(fields)
 
-    /** Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. */
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+     * fields, it drops from the kept fields.
+     */
     fun omit(): Optional<String> = Optional.ofNullable(omit)
 
     /** Additional headers to send with the request. */
@@ -57,7 +77,8 @@ private constructor(
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
-        @JvmSynthetic internal fun from(userRetrieveShadowbanParams: UserRetrieveShadowbanParams) = apply {
+        @JvmSynthetic
+        internal fun from(userRetrieveShadowbanParams: UserRetrieveShadowbanParams) = apply {
             id = userRetrieveShadowbanParams.id
             fields = userRetrieveShadowbanParams.fields
             omit = userRetrieveShadowbanParams.omit
@@ -65,24 +86,37 @@ private constructor(
             additionalQueryParams = userRetrieveShadowbanParams.additionalQueryParams.toBuilder()
         }
 
-        /** User ID, username with or without @, or URL-encoded profile URL, such as x.com/nasa or x.com/i/user/11348282. A number is a user ID. Writes look up a username's ID before sending. Anything else gets 400 `invalid_user_id`. */
+        /**
+         * User ID, username with or without @, or URL-encoded profile URL, such as x.com/nasa or
+         * x.com/i/user/11348282. A number is a user ID. Writes look up a username's ID before
+         * sending. Anything else gets 400 `invalid_user_id`.
+         */
         fun id(id: String?) = apply { this.id = id }
 
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
 
-        /** Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. A required getter throws when you leave its field out, and response validation fails. */
+        /**
+         * Fields to keep in each row, comma-separated. Use dots for nested fields, such as
+         * author.username. A list keeps the field in each item. Case & underscores do not matter. A
+         * row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An
+         * unknown name answers 400 unknown_field with the valid names, before any read. The price
+         * stays the same. A required getter throws when you leave its field out, and response
+         * validation fails.
+         */
         fun fields(fields: String?) = apply { this.fields = fields }
 
         /** Alias for calling [Builder.fields] with `fields.orElse(null)`. */
         fun fields(fields: Optional<String>) = fields(fields.getOrNull())
 
-        /** Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. */
+        /**
+         * Fields to drop from each row, comma-separated. It takes the same names as fields. With
+         * fields, it drops from the kept fields.
+         */
         fun omit(omit: String?) = apply { this.omit = omit }
 
         /** Alias for calling [Builder.omit] with `omit.orElse(null)`. */
         fun omit(omit: Optional<String>) = omit(omit.getOrNull())
-
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()

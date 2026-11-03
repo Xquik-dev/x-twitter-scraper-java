@@ -70,7 +70,8 @@ private constructor(
         private var away: JsonField<FootballOdds>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballScheduleGameOdds: FootballScheduleGameOdds) = apply {
+        @JvmSynthetic
+        internal fun from(footballScheduleGameOdds: FootballScheduleGameOdds) = apply {
             home = footballScheduleGameOdds.home
             away = footballScheduleGameOdds.away
             additionalProperties = footballScheduleGameOdds.additionalProperties.toMutableMap()
@@ -146,7 +147,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (home.asKnown().getOrNull()?.validity() ?: 0) +
             (away.asKnown().getOrNull()?.validity() ?: 0)
 

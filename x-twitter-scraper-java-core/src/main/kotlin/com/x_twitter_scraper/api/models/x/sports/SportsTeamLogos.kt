@@ -80,7 +80,8 @@ private constructor(
         private var dark: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(sportsTeamLogos: SportsTeamLogos) = apply {
+        @JvmSynthetic
+        internal fun from(sportsTeamLogos: SportsTeamLogos) = apply {
             default_ = sportsTeamLogos.default_
             light = sportsTeamLogos.light
             dark = sportsTeamLogos.dark
@@ -137,7 +138,7 @@ private constructor(
          */
         fun build(): SportsTeamLogos =
             SportsTeamLogos(
-                checkRequired("default", default_),
+                checkRequired("default_", default_),
                 checkRequired("light", light),
                 checkRequired("dark", dark),
                 additionalProperties.toMutableMap(),
@@ -171,7 +172,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (default_.asKnown().isPresent) 1 else 0) +
             (if (light.asKnown().isPresent) 1 else 0) +
             (if (dark.asKnown().isPresent) 1 else 0)

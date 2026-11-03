@@ -84,7 +84,9 @@ class XTwitterScraperClientImpl(private val clientOptions: ClientOptions) : XTwi
 
     private val draws: DrawService by lazy { DrawServiceImpl(clientOptionsWithUserAgent) }
 
-    private val activity: ActivityService by lazy { ActivityServiceImpl(clientOptionsWithUserAgent) }
+    private val activity: ActivityService by lazy {
+        ActivityServiceImpl(clientOptionsWithUserAgent)
+    }
 
     private val webhooks: WebhookService by lazy { WebhookServiceImpl(clientOptionsWithUserAgent) }
 

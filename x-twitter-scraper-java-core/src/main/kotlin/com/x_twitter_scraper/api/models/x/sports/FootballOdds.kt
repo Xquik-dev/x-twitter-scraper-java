@@ -80,7 +80,8 @@ private constructor(
         private var total: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballOdds: FootballOdds) = apply {
+        @JvmSynthetic
+        internal fun from(footballOdds: FootballOdds) = apply {
             moneyLine = footballOdds.moneyLine
             spread = footballOdds.spread
             total = footballOdds.total
@@ -171,7 +172,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (moneyLine.asKnown().isPresent) 1 else 0) +
             (if (spread.asKnown().isPresent) 1 else 0) +
             (if (total.asKnown().isPresent) 1 else 0)
@@ -188,7 +190,9 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(moneyLine, spread, total, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(moneyLine, spread, total, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

@@ -217,8 +217,7 @@ private constructor(
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(id, hours, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int = Objects.hash(id, hours, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "PostRetrieveMetricsParams{id=$id, hours=$hours, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

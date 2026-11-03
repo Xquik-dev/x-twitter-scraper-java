@@ -60,8 +60,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [SportRetrievePlaysParams].
+         * Returns a mutable builder for constructing an instance of [SportRetrievePlaysParams].
          *
          * The following fields are required:
          * ```java
@@ -82,16 +81,14 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(sportRetrievePlaysParams: SportRetrievePlaysParams) =
-            apply {
-                league = sportRetrievePlaysParams.league
-                id = sportRetrievePlaysParams.id
-                fields = sportRetrievePlaysParams.fields
-                omit = sportRetrievePlaysParams.omit
-                additionalHeaders = sportRetrievePlaysParams.additionalHeaders.toBuilder()
-                additionalQueryParams =
-                    sportRetrievePlaysParams.additionalQueryParams.toBuilder()
-            }
+        internal fun from(sportRetrievePlaysParams: SportRetrievePlaysParams) = apply {
+            league = sportRetrievePlaysParams.league
+            id = sportRetrievePlaysParams.id
+            fields = sportRetrievePlaysParams.fields
+            omit = sportRetrievePlaysParams.omit
+            additionalHeaders = sportRetrievePlaysParams.additionalHeaders.toBuilder()
+            additionalQueryParams = sportRetrievePlaysParams.additionalQueryParams.toBuilder()
+        }
 
         /**
          * nfl for the NFL or ncaafb for college football, in any case. Another value gets a free

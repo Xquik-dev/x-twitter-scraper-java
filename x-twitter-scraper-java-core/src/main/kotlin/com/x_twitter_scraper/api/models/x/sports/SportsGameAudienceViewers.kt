@@ -17,7 +17,6 @@ import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
-import kotlin.jvm.optionals.getOrNull
 
 /** People watching the game on X at X's last count. Null before X counts any, as before kickoff. */
 class SportsGameAudienceViewers
@@ -60,7 +59,9 @@ private constructor(
 
     companion object {
 
-        /** Returns a mutable builder for constructing an instance of [SportsGameAudienceViewers]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [SportsGameAudienceViewers].
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -71,7 +72,8 @@ private constructor(
         private var asOf: JsonField<OffsetDateTime>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(sportsGameAudienceViewers: SportsGameAudienceViewers) = apply {
+        @JvmSynthetic
+        internal fun from(sportsGameAudienceViewers: SportsGameAudienceViewers) = apply {
             count = sportsGameAudienceViewers.count
             asOf = sportsGameAudienceViewers.asOf
             additionalProperties = sportsGameAudienceViewers.additionalProperties.toMutableMap()
@@ -147,9 +149,9 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
-        (if (count.asKnown().isPresent) 1 else 0) +
-            (if (asOf.asKnown().isPresent) 1 else 0)
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (count.asKnown().isPresent) 1 else 0) + (if (asOf.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

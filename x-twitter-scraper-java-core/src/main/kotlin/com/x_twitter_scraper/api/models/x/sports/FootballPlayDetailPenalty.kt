@@ -33,7 +33,9 @@ private constructor(
 
     @JsonCreator
     private constructor(
-        @JsonProperty("description") @ExcludeMissing description: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("description")
+        @ExcludeMissing
+        description: JsonField<String> = JsonMissing.of(),
         @JsonProperty("nextDown") @ExcludeMissing nextDown: JsonField<String> = JsonMissing.of(),
         @JsonProperty("result") @ExcludeMissing result: JsonField<String> = JsonMissing.of(),
         @JsonProperty("teamId") @ExcludeMissing teamId: JsonField<String> = JsonMissing.of(),
@@ -84,7 +86,9 @@ private constructor(
 
     companion object {
 
-        /** Returns a mutable builder for constructing an instance of [FootballPlayDetailPenalty]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [FootballPlayDetailPenalty].
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -98,7 +102,8 @@ private constructor(
         private var yards: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballPlayDetailPenalty: FootballPlayDetailPenalty) = apply {
+        @JvmSynthetic
+        internal fun from(footballPlayDetailPenalty: FootballPlayDetailPenalty) = apply {
             description = footballPlayDetailPenalty.description
             nextDown = footballPlayDetailPenalty.nextDown
             result = footballPlayDetailPenalty.result
@@ -213,7 +218,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (description.asKnown().isPresent) 1 else 0) +
             (if (nextDown.asKnown().isPresent) 1 else 0) +
             (if (result.asKnown().isPresent) 1 else 0) +
@@ -234,7 +240,9 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(description, nextDown, result, teamId, yards, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(description, nextDown, result, teamId, yards, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

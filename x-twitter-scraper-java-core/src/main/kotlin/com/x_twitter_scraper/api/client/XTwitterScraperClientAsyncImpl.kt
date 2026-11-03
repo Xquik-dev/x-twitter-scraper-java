@@ -97,7 +97,9 @@ class XTwitterScraperClientAsyncImpl(private val clientOptions: ClientOptions) :
 
     private val draws: DrawServiceAsync by lazy { DrawServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val activity: ActivityServiceAsync by lazy { ActivityServiceAsyncImpl(clientOptionsWithUserAgent) }
+    private val activity: ActivityServiceAsync by lazy {
+        ActivityServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
 
     private val webhooks: WebhookServiceAsync by lazy {
         WebhookServiceAsyncImpl(clientOptionsWithUserAgent)

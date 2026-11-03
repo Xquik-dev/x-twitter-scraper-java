@@ -46,11 +46,30 @@ private constructor(
         @JsonProperty("jersey") @ExcludeMissing jersey: JsonField<String> = JsonMissing.of(),
         @JsonProperty("position") @ExcludeMissing position: JsonField<String> = JsonMissing.of(),
         @JsonProperty("college") @ExcludeMissing college: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("birthPlace") @ExcludeMissing birthPlace: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("birthPlace")
+        @ExcludeMissing
+        birthPlace: JsonField<String> = JsonMissing.of(),
         @JsonProperty("birthDate") @ExcludeMissing birthDate: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("headshots") @ExcludeMissing headshots: JsonField<FootballPlayerHeadshots> = JsonMissing.of(),
-        @JsonProperty("xUser") @ExcludeMissing xUser: JsonField<FootballPlayerXUser> = JsonMissing.of(),
-    ) : this(id, teamId, name, shortName, jersey, position, college, birthPlace, birthDate, headshots, xUser, mutableMapOf())
+        @JsonProperty("headshots")
+        @ExcludeMissing
+        headshots: JsonField<FootballPlayerHeadshots> = JsonMissing.of(),
+        @JsonProperty("xUser")
+        @ExcludeMissing
+        xUser: JsonField<FootballPlayerXUser> = JsonMissing.of(),
+    ) : this(
+        id,
+        teamId,
+        name,
+        shortName,
+        jersey,
+        position,
+        college,
+        birthPlace,
+        birthDate,
+        headshots,
+        xUser,
+        mutableMapOf(),
+    )
 
     /** The player ID that plays & stats refer to. */
     fun id(): String = id.getRequired("id")
@@ -113,7 +132,9 @@ private constructor(
     @JsonProperty("birthDate") @ExcludeMissing fun _birthDate(): JsonField<String> = birthDate
 
     /** Returns the raw JSON value of [headshots]. */
-    @JsonProperty("headshots") @ExcludeMissing fun _headshots(): JsonField<FootballPlayerHeadshots> = headshots
+    @JsonProperty("headshots")
+    @ExcludeMissing
+    fun _headshots(): JsonField<FootballPlayerHeadshots> = headshots
 
     /** Returns the raw JSON value of [xUser]. */
     @JsonProperty("xUser") @ExcludeMissing fun _xUser(): JsonField<FootballPlayerXUser> = xUser
@@ -152,7 +173,8 @@ private constructor(
         private var xUser: JsonField<FootballPlayerXUser>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballPlayer: FootballPlayer) = apply {
+        @JvmSynthetic
+        internal fun from(footballPlayer: FootballPlayer) = apply {
             id = footballPlayer.id
             teamId = footballPlayer.teamId
             name = footballPlayer.name
@@ -241,7 +263,9 @@ private constructor(
         fun headshots(headshots: FootballPlayerHeadshots) = headshots(JsonField.of(headshots))
 
         /** Sets [Builder.headshots] to an arbitrary JSON value. */
-        fun headshots(headshots: JsonField<FootballPlayerHeadshots>) = apply { this.headshots = headshots }
+        fun headshots(headshots: JsonField<FootballPlayerHeadshots>) = apply {
+            this.headshots = headshots
+        }
 
         /** The player's X account, or null without one. */
         fun xUser(xUser: FootballPlayerXUser?) = xUser(JsonField.ofNullable(xUser))
@@ -327,7 +351,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (teamId.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
@@ -360,7 +385,22 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, teamId, name, shortName, jersey, position, college, birthPlace, birthDate, headshots, xUser, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            id,
+            teamId,
+            name,
+            shortName,
+            jersey,
+            position,
+            college,
+            birthPlace,
+            birthDate,
+            headshots,
+            xUser,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

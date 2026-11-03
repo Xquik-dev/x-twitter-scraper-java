@@ -94,7 +94,9 @@ Call REST directly when a Maven dependency does not fit.
 | Search X job listings | `GET /x/jobs/search`, `GET /x/jobs/{id}` | `client.x().jobs()` |
 | Read Spaces, replays, and live broadcasts | `GET /x/spaces/search`, `GET /x/spaces/{id}/replay`, `GET /x/broadcasts/{id}` | `client.x().spaces()`, `client.x().broadcasts()` |
 | Read Community Notes contributors and their notes | `GET /x/community-notes/contributors/{alias}/notes` | `client.x().communityNotes()` |
-| Read NFL & college football games, box scores, plays and audiences | `GET /x/sports/{league}/games`, `GET /x/sports/{league}/games/{id}/plays` | `client.x().sports()` |
+| Read NFL & college football games, box scores, plays, audiences, rosters, player props and posts | `GET /x/sports/{league}/games`, `GET /x/sports/{league}/games/{id}/plays` | `client.x().sports()` |
+| Read the account's activity log and each activity's full record | `GET /activity`, `GET /activity/{id}` | `client.activity()` |
+| Check 1 account for a search ban, a suggestion ban and reply deboosting | `GET /x/users/{id}/shadowban` | `client.x().users().retrieveShadowban` |
 
 ## Install
 

@@ -19,7 +19,10 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** A metric's value at the hour's end & its gain over that hour. Both are null when X shows no count. */
+/**
+ * A metric's value at the hour's end & its gain over that hour. Both are null when X shows no
+ * count.
+ */
 class PostMetricPoint
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -69,7 +72,8 @@ private constructor(
         private var gain: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(postMetricPoint: PostMetricPoint) = apply {
+        @JvmSynthetic
+        internal fun from(postMetricPoint: PostMetricPoint) = apply {
             value = postMetricPoint.value
             gain = postMetricPoint.gain
             additionalProperties = postMetricPoint.additionalProperties.toMutableMap()
@@ -151,9 +155,9 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
-        (if (value.asKnown().isPresent) 1 else 0) +
-            (if (gain.asKnown().isPresent) 1 else 0)
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (value.asKnown().isPresent) 1 else 0) + (if (gain.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

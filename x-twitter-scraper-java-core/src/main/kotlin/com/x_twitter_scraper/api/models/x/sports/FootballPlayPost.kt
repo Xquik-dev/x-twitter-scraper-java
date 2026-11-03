@@ -71,7 +71,8 @@ private constructor(
         private var username: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballPlayPost: FootballPlayPost) = apply {
+        @JvmSynthetic
+        internal fun from(footballPlayPost: FootballPlayPost) = apply {
             id = footballPlayPost.id
             username = footballPlayPost.username
             additionalProperties = footballPlayPost.additionalProperties.toMutableMap()
@@ -149,9 +150,9 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
-        (if (id.asKnown().isPresent) 1 else 0) +
-            (if (username.asKnown().isPresent) 1 else 0)
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (id.asKnown().isPresent) 1 else 0) + (if (username.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

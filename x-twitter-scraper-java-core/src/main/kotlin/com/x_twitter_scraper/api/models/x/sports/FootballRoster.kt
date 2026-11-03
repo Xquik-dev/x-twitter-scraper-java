@@ -37,9 +37,15 @@ private constructor(
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
         @JsonProperty("league") @ExcludeMissing league: JsonField<League> = JsonMissing.of(),
-        @JsonProperty("rosters") @ExcludeMissing rosters: JsonField<List<FootballRosterTeam>> = JsonMissing.of(),
-        @JsonProperty("teams") @ExcludeMissing teams: JsonField<Map<String, SportsTeam>> = JsonMissing.of(),
-        @JsonProperty("players") @ExcludeMissing players: JsonField<Map<String, FootballPlayer>> = JsonMissing.of(),
+        @JsonProperty("rosters")
+        @ExcludeMissing
+        rosters: JsonField<List<FootballRosterTeam>> = JsonMissing.of(),
+        @JsonProperty("teams")
+        @ExcludeMissing
+        teams: JsonField<Map<String, SportsTeam>> = JsonMissing.of(),
+        @JsonProperty("players")
+        @ExcludeMissing
+        players: JsonField<Map<String, FootballPlayer>> = JsonMissing.of(),
     ) : this(id, league, rosters, teams, players, mutableMapOf())
 
     /** The ID of the game these rosters cover. */
@@ -54,7 +60,10 @@ private constructor(
     /** The 2 teams, by team ID. */
     fun teams(): Map<String, SportsTeam> = teams.getRequired("teams")
 
-    /** Every rostered player, by player ID. Rosters carry no college or birth details & only a medium headshot, so the rest are null. */
+    /**
+     * Every rostered player, by player ID. Rosters carry no college or birth details & only a
+     * medium headshot, so the rest are null.
+     */
     fun players(): Map<String, FootballPlayer> = players.getRequired("players")
 
     /** Returns the raw JSON value of [id]. */
@@ -64,13 +73,17 @@ private constructor(
     @JsonProperty("league") @ExcludeMissing fun _league(): JsonField<League> = league
 
     /** Returns the raw JSON value of [rosters]. */
-    @JsonProperty("rosters") @ExcludeMissing fun _rosters(): JsonField<List<FootballRosterTeam>> = rosters
+    @JsonProperty("rosters")
+    @ExcludeMissing
+    fun _rosters(): JsonField<List<FootballRosterTeam>> = rosters
 
     /** Returns the raw JSON value of [teams]. */
     @JsonProperty("teams") @ExcludeMissing fun _teams(): JsonField<Map<String, SportsTeam>> = teams
 
     /** Returns the raw JSON value of [players]. */
-    @JsonProperty("players") @ExcludeMissing fun _players(): JsonField<Map<String, FootballPlayer>> = players
+    @JsonProperty("players")
+    @ExcludeMissing
+    fun _players(): JsonField<Map<String, FootballPlayer>> = players
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -100,7 +113,8 @@ private constructor(
         private var players: JsonField<Map<String, FootballPlayer>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballRoster: FootballRoster) = apply {
+        @JvmSynthetic
+        internal fun from(footballRoster: FootballRoster) = apply {
             id = footballRoster.id
             league = footballRoster.league
             rosters = footballRoster.rosters.map { it.toMutableList() }
@@ -125,7 +139,9 @@ private constructor(
         fun rosters(rosters: List<FootballRosterTeam>) = rosters(JsonField.of(rosters))
 
         /** Sets [Builder.rosters] to an arbitrary JSON value. */
-        fun rosters(rosters: JsonField<List<FootballRosterTeam>>) = apply { this.rosters = rosters.map { it.toMutableList() } }
+        fun rosters(rosters: JsonField<List<FootballRosterTeam>>) = apply {
+            this.rosters = rosters.map { it.toMutableList() }
+        }
 
         /** Adds a single [FootballRosterTeam] to [rosters]. */
         fun addRoster(roster: FootballRosterTeam) = apply {
@@ -141,11 +157,16 @@ private constructor(
         /** Sets [Builder.teams] to an arbitrary JSON value. */
         fun teams(teams: JsonField<Map<String, SportsTeam>>) = apply { this.teams = teams }
 
-        /** Every rostered player, by player ID. Rosters carry no college or birth details & only a medium headshot, so the rest are null. */
+        /**
+         * Every rostered player, by player ID. Rosters carry no college or birth details & only a
+         * medium headshot, so the rest are null.
+         */
         fun players(players: Map<String, FootballPlayer>) = players(JsonField.of(players))
 
         /** Sets [Builder.players] to an arbitrary JSON value. */
-        fun players(players: JsonField<Map<String, FootballPlayer>>) = apply { this.players = players }
+        fun players(players: JsonField<Map<String, FootballPlayer>>) = apply {
+            this.players = players
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -189,7 +210,8 @@ private constructor(
     /**
      * Validates that the types of all values in this object match their expected types recursively.
      *
-     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
      */
     fun validate(): FootballRoster = apply {
         if (validated) {
@@ -212,12 +234,13 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (league.asKnown().getOrNull()?.validity() ?: 0) +
-            (rosters.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (teams.asKnown().getOrNull()?.values?.sumOf { it.validity().toInt() } ?: 0) +
-            (players.asKnown().getOrNull()?.values?.sumOf { it.validity().toInt() } ?: 0)
+            (rosters.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
+            (teams.asKnown().getOrNull()?.values?.sumOf { it.validity() } ?: 0) +
+            (players.asKnown().getOrNull()?.values?.sumOf { it.validity() } ?: 0)
 
     /** The league of the game these rosters cover. */
     class League @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -234,7 +257,7 @@ private constructor(
 
         /** An enum containing [League]'s known values. */
         enum class Known {
-            NFL,
+            NFL
         }
 
         /** An enum containing [League]'s known values, as well as an [_UNKNOWN] member. */
@@ -244,7 +267,10 @@ private constructor(
             _UNKNOWN,
         }
 
-        /** Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if unknown. */
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if unknown.
+         */
         fun value(): Value =
             when (this) {
                 NFL -> Value.NFL
@@ -254,7 +280,8 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value.
          *
-         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a known member.
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
          */
         fun known(): Known =
             when (this) {
@@ -265,10 +292,13 @@ private constructor(
         /**
          * Returns this class instance's primitive wire representation.
          *
-         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have the expected primitive type.
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
          */
         fun asString(): String =
-            _value().asString().orElseThrow { XTwitterScraperInvalidDataException("Value is not a String") }
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
 
         private var validated: Boolean = false
 
@@ -319,7 +349,9 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, league, rosters, teams, players, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(id, league, rosters, teams, players, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

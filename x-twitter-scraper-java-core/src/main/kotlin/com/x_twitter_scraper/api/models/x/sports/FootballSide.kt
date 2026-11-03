@@ -33,7 +33,9 @@ private constructor(
     private constructor(
         @JsonProperty("teamId") @ExcludeMissing teamId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("points") @ExcludeMissing points: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("timeoutsLeft") @ExcludeMissing timeoutsLeft: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("timeoutsLeft")
+        @ExcludeMissing
+        timeoutsLeft: JsonField<Long> = JsonMissing.of(),
     ) : this(teamId, points, timeoutsLeft, mutableMapOf())
 
     /** The team, a key of teams. */
@@ -52,7 +54,9 @@ private constructor(
     @JsonProperty("points") @ExcludeMissing fun _points(): JsonField<Long> = points
 
     /** Returns the raw JSON value of [timeoutsLeft]. */
-    @JsonProperty("timeoutsLeft") @ExcludeMissing fun _timeoutsLeft(): JsonField<Long> = timeoutsLeft
+    @JsonProperty("timeoutsLeft")
+    @ExcludeMissing
+    fun _timeoutsLeft(): JsonField<Long> = timeoutsLeft
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -80,7 +84,8 @@ private constructor(
         private var timeoutsLeft: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballSide: FootballSide) = apply {
+        @JvmSynthetic
+        internal fun from(footballSide: FootballSide) = apply {
             teamId = footballSide.teamId
             points = footballSide.points
             timeoutsLeft = footballSide.timeoutsLeft
@@ -175,7 +180,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (teamId.asKnown().isPresent) 1 else 0) +
             (if (points.asKnown().isPresent) 1 else 0) +
             (if (timeoutsLeft.asKnown().isPresent) 1 else 0)
@@ -192,7 +198,9 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(teamId, points, timeoutsLeft, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(teamId, points, timeoutsLeft, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

@@ -38,15 +38,38 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("firstDowns") @ExcludeMissing firstDowns: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("thirdDowns") @ExcludeMissing thirdDowns: JsonField<FootballTeamTotalsThirdDowns> = JsonMissing.of(),
-        @JsonProperty("fumbles") @ExcludeMissing fumbles: JsonField<FootballFumbleStats> = JsonMissing.of(),
-        @JsonProperty("passing") @ExcludeMissing passing: JsonField<FootballPassingStats> = JsonMissing.of(),
-        @JsonProperty("penalties") @ExcludeMissing penalties: JsonField<FootballTeamTotalsPenalties> = JsonMissing.of(),
-        @JsonProperty("rushing") @ExcludeMissing rushing: JsonField<FootballRushingStats> = JsonMissing.of(),
-        @JsonProperty("timeOfPossessionSeconds") @ExcludeMissing timeOfPossessionSeconds: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("thirdDowns")
+        @ExcludeMissing
+        thirdDowns: JsonField<FootballTeamTotalsThirdDowns> = JsonMissing.of(),
+        @JsonProperty("fumbles")
+        @ExcludeMissing
+        fumbles: JsonField<FootballFumbleStats> = JsonMissing.of(),
+        @JsonProperty("passing")
+        @ExcludeMissing
+        passing: JsonField<FootballPassingStats> = JsonMissing.of(),
+        @JsonProperty("penalties")
+        @ExcludeMissing
+        penalties: JsonField<FootballTeamTotalsPenalties> = JsonMissing.of(),
+        @JsonProperty("rushing")
+        @ExcludeMissing
+        rushing: JsonField<FootballRushingStats> = JsonMissing.of(),
+        @JsonProperty("timeOfPossessionSeconds")
+        @ExcludeMissing
+        timeOfPossessionSeconds: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("totalYards") @ExcludeMissing totalYards: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("turnovers") @ExcludeMissing turnovers: JsonField<Long> = JsonMissing.of(),
-    ) : this(firstDowns, thirdDowns, fumbles, passing, penalties, rushing, timeOfPossessionSeconds, totalYards, turnovers, mutableMapOf())
+    ) : this(
+        firstDowns,
+        thirdDowns,
+        fumbles,
+        passing,
+        penalties,
+        rushing,
+        timeOfPossessionSeconds,
+        totalYards,
+        turnovers,
+        mutableMapOf(),
+    )
 
     /** First downs. */
     fun firstDowns(): Optional<Long> = firstDowns.getOptional("firstDowns")
@@ -67,7 +90,8 @@ private constructor(
     fun rushing(): Optional<FootballRushingStats> = rushing.getOptional("rushing")
 
     /** Time with the ball, in seconds. */
-    fun timeOfPossessionSeconds(): Optional<Long> = timeOfPossessionSeconds.getOptional("timeOfPossessionSeconds")
+    fun timeOfPossessionSeconds(): Optional<Long> =
+        timeOfPossessionSeconds.getOptional("timeOfPossessionSeconds")
 
     /** Total yards. */
     fun totalYards(): Optional<Long> = totalYards.getOptional("totalYards")
@@ -79,22 +103,34 @@ private constructor(
     @JsonProperty("firstDowns") @ExcludeMissing fun _firstDowns(): JsonField<Long> = firstDowns
 
     /** Returns the raw JSON value of [thirdDowns]. */
-    @JsonProperty("thirdDowns") @ExcludeMissing fun _thirdDowns(): JsonField<FootballTeamTotalsThirdDowns> = thirdDowns
+    @JsonProperty("thirdDowns")
+    @ExcludeMissing
+    fun _thirdDowns(): JsonField<FootballTeamTotalsThirdDowns> = thirdDowns
 
     /** Returns the raw JSON value of [fumbles]. */
-    @JsonProperty("fumbles") @ExcludeMissing fun _fumbles(): JsonField<FootballFumbleStats> = fumbles
+    @JsonProperty("fumbles")
+    @ExcludeMissing
+    fun _fumbles(): JsonField<FootballFumbleStats> = fumbles
 
     /** Returns the raw JSON value of [passing]. */
-    @JsonProperty("passing") @ExcludeMissing fun _passing(): JsonField<FootballPassingStats> = passing
+    @JsonProperty("passing")
+    @ExcludeMissing
+    fun _passing(): JsonField<FootballPassingStats> = passing
 
     /** Returns the raw JSON value of [penalties]. */
-    @JsonProperty("penalties") @ExcludeMissing fun _penalties(): JsonField<FootballTeamTotalsPenalties> = penalties
+    @JsonProperty("penalties")
+    @ExcludeMissing
+    fun _penalties(): JsonField<FootballTeamTotalsPenalties> = penalties
 
     /** Returns the raw JSON value of [rushing]. */
-    @JsonProperty("rushing") @ExcludeMissing fun _rushing(): JsonField<FootballRushingStats> = rushing
+    @JsonProperty("rushing")
+    @ExcludeMissing
+    fun _rushing(): JsonField<FootballRushingStats> = rushing
 
     /** Returns the raw JSON value of [timeOfPossessionSeconds]. */
-    @JsonProperty("timeOfPossessionSeconds") @ExcludeMissing fun _timeOfPossessionSeconds(): JsonField<Long> = timeOfPossessionSeconds
+    @JsonProperty("timeOfPossessionSeconds")
+    @ExcludeMissing
+    fun _timeOfPossessionSeconds(): JsonField<Long> = timeOfPossessionSeconds
 
     /** Returns the raw JSON value of [totalYards]. */
     @JsonProperty("totalYards") @ExcludeMissing fun _totalYards(): JsonField<Long> = totalYards
@@ -134,7 +170,8 @@ private constructor(
         private var turnovers: JsonField<Long>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballTeamTotals: FootballTeamTotals) = apply {
+        @JvmSynthetic
+        internal fun from(footballTeamTotals: FootballTeamTotals) = apply {
             firstDowns = footballTeamTotals.firstDowns
             thirdDowns = footballTeamTotals.thirdDowns
             fumbles = footballTeamTotals.fumbles
@@ -158,12 +195,16 @@ private constructor(
         fun firstDowns(firstDowns: JsonField<Long>) = apply { this.firstDowns = firstDowns }
 
         /** Third downs tried & converted. */
-        fun thirdDowns(thirdDowns: FootballTeamTotalsThirdDowns?) = thirdDowns(JsonField.ofNullable(thirdDowns))
+        fun thirdDowns(thirdDowns: FootballTeamTotalsThirdDowns?) =
+            thirdDowns(JsonField.ofNullable(thirdDowns))
 
-        fun thirdDowns(thirdDowns: Optional<FootballTeamTotalsThirdDowns>) = thirdDowns(thirdDowns.getOrNull())
+        fun thirdDowns(thirdDowns: Optional<FootballTeamTotalsThirdDowns>) =
+            thirdDowns(thirdDowns.getOrNull())
 
         /** Sets [Builder.thirdDowns] to an arbitrary JSON value. */
-        fun thirdDowns(thirdDowns: JsonField<FootballTeamTotalsThirdDowns>) = apply { this.thirdDowns = thirdDowns }
+        fun thirdDowns(thirdDowns: JsonField<FootballTeamTotalsThirdDowns>) = apply {
+            this.thirdDowns = thirdDowns
+        }
 
         /** The team's fumbles, or null. */
         fun fumbles(fumbles: FootballFumbleStats?) = fumbles(JsonField.ofNullable(fumbles))
@@ -182,12 +223,16 @@ private constructor(
         fun passing(passing: JsonField<FootballPassingStats>) = apply { this.passing = passing }
 
         /** Penalties against the team. */
-        fun penalties(penalties: FootballTeamTotalsPenalties?) = penalties(JsonField.ofNullable(penalties))
+        fun penalties(penalties: FootballTeamTotalsPenalties?) =
+            penalties(JsonField.ofNullable(penalties))
 
-        fun penalties(penalties: Optional<FootballTeamTotalsPenalties>) = penalties(penalties.getOrNull())
+        fun penalties(penalties: Optional<FootballTeamTotalsPenalties>) =
+            penalties(penalties.getOrNull())
 
         /** Sets [Builder.penalties] to an arbitrary JSON value. */
-        fun penalties(penalties: JsonField<FootballTeamTotalsPenalties>) = apply { this.penalties = penalties }
+        fun penalties(penalties: JsonField<FootballTeamTotalsPenalties>) = apply {
+            this.penalties = penalties
+        }
 
         /** The team's rushing, or null. */
         fun rushing(rushing: FootballRushingStats?) = rushing(JsonField.ofNullable(rushing))
@@ -198,14 +243,19 @@ private constructor(
         fun rushing(rushing: JsonField<FootballRushingStats>) = apply { this.rushing = rushing }
 
         /** Time with the ball, in seconds. */
-        fun timeOfPossessionSeconds(timeOfPossessionSeconds: Long?) = timeOfPossessionSeconds(JsonField.ofNullable(timeOfPossessionSeconds))
+        fun timeOfPossessionSeconds(timeOfPossessionSeconds: Long?) =
+            timeOfPossessionSeconds(JsonField.ofNullable(timeOfPossessionSeconds))
 
-        fun timeOfPossessionSeconds(timeOfPossessionSeconds: Long) = timeOfPossessionSeconds(timeOfPossessionSeconds as Long?)
+        fun timeOfPossessionSeconds(timeOfPossessionSeconds: Long) =
+            timeOfPossessionSeconds(timeOfPossessionSeconds as Long?)
 
-        fun timeOfPossessionSeconds(timeOfPossessionSeconds: Optional<Long>) = timeOfPossessionSeconds(timeOfPossessionSeconds.getOrNull())
+        fun timeOfPossessionSeconds(timeOfPossessionSeconds: Optional<Long>) =
+            timeOfPossessionSeconds(timeOfPossessionSeconds.getOrNull())
 
         /** Sets [Builder.timeOfPossessionSeconds] to an arbitrary JSON value. */
-        fun timeOfPossessionSeconds(timeOfPossessionSeconds: JsonField<Long>) = apply { this.timeOfPossessionSeconds = timeOfPossessionSeconds }
+        fun timeOfPossessionSeconds(timeOfPossessionSeconds: JsonField<Long>) = apply {
+            this.timeOfPossessionSeconds = timeOfPossessionSeconds
+        }
 
         /** Total yards. */
         fun totalYards(totalYards: Long?) = totalYards(JsonField.ofNullable(totalYards))
@@ -299,7 +349,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (firstDowns.asKnown().isPresent) 1 else 0) +
             (thirdDowns.asKnown().getOrNull()?.validity() ?: 0) +
             (fumbles.asKnown().getOrNull()?.validity() ?: 0) +
@@ -328,7 +379,20 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(firstDowns, thirdDowns, fumbles, passing, penalties, rushing, timeOfPossessionSeconds, totalYards, turnovers, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            firstDowns,
+            thirdDowns,
+            fumbles,
+            passing,
+            penalties,
+            rushing,
+            timeOfPossessionSeconds,
+            totalYards,
+            turnovers,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

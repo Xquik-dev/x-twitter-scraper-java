@@ -51,18 +51,50 @@ private constructor(
         @JsonProperty("clock") @ExcludeMissing clock: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonField<String> = JsonMissing.of(),
         @JsonProperty("direction") @ExcludeMissing direction: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("description") @ExcludeMissing description: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("description")
+        @ExcludeMissing
+        description: JsonField<String> = JsonMissing.of(),
         @JsonProperty("scoring") @ExcludeMissing scoring: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("homePoints") @ExcludeMissing homePoints: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("awayPoints") @ExcludeMissing awayPoints: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("score") @ExcludeMissing score: JsonField<FootballPlayScore> = JsonMissing.of(),
-        @JsonProperty("start") @ExcludeMissing start: JsonField<FootballPlayStart> = JsonMissing.of(),
-        @JsonProperty("onField") @ExcludeMissing onField: JsonField<FootballPlayOnField> = JsonMissing.of(),
-        @JsonProperty("details") @ExcludeMissing details: JsonField<List<FootballPlayDetail>> = JsonMissing.of(),
+        @JsonProperty("score")
+        @ExcludeMissing
+        score: JsonField<FootballPlayScore> = JsonMissing.of(),
+        @JsonProperty("start")
+        @ExcludeMissing
+        start: JsonField<FootballPlayStart> = JsonMissing.of(),
+        @JsonProperty("onField")
+        @ExcludeMissing
+        onField: JsonField<FootballPlayOnField> = JsonMissing.of(),
+        @JsonProperty("details")
+        @ExcludeMissing
+        details: JsonField<List<FootballPlayDetail>> = JsonMissing.of(),
         @JsonProperty("post") @ExcludeMissing post: JsonField<FootballPlayPost> = JsonMissing.of(),
-        @JsonProperty("videoPostId") @ExcludeMissing videoPostId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("videoReplyPostId") @ExcludeMissing videoReplyPostId: JsonField<String> = JsonMissing.of(),
-    ) : this(id, sequence, clock, type, direction, description, scoring, homePoints, awayPoints, score, start, onField, details, post, videoPostId, videoReplyPostId, mutableMapOf())
+        @JsonProperty("videoPostId")
+        @ExcludeMissing
+        videoPostId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("videoReplyPostId")
+        @ExcludeMissing
+        videoReplyPostId: JsonField<String> = JsonMissing.of(),
+    ) : this(
+        id,
+        sequence,
+        clock,
+        type,
+        direction,
+        description,
+        scoring,
+        homePoints,
+        awayPoints,
+        score,
+        start,
+        onField,
+        details,
+        post,
+        videoPostId,
+        videoReplyPostId,
+        mutableMapOf(),
+    )
 
     /** X's ID for the play within the game. */
     fun id(): Optional<String> = id.getOptional("id")
@@ -146,10 +178,14 @@ private constructor(
     @JsonProperty("start") @ExcludeMissing fun _start(): JsonField<FootballPlayStart> = start
 
     /** Returns the raw JSON value of [onField]. */
-    @JsonProperty("onField") @ExcludeMissing fun _onField(): JsonField<FootballPlayOnField> = onField
+    @JsonProperty("onField")
+    @ExcludeMissing
+    fun _onField(): JsonField<FootballPlayOnField> = onField
 
     /** Returns the raw JSON value of [details]. */
-    @JsonProperty("details") @ExcludeMissing fun _details(): JsonField<List<FootballPlayDetail>> = details
+    @JsonProperty("details")
+    @ExcludeMissing
+    fun _details(): JsonField<List<FootballPlayDetail>> = details
 
     /** Returns the raw JSON value of [post]. */
     @JsonProperty("post") @ExcludeMissing fun _post(): JsonField<FootballPlayPost> = post
@@ -158,7 +194,9 @@ private constructor(
     @JsonProperty("videoPostId") @ExcludeMissing fun _videoPostId(): JsonField<String> = videoPostId
 
     /** Returns the raw JSON value of [videoReplyPostId]. */
-    @JsonProperty("videoReplyPostId") @ExcludeMissing fun _videoReplyPostId(): JsonField<String> = videoReplyPostId
+    @JsonProperty("videoReplyPostId")
+    @ExcludeMissing
+    fun _videoReplyPostId(): JsonField<String> = videoReplyPostId
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -199,7 +237,8 @@ private constructor(
         private var videoReplyPostId: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(footballPlay: FootballPlay) = apply {
+        @JvmSynthetic
+        internal fun from(footballPlay: FootballPlay) = apply {
             id = footballPlay.id
             sequence = footballPlay.sequence
             clock = footballPlay.clock
@@ -327,7 +366,9 @@ private constructor(
         fun details(details: List<FootballPlayDetail>) = details(JsonField.of(details))
 
         /** Sets [Builder.details] to an arbitrary JSON value. */
-        fun details(details: JsonField<List<FootballPlayDetail>>) = apply { this.details = details.map { it.toMutableList() } }
+        fun details(details: JsonField<List<FootballPlayDetail>>) = apply {
+            this.details = details.map { it.toMutableList() }
+        }
 
         /** Adds a single [FootballPlayDetail] to [details]. */
         fun addDetail(detail: FootballPlayDetail) = apply {
@@ -354,12 +395,16 @@ private constructor(
         fun videoPostId(videoPostId: JsonField<String>) = apply { this.videoPostId = videoPostId }
 
         /** The ID of a reply with the play's video. */
-        fun videoReplyPostId(videoReplyPostId: String?) = videoReplyPostId(JsonField.ofNullable(videoReplyPostId))
+        fun videoReplyPostId(videoReplyPostId: String?) =
+            videoReplyPostId(JsonField.ofNullable(videoReplyPostId))
 
-        fun videoReplyPostId(videoReplyPostId: Optional<String>) = videoReplyPostId(videoReplyPostId.getOrNull())
+        fun videoReplyPostId(videoReplyPostId: Optional<String>) =
+            videoReplyPostId(videoReplyPostId.getOrNull())
 
         /** Sets [Builder.videoReplyPostId] to an arbitrary JSON value. */
-        fun videoReplyPostId(videoReplyPostId: JsonField<String>) = apply { this.videoReplyPostId = videoReplyPostId }
+        fun videoReplyPostId(videoReplyPostId: JsonField<String>) = apply {
+            this.videoReplyPostId = videoReplyPostId
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -447,7 +492,8 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (sequence.asKnown().isPresent) 1 else 0) +
             (if (clock.asKnown().isPresent) 1 else 0) +
@@ -490,7 +536,27 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, sequence, clock, type, direction, description, scoring, homePoints, awayPoints, score, start, onField, details, post, videoPostId, videoReplyPostId, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            id,
+            sequence,
+            clock,
+            type,
+            direction,
+            description,
+            scoring,
+            homePoints,
+            awayPoints,
+            score,
+            start,
+            onField,
+            details,
+            post,
+            videoPostId,
+            videoReplyPostId,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

@@ -23,7 +23,9 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** A page of 1 game's posts, in Xquik's post shape. Pass next_cursor as cursor for the next page. */
+/**
+ * A page of 1 game's posts, in Xquik's post shape. Pass next_cursor as cursor for the next page.
+ */
 class SportsGamePosts
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -41,16 +43,43 @@ private constructor(
 
     @JsonCreator
     private constructor(
-        @JsonProperty("filtered_count") @ExcludeMissing filteredCount: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("tweets") @ExcludeMissing tweets: JsonField<List<SearchTweet>> = JsonMissing.of(),
-        @JsonProperty("has_next_page") @ExcludeMissing hasNextPage: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("next_cursor") @ExcludeMissing nextCursor: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("readBackTo") @ExcludeMissing readBackTo: JsonField<OffsetDateTime> = JsonMissing.of(),
-        @JsonProperty("windowComplete") @ExcludeMissing windowComplete: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("searchedQuery") @ExcludeMissing searchedQuery: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("searchContext") @ExcludeMissing searchContext: JsonField<SearchContext> = JsonMissing.of(),
+        @JsonProperty("filtered_count")
+        @ExcludeMissing
+        filteredCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("tweets")
+        @ExcludeMissing
+        tweets: JsonField<List<SearchTweet>> = JsonMissing.of(),
+        @JsonProperty("has_next_page")
+        @ExcludeMissing
+        hasNextPage: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("next_cursor")
+        @ExcludeMissing
+        nextCursor: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("readBackTo")
+        @ExcludeMissing
+        readBackTo: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("windowComplete")
+        @ExcludeMissing
+        windowComplete: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("searchedQuery")
+        @ExcludeMissing
+        searchedQuery: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("searchContext")
+        @ExcludeMissing
+        searchContext: JsonField<SearchContext> = JsonMissing.of(),
         @JsonProperty("query") @ExcludeMissing query: JsonField<String> = JsonMissing.of(),
-    ) : this(filteredCount, tweets, hasNextPage, nextCursor, readBackTo, windowComplete, searchedQuery, searchContext, query, mutableMapOf())
+    ) : this(
+        filteredCount,
+        tweets,
+        hasNextPage,
+        nextCursor,
+        readBackTo,
+        windowComplete,
+        searchedQuery,
+        searchContext,
+        query,
+        mutableMapOf(),
+    )
 
     /** Whole number from 0. */
     fun filteredCount(): Optional<Long> = filteredCount.getOptional("filtered_count")
@@ -71,35 +100,54 @@ private constructor(
     /** The query that ran, when it differs from your q. */
     fun searchedQuery(): Optional<String> = searchedQuery.getOptional("searchedQuery")
 
-    /** What X shows beside a search's posts, the same for everyone. Present on a search for a cashtag X has a card for, such as $BTC. Cashtag searches add X's ticker card in `searchContext`. */
+    /**
+     * What X shows beside a search's posts, the same for everyone. Present on a search for a
+     * cashtag X has a card for, such as $BTC. Cashtag searches add X's ticker card in
+     * `searchContext`.
+     */
     fun searchContext(): Optional<SearchContext> = searchContext.getOptional("searchContext")
 
-    /** An X search for this game's posts, in the order asked. Send it to GET /x/tweets/search for more filters. Null when no search is available. */
+    /**
+     * An X search for this game's posts, in the order asked. Send it to GET /x/tweets/search for
+     * more filters. Null when no search is available.
+     */
     fun query(): Optional<String> = query.getOptional("query")
 
     /** Returns the raw JSON value of [filteredCount]. */
-    @JsonProperty("filtered_count") @ExcludeMissing fun _filteredCount(): JsonField<Long> = filteredCount
+    @JsonProperty("filtered_count")
+    @ExcludeMissing
+    fun _filteredCount(): JsonField<Long> = filteredCount
 
     /** Returns the raw JSON value of [tweets]. */
     @JsonProperty("tweets") @ExcludeMissing fun _tweets(): JsonField<List<SearchTweet>> = tweets
 
     /** Returns the raw JSON value of [hasNextPage]. */
-    @JsonProperty("has_next_page") @ExcludeMissing fun _hasNextPage(): JsonField<Boolean> = hasNextPage
+    @JsonProperty("has_next_page")
+    @ExcludeMissing
+    fun _hasNextPage(): JsonField<Boolean> = hasNextPage
 
     /** Returns the raw JSON value of [nextCursor]. */
     @JsonProperty("next_cursor") @ExcludeMissing fun _nextCursor(): JsonField<String> = nextCursor
 
     /** Returns the raw JSON value of [readBackTo]. */
-    @JsonProperty("readBackTo") @ExcludeMissing fun _readBackTo(): JsonField<OffsetDateTime> = readBackTo
+    @JsonProperty("readBackTo")
+    @ExcludeMissing
+    fun _readBackTo(): JsonField<OffsetDateTime> = readBackTo
 
     /** Returns the raw JSON value of [windowComplete]. */
-    @JsonProperty("windowComplete") @ExcludeMissing fun _windowComplete(): JsonField<Boolean> = windowComplete
+    @JsonProperty("windowComplete")
+    @ExcludeMissing
+    fun _windowComplete(): JsonField<Boolean> = windowComplete
 
     /** Returns the raw JSON value of [searchedQuery]. */
-    @JsonProperty("searchedQuery") @ExcludeMissing fun _searchedQuery(): JsonField<String> = searchedQuery
+    @JsonProperty("searchedQuery")
+    @ExcludeMissing
+    fun _searchedQuery(): JsonField<String> = searchedQuery
 
     /** Returns the raw JSON value of [searchContext]. */
-    @JsonProperty("searchContext") @ExcludeMissing fun _searchContext(): JsonField<SearchContext> = searchContext
+    @JsonProperty("searchContext")
+    @ExcludeMissing
+    fun _searchContext(): JsonField<SearchContext> = searchContext
 
     /** Returns the raw JSON value of [query]. */
     @JsonProperty("query") @ExcludeMissing fun _query(): JsonField<String> = query
@@ -136,7 +184,8 @@ private constructor(
         private var query: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-        @JvmSynthetic internal fun from(sportsGamePosts: SportsGamePosts) = apply {
+        @JvmSynthetic
+        internal fun from(sportsGamePosts: SportsGamePosts) = apply {
             filteredCount = sportsGamePosts.filteredCount
             tweets = sportsGamePosts.tweets.map { it.toMutableList() }
             hasNextPage = sportsGamePosts.hasNextPage
@@ -153,12 +202,16 @@ private constructor(
         fun filteredCount(filteredCount: Long) = filteredCount(JsonField.of(filteredCount))
 
         /** Sets [Builder.filteredCount] to an arbitrary JSON value. */
-        fun filteredCount(filteredCount: JsonField<Long>) = apply { this.filteredCount = filteredCount }
+        fun filteredCount(filteredCount: JsonField<Long>) = apply {
+            this.filteredCount = filteredCount
+        }
 
         fun tweets(tweets: List<SearchTweet>) = tweets(JsonField.of(tweets))
 
         /** Sets [Builder.tweets] to an arbitrary JSON value. */
-        fun tweets(tweets: JsonField<List<SearchTweet>>) = apply { this.tweets = tweets.map { it.toMutableList() } }
+        fun tweets(tweets: JsonField<List<SearchTweet>>) = apply {
+            this.tweets = tweets.map { it.toMutableList() }
+        }
 
         /** Adds a single [SearchTweet] to [tweets]. */
         fun addTweet(tweet: SearchTweet) = apply {
@@ -183,27 +236,42 @@ private constructor(
         fun readBackTo(readBackTo: OffsetDateTime) = readBackTo(JsonField.of(readBackTo))
 
         /** Sets [Builder.readBackTo] to an arbitrary JSON value. */
-        fun readBackTo(readBackTo: JsonField<OffsetDateTime>) = apply { this.readBackTo = readBackTo }
+        fun readBackTo(readBackTo: JsonField<OffsetDateTime>) = apply {
+            this.readBackTo = readBackTo
+        }
 
         /** Present on a last page whose sources all read past its start time. */
         fun windowComplete(windowComplete: Boolean) = windowComplete(JsonField.of(windowComplete))
 
         /** Sets [Builder.windowComplete] to an arbitrary JSON value. */
-        fun windowComplete(windowComplete: JsonField<Boolean>) = apply { this.windowComplete = windowComplete }
+        fun windowComplete(windowComplete: JsonField<Boolean>) = apply {
+            this.windowComplete = windowComplete
+        }
 
         /** The query that ran, when it differs from your q. */
         fun searchedQuery(searchedQuery: String) = searchedQuery(JsonField.of(searchedQuery))
 
         /** Sets [Builder.searchedQuery] to an arbitrary JSON value. */
-        fun searchedQuery(searchedQuery: JsonField<String>) = apply { this.searchedQuery = searchedQuery }
+        fun searchedQuery(searchedQuery: JsonField<String>) = apply {
+            this.searchedQuery = searchedQuery
+        }
 
-        /** What X shows beside a search's posts, the same for everyone. Present on a search for a cashtag X has a card for, such as $BTC. Cashtag searches add X's ticker card in `searchContext`. */
+        /**
+         * What X shows beside a search's posts, the same for everyone. Present on a search for a
+         * cashtag X has a card for, such as $BTC. Cashtag searches add X's ticker card in
+         * `searchContext`.
+         */
         fun searchContext(searchContext: SearchContext) = searchContext(JsonField.of(searchContext))
 
         /** Sets [Builder.searchContext] to an arbitrary JSON value. */
-        fun searchContext(searchContext: JsonField<SearchContext>) = apply { this.searchContext = searchContext }
+        fun searchContext(searchContext: JsonField<SearchContext>) = apply {
+            this.searchContext = searchContext
+        }
 
-        /** An X search for this game's posts, in the order asked. Send it to GET /x/tweets/search for more filters. Null when no search is available. */
+        /**
+         * An X search for this game's posts, in the order asked. Send it to GET /x/tweets/search
+         * for more filters. Null when no search is available.
+         */
         fun query(query: String?) = query(JsonField.ofNullable(query))
 
         /** Alias for calling [Builder.query] with `query.orElse(null)`. */
@@ -258,7 +326,8 @@ private constructor(
     /**
      * Validates that the types of all values in this object match their expected types recursively.
      *
-     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
      */
     fun validate(): SportsGamePosts = apply {
         if (validated) {
@@ -285,9 +354,10 @@ private constructor(
             false
         }
 
-    @JvmSynthetic internal fun validity(): Int =
+    @JvmSynthetic
+    internal fun validity(): Int =
         (if (filteredCount.asKnown().isPresent) 1 else 0) +
-            (tweets.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (tweets.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (if (hasNextPage.asKnown().isPresent) 1 else 0) +
             (if (nextCursor.asKnown().isPresent) 1 else 0) +
             (if (readBackTo.asKnown().isPresent) 1 else 0) +
@@ -296,7 +366,11 @@ private constructor(
             (searchContext.asKnown().getOrNull()?.validity() ?: 0) +
             (if (query.asKnown().isPresent) 1 else 0)
 
-    /** What X shows beside a search's posts, the same for everyone. Present on a search for a cashtag X has a card for, such as $BTC. Cashtag searches add X's ticker card in `searchContext`. */
+    /**
+     * What X shows beside a search's posts, the same for everyone. Present on a search for a
+     * cashtag X has a card for, such as $BTC. Cashtag searches add X's ticker card in
+     * `searchContext`.
+     */
     class SearchContext
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
@@ -306,7 +380,9 @@ private constructor(
 
         @JsonCreator
         private constructor(
-            @JsonProperty("smartTag") @ExcludeMissing smartTag: JsonField<SmartTag> = JsonMissing.of(),
+            @JsonProperty("smartTag")
+            @ExcludeMissing
+            smartTag: JsonField<SmartTag> = JsonMissing.of()
         ) : this(smartTag, mutableMapOf())
 
         /** X's card for the cashtag the search names. */
@@ -339,7 +415,8 @@ private constructor(
             private var smartTag: JsonField<SmartTag>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-            @JvmSynthetic internal fun from(searchContext: SearchContext) = apply {
+            @JvmSynthetic
+            internal fun from(searchContext: SearchContext) = apply {
                 smartTag = searchContext.smartTag
                 additionalProperties = searchContext.additionalProperties.toMutableMap()
             }
@@ -386,9 +463,11 @@ private constructor(
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types recursively.
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
          *
-         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
          */
         fun validate(): SearchContext = apply {
             if (validated) {
@@ -407,8 +486,8 @@ private constructor(
                 false
             }
 
-        @JvmSynthetic internal fun validity(): Int =
-            (smartTag.asKnown().getOrNull()?.validity() ?: 0)
+        @JvmSynthetic
+        internal fun validity(): Int = (smartTag.asKnown().getOrNull()?.validity() ?: 0)
 
         /** X's card for the cashtag the search names. */
         class SmartTag
@@ -423,8 +502,12 @@ private constructor(
             @JsonCreator
             private constructor(
                 @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("active") @ExcludeMissing active: JsonField<Boolean> = JsonMissing.of(),
-                @JsonProperty("supportsOhlc") @ExcludeMissing supportsOhlc: JsonField<Boolean> = JsonMissing.of(),
+                @JsonProperty("active")
+                @ExcludeMissing
+                active: JsonField<Boolean> = JsonMissing.of(),
+                @JsonProperty("supportsOhlc")
+                @ExcludeMissing
+                supportsOhlc: JsonField<Boolean> = JsonMissing.of(),
             ) : this(id, active, supportsOhlc, mutableMapOf())
 
             /** The ticker X matched. */
@@ -443,7 +526,9 @@ private constructor(
             @JsonProperty("active") @ExcludeMissing fun _active(): JsonField<Boolean> = active
 
             /** Returns the raw JSON value of [supportsOhlc]. */
-            @JsonProperty("supportsOhlc") @ExcludeMissing fun _supportsOhlc(): JsonField<Boolean> = supportsOhlc
+            @JsonProperty("supportsOhlc")
+            @ExcludeMissing
+            fun _supportsOhlc(): JsonField<Boolean> = supportsOhlc
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -471,7 +556,8 @@ private constructor(
                 private var supportsOhlc: JsonField<Boolean> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
-                @JvmSynthetic internal fun from(smartTag: SmartTag) = apply {
+                @JvmSynthetic
+                internal fun from(smartTag: SmartTag) = apply {
                     id = smartTag.id
                     active = smartTag.active
                     supportsOhlc = smartTag.supportsOhlc
@@ -494,7 +580,9 @@ private constructor(
                 fun supportsOhlc(supportsOhlc: Boolean) = supportsOhlc(JsonField.of(supportsOhlc))
 
                 /** Sets [Builder.supportsOhlc] to an arbitrary JSON value. */
-                fun supportsOhlc(supportsOhlc: JsonField<Boolean>) = apply { this.supportsOhlc = supportsOhlc }
+                fun supportsOhlc(supportsOhlc: JsonField<Boolean>) = apply {
+                    this.supportsOhlc = supportsOhlc
+                }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                     this.additionalProperties.clear()
@@ -505,11 +593,14 @@ private constructor(
                     additionalProperties.put(key, value)
                 }
 
-                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                    this.additionalProperties.putAll(additionalProperties)
-                }
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
 
-                fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
 
                 fun removeAllAdditionalProperties(keys: Set<String>) = apply {
                     keys.forEach(::removeAdditionalProperty)
@@ -534,9 +625,11 @@ private constructor(
             private var validated: Boolean = false
 
             /**
-             * Validates that the types of all values in this object match their expected types recursively.
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
              *
-             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match its expected type.
+             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
              */
             fun validate(): SmartTag = apply {
                 if (validated) {
@@ -557,7 +650,8 @@ private constructor(
                     false
                 }
 
-            @JvmSynthetic internal fun validity(): Int =
+            @JvmSynthetic
+            internal fun validity(): Int =
                 (if (id.asKnown().isPresent) 1 else 0) +
                     (if (active.asKnown().isPresent) 1 else 0) +
                     (if (supportsOhlc.asKnown().isPresent) 1 else 0)
@@ -574,7 +668,9 @@ private constructor(
                     additionalProperties == other.additionalProperties
             }
 
-            private val hashCode: Int by lazy { Objects.hash(id, active, supportsOhlc, additionalProperties) }
+            private val hashCode: Int by lazy {
+                Objects.hash(id, active, supportsOhlc, additionalProperties)
+            }
 
             override fun hashCode(): Int = hashCode
 
@@ -618,7 +714,20 @@ private constructor(
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(filteredCount, tweets, hasNextPage, nextCursor, readBackTo, windowComplete, searchedQuery, searchContext, query, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            filteredCount,
+            tweets,
+            hasNextPage,
+            nextCursor,
+            readBackTo,
+            windowComplete,
+            searchedQuery,
+            searchContext,
+            query,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 
