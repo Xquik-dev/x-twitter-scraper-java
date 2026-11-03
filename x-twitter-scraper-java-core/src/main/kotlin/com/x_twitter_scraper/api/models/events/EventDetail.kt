@@ -4,6 +4,8 @@
 
 package com.x_twitter_scraper.api.models.events
 
+import com.x_twitter_scraper.api.models.UnknownField
+import com.x_twitter_scraper.api.models.LiveEventContext
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -701,6 +703,8 @@ private constructor(
         private val metric: JsonField<Event.Data.Metric>,
         private val previousText: JsonField<String>,
         private val versionId: JsonField<String>,
+        private val liveEventContext: JsonField<LiveEventContext>,
+        private val unknownFields: JsonField<List<UnknownField>>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
         @JsonCreator
@@ -928,6 +932,8 @@ private constructor(
             @JsonProperty("versionId")
             @ExcludeMissing
             versionId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("liveEventContext") @ExcludeMissing liveEventContext: JsonField<LiveEventContext> = JsonMissing.of(),
+            @JsonProperty("unknownFields") @ExcludeMissing unknownFields: JsonField<List<UnknownField>> = JsonMissing.of(),
         ) : this(
             id,
             text,
@@ -1011,7 +1017,7 @@ private constructor(
             metric,
             previousText,
             versionId,
-            mutableMapOf(),
+            liveEventContext, unknownFields, mutableMapOf(),
         )
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
@@ -1308,6 +1314,12 @@ private constructor(
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
         fun versionId(): Optional<String> = versionId.getOptional("versionId")
+
+        /** The live event the post belongs to, such as an election. */
+        fun liveEventContext(): Optional<LiveEventContext> = liveEventContext.getOptional("liveEventContext")
+
+        /** The fields X did not send for this post. text reads empty, so treat it as unknown rather than empty. Left out when X sent the text. */
+        fun unknownFields(): Optional<List<UnknownField>> = unknownFields.getOptional("unknownFields")
 
         /**
          * Returns the raw JSON value of [id].
@@ -2032,6 +2044,12 @@ private constructor(
          */
         @JsonProperty("versionId") @ExcludeMissing fun _versionId(): JsonField<String> = versionId
 
+        /** Returns the raw JSON value of [liveEventContext]. */
+        @JsonProperty("liveEventContext") @ExcludeMissing fun _liveEventContext(): JsonField<LiveEventContext> = liveEventContext
+
+        /** Returns the raw JSON value of [unknownFields]. */
+        @JsonProperty("unknownFields") @ExcludeMissing fun _unknownFields(): JsonField<List<UnknownField>> = unknownFields
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -2141,6 +2159,8 @@ private constructor(
             private var metric: JsonField<Event.Data.Metric> = JsonMissing.of()
             private var previousText: JsonField<String> = JsonMissing.of()
             private var versionId: JsonField<String> = JsonMissing.of()
+            private var liveEventContext: JsonField<LiveEventContext> = JsonMissing.of()
+            private var unknownFields: JsonField<MutableList<UnknownField>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -2227,6 +2247,8 @@ private constructor(
                 metric = data.metric
                 previousText = data.previousText
                 versionId = data.versionId
+                liveEventContext = data.liveEventContext
+                unknownFields = data.unknownFields.map { it.toMutableList() }
                 additionalProperties = data.additionalProperties.toMutableMap()
             }
 
@@ -2915,6 +2937,23 @@ private constructor(
             /** Sets [Builder.versionId] to an arbitrary JSON value. */
             fun versionId(versionId: JsonField<String>) = apply { this.versionId = versionId }
 
+            /** The live event the post belongs to, such as an election. */
+            fun liveEventContext(liveEventContext: LiveEventContext) = liveEventContext(JsonField.of(liveEventContext))
+
+            /** Sets [Builder.liveEventContext] to an arbitrary JSON value. */
+            fun liveEventContext(liveEventContext: JsonField<LiveEventContext>) = apply { this.liveEventContext = liveEventContext }
+
+            /** The fields X did not send for this post. text reads empty, so treat it as unknown rather than empty. Left out when X sent the text. */
+            fun unknownFields(unknownFields: List<UnknownField>) = unknownFields(JsonField.of(unknownFields))
+
+            /** Sets [Builder.unknownFields] to an arbitrary JSON value. */
+            fun unknownFields(unknownFields: JsonField<List<UnknownField>>) = apply { this.unknownFields = unknownFields.map { it.toMutableList() } }
+
+            /** Adds a single [UnknownField] to [unknownFields]. */
+            fun addUnknownField(unknownField: UnknownField) = apply {
+                unknownFields = (unknownFields ?: JsonField.of(mutableListOf())).also { checkKnown("unknownFields", it).add(unknownField) }
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -3023,6 +3062,8 @@ private constructor(
                     metric,
                     previousText,
                     versionId,
+                    liveEventContext,
+                    (unknownFields ?: JsonMissing.of()).map { it.toImmutable() },
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -3124,6 +3165,8 @@ private constructor(
             metric().ifPresent { it.validate() }
             previousText()
             versionId()
+            liveEventContext().ifPresent { it.validate() }
+            unknownFields().ifPresent { it.forEach { it.validate() } }
             validated = true
         }
 
@@ -3219,7 +3262,9 @@ private constructor(
                 (reason.asKnown().getOrNull()?.validity() ?: 0) +
                 (metric.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (previousText.asKnown().isPresent) 1 else 0) +
-                (if (versionId.asKnown().isPresent) 1 else 0)
+                (if (versionId.asKnown().isPresent) 1 else 0) +
+            (liveEventContext.asKnown().getOrNull()?.validity() ?: 0) +
+            (unknownFields.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -3308,6 +3353,8 @@ private constructor(
                 metric == other.metric &&
                 previousText == other.previousText &&
                 versionId == other.versionId &&
+                liveEventContext == other.liveEventContext &&
+                unknownFields == other.unknownFields &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -3395,14 +3442,14 @@ private constructor(
                 metric,
                 previousText,
                 versionId,
-                additionalProperties,
+                liveEventContext, unknownFields, additionalProperties,
             )
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{id=$id, text=$text, type=$type, createdAt=$createdAt, url=$url, lang=$lang, isReply=$isReply, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isRetweet=$isRetweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, retweetedAt=$retweetedAt, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, conversationId=$conversationId, conversationControl=$conversationControl, limitedActions=$limitedActions, source=$source, displayTextRange=$displayTextRange, textHighlights=$textHighlights, contentDisclosure=$contentDisclosure, article=$article, authorUnavailable=$authorUnavailable, unavailableAuthorId=$unavailableAuthorId, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, hasCommunityNotes=$hasCommunityNotes, edit=$edit, exclusiveContent=$exclusiveContent, isTranslatable=$isTranslatable, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, jetfuelAttachment=$jetfuelAttachment, noteTweet=$noteTweet, place=$place, coordinates=$coordinates, geo=$geo, postCta=$postCta, possiblySensitive=$possiblySensitive, previousCounts=$previousCounts, reactionContext=$reactionContext, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, tombstone=$tombstone, interstitial=$interstitial, unmentionedUserIds=$unmentionedUserIds, viewState=$viewState, entities=$entities, scopes=$scopes, softIntervention=$softIntervention, media=$media, retweetCount=$retweetCount, replyCount=$replyCount, likeCount=$likeCount, quoteCount=$quoteCount, viewCount=$viewCount, bookmarkCount=$bookmarkCount, unknownCounts=$unknownCounts, parentTweet=$parentTweet, quotedTweet=$quotedTweet, retweetedTweet=$retweetedTweet, author=$author, field=$field, change=$change, userId=$userId, username=$username, previous=$previous, current=$current, followedAt=$followedAt, followedAtExact=$followedAtExact, reason=$reason, metric=$metric, previousText=$previousText, versionId=$versionId, additionalProperties=$additionalProperties}"
+            "Data{id=$id, text=$text, type=$type, createdAt=$createdAt, url=$url, lang=$lang, isReply=$isReply, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isRetweet=$isRetweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, retweetedAt=$retweetedAt, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, conversationId=$conversationId, conversationControl=$conversationControl, limitedActions=$limitedActions, source=$source, displayTextRange=$displayTextRange, textHighlights=$textHighlights, contentDisclosure=$contentDisclosure, article=$article, authorUnavailable=$authorUnavailable, unavailableAuthorId=$unavailableAuthorId, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, hasCommunityNotes=$hasCommunityNotes, edit=$edit, exclusiveContent=$exclusiveContent, isTranslatable=$isTranslatable, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, jetfuelAttachment=$jetfuelAttachment, noteTweet=$noteTweet, place=$place, coordinates=$coordinates, geo=$geo, postCta=$postCta, possiblySensitive=$possiblySensitive, previousCounts=$previousCounts, reactionContext=$reactionContext, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, tombstone=$tombstone, interstitial=$interstitial, unmentionedUserIds=$unmentionedUserIds, viewState=$viewState, entities=$entities, scopes=$scopes, softIntervention=$softIntervention, media=$media, retweetCount=$retweetCount, replyCount=$replyCount, likeCount=$likeCount, quoteCount=$quoteCount, viewCount=$viewCount, bookmarkCount=$bookmarkCount, unknownCounts=$unknownCounts, parentTweet=$parentTweet, quotedTweet=$quotedTweet, retweetedTweet=$retweetedTweet, author=$author, field=$field, change=$change, userId=$userId, username=$username, previous=$previous, current=$current, followedAt=$followedAt, followedAtExact=$followedAtExact, reason=$reason, metric=$metric, previousText=$previousText, versionId=$versionId, liveEventContext=$liveEventContext, unknownFields=$unknownFields, additionalProperties=$additionalProperties}"
 
         class Reason @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 

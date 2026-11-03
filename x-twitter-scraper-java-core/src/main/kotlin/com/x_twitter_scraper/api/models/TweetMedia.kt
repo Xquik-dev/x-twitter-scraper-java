@@ -61,6 +61,7 @@ private constructor(
     private val visitSiteUrl: JsonField<String>,
     private val watchNowUrl: JsonField<String>,
     private val width: JsonField<Long>,
+    private val editedWithNativeEditor: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -147,6 +148,7 @@ private constructor(
         @ExcludeMissing
         watchNowUrl: JsonField<String> = JsonMissing.of(),
         @JsonProperty("width") @ExcludeMissing width: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("editedWithNativeEditor") @ExcludeMissing editedWithNativeEditor: JsonField<Boolean> = JsonMissing.of(),
     ) : this(
         mediaUrl,
         type,
@@ -183,7 +185,7 @@ private constructor(
         visitSiteUrl,
         watchNowUrl,
         width,
-        mutableMapOf(),
+        editedWithNativeEditor, mutableMapOf(),
     )
 
     /**
@@ -432,6 +434,9 @@ private constructor(
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun width(): Optional<Long> = width.getOptional("width")
+
+    /** True when the author edited this media in X's own editor before posting. Absent when X sends no editor info. */
+    fun editedWithNativeEditor(): Optional<Boolean> = editedWithNativeEditor.getOptional("editedWithNativeEditor")
 
     /**
      * Returns the raw JSON value of [mediaUrl].
@@ -714,6 +719,9 @@ private constructor(
      */
     @JsonProperty("width") @ExcludeMissing fun _width(): JsonField<Long> = width
 
+    /** Returns the raw JSON value of [editedWithNativeEditor]. */
+    @JsonProperty("editedWithNativeEditor") @ExcludeMissing fun _editedWithNativeEditor(): JsonField<Boolean> = editedWithNativeEditor
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -779,6 +787,7 @@ private constructor(
         private var visitSiteUrl: JsonField<String> = JsonMissing.of()
         private var watchNowUrl: JsonField<String> = JsonMissing.of()
         private var width: JsonField<Long> = JsonMissing.of()
+        private var editedWithNativeEditor: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -818,6 +827,7 @@ private constructor(
             visitSiteUrl = tweetMedia.visitSiteUrl
             watchNowUrl = tweetMedia.watchNowUrl
             width = tweetMedia.width
+            editedWithNativeEditor = tweetMedia.editedWithNativeEditor
             additionalProperties = tweetMedia.additionalProperties.toMutableMap()
         }
 
@@ -1128,6 +1138,12 @@ private constructor(
         /** Sets [Builder.width] to an arbitrary JSON value. */
         fun width(width: JsonField<Long>) = apply { this.width = width }
 
+        /** True when the author edited this media in X's own editor before posting. Absent when X sends no editor info. */
+        fun editedWithNativeEditor(editedWithNativeEditor: Boolean) = editedWithNativeEditor(JsonField.of(editedWithNativeEditor))
+
+        /** Sets [Builder.editedWithNativeEditor] to an arbitrary JSON value. */
+        fun editedWithNativeEditor(editedWithNativeEditor: JsonField<Boolean>) = apply { this.editedWithNativeEditor = editedWithNativeEditor }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -1198,6 +1214,7 @@ private constructor(
                 visitSiteUrl,
                 watchNowUrl,
                 width,
+                editedWithNativeEditor,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -1252,6 +1269,7 @@ private constructor(
         visitSiteUrl()
         watchNowUrl()
         width()
+        editedWithNativeEditor()
         validated = true
     }
 
@@ -1299,7 +1317,8 @@ private constructor(
             (videoVariants.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (if (visitSiteUrl.asKnown().isPresent) 1 else 0) +
             (if (watchNowUrl.asKnown().isPresent) 1 else 0) +
-            (if (width.asKnown().isPresent) 1 else 0)
+            (if (width.asKnown().isPresent) 1 else 0) +
+        (if (editedWithNativeEditor.asKnown().isPresent) 1 else 0)
 
     class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -2508,6 +2527,7 @@ private constructor(
             visitSiteUrl == other.visitSiteUrl &&
             watchNowUrl == other.watchNowUrl &&
             width == other.width &&
+            editedWithNativeEditor == other.editedWithNativeEditor &&
             additionalProperties == other.additionalProperties
     }
 
@@ -2548,12 +2568,12 @@ private constructor(
             visitSiteUrl,
             watchNowUrl,
             width,
-            additionalProperties,
+            editedWithNativeEditor, additionalProperties,
         )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "TweetMedia{mediaUrl=$mediaUrl, type=$type, url=$url, adultContent=$adultContent, availabilityReason=$availabilityReason, description=$description, embeddable=$embeddable, graphicViolence=$graphicViolence, grokImageAnnotation=$grokImageAnnotation, grokPostId=$grokPostId, id=$id, allowDownload=$allowDownload, altText=$altText, aspectRatio=$aspectRatio, availabilityStatus=$availabilityStatus, displayUrl=$displayUrl, durationMillis=$durationMillis, expandedUrl=$expandedUrl, faceRects=$faceRects, focusRects=$focusRects, height=$height, indices=$indices, mediaKey=$mediaKey, monetizable=$monetizable, otherSensitiveContent=$otherSensitiveContent, sizes=$sizes, sourceStatusId=$sourceStatusId, sourceUser=$sourceUser, sourceUserId=$sourceUserId, tags=$tags, title=$title, videoVariants=$videoVariants, visitSiteUrl=$visitSiteUrl, watchNowUrl=$watchNowUrl, width=$width, additionalProperties=$additionalProperties}"
+        "TweetMedia{mediaUrl=$mediaUrl, type=$type, url=$url, adultContent=$adultContent, availabilityReason=$availabilityReason, description=$description, embeddable=$embeddable, graphicViolence=$graphicViolence, grokImageAnnotation=$grokImageAnnotation, grokPostId=$grokPostId, id=$id, allowDownload=$allowDownload, altText=$altText, aspectRatio=$aspectRatio, availabilityStatus=$availabilityStatus, displayUrl=$displayUrl, durationMillis=$durationMillis, expandedUrl=$expandedUrl, faceRects=$faceRects, focusRects=$focusRects, height=$height, indices=$indices, mediaKey=$mediaKey, monetizable=$monetizable, otherSensitiveContent=$otherSensitiveContent, sizes=$sizes, sourceStatusId=$sourceStatusId, sourceUser=$sourceUser, sourceUserId=$sourceUserId, tags=$tags, title=$title, videoVariants=$videoVariants, visitSiteUrl=$visitSiteUrl, watchNowUrl=$watchNowUrl, width=$width, editedWithNativeEditor=$editedWithNativeEditor, additionalProperties=$additionalProperties}"
 }

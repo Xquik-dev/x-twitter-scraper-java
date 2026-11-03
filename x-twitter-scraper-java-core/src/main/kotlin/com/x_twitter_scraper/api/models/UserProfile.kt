@@ -3023,6 +3023,7 @@ private constructor(
         private val urlType: JsonField<String>,
         private val userLabelDisplayType: JsonField<String>,
         private val userLabelType: JsonField<String>,
+        private val auxiliaryLabels: JsonField<List<UserAuxiliaryLabel>>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -3045,6 +3046,7 @@ private constructor(
             @JsonProperty("userLabelType")
             @ExcludeMissing
             userLabelType: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("auxiliaryLabels") @ExcludeMissing auxiliaryLabels: JsonField<List<UserAuxiliaryLabel>> = JsonMissing.of(),
         ) : this(
             badgeUrl,
             description,
@@ -3053,7 +3055,7 @@ private constructor(
             urlType,
             userLabelDisplayType,
             userLabelType,
-            mutableMapOf(),
+            auxiliaryLabels, mutableMapOf(),
         )
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
@@ -3082,6 +3084,9 @@ private constructor(
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun userLabelType(): Optional<String> = userLabelType.getOptional("userLabelType")
+
+        /** More labels X shows beside the affiliation, such as an automated account's owner. */
+        fun auxiliaryLabels(): Optional<List<UserAuxiliaryLabel>> = auxiliaryLabels.getOptional("auxiliaryLabels")
 
         /**
          * Returns the raw JSON value of [badgeUrl].
@@ -3143,6 +3148,9 @@ private constructor(
         @ExcludeMissing
         fun _userLabelType(): JsonField<String> = userLabelType
 
+        /** Returns the raw JSON value of [auxiliaryLabels]. */
+        @JsonProperty("auxiliaryLabels") @ExcludeMissing fun _auxiliaryLabels(): JsonField<List<UserAuxiliaryLabel>> = auxiliaryLabels
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -3174,6 +3182,7 @@ private constructor(
             private var urlType: JsonField<String> = JsonMissing.of()
             private var userLabelDisplayType: JsonField<String> = JsonMissing.of()
             private var userLabelType: JsonField<String> = JsonMissing.of()
+            private var auxiliaryLabels: JsonField<MutableList<UserAuxiliaryLabel>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -3235,6 +3244,17 @@ private constructor(
                 this.userLabelType = userLabelType
             }
 
+            /** More labels X shows beside the affiliation, such as an automated account's owner. */
+            fun auxiliaryLabels(auxiliaryLabels: List<UserAuxiliaryLabel>) = auxiliaryLabels(JsonField.of(auxiliaryLabels))
+
+            /** Sets [Builder.auxiliaryLabels] to an arbitrary JSON value. */
+            fun auxiliaryLabels(auxiliaryLabels: JsonField<List<UserAuxiliaryLabel>>) = apply { this.auxiliaryLabels = auxiliaryLabels.map { it.toMutableList() } }
+
+            /** Adds a single [UserAuxiliaryLabel] to [auxiliaryLabels]. */
+            fun addAuxiliaryLabel(auxiliaryLabel: UserAuxiliaryLabel) = apply {
+                auxiliaryLabels = (auxiliaryLabels ?: JsonField.of(mutableListOf())).also { checkKnown("auxiliaryLabels", it).add(auxiliaryLabel) }
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -3268,6 +3288,7 @@ private constructor(
                     urlType,
                     userLabelDisplayType,
                     userLabelType,
+                    (auxiliaryLabels ?: JsonMissing.of()).map { it.toImmutable() },
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -3295,6 +3316,7 @@ private constructor(
             urlType()
             userLabelDisplayType()
             userLabelType()
+            auxiliaryLabels().ifPresent { it.forEach { it.validate() } }
             validated = true
         }
 
@@ -3314,7 +3336,8 @@ private constructor(
                 (if (url.asKnown().isPresent) 1 else 0) +
                 (if (urlType.asKnown().isPresent) 1 else 0) +
                 (if (userLabelDisplayType.asKnown().isPresent) 1 else 0) +
-                (if (userLabelType.asKnown().isPresent) 1 else 0)
+                (if (userLabelType.asKnown().isPresent) 1 else 0) +
+            (auxiliaryLabels.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 
         /** Public metadata whose fields X defines. */
         class LongDescription
@@ -3343,7 +3366,8 @@ private constructor(
 
                 @JvmSynthetic
                 internal fun from(longDescription: LongDescription) = apply {
-                    additionalProperties = longDescription.additionalProperties.toMutableMap()
+                    auxiliaryLabels = longDescription.auxiliaryLabels.map { it.toMutableList() }
+                additionalProperties = longDescription.additionalProperties.toMutableMap()
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -3438,6 +3462,7 @@ private constructor(
                 urlType == other.urlType &&
                 userLabelDisplayType == other.userLabelDisplayType &&
                 userLabelType == other.userLabelType &&
+                auxiliaryLabels == other.auxiliaryLabels &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -3450,14 +3475,14 @@ private constructor(
                 urlType,
                 userLabelDisplayType,
                 userLabelType,
-                additionalProperties,
+                auxiliaryLabels, additionalProperties,
             )
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "AffiliatesHighlightedLabel{badgeUrl=$badgeUrl, description=$description, longDescription=$longDescription, url=$url, urlType=$urlType, userLabelDisplayType=$userLabelDisplayType, userLabelType=$userLabelType, additionalProperties=$additionalProperties}"
+            "AffiliatesHighlightedLabel{badgeUrl=$badgeUrl, description=$description, longDescription=$longDescription, url=$url, urlType=$urlType, userLabelDisplayType=$userLabelDisplayType, userLabelType=$userLabelType, auxiliaryLabels=$auxiliaryLabels, additionalProperties=$additionalProperties}"
     }
 
     /** The parts of the birthday the account made public. */

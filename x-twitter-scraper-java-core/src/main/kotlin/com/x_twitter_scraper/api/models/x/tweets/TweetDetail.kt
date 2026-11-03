@@ -4,6 +4,8 @@
 
 package com.x_twitter_scraper.api.models.x.tweets
 
+import com.x_twitter_scraper.api.models.UnknownField
+import com.x_twitter_scraper.api.models.LiveEventContext
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -106,6 +108,8 @@ private constructor(
     private val unmentionedUserIds: JsonField<List<String>>,
     private val url: JsonField<String>,
     private val viewState: JsonField<String>,
+    private val liveEventContext: JsonField<LiveEventContext>,
+    private val unknownFields: JsonField<List<UnknownField>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -277,6 +281,8 @@ private constructor(
         unmentionedUserIds: JsonField<List<String>> = JsonMissing.of(),
         @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
         @JsonProperty("viewState") @ExcludeMissing viewState: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("liveEventContext") @ExcludeMissing liveEventContext: JsonField<LiveEventContext> = JsonMissing.of(),
+        @JsonProperty("unknownFields") @ExcludeMissing unknownFields: JsonField<List<UnknownField>> = JsonMissing.of(),
     ) : this(
         id,
         bookmarkCount,
@@ -348,7 +354,7 @@ private constructor(
         unmentionedUserIds,
         url,
         viewState,
-        mutableMapOf(),
+        liveEventContext, unknownFields, mutableMapOf(),
     )
 
     /**
@@ -837,6 +843,12 @@ private constructor(
 
     /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun viewState(): Optional<String> = viewState.getOptional("viewState")
+
+    /** The live event the post belongs to, such as an election. */
+    fun liveEventContext(): Optional<LiveEventContext> = liveEventContext.getOptional("liveEventContext")
+
+    /** The fields X did not send for this post. text reads empty, so treat it as unknown rather than empty. Left out when X sent the text. */
+    fun unknownFields(): Optional<List<UnknownField>> = unknownFields.getOptional("unknownFields")
 
     /**
      * Returns the raw JSON value of [id].
@@ -1432,6 +1444,12 @@ private constructor(
      */
     @JsonProperty("viewState") @ExcludeMissing fun _viewState(): JsonField<String> = viewState
 
+    /** Returns the raw JSON value of [liveEventContext]. */
+    @JsonProperty("liveEventContext") @ExcludeMissing fun _liveEventContext(): JsonField<LiveEventContext> = liveEventContext
+
+    /** Returns the raw JSON value of [unknownFields]. */
+    @JsonProperty("unknownFields") @ExcludeMissing fun _unknownFields(): JsonField<List<UnknownField>> = unknownFields
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -1542,6 +1560,8 @@ private constructor(
         private var unmentionedUserIds: JsonField<MutableList<String>>? = null
         private var url: JsonField<String> = JsonMissing.of()
         private var viewState: JsonField<String> = JsonMissing.of()
+        private var liveEventContext: JsonField<LiveEventContext> = JsonMissing.of()
+        private var unknownFields: JsonField<MutableList<UnknownField>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -1616,6 +1636,8 @@ private constructor(
             unmentionedUserIds = tweetDetail.unmentionedUserIds.map { it.toMutableList() }
             url = tweetDetail.url
             viewState = tweetDetail.viewState
+            liveEventContext = tweetDetail.liveEventContext
+            unknownFields = tweetDetail.unknownFields.map { it.toMutableList() }
             additionalProperties = tweetDetail.additionalProperties.toMutableMap()
         }
 
@@ -2269,6 +2291,23 @@ private constructor(
         /** Sets [Builder.viewState] to an arbitrary JSON value. */
         fun viewState(viewState: JsonField<String>) = apply { this.viewState = viewState }
 
+        /** The live event the post belongs to, such as an election. */
+        fun liveEventContext(liveEventContext: LiveEventContext) = liveEventContext(JsonField.of(liveEventContext))
+
+        /** Sets [Builder.liveEventContext] to an arbitrary JSON value. */
+        fun liveEventContext(liveEventContext: JsonField<LiveEventContext>) = apply { this.liveEventContext = liveEventContext }
+
+        /** The fields X did not send for this post. text reads empty, so treat it as unknown rather than empty. Left out when X sent the text. */
+        fun unknownFields(unknownFields: List<UnknownField>) = unknownFields(JsonField.of(unknownFields))
+
+        /** Sets [Builder.unknownFields] to an arbitrary JSON value. */
+        fun unknownFields(unknownFields: JsonField<List<UnknownField>>) = apply { this.unknownFields = unknownFields.map { it.toMutableList() } }
+
+        /** Adds a single [UnknownField] to [unknownFields]. */
+        fun addUnknownField(unknownField: UnknownField) = apply {
+            unknownFields = (unknownFields ?: JsonField.of(mutableListOf())).also { checkKnown("unknownFields", it).add(unknownField) }
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -2379,6 +2418,8 @@ private constructor(
                 (unmentionedUserIds ?: JsonMissing.of()).map { it.toImmutable() },
                 url,
                 viewState,
+                liveEventContext,
+                (unknownFields ?: JsonMissing.of()).map { it.toImmutable() },
                 additionalProperties.toMutableMap(),
             )
     }
@@ -2468,6 +2509,8 @@ private constructor(
         unmentionedUserIds()
         url()
         viewState()
+        liveEventContext().ifPresent { it.validate() }
+        unknownFields().ifPresent { it.forEach { it.validate() } }
         validated = true
     }
 
@@ -2550,7 +2593,9 @@ private constructor(
             (if (unavailableAuthorId.asKnown().isPresent) 1 else 0) +
             (unmentionedUserIds.asKnown().getOrNull()?.size ?: 0) +
             (if (url.asKnown().isPresent) 1 else 0) +
-            (if (viewState.asKnown().isPresent) 1 else 0)
+            (if (viewState.asKnown().isPresent) 1 else 0) +
+        (liveEventContext.asKnown().getOrNull()?.validity() ?: 0) +
+        (unknownFields.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 
     /** Article metadata attached to a tweet. */
     class Article
@@ -14480,6 +14525,8 @@ private constructor(
             unmentionedUserIds == other.unmentionedUserIds &&
             url == other.url &&
             viewState == other.viewState &&
+            liveEventContext == other.liveEventContext &&
+            unknownFields == other.unknownFields &&
             additionalProperties == other.additionalProperties
     }
 
@@ -14555,12 +14602,12 @@ private constructor(
             unmentionedUserIds,
             url,
             viewState,
-            additionalProperties,
+            liveEventContext, unknownFields, additionalProperties,
         )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "TweetDetail{id=$id, bookmarkCount=$bookmarkCount, unknownCounts=$unknownCounts, likeCount=$likeCount, quoteCount=$quoteCount, replyCount=$replyCount, retweetCount=$retweetCount, text=$text, viewCount=$viewCount, article=$article, author=$author, authorUnavailable=$authorUnavailable, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, contentDisclosure=$contentDisclosure, conversationControl=$conversationControl, conversationId=$conversationId, coordinates=$coordinates, createdAt=$createdAt, displayTextRange=$displayTextRange, edit=$edit, entities=$entities, exclusiveContent=$exclusiveContent, geo=$geo, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, hasCommunityNotes=$hasCommunityNotes, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, interstitial=$interstitial, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isReply=$isReply, isRetweet=$isRetweet, isTranslatable=$isTranslatable, jetfuelAttachment=$jetfuelAttachment, lang=$lang, limitedActions=$limitedActions, media=$media, noteTweet=$noteTweet, parentTweet=$parentTweet, place=$place, possiblySensitive=$possiblySensitive, postCta=$postCta, previousCounts=$previousCounts, quotedTweet=$quotedTweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, reactionContext=$reactionContext, retweetedTweet=$retweetedTweet, retweetedAt=$retweetedAt, scopes=$scopes, softIntervention=$softIntervention, source=$source, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, textHighlights=$textHighlights, tombstone=$tombstone, type=$type, unavailableAuthorId=$unavailableAuthorId, unmentionedUserIds=$unmentionedUserIds, url=$url, viewState=$viewState, additionalProperties=$additionalProperties}"
+        "TweetDetail{id=$id, bookmarkCount=$bookmarkCount, unknownCounts=$unknownCounts, likeCount=$likeCount, quoteCount=$quoteCount, replyCount=$replyCount, retweetCount=$retweetCount, text=$text, viewCount=$viewCount, article=$article, author=$author, authorUnavailable=$authorUnavailable, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, contentDisclosure=$contentDisclosure, conversationControl=$conversationControl, conversationId=$conversationId, coordinates=$coordinates, createdAt=$createdAt, displayTextRange=$displayTextRange, edit=$edit, entities=$entities, exclusiveContent=$exclusiveContent, geo=$geo, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, hasCommunityNotes=$hasCommunityNotes, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, interstitial=$interstitial, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isReply=$isReply, isRetweet=$isRetweet, isTranslatable=$isTranslatable, jetfuelAttachment=$jetfuelAttachment, lang=$lang, limitedActions=$limitedActions, media=$media, noteTweet=$noteTweet, parentTweet=$parentTweet, place=$place, possiblySensitive=$possiblySensitive, postCta=$postCta, previousCounts=$previousCounts, quotedTweet=$quotedTweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, reactionContext=$reactionContext, retweetedTweet=$retweetedTweet, retweetedAt=$retweetedAt, scopes=$scopes, softIntervention=$softIntervention, source=$source, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, textHighlights=$textHighlights, tombstone=$tombstone, type=$type, unavailableAuthorId=$unavailableAuthorId, unmentionedUserIds=$unmentionedUserIds, url=$url, viewState=$viewState, liveEventContext=$liveEventContext, unknownFields=$unknownFields, additionalProperties=$additionalProperties}"
 }
