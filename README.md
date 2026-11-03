@@ -85,6 +85,7 @@ Call REST directly when a Maven dependency does not fit.
 | Read community activity and growth | `GET /x/communities/{id}/analytics` | `client.x().communities().retrieveAnalytics()` |
 | Export large X datasets | `POST /extractions` | `client.extractions()` |
 | Monitor tweet keywords or accounts | `POST /monitors/keywords`, `POST /monitors` | `client.monitors()` |
+| Track 1 post's replies, quotes, edits and hourly metrics | `POST /monitors/posts`, `GET /monitors/posts/{id}/metrics` | `client.monitors().posts()` |
 | Receive signed event deliveries | `POST /webhooks` | `client.webhooks()` |
 | Stream monitor events as they happen | `GET /events/stream` | `client.events()` |
 | Analyze the sentiment, viral score, or brand mentions of posts | `POST /x/analysis/sentiment`, `POST /x/analysis/brand` | `client.x().analysis()` |
@@ -94,6 +95,9 @@ Call REST directly when a Maven dependency does not fit.
 | Search X job listings | `GET /x/jobs/search`, `GET /x/jobs/{id}` | `client.x().jobs()` |
 | Read Spaces, replays, and live broadcasts | `GET /x/spaces/search`, `GET /x/spaces/{id}/replay`, `GET /x/broadcasts/{id}` | `client.x().spaces()`, `client.x().broadcasts()` |
 | Read Community Notes contributors and their notes | `GET /x/community-notes/contributors/{alias}/notes` | `client.x().communityNotes()` |
+| Read NFL & college football games, box scores, plays, audiences, rosters, player props and posts | `GET /x/sports/{league}/games`, `GET /x/sports/{league}/games/{id}/plays` | `client.x().sports()` |
+| Read the account's activity log and each activity's full record | `GET /activity`, `GET /activity/{id}` | `client.activity()` |
+| Check 1 account for a search ban, a suggestion ban and reply deboosting | `GET /x/users/{id}/shadowban` | `client.x().users().retrieveShadowban` |
 
 ## Install
 

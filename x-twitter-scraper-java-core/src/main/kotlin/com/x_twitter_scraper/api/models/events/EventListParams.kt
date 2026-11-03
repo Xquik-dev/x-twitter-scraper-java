@@ -20,6 +20,7 @@ private constructor(
     private val keywordMonitorId: String?,
     private val limit: Long?,
     private val monitorId: String?,
+    private val postMonitorId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -42,6 +43,9 @@ private constructor(
 
     /** Account monitor ID. */
     fun monitorId(): Optional<String> = Optional.ofNullable(monitorId)
+
+    /** Post monitor ID. The post_monitor_id alias also works. */
+    fun postMonitorId(): Optional<String> = Optional.ofNullable(postMonitorId)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -67,6 +71,7 @@ private constructor(
         private var keywordMonitorId: String? = null
         private var limit: Long? = null
         private var monitorId: String? = null
+        private var postMonitorId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -77,6 +82,7 @@ private constructor(
             keywordMonitorId = eventListParams.keywordMonitorId
             limit = eventListParams.limit
             monitorId = eventListParams.monitorId
+            postMonitorId = eventListParams.postMonitorId
             additionalHeaders = eventListParams.additionalHeaders.toBuilder()
             additionalQueryParams = eventListParams.additionalQueryParams.toBuilder()
         }
@@ -120,6 +126,13 @@ private constructor(
 
         /** Alias for calling [Builder.monitorId] with `monitorId.orElse(null)`. */
         fun monitorId(monitorId: Optional<String>) = monitorId(monitorId.getOrNull())
+
+        /** Post monitor ID. The post_monitor_id alias also works. */
+        fun postMonitorId(postMonitorId: String?) = apply { this.postMonitorId = postMonitorId }
+
+        /** Alias for calling [Builder.postMonitorId] with `postMonitorId.orElse(null)`. */
+        fun postMonitorId(postMonitorId: Optional<String>) =
+            postMonitorId(postMonitorId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -231,6 +244,7 @@ private constructor(
                 keywordMonitorId,
                 limit,
                 monitorId,
+                postMonitorId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -246,6 +260,7 @@ private constructor(
                 keywordMonitorId?.let { put("keywordMonitorId", it) }
                 limit?.let { put("limit", it.toString()) }
                 monitorId?.let { put("monitorId", it) }
+                postMonitorId?.let { put("postMonitorId", it) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -261,6 +276,7 @@ private constructor(
             keywordMonitorId == other.keywordMonitorId &&
             limit == other.limit &&
             monitorId == other.monitorId &&
+            postMonitorId == other.postMonitorId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
@@ -272,10 +288,11 @@ private constructor(
             keywordMonitorId,
             limit,
             monitorId,
+            postMonitorId,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "EventListParams{cursor=$cursor, eventType=$eventType, keywordMonitorId=$keywordMonitorId, limit=$limit, monitorId=$monitorId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "EventListParams{cursor=$cursor, eventType=$eventType, keywordMonitorId=$keywordMonitorId, limit=$limit, monitorId=$monitorId, postMonitorId=$postMonitorId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -15,6 +15,7 @@ import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import com.x_twitter_scraper.api.models.Currency
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -26,6 +27,8 @@ private constructor(
     private val status: JsonField<Status>,
     private val amountDollars: JsonField<Long>,
     private val credits: JsonField<String>,
+    private val chargedCurrency: JsonField<Currency>,
+    private val chargedMinorUnits: JsonField<Long>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -36,7 +39,13 @@ private constructor(
         @ExcludeMissing
         amountDollars: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("credits") @ExcludeMissing credits: JsonField<String> = JsonMissing.of(),
-    ) : this(status, amountDollars, credits, mutableMapOf())
+        @JsonProperty("chargedCurrency")
+        @ExcludeMissing
+        chargedCurrency: JsonField<Currency> = JsonMissing.of(),
+        @JsonProperty("chargedMinorUnits")
+        @ExcludeMissing
+        chargedMinorUnits: JsonField<Long> = JsonMissing.of(),
+    ) : this(status, amountDollars, credits, chargedCurrency, chargedMinorUnits, mutableMapOf())
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -57,6 +66,15 @@ private constructor(
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun credits(): Optional<String> = credits.getOptional("credits")
+
+    /** Currency the checkout charged. */
+    fun chargedCurrency(): Optional<Currency> = chargedCurrency.getOptional("chargedCurrency")
+
+    /**
+     * Amount the checkout charged before tax, in the currency's smallest unit. JPY and KRW have no
+     * decimals, so 1580 JPY is ¥1,580.
+     */
+    fun chargedMinorUnits(): Optional<Long> = chargedMinorUnits.getOptional("chargedMinorUnits")
 
     /**
      * Returns the raw JSON value of [status].
@@ -80,6 +98,16 @@ private constructor(
      * Unlike [credits], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("credits") @ExcludeMissing fun _credits(): JsonField<String> = credits
+
+    /** Returns the raw JSON value of [chargedCurrency]. */
+    @JsonProperty("chargedCurrency")
+    @ExcludeMissing
+    fun _chargedCurrency(): JsonField<Currency> = chargedCurrency
+
+    /** Returns the raw JSON value of [chargedMinorUnits]. */
+    @JsonProperty("chargedMinorUnits")
+    @ExcludeMissing
+    fun _chargedMinorUnits(): JsonField<Long> = chargedMinorUnits
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -113,6 +141,8 @@ private constructor(
         private var status: JsonField<Status>? = null
         private var amountDollars: JsonField<Long> = JsonMissing.of()
         private var credits: JsonField<String> = JsonMissing.of()
+        private var chargedCurrency: JsonField<Currency> = JsonMissing.of()
+        private var chargedMinorUnits: JsonField<Long> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -121,6 +151,8 @@ private constructor(
                 status = creditRetrieveTopupStatusResponse.status
                 amountDollars = creditRetrieveTopupStatusResponse.amountDollars
                 credits = creditRetrieveTopupStatusResponse.credits
+                chargedCurrency = creditRetrieveTopupStatusResponse.chargedCurrency
+                chargedMinorUnits = creditRetrieveTopupStatusResponse.chargedMinorUnits
                 additionalProperties =
                     creditRetrieveTopupStatusResponse.additionalProperties.toMutableMap()
             }
@@ -149,6 +181,27 @@ private constructor(
 
         /** Sets [Builder.credits] to an arbitrary JSON value. */
         fun credits(credits: JsonField<String>) = apply { this.credits = credits }
+
+        /** Currency the checkout charged. */
+        fun chargedCurrency(chargedCurrency: Currency) =
+            chargedCurrency(JsonField.of(chargedCurrency))
+
+        /** Sets [Builder.chargedCurrency] to an arbitrary JSON value. */
+        fun chargedCurrency(chargedCurrency: JsonField<Currency>) = apply {
+            this.chargedCurrency = chargedCurrency
+        }
+
+        /**
+         * Amount the checkout charged before tax, in the currency's smallest unit. JPY and KRW have
+         * no decimals, so 1580 JPY is ¥1,580.
+         */
+        fun chargedMinorUnits(chargedMinorUnits: Long) =
+            chargedMinorUnits(JsonField.of(chargedMinorUnits))
+
+        /** Sets [Builder.chargedMinorUnits] to an arbitrary JSON value. */
+        fun chargedMinorUnits(chargedMinorUnits: JsonField<Long>) = apply {
+            this.chargedMinorUnits = chargedMinorUnits
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -186,6 +239,8 @@ private constructor(
                 checkRequired("status", status),
                 amountDollars,
                 credits,
+                chargedCurrency,
+                chargedMinorUnits,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -208,6 +263,8 @@ private constructor(
         status().validate()
         amountDollars()
         credits()
+        chargedCurrency().ifPresent { it.validate() }
+        chargedMinorUnits()
         validated = true
     }
 
@@ -223,7 +280,9 @@ private constructor(
     internal fun validity(): Int =
         (status.asKnown().getOrNull()?.validity() ?: 0) +
             (if (amountDollars.asKnown().isPresent) 1 else 0) +
-            (if (credits.asKnown().isPresent) 1 else 0)
+            (if (credits.asKnown().isPresent) 1 else 0) +
+            (chargedCurrency.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (chargedMinorUnits.asKnown().isPresent) 1 else 0)
 
     class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -360,15 +419,24 @@ private constructor(
             status == other.status &&
             amountDollars == other.amountDollars &&
             credits == other.credits &&
+            chargedCurrency == other.chargedCurrency &&
+            chargedMinorUnits == other.chargedMinorUnits &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(status, amountDollars, credits, additionalProperties)
+        Objects.hash(
+            status,
+            amountDollars,
+            credits,
+            chargedCurrency,
+            chargedMinorUnits,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CreditRetrieveTopupStatusResponse{status=$status, amountDollars=$amountDollars, credits=$credits, additionalProperties=$additionalProperties}"
+        "CreditRetrieveTopupStatusResponse{status=$status, amountDollars=$amountDollars, credits=$credits, chargedCurrency=$chargedCurrency, chargedMinorUnits=$chargedMinorUnits, additionalProperties=$additionalProperties}"
 }

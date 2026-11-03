@@ -17,6 +17,7 @@ import com.x_twitter_scraper.api.core.Params
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import com.x_twitter_scraper.api.models.Currency
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -46,6 +47,15 @@ private constructor(
      * Unlike [tier], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _tier(): JsonField<Tier> = body._tier()
+
+    /**
+     * Currency to pay in. Xquik converts the USD plan price at the latest daily ECB rate, and each
+     * renewal charges the same amount before tax. chargedCurrency shows the currency charged.
+     */
+    fun currency(): Optional<Currency> = body.currency()
+
+    /** Returns the raw JSON value of [currency]. */
+    fun _currency(): JsonField<Currency> = body._currency()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -87,6 +97,16 @@ private constructor(
 
         /** Sets [Builder.tier] to an arbitrary JSON value. */
         fun tier(tier: JsonField<Tier>) = apply { body.tier(tier) }
+
+        /**
+         * Currency to pay in. Xquik converts the USD plan price at the latest daily ECB rate, and
+         * each renewal charges the same amount before tax. chargedCurrency shows the currency
+         * charged.
+         */
+        fun currency(currency: Currency) = apply { body.currency(currency) }
+
+        /** Sets [Builder.currency] to an arbitrary JSON value. */
+        fun currency(currency: JsonField<Currency>) = apply { body.currency(currency) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -228,13 +248,17 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val tier: JsonField<Tier>,
+        private val currency: JsonField<Currency>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("tier") @ExcludeMissing tier: JsonField<Tier> = JsonMissing.of()
-        ) : this(tier, mutableMapOf())
+            @JsonProperty("tier") @ExcludeMissing tier: JsonField<Tier> = JsonMissing.of(),
+            @JsonProperty("currency")
+            @ExcludeMissing
+            currency: JsonField<Currency> = JsonMissing.of(),
+        ) : this(tier, currency, mutableMapOf())
 
         /**
          * Subscription tier to pre-select.
@@ -244,11 +268,21 @@ private constructor(
         fun tier(): Optional<Tier> = tier.getOptional("tier")
 
         /**
+         * Currency to pay in. Xquik converts the USD plan price at the latest daily ECB rate, and
+         * each renewal charges the same amount before tax. chargedCurrency shows the currency
+         * charged.
+         */
+        fun currency(): Optional<Currency> = currency.getOptional("currency")
+
+        /**
          * Returns the raw JSON value of [tier].
          *
          * Unlike [tier], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("tier") @ExcludeMissing fun _tier(): JsonField<Tier> = tier
+
+        /** Returns the raw JSON value of [currency]. */
+        @JsonProperty("currency") @ExcludeMissing fun _currency(): JsonField<Currency> = currency
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -272,11 +306,13 @@ private constructor(
         class Builder internal constructor() {
 
             private var tier: JsonField<Tier> = JsonMissing.of()
+            private var currency: JsonField<Currency> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 tier = body.tier
+                currency = body.currency
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -285,6 +321,16 @@ private constructor(
 
             /** Sets [Builder.tier] to an arbitrary JSON value. */
             fun tier(tier: JsonField<Tier>) = apply { this.tier = tier }
+
+            /**
+             * Currency to pay in. Xquik converts the USD plan price at the latest daily ECB rate,
+             * and each renewal charges the same amount before tax. chargedCurrency shows the
+             * currency charged.
+             */
+            fun currency(currency: Currency) = currency(JsonField.of(currency))
+
+            /** Sets [Builder.currency] to an arbitrary JSON value. */
+            fun currency(currency: JsonField<Currency>) = apply { this.currency = currency }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -310,7 +356,7 @@ private constructor(
              *
              * Further updates to this [Builder] will not mutate the returned instance.
              */
-            fun build(): Body = Body(tier, additionalProperties.toMutableMap())
+            fun build(): Body = Body(tier, currency, additionalProperties.toMutableMap())
         }
 
         private var validated: Boolean = false
@@ -330,6 +376,7 @@ private constructor(
             }
 
             tier().ifPresent { it.validate() }
+            currency().ifPresent { it.validate() }
             validated = true
         }
 
@@ -341,7 +388,10 @@ private constructor(
                 false
             }
 
-        @JvmSynthetic internal fun validity(): Int = (tier.asKnown().getOrNull()?.validity() ?: 0)
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (tier.asKnown().getOrNull()?.validity() ?: 0) +
+                (currency.asKnown().getOrNull()?.validity() ?: 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -350,14 +400,16 @@ private constructor(
 
             return other is Body &&
                 tier == other.tier &&
+                currency == other.currency &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(tier, additionalProperties) }
+        private val hashCode: Int by lazy { Objects.hash(tier, currency, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() = "Body{tier=$tier, additionalProperties=$additionalProperties}"
+        override fun toString() =
+            "Body{tier=$tier, currency=$currency, additionalProperties=$additionalProperties}"
     }
 
     /** Subscription tier to pre-select. */

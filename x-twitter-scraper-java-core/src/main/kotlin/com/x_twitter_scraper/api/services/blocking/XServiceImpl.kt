@@ -67,6 +67,8 @@ import com.x_twitter_scraper.api.services.blocking.x.ProfileService
 import com.x_twitter_scraper.api.services.blocking.x.ProfileServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.SpaceService
 import com.x_twitter_scraper.api.services.blocking.x.SpaceServiceImpl
+import com.x_twitter_scraper.api.services.blocking.x.SportService
+import com.x_twitter_scraper.api.services.blocking.x.SportServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.TweetService
 import com.x_twitter_scraper.api.services.blocking.x.TweetServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.UserService
@@ -124,6 +126,8 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
 
     private val spaces: SpaceService by lazy { SpaceServiceImpl(clientOptions) }
 
+    private val sports: SportService by lazy { SportServiceImpl(clientOptions) }
+
     override fun withRawResponse(): XService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): XService =
@@ -179,6 +183,9 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
 
     /** X Space details, host, and speakers */
     override fun spaces(): SpaceService = spaces
+
+    /** NFL & college football games, scoreboards, plays & box scores */
+    override fun sports(): SportService = sports
 
     override fun autocompleteSearch(
         params: XAutocompleteSearchParams,
@@ -315,6 +322,10 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
             SpaceServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val sports: SportService.WithRawResponse by lazy {
+            SportServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): XService.WithRawResponse =
@@ -372,6 +383,9 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
 
         /** X Space details, host, and speakers */
         override fun spaces(): SpaceService.WithRawResponse = spaces
+
+        /** NFL & college football games, scoreboards, plays & box scores */
+        override fun sports(): SportService.WithRawResponse = sports
 
         private val autocompleteSearchHandler: Handler<XAutocompleteSearchResponse> =
             jsonHandler<XAutocompleteSearchResponse>(clientOptions.jsonMapper)

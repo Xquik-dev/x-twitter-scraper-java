@@ -42,6 +42,7 @@ import com.x_twitter_scraper.api.services.async.x.ListServiceAsync
 import com.x_twitter_scraper.api.services.async.x.MediaServiceAsync
 import com.x_twitter_scraper.api.services.async.x.ProfileServiceAsync
 import com.x_twitter_scraper.api.services.async.x.SpaceServiceAsync
+import com.x_twitter_scraper.api.services.async.x.SportServiceAsync
 import com.x_twitter_scraper.api.services.async.x.TweetServiceAsync
 import com.x_twitter_scraper.api.services.async.x.UserServiceAsync
 import com.x_twitter_scraper.api.services.async.x.WriteActionServiceAsync
@@ -110,6 +111,9 @@ interface XServiceAsync {
 
     /** X Space details, host, and speakers */
     fun spaces(): SpaceServiceAsync
+
+    /** NFL & college football games, scoreboards, plays & box scores */
+    fun sports(): SportServiceAsync
 
     /**
      * Returns the accounts, topics, hashtags & cashtags X suggests while someone types a search. X
@@ -415,6 +419,9 @@ interface XServiceAsync {
 
         /** X Space details, host, and speakers */
         fun spaces(): SpaceServiceAsync.WithRawResponse
+
+        /** NFL & college football games, scoreboards, plays & box scores */
+        fun sports(): SportServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /x/search/autocomplete`, but is otherwise the same

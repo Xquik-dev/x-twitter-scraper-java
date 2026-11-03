@@ -8,14 +8,20 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.x_twitter_scraper.api.core.Enum
 import com.x_twitter_scraper.api.core.ExcludeMissing
 import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
+import com.x_twitter_scraper.api.core.checkKnown
+import com.x_twitter_scraper.api.core.checkRequired
+import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 class MediaDownloadResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -25,6 +31,7 @@ private constructor(
     private val totalMedia: JsonField<Long>,
     private val totalTweets: JsonField<Long>,
     private val tweetId: JsonField<String>,
+    private val items: JsonField<List<Item>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -39,7 +46,8 @@ private constructor(
         @ExcludeMissing
         totalTweets: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("tweetId") @ExcludeMissing tweetId: JsonField<String> = JsonMissing.of(),
-    ) : this(cacheHit, galleryUrl, totalMedia, totalTweets, tweetId, mutableMapOf())
+        @JsonProperty("items") @ExcludeMissing items: JsonField<List<Item>> = JsonMissing.of(),
+    ) : this(cacheHit, galleryUrl, totalMedia, totalTweets, tweetId, items, mutableMapOf())
 
     /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun cacheHit(): Optional<Boolean> = cacheHit.getOptional("cacheHit")
@@ -55,6 +63,9 @@ private constructor(
 
     /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun tweetId(): Optional<String> = tweetId.getOptional("tweetId")
+
+    /** The post's files saved to your gallery. Single downloads only. */
+    fun items(): Optional<List<Item>> = items.getOptional("items")
 
     /**
      * Returns the raw JSON value of [cacheHit].
@@ -91,6 +102,9 @@ private constructor(
      */
     @JsonProperty("tweetId") @ExcludeMissing fun _tweetId(): JsonField<String> = tweetId
 
+    /** Returns the raw JSON value of [items]. */
+    @JsonProperty("items") @ExcludeMissing fun _items(): JsonField<List<Item>> = items
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -117,6 +131,7 @@ private constructor(
         private var totalMedia: JsonField<Long> = JsonMissing.of()
         private var totalTweets: JsonField<Long> = JsonMissing.of()
         private var tweetId: JsonField<String> = JsonMissing.of()
+        private var items: JsonField<MutableList<Item>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -126,6 +141,7 @@ private constructor(
             totalMedia = mediaDownloadResponse.totalMedia
             totalTweets = mediaDownloadResponse.totalTweets
             tweetId = mediaDownloadResponse.tweetId
+            items = mediaDownloadResponse.items.map { it.toMutableList() }
             additionalProperties = mediaDownloadResponse.additionalProperties.toMutableMap()
         }
 
@@ -153,6 +169,20 @@ private constructor(
 
         /** Sets [Builder.tweetId] to an arbitrary JSON value. */
         fun tweetId(tweetId: JsonField<String>) = apply { this.tweetId = tweetId }
+
+        /** The post's files saved to your gallery. Single downloads only. */
+        fun items(items: List<Item>) = items(JsonField.of(items))
+
+        /** Sets [Builder.items] to an arbitrary JSON value. */
+        fun items(items: JsonField<List<Item>>) = apply {
+            this.items = items.map { it.toMutableList() }
+        }
+
+        /** Adds a single [Item] to [items]. */
+        fun addItem(item: Item) = apply {
+            items =
+                (items ?: JsonField.of(mutableListOf())).also { checkKnown("items", it).add(item) }
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -185,6 +215,7 @@ private constructor(
                 totalMedia,
                 totalTweets,
                 tweetId,
+                (items ?: JsonMissing.of()).map { it.toImmutable() },
                 additionalProperties.toMutableMap(),
             )
     }
@@ -209,6 +240,7 @@ private constructor(
         totalMedia()
         totalTweets()
         tweetId()
+        items().ifPresent { it.forEach { it.validate() } }
         validated = true
     }
 
@@ -226,7 +258,585 @@ private constructor(
             (if (galleryUrl.asKnown().isPresent) 1 else 0) +
             (if (totalMedia.asKnown().isPresent) 1 else 0) +
             (if (totalTweets.asKnown().isPresent) 1 else 0) +
-            (if (tweetId.asKnown().isPresent) 1 else 0)
+            (if (tweetId.asKnown().isPresent) 1 else 0) +
+            (items.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
+
+    class Item
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val id: JsonField<String>,
+        private val tweetId: JsonField<String>,
+        private val mediaType: JsonField<MediaType>,
+        private val mediaUrl: JsonField<String>,
+        private val fileSize: JsonField<String>,
+        private val createdAt: JsonField<OffsetDateTime>,
+        private val authorUsername: JsonField<String>,
+        private val authorDisplayName: JsonField<String>,
+        private val authorAvatar: JsonField<String>,
+        private val tweetText: JsonField<String>,
+        private val likes: JsonField<Long>,
+        private val retweets: JsonField<Long>,
+        private val views: JsonField<Long>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("tweetId") @ExcludeMissing tweetId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("mediaType")
+            @ExcludeMissing
+            mediaType: JsonField<MediaType> = JsonMissing.of(),
+            @JsonProperty("mediaUrl")
+            @ExcludeMissing
+            mediaUrl: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("fileSize")
+            @ExcludeMissing
+            fileSize: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("createdAt")
+            @ExcludeMissing
+            createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("authorUsername")
+            @ExcludeMissing
+            authorUsername: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("authorDisplayName")
+            @ExcludeMissing
+            authorDisplayName: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("authorAvatar")
+            @ExcludeMissing
+            authorAvatar: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("tweetText")
+            @ExcludeMissing
+            tweetText: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("likes") @ExcludeMissing likes: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("retweets") @ExcludeMissing retweets: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("views") @ExcludeMissing views: JsonField<Long> = JsonMissing.of(),
+        ) : this(
+            id,
+            tweetId,
+            mediaType,
+            mediaUrl,
+            fileSize,
+            createdAt,
+            authorUsername,
+            authorDisplayName,
+            authorAvatar,
+            tweetText,
+            likes,
+            retweets,
+            views,
+            mutableMapOf(),
+        )
+
+        /** Gallery file ID */
+        fun id(): String = id.getRequired("id")
+
+        fun tweetId(): String = tweetId.getRequired("tweetId")
+
+        fun mediaType(): MediaType = mediaType.getRequired("mediaType")
+
+        /**
+         * Link to the file. It goes to X when X flagged the post or its media at save time, or sent
+         * no post flag. Xquik keeps no copy of those files.
+         */
+        fun mediaUrl(): String = mediaUrl.getRequired("mediaUrl")
+
+        /** File size in bytes, as a string */
+        fun fileSize(): Optional<String> = fileSize.getOptional("fileSize")
+
+        /** When the file joined your gallery */
+        fun createdAt(): OffsetDateTime = createdAt.getRequired("createdAt")
+
+        fun authorUsername(): String = authorUsername.getRequired("authorUsername")
+
+        fun authorDisplayName(): String = authorDisplayName.getRequired("authorDisplayName")
+
+        fun authorAvatar(): Optional<String> = authorAvatar.getOptional("authorAvatar")
+
+        fun tweetText(): String = tweetText.getRequired("tweetText")
+
+        fun likes(): Optional<Long> = likes.getOptional("likes")
+
+        fun retweets(): Optional<Long> = retweets.getOptional("retweets")
+
+        fun views(): Optional<Long> = views.getOptional("views")
+
+        /** Returns the raw JSON value of [id]. */
+        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+        /** Returns the raw JSON value of [tweetId]. */
+        @JsonProperty("tweetId") @ExcludeMissing fun _tweetId(): JsonField<String> = tweetId
+
+        /** Returns the raw JSON value of [mediaType]. */
+        @JsonProperty("mediaType")
+        @ExcludeMissing
+        fun _mediaType(): JsonField<MediaType> = mediaType
+
+        /** Returns the raw JSON value of [mediaUrl]. */
+        @JsonProperty("mediaUrl") @ExcludeMissing fun _mediaUrl(): JsonField<String> = mediaUrl
+
+        /** Returns the raw JSON value of [fileSize]. */
+        @JsonProperty("fileSize") @ExcludeMissing fun _fileSize(): JsonField<String> = fileSize
+
+        /** Returns the raw JSON value of [createdAt]. */
+        @JsonProperty("createdAt")
+        @ExcludeMissing
+        fun _createdAt(): JsonField<OffsetDateTime> = createdAt
+
+        /** Returns the raw JSON value of [authorUsername]. */
+        @JsonProperty("authorUsername")
+        @ExcludeMissing
+        fun _authorUsername(): JsonField<String> = authorUsername
+
+        /** Returns the raw JSON value of [authorDisplayName]. */
+        @JsonProperty("authorDisplayName")
+        @ExcludeMissing
+        fun _authorDisplayName(): JsonField<String> = authorDisplayName
+
+        /** Returns the raw JSON value of [authorAvatar]. */
+        @JsonProperty("authorAvatar")
+        @ExcludeMissing
+        fun _authorAvatar(): JsonField<String> = authorAvatar
+
+        /** Returns the raw JSON value of [tweetText]. */
+        @JsonProperty("tweetText") @ExcludeMissing fun _tweetText(): JsonField<String> = tweetText
+
+        /** Returns the raw JSON value of [likes]. */
+        @JsonProperty("likes") @ExcludeMissing fun _likes(): JsonField<Long> = likes
+
+        /** Returns the raw JSON value of [retweets]. */
+        @JsonProperty("retweets") @ExcludeMissing fun _retweets(): JsonField<Long> = retweets
+
+        /** Returns the raw JSON value of [views]. */
+        @JsonProperty("views") @ExcludeMissing fun _views(): JsonField<Long> = views
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [Item]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Item]. */
+        class Builder internal constructor() {
+
+            private var id: JsonField<String>? = null
+            private var tweetId: JsonField<String>? = null
+            private var mediaType: JsonField<MediaType>? = null
+            private var mediaUrl: JsonField<String>? = null
+            private var fileSize: JsonField<String>? = null
+            private var createdAt: JsonField<OffsetDateTime>? = null
+            private var authorUsername: JsonField<String>? = null
+            private var authorDisplayName: JsonField<String>? = null
+            private var authorAvatar: JsonField<String>? = null
+            private var tweetText: JsonField<String>? = null
+            private var likes: JsonField<Long>? = null
+            private var retweets: JsonField<Long>? = null
+            private var views: JsonField<Long>? = null
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(item: Item) = apply {
+                id = item.id
+                tweetId = item.tweetId
+                mediaType = item.mediaType
+                mediaUrl = item.mediaUrl
+                fileSize = item.fileSize
+                createdAt = item.createdAt
+                authorUsername = item.authorUsername
+                authorDisplayName = item.authorDisplayName
+                authorAvatar = item.authorAvatar
+                tweetText = item.tweetText
+                likes = item.likes
+                retweets = item.retweets
+                views = item.views
+                additionalProperties = item.additionalProperties.toMutableMap()
+            }
+
+            /** Gallery file ID */
+            fun id(id: String) = id(JsonField.of(id))
+
+            /** Sets [Builder.id] to an arbitrary JSON value. */
+            fun id(id: JsonField<String>) = apply { this.id = id }
+
+            fun tweetId(tweetId: String) = tweetId(JsonField.of(tweetId))
+
+            /** Sets [Builder.tweetId] to an arbitrary JSON value. */
+            fun tweetId(tweetId: JsonField<String>) = apply { this.tweetId = tweetId }
+
+            fun mediaType(mediaType: MediaType) = mediaType(JsonField.of(mediaType))
+
+            /** Sets [Builder.mediaType] to an arbitrary JSON value. */
+            fun mediaType(mediaType: JsonField<MediaType>) = apply { this.mediaType = mediaType }
+
+            /**
+             * Link to the file. It goes to X when X flagged the post or its media at save time, or
+             * sent no post flag. Xquik keeps no copy of those files.
+             */
+            fun mediaUrl(mediaUrl: String) = mediaUrl(JsonField.of(mediaUrl))
+
+            /** Sets [Builder.mediaUrl] to an arbitrary JSON value. */
+            fun mediaUrl(mediaUrl: JsonField<String>) = apply { this.mediaUrl = mediaUrl }
+
+            /** File size in bytes, as a string */
+            fun fileSize(fileSize: String?) = fileSize(JsonField.ofNullable(fileSize))
+
+            /** Alias for calling [Builder.fileSize] with `fileSize.orElse(null)`. */
+            fun fileSize(fileSize: Optional<String>) = fileSize(fileSize.getOrNull())
+
+            /** Sets [Builder.fileSize] to an arbitrary JSON value. */
+            fun fileSize(fileSize: JsonField<String>) = apply { this.fileSize = fileSize }
+
+            /** When the file joined your gallery */
+            fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
+
+            /** Sets [Builder.createdAt] to an arbitrary JSON value. */
+            fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply {
+                this.createdAt = createdAt
+            }
+
+            fun authorUsername(authorUsername: String) =
+                authorUsername(JsonField.of(authorUsername))
+
+            /** Sets [Builder.authorUsername] to an arbitrary JSON value. */
+            fun authorUsername(authorUsername: JsonField<String>) = apply {
+                this.authorUsername = authorUsername
+            }
+
+            fun authorDisplayName(authorDisplayName: String) =
+                authorDisplayName(JsonField.of(authorDisplayName))
+
+            /** Sets [Builder.authorDisplayName] to an arbitrary JSON value. */
+            fun authorDisplayName(authorDisplayName: JsonField<String>) = apply {
+                this.authorDisplayName = authorDisplayName
+            }
+
+            fun authorAvatar(authorAvatar: String?) =
+                authorAvatar(JsonField.ofNullable(authorAvatar))
+
+            /** Alias for calling [Builder.authorAvatar] with `authorAvatar.orElse(null)`. */
+            fun authorAvatar(authorAvatar: Optional<String>) =
+                authorAvatar(authorAvatar.getOrNull())
+
+            /** Sets [Builder.authorAvatar] to an arbitrary JSON value. */
+            fun authorAvatar(authorAvatar: JsonField<String>) = apply {
+                this.authorAvatar = authorAvatar
+            }
+
+            fun tweetText(tweetText: String) = tweetText(JsonField.of(tweetText))
+
+            /** Sets [Builder.tweetText] to an arbitrary JSON value. */
+            fun tweetText(tweetText: JsonField<String>) = apply { this.tweetText = tweetText }
+
+            fun likes(likes: Long?) = likes(JsonField.ofNullable(likes))
+
+            /**
+             * Alias for [Builder.likes].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun likes(likes: Long) = likes(likes as Long?)
+
+            /** Alias for calling [Builder.likes] with `likes.orElse(null)`. */
+            fun likes(likes: Optional<Long>) = likes(likes.getOrNull())
+
+            /** Sets [Builder.likes] to an arbitrary JSON value. */
+            fun likes(likes: JsonField<Long>) = apply { this.likes = likes }
+
+            fun retweets(retweets: Long?) = retweets(JsonField.ofNullable(retweets))
+
+            /**
+             * Alias for [Builder.retweets].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun retweets(retweets: Long) = retweets(retweets as Long?)
+
+            /** Alias for calling [Builder.retweets] with `retweets.orElse(null)`. */
+            fun retweets(retweets: Optional<Long>) = retweets(retweets.getOrNull())
+
+            /** Sets [Builder.retweets] to an arbitrary JSON value. */
+            fun retweets(retweets: JsonField<Long>) = apply { this.retweets = retweets }
+
+            fun views(views: Long?) = views(JsonField.ofNullable(views))
+
+            /**
+             * Alias for [Builder.views].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun views(views: Long) = views(views as Long?)
+
+            /** Alias for calling [Builder.views] with `views.orElse(null)`. */
+            fun views(views: Optional<Long>) = views(views.getOrNull())
+
+            /** Sets [Builder.views] to an arbitrary JSON value. */
+            fun views(views: JsonField<Long>) = apply { this.views = views }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Item].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): Item =
+                Item(
+                    checkRequired("id", id),
+                    checkRequired("tweetId", tweetId),
+                    checkRequired("mediaType", mediaType),
+                    checkRequired("mediaUrl", mediaUrl),
+                    checkRequired("fileSize", fileSize),
+                    checkRequired("createdAt", createdAt),
+                    checkRequired("authorUsername", authorUsername),
+                    checkRequired("authorDisplayName", authorDisplayName),
+                    checkRequired("authorAvatar", authorAvatar),
+                    checkRequired("tweetText", tweetText),
+                    checkRequired("likes", likes),
+                    checkRequired("retweets", retweets),
+                    checkRequired("views", views),
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): Item = apply {
+            if (validated) {
+                return@apply
+            }
+
+            id()
+            tweetId()
+            mediaType().validate()
+            mediaUrl()
+            fileSize()
+            createdAt()
+            authorUsername()
+            authorDisplayName()
+            authorAvatar()
+            tweetText()
+            likes()
+            retweets()
+            views()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (id.asKnown().isPresent) 1 else 0) +
+                (if (tweetId.asKnown().isPresent) 1 else 0) +
+                (mediaType.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (mediaUrl.asKnown().isPresent) 1 else 0) +
+                (if (fileSize.asKnown().isPresent) 1 else 0) +
+                (if (createdAt.asKnown().isPresent) 1 else 0) +
+                (if (authorUsername.asKnown().isPresent) 1 else 0) +
+                (if (authorDisplayName.asKnown().isPresent) 1 else 0) +
+                (if (authorAvatar.asKnown().isPresent) 1 else 0) +
+                (if (tweetText.asKnown().isPresent) 1 else 0) +
+                (if (likes.asKnown().isPresent) 1 else 0) +
+                (if (retweets.asKnown().isPresent) 1 else 0) +
+                (if (views.asKnown().isPresent) 1 else 0)
+
+        class MediaType @JsonCreator private constructor(private val value: JsonField<String>) :
+            Enum {
+
+            /** Returns this class instance's raw value. */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val PHOTO = of("photo")
+
+                @JvmField val VIDEO = of("video")
+
+                @JvmField val ANIMATED_GIF = of("animated_gif")
+
+                @JvmStatic fun of(value: String) = MediaType(JsonField.of(value))
+            }
+
+            /** An enum containing [MediaType]'s known values. */
+            enum class Known {
+                PHOTO,
+                VIDEO,
+                ANIMATED_GIF,
+            }
+
+            /** An enum containing [MediaType]'s known values, as well as an [_UNKNOWN] member. */
+            enum class Value {
+                PHOTO,
+                VIDEO,
+                ANIMATED_GIF,
+                /**
+                 * An enum member indicating that [MediaType] was instantiated with an unknown
+                 * value.
+                 */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if unknown.
+             */
+            fun value(): Value =
+                when (this) {
+                    PHOTO -> Value.PHOTO
+                    VIDEO -> Value.VIDEO
+                    ANIMATED_GIF -> Value.ANIMATED_GIF
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+             *   known member.
+             */
+            fun known(): Known =
+                when (this) {
+                    PHOTO -> Known.PHOTO
+                    VIDEO -> Known.VIDEO
+                    ANIMATED_GIF -> Known.ANIMATED_GIF
+                    else -> throw XTwitterScraperInvalidDataException("Unknown MediaType: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * @throws XTwitterScraperInvalidDataException if this class instance's value does not
+             *   have the expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    XTwitterScraperInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            /** Validates that this value is a known member. */
+            fun validate(): MediaType = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: XTwitterScraperInvalidDataException) {
+                    false
+                }
+
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is MediaType && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Item &&
+                id == other.id &&
+                tweetId == other.tweetId &&
+                mediaType == other.mediaType &&
+                mediaUrl == other.mediaUrl &&
+                fileSize == other.fileSize &&
+                createdAt == other.createdAt &&
+                authorUsername == other.authorUsername &&
+                authorDisplayName == other.authorDisplayName &&
+                authorAvatar == other.authorAvatar &&
+                tweetText == other.tweetText &&
+                likes == other.likes &&
+                retweets == other.retweets &&
+                views == other.views &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy {
+            Objects.hash(
+                id,
+                tweetId,
+                mediaType,
+                mediaUrl,
+                fileSize,
+                createdAt,
+                authorUsername,
+                authorDisplayName,
+                authorAvatar,
+                tweetText,
+                likes,
+                retweets,
+                views,
+                additionalProperties,
+            )
+        }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "Item{id=$id, tweetId=$tweetId, mediaType=$mediaType, mediaUrl=$mediaUrl, fileSize=$fileSize, createdAt=$createdAt, authorUsername=$authorUsername, authorDisplayName=$authorDisplayName, authorAvatar=$authorAvatar, tweetText=$tweetText, likes=$likes, retweets=$retweets, views=$views, additionalProperties=$additionalProperties}"
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -239,15 +849,24 @@ private constructor(
             totalMedia == other.totalMedia &&
             totalTweets == other.totalTweets &&
             tweetId == other.tweetId &&
+            items == other.items &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(cacheHit, galleryUrl, totalMedia, totalTweets, tweetId, additionalProperties)
+        Objects.hash(
+            cacheHit,
+            galleryUrl,
+            totalMedia,
+            totalTweets,
+            tweetId,
+            items,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "MediaDownloadResponse{cacheHit=$cacheHit, galleryUrl=$galleryUrl, totalMedia=$totalMedia, totalTweets=$totalTweets, tweetId=$tweetId, additionalProperties=$additionalProperties}"
+        "MediaDownloadResponse{cacheHit=$cacheHit, galleryUrl=$galleryUrl, totalMedia=$totalMedia, totalTweets=$totalTweets, tweetId=$tweetId, items=$items, additionalProperties=$additionalProperties}"
 }

@@ -6,6 +6,7 @@ package com.x_twitter_scraper.api.client
 
 import com.x_twitter_scraper.api.core.ClientOptions
 import com.x_twitter_scraper.api.services.blocking.AccountService
+import com.x_twitter_scraper.api.services.blocking.ActivityService
 import com.x_twitter_scraper.api.services.blocking.ComposeService
 import com.x_twitter_scraper.api.services.blocking.CreditService
 import com.x_twitter_scraper.api.services.blocking.DraftService
@@ -81,6 +82,9 @@ interface XTwitterScraperClient {
     /** Giveaway draws from tweet replies */
     fun draws(): DrawService
 
+    /** The account's activity log and the full record of each activity */
+    fun activity(): ActivityService
+
     /** Webhook endpoint management and delivery */
     fun webhooks(): WebhookService
 
@@ -143,6 +147,9 @@ interface XTwitterScraperClient {
 
         /** Giveaway draws from tweet replies */
         fun draws(): DrawService.WithRawResponse
+
+        /** The account's activity log and the full record of each activity */
+        fun activity(): ActivityService.WithRawResponse
 
         /** Webhook endpoint management and delivery */
         fun webhooks(): WebhookService.WithRawResponse
