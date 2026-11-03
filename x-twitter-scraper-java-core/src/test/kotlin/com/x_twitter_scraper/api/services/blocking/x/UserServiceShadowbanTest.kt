@@ -20,6 +20,7 @@ import com.x_twitter_scraper.api.client.okhttp.XTwitterScraperOkHttpClientAsync
 import com.x_twitter_scraper.api.models.x.users.ShadowbanReport
 import com.x_twitter_scraper.api.models.x.users.ShadowbanVerdict
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveShadowbanParams
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -81,6 +82,15 @@ internal class UserServiceShadowbanTest {
         assertThat(checks.replies().verdict()).isEqualTo(ShadowbanVerdict.UNKNOWN)
         assertThat(checks.replies().evidence().get().replies().map { it.placement() })
             .containsExactly(ShadowbanReport.Checks.Replies.Evidence.Reply.Placement.MORE_REPLIES)
+        assertThat(response.checkedAt()).isEqualTo(OffsetDateTime.parse("2026-11-03T02:15:00.000Z"))
+        assertThat(response.overall()).isEqualTo(ShadowbanReport.Overall.LIMITED)
+        assertThat(checks.replyLock().evidence().get().shownReplies()).isEqualTo(0L)
+        assertThat(checks.timeline().reason())
+            .isEqualTo(ShadowbanReport.Checks.Timeline.Reason.VISIBLE)
+        assertThat(checks.engagement().evidence().get().newestMedian()).isEqualTo(4268.0)
+        assertThat(checks.sensitive().reason())
+            .isEqualTo(ShadowbanReport.Checks.Sensitive.Reason.NOT_FLAGGED)
+        assertThat(checks.withheld().evidence().get().countries()).isEmpty()
     }
 
     @Test
@@ -95,6 +105,10 @@ internal class UserServiceShadowbanTest {
         assertThat(response.checks().search().evidence()).isEmpty()
         assertThat(response.checks().suggestion().evidence()).isEmpty()
         assertThat(response.checks().replies().evidence()).isEmpty()
+        assertThat(response.overall()).isEqualTo(ShadowbanReport.Overall.SUSPENDED)
+        assertThat(response.checks().timeline().reason())
+            .isEqualTo(ShadowbanReport.Checks.Timeline.Reason.SUSPENDED)
+        assertThat(response.checks().withheld().evidence()).isEmpty()
     }
 
     companion object {
@@ -105,11 +119,15 @@ internal class UserServiceShadowbanTest {
               "username": "NASA",
               "userId": "11348282",
               "account": "active",
+              "checkedAt": "2026-11-03T02:15:00.000Z",
+              "overall": "limited",
               "checks": {
                 "account": {
                   "verdict": "pass",
                   "reason": "active",
-                  "evidence": {"profileUrl": "https://x.com/NASA"}
+                  "evidence": {
+                    "profileUrl": "https://x.com/NASA"
+                  }
                 },
                 "search": {
                   "verdict": "pass",
@@ -117,14 +135,25 @@ internal class UserServiceShadowbanTest {
                   "evidence": {
                     "query": "from:NASA",
                     "searchUrl": "https://x.com/search?q=from%3ANASA&f=live",
-                    "recentPostIds": ["2103610284464316469", "2103583087540003274"],
-                    "foundPostIds": ["2103610284464316469"]
+                    "recentPostIds": [
+                      "2103610284464316469",
+                      "2103583087540003274"
+                    ],
+                    "foundPostIds": [
+                      "2103610284464316469"
+                    ]
                   }
                 },
                 "suggestion": {
                   "verdict": "fail",
                   "reason": "not_suggested",
-                  "evidence": {"query": "NASA", "suggestedUsernames": ["NASAHubble", "NASAEarth"]}
+                  "evidence": {
+                    "query": "NASA",
+                    "suggestedUsernames": [
+                      "NASAHubble",
+                      "NASAEarth"
+                    ]
+                  }
                 },
                 "replies": {
                   "verdict": "unknown",
@@ -140,6 +169,44 @@ internal class UserServiceShadowbanTest {
                       }
                     ]
                   }
+                },
+                "replyLock": {
+                  "verdict": "unknown",
+                  "reason": "replies_missing",
+                  "evidence": {
+                    "checkedReplies": 1,
+                    "shownReplies": 0
+                  }
+                },
+                "timeline": {
+                  "verdict": "pass",
+                  "reason": "visible",
+                  "evidence": {
+                    "postCount": 74486,
+                    "timelinePosts": 20
+                  }
+                },
+                "engagement": {
+                  "verdict": "pass",
+                  "reason": "typical",
+                  "evidence": {
+                    "newestMedian": 4268,
+                    "newestPosts": 5,
+                    "earlierMedian": 2773,
+                    "earlierPosts": 7
+                  }
+                },
+                "sensitive": {
+                  "verdict": "pass",
+                  "reason": "not_flagged",
+                  "evidence": null
+                },
+                "withheld": {
+                  "verdict": "pass",
+                  "reason": "none",
+                  "evidence": {
+                    "countries": []
+                  }
                 }
               }
             }
@@ -152,15 +219,56 @@ internal class UserServiceShadowbanTest {
               "username": "gone",
               "userId": null,
               "account": "suspended",
+              "checkedAt": "2026-11-03T02:15:00.000Z",
+              "overall": "suspended",
               "checks": {
                 "account": {
                   "verdict": "fail",
                   "reason": "suspended",
-                  "evidence": {"profileUrl": "https://x.com/gone"}
+                  "evidence": {
+                    "profileUrl": "https://x.com/gone"
+                  }
                 },
-                "search": {"verdict": "unknown", "reason": "suspended", "evidence": null},
-                "suggestion": {"verdict": "unknown", "reason": "suspended", "evidence": null},
-                "replies": {"verdict": "unknown", "reason": "suspended", "evidence": null}
+                "search": {
+                  "verdict": "unknown",
+                  "reason": "suspended",
+                  "evidence": null
+                },
+                "suggestion": {
+                  "verdict": "unknown",
+                  "reason": "suspended",
+                  "evidence": null
+                },
+                "replies": {
+                  "verdict": "unknown",
+                  "reason": "suspended",
+                  "evidence": null
+                },
+                "replyLock": {
+                  "verdict": "unknown",
+                  "reason": "suspended",
+                  "evidence": null
+                },
+                "timeline": {
+                  "verdict": "unknown",
+                  "reason": "suspended",
+                  "evidence": null
+                },
+                "engagement": {
+                  "verdict": "unknown",
+                  "reason": "suspended",
+                  "evidence": null
+                },
+                "sensitive": {
+                  "verdict": "unknown",
+                  "reason": "suspended",
+                  "evidence": null
+                },
+                "withheld": {
+                  "verdict": "unknown",
+                  "reason": "suspended",
+                  "evidence": null
+                }
               }
             }
             """
