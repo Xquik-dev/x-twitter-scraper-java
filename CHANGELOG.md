@@ -1,12 +1,21 @@
 # Changelog
 
-## Unreleased
+## 0.11.0 (2026-11-04)
+
+[Full changelog from v0.10.3 to v0.11.0](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.10.3...v0.11.0)
 
 ### Breaking changes
 
 * `CreditTopupBalanceResponse.builder()` requires `chargedCurrency` and `chargedMinorUnits`, which the API always sends. Code that builds the response by hand must set both.
 * `AccountBulkRetryParams._body()` returns `AccountBulkRetryParams.Body` instead of `Optional<Map<String, JsonValue>>`, and bulk retry always sends a JSON body, which is `{}` when no account is named. Code that calls `_body()` must change, and compiled callers must rebuild.
 * `MediaUploadParams`, `ProfileUpdateAvatarParams` and `ProfileUpdateBannerParams` take exactly 1 of `url` or `file`, so their `url()` getters return `Optional<String>`. Builders that set `url` keep working.
+
+### Security
+
+* Update jackson-core & jackson-databind from 2.22.1 to 2.22.3, which fixes 7 advisories, 5 high & 2 moderate.
+* The jackson-core fixes are GHSA-7hhh-6rmp-j9qf & GHSA-p6pp-m3f8-5c89.
+* The jackson-databind fixes are GHSA-cxp5-3px4-pw24, GHSA-q4xh-88c3-wmh7, GHSA-wv8q-qhhj-9h54, GHSA-gx83-3vf8-gh7j & GHSA-wjgm-6hv5-3cvf.
+* The SDK's own JSON handling does not use the affected features. Your application gets the same Jackson version through the SDK, so update if it parses untrusted JSON with Jackson.
 
 ### Features
 
@@ -48,6 +57,8 @@
 * `UserProfile`, `SearchTweet`, `TweetMedia`, `EmbeddedTweet`, `ContentDisclosure`, `PaginatedTweets`, `PaginatedUsers`, `TweetDetail` and `TweetAuthor` gain every field the API spec lists. New fields are optional in the builders.
 * 32 reads, such as `client.x().tweets().retrieve` and `client.x().users().retrieveFollowers`, take `fields` and `omit` and their other missing query params. Their responses gain the fields the spec lists.
 * The remaining request and response models gain the fields and enum values in the API spec. New fields are optional in builders. List reads gain pagination params and metadata, and upload requests gain file fields.
+* The 19 write methods, such as `client.x().tweets().create`, take `prefer`. They send it as the `Prefer` header. `wait=<seconds>` asks for the answer within that many seconds, up to 85. A write still running then answers 202 with its status link.
+* Error codes gain the 59 codes the API added, such as `PRICE_CHANGED` and `X_COMMUNITY_CREATION_CLOSED`. X takes no new Communities, so `client.x().communities().create` fails. It answers `x_community_creation_closed` and charges nothing.
 
 ### Bug fixes
 
@@ -55,27 +66,6 @@
 * Media, avatar and banner uploads detect file types from stream headers and preserve every byte, including MP4 streams for long videos.
 * Follower, following and verified follower response unions select the coverage variant when the response contains `diagnostic`.
 * `XAccount` and `XAccountDetail` drop a timestamp field the API stopped returning.
-
-### Chores
-
-* The check and release scripts remove their temp dirs on every exit, including a failed step, a signal and read-only build caches.
-* `bin/check-local` now fails when the API has an operation that the SDK neither sends nor lists in `excluded-operations.json`. CONTRIBUTING.md explains the check.
-* The dependency audit now works in a Git worktree under `.claude/worktrees`.
-* `scripts/api-fields` checks request and response fields against the API spec. `accepted-field-differences.json` records the differences kept for caller compatibility.
-
-## 0.10.4 (2026-10-13)
-
-[Full changelog from v0.10.3 to v0.10.4](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.10.3...v0.10.4)
-
-### Security
-
-* Update jackson-core & jackson-databind from 2.22.1 to 2.22.3, which fixes 7 advisories, 5 high & 2 moderate.
-* The jackson-core fixes are GHSA-7hhh-6rmp-j9qf & GHSA-p6pp-m3f8-5c89.
-* The jackson-databind fixes are GHSA-cxp5-3px4-pw24, GHSA-q4xh-88c3-wmh7, GHSA-wv8q-qhhj-9h54, GHSA-gx83-3vf8-gh7j & GHSA-wjgm-6hv5-3cvf.
-* The SDK's own JSON handling does not use the affected features. Your application gets the same Jackson version through the SDK, so update if it parses untrusted JSON with Jackson.
-
-### Bug fixes
-
 * Reading the generic types of a raw response's class no longer throws `TypeNotPresentException`.
 
 ### Documentation
@@ -86,6 +76,10 @@
 
 ### Chores
 
+* The check and release scripts remove their temp dirs on every exit, including a failed step, a signal and read-only build caches.
+* `bin/check-local` now fails when the API has an operation that the SDK neither sends nor lists in `excluded-operations.json`. CONTRIBUTING.md explains the check.
+* The dependency audit now works in a Git worktree under `.claude/worktrees`.
+* `scripts/api-fields` checks request and response fields against the API spec. `accepted-field-differences.json` records the differences kept for caller compatibility.
 * The prefix of the idempotency key that the client can generate is now `xquik-java-retry-`. The client never sends that key by default, so no request changes.
 * The SDK now depends on kotlin-stdlib 2.3.21, the latest patch of the 2.3 line, instead of 2.3.20.
 

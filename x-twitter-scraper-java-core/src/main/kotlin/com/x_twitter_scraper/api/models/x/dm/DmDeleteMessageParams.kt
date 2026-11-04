@@ -25,6 +25,7 @@ private constructor(
     private val messageId: String?,
     private val account: String,
     private val idempotencyKey: String,
+    private val prefer: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
     private val additionalBodyProperties: Map<String, JsonValue>,
@@ -38,6 +39,14 @@ private constructor(
     fun account(): String = account
 
     fun idempotencyKey(): String = idempotencyKey
+
+    /**
+     * A long write answers 202 with a status link, then lands on X. `wait=<seconds>` asks for the
+     * answer within that many seconds, up to 85. If the write is still running then, the API
+     * answers 202 with Location. Poll Location until `terminal` is true, and don't send the write
+     * again.
+     */
+    fun prefer(): Optional<String> = Optional.ofNullable(prefer)
 
     /** Additional body properties to send with the request. */
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
@@ -72,6 +81,7 @@ private constructor(
         private var messageId: String? = null
         private var account: String? = null
         private var idempotencyKey: String? = null
+        private var prefer: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -82,6 +92,7 @@ private constructor(
             messageId = dmDeleteMessageParams.messageId
             account = dmDeleteMessageParams.account
             idempotencyKey = dmDeleteMessageParams.idempotencyKey
+            prefer = dmDeleteMessageParams.prefer
             additionalHeaders = dmDeleteMessageParams.additionalHeaders.toBuilder()
             additionalQueryParams = dmDeleteMessageParams.additionalQueryParams.toBuilder()
             additionalBodyProperties = dmDeleteMessageParams.additionalBodyProperties.toMutableMap()
@@ -98,6 +109,17 @@ private constructor(
         fun account(account: String) = apply { this.account = account }
 
         fun idempotencyKey(idempotencyKey: String) = apply { this.idempotencyKey = idempotencyKey }
+
+        /**
+         * A long write answers 202 with a status link, then lands on X. `wait=<seconds>` asks for
+         * the answer within that many seconds, up to 85. If the write is still running then, the
+         * API answers 202 with Location. Poll Location until `terminal` is true, and don't send the
+         * write again.
+         */
+        fun prefer(prefer: String?) = apply { this.prefer = prefer }
+
+        /** Alias for calling [Builder.prefer] with `prefer.orElse(null)`. */
+        fun prefer(prefer: Optional<String>) = prefer(prefer.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -239,6 +261,7 @@ private constructor(
                 messageId,
                 checkRequired("account", account),
                 checkRequired("idempotencyKey", idempotencyKey),
+                prefer,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
                 additionalBodyProperties.toImmutable(),
@@ -259,6 +282,7 @@ private constructor(
         Headers.builder()
             .apply {
                 put("Idempotency-Key", idempotencyKey)
+                prefer?.let { put("Prefer", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -281,6 +305,7 @@ private constructor(
             messageId == other.messageId &&
             account == other.account &&
             idempotencyKey == other.idempotencyKey &&
+            prefer == other.prefer &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams &&
             additionalBodyProperties == other.additionalBodyProperties
@@ -292,11 +317,12 @@ private constructor(
             messageId,
             account,
             idempotencyKey,
+            prefer,
             additionalHeaders,
             additionalQueryParams,
             additionalBodyProperties,
         )
 
     override fun toString() =
-        "DmDeleteMessageParams{userId=$userId, messageId=$messageId, account=$account, idempotencyKey=$idempotencyKey, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "DmDeleteMessageParams{userId=$userId, messageId=$messageId, account=$account, idempotencyKey=$idempotencyKey, prefer=$prefer, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
 }

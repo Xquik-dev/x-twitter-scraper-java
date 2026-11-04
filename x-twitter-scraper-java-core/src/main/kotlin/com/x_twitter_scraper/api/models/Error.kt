@@ -493,9 +493,21 @@ private constructor(
 
                 @JvmField val ACCOUNT_RESTRICTED = of("account_restricted")
 
+                @JvmField val API_KEY_EXPIRED = of("api_key_expired")
+
                 @JvmField val API_KEY_LIMIT_REACHED = of("api_key_limit_reached")
 
+                @JvmField val API_KEY_PAUSED = of("api_key_paused")
+
+                @JvmField val API_KEY_BUDGET_REACHED = of("api_key_budget_reached")
+
+                @JvmField val API_KEY_REVOKED = of("api_key_revoked")
+
+                @JvmField val IP_NOT_ALLOWED = of("ip_not_allowed")
+
                 @JvmField val ARTICLE_NOT_FOUND = of("article_not_found")
+
+                @JvmField val CLOSED = of("closed")
 
                 @JvmField val DM_NOT_PERMITTED = of("dm_not_permitted")
 
@@ -504,6 +516,10 @@ private constructor(
                 @JvmField val INVALID_ID = of("invalid_id")
 
                 @JvmField val INVALID_INPUT = of("invalid_input")
+
+                @JvmField val INVALID_MEDIA_URL = of("invalid_media_url")
+
+                @JvmField val INVALID_MESSAGE_ID = of("invalid_message_id")
 
                 @JvmField val INVALID_PARAMS = of("invalid_params")
 
@@ -523,11 +539,19 @@ private constructor(
 
                 @JvmField val INSUFFICIENT_CREDITS = of("insufficient_credits")
 
+                @JvmField val INSUFFICIENT_SCOPE = of("insufficient_scope")
+
+                @JvmField val JOB_NOT_FOUND = of("job_not_found")
+
                 @JvmField val LOGIN_COOLDOWN = of("login_cooldown")
 
                 @JvmField val LOGIN_FAILED = of("login_failed")
 
                 @JvmField val MEDIA_DOWNLOAD_FAILED = of("media_download_failed")
+
+                @JvmField val MEDIA_TOO_LARGE = of("media_too_large")
+
+                @JvmField val MEDIA_UNAVAILABLE = of("media_unavailable")
 
                 @JvmField val MISSING_PARAMS = of("missing_params")
 
@@ -543,13 +567,21 @@ private constructor(
 
                 @JvmField val NO_SUBSCRIPTION = of("no_subscription")
 
+                @JvmField val EXTRACTION_TERMINAL = of("extraction_terminal")
+
                 @JvmField val NOT_FOUND = of("not_found")
 
                 @JvmField val PAYMENT_FAILED = of("payment_failed")
 
+                @JvmField val POST_UNAVAILABLE = of("post_unavailable")
+
+                @JvmField val PRICE_CHANGED = of("price_changed")
+
                 @JvmField val RATE_LIMIT_EXCEEDED = of("rate_limit_exceeded")
 
                 @JvmField val SERVICE_UNAVAILABLE = of("service_unavailable")
+
+                @JvmField val SESSION_REQUIRED = of("session_required")
 
                 @JvmField val STYLE_NOT_FOUND = of("style_not_found")
 
@@ -565,17 +597,29 @@ private constructor(
 
                 @JvmField val BODY_TOO_LARGE = of("body_too_large")
 
+                @JvmField val BOOKMARK_FOLDERS_UNAVAILABLE = of("bookmark_folders_unavailable")
+
+                @JvmField val BROADCAST_NOT_FOUND = of("broadcast_not_found")
+
                 @JvmField val CHECKOUT_UNAVAILABLE = of("checkout_unavailable")
 
                 @JvmField val CONNECTION_CHALLENGE_EXPIRED = of("connection_challenge_expired")
 
                 @JvmField val CONNECTION_CHALLENGE_INACTIVE = of("connection_challenge_inactive")
 
+                @JvmField val CONTRIBUTOR_NOT_FOUND = of("contributor_not_found")
+
                 @JvmField val COVERAGE_CURSOR_GONE = of("coverage_cursor_gone")
 
                 @JvmField val COVERAGE_CURSOR_UNAVAILABLE = of("coverage_cursor_unavailable")
 
+                @JvmField val CURSOR_ACCOUNT_UNAVAILABLE = of("cursor_account_unavailable")
+
                 @JvmField val DRAFT_NOT_FOUND = of("draft_not_found")
+
+                @JvmField val DRAW_TOO_LARGE = of("draw_too_large")
+
+                @JvmField val EXPIRED = of("expired")
 
                 @JvmField val FAVORITERS_UNAVAILABLE = of("favoriters_unavailable")
 
@@ -589,20 +633,36 @@ private constructor(
 
                 @JvmField val IDEMPOTENCY_CONFLICT = of("idempotency_conflict")
 
+                @JvmField val IDEMPOTENCY_IN_PROGRESS = of("idempotency_in_progress")
+
                 @JvmField val IDEMPOTENCY_KEY_CONFLICT = of("idempotency_key_conflict")
+
+                @JvmField val INVALID_BROADCAST_ID = of("invalid_broadcast_id")
 
                 @JvmField val INVALID_COMMUNITY_ID = of("invalid_community_id")
 
+                @JvmField val INVALID_COMMUNITY_TOPIC = of("invalid_community_topic")
+
                 @JvmField
                 val INVALID_COMPLETE_REPLIES_REQUEST = of("invalid_complete_replies_request")
+
+                @JvmField val INVALID_CONTRIBUTOR_ALIAS = of("invalid_contributor_alias")
 
                 @JvmField val INVALID_COVERAGE_CURSOR = of("invalid_coverage_cursor")
 
                 @JvmField val INVALID_COVERAGE_REQUEST = of("invalid_coverage_request")
 
+                @JvmField val INVALID_CURSOR = of("invalid_cursor")
+
                 @JvmField val INVALID_IDEMPOTENCY_KEY = of("invalid_idempotency_key")
 
+                @JvmField val INVALID_JOB_FILTER = of("invalid_job_filter")
+
+                @JvmField val INVALID_JOB_ID = of("invalid_job_id")
+
                 @JvmField val INVALID_LIST_ID = of("invalid_list_id")
+
+                @JvmField val INVALID_NEWS_ID = of("invalid_news_id")
 
                 @JvmField val INVALID_OUTPUT_OPTIONS = of("invalid_output_options")
 
@@ -612,6 +672,12 @@ private constructor(
 
                 @JvmField val INVALID_REPLY_OPTIONS = of("invalid_reply_options")
 
+                @JvmField val INVALID_SPACE_ID = of("invalid_space_id")
+
+                @JvmField val LIKES_UNAVAILABLE = of("likes_unavailable")
+
+                @JvmField val LIST_NOT_FOUND = of("list_not_found")
+
                 @JvmField val LOGIN_RATE_LIMITED = of("login_rate_limited")
 
                 @JvmField val LOGIN_SERVICE_UNAVAILABLE = of("login_service_unavailable")
@@ -620,7 +686,13 @@ private constructor(
 
                 @JvmField val MISSING_IDS = of("missing_ids")
 
+                @JvmField val MISSING_URL = of("missing_url")
+
+                @JvmField val NEWS_NOT_FOUND = of("news_not_found")
+
                 @JvmField val NO_CACHED_STYLE = of("no_cached_style")
+
+                @JvmField val PAGINATION_STALLED = of("pagination_stalled")
 
                 @JvmField val PASSKEY_REQUIRED = of("passkey_required")
 
@@ -628,17 +700,35 @@ private constructor(
 
                 @JvmField val READ_REQUEST_TIMEOUT = of("read_request_timeout")
 
+                @JvmField val REPLAY_UNAVAILABLE = of("replay_unavailable")
+
                 @JvmField val REPLIES_INCOMPLETE = of("replies_incomplete")
+
+                @JvmField val RETWEETERS_INCOMPLETE = of("retweeters_incomplete")
+
+                @JvmField val SEARCH_UNAVAILABLE = of("search_unavailable")
+
+                @JvmField val SPACE_CANCELED = of("space_canceled")
+
+                @JvmField val SPACE_NOT_ENDED = of("space_not_ended")
 
                 @JvmField val SUPPORT_MEDIA_RATE_LIMIT = of("support_media_rate_limit")
 
                 @JvmField val SUPPORT_REQUEST_RATE_LIMIT = of("support_request_rate_limit")
 
+                @JvmField val TELEGRAM_UNAVAILABLE = of("telegram_unavailable")
+
                 @JvmField val TOO_MANY_IDS = of("too_many_ids")
+
+                @JvmField val TOO_MANY_STREAMS = of("too_many_streams")
 
                 @JvmField val TOO_MANY_TWEETS = of("too_many_tweets")
 
+                @JvmField val TOPUP_IN_PROGRESS = of("topup_in_progress")
+
                 @JvmField val UNKNOWN_FIELD = of("unknown_field")
+
+                @JvmField val UNSUPPORTED_MEDIA_COMBINATION = of("unsupported_media_combination")
 
                 @JvmField val UNSUPPORTED_MEDIA_TYPE = of("unsupported_media_type")
 
@@ -662,11 +752,27 @@ private constructor(
 
                 @JvmField val X_AUTH_FAILURE = of("x_auth_failure")
 
+                @JvmField val X_AUTOMATION_REFUSED = of("x_automation_refused")
+
+                @JvmField val X_COMMUNITY_CREATION_CLOSED = of("x_community_creation_closed")
+
+                @JvmField val X_COMMUNITY_NOT_JOINED = of("x_community_not_joined")
+
+                @JvmField val X_COMMUNITY_NOT_SELECTABLE = of("x_community_not_selectable")
+
+                @JvmField val X_COMMUNITY_POST_PUBLIC = of("x_community_post_public")
+
+                @JvmField val X_COMMUNITY_POST_REMOVED = of("x_community_post_removed")
+
                 @JvmField val X_CONTENT_TOO_LONG = of("x_content_too_long")
 
                 @JvmField val X_DAILY_LIMIT = of("x_daily_limit")
 
                 @JvmField val X_DM_NOT_ALLOWED = of("x_dm_not_allowed")
+
+                @JvmField val X_DM_NOT_DELETED = of("x_dm_not_deleted")
+
+                @JvmField val X_DM_NOT_SENT = of("x_dm_not_sent")
 
                 @JvmField val X_DUPLICATE_ACTION = of("x_duplicate_action")
 
@@ -686,15 +792,27 @@ private constructor(
 
                 @JvmField val X_LOGIN_SUSPENDED = of("x_login_suspended")
 
+                @JvmField val X_IMAGE_INVALID = of("x_image_invalid")
+
+                @JvmField val X_MEDIA_REJECTED = of("x_media_rejected")
+
+                @JvmField val X_POST_NOT_SENT = of("x_post_not_sent")
+
                 @JvmField val X_RATE_LIMITED = of("x_rate_limited")
 
                 @JvmField val X_REJECTED = of("x_rejected")
+
+                @JvmField val X_REPLY_NOT_ALLOWED = of("x_reply_not_allowed")
+
+                @JvmField val X_REPLY_TARGET_UNAVAILABLE = of("x_reply_target_unavailable")
 
                 @JvmField val X_TARGET_NOT_FOUND = of("x_target_not_found")
 
                 @JvmField val X_TRANSIENT_ERROR = of("x_transient_error")
 
                 @JvmField val X_USER_LOOKUP_FAILED = of("x_user_lookup_failed")
+
+                @JvmField val X_VIDEO_TOO_LARGE = of("x_video_too_large")
 
                 @JvmField val X_WRITE_AMBIGUOUS = of("x_write_ambiguous")
 
@@ -711,12 +829,20 @@ private constructor(
                 ACCOUNT_NOT_FOUND,
                 ACCOUNT_REQUIRED,
                 ACCOUNT_RESTRICTED,
+                API_KEY_EXPIRED,
                 API_KEY_LIMIT_REACHED,
+                API_KEY_PAUSED,
+                API_KEY_BUDGET_REACHED,
+                API_KEY_REVOKED,
+                IP_NOT_ALLOWED,
                 ARTICLE_NOT_FOUND,
+                CLOSED,
                 DM_NOT_PERMITTED,
                 INVALID_FORMAT,
                 INVALID_ID,
                 INVALID_INPUT,
+                INVALID_MEDIA_URL,
+                INVALID_MESSAGE_ID,
                 INVALID_PARAMS,
                 INVALID_TOOL_TYPE,
                 INVALID_TWEET_ID,
@@ -726,9 +852,13 @@ private constructor(
                 INVALID_USERNAME,
                 INVALID_JSON,
                 INSUFFICIENT_CREDITS,
+                INSUFFICIENT_SCOPE,
+                JOB_NOT_FOUND,
                 LOGIN_COOLDOWN,
                 LOGIN_FAILED,
                 MEDIA_DOWNLOAD_FAILED,
+                MEDIA_TOO_LARGE,
+                MEDIA_UNAVAILABLE,
                 MISSING_PARAMS,
                 MISSING_QUERY,
                 MONITOR_ALREADY_EXISTS,
@@ -736,10 +866,14 @@ private constructor(
                 NO_MEDIA,
                 NO_CREDITS,
                 NO_SUBSCRIPTION,
+                EXTRACTION_TERMINAL,
                 NOT_FOUND,
                 PAYMENT_FAILED,
+                POST_UNAVAILABLE,
+                PRICE_CHANGED,
                 RATE_LIMIT_EXCEEDED,
                 SERVICE_UNAVAILABLE,
+                SESSION_REQUIRED,
                 STYLE_NOT_FOUND,
                 SUBSCRIPTION_INACTIVE,
                 TWEET_NOT_FOUND,
@@ -747,43 +881,72 @@ private constructor(
                 UNSUPPORTED_FIELD,
                 USER_NOT_FOUND,
                 BODY_TOO_LARGE,
+                BOOKMARK_FOLDERS_UNAVAILABLE,
+                BROADCAST_NOT_FOUND,
                 CHECKOUT_UNAVAILABLE,
                 CONNECTION_CHALLENGE_EXPIRED,
                 CONNECTION_CHALLENGE_INACTIVE,
+                CONTRIBUTOR_NOT_FOUND,
                 COVERAGE_CURSOR_GONE,
                 COVERAGE_CURSOR_UNAVAILABLE,
+                CURSOR_ACCOUNT_UNAVAILABLE,
                 DRAFT_NOT_FOUND,
+                DRAW_TOO_LARGE,
+                EXPIRED,
                 FAVORITERS_UNAVAILABLE,
                 FORBIDDEN,
                 GUEST_WALLET_UNAVAILABLE,
                 GUEST_WALLETS_DISABLED,
                 GUEST_WALLETS_UNAVAILABLE,
                 IDEMPOTENCY_CONFLICT,
+                IDEMPOTENCY_IN_PROGRESS,
                 IDEMPOTENCY_KEY_CONFLICT,
+                INVALID_BROADCAST_ID,
                 INVALID_COMMUNITY_ID,
+                INVALID_COMMUNITY_TOPIC,
                 INVALID_COMPLETE_REPLIES_REQUEST,
+                INVALID_CONTRIBUTOR_ALIAS,
                 INVALID_COVERAGE_CURSOR,
                 INVALID_COVERAGE_REQUEST,
+                INVALID_CURSOR,
                 INVALID_IDEMPOTENCY_KEY,
+                INVALID_JOB_FILTER,
+                INVALID_JOB_ID,
                 INVALID_LIST_ID,
+                INVALID_NEWS_ID,
                 INVALID_OUTPUT_OPTIONS,
                 INVALID_PAYMENT_AMOUNT,
                 INVALID_RANGE,
                 INVALID_REPLY_OPTIONS,
+                INVALID_SPACE_ID,
+                LIKES_UNAVAILABLE,
+                LIST_NOT_FOUND,
                 LOGIN_RATE_LIMITED,
                 LOGIN_SERVICE_UNAVAILABLE,
                 MISSING_IDEMPOTENCY_KEY,
                 MISSING_IDS,
+                MISSING_URL,
+                NEWS_NOT_FOUND,
                 NO_CACHED_STYLE,
+                PAGINATION_STALLED,
                 PASSKEY_REQUIRED,
                 RATE_LIMITED,
                 READ_REQUEST_TIMEOUT,
+                REPLAY_UNAVAILABLE,
                 REPLIES_INCOMPLETE,
+                RETWEETERS_INCOMPLETE,
+                SEARCH_UNAVAILABLE,
+                SPACE_CANCELED,
+                SPACE_NOT_ENDED,
                 SUPPORT_MEDIA_RATE_LIMIT,
                 SUPPORT_REQUEST_RATE_LIMIT,
+                TELEGRAM_UNAVAILABLE,
                 TOO_MANY_IDS,
+                TOO_MANY_STREAMS,
                 TOO_MANY_TWEETS,
+                TOPUP_IN_PROGRESS,
                 UNKNOWN_FIELD,
+                UNSUPPORTED_MEDIA_COMBINATION,
                 UNSUPPORTED_MEDIA_TYPE,
                 WEBHOOK_INACTIVE,
                 WRITE_TRACKING_UNAVAILABLE,
@@ -795,9 +958,17 @@ private constructor(
                 X_API_UNAVAILABLE,
                 X_API_UNAUTHORIZED,
                 X_AUTH_FAILURE,
+                X_AUTOMATION_REFUSED,
+                X_COMMUNITY_CREATION_CLOSED,
+                X_COMMUNITY_NOT_JOINED,
+                X_COMMUNITY_NOT_SELECTABLE,
+                X_COMMUNITY_POST_PUBLIC,
+                X_COMMUNITY_POST_REMOVED,
                 X_CONTENT_TOO_LONG,
                 X_DAILY_LIMIT,
                 X_DM_NOT_ALLOWED,
+                X_DM_NOT_DELETED,
+                X_DM_NOT_SENT,
                 X_DUPLICATE_ACTION,
                 X_LOGIN_AUTH_FAILED,
                 X_LOGIN_CHALLENGE,
@@ -807,11 +978,17 @@ private constructor(
                 X_LOGIN_RATE_LIMITED,
                 X_LOGIN_SERVICE_UNAVAILABLE,
                 X_LOGIN_SUSPENDED,
+                X_IMAGE_INVALID,
+                X_MEDIA_REJECTED,
+                X_POST_NOT_SENT,
                 X_RATE_LIMITED,
                 X_REJECTED,
+                X_REPLY_NOT_ALLOWED,
+                X_REPLY_TARGET_UNAVAILABLE,
                 X_TARGET_NOT_FOUND,
                 X_TRANSIENT_ERROR,
                 X_USER_LOOKUP_FAILED,
+                X_VIDEO_TOO_LARGE,
                 X_WRITE_AMBIGUOUS,
                 X_WRITE_FAILED,
             }
@@ -832,12 +1009,20 @@ private constructor(
                 ACCOUNT_NOT_FOUND,
                 ACCOUNT_REQUIRED,
                 ACCOUNT_RESTRICTED,
+                API_KEY_EXPIRED,
                 API_KEY_LIMIT_REACHED,
+                API_KEY_PAUSED,
+                API_KEY_BUDGET_REACHED,
+                API_KEY_REVOKED,
+                IP_NOT_ALLOWED,
                 ARTICLE_NOT_FOUND,
+                CLOSED,
                 DM_NOT_PERMITTED,
                 INVALID_FORMAT,
                 INVALID_ID,
                 INVALID_INPUT,
+                INVALID_MEDIA_URL,
+                INVALID_MESSAGE_ID,
                 INVALID_PARAMS,
                 INVALID_TOOL_TYPE,
                 INVALID_TWEET_ID,
@@ -847,9 +1032,13 @@ private constructor(
                 INVALID_USERNAME,
                 INVALID_JSON,
                 INSUFFICIENT_CREDITS,
+                INSUFFICIENT_SCOPE,
+                JOB_NOT_FOUND,
                 LOGIN_COOLDOWN,
                 LOGIN_FAILED,
                 MEDIA_DOWNLOAD_FAILED,
+                MEDIA_TOO_LARGE,
+                MEDIA_UNAVAILABLE,
                 MISSING_PARAMS,
                 MISSING_QUERY,
                 MONITOR_ALREADY_EXISTS,
@@ -857,10 +1046,14 @@ private constructor(
                 NO_MEDIA,
                 NO_CREDITS,
                 NO_SUBSCRIPTION,
+                EXTRACTION_TERMINAL,
                 NOT_FOUND,
                 PAYMENT_FAILED,
+                POST_UNAVAILABLE,
+                PRICE_CHANGED,
                 RATE_LIMIT_EXCEEDED,
                 SERVICE_UNAVAILABLE,
+                SESSION_REQUIRED,
                 STYLE_NOT_FOUND,
                 SUBSCRIPTION_INACTIVE,
                 TWEET_NOT_FOUND,
@@ -868,43 +1061,72 @@ private constructor(
                 UNSUPPORTED_FIELD,
                 USER_NOT_FOUND,
                 BODY_TOO_LARGE,
+                BOOKMARK_FOLDERS_UNAVAILABLE,
+                BROADCAST_NOT_FOUND,
                 CHECKOUT_UNAVAILABLE,
                 CONNECTION_CHALLENGE_EXPIRED,
                 CONNECTION_CHALLENGE_INACTIVE,
+                CONTRIBUTOR_NOT_FOUND,
                 COVERAGE_CURSOR_GONE,
                 COVERAGE_CURSOR_UNAVAILABLE,
+                CURSOR_ACCOUNT_UNAVAILABLE,
                 DRAFT_NOT_FOUND,
+                DRAW_TOO_LARGE,
+                EXPIRED,
                 FAVORITERS_UNAVAILABLE,
                 FORBIDDEN,
                 GUEST_WALLET_UNAVAILABLE,
                 GUEST_WALLETS_DISABLED,
                 GUEST_WALLETS_UNAVAILABLE,
                 IDEMPOTENCY_CONFLICT,
+                IDEMPOTENCY_IN_PROGRESS,
                 IDEMPOTENCY_KEY_CONFLICT,
+                INVALID_BROADCAST_ID,
                 INVALID_COMMUNITY_ID,
+                INVALID_COMMUNITY_TOPIC,
                 INVALID_COMPLETE_REPLIES_REQUEST,
+                INVALID_CONTRIBUTOR_ALIAS,
                 INVALID_COVERAGE_CURSOR,
                 INVALID_COVERAGE_REQUEST,
+                INVALID_CURSOR,
                 INVALID_IDEMPOTENCY_KEY,
+                INVALID_JOB_FILTER,
+                INVALID_JOB_ID,
                 INVALID_LIST_ID,
+                INVALID_NEWS_ID,
                 INVALID_OUTPUT_OPTIONS,
                 INVALID_PAYMENT_AMOUNT,
                 INVALID_RANGE,
                 INVALID_REPLY_OPTIONS,
+                INVALID_SPACE_ID,
+                LIKES_UNAVAILABLE,
+                LIST_NOT_FOUND,
                 LOGIN_RATE_LIMITED,
                 LOGIN_SERVICE_UNAVAILABLE,
                 MISSING_IDEMPOTENCY_KEY,
                 MISSING_IDS,
+                MISSING_URL,
+                NEWS_NOT_FOUND,
                 NO_CACHED_STYLE,
+                PAGINATION_STALLED,
                 PASSKEY_REQUIRED,
                 RATE_LIMITED,
                 READ_REQUEST_TIMEOUT,
+                REPLAY_UNAVAILABLE,
                 REPLIES_INCOMPLETE,
+                RETWEETERS_INCOMPLETE,
+                SEARCH_UNAVAILABLE,
+                SPACE_CANCELED,
+                SPACE_NOT_ENDED,
                 SUPPORT_MEDIA_RATE_LIMIT,
                 SUPPORT_REQUEST_RATE_LIMIT,
+                TELEGRAM_UNAVAILABLE,
                 TOO_MANY_IDS,
+                TOO_MANY_STREAMS,
                 TOO_MANY_TWEETS,
+                TOPUP_IN_PROGRESS,
                 UNKNOWN_FIELD,
+                UNSUPPORTED_MEDIA_COMBINATION,
                 UNSUPPORTED_MEDIA_TYPE,
                 WEBHOOK_INACTIVE,
                 WRITE_TRACKING_UNAVAILABLE,
@@ -916,9 +1138,17 @@ private constructor(
                 X_API_UNAVAILABLE,
                 X_API_UNAUTHORIZED,
                 X_AUTH_FAILURE,
+                X_AUTOMATION_REFUSED,
+                X_COMMUNITY_CREATION_CLOSED,
+                X_COMMUNITY_NOT_JOINED,
+                X_COMMUNITY_NOT_SELECTABLE,
+                X_COMMUNITY_POST_PUBLIC,
+                X_COMMUNITY_POST_REMOVED,
                 X_CONTENT_TOO_LONG,
                 X_DAILY_LIMIT,
                 X_DM_NOT_ALLOWED,
+                X_DM_NOT_DELETED,
+                X_DM_NOT_SENT,
                 X_DUPLICATE_ACTION,
                 X_LOGIN_AUTH_FAILED,
                 X_LOGIN_CHALLENGE,
@@ -928,11 +1158,17 @@ private constructor(
                 X_LOGIN_RATE_LIMITED,
                 X_LOGIN_SERVICE_UNAVAILABLE,
                 X_LOGIN_SUSPENDED,
+                X_IMAGE_INVALID,
+                X_MEDIA_REJECTED,
+                X_POST_NOT_SENT,
                 X_RATE_LIMITED,
                 X_REJECTED,
+                X_REPLY_NOT_ALLOWED,
+                X_REPLY_TARGET_UNAVAILABLE,
                 X_TARGET_NOT_FOUND,
                 X_TRANSIENT_ERROR,
                 X_USER_LOOKUP_FAILED,
+                X_VIDEO_TOO_LARGE,
                 X_WRITE_AMBIGUOUS,
                 X_WRITE_FAILED,
                 /**
@@ -954,12 +1190,20 @@ private constructor(
                     ACCOUNT_NOT_FOUND -> Value.ACCOUNT_NOT_FOUND
                     ACCOUNT_REQUIRED -> Value.ACCOUNT_REQUIRED
                     ACCOUNT_RESTRICTED -> Value.ACCOUNT_RESTRICTED
+                    API_KEY_EXPIRED -> Value.API_KEY_EXPIRED
                     API_KEY_LIMIT_REACHED -> Value.API_KEY_LIMIT_REACHED
+                    API_KEY_PAUSED -> Value.API_KEY_PAUSED
+                    API_KEY_BUDGET_REACHED -> Value.API_KEY_BUDGET_REACHED
+                    API_KEY_REVOKED -> Value.API_KEY_REVOKED
+                    IP_NOT_ALLOWED -> Value.IP_NOT_ALLOWED
                     ARTICLE_NOT_FOUND -> Value.ARTICLE_NOT_FOUND
+                    CLOSED -> Value.CLOSED
                     DM_NOT_PERMITTED -> Value.DM_NOT_PERMITTED
                     INVALID_FORMAT -> Value.INVALID_FORMAT
                     INVALID_ID -> Value.INVALID_ID
                     INVALID_INPUT -> Value.INVALID_INPUT
+                    INVALID_MEDIA_URL -> Value.INVALID_MEDIA_URL
+                    INVALID_MESSAGE_ID -> Value.INVALID_MESSAGE_ID
                     INVALID_PARAMS -> Value.INVALID_PARAMS
                     INVALID_TOOL_TYPE -> Value.INVALID_TOOL_TYPE
                     INVALID_TWEET_ID -> Value.INVALID_TWEET_ID
@@ -969,9 +1213,13 @@ private constructor(
                     INVALID_USERNAME -> Value.INVALID_USERNAME
                     INVALID_JSON -> Value.INVALID_JSON
                     INSUFFICIENT_CREDITS -> Value.INSUFFICIENT_CREDITS
+                    INSUFFICIENT_SCOPE -> Value.INSUFFICIENT_SCOPE
+                    JOB_NOT_FOUND -> Value.JOB_NOT_FOUND
                     LOGIN_COOLDOWN -> Value.LOGIN_COOLDOWN
                     LOGIN_FAILED -> Value.LOGIN_FAILED
                     MEDIA_DOWNLOAD_FAILED -> Value.MEDIA_DOWNLOAD_FAILED
+                    MEDIA_TOO_LARGE -> Value.MEDIA_TOO_LARGE
+                    MEDIA_UNAVAILABLE -> Value.MEDIA_UNAVAILABLE
                     MISSING_PARAMS -> Value.MISSING_PARAMS
                     MISSING_QUERY -> Value.MISSING_QUERY
                     MONITOR_ALREADY_EXISTS -> Value.MONITOR_ALREADY_EXISTS
@@ -979,10 +1227,14 @@ private constructor(
                     NO_MEDIA -> Value.NO_MEDIA
                     NO_CREDITS -> Value.NO_CREDITS
                     NO_SUBSCRIPTION -> Value.NO_SUBSCRIPTION
+                    EXTRACTION_TERMINAL -> Value.EXTRACTION_TERMINAL
                     NOT_FOUND -> Value.NOT_FOUND
                     PAYMENT_FAILED -> Value.PAYMENT_FAILED
+                    POST_UNAVAILABLE -> Value.POST_UNAVAILABLE
+                    PRICE_CHANGED -> Value.PRICE_CHANGED
                     RATE_LIMIT_EXCEEDED -> Value.RATE_LIMIT_EXCEEDED
                     SERVICE_UNAVAILABLE -> Value.SERVICE_UNAVAILABLE
+                    SESSION_REQUIRED -> Value.SESSION_REQUIRED
                     STYLE_NOT_FOUND -> Value.STYLE_NOT_FOUND
                     SUBSCRIPTION_INACTIVE -> Value.SUBSCRIPTION_INACTIVE
                     TWEET_NOT_FOUND -> Value.TWEET_NOT_FOUND
@@ -990,43 +1242,72 @@ private constructor(
                     UNSUPPORTED_FIELD -> Value.UNSUPPORTED_FIELD
                     USER_NOT_FOUND -> Value.USER_NOT_FOUND
                     BODY_TOO_LARGE -> Value.BODY_TOO_LARGE
+                    BOOKMARK_FOLDERS_UNAVAILABLE -> Value.BOOKMARK_FOLDERS_UNAVAILABLE
+                    BROADCAST_NOT_FOUND -> Value.BROADCAST_NOT_FOUND
                     CHECKOUT_UNAVAILABLE -> Value.CHECKOUT_UNAVAILABLE
                     CONNECTION_CHALLENGE_EXPIRED -> Value.CONNECTION_CHALLENGE_EXPIRED
                     CONNECTION_CHALLENGE_INACTIVE -> Value.CONNECTION_CHALLENGE_INACTIVE
+                    CONTRIBUTOR_NOT_FOUND -> Value.CONTRIBUTOR_NOT_FOUND
                     COVERAGE_CURSOR_GONE -> Value.COVERAGE_CURSOR_GONE
                     COVERAGE_CURSOR_UNAVAILABLE -> Value.COVERAGE_CURSOR_UNAVAILABLE
+                    CURSOR_ACCOUNT_UNAVAILABLE -> Value.CURSOR_ACCOUNT_UNAVAILABLE
                     DRAFT_NOT_FOUND -> Value.DRAFT_NOT_FOUND
+                    DRAW_TOO_LARGE -> Value.DRAW_TOO_LARGE
+                    EXPIRED -> Value.EXPIRED
                     FAVORITERS_UNAVAILABLE -> Value.FAVORITERS_UNAVAILABLE
                     FORBIDDEN -> Value.FORBIDDEN
                     GUEST_WALLET_UNAVAILABLE -> Value.GUEST_WALLET_UNAVAILABLE
                     GUEST_WALLETS_DISABLED -> Value.GUEST_WALLETS_DISABLED
                     GUEST_WALLETS_UNAVAILABLE -> Value.GUEST_WALLETS_UNAVAILABLE
                     IDEMPOTENCY_CONFLICT -> Value.IDEMPOTENCY_CONFLICT
+                    IDEMPOTENCY_IN_PROGRESS -> Value.IDEMPOTENCY_IN_PROGRESS
                     IDEMPOTENCY_KEY_CONFLICT -> Value.IDEMPOTENCY_KEY_CONFLICT
+                    INVALID_BROADCAST_ID -> Value.INVALID_BROADCAST_ID
                     INVALID_COMMUNITY_ID -> Value.INVALID_COMMUNITY_ID
+                    INVALID_COMMUNITY_TOPIC -> Value.INVALID_COMMUNITY_TOPIC
                     INVALID_COMPLETE_REPLIES_REQUEST -> Value.INVALID_COMPLETE_REPLIES_REQUEST
+                    INVALID_CONTRIBUTOR_ALIAS -> Value.INVALID_CONTRIBUTOR_ALIAS
                     INVALID_COVERAGE_CURSOR -> Value.INVALID_COVERAGE_CURSOR
                     INVALID_COVERAGE_REQUEST -> Value.INVALID_COVERAGE_REQUEST
+                    INVALID_CURSOR -> Value.INVALID_CURSOR
                     INVALID_IDEMPOTENCY_KEY -> Value.INVALID_IDEMPOTENCY_KEY
+                    INVALID_JOB_FILTER -> Value.INVALID_JOB_FILTER
+                    INVALID_JOB_ID -> Value.INVALID_JOB_ID
                     INVALID_LIST_ID -> Value.INVALID_LIST_ID
+                    INVALID_NEWS_ID -> Value.INVALID_NEWS_ID
                     INVALID_OUTPUT_OPTIONS -> Value.INVALID_OUTPUT_OPTIONS
                     INVALID_PAYMENT_AMOUNT -> Value.INVALID_PAYMENT_AMOUNT
                     INVALID_RANGE -> Value.INVALID_RANGE
                     INVALID_REPLY_OPTIONS -> Value.INVALID_REPLY_OPTIONS
+                    INVALID_SPACE_ID -> Value.INVALID_SPACE_ID
+                    LIKES_UNAVAILABLE -> Value.LIKES_UNAVAILABLE
+                    LIST_NOT_FOUND -> Value.LIST_NOT_FOUND
                     LOGIN_RATE_LIMITED -> Value.LOGIN_RATE_LIMITED
                     LOGIN_SERVICE_UNAVAILABLE -> Value.LOGIN_SERVICE_UNAVAILABLE
                     MISSING_IDEMPOTENCY_KEY -> Value.MISSING_IDEMPOTENCY_KEY
                     MISSING_IDS -> Value.MISSING_IDS
+                    MISSING_URL -> Value.MISSING_URL
+                    NEWS_NOT_FOUND -> Value.NEWS_NOT_FOUND
                     NO_CACHED_STYLE -> Value.NO_CACHED_STYLE
+                    PAGINATION_STALLED -> Value.PAGINATION_STALLED
                     PASSKEY_REQUIRED -> Value.PASSKEY_REQUIRED
                     RATE_LIMITED -> Value.RATE_LIMITED
                     READ_REQUEST_TIMEOUT -> Value.READ_REQUEST_TIMEOUT
+                    REPLAY_UNAVAILABLE -> Value.REPLAY_UNAVAILABLE
                     REPLIES_INCOMPLETE -> Value.REPLIES_INCOMPLETE
+                    RETWEETERS_INCOMPLETE -> Value.RETWEETERS_INCOMPLETE
+                    SEARCH_UNAVAILABLE -> Value.SEARCH_UNAVAILABLE
+                    SPACE_CANCELED -> Value.SPACE_CANCELED
+                    SPACE_NOT_ENDED -> Value.SPACE_NOT_ENDED
                     SUPPORT_MEDIA_RATE_LIMIT -> Value.SUPPORT_MEDIA_RATE_LIMIT
                     SUPPORT_REQUEST_RATE_LIMIT -> Value.SUPPORT_REQUEST_RATE_LIMIT
+                    TELEGRAM_UNAVAILABLE -> Value.TELEGRAM_UNAVAILABLE
                     TOO_MANY_IDS -> Value.TOO_MANY_IDS
+                    TOO_MANY_STREAMS -> Value.TOO_MANY_STREAMS
                     TOO_MANY_TWEETS -> Value.TOO_MANY_TWEETS
+                    TOPUP_IN_PROGRESS -> Value.TOPUP_IN_PROGRESS
                     UNKNOWN_FIELD -> Value.UNKNOWN_FIELD
+                    UNSUPPORTED_MEDIA_COMBINATION -> Value.UNSUPPORTED_MEDIA_COMBINATION
                     UNSUPPORTED_MEDIA_TYPE -> Value.UNSUPPORTED_MEDIA_TYPE
                     WEBHOOK_INACTIVE -> Value.WEBHOOK_INACTIVE
                     WRITE_TRACKING_UNAVAILABLE -> Value.WRITE_TRACKING_UNAVAILABLE
@@ -1038,9 +1319,17 @@ private constructor(
                     X_API_UNAVAILABLE -> Value.X_API_UNAVAILABLE
                     X_API_UNAUTHORIZED -> Value.X_API_UNAUTHORIZED
                     X_AUTH_FAILURE -> Value.X_AUTH_FAILURE
+                    X_AUTOMATION_REFUSED -> Value.X_AUTOMATION_REFUSED
+                    X_COMMUNITY_CREATION_CLOSED -> Value.X_COMMUNITY_CREATION_CLOSED
+                    X_COMMUNITY_NOT_JOINED -> Value.X_COMMUNITY_NOT_JOINED
+                    X_COMMUNITY_NOT_SELECTABLE -> Value.X_COMMUNITY_NOT_SELECTABLE
+                    X_COMMUNITY_POST_PUBLIC -> Value.X_COMMUNITY_POST_PUBLIC
+                    X_COMMUNITY_POST_REMOVED -> Value.X_COMMUNITY_POST_REMOVED
                     X_CONTENT_TOO_LONG -> Value.X_CONTENT_TOO_LONG
                     X_DAILY_LIMIT -> Value.X_DAILY_LIMIT
                     X_DM_NOT_ALLOWED -> Value.X_DM_NOT_ALLOWED
+                    X_DM_NOT_DELETED -> Value.X_DM_NOT_DELETED
+                    X_DM_NOT_SENT -> Value.X_DM_NOT_SENT
                     X_DUPLICATE_ACTION -> Value.X_DUPLICATE_ACTION
                     X_LOGIN_AUTH_FAILED -> Value.X_LOGIN_AUTH_FAILED
                     X_LOGIN_CHALLENGE -> Value.X_LOGIN_CHALLENGE
@@ -1050,11 +1339,17 @@ private constructor(
                     X_LOGIN_RATE_LIMITED -> Value.X_LOGIN_RATE_LIMITED
                     X_LOGIN_SERVICE_UNAVAILABLE -> Value.X_LOGIN_SERVICE_UNAVAILABLE
                     X_LOGIN_SUSPENDED -> Value.X_LOGIN_SUSPENDED
+                    X_IMAGE_INVALID -> Value.X_IMAGE_INVALID
+                    X_MEDIA_REJECTED -> Value.X_MEDIA_REJECTED
+                    X_POST_NOT_SENT -> Value.X_POST_NOT_SENT
                     X_RATE_LIMITED -> Value.X_RATE_LIMITED
                     X_REJECTED -> Value.X_REJECTED
+                    X_REPLY_NOT_ALLOWED -> Value.X_REPLY_NOT_ALLOWED
+                    X_REPLY_TARGET_UNAVAILABLE -> Value.X_REPLY_TARGET_UNAVAILABLE
                     X_TARGET_NOT_FOUND -> Value.X_TARGET_NOT_FOUND
                     X_TRANSIENT_ERROR -> Value.X_TRANSIENT_ERROR
                     X_USER_LOOKUP_FAILED -> Value.X_USER_LOOKUP_FAILED
+                    X_VIDEO_TOO_LARGE -> Value.X_VIDEO_TOO_LARGE
                     X_WRITE_AMBIGUOUS -> Value.X_WRITE_AMBIGUOUS
                     X_WRITE_FAILED -> Value.X_WRITE_FAILED
                     else -> Value._UNKNOWN
@@ -1074,12 +1369,20 @@ private constructor(
                     ACCOUNT_NOT_FOUND -> Known.ACCOUNT_NOT_FOUND
                     ACCOUNT_REQUIRED -> Known.ACCOUNT_REQUIRED
                     ACCOUNT_RESTRICTED -> Known.ACCOUNT_RESTRICTED
+                    API_KEY_EXPIRED -> Known.API_KEY_EXPIRED
                     API_KEY_LIMIT_REACHED -> Known.API_KEY_LIMIT_REACHED
+                    API_KEY_PAUSED -> Known.API_KEY_PAUSED
+                    API_KEY_BUDGET_REACHED -> Known.API_KEY_BUDGET_REACHED
+                    API_KEY_REVOKED -> Known.API_KEY_REVOKED
+                    IP_NOT_ALLOWED -> Known.IP_NOT_ALLOWED
                     ARTICLE_NOT_FOUND -> Known.ARTICLE_NOT_FOUND
+                    CLOSED -> Known.CLOSED
                     DM_NOT_PERMITTED -> Known.DM_NOT_PERMITTED
                     INVALID_FORMAT -> Known.INVALID_FORMAT
                     INVALID_ID -> Known.INVALID_ID
                     INVALID_INPUT -> Known.INVALID_INPUT
+                    INVALID_MEDIA_URL -> Known.INVALID_MEDIA_URL
+                    INVALID_MESSAGE_ID -> Known.INVALID_MESSAGE_ID
                     INVALID_PARAMS -> Known.INVALID_PARAMS
                     INVALID_TOOL_TYPE -> Known.INVALID_TOOL_TYPE
                     INVALID_TWEET_ID -> Known.INVALID_TWEET_ID
@@ -1089,9 +1392,13 @@ private constructor(
                     INVALID_USERNAME -> Known.INVALID_USERNAME
                     INVALID_JSON -> Known.INVALID_JSON
                     INSUFFICIENT_CREDITS -> Known.INSUFFICIENT_CREDITS
+                    INSUFFICIENT_SCOPE -> Known.INSUFFICIENT_SCOPE
+                    JOB_NOT_FOUND -> Known.JOB_NOT_FOUND
                     LOGIN_COOLDOWN -> Known.LOGIN_COOLDOWN
                     LOGIN_FAILED -> Known.LOGIN_FAILED
                     MEDIA_DOWNLOAD_FAILED -> Known.MEDIA_DOWNLOAD_FAILED
+                    MEDIA_TOO_LARGE -> Known.MEDIA_TOO_LARGE
+                    MEDIA_UNAVAILABLE -> Known.MEDIA_UNAVAILABLE
                     MISSING_PARAMS -> Known.MISSING_PARAMS
                     MISSING_QUERY -> Known.MISSING_QUERY
                     MONITOR_ALREADY_EXISTS -> Known.MONITOR_ALREADY_EXISTS
@@ -1099,10 +1406,14 @@ private constructor(
                     NO_MEDIA -> Known.NO_MEDIA
                     NO_CREDITS -> Known.NO_CREDITS
                     NO_SUBSCRIPTION -> Known.NO_SUBSCRIPTION
+                    EXTRACTION_TERMINAL -> Known.EXTRACTION_TERMINAL
                     NOT_FOUND -> Known.NOT_FOUND
                     PAYMENT_FAILED -> Known.PAYMENT_FAILED
+                    POST_UNAVAILABLE -> Known.POST_UNAVAILABLE
+                    PRICE_CHANGED -> Known.PRICE_CHANGED
                     RATE_LIMIT_EXCEEDED -> Known.RATE_LIMIT_EXCEEDED
                     SERVICE_UNAVAILABLE -> Known.SERVICE_UNAVAILABLE
+                    SESSION_REQUIRED -> Known.SESSION_REQUIRED
                     STYLE_NOT_FOUND -> Known.STYLE_NOT_FOUND
                     SUBSCRIPTION_INACTIVE -> Known.SUBSCRIPTION_INACTIVE
                     TWEET_NOT_FOUND -> Known.TWEET_NOT_FOUND
@@ -1110,43 +1421,72 @@ private constructor(
                     UNSUPPORTED_FIELD -> Known.UNSUPPORTED_FIELD
                     USER_NOT_FOUND -> Known.USER_NOT_FOUND
                     BODY_TOO_LARGE -> Known.BODY_TOO_LARGE
+                    BOOKMARK_FOLDERS_UNAVAILABLE -> Known.BOOKMARK_FOLDERS_UNAVAILABLE
+                    BROADCAST_NOT_FOUND -> Known.BROADCAST_NOT_FOUND
                     CHECKOUT_UNAVAILABLE -> Known.CHECKOUT_UNAVAILABLE
                     CONNECTION_CHALLENGE_EXPIRED -> Known.CONNECTION_CHALLENGE_EXPIRED
                     CONNECTION_CHALLENGE_INACTIVE -> Known.CONNECTION_CHALLENGE_INACTIVE
+                    CONTRIBUTOR_NOT_FOUND -> Known.CONTRIBUTOR_NOT_FOUND
                     COVERAGE_CURSOR_GONE -> Known.COVERAGE_CURSOR_GONE
                     COVERAGE_CURSOR_UNAVAILABLE -> Known.COVERAGE_CURSOR_UNAVAILABLE
+                    CURSOR_ACCOUNT_UNAVAILABLE -> Known.CURSOR_ACCOUNT_UNAVAILABLE
                     DRAFT_NOT_FOUND -> Known.DRAFT_NOT_FOUND
+                    DRAW_TOO_LARGE -> Known.DRAW_TOO_LARGE
+                    EXPIRED -> Known.EXPIRED
                     FAVORITERS_UNAVAILABLE -> Known.FAVORITERS_UNAVAILABLE
                     FORBIDDEN -> Known.FORBIDDEN
                     GUEST_WALLET_UNAVAILABLE -> Known.GUEST_WALLET_UNAVAILABLE
                     GUEST_WALLETS_DISABLED -> Known.GUEST_WALLETS_DISABLED
                     GUEST_WALLETS_UNAVAILABLE -> Known.GUEST_WALLETS_UNAVAILABLE
                     IDEMPOTENCY_CONFLICT -> Known.IDEMPOTENCY_CONFLICT
+                    IDEMPOTENCY_IN_PROGRESS -> Known.IDEMPOTENCY_IN_PROGRESS
                     IDEMPOTENCY_KEY_CONFLICT -> Known.IDEMPOTENCY_KEY_CONFLICT
+                    INVALID_BROADCAST_ID -> Known.INVALID_BROADCAST_ID
                     INVALID_COMMUNITY_ID -> Known.INVALID_COMMUNITY_ID
+                    INVALID_COMMUNITY_TOPIC -> Known.INVALID_COMMUNITY_TOPIC
                     INVALID_COMPLETE_REPLIES_REQUEST -> Known.INVALID_COMPLETE_REPLIES_REQUEST
+                    INVALID_CONTRIBUTOR_ALIAS -> Known.INVALID_CONTRIBUTOR_ALIAS
                     INVALID_COVERAGE_CURSOR -> Known.INVALID_COVERAGE_CURSOR
                     INVALID_COVERAGE_REQUEST -> Known.INVALID_COVERAGE_REQUEST
+                    INVALID_CURSOR -> Known.INVALID_CURSOR
                     INVALID_IDEMPOTENCY_KEY -> Known.INVALID_IDEMPOTENCY_KEY
+                    INVALID_JOB_FILTER -> Known.INVALID_JOB_FILTER
+                    INVALID_JOB_ID -> Known.INVALID_JOB_ID
                     INVALID_LIST_ID -> Known.INVALID_LIST_ID
+                    INVALID_NEWS_ID -> Known.INVALID_NEWS_ID
                     INVALID_OUTPUT_OPTIONS -> Known.INVALID_OUTPUT_OPTIONS
                     INVALID_PAYMENT_AMOUNT -> Known.INVALID_PAYMENT_AMOUNT
                     INVALID_RANGE -> Known.INVALID_RANGE
                     INVALID_REPLY_OPTIONS -> Known.INVALID_REPLY_OPTIONS
+                    INVALID_SPACE_ID -> Known.INVALID_SPACE_ID
+                    LIKES_UNAVAILABLE -> Known.LIKES_UNAVAILABLE
+                    LIST_NOT_FOUND -> Known.LIST_NOT_FOUND
                     LOGIN_RATE_LIMITED -> Known.LOGIN_RATE_LIMITED
                     LOGIN_SERVICE_UNAVAILABLE -> Known.LOGIN_SERVICE_UNAVAILABLE
                     MISSING_IDEMPOTENCY_KEY -> Known.MISSING_IDEMPOTENCY_KEY
                     MISSING_IDS -> Known.MISSING_IDS
+                    MISSING_URL -> Known.MISSING_URL
+                    NEWS_NOT_FOUND -> Known.NEWS_NOT_FOUND
                     NO_CACHED_STYLE -> Known.NO_CACHED_STYLE
+                    PAGINATION_STALLED -> Known.PAGINATION_STALLED
                     PASSKEY_REQUIRED -> Known.PASSKEY_REQUIRED
                     RATE_LIMITED -> Known.RATE_LIMITED
                     READ_REQUEST_TIMEOUT -> Known.READ_REQUEST_TIMEOUT
+                    REPLAY_UNAVAILABLE -> Known.REPLAY_UNAVAILABLE
                     REPLIES_INCOMPLETE -> Known.REPLIES_INCOMPLETE
+                    RETWEETERS_INCOMPLETE -> Known.RETWEETERS_INCOMPLETE
+                    SEARCH_UNAVAILABLE -> Known.SEARCH_UNAVAILABLE
+                    SPACE_CANCELED -> Known.SPACE_CANCELED
+                    SPACE_NOT_ENDED -> Known.SPACE_NOT_ENDED
                     SUPPORT_MEDIA_RATE_LIMIT -> Known.SUPPORT_MEDIA_RATE_LIMIT
                     SUPPORT_REQUEST_RATE_LIMIT -> Known.SUPPORT_REQUEST_RATE_LIMIT
+                    TELEGRAM_UNAVAILABLE -> Known.TELEGRAM_UNAVAILABLE
                     TOO_MANY_IDS -> Known.TOO_MANY_IDS
+                    TOO_MANY_STREAMS -> Known.TOO_MANY_STREAMS
                     TOO_MANY_TWEETS -> Known.TOO_MANY_TWEETS
+                    TOPUP_IN_PROGRESS -> Known.TOPUP_IN_PROGRESS
                     UNKNOWN_FIELD -> Known.UNKNOWN_FIELD
+                    UNSUPPORTED_MEDIA_COMBINATION -> Known.UNSUPPORTED_MEDIA_COMBINATION
                     UNSUPPORTED_MEDIA_TYPE -> Known.UNSUPPORTED_MEDIA_TYPE
                     WEBHOOK_INACTIVE -> Known.WEBHOOK_INACTIVE
                     WRITE_TRACKING_UNAVAILABLE -> Known.WRITE_TRACKING_UNAVAILABLE
@@ -1158,9 +1498,17 @@ private constructor(
                     X_API_UNAVAILABLE -> Known.X_API_UNAVAILABLE
                     X_API_UNAUTHORIZED -> Known.X_API_UNAUTHORIZED
                     X_AUTH_FAILURE -> Known.X_AUTH_FAILURE
+                    X_AUTOMATION_REFUSED -> Known.X_AUTOMATION_REFUSED
+                    X_COMMUNITY_CREATION_CLOSED -> Known.X_COMMUNITY_CREATION_CLOSED
+                    X_COMMUNITY_NOT_JOINED -> Known.X_COMMUNITY_NOT_JOINED
+                    X_COMMUNITY_NOT_SELECTABLE -> Known.X_COMMUNITY_NOT_SELECTABLE
+                    X_COMMUNITY_POST_PUBLIC -> Known.X_COMMUNITY_POST_PUBLIC
+                    X_COMMUNITY_POST_REMOVED -> Known.X_COMMUNITY_POST_REMOVED
                     X_CONTENT_TOO_LONG -> Known.X_CONTENT_TOO_LONG
                     X_DAILY_LIMIT -> Known.X_DAILY_LIMIT
                     X_DM_NOT_ALLOWED -> Known.X_DM_NOT_ALLOWED
+                    X_DM_NOT_DELETED -> Known.X_DM_NOT_DELETED
+                    X_DM_NOT_SENT -> Known.X_DM_NOT_SENT
                     X_DUPLICATE_ACTION -> Known.X_DUPLICATE_ACTION
                     X_LOGIN_AUTH_FAILED -> Known.X_LOGIN_AUTH_FAILED
                     X_LOGIN_CHALLENGE -> Known.X_LOGIN_CHALLENGE
@@ -1170,11 +1518,17 @@ private constructor(
                     X_LOGIN_RATE_LIMITED -> Known.X_LOGIN_RATE_LIMITED
                     X_LOGIN_SERVICE_UNAVAILABLE -> Known.X_LOGIN_SERVICE_UNAVAILABLE
                     X_LOGIN_SUSPENDED -> Known.X_LOGIN_SUSPENDED
+                    X_IMAGE_INVALID -> Known.X_IMAGE_INVALID
+                    X_MEDIA_REJECTED -> Known.X_MEDIA_REJECTED
+                    X_POST_NOT_SENT -> Known.X_POST_NOT_SENT
                     X_RATE_LIMITED -> Known.X_RATE_LIMITED
                     X_REJECTED -> Known.X_REJECTED
+                    X_REPLY_NOT_ALLOWED -> Known.X_REPLY_NOT_ALLOWED
+                    X_REPLY_TARGET_UNAVAILABLE -> Known.X_REPLY_TARGET_UNAVAILABLE
                     X_TARGET_NOT_FOUND -> Known.X_TARGET_NOT_FOUND
                     X_TRANSIENT_ERROR -> Known.X_TRANSIENT_ERROR
                     X_USER_LOOKUP_FAILED -> Known.X_USER_LOOKUP_FAILED
+                    X_VIDEO_TOO_LARGE -> Known.X_VIDEO_TOO_LARGE
                     X_WRITE_AMBIGUOUS -> Known.X_WRITE_AMBIGUOUS
                     X_WRITE_FAILED -> Known.X_WRITE_FAILED
                     else ->
@@ -1453,9 +1807,21 @@ private constructor(
 
                     @JvmField val ACCOUNT_RESTRICTED = of("account_restricted")
 
+                    @JvmField val API_KEY_EXPIRED = of("api_key_expired")
+
                     @JvmField val API_KEY_LIMIT_REACHED = of("api_key_limit_reached")
 
+                    @JvmField val API_KEY_PAUSED = of("api_key_paused")
+
+                    @JvmField val API_KEY_BUDGET_REACHED = of("api_key_budget_reached")
+
+                    @JvmField val API_KEY_REVOKED = of("api_key_revoked")
+
+                    @JvmField val IP_NOT_ALLOWED = of("ip_not_allowed")
+
                     @JvmField val ARTICLE_NOT_FOUND = of("article_not_found")
+
+                    @JvmField val CLOSED = of("closed")
 
                     @JvmField val DM_NOT_PERMITTED = of("dm_not_permitted")
 
@@ -1464,6 +1830,10 @@ private constructor(
                     @JvmField val INVALID_ID = of("invalid_id")
 
                     @JvmField val INVALID_INPUT = of("invalid_input")
+
+                    @JvmField val INVALID_MEDIA_URL = of("invalid_media_url")
+
+                    @JvmField val INVALID_MESSAGE_ID = of("invalid_message_id")
 
                     @JvmField val INVALID_PARAMS = of("invalid_params")
 
@@ -1483,11 +1853,19 @@ private constructor(
 
                     @JvmField val INSUFFICIENT_CREDITS = of("insufficient_credits")
 
+                    @JvmField val INSUFFICIENT_SCOPE = of("insufficient_scope")
+
+                    @JvmField val JOB_NOT_FOUND = of("job_not_found")
+
                     @JvmField val LOGIN_COOLDOWN = of("login_cooldown")
 
                     @JvmField val LOGIN_FAILED = of("login_failed")
 
                     @JvmField val MEDIA_DOWNLOAD_FAILED = of("media_download_failed")
+
+                    @JvmField val MEDIA_TOO_LARGE = of("media_too_large")
+
+                    @JvmField val MEDIA_UNAVAILABLE = of("media_unavailable")
 
                     @JvmField val MISSING_PARAMS = of("missing_params")
 
@@ -1503,13 +1881,21 @@ private constructor(
 
                     @JvmField val NO_SUBSCRIPTION = of("no_subscription")
 
+                    @JvmField val EXTRACTION_TERMINAL = of("extraction_terminal")
+
                     @JvmField val NOT_FOUND = of("not_found")
 
                     @JvmField val PAYMENT_FAILED = of("payment_failed")
 
+                    @JvmField val POST_UNAVAILABLE = of("post_unavailable")
+
+                    @JvmField val PRICE_CHANGED = of("price_changed")
+
                     @JvmField val RATE_LIMIT_EXCEEDED = of("rate_limit_exceeded")
 
                     @JvmField val SERVICE_UNAVAILABLE = of("service_unavailable")
+
+                    @JvmField val SESSION_REQUIRED = of("session_required")
 
                     @JvmField val STYLE_NOT_FOUND = of("style_not_found")
 
@@ -1525,6 +1911,10 @@ private constructor(
 
                     @JvmField val BODY_TOO_LARGE = of("body_too_large")
 
+                    @JvmField val BOOKMARK_FOLDERS_UNAVAILABLE = of("bookmark_folders_unavailable")
+
+                    @JvmField val BROADCAST_NOT_FOUND = of("broadcast_not_found")
+
                     @JvmField val CHECKOUT_UNAVAILABLE = of("checkout_unavailable")
 
                     @JvmField val CONNECTION_CHALLENGE_EXPIRED = of("connection_challenge_expired")
@@ -1532,11 +1922,19 @@ private constructor(
                     @JvmField
                     val CONNECTION_CHALLENGE_INACTIVE = of("connection_challenge_inactive")
 
+                    @JvmField val CONTRIBUTOR_NOT_FOUND = of("contributor_not_found")
+
                     @JvmField val COVERAGE_CURSOR_GONE = of("coverage_cursor_gone")
 
                     @JvmField val COVERAGE_CURSOR_UNAVAILABLE = of("coverage_cursor_unavailable")
 
+                    @JvmField val CURSOR_ACCOUNT_UNAVAILABLE = of("cursor_account_unavailable")
+
                     @JvmField val DRAFT_NOT_FOUND = of("draft_not_found")
+
+                    @JvmField val DRAW_TOO_LARGE = of("draw_too_large")
+
+                    @JvmField val EXPIRED = of("expired")
 
                     @JvmField val FAVORITERS_UNAVAILABLE = of("favoriters_unavailable")
 
@@ -1550,20 +1948,36 @@ private constructor(
 
                     @JvmField val IDEMPOTENCY_CONFLICT = of("idempotency_conflict")
 
+                    @JvmField val IDEMPOTENCY_IN_PROGRESS = of("idempotency_in_progress")
+
                     @JvmField val IDEMPOTENCY_KEY_CONFLICT = of("idempotency_key_conflict")
+
+                    @JvmField val INVALID_BROADCAST_ID = of("invalid_broadcast_id")
 
                     @JvmField val INVALID_COMMUNITY_ID = of("invalid_community_id")
 
+                    @JvmField val INVALID_COMMUNITY_TOPIC = of("invalid_community_topic")
+
                     @JvmField
                     val INVALID_COMPLETE_REPLIES_REQUEST = of("invalid_complete_replies_request")
+
+                    @JvmField val INVALID_CONTRIBUTOR_ALIAS = of("invalid_contributor_alias")
 
                     @JvmField val INVALID_COVERAGE_CURSOR = of("invalid_coverage_cursor")
 
                     @JvmField val INVALID_COVERAGE_REQUEST = of("invalid_coverage_request")
 
+                    @JvmField val INVALID_CURSOR = of("invalid_cursor")
+
                     @JvmField val INVALID_IDEMPOTENCY_KEY = of("invalid_idempotency_key")
 
+                    @JvmField val INVALID_JOB_FILTER = of("invalid_job_filter")
+
+                    @JvmField val INVALID_JOB_ID = of("invalid_job_id")
+
                     @JvmField val INVALID_LIST_ID = of("invalid_list_id")
+
+                    @JvmField val INVALID_NEWS_ID = of("invalid_news_id")
 
                     @JvmField val INVALID_OUTPUT_OPTIONS = of("invalid_output_options")
 
@@ -1573,6 +1987,12 @@ private constructor(
 
                     @JvmField val INVALID_REPLY_OPTIONS = of("invalid_reply_options")
 
+                    @JvmField val INVALID_SPACE_ID = of("invalid_space_id")
+
+                    @JvmField val LIKES_UNAVAILABLE = of("likes_unavailable")
+
+                    @JvmField val LIST_NOT_FOUND = of("list_not_found")
+
                     @JvmField val LOGIN_RATE_LIMITED = of("login_rate_limited")
 
                     @JvmField val LOGIN_SERVICE_UNAVAILABLE = of("login_service_unavailable")
@@ -1581,7 +2001,13 @@ private constructor(
 
                     @JvmField val MISSING_IDS = of("missing_ids")
 
+                    @JvmField val MISSING_URL = of("missing_url")
+
+                    @JvmField val NEWS_NOT_FOUND = of("news_not_found")
+
                     @JvmField val NO_CACHED_STYLE = of("no_cached_style")
+
+                    @JvmField val PAGINATION_STALLED = of("pagination_stalled")
 
                     @JvmField val PASSKEY_REQUIRED = of("passkey_required")
 
@@ -1589,17 +2015,36 @@ private constructor(
 
                     @JvmField val READ_REQUEST_TIMEOUT = of("read_request_timeout")
 
+                    @JvmField val REPLAY_UNAVAILABLE = of("replay_unavailable")
+
                     @JvmField val REPLIES_INCOMPLETE = of("replies_incomplete")
+
+                    @JvmField val RETWEETERS_INCOMPLETE = of("retweeters_incomplete")
+
+                    @JvmField val SEARCH_UNAVAILABLE = of("search_unavailable")
+
+                    @JvmField val SPACE_CANCELED = of("space_canceled")
+
+                    @JvmField val SPACE_NOT_ENDED = of("space_not_ended")
 
                     @JvmField val SUPPORT_MEDIA_RATE_LIMIT = of("support_media_rate_limit")
 
                     @JvmField val SUPPORT_REQUEST_RATE_LIMIT = of("support_request_rate_limit")
 
+                    @JvmField val TELEGRAM_UNAVAILABLE = of("telegram_unavailable")
+
                     @JvmField val TOO_MANY_IDS = of("too_many_ids")
+
+                    @JvmField val TOO_MANY_STREAMS = of("too_many_streams")
 
                     @JvmField val TOO_MANY_TWEETS = of("too_many_tweets")
 
+                    @JvmField val TOPUP_IN_PROGRESS = of("topup_in_progress")
+
                     @JvmField val UNKNOWN_FIELD = of("unknown_field")
+
+                    @JvmField
+                    val UNSUPPORTED_MEDIA_COMBINATION = of("unsupported_media_combination")
 
                     @JvmField val UNSUPPORTED_MEDIA_TYPE = of("unsupported_media_type")
 
@@ -1623,11 +2068,27 @@ private constructor(
 
                     @JvmField val X_AUTH_FAILURE = of("x_auth_failure")
 
+                    @JvmField val X_AUTOMATION_REFUSED = of("x_automation_refused")
+
+                    @JvmField val X_COMMUNITY_CREATION_CLOSED = of("x_community_creation_closed")
+
+                    @JvmField val X_COMMUNITY_NOT_JOINED = of("x_community_not_joined")
+
+                    @JvmField val X_COMMUNITY_NOT_SELECTABLE = of("x_community_not_selectable")
+
+                    @JvmField val X_COMMUNITY_POST_PUBLIC = of("x_community_post_public")
+
+                    @JvmField val X_COMMUNITY_POST_REMOVED = of("x_community_post_removed")
+
                     @JvmField val X_CONTENT_TOO_LONG = of("x_content_too_long")
 
                     @JvmField val X_DAILY_LIMIT = of("x_daily_limit")
 
                     @JvmField val X_DM_NOT_ALLOWED = of("x_dm_not_allowed")
+
+                    @JvmField val X_DM_NOT_DELETED = of("x_dm_not_deleted")
+
+                    @JvmField val X_DM_NOT_SENT = of("x_dm_not_sent")
 
                     @JvmField val X_DUPLICATE_ACTION = of("x_duplicate_action")
 
@@ -1647,15 +2108,27 @@ private constructor(
 
                     @JvmField val X_LOGIN_SUSPENDED = of("x_login_suspended")
 
+                    @JvmField val X_IMAGE_INVALID = of("x_image_invalid")
+
+                    @JvmField val X_MEDIA_REJECTED = of("x_media_rejected")
+
+                    @JvmField val X_POST_NOT_SENT = of("x_post_not_sent")
+
                     @JvmField val X_RATE_LIMITED = of("x_rate_limited")
 
                     @JvmField val X_REJECTED = of("x_rejected")
+
+                    @JvmField val X_REPLY_NOT_ALLOWED = of("x_reply_not_allowed")
+
+                    @JvmField val X_REPLY_TARGET_UNAVAILABLE = of("x_reply_target_unavailable")
 
                     @JvmField val X_TARGET_NOT_FOUND = of("x_target_not_found")
 
                     @JvmField val X_TRANSIENT_ERROR = of("x_transient_error")
 
                     @JvmField val X_USER_LOOKUP_FAILED = of("x_user_lookup_failed")
+
+                    @JvmField val X_VIDEO_TOO_LARGE = of("x_video_too_large")
 
                     @JvmField val X_WRITE_AMBIGUOUS = of("x_write_ambiguous")
 
@@ -1672,12 +2145,20 @@ private constructor(
                     ACCOUNT_NOT_FOUND,
                     ACCOUNT_REQUIRED,
                     ACCOUNT_RESTRICTED,
+                    API_KEY_EXPIRED,
                     API_KEY_LIMIT_REACHED,
+                    API_KEY_PAUSED,
+                    API_KEY_BUDGET_REACHED,
+                    API_KEY_REVOKED,
+                    IP_NOT_ALLOWED,
                     ARTICLE_NOT_FOUND,
+                    CLOSED,
                     DM_NOT_PERMITTED,
                     INVALID_FORMAT,
                     INVALID_ID,
                     INVALID_INPUT,
+                    INVALID_MEDIA_URL,
+                    INVALID_MESSAGE_ID,
                     INVALID_PARAMS,
                     INVALID_TOOL_TYPE,
                     INVALID_TWEET_ID,
@@ -1687,9 +2168,13 @@ private constructor(
                     INVALID_USERNAME,
                     INVALID_JSON,
                     INSUFFICIENT_CREDITS,
+                    INSUFFICIENT_SCOPE,
+                    JOB_NOT_FOUND,
                     LOGIN_COOLDOWN,
                     LOGIN_FAILED,
                     MEDIA_DOWNLOAD_FAILED,
+                    MEDIA_TOO_LARGE,
+                    MEDIA_UNAVAILABLE,
                     MISSING_PARAMS,
                     MISSING_QUERY,
                     MONITOR_ALREADY_EXISTS,
@@ -1697,10 +2182,14 @@ private constructor(
                     NO_MEDIA,
                     NO_CREDITS,
                     NO_SUBSCRIPTION,
+                    EXTRACTION_TERMINAL,
                     NOT_FOUND,
                     PAYMENT_FAILED,
+                    POST_UNAVAILABLE,
+                    PRICE_CHANGED,
                     RATE_LIMIT_EXCEEDED,
                     SERVICE_UNAVAILABLE,
+                    SESSION_REQUIRED,
                     STYLE_NOT_FOUND,
                     SUBSCRIPTION_INACTIVE,
                     TWEET_NOT_FOUND,
@@ -1708,43 +2197,72 @@ private constructor(
                     UNSUPPORTED_FIELD,
                     USER_NOT_FOUND,
                     BODY_TOO_LARGE,
+                    BOOKMARK_FOLDERS_UNAVAILABLE,
+                    BROADCAST_NOT_FOUND,
                     CHECKOUT_UNAVAILABLE,
                     CONNECTION_CHALLENGE_EXPIRED,
                     CONNECTION_CHALLENGE_INACTIVE,
+                    CONTRIBUTOR_NOT_FOUND,
                     COVERAGE_CURSOR_GONE,
                     COVERAGE_CURSOR_UNAVAILABLE,
+                    CURSOR_ACCOUNT_UNAVAILABLE,
                     DRAFT_NOT_FOUND,
+                    DRAW_TOO_LARGE,
+                    EXPIRED,
                     FAVORITERS_UNAVAILABLE,
                     FORBIDDEN,
                     GUEST_WALLET_UNAVAILABLE,
                     GUEST_WALLETS_DISABLED,
                     GUEST_WALLETS_UNAVAILABLE,
                     IDEMPOTENCY_CONFLICT,
+                    IDEMPOTENCY_IN_PROGRESS,
                     IDEMPOTENCY_KEY_CONFLICT,
+                    INVALID_BROADCAST_ID,
                     INVALID_COMMUNITY_ID,
+                    INVALID_COMMUNITY_TOPIC,
                     INVALID_COMPLETE_REPLIES_REQUEST,
+                    INVALID_CONTRIBUTOR_ALIAS,
                     INVALID_COVERAGE_CURSOR,
                     INVALID_COVERAGE_REQUEST,
+                    INVALID_CURSOR,
                     INVALID_IDEMPOTENCY_KEY,
+                    INVALID_JOB_FILTER,
+                    INVALID_JOB_ID,
                     INVALID_LIST_ID,
+                    INVALID_NEWS_ID,
                     INVALID_OUTPUT_OPTIONS,
                     INVALID_PAYMENT_AMOUNT,
                     INVALID_RANGE,
                     INVALID_REPLY_OPTIONS,
+                    INVALID_SPACE_ID,
+                    LIKES_UNAVAILABLE,
+                    LIST_NOT_FOUND,
                     LOGIN_RATE_LIMITED,
                     LOGIN_SERVICE_UNAVAILABLE,
                     MISSING_IDEMPOTENCY_KEY,
                     MISSING_IDS,
+                    MISSING_URL,
+                    NEWS_NOT_FOUND,
                     NO_CACHED_STYLE,
+                    PAGINATION_STALLED,
                     PASSKEY_REQUIRED,
                     RATE_LIMITED,
                     READ_REQUEST_TIMEOUT,
+                    REPLAY_UNAVAILABLE,
                     REPLIES_INCOMPLETE,
+                    RETWEETERS_INCOMPLETE,
+                    SEARCH_UNAVAILABLE,
+                    SPACE_CANCELED,
+                    SPACE_NOT_ENDED,
                     SUPPORT_MEDIA_RATE_LIMIT,
                     SUPPORT_REQUEST_RATE_LIMIT,
+                    TELEGRAM_UNAVAILABLE,
                     TOO_MANY_IDS,
+                    TOO_MANY_STREAMS,
                     TOO_MANY_TWEETS,
+                    TOPUP_IN_PROGRESS,
                     UNKNOWN_FIELD,
+                    UNSUPPORTED_MEDIA_COMBINATION,
                     UNSUPPORTED_MEDIA_TYPE,
                     WEBHOOK_INACTIVE,
                     WRITE_TRACKING_UNAVAILABLE,
@@ -1756,9 +2274,17 @@ private constructor(
                     X_API_UNAVAILABLE,
                     X_API_UNAUTHORIZED,
                     X_AUTH_FAILURE,
+                    X_AUTOMATION_REFUSED,
+                    X_COMMUNITY_CREATION_CLOSED,
+                    X_COMMUNITY_NOT_JOINED,
+                    X_COMMUNITY_NOT_SELECTABLE,
+                    X_COMMUNITY_POST_PUBLIC,
+                    X_COMMUNITY_POST_REMOVED,
                     X_CONTENT_TOO_LONG,
                     X_DAILY_LIMIT,
                     X_DM_NOT_ALLOWED,
+                    X_DM_NOT_DELETED,
+                    X_DM_NOT_SENT,
                     X_DUPLICATE_ACTION,
                     X_LOGIN_AUTH_FAILED,
                     X_LOGIN_CHALLENGE,
@@ -1768,11 +2294,17 @@ private constructor(
                     X_LOGIN_RATE_LIMITED,
                     X_LOGIN_SERVICE_UNAVAILABLE,
                     X_LOGIN_SUSPENDED,
+                    X_IMAGE_INVALID,
+                    X_MEDIA_REJECTED,
+                    X_POST_NOT_SENT,
                     X_RATE_LIMITED,
                     X_REJECTED,
+                    X_REPLY_NOT_ALLOWED,
+                    X_REPLY_TARGET_UNAVAILABLE,
                     X_TARGET_NOT_FOUND,
                     X_TRANSIENT_ERROR,
                     X_USER_LOOKUP_FAILED,
+                    X_VIDEO_TOO_LARGE,
                     X_WRITE_AMBIGUOUS,
                     X_WRITE_FAILED,
                 }
@@ -1793,12 +2325,20 @@ private constructor(
                     ACCOUNT_NOT_FOUND,
                     ACCOUNT_REQUIRED,
                     ACCOUNT_RESTRICTED,
+                    API_KEY_EXPIRED,
                     API_KEY_LIMIT_REACHED,
+                    API_KEY_PAUSED,
+                    API_KEY_BUDGET_REACHED,
+                    API_KEY_REVOKED,
+                    IP_NOT_ALLOWED,
                     ARTICLE_NOT_FOUND,
+                    CLOSED,
                     DM_NOT_PERMITTED,
                     INVALID_FORMAT,
                     INVALID_ID,
                     INVALID_INPUT,
+                    INVALID_MEDIA_URL,
+                    INVALID_MESSAGE_ID,
                     INVALID_PARAMS,
                     INVALID_TOOL_TYPE,
                     INVALID_TWEET_ID,
@@ -1808,9 +2348,13 @@ private constructor(
                     INVALID_USERNAME,
                     INVALID_JSON,
                     INSUFFICIENT_CREDITS,
+                    INSUFFICIENT_SCOPE,
+                    JOB_NOT_FOUND,
                     LOGIN_COOLDOWN,
                     LOGIN_FAILED,
                     MEDIA_DOWNLOAD_FAILED,
+                    MEDIA_TOO_LARGE,
+                    MEDIA_UNAVAILABLE,
                     MISSING_PARAMS,
                     MISSING_QUERY,
                     MONITOR_ALREADY_EXISTS,
@@ -1818,10 +2362,14 @@ private constructor(
                     NO_MEDIA,
                     NO_CREDITS,
                     NO_SUBSCRIPTION,
+                    EXTRACTION_TERMINAL,
                     NOT_FOUND,
                     PAYMENT_FAILED,
+                    POST_UNAVAILABLE,
+                    PRICE_CHANGED,
                     RATE_LIMIT_EXCEEDED,
                     SERVICE_UNAVAILABLE,
+                    SESSION_REQUIRED,
                     STYLE_NOT_FOUND,
                     SUBSCRIPTION_INACTIVE,
                     TWEET_NOT_FOUND,
@@ -1829,43 +2377,72 @@ private constructor(
                     UNSUPPORTED_FIELD,
                     USER_NOT_FOUND,
                     BODY_TOO_LARGE,
+                    BOOKMARK_FOLDERS_UNAVAILABLE,
+                    BROADCAST_NOT_FOUND,
                     CHECKOUT_UNAVAILABLE,
                     CONNECTION_CHALLENGE_EXPIRED,
                     CONNECTION_CHALLENGE_INACTIVE,
+                    CONTRIBUTOR_NOT_FOUND,
                     COVERAGE_CURSOR_GONE,
                     COVERAGE_CURSOR_UNAVAILABLE,
+                    CURSOR_ACCOUNT_UNAVAILABLE,
                     DRAFT_NOT_FOUND,
+                    DRAW_TOO_LARGE,
+                    EXPIRED,
                     FAVORITERS_UNAVAILABLE,
                     FORBIDDEN,
                     GUEST_WALLET_UNAVAILABLE,
                     GUEST_WALLETS_DISABLED,
                     GUEST_WALLETS_UNAVAILABLE,
                     IDEMPOTENCY_CONFLICT,
+                    IDEMPOTENCY_IN_PROGRESS,
                     IDEMPOTENCY_KEY_CONFLICT,
+                    INVALID_BROADCAST_ID,
                     INVALID_COMMUNITY_ID,
+                    INVALID_COMMUNITY_TOPIC,
                     INVALID_COMPLETE_REPLIES_REQUEST,
+                    INVALID_CONTRIBUTOR_ALIAS,
                     INVALID_COVERAGE_CURSOR,
                     INVALID_COVERAGE_REQUEST,
+                    INVALID_CURSOR,
                     INVALID_IDEMPOTENCY_KEY,
+                    INVALID_JOB_FILTER,
+                    INVALID_JOB_ID,
                     INVALID_LIST_ID,
+                    INVALID_NEWS_ID,
                     INVALID_OUTPUT_OPTIONS,
                     INVALID_PAYMENT_AMOUNT,
                     INVALID_RANGE,
                     INVALID_REPLY_OPTIONS,
+                    INVALID_SPACE_ID,
+                    LIKES_UNAVAILABLE,
+                    LIST_NOT_FOUND,
                     LOGIN_RATE_LIMITED,
                     LOGIN_SERVICE_UNAVAILABLE,
                     MISSING_IDEMPOTENCY_KEY,
                     MISSING_IDS,
+                    MISSING_URL,
+                    NEWS_NOT_FOUND,
                     NO_CACHED_STYLE,
+                    PAGINATION_STALLED,
                     PASSKEY_REQUIRED,
                     RATE_LIMITED,
                     READ_REQUEST_TIMEOUT,
+                    REPLAY_UNAVAILABLE,
                     REPLIES_INCOMPLETE,
+                    RETWEETERS_INCOMPLETE,
+                    SEARCH_UNAVAILABLE,
+                    SPACE_CANCELED,
+                    SPACE_NOT_ENDED,
                     SUPPORT_MEDIA_RATE_LIMIT,
                     SUPPORT_REQUEST_RATE_LIMIT,
+                    TELEGRAM_UNAVAILABLE,
                     TOO_MANY_IDS,
+                    TOO_MANY_STREAMS,
                     TOO_MANY_TWEETS,
+                    TOPUP_IN_PROGRESS,
                     UNKNOWN_FIELD,
+                    UNSUPPORTED_MEDIA_COMBINATION,
                     UNSUPPORTED_MEDIA_TYPE,
                     WEBHOOK_INACTIVE,
                     WRITE_TRACKING_UNAVAILABLE,
@@ -1877,9 +2454,17 @@ private constructor(
                     X_API_UNAVAILABLE,
                     X_API_UNAUTHORIZED,
                     X_AUTH_FAILURE,
+                    X_AUTOMATION_REFUSED,
+                    X_COMMUNITY_CREATION_CLOSED,
+                    X_COMMUNITY_NOT_JOINED,
+                    X_COMMUNITY_NOT_SELECTABLE,
+                    X_COMMUNITY_POST_PUBLIC,
+                    X_COMMUNITY_POST_REMOVED,
                     X_CONTENT_TOO_LONG,
                     X_DAILY_LIMIT,
                     X_DM_NOT_ALLOWED,
+                    X_DM_NOT_DELETED,
+                    X_DM_NOT_SENT,
                     X_DUPLICATE_ACTION,
                     X_LOGIN_AUTH_FAILED,
                     X_LOGIN_CHALLENGE,
@@ -1889,11 +2474,17 @@ private constructor(
                     X_LOGIN_RATE_LIMITED,
                     X_LOGIN_SERVICE_UNAVAILABLE,
                     X_LOGIN_SUSPENDED,
+                    X_IMAGE_INVALID,
+                    X_MEDIA_REJECTED,
+                    X_POST_NOT_SENT,
                     X_RATE_LIMITED,
                     X_REJECTED,
+                    X_REPLY_NOT_ALLOWED,
+                    X_REPLY_TARGET_UNAVAILABLE,
                     X_TARGET_NOT_FOUND,
                     X_TRANSIENT_ERROR,
                     X_USER_LOOKUP_FAILED,
+                    X_VIDEO_TOO_LARGE,
                     X_WRITE_AMBIGUOUS,
                     X_WRITE_FAILED,
                     /**
@@ -1914,12 +2505,20 @@ private constructor(
                         ACCOUNT_NOT_FOUND -> Value.ACCOUNT_NOT_FOUND
                         ACCOUNT_REQUIRED -> Value.ACCOUNT_REQUIRED
                         ACCOUNT_RESTRICTED -> Value.ACCOUNT_RESTRICTED
+                        API_KEY_EXPIRED -> Value.API_KEY_EXPIRED
                         API_KEY_LIMIT_REACHED -> Value.API_KEY_LIMIT_REACHED
+                        API_KEY_PAUSED -> Value.API_KEY_PAUSED
+                        API_KEY_BUDGET_REACHED -> Value.API_KEY_BUDGET_REACHED
+                        API_KEY_REVOKED -> Value.API_KEY_REVOKED
+                        IP_NOT_ALLOWED -> Value.IP_NOT_ALLOWED
                         ARTICLE_NOT_FOUND -> Value.ARTICLE_NOT_FOUND
+                        CLOSED -> Value.CLOSED
                         DM_NOT_PERMITTED -> Value.DM_NOT_PERMITTED
                         INVALID_FORMAT -> Value.INVALID_FORMAT
                         INVALID_ID -> Value.INVALID_ID
                         INVALID_INPUT -> Value.INVALID_INPUT
+                        INVALID_MEDIA_URL -> Value.INVALID_MEDIA_URL
+                        INVALID_MESSAGE_ID -> Value.INVALID_MESSAGE_ID
                         INVALID_PARAMS -> Value.INVALID_PARAMS
                         INVALID_TOOL_TYPE -> Value.INVALID_TOOL_TYPE
                         INVALID_TWEET_ID -> Value.INVALID_TWEET_ID
@@ -1929,9 +2528,13 @@ private constructor(
                         INVALID_USERNAME -> Value.INVALID_USERNAME
                         INVALID_JSON -> Value.INVALID_JSON
                         INSUFFICIENT_CREDITS -> Value.INSUFFICIENT_CREDITS
+                        INSUFFICIENT_SCOPE -> Value.INSUFFICIENT_SCOPE
+                        JOB_NOT_FOUND -> Value.JOB_NOT_FOUND
                         LOGIN_COOLDOWN -> Value.LOGIN_COOLDOWN
                         LOGIN_FAILED -> Value.LOGIN_FAILED
                         MEDIA_DOWNLOAD_FAILED -> Value.MEDIA_DOWNLOAD_FAILED
+                        MEDIA_TOO_LARGE -> Value.MEDIA_TOO_LARGE
+                        MEDIA_UNAVAILABLE -> Value.MEDIA_UNAVAILABLE
                         MISSING_PARAMS -> Value.MISSING_PARAMS
                         MISSING_QUERY -> Value.MISSING_QUERY
                         MONITOR_ALREADY_EXISTS -> Value.MONITOR_ALREADY_EXISTS
@@ -1939,10 +2542,14 @@ private constructor(
                         NO_MEDIA -> Value.NO_MEDIA
                         NO_CREDITS -> Value.NO_CREDITS
                         NO_SUBSCRIPTION -> Value.NO_SUBSCRIPTION
+                        EXTRACTION_TERMINAL -> Value.EXTRACTION_TERMINAL
                         NOT_FOUND -> Value.NOT_FOUND
                         PAYMENT_FAILED -> Value.PAYMENT_FAILED
+                        POST_UNAVAILABLE -> Value.POST_UNAVAILABLE
+                        PRICE_CHANGED -> Value.PRICE_CHANGED
                         RATE_LIMIT_EXCEEDED -> Value.RATE_LIMIT_EXCEEDED
                         SERVICE_UNAVAILABLE -> Value.SERVICE_UNAVAILABLE
+                        SESSION_REQUIRED -> Value.SESSION_REQUIRED
                         STYLE_NOT_FOUND -> Value.STYLE_NOT_FOUND
                         SUBSCRIPTION_INACTIVE -> Value.SUBSCRIPTION_INACTIVE
                         TWEET_NOT_FOUND -> Value.TWEET_NOT_FOUND
@@ -1950,43 +2557,72 @@ private constructor(
                         UNSUPPORTED_FIELD -> Value.UNSUPPORTED_FIELD
                         USER_NOT_FOUND -> Value.USER_NOT_FOUND
                         BODY_TOO_LARGE -> Value.BODY_TOO_LARGE
+                        BOOKMARK_FOLDERS_UNAVAILABLE -> Value.BOOKMARK_FOLDERS_UNAVAILABLE
+                        BROADCAST_NOT_FOUND -> Value.BROADCAST_NOT_FOUND
                         CHECKOUT_UNAVAILABLE -> Value.CHECKOUT_UNAVAILABLE
                         CONNECTION_CHALLENGE_EXPIRED -> Value.CONNECTION_CHALLENGE_EXPIRED
                         CONNECTION_CHALLENGE_INACTIVE -> Value.CONNECTION_CHALLENGE_INACTIVE
+                        CONTRIBUTOR_NOT_FOUND -> Value.CONTRIBUTOR_NOT_FOUND
                         COVERAGE_CURSOR_GONE -> Value.COVERAGE_CURSOR_GONE
                         COVERAGE_CURSOR_UNAVAILABLE -> Value.COVERAGE_CURSOR_UNAVAILABLE
+                        CURSOR_ACCOUNT_UNAVAILABLE -> Value.CURSOR_ACCOUNT_UNAVAILABLE
                         DRAFT_NOT_FOUND -> Value.DRAFT_NOT_FOUND
+                        DRAW_TOO_LARGE -> Value.DRAW_TOO_LARGE
+                        EXPIRED -> Value.EXPIRED
                         FAVORITERS_UNAVAILABLE -> Value.FAVORITERS_UNAVAILABLE
                         FORBIDDEN -> Value.FORBIDDEN
                         GUEST_WALLET_UNAVAILABLE -> Value.GUEST_WALLET_UNAVAILABLE
                         GUEST_WALLETS_DISABLED -> Value.GUEST_WALLETS_DISABLED
                         GUEST_WALLETS_UNAVAILABLE -> Value.GUEST_WALLETS_UNAVAILABLE
                         IDEMPOTENCY_CONFLICT -> Value.IDEMPOTENCY_CONFLICT
+                        IDEMPOTENCY_IN_PROGRESS -> Value.IDEMPOTENCY_IN_PROGRESS
                         IDEMPOTENCY_KEY_CONFLICT -> Value.IDEMPOTENCY_KEY_CONFLICT
+                        INVALID_BROADCAST_ID -> Value.INVALID_BROADCAST_ID
                         INVALID_COMMUNITY_ID -> Value.INVALID_COMMUNITY_ID
+                        INVALID_COMMUNITY_TOPIC -> Value.INVALID_COMMUNITY_TOPIC
                         INVALID_COMPLETE_REPLIES_REQUEST -> Value.INVALID_COMPLETE_REPLIES_REQUEST
+                        INVALID_CONTRIBUTOR_ALIAS -> Value.INVALID_CONTRIBUTOR_ALIAS
                         INVALID_COVERAGE_CURSOR -> Value.INVALID_COVERAGE_CURSOR
                         INVALID_COVERAGE_REQUEST -> Value.INVALID_COVERAGE_REQUEST
+                        INVALID_CURSOR -> Value.INVALID_CURSOR
                         INVALID_IDEMPOTENCY_KEY -> Value.INVALID_IDEMPOTENCY_KEY
+                        INVALID_JOB_FILTER -> Value.INVALID_JOB_FILTER
+                        INVALID_JOB_ID -> Value.INVALID_JOB_ID
                         INVALID_LIST_ID -> Value.INVALID_LIST_ID
+                        INVALID_NEWS_ID -> Value.INVALID_NEWS_ID
                         INVALID_OUTPUT_OPTIONS -> Value.INVALID_OUTPUT_OPTIONS
                         INVALID_PAYMENT_AMOUNT -> Value.INVALID_PAYMENT_AMOUNT
                         INVALID_RANGE -> Value.INVALID_RANGE
                         INVALID_REPLY_OPTIONS -> Value.INVALID_REPLY_OPTIONS
+                        INVALID_SPACE_ID -> Value.INVALID_SPACE_ID
+                        LIKES_UNAVAILABLE -> Value.LIKES_UNAVAILABLE
+                        LIST_NOT_FOUND -> Value.LIST_NOT_FOUND
                         LOGIN_RATE_LIMITED -> Value.LOGIN_RATE_LIMITED
                         LOGIN_SERVICE_UNAVAILABLE -> Value.LOGIN_SERVICE_UNAVAILABLE
                         MISSING_IDEMPOTENCY_KEY -> Value.MISSING_IDEMPOTENCY_KEY
                         MISSING_IDS -> Value.MISSING_IDS
+                        MISSING_URL -> Value.MISSING_URL
+                        NEWS_NOT_FOUND -> Value.NEWS_NOT_FOUND
                         NO_CACHED_STYLE -> Value.NO_CACHED_STYLE
+                        PAGINATION_STALLED -> Value.PAGINATION_STALLED
                         PASSKEY_REQUIRED -> Value.PASSKEY_REQUIRED
                         RATE_LIMITED -> Value.RATE_LIMITED
                         READ_REQUEST_TIMEOUT -> Value.READ_REQUEST_TIMEOUT
+                        REPLAY_UNAVAILABLE -> Value.REPLAY_UNAVAILABLE
                         REPLIES_INCOMPLETE -> Value.REPLIES_INCOMPLETE
+                        RETWEETERS_INCOMPLETE -> Value.RETWEETERS_INCOMPLETE
+                        SEARCH_UNAVAILABLE -> Value.SEARCH_UNAVAILABLE
+                        SPACE_CANCELED -> Value.SPACE_CANCELED
+                        SPACE_NOT_ENDED -> Value.SPACE_NOT_ENDED
                         SUPPORT_MEDIA_RATE_LIMIT -> Value.SUPPORT_MEDIA_RATE_LIMIT
                         SUPPORT_REQUEST_RATE_LIMIT -> Value.SUPPORT_REQUEST_RATE_LIMIT
+                        TELEGRAM_UNAVAILABLE -> Value.TELEGRAM_UNAVAILABLE
                         TOO_MANY_IDS -> Value.TOO_MANY_IDS
+                        TOO_MANY_STREAMS -> Value.TOO_MANY_STREAMS
                         TOO_MANY_TWEETS -> Value.TOO_MANY_TWEETS
+                        TOPUP_IN_PROGRESS -> Value.TOPUP_IN_PROGRESS
                         UNKNOWN_FIELD -> Value.UNKNOWN_FIELD
+                        UNSUPPORTED_MEDIA_COMBINATION -> Value.UNSUPPORTED_MEDIA_COMBINATION
                         UNSUPPORTED_MEDIA_TYPE -> Value.UNSUPPORTED_MEDIA_TYPE
                         WEBHOOK_INACTIVE -> Value.WEBHOOK_INACTIVE
                         WRITE_TRACKING_UNAVAILABLE -> Value.WRITE_TRACKING_UNAVAILABLE
@@ -1998,9 +2634,17 @@ private constructor(
                         X_API_UNAVAILABLE -> Value.X_API_UNAVAILABLE
                         X_API_UNAUTHORIZED -> Value.X_API_UNAUTHORIZED
                         X_AUTH_FAILURE -> Value.X_AUTH_FAILURE
+                        X_AUTOMATION_REFUSED -> Value.X_AUTOMATION_REFUSED
+                        X_COMMUNITY_CREATION_CLOSED -> Value.X_COMMUNITY_CREATION_CLOSED
+                        X_COMMUNITY_NOT_JOINED -> Value.X_COMMUNITY_NOT_JOINED
+                        X_COMMUNITY_NOT_SELECTABLE -> Value.X_COMMUNITY_NOT_SELECTABLE
+                        X_COMMUNITY_POST_PUBLIC -> Value.X_COMMUNITY_POST_PUBLIC
+                        X_COMMUNITY_POST_REMOVED -> Value.X_COMMUNITY_POST_REMOVED
                         X_CONTENT_TOO_LONG -> Value.X_CONTENT_TOO_LONG
                         X_DAILY_LIMIT -> Value.X_DAILY_LIMIT
                         X_DM_NOT_ALLOWED -> Value.X_DM_NOT_ALLOWED
+                        X_DM_NOT_DELETED -> Value.X_DM_NOT_DELETED
+                        X_DM_NOT_SENT -> Value.X_DM_NOT_SENT
                         X_DUPLICATE_ACTION -> Value.X_DUPLICATE_ACTION
                         X_LOGIN_AUTH_FAILED -> Value.X_LOGIN_AUTH_FAILED
                         X_LOGIN_CHALLENGE -> Value.X_LOGIN_CHALLENGE
@@ -2010,11 +2654,17 @@ private constructor(
                         X_LOGIN_RATE_LIMITED -> Value.X_LOGIN_RATE_LIMITED
                         X_LOGIN_SERVICE_UNAVAILABLE -> Value.X_LOGIN_SERVICE_UNAVAILABLE
                         X_LOGIN_SUSPENDED -> Value.X_LOGIN_SUSPENDED
+                        X_IMAGE_INVALID -> Value.X_IMAGE_INVALID
+                        X_MEDIA_REJECTED -> Value.X_MEDIA_REJECTED
+                        X_POST_NOT_SENT -> Value.X_POST_NOT_SENT
                         X_RATE_LIMITED -> Value.X_RATE_LIMITED
                         X_REJECTED -> Value.X_REJECTED
+                        X_REPLY_NOT_ALLOWED -> Value.X_REPLY_NOT_ALLOWED
+                        X_REPLY_TARGET_UNAVAILABLE -> Value.X_REPLY_TARGET_UNAVAILABLE
                         X_TARGET_NOT_FOUND -> Value.X_TARGET_NOT_FOUND
                         X_TRANSIENT_ERROR -> Value.X_TRANSIENT_ERROR
                         X_USER_LOOKUP_FAILED -> Value.X_USER_LOOKUP_FAILED
+                        X_VIDEO_TOO_LARGE -> Value.X_VIDEO_TOO_LARGE
                         X_WRITE_AMBIGUOUS -> Value.X_WRITE_AMBIGUOUS
                         X_WRITE_FAILED -> Value.X_WRITE_FAILED
                         else -> Value._UNKNOWN
@@ -2034,12 +2684,20 @@ private constructor(
                         ACCOUNT_NOT_FOUND -> Known.ACCOUNT_NOT_FOUND
                         ACCOUNT_REQUIRED -> Known.ACCOUNT_REQUIRED
                         ACCOUNT_RESTRICTED -> Known.ACCOUNT_RESTRICTED
+                        API_KEY_EXPIRED -> Known.API_KEY_EXPIRED
                         API_KEY_LIMIT_REACHED -> Known.API_KEY_LIMIT_REACHED
+                        API_KEY_PAUSED -> Known.API_KEY_PAUSED
+                        API_KEY_BUDGET_REACHED -> Known.API_KEY_BUDGET_REACHED
+                        API_KEY_REVOKED -> Known.API_KEY_REVOKED
+                        IP_NOT_ALLOWED -> Known.IP_NOT_ALLOWED
                         ARTICLE_NOT_FOUND -> Known.ARTICLE_NOT_FOUND
+                        CLOSED -> Known.CLOSED
                         DM_NOT_PERMITTED -> Known.DM_NOT_PERMITTED
                         INVALID_FORMAT -> Known.INVALID_FORMAT
                         INVALID_ID -> Known.INVALID_ID
                         INVALID_INPUT -> Known.INVALID_INPUT
+                        INVALID_MEDIA_URL -> Known.INVALID_MEDIA_URL
+                        INVALID_MESSAGE_ID -> Known.INVALID_MESSAGE_ID
                         INVALID_PARAMS -> Known.INVALID_PARAMS
                         INVALID_TOOL_TYPE -> Known.INVALID_TOOL_TYPE
                         INVALID_TWEET_ID -> Known.INVALID_TWEET_ID
@@ -2049,9 +2707,13 @@ private constructor(
                         INVALID_USERNAME -> Known.INVALID_USERNAME
                         INVALID_JSON -> Known.INVALID_JSON
                         INSUFFICIENT_CREDITS -> Known.INSUFFICIENT_CREDITS
+                        INSUFFICIENT_SCOPE -> Known.INSUFFICIENT_SCOPE
+                        JOB_NOT_FOUND -> Known.JOB_NOT_FOUND
                         LOGIN_COOLDOWN -> Known.LOGIN_COOLDOWN
                         LOGIN_FAILED -> Known.LOGIN_FAILED
                         MEDIA_DOWNLOAD_FAILED -> Known.MEDIA_DOWNLOAD_FAILED
+                        MEDIA_TOO_LARGE -> Known.MEDIA_TOO_LARGE
+                        MEDIA_UNAVAILABLE -> Known.MEDIA_UNAVAILABLE
                         MISSING_PARAMS -> Known.MISSING_PARAMS
                         MISSING_QUERY -> Known.MISSING_QUERY
                         MONITOR_ALREADY_EXISTS -> Known.MONITOR_ALREADY_EXISTS
@@ -2059,10 +2721,14 @@ private constructor(
                         NO_MEDIA -> Known.NO_MEDIA
                         NO_CREDITS -> Known.NO_CREDITS
                         NO_SUBSCRIPTION -> Known.NO_SUBSCRIPTION
+                        EXTRACTION_TERMINAL -> Known.EXTRACTION_TERMINAL
                         NOT_FOUND -> Known.NOT_FOUND
                         PAYMENT_FAILED -> Known.PAYMENT_FAILED
+                        POST_UNAVAILABLE -> Known.POST_UNAVAILABLE
+                        PRICE_CHANGED -> Known.PRICE_CHANGED
                         RATE_LIMIT_EXCEEDED -> Known.RATE_LIMIT_EXCEEDED
                         SERVICE_UNAVAILABLE -> Known.SERVICE_UNAVAILABLE
+                        SESSION_REQUIRED -> Known.SESSION_REQUIRED
                         STYLE_NOT_FOUND -> Known.STYLE_NOT_FOUND
                         SUBSCRIPTION_INACTIVE -> Known.SUBSCRIPTION_INACTIVE
                         TWEET_NOT_FOUND -> Known.TWEET_NOT_FOUND
@@ -2070,43 +2736,72 @@ private constructor(
                         UNSUPPORTED_FIELD -> Known.UNSUPPORTED_FIELD
                         USER_NOT_FOUND -> Known.USER_NOT_FOUND
                         BODY_TOO_LARGE -> Known.BODY_TOO_LARGE
+                        BOOKMARK_FOLDERS_UNAVAILABLE -> Known.BOOKMARK_FOLDERS_UNAVAILABLE
+                        BROADCAST_NOT_FOUND -> Known.BROADCAST_NOT_FOUND
                         CHECKOUT_UNAVAILABLE -> Known.CHECKOUT_UNAVAILABLE
                         CONNECTION_CHALLENGE_EXPIRED -> Known.CONNECTION_CHALLENGE_EXPIRED
                         CONNECTION_CHALLENGE_INACTIVE -> Known.CONNECTION_CHALLENGE_INACTIVE
+                        CONTRIBUTOR_NOT_FOUND -> Known.CONTRIBUTOR_NOT_FOUND
                         COVERAGE_CURSOR_GONE -> Known.COVERAGE_CURSOR_GONE
                         COVERAGE_CURSOR_UNAVAILABLE -> Known.COVERAGE_CURSOR_UNAVAILABLE
+                        CURSOR_ACCOUNT_UNAVAILABLE -> Known.CURSOR_ACCOUNT_UNAVAILABLE
                         DRAFT_NOT_FOUND -> Known.DRAFT_NOT_FOUND
+                        DRAW_TOO_LARGE -> Known.DRAW_TOO_LARGE
+                        EXPIRED -> Known.EXPIRED
                         FAVORITERS_UNAVAILABLE -> Known.FAVORITERS_UNAVAILABLE
                         FORBIDDEN -> Known.FORBIDDEN
                         GUEST_WALLET_UNAVAILABLE -> Known.GUEST_WALLET_UNAVAILABLE
                         GUEST_WALLETS_DISABLED -> Known.GUEST_WALLETS_DISABLED
                         GUEST_WALLETS_UNAVAILABLE -> Known.GUEST_WALLETS_UNAVAILABLE
                         IDEMPOTENCY_CONFLICT -> Known.IDEMPOTENCY_CONFLICT
+                        IDEMPOTENCY_IN_PROGRESS -> Known.IDEMPOTENCY_IN_PROGRESS
                         IDEMPOTENCY_KEY_CONFLICT -> Known.IDEMPOTENCY_KEY_CONFLICT
+                        INVALID_BROADCAST_ID -> Known.INVALID_BROADCAST_ID
                         INVALID_COMMUNITY_ID -> Known.INVALID_COMMUNITY_ID
+                        INVALID_COMMUNITY_TOPIC -> Known.INVALID_COMMUNITY_TOPIC
                         INVALID_COMPLETE_REPLIES_REQUEST -> Known.INVALID_COMPLETE_REPLIES_REQUEST
+                        INVALID_CONTRIBUTOR_ALIAS -> Known.INVALID_CONTRIBUTOR_ALIAS
                         INVALID_COVERAGE_CURSOR -> Known.INVALID_COVERAGE_CURSOR
                         INVALID_COVERAGE_REQUEST -> Known.INVALID_COVERAGE_REQUEST
+                        INVALID_CURSOR -> Known.INVALID_CURSOR
                         INVALID_IDEMPOTENCY_KEY -> Known.INVALID_IDEMPOTENCY_KEY
+                        INVALID_JOB_FILTER -> Known.INVALID_JOB_FILTER
+                        INVALID_JOB_ID -> Known.INVALID_JOB_ID
                         INVALID_LIST_ID -> Known.INVALID_LIST_ID
+                        INVALID_NEWS_ID -> Known.INVALID_NEWS_ID
                         INVALID_OUTPUT_OPTIONS -> Known.INVALID_OUTPUT_OPTIONS
                         INVALID_PAYMENT_AMOUNT -> Known.INVALID_PAYMENT_AMOUNT
                         INVALID_RANGE -> Known.INVALID_RANGE
                         INVALID_REPLY_OPTIONS -> Known.INVALID_REPLY_OPTIONS
+                        INVALID_SPACE_ID -> Known.INVALID_SPACE_ID
+                        LIKES_UNAVAILABLE -> Known.LIKES_UNAVAILABLE
+                        LIST_NOT_FOUND -> Known.LIST_NOT_FOUND
                         LOGIN_RATE_LIMITED -> Known.LOGIN_RATE_LIMITED
                         LOGIN_SERVICE_UNAVAILABLE -> Known.LOGIN_SERVICE_UNAVAILABLE
                         MISSING_IDEMPOTENCY_KEY -> Known.MISSING_IDEMPOTENCY_KEY
                         MISSING_IDS -> Known.MISSING_IDS
+                        MISSING_URL -> Known.MISSING_URL
+                        NEWS_NOT_FOUND -> Known.NEWS_NOT_FOUND
                         NO_CACHED_STYLE -> Known.NO_CACHED_STYLE
+                        PAGINATION_STALLED -> Known.PAGINATION_STALLED
                         PASSKEY_REQUIRED -> Known.PASSKEY_REQUIRED
                         RATE_LIMITED -> Known.RATE_LIMITED
                         READ_REQUEST_TIMEOUT -> Known.READ_REQUEST_TIMEOUT
+                        REPLAY_UNAVAILABLE -> Known.REPLAY_UNAVAILABLE
                         REPLIES_INCOMPLETE -> Known.REPLIES_INCOMPLETE
+                        RETWEETERS_INCOMPLETE -> Known.RETWEETERS_INCOMPLETE
+                        SEARCH_UNAVAILABLE -> Known.SEARCH_UNAVAILABLE
+                        SPACE_CANCELED -> Known.SPACE_CANCELED
+                        SPACE_NOT_ENDED -> Known.SPACE_NOT_ENDED
                         SUPPORT_MEDIA_RATE_LIMIT -> Known.SUPPORT_MEDIA_RATE_LIMIT
                         SUPPORT_REQUEST_RATE_LIMIT -> Known.SUPPORT_REQUEST_RATE_LIMIT
+                        TELEGRAM_UNAVAILABLE -> Known.TELEGRAM_UNAVAILABLE
                         TOO_MANY_IDS -> Known.TOO_MANY_IDS
+                        TOO_MANY_STREAMS -> Known.TOO_MANY_STREAMS
                         TOO_MANY_TWEETS -> Known.TOO_MANY_TWEETS
+                        TOPUP_IN_PROGRESS -> Known.TOPUP_IN_PROGRESS
                         UNKNOWN_FIELD -> Known.UNKNOWN_FIELD
+                        UNSUPPORTED_MEDIA_COMBINATION -> Known.UNSUPPORTED_MEDIA_COMBINATION
                         UNSUPPORTED_MEDIA_TYPE -> Known.UNSUPPORTED_MEDIA_TYPE
                         WEBHOOK_INACTIVE -> Known.WEBHOOK_INACTIVE
                         WRITE_TRACKING_UNAVAILABLE -> Known.WRITE_TRACKING_UNAVAILABLE
@@ -2118,9 +2813,17 @@ private constructor(
                         X_API_UNAVAILABLE -> Known.X_API_UNAVAILABLE
                         X_API_UNAUTHORIZED -> Known.X_API_UNAUTHORIZED
                         X_AUTH_FAILURE -> Known.X_AUTH_FAILURE
+                        X_AUTOMATION_REFUSED -> Known.X_AUTOMATION_REFUSED
+                        X_COMMUNITY_CREATION_CLOSED -> Known.X_COMMUNITY_CREATION_CLOSED
+                        X_COMMUNITY_NOT_JOINED -> Known.X_COMMUNITY_NOT_JOINED
+                        X_COMMUNITY_NOT_SELECTABLE -> Known.X_COMMUNITY_NOT_SELECTABLE
+                        X_COMMUNITY_POST_PUBLIC -> Known.X_COMMUNITY_POST_PUBLIC
+                        X_COMMUNITY_POST_REMOVED -> Known.X_COMMUNITY_POST_REMOVED
                         X_CONTENT_TOO_LONG -> Known.X_CONTENT_TOO_LONG
                         X_DAILY_LIMIT -> Known.X_DAILY_LIMIT
                         X_DM_NOT_ALLOWED -> Known.X_DM_NOT_ALLOWED
+                        X_DM_NOT_DELETED -> Known.X_DM_NOT_DELETED
+                        X_DM_NOT_SENT -> Known.X_DM_NOT_SENT
                         X_DUPLICATE_ACTION -> Known.X_DUPLICATE_ACTION
                         X_LOGIN_AUTH_FAILED -> Known.X_LOGIN_AUTH_FAILED
                         X_LOGIN_CHALLENGE -> Known.X_LOGIN_CHALLENGE
@@ -2130,11 +2833,17 @@ private constructor(
                         X_LOGIN_RATE_LIMITED -> Known.X_LOGIN_RATE_LIMITED
                         X_LOGIN_SERVICE_UNAVAILABLE -> Known.X_LOGIN_SERVICE_UNAVAILABLE
                         X_LOGIN_SUSPENDED -> Known.X_LOGIN_SUSPENDED
+                        X_IMAGE_INVALID -> Known.X_IMAGE_INVALID
+                        X_MEDIA_REJECTED -> Known.X_MEDIA_REJECTED
+                        X_POST_NOT_SENT -> Known.X_POST_NOT_SENT
                         X_RATE_LIMITED -> Known.X_RATE_LIMITED
                         X_REJECTED -> Known.X_REJECTED
+                        X_REPLY_NOT_ALLOWED -> Known.X_REPLY_NOT_ALLOWED
+                        X_REPLY_TARGET_UNAVAILABLE -> Known.X_REPLY_TARGET_UNAVAILABLE
                         X_TARGET_NOT_FOUND -> Known.X_TARGET_NOT_FOUND
                         X_TRANSIENT_ERROR -> Known.X_TRANSIENT_ERROR
                         X_USER_LOOKUP_FAILED -> Known.X_USER_LOOKUP_FAILED
+                        X_VIDEO_TOO_LARGE -> Known.X_VIDEO_TOO_LARGE
                         X_WRITE_AMBIGUOUS -> Known.X_WRITE_AMBIGUOUS
                         X_WRITE_FAILED -> Known.X_WRITE_FAILED
                         else -> throw XTwitterScraperInvalidDataException("Unknown Code: $value")
