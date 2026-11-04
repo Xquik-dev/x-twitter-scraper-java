@@ -566,6 +566,14 @@ private constructor(
     fun sinceId(): Optional<String> = body.sinceId()
 
     /**
+     * Collects a post only when 1 of these words or quoted phrases is in its text, a link, its card
+     * or a quoted post. The author's name and username don't count.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun textOnlyTerms(): Optional<String> = body.textOnlyTerms()
+
+    /**
      * Reply start time as ISO 8601 or Unix seconds.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
@@ -1241,6 +1249,13 @@ private constructor(
      * Unlike [sinceId], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _sinceId(): JsonField<String> = body._sinceId()
+
+    /**
+     * Returns the raw JSON value of [textOnlyTerms].
+     *
+     * Unlike [textOnlyTerms], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _textOnlyTerms(): JsonField<String> = body._textOnlyTerms()
 
     /**
      * Returns the raw JSON value of [sinceTime].
@@ -2037,6 +2052,17 @@ private constructor(
         /** Sets [Builder.sinceId] to an arbitrary JSON value. */
         fun sinceId(sinceId: JsonField<String>) = apply { body.sinceId(sinceId) }
 
+        /**
+         * Collects a post only when 1 of these words or quoted phrases is in its text, a link, its
+         * card or a quoted post. The author's name and username don't count.
+         */
+        fun textOnlyTerms(textOnlyTerms: String) = apply { body.textOnlyTerms(textOnlyTerms) }
+
+        /** Sets [Builder.textOnlyTerms] to an arbitrary JSON value. */
+        fun textOnlyTerms(textOnlyTerms: JsonField<String>) = apply {
+            body.textOnlyTerms(textOnlyTerms)
+        }
+
         /** Reply start time as ISO 8601 or Unix seconds. */
         fun sinceTime(sinceTime: SinceTime) = apply { body.sinceTime(sinceTime) }
 
@@ -2519,6 +2545,7 @@ private constructor(
         private val searchQuery: JsonField<String>,
         private val sinceDate: JsonField<LocalDate>,
         private val sinceId: JsonField<String>,
+        private val textOnlyTerms: JsonField<String>,
         private val sinceTime: JsonField<SinceTime>,
         private val sort: JsonField<Sort>,
         private val source: JsonField<String>,
@@ -2736,6 +2763,9 @@ private constructor(
             @ExcludeMissing
             sinceDate: JsonField<LocalDate> = JsonMissing.of(),
             @JsonProperty("sinceId") @ExcludeMissing sinceId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("textOnlyTerms")
+            @ExcludeMissing
+            textOnlyTerms: JsonField<String> = JsonMissing.of(),
             @JsonProperty("sinceTime")
             @ExcludeMissing
             sinceTime: JsonField<SinceTime> = JsonMissing.of(),
@@ -2881,6 +2911,7 @@ private constructor(
             searchQuery,
             sinceDate,
             sinceId,
+            textOnlyTerms,
             sinceTime,
             sort,
             source,
@@ -3433,6 +3464,14 @@ private constructor(
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
         fun sinceId(): Optional<String> = sinceId.getOptional("sinceId")
+
+        /**
+         * Collects a post only when 1 of these words or quoted phrases is in its text, a link, its
+         * card or a quoted post. The author's name and username don't count.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun textOnlyTerms(): Optional<String> = textOnlyTerms.getOptional("textOnlyTerms")
 
         /**
          * Reply start time as ISO 8601 or Unix seconds.
@@ -4232,6 +4271,16 @@ private constructor(
         @JsonProperty("sinceId") @ExcludeMissing fun _sinceId(): JsonField<String> = sinceId
 
         /**
+         * Returns the raw JSON value of [textOnlyTerms].
+         *
+         * Unlike [textOnlyTerms], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("textOnlyTerms")
+        @ExcludeMissing
+        fun _textOnlyTerms(): JsonField<String> = textOnlyTerms
+
+        /**
          * Returns the raw JSON value of [sinceTime].
          *
          * Unlike [sinceTime], this method doesn't throw if the JSON field has an unexpected type.
@@ -4576,6 +4625,7 @@ private constructor(
             private var searchQuery: JsonField<String> = JsonMissing.of()
             private var sinceDate: JsonField<LocalDate> = JsonMissing.of()
             private var sinceId: JsonField<String> = JsonMissing.of()
+            private var textOnlyTerms: JsonField<String> = JsonMissing.of()
             private var sinceTime: JsonField<SinceTime> = JsonMissing.of()
             private var sort: JsonField<Sort> = JsonMissing.of()
             private var source: JsonField<String> = JsonMissing.of()
@@ -4680,6 +4730,7 @@ private constructor(
                 searchQuery = body.searchQuery
                 sinceDate = body.sinceDate
                 sinceId = body.sinceId
+                textOnlyTerms = body.textOnlyTerms
                 sinceTime = body.sinceTime
                 sort = body.sort
                 source = body.source
@@ -5273,6 +5324,17 @@ private constructor(
             /** Sets [Builder.sinceId] to an arbitrary JSON value. */
             fun sinceId(sinceId: JsonField<String>) = apply { this.sinceId = sinceId }
 
+            /**
+             * Collects a post only when 1 of these words or quoted phrases is in its text, a link,
+             * its card or a quoted post. The author's name and username don't count.
+             */
+            fun textOnlyTerms(textOnlyTerms: String) = textOnlyTerms(JsonField.of(textOnlyTerms))
+
+            /** Sets [Builder.textOnlyTerms] to an arbitrary JSON value. */
+            fun textOnlyTerms(textOnlyTerms: JsonField<String>) = apply {
+                this.textOnlyTerms = textOnlyTerms
+            }
+
             /** Reply start time as ISO 8601 or Unix seconds. */
             fun sinceTime(sinceTime: SinceTime) = sinceTime(JsonField.of(sinceTime))
 
@@ -5659,6 +5721,7 @@ private constructor(
                     searchQuery,
                     sinceDate,
                     sinceId,
+                    textOnlyTerms,
                     sinceTime,
                     sort,
                     source,
@@ -5779,6 +5842,7 @@ private constructor(
             searchQuery()
             sinceDate()
             sinceId()
+            textOnlyTerms()
             sinceTime().ifPresent { it.validate() }
             sort().ifPresent { it.validate() }
             source()
@@ -5892,6 +5956,7 @@ private constructor(
                 (if (searchQuery.asKnown().isPresent) 1 else 0) +
                 (if (sinceDate.asKnown().isPresent) 1 else 0) +
                 (if (sinceId.asKnown().isPresent) 1 else 0) +
+                (if (textOnlyTerms.asKnown().isPresent) 1 else 0) +
                 (sinceTime.asKnown().getOrNull()?.validity() ?: 0) +
                 (sort.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (source.asKnown().isPresent) 1 else 0) +
@@ -5999,6 +6064,7 @@ private constructor(
                 searchQuery == other.searchQuery &&
                 sinceDate == other.sinceDate &&
                 sinceId == other.sinceId &&
+                textOnlyTerms == other.textOnlyTerms &&
                 sinceTime == other.sinceTime &&
                 sort == other.sort &&
                 source == other.source &&
@@ -6104,6 +6170,7 @@ private constructor(
                 searchQuery,
                 sinceDate,
                 sinceId,
+                textOnlyTerms,
                 sinceTime,
                 sort,
                 source,
@@ -6138,7 +6205,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{toolType=$toolType, advancedQuery=$advancedQuery, anyWords=$anyWords, bioContains=$bioContains, blueVerifiedOnly=$blueVerifiedOnly, boundingBox=$boundingBox, cardName=$cardName, cashtags=$cashtags, collectionStrategy=$collectionStrategy, conversationId=$conversationId, dedupeAcrossTargets=$dedupeAcrossTargets, dedupeMode=$dedupeMode, exactPhrase=$exactPhrase, excludeOriginalAuthor=$excludeOriginalAuthor, excludeSource=$excludeSource, excludeWords=$excludeWords, fromUser=$fromUser, geocode=$geocode, hashtags=$hashtags, hasLocation=$hasLocation, hasMediaOnly=$hasMediaOnly, hasWebsite=$hasWebsite, includeOriginalPost=$includeOriginalPost, includeSearchTerms=$includeSearchTerms, includeTargetMetadata=$includeTargetMetadata, inReplyToTweetId=$inReplyToTweetId, language=$language, listId=$listId, locationContains=$locationContains, maxDepth=$maxDepth, maxFollowers=$maxFollowers, maxFollowing=$maxFollowing, maxId=$maxId, maxItemsPerTarget=$maxItemsPerTarget, maxLikes=$maxLikes, maxPagesPerTarget=$maxPagesPerTarget, maxPosts=$maxPosts, maxQuotes=$maxQuotes, maxReplies=$maxReplies, maxRetweets=$maxRetweets, mediaType=$mediaType, mentioning=$mentioning, minAccountAgeDays=$minAccountAgeDays, minBookmarks=$minBookmarks, minFaves=$minFaves, minFollowers=$minFollowers, minFollowing=$minFollowing, minPosts=$minPosts, minQuotes=$minQuotes, minReplies=$minReplies, minRetweets=$minRetweets, minViews=$minViews, nativeRetweets=$nativeRetweets, near=$near, news=$news, overlapMode=$overlapMode, place=$place, placeCountry=$placeCountry, pointRadius=$pointRadius, queryType=$queryType, quotes=$quotes, quotesOfTweetId=$quotesOfTweetId, relationTargets=$relationTargets, replies=$replies, resultsLimit=$resultsLimit, retweets=$retweets, retweetsOfTweetId=$retweetsOfTweetId, safe=$safe, scope=$scope, searchQueries=$searchQueries, searchQuery=$searchQuery, sinceDate=$sinceDate, sinceId=$sinceId, sinceTime=$sinceTime, sort=$sort, source=$source, startCursor=$startCursor, targetCommunityId=$targetCommunityId, targetCommunityIds=$targetCommunityIds, targetListId=$targetListId, targetListIds=$targetListIds, targets=$targets, targetSpaceId=$targetSpaceId, targetTweetId=$targetTweetId, targetTweetIds=$targetTweetIds, targetUsername=$targetUsername, targetUsernames=$targetUsernames, toUser=$toUser, untilDate=$untilDate, untilTime=$untilTime, url=$url, usernameContains=$usernameContains, verifiedOnly=$verifiedOnly, verifiedType=$verifiedType, within=$within, withinTime=$withinTime, enrichProfiles=$enrichProfiles, hasEmail=$hasEmail, businessEmailOnly=$businessEmailOnly, emailDomains=$emailDomains, additionalProperties=$additionalProperties}"
+            "Body{toolType=$toolType, advancedQuery=$advancedQuery, anyWords=$anyWords, bioContains=$bioContains, blueVerifiedOnly=$blueVerifiedOnly, boundingBox=$boundingBox, cardName=$cardName, cashtags=$cashtags, collectionStrategy=$collectionStrategy, conversationId=$conversationId, dedupeAcrossTargets=$dedupeAcrossTargets, dedupeMode=$dedupeMode, exactPhrase=$exactPhrase, excludeOriginalAuthor=$excludeOriginalAuthor, excludeSource=$excludeSource, excludeWords=$excludeWords, fromUser=$fromUser, geocode=$geocode, hashtags=$hashtags, hasLocation=$hasLocation, hasMediaOnly=$hasMediaOnly, hasWebsite=$hasWebsite, includeOriginalPost=$includeOriginalPost, includeSearchTerms=$includeSearchTerms, includeTargetMetadata=$includeTargetMetadata, inReplyToTweetId=$inReplyToTweetId, language=$language, listId=$listId, locationContains=$locationContains, maxDepth=$maxDepth, maxFollowers=$maxFollowers, maxFollowing=$maxFollowing, maxId=$maxId, maxItemsPerTarget=$maxItemsPerTarget, maxLikes=$maxLikes, maxPagesPerTarget=$maxPagesPerTarget, maxPosts=$maxPosts, maxQuotes=$maxQuotes, maxReplies=$maxReplies, maxRetweets=$maxRetweets, mediaType=$mediaType, mentioning=$mentioning, minAccountAgeDays=$minAccountAgeDays, minBookmarks=$minBookmarks, minFaves=$minFaves, minFollowers=$minFollowers, minFollowing=$minFollowing, minPosts=$minPosts, minQuotes=$minQuotes, minReplies=$minReplies, minRetweets=$minRetweets, minViews=$minViews, nativeRetweets=$nativeRetweets, near=$near, news=$news, overlapMode=$overlapMode, place=$place, placeCountry=$placeCountry, pointRadius=$pointRadius, queryType=$queryType, quotes=$quotes, quotesOfTweetId=$quotesOfTweetId, relationTargets=$relationTargets, replies=$replies, resultsLimit=$resultsLimit, retweets=$retweets, retweetsOfTweetId=$retweetsOfTweetId, safe=$safe, scope=$scope, searchQueries=$searchQueries, searchQuery=$searchQuery, sinceDate=$sinceDate, sinceId=$sinceId, textOnlyTerms=$textOnlyTerms, sinceTime=$sinceTime, sort=$sort, source=$source, startCursor=$startCursor, targetCommunityId=$targetCommunityId, targetCommunityIds=$targetCommunityIds, targetListId=$targetListId, targetListIds=$targetListIds, targets=$targets, targetSpaceId=$targetSpaceId, targetTweetId=$targetTweetId, targetTweetIds=$targetTweetIds, targetUsername=$targetUsername, targetUsernames=$targetUsernames, toUser=$toUser, untilDate=$untilDate, untilTime=$untilTime, url=$url, usernameContains=$usernameContains, verifiedOnly=$verifiedOnly, verifiedType=$verifiedType, within=$within, withinTime=$withinTime, enrichProfiles=$enrichProfiles, hasEmail=$hasEmail, businessEmailOnly=$businessEmailOnly, emailDomains=$emailDomains, additionalProperties=$additionalProperties}"
     }
 
     /** Identifier for the extraction tool used to run a job. */

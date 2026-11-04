@@ -9,6 +9,7 @@
 * `CreditTopupBalanceResponse.builder()` requires `chargedCurrency` and `chargedMinorUnits`, which the API always sends. Code that builds the response by hand must set both.
 * `AccountBulkRetryParams._body()` returns `AccountBulkRetryParams.Body` instead of `Optional<Map<String, JsonValue>>`, and bulk retry always sends a JSON body, which is `{}` when no account is named. Code that calls `_body()` must change, and compiled callers must rebuild.
 * `MediaUploadParams`, `ProfileUpdateAvatarParams` and `ProfileUpdateBannerParams` take exactly 1 of `url` or `file`, so their `url()` getters return `Optional<String>`. Builders that set `url` keep working.
+* `UserRetrieveInsightsResponse.Insights.builder()` requires `medianViews`, which the API always sends. Code that builds it by hand must set it.
 
 ### Security
 
@@ -59,6 +60,10 @@
 * The remaining request and response models gain the fields and enum values in the API spec. New fields are optional in builders. List reads gain pagination params and metadata, and upload requests gain file fields.
 * The 19 write methods, such as `client.x().tweets().create`, take `prefer`. They send it as the `Prefer` header. `wait=<seconds>` asks for the answer within that many seconds, up to 85. A write still running then answers 202 with its status link.
 * Error codes gain the 59 codes the API added, such as `PRICE_CHANGED` and `X_COMMUNITY_CREATION_CLOSED`. X takes no new Communities, so `client.x().communities().create` fails. It answers `x_community_creation_closed` and charges nothing.
+* `ExtractionExportResultsParams` takes `compare` & `change` to keep only the rows that differ from another run.
+* Exports also filter accounts by `hasWebsite`, `location`, `joinedSince` & `joinedUntil`. `hideInactive` & `hideFake` drop inactive & fake-looking accounts.
+* `TweetSearchParams`, `ExtractionRunParams` & `ExtractionEstimateCostParams` take `textOnlyTerms`. It keeps posts whose text, link, card or quote holds 1 of the terms.
+* User insights return `medianViews`. Radar item metadata returns `sentiment` & `windows`.
 
 ### Bug fixes
 
