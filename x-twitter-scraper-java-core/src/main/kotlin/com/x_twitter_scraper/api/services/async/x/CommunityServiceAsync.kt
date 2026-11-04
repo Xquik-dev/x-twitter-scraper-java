@@ -57,7 +57,10 @@ interface CommunityServiceAsync {
     /** Find X Communities & read their info, members, posts & media */
     fun media(): MediaServiceAsync
 
-    /** Create community */
+    /**
+     * Create community. X isn't accepting new Communities. This call answers
+     * `x_community_creation_closed` & charges nothing.
+     */
     fun create(params: CommunityCreateParams): CompletableFuture<CommunityCreateResponse> =
         create(params, RequestOptions.none())
 

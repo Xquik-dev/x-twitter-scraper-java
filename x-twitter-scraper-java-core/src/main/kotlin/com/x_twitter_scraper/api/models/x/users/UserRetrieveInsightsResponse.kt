@@ -201,6 +201,7 @@ private constructor(
         private val averages: JsonField<Averages>,
         private val engagementPerView: JsonField<Double>,
         private val engagementRate: JsonField<Double>,
+        private val medianViews: JsonField<Double>,
         private val followers: JsonField<Double>,
         private val following: JsonField<Double>,
         private val posts: JsonField<Double>,
@@ -227,6 +228,9 @@ private constructor(
             @JsonProperty("engagementRate")
             @ExcludeMissing
             engagementRate: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("medianViews")
+            @ExcludeMissing
+            medianViews: JsonField<Double> = JsonMissing.of(),
             @JsonProperty("followers")
             @ExcludeMissing
             followers: JsonField<Double> = JsonMissing.of(),
@@ -253,6 +257,7 @@ private constructor(
             averages,
             engagementPerView,
             engagementRate,
+            medianViews,
             followers,
             following,
             posts,
@@ -293,6 +298,14 @@ private constructor(
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
         fun engagementRate(): Optional<Double> = engagementRate.getOptional("engagementRate")
+
+        /**
+         * Middle view count of the sample, so 1 viral post moves it less than the average. Null
+         * without posts.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun medianViews(): Optional<Double> = medianViews.getOptional("medianViews")
 
         /**
          * Followers.
@@ -401,6 +414,15 @@ private constructor(
         @JsonProperty("engagementRate")
         @ExcludeMissing
         fun _engagementRate(): JsonField<Double> = engagementRate
+
+        /**
+         * Returns the raw JSON value of [medianViews].
+         *
+         * Unlike [medianViews], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("medianViews")
+        @ExcludeMissing
+        fun _medianViews(): JsonField<Double> = medianViews
 
         /**
          * Returns the raw JSON value of [followers].
@@ -514,6 +536,7 @@ private constructor(
             private var averages: JsonField<Averages>? = null
             private var engagementPerView: JsonField<Double>? = null
             private var engagementRate: JsonField<Double>? = null
+            private var medianViews: JsonField<Double>? = null
             private var followers: JsonField<Double>? = null
             private var following: JsonField<Double>? = null
             private var posts: JsonField<Double>? = null
@@ -531,6 +554,7 @@ private constructor(
                 averages = insights.averages
                 engagementPerView = insights.engagementPerView
                 engagementRate = insights.engagementRate
+                medianViews = insights.medianViews
                 followers = insights.followers
                 following = insights.following
                 posts = insights.posts
@@ -601,6 +625,23 @@ private constructor(
             /** Sets [Builder.engagementRate] to an arbitrary JSON value. */
             fun engagementRate(engagementRate: JsonField<Double>) = apply {
                 this.engagementRate = engagementRate
+            }
+
+            /**
+             * Middle view count of the sample, so 1 viral post moves it less than the average. Null
+             * without posts.
+             */
+            fun medianViews(medianViews: Double?) = medianViews(JsonField.ofNullable(medianViews))
+
+            /** Alias for [Builder.medianViews]. */
+            fun medianViews(medianViews: Double) = medianViews(medianViews as Double?)
+
+            /** Alias for calling [Builder.medianViews] with `medianViews.orElse(null)`. */
+            fun medianViews(medianViews: Optional<Double>) = medianViews(medianViews.getOrNull())
+
+            /** Sets [Builder.medianViews] to an arbitrary JSON value. */
+            fun medianViews(medianViews: JsonField<Double>) = apply {
+                this.medianViews = medianViews
             }
 
             /** Followers. */
@@ -722,6 +763,7 @@ private constructor(
                     checkRequired("averages", averages),
                     checkRequired("engagementPerView", engagementPerView),
                     checkRequired("engagementRate", engagementRate),
+                    checkRequired("medianViews", medianViews),
                     checkRequired("followers", followers),
                     checkRequired("following", following),
                     checkRequired("posts", posts),
@@ -755,6 +797,7 @@ private constructor(
             averages().ifPresent { it.validate() }
             engagementPerView()
             engagementRate()
+            medianViews()
             followers()
             following()
             posts()
@@ -781,6 +824,7 @@ private constructor(
                 (averages.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (engagementPerView.asKnown().isPresent) 1 else 0) +
                 (if (engagementRate.asKnown().isPresent) 1 else 0) +
+                (if (medianViews.asKnown().isPresent) 1 else 0) +
                 (if (followers.asKnown().isPresent) 1 else 0) +
                 (if (following.asKnown().isPresent) 1 else 0) +
                 (if (posts.asKnown().isPresent) 1 else 0) +
@@ -1424,6 +1468,7 @@ private constructor(
                 averages == other.averages &&
                 engagementPerView == other.engagementPerView &&
                 engagementRate == other.engagementRate &&
+                medianViews == other.medianViews &&
                 followers == other.followers &&
                 following == other.following &&
                 posts == other.posts &&
@@ -1442,6 +1487,7 @@ private constructor(
                 averages,
                 engagementPerView,
                 engagementRate,
+                medianViews,
                 followers,
                 following,
                 posts,
@@ -1458,7 +1504,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Insights{accountAgeDays=$accountAgeDays, averages=$averages, engagementPerView=$engagementPerView, engagementRate=$engagementRate, followers=$followers, following=$following, posts=$posts, postsPerDay=$postsPerDay, postsPrivate=$postsPrivate, sample=$sample, topPostId=$topPostId, userId=$userId, userName=$userName, additionalProperties=$additionalProperties}"
+            "Insights{accountAgeDays=$accountAgeDays, averages=$averages, engagementPerView=$engagementPerView, engagementRate=$engagementRate, medianViews=$medianViews, followers=$followers, following=$following, posts=$posts, postsPerDay=$postsPerDay, postsPrivate=$postsPrivate, sample=$sample, topPostId=$topPostId, userId=$userId, userName=$userName, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

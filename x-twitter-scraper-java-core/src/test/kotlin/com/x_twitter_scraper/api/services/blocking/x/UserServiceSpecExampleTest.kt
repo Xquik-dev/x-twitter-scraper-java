@@ -361,6 +361,7 @@ internal class UserServiceSpecExampleTest {
                               "engagements": 4331.7
                             },
                             "engagementRate": 0.0047,
+                            "medianViews": 800791.5,
                             "engagementPerView": 0.5516,
                             "postsPerDay": 1.6814,
                             "topPostId": "2102761519985332442"
@@ -399,6 +400,7 @@ internal class UserServiceSpecExampleTest {
         assertThat(response.insights().averages().get().views()).isEqualTo(785247.8)
         assertThat(response.insights().engagementPerView()).contains(0.5516)
         assertThat(response.insights().engagementRate()).contains(0.0047)
+        assertThat(response.insights().medianViews()).contains(800791.5)
         assertThat(response.insights().followers()).isEqualTo(92376187.0)
         assertThat(response.insights().following()).isEqualTo(115.0)
         assertThat(response.insights().posts()).isEqualTo(74336.0)

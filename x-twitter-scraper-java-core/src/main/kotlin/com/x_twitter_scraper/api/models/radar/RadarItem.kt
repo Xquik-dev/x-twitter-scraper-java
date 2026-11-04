@@ -13,7 +13,9 @@ import com.x_twitter_scraper.api.core.ExcludeMissing
 import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
+import com.x_twitter_scraper.api.core.checkKnown
 import com.x_twitter_scraper.api.core.checkRequired
+import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.time.OffsetDateTime
 import java.util.Collections
@@ -774,6 +776,8 @@ private constructor(
         private val score: JsonField<Long>,
         private val selftext: JsonField<String>,
         private val sourceFormat: JsonField<SourceFormat>,
+        private val sentiment: JsonField<Sentiment>,
+        private val windows: JsonField<List<Window>>,
         private val subreddit: JsonField<String>,
         private val upvoteRatio: JsonField<Double>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -801,6 +805,12 @@ private constructor(
             @JsonProperty("sourceFormat")
             @ExcludeMissing
             sourceFormat: JsonField<SourceFormat> = JsonMissing.of(),
+            @JsonProperty("sentiment")
+            @ExcludeMissing
+            sentiment: JsonField<Sentiment> = JsonMissing.of(),
+            @JsonProperty("windows")
+            @ExcludeMissing
+            windows: JsonField<List<Window>> = JsonMissing.of(),
             @JsonProperty("subreddit")
             @ExcludeMissing
             subreddit: JsonField<String> = JsonMissing.of(),
@@ -816,6 +826,8 @@ private constructor(
             score,
             selftext,
             sourceFormat,
+            sentiment,
+            windows,
             subreddit,
             upvoteRatio,
             mutableMapOf(),
@@ -849,6 +861,21 @@ private constructor(
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
         fun sourceFormat(): Optional<SourceFormat> = sourceFormat.getOptional("sourceFormat")
+
+        /**
+         * Tone of an English post title, from the VADER word list.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun sentiment(): Optional<Sentiment> = sentiment.getOptional("sentiment")
+
+        /**
+         * Reddit lists the post ranks in. now is the popular feed, and the rest are top lists of
+         * that window.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun windows(): Optional<List<Window>> = windows.getOptional("windows")
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun subreddit(): Optional<String> = subreddit.getOptional("subreddit")
@@ -927,6 +954,22 @@ private constructor(
         fun _sourceFormat(): JsonField<SourceFormat> = sourceFormat
 
         /**
+         * Returns the raw JSON value of [sentiment].
+         *
+         * Unlike [sentiment], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("sentiment")
+        @ExcludeMissing
+        fun _sentiment(): JsonField<Sentiment> = sentiment
+
+        /**
+         * Returns the raw JSON value of [windows].
+         *
+         * Unlike [windows], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("windows") @ExcludeMissing fun _windows(): JsonField<List<Window>> = windows
+
+        /**
          * Returns the raw JSON value of [subreddit].
          *
          * Unlike [subreddit], this method doesn't throw if the JSON field has an unexpected type.
@@ -971,6 +1014,8 @@ private constructor(
             private var score: JsonField<Long> = JsonMissing.of()
             private var selftext: JsonField<String> = JsonMissing.of()
             private var sourceFormat: JsonField<SourceFormat> = JsonMissing.of()
+            private var sentiment: JsonField<Sentiment> = JsonMissing.of()
+            private var windows: JsonField<MutableList<Window>>? = null
             private var subreddit: JsonField<String> = JsonMissing.of()
             private var upvoteRatio: JsonField<Double> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -985,6 +1030,8 @@ private constructor(
                 score = metadata.score
                 selftext = metadata.selftext
                 sourceFormat = metadata.sourceFormat
+                sentiment = metadata.sentiment
+                windows = metadata.windows.map { it.toMutableList() }
                 subreddit = metadata.subreddit
                 upvoteRatio = metadata.upvoteRatio
                 additionalProperties = metadata.additionalProperties.toMutableMap()
@@ -1041,6 +1088,37 @@ private constructor(
                 this.sourceFormat = sourceFormat
             }
 
+            /** Tone of an English post title, from the VADER word list. */
+            fun sentiment(sentiment: Sentiment) = sentiment(JsonField.of(sentiment))
+
+            /** Sets [Builder.sentiment] to an arbitrary JSON value. */
+            fun sentiment(sentiment: JsonField<Sentiment>) = apply {
+                this.sentiment = sentiment
+            }
+
+            /**
+             * Reddit lists the post ranks in. now is the popular feed, and the rest are top lists
+             * of that window.
+             */
+            fun windows(windows: List<Window>) = windows(JsonField.of(windows))
+
+            /** Sets [Builder.windows] to an arbitrary JSON value. */
+            fun windows(windows: JsonField<List<Window>>) = apply {
+                this.windows = windows.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [Window] to [windows].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addWindow(window: Window) = apply {
+                windows =
+                    (windows ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("windows", it).add(window)
+                    }
+            }
+
             fun subreddit(subreddit: String) = subreddit(JsonField.of(subreddit))
 
             /** Sets [Builder.subreddit] to an arbitrary JSON value. */
@@ -1087,6 +1165,8 @@ private constructor(
                     score,
                     selftext,
                     sourceFormat,
+                    sentiment,
+                    (windows ?: JsonMissing.of()).map { it.toImmutable() },
                     subreddit,
                     upvoteRatio,
                     additionalProperties.toMutableMap(),
@@ -1117,6 +1197,8 @@ private constructor(
             score()
             selftext()
             sourceFormat().ifPresent { it.validate() }
+            sentiment().ifPresent { it.validate() }
+            windows().ifPresent { it.forEach { it.validate() } }
             subreddit()
             upvoteRatio()
             validated = true
@@ -1140,6 +1222,8 @@ private constructor(
                 (if (score.asKnown().isPresent) 1 else 0) +
                 (if (selftext.asKnown().isPresent) 1 else 0) +
                 (sourceFormat.asKnown().getOrNull()?.validity() ?: 0) +
+                (sentiment.asKnown().getOrNull()?.validity() ?: 0) +
+                (windows.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
                 (if (subreddit.asKnown().isPresent) 1 else 0) +
                 (if (upvoteRatio.asKnown().isPresent) 1 else 0)
 
@@ -1270,6 +1354,274 @@ private constructor(
             override fun toString() = value.toString()
         }
 
+        /** Feed or top list of a time window that the post ranks in. */
+        class Window @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+            /** Returns this class instance's raw value. */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val NOW = of("now")
+
+                @JvmField val HOUR = of("hour")
+
+                @JvmField val DAY = of("day")
+
+                @JvmField val WEEK = of("week")
+
+                @JvmField val MONTH = of("month")
+
+                @JvmField val YEAR = of("year")
+
+                @JvmStatic fun of(value: String) = Window(JsonField.of(value))
+            }
+
+            /** An enum containing [Window]'s known values. */
+            enum class Known {
+                NOW,
+                HOUR,
+                DAY,
+                WEEK,
+                MONTH,
+                YEAR,
+            }
+
+            /**
+             * An enum containing [Window]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [Window] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                NOW,
+                HOUR,
+                DAY,
+                WEEK,
+                MONTH,
+                YEAR,
+                /**
+                 * An enum member indicating that [Window] was instantiated with an unknown value.
+                 */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             */
+            fun value(): Value =
+                when (this) {
+                    NOW -> Value.NOW
+                    HOUR -> Value.HOUR
+                    DAY -> Value.DAY
+                    WEEK -> Value.WEEK
+                    MONTH -> Value.MONTH
+                    YEAR -> Value.YEAR
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+             *   known member.
+             */
+            fun known(): Known =
+                when (this) {
+                    NOW -> Known.NOW
+                    HOUR -> Known.HOUR
+                    DAY -> Known.DAY
+                    WEEK -> Known.WEEK
+                    MONTH -> Known.MONTH
+                    YEAR -> Known.YEAR
+                    else -> throw XTwitterScraperInvalidDataException("Unknown Window: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * @throws XTwitterScraperInvalidDataException if this class instance's value does not
+             *   have the expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    XTwitterScraperInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
+             */
+            fun validate(): Window = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: XTwitterScraperInvalidDataException) {
+                    false
+                }
+
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Window && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
+
+        /** Tone of an English post title, from the VADER word list. */
+        class Sentiment @JsonCreator private constructor(private val value: JsonField<String>) :
+            Enum {
+
+            /** Returns this class instance's raw value. */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val POSITIVE = of("positive")
+
+                @JvmField val NEUTRAL = of("neutral")
+
+                @JvmField val NEGATIVE = of("negative")
+
+                @JvmStatic fun of(value: String) = Sentiment(JsonField.of(value))
+            }
+
+            /** An enum containing [Sentiment]'s known values. */
+            enum class Known {
+                POSITIVE,
+                NEUTRAL,
+                NEGATIVE,
+            }
+
+            /**
+             * An enum containing [Sentiment]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [Sentiment] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                POSITIVE,
+                NEUTRAL,
+                NEGATIVE,
+                /**
+                 * An enum member indicating that [Sentiment] was instantiated with an unknown
+                 * value.
+                 */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             */
+            fun value(): Value =
+                when (this) {
+                    POSITIVE -> Value.POSITIVE
+                    NEUTRAL -> Value.NEUTRAL
+                    NEGATIVE -> Value.NEGATIVE
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+             *   known member.
+             */
+            fun known(): Known =
+                when (this) {
+                    POSITIVE -> Known.POSITIVE
+                    NEUTRAL -> Known.NEUTRAL
+                    NEGATIVE -> Known.NEGATIVE
+                    else -> throw XTwitterScraperInvalidDataException("Unknown Sentiment: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * @throws XTwitterScraperInvalidDataException if this class instance's value does not
+             *   have the expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    XTwitterScraperInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
+             */
+            fun validate(): Sentiment = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: XTwitterScraperInvalidDataException) {
+                    false
+                }
+
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Sentiment && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
+
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
@@ -1284,6 +1636,8 @@ private constructor(
                 score == other.score &&
                 selftext == other.selftext &&
                 sourceFormat == other.sourceFormat &&
+                sentiment == other.sentiment &&
+                windows == other.windows &&
                 subreddit == other.subreddit &&
                 upvoteRatio == other.upvoteRatio &&
                 additionalProperties == other.additionalProperties
@@ -1299,6 +1653,8 @@ private constructor(
                 score,
                 selftext,
                 sourceFormat,
+                sentiment,
+                windows,
                 subreddit,
                 upvoteRatio,
                 additionalProperties,
@@ -1308,7 +1664,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Metadata{author=$author, contentUrl=$contentUrl, estimatedDownvotes=$estimatedDownvotes, estimatedUpvotes=$estimatedUpvotes, numberComments=$numberComments, score=$score, selftext=$selftext, sourceFormat=$sourceFormat, subreddit=$subreddit, upvoteRatio=$upvoteRatio, additionalProperties=$additionalProperties}"
+            "Metadata{author=$author, contentUrl=$contentUrl, estimatedDownvotes=$estimatedDownvotes, estimatedUpvotes=$estimatedUpvotes, numberComments=$numberComments, score=$score, selftext=$selftext, sourceFormat=$sourceFormat, sentiment=$sentiment, windows=$windows, subreddit=$subreddit, upvoteRatio=$upvoteRatio, additionalProperties=$additionalProperties}"
     }
 
     class Source @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
