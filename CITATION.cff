@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: If you use Xquik Java SDK for the Twitter API & X data, cite it using this metadata.
+title: Xquik Java SDK for the Twitter API & X data
+type: software
+abstract: >-
+  Twitter API Java SDK & Twitter scraper for Xquik. Scrape tweets, read
+  profiles, export followers, manage media & webhooks from Java with typed
+  requests & responses.
+authors:
+  - name: Xquik
+    website: https://xquik.com
+url: https://github.com/Xquik-dev/x-twitter-scraper-java
+repository-code: https://github.com/Xquik-dev/x-twitter-scraper-java
+license: Apache-2.0
+keywords:
+  - Xquik
+  - Twitter API Java
+  - Twitter Java
+  - scrape tweets
+  - Twitter scraper
+  - X API
+  - Java SDK
+  - webhooks
