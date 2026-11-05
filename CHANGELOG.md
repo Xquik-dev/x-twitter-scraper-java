@@ -6,6 +6,7 @@
 
 ### Breaking changes
 
+* `ExtractionJob.builder()` requires `url`, which the API always sends. Code that builds the job by hand must set it.
 * `CreditTopupBalanceResponse.builder()` requires `chargedCurrency` and `chargedMinorUnits`, which the API always sends. Code that builds the response by hand must set both.
 * `AccountBulkRetryParams._body()` returns `AccountBulkRetryParams.Body` instead of `Optional<Map<String, JsonValue>>`, and bulk retry always sends a JSON body, which is `{}` when no account is named. Code that calls `_body()` must change, and compiled callers must rebuild.
 * `MediaUploadParams`, `ProfileUpdateAvatarParams` and `ProfileUpdateBannerParams` take exactly 1 of `url` or `file`, so their `url()` getters return `Optional<String>`. Builders that set `url` keep working.
@@ -20,6 +21,8 @@
 
 ### Features
 
+* The 6 `x().analysis()` methods take `images` in `analysis`. The AI reads up to 4 images per post at no extra cost, and `false` keeps it to the text. `contextAvailability.media` adds `IMAGES`, for when the AI read them.
+* `ExtractionJob`, the `job` of `extractions().retrieve` and the accepted `extractions().run` response read `url`, the job's dashboard page with every row as a file.
 * `client.monitors().posts()` adds post monitors. It has `create`, `retrieve`, `update`, `list`, `delete` and `retrieveMetrics`.
 * `client.x().sports()` adds NFL & college football reads. It has `listGames`, `retrieveScoreboard`, `retrieveBoxScore`, `retrievePlays`, `retrieveAudience`, `retrieveRoster`, `retrievePlayerProps` and `listPosts`.
 * `client.activity()` adds the activity log. `list` returns the account's activity rows, and `retrieve` returns the full record of 1 activity.

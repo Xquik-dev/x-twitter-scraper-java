@@ -320,6 +320,7 @@ private constructor(
         private val toolType: JsonField<ExtractionJob.ToolType>,
         private val status: JsonField<Status>,
         private val totalResults: JsonField<Long>,
+        private val url: JsonField<String>,
         private val resultsLimit: JsonField<Long>,
         private val effectiveResultsLimit: JsonField<Long>,
         private val completionReason: JsonField<CompletionReason>,
@@ -338,6 +339,7 @@ private constructor(
             @JsonProperty("totalResults")
             @ExcludeMissing
             totalResults: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
             @JsonProperty("resultsLimit")
             @ExcludeMissing
             resultsLimit: JsonField<Long> = JsonMissing.of(),
@@ -361,6 +363,7 @@ private constructor(
             toolType,
             status,
             totalResults,
+            url,
             resultsLimit,
             effectiveResultsLimit,
             completionReason,
@@ -381,6 +384,14 @@ private constructor(
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun totalResults(): Optional<Long> = totalResults.getOptional("totalResults")
+
+        /**
+         * Dashboard page where a signed-in user follows this job & downloads its rows as CSV, XLSX,
+         * JSON, Markdown, PDF or text.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun url(): Optional<String> = url.getOptional("url")
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun resultsLimit(): Optional<Long> = resultsLimit.getOptional("resultsLimit")
@@ -434,6 +445,13 @@ private constructor(
         @JsonProperty("totalResults")
         @ExcludeMissing
         fun _totalResults(): JsonField<Long> = totalResults
+
+        /**
+         * Returns the raw JSON value of [url].
+         *
+         * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
 
         /**
          * Returns the raw JSON value of [resultsLimit].
@@ -516,6 +534,7 @@ private constructor(
             private var toolType: JsonField<ExtractionJob.ToolType> = JsonMissing.of()
             private var status: JsonField<Status> = JsonMissing.of()
             private var totalResults: JsonField<Long> = JsonMissing.of()
+            private var url: JsonField<String> = JsonMissing.of()
             private var resultsLimit: JsonField<Long> = JsonMissing.of()
             private var effectiveResultsLimit: JsonField<Long> = JsonMissing.of()
             private var completionReason: JsonField<CompletionReason> = JsonMissing.of()
@@ -530,6 +549,7 @@ private constructor(
                 toolType = job.toolType
                 status = job.status
                 totalResults = job.totalResults
+                url = job.url
                 resultsLimit = job.resultsLimit
                 effectiveResultsLimit = job.effectiveResultsLimit
                 completionReason = job.completionReason
@@ -562,6 +582,15 @@ private constructor(
             fun totalResults(totalResults: JsonField<Long>) = apply {
                 this.totalResults = totalResults
             }
+
+            /**
+             * Dashboard page where a signed-in user follows this job & downloads its rows as CSV,
+             * XLSX, JSON, Markdown, PDF or text.
+             */
+            fun url(url: String) = url(JsonField.of(url))
+
+            /** Sets [Builder.url] to an arbitrary JSON value. */
+            fun url(url: JsonField<String>) = apply { this.url = url }
 
             fun resultsLimit(resultsLimit: Long) = resultsLimit(JsonField.of(resultsLimit))
 
@@ -637,6 +666,7 @@ private constructor(
                     toolType,
                     status,
                     totalResults,
+                    url,
                     resultsLimit,
                     effectiveResultsLimit,
                     completionReason,
@@ -666,6 +696,7 @@ private constructor(
             toolType().ifPresent { it.validate() }
             status().ifPresent { it.validate() }
             totalResults()
+            url()
             resultsLimit()
             effectiveResultsLimit()
             completionReason().ifPresent { it.validate() }
@@ -690,6 +721,7 @@ private constructor(
                 (toolType.asKnown().getOrNull()?.validity() ?: 0) +
                 (status.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (totalResults.asKnown().isPresent) 1 else 0) +
+                (if (url.asKnown().isPresent) 1 else 0) +
                 (if (resultsLimit.asKnown().isPresent) 1 else 0) +
                 (if (effectiveResultsLimit.asKnown().isPresent) 1 else 0) +
                 (completionReason.asKnown().getOrNull()?.validity() ?: 0) +
@@ -706,6 +738,7 @@ private constructor(
                 toolType == other.toolType &&
                 status == other.status &&
                 totalResults == other.totalResults &&
+                url == other.url &&
                 resultsLimit == other.resultsLimit &&
                 effectiveResultsLimit == other.effectiveResultsLimit &&
                 completionReason == other.completionReason &&
@@ -721,6 +754,7 @@ private constructor(
                 toolType,
                 status,
                 totalResults,
+                url,
                 resultsLimit,
                 effectiveResultsLimit,
                 completionReason,
@@ -734,7 +768,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Job{id=$id, toolType=$toolType, status=$status, totalResults=$totalResults, resultsLimit=$resultsLimit, effectiveResultsLimit=$effectiveResultsLimit, completionReason=$completionReason, errorMessage=$errorMessage, createdAt=$createdAt, completedAt=$completedAt, additionalProperties=$additionalProperties}"
+            "Job{id=$id, toolType=$toolType, status=$status, totalResults=$totalResults, url=$url, resultsLimit=$resultsLimit, effectiveResultsLimit=$effectiveResultsLimit, completionReason=$completionReason, errorMessage=$errorMessage, createdAt=$createdAt, completedAt=$completedAt, additionalProperties=$additionalProperties}"
 
         class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 

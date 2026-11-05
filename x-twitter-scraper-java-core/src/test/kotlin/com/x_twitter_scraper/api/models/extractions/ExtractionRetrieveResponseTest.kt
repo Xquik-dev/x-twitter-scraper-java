@@ -167,7 +167,7 @@ internal class ExtractionRetrieveResponseTest {
     fun additionalJobFieldsRoundtrip() {
         val jsonMapper = jsonMapper()
         val json =
-            """{"id":"sample","toolType":"article_extractor","status":"pending","totalResults":1,"resultsLimit":1,"effectiveResultsLimit":1,"completionReason":"budget_limited","errorMessage":"sample","createdAt":"2025-01-15T12:00:00Z","completedAt":"2025-01-15T12:00:00Z"}"""
+            """{"id":"sample","toolType":"article_extractor","status":"pending","totalResults":1,"url":"https://dashboard.xquik.com/activity/a1","resultsLimit":1,"effectiveResultsLimit":1,"completionReason":"budget_limited","errorMessage":"sample","createdAt":"2025-01-15T12:00:00Z","completedAt":"2025-01-15T12:00:00Z"}"""
         val model = jsonMapper.readValue(json, jacksonTypeRef<ExtractionRetrieveResponse.Job>())
 
         assertThat(model.id()).isPresent()
@@ -178,6 +178,8 @@ internal class ExtractionRetrieveResponseTest {
         assertThat(model._additionalProperties()).doesNotContainKey("status")
         assertThat(model.totalResults()).isPresent()
         assertThat(model._additionalProperties()).doesNotContainKey("totalResults")
+        assertThat(model.url()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("url")
         assertThat(model.resultsLimit()).isPresent()
         assertThat(model._additionalProperties()).doesNotContainKey("resultsLimit")
         assertThat(model.effectiveResultsLimit()).isPresent()
