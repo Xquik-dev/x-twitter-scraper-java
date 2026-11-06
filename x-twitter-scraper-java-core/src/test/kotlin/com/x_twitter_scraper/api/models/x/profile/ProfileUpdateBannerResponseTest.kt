@@ -330,4 +330,21 @@ internal class ProfileUpdateBannerResponseTest {
         assertThat(ProfileUpdateBannerResponse.Action.of("delete_dm").known())
             .isEqualTo(ProfileUpdateBannerResponse.Action.Known.DELETE_DM)
     }
+
+    @Test
+    fun bookmarkBlockAndMuteActionValues() {
+        mapOf(
+                "bookmark" to ProfileUpdateBannerResponse.Action.Known.BOOKMARK,
+                "unbookmark" to ProfileUpdateBannerResponse.Action.Known.UNBOOKMARK,
+                "block" to ProfileUpdateBannerResponse.Action.Known.BLOCK,
+                "unblock" to ProfileUpdateBannerResponse.Action.Known.UNBLOCK,
+                "mute" to ProfileUpdateBannerResponse.Action.Known.MUTE,
+                "unmute" to ProfileUpdateBannerResponse.Action.Known.UNMUTE,
+            )
+            .forEach { (wire, known) ->
+                assertThat(ProfileUpdateBannerResponse.Action.of(wire).known()).isEqualTo(known)
+                assertThat(ProfileUpdateBannerResponse.Action.of(wire).value().name)
+                    .isEqualTo(known.name)
+            }
+    }
 }

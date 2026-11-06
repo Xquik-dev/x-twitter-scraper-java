@@ -313,4 +313,20 @@ internal class TweetCreateResponseTest {
         assertThat(TweetCreateResponse.Action.of("delete_dm").known())
             .isEqualTo(TweetCreateResponse.Action.Known.DELETE_DM)
     }
+
+    @Test
+    fun bookmarkBlockAndMuteActionValues() {
+        mapOf(
+                "bookmark" to TweetCreateResponse.Action.Known.BOOKMARK,
+                "unbookmark" to TweetCreateResponse.Action.Known.UNBOOKMARK,
+                "block" to TweetCreateResponse.Action.Known.BLOCK,
+                "unblock" to TweetCreateResponse.Action.Known.UNBLOCK,
+                "mute" to TweetCreateResponse.Action.Known.MUTE,
+                "unmute" to TweetCreateResponse.Action.Known.UNMUTE,
+            )
+            .forEach { (wire, known) ->
+                assertThat(TweetCreateResponse.Action.of(wire).known()).isEqualTo(known)
+                assertThat(TweetCreateResponse.Action.of(wire).value().name).isEqualTo(known.name)
+            }
+    }
 }

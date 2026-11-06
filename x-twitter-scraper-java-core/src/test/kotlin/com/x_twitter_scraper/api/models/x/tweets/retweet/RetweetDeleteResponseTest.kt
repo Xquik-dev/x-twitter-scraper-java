@@ -317,4 +317,20 @@ internal class RetweetDeleteResponseTest {
         assertThat(RetweetDeleteResponse.Action.of("delete_dm").known())
             .isEqualTo(RetweetDeleteResponse.Action.Known.DELETE_DM)
     }
+
+    @Test
+    fun bookmarkBlockAndMuteActionValues() {
+        mapOf(
+                "bookmark" to RetweetDeleteResponse.Action.Known.BOOKMARK,
+                "unbookmark" to RetweetDeleteResponse.Action.Known.UNBOOKMARK,
+                "block" to RetweetDeleteResponse.Action.Known.BLOCK,
+                "unblock" to RetweetDeleteResponse.Action.Known.UNBLOCK,
+                "mute" to RetweetDeleteResponse.Action.Known.MUTE,
+                "unmute" to RetweetDeleteResponse.Action.Known.UNMUTE,
+            )
+            .forEach { (wire, known) ->
+                assertThat(RetweetDeleteResponse.Action.of(wire).known()).isEqualTo(known)
+                assertThat(RetweetDeleteResponse.Action.of(wire).value().name).isEqualTo(known.name)
+            }
+    }
 }

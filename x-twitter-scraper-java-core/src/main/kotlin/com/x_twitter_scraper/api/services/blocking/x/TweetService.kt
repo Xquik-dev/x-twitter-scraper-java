@@ -41,6 +41,7 @@ import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetTranslateParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetTranslateResponse
+import com.x_twitter_scraper.api.services.blocking.x.tweets.BookmarkService
 import com.x_twitter_scraper.api.services.blocking.x.tweets.LikeService
 import com.x_twitter_scraper.api.services.blocking.x.tweets.RetweetService
 import java.util.function.Consumer
@@ -58,6 +59,9 @@ interface TweetService {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): TweetService
+
+    /** X write actions (tweets, likes, follows, DMs) */
+    fun bookmark(): BookmarkService
 
     /** X write actions (tweets, likes, follows, DMs) */
     fun like(): LikeService
@@ -572,6 +576,9 @@ interface TweetService {
          * The original service is not modified.
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): TweetService.WithRawResponse
+
+        /** X write actions (tweets, likes, follows, DMs) */
+        fun bookmark(): BookmarkService.WithRawResponse
 
         /** X write actions (tweets, likes, follows, DMs) */
         fun like(): LikeService.WithRawResponse

@@ -11,6 +11,7 @@
 * `AccountBulkRetryParams._body()` returns `AccountBulkRetryParams.Body` instead of `Optional<Map<String, JsonValue>>`, and bulk retry always sends a JSON body, which is `{}` when no account is named. Code that calls `_body()` must change, and compiled callers must rebuild.
 * `MediaUploadParams`, `ProfileUpdateAvatarParams` and `ProfileUpdateBannerParams` take exactly 1 of `url` or `file`, so their `url()` getters return `Optional<String>`. Builders that set `url` keep working.
 * `UserRetrieveInsightsResponse.Insights.builder()` requires `medianViews`, which the API always sends. Code that builds it by hand must set it.
+* `TweetSearchParams.q()` returns `Optional<String>`, and `TweetSearchParams.builder()` no longer requires `q`, since the API can build the search from `fromUser`, `keywords` or another field. Code that reads `q()` must change. A search with no query field still answers `missing_query`.
 
 ### Security
 
@@ -21,6 +22,12 @@
 
 ### Features
 
+* `client.x().tweets().bookmark()`, `client.x().users().block()` and `client.x().users().mute()` add the 6 new writes. Each takes `create` and `delete`, sends `account` in the body and `Idempotency-Key` and `Prefer` as headers, like `client.x().tweets().like()`.
+* Every write response's `Action` adds `BOOKMARK`, `UNBOOKMARK`, `BLOCK`, `UNBLOCK`, `MUTE` and `UNMUTE`.
+* Post monitors read `authorAffiliate`, the organization badge X shows beside the author, and `PostCreateParams` takes `isActive`, so a monitor can start paused.
+* Event data reads `followKind`, which says why a removed account came back.
+* Extraction results read `possiblySensitive`, `quotedPossiblySensitive`, `quotedMedia` and `quotedPost` with `outputPreset=flat`.
+* Media download items read `posterUrl` and `qualities`, the cover image and the MP4 sizes X stores for a video.
 * The 6 `x().analysis()` methods take `images` in `analysis`. The AI reads up to 4 images per post at no extra cost, and `false` keeps it to the text. `contextAvailability.media` adds `IMAGES`, for when the AI read them.
 * `ExtractionJob`, the `job` of `extractions().retrieve` and the accepted `extractions().run` response read `url`, the job's dashboard page with every row as a file.
 * `client.monitors().posts()` adds post monitors. It has `create`, `retrieve`, `update`, `list`, `delete` and `retrieveMetrics`.

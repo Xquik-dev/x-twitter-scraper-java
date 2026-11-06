@@ -317,4 +317,20 @@ internal class JoinDeleteAllResponseTest {
         assertThat(JoinDeleteAllResponse.Action.of("delete_dm").known())
             .isEqualTo(JoinDeleteAllResponse.Action.Known.DELETE_DM)
     }
+
+    @Test
+    fun bookmarkBlockAndMuteActionValues() {
+        mapOf(
+                "bookmark" to JoinDeleteAllResponse.Action.Known.BOOKMARK,
+                "unbookmark" to JoinDeleteAllResponse.Action.Known.UNBOOKMARK,
+                "block" to JoinDeleteAllResponse.Action.Known.BLOCK,
+                "unblock" to JoinDeleteAllResponse.Action.Known.UNBLOCK,
+                "mute" to JoinDeleteAllResponse.Action.Known.MUTE,
+                "unmute" to JoinDeleteAllResponse.Action.Known.UNMUTE,
+            )
+            .forEach { (wire, known) ->
+                assertThat(JoinDeleteAllResponse.Action.of(wire).known()).isEqualTo(known)
+                assertThat(JoinDeleteAllResponse.Action.of(wire).value().name).isEqualTo(known.name)
+            }
+    }
 }

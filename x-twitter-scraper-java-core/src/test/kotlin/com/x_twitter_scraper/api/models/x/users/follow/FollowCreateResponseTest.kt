@@ -317,4 +317,20 @@ internal class FollowCreateResponseTest {
         assertThat(FollowCreateResponse.Action.of("delete_dm").known())
             .isEqualTo(FollowCreateResponse.Action.Known.DELETE_DM)
     }
+
+    @Test
+    fun bookmarkBlockAndMuteActionValues() {
+        mapOf(
+                "bookmark" to FollowCreateResponse.Action.Known.BOOKMARK,
+                "unbookmark" to FollowCreateResponse.Action.Known.UNBOOKMARK,
+                "block" to FollowCreateResponse.Action.Known.BLOCK,
+                "unblock" to FollowCreateResponse.Action.Known.UNBLOCK,
+                "mute" to FollowCreateResponse.Action.Known.MUTE,
+                "unmute" to FollowCreateResponse.Action.Known.UNMUTE,
+            )
+            .forEach { (wire, known) ->
+                assertThat(FollowCreateResponse.Action.of(wire).known()).isEqualTo(known)
+                assertThat(FollowCreateResponse.Action.of(wire).value().name).isEqualTo(known.name)
+            }
+    }
 }

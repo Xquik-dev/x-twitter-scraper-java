@@ -52,7 +52,9 @@ import com.x_twitter_scraper.api.models.x.users.UserRetrieveVerifiedFollowersPar
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveVerifiedFollowersResponse
 import com.x_twitter_scraper.api.models.x.users.UserTranslateBioParams
 import com.x_twitter_scraper.api.models.x.users.UserTranslateBioResponse
+import com.x_twitter_scraper.api.services.blocking.x.users.BlockService
 import com.x_twitter_scraper.api.services.blocking.x.users.FollowService
+import com.x_twitter_scraper.api.services.blocking.x.users.MuteService
 import java.util.function.Consumer
 
 interface UserService {
@@ -68,6 +70,12 @@ interface UserService {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserService
+
+    /** X write actions (tweets, likes, follows, DMs) */
+    fun block(): BlockService
+
+    /** X write actions (tweets, likes, follows, DMs) */
+    fun mute(): MuteService
 
     /** X write actions (tweets, likes, follows, DMs) */
     fun follow(): FollowService
@@ -926,6 +934,12 @@ interface UserService {
          * The original service is not modified.
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserService.WithRawResponse
+
+        /** X write actions (tweets, likes, follows, DMs) */
+        fun block(): BlockService.WithRawResponse
+
+        /** X write actions (tweets, likes, follows, DMs) */
+        fun mute(): MuteService.WithRawResponse
 
         /** X write actions (tweets, likes, follows, DMs) */
         fun follow(): FollowService.WithRawResponse

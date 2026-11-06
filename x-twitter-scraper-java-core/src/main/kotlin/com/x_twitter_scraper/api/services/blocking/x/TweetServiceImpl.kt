@@ -51,6 +51,8 @@ import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse
 import com.x_twitter_scraper.api.models.x.tweets.TweetTranslateParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetTranslateResponse
+import com.x_twitter_scraper.api.services.blocking.x.tweets.BookmarkService
+import com.x_twitter_scraper.api.services.blocking.x.tweets.BookmarkServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.tweets.LikeService
 import com.x_twitter_scraper.api.services.blocking.x.tweets.LikeServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.tweets.RetweetService
@@ -65,6 +67,8 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
         WithRawResponseImpl(clientOptions)
     }
 
+    private val bookmark: BookmarkService by lazy { BookmarkServiceImpl(clientOptions) }
+
     private val like: LikeService by lazy { LikeServiceImpl(clientOptions) }
 
     private val retweet: RetweetService by lazy { RetweetServiceImpl(clientOptions) }
@@ -73,6 +77,9 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): TweetService =
         TweetServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    /** X write actions (tweets, likes, follows, DMs) */
+    override fun bookmark(): BookmarkService = bookmark
 
     /** X write actions (tweets, likes, follows, DMs) */
     override fun like(): LikeService = like
@@ -180,6 +187,10 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
+        private val bookmark: BookmarkService.WithRawResponse by lazy {
+            BookmarkServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val like: LikeService.WithRawResponse by lazy {
             LikeServiceImpl.WithRawResponseImpl(clientOptions)
         }
@@ -194,6 +205,9 @@ class TweetServiceImpl internal constructor(private val clientOptions: ClientOpt
             TweetServiceImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        /** X write actions (tweets, likes, follows, DMs) */
+        override fun bookmark(): BookmarkService.WithRawResponse = bookmark
 
         /** X write actions (tweets, likes, follows, DMs) */
         override fun like(): LikeService.WithRawResponse = like

@@ -71,6 +71,7 @@ internal class PostServiceSpecExampleTest {
                 .name("Launch post")
                 .addEventType(PostMonitor.EventType.POST_REPLY_NEW)
                 .addEventType(PostMonitor.EventType.POST_LIKES_CHANGED)
+                .isActive(false)
                 .build()
 
         val response = client.monitors().posts().create(params)
@@ -91,7 +92,8 @@ internal class PostServiceSpecExampleTest {
                         {
                           "post": "https://x.com/NASA/status/2102761519985332442",
                           "name": "Launch post",
-                          "eventTypes": ["post.reply.new", "post.likes.changed"]
+                          "eventTypes": ["post.reply.new", "post.likes.changed"],
+                          "isActive": false
                         }
                         """
                     )
@@ -245,6 +247,13 @@ internal class PostServiceSpecExampleTest {
         assertThat(monitor.authorId()).isEqualTo("11348282")
         assertThat(monitor.authorUsername()).isEqualTo("NASA")
         assertThat(monitor.authorName()).isEqualTo("NASA")
+        assertThat(monitor.authorAffiliate())
+            .contains(
+                PostMonitor.AuthorAffiliate.builder()
+                    .badgeUrl("https://pbs.twimg.com/profile_images/1/badge_bigger.jpg")
+                    .description("NASA")
+                    .build()
+            )
         assertThat(monitor.text()).isEqualTo("We shipped post monitors.")
         assertThat(monitor.postedAt()).isEqualTo(OffsetDateTime.parse("2026-09-29T17:19:49.000Z"))
         assertThat(monitor.eventTypes())
@@ -278,6 +287,10 @@ internal class PostServiceSpecExampleTest {
               "authorId": "11348282",
               "authorUsername": "NASA",
               "authorName": "NASA",
+              "authorAffiliate": {
+                "badgeUrl": "https://pbs.twimg.com/profile_images/1/badge_bigger.jpg",
+                "description": "NASA"
+              },
               "text": "We shipped post monitors.",
               "postedAt": "2026-09-29T17:19:49.000Z",
               "eventTypes": [

@@ -313,4 +313,20 @@ internal class DmSendResponseTest {
         assertThat(DmSendResponse.Action.of("delete_dm").known())
             .isEqualTo(DmSendResponse.Action.Known.DELETE_DM)
     }
+
+    @Test
+    fun bookmarkBlockAndMuteActionValues() {
+        mapOf(
+                "bookmark" to DmSendResponse.Action.Known.BOOKMARK,
+                "unbookmark" to DmSendResponse.Action.Known.UNBOOKMARK,
+                "block" to DmSendResponse.Action.Known.BLOCK,
+                "unblock" to DmSendResponse.Action.Known.UNBLOCK,
+                "mute" to DmSendResponse.Action.Known.MUTE,
+                "unmute" to DmSendResponse.Action.Known.UNMUTE,
+            )
+            .forEach { (wire, known) ->
+                assertThat(DmSendResponse.Action.of(wire).known()).isEqualTo(known)
+                assertThat(DmSendResponse.Action.of(wire).value().name).isEqualTo(known.name)
+            }
+    }
 }

@@ -231,7 +231,6 @@
       "POST /api/v1/extractions response required creditsRequired",
       "POST /api/v1/extractions response required estimatedResults",
       "POST /api/v1/extractions response required source",
-      "POST /api/v1/extractions response required url",
       "POST /api/v1/x/account-connection-challenges/{id}/submit response required createdAt",
       "POST /api/v1/x/account-connection-challenges/{id}/submit response required health",
       "POST /api/v1/x/account-connection-challenges/{id}/submit response required xUserId",

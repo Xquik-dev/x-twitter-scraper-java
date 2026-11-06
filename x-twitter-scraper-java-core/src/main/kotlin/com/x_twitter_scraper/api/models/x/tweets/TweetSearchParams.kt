@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.x_twitter_scraper.api.core.Enum
 import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.core.Params
-import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
@@ -23,7 +22,7 @@ import kotlin.jvm.optionals.getOrNull
  */
 class TweetSearchParams
 private constructor(
-    private val q: String,
+    private val q: String?,
     private val advancedQuery: String?,
     private val anyWords: String?,
     private val blueVerifiedOnly: Boolean?,
@@ -89,8 +88,11 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** Query, Tweet ID, or status URL. Valid inline bounds apply per page. */
-    fun q(): String = q
+    /**
+     * Query, Tweet ID, or URL. Optional when fromUser, keywords or another field forms the search.
+     * Without either, the API answers 400 missing_query.
+     */
+    fun q(): Optional<String> = Optional.ofNullable(q)
 
     /** Raw advanced search query appended as-is. */
     fun advancedQuery(): Optional<String> = Optional.ofNullable(advancedQuery)
@@ -307,14 +309,7 @@ private constructor(
 
     companion object {
 
-        /**
-         * Returns a mutable builder for constructing an instance of [TweetSearchParams].
-         *
-         * The following fields are required:
-         * ```java
-         * .q()
-         * ```
-         */
+        /** Returns a mutable builder for constructing an instance of [TweetSearchParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -454,8 +449,14 @@ private constructor(
             additionalQueryParams = tweetSearchParams.additionalQueryParams.toBuilder()
         }
 
-        /** Query, Tweet ID, or status URL. Valid inline bounds apply per page. */
-        fun q(q: String) = apply { this.q = q }
+        /**
+         * Query, Tweet ID, or URL. Optional when fromUser, keywords or another field forms the
+         * search. Without either, the API answers 400 missing_query.
+         */
+        fun q(q: String?) = apply { this.q = q }
+
+        /** Alias for calling [Builder.q] with `q.orElse(null)`. */
+        fun q(q: Optional<String>) = q(q.getOrNull())
 
         /** Raw advanced search query appended as-is. */
         fun advancedQuery(advancedQuery: String?) = apply { this.advancedQuery = advancedQuery }
@@ -1021,17 +1022,10 @@ private constructor(
          * Returns an immutable instance of [TweetSearchParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
-         *
-         * The following fields are required:
-         * ```java
-         * .q()
-         * ```
-         *
-         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): TweetSearchParams =
             TweetSearchParams(
-                checkRequired("q", q),
+                q,
                 advancedQuery,
                 anyWords,
                 blueVerifiedOnly,
@@ -1103,7 +1097,7 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
-                put("q", q)
+                q?.let { put("q", it) }
                 advancedQuery?.let { put("advancedQuery", it) }
                 anyWords?.let { put("anyWords", it) }
                 blueVerifiedOnly?.let { put("blueVerifiedOnly", it.toString()) }

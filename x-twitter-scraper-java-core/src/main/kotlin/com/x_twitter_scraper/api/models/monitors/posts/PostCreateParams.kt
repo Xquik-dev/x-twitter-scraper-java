@@ -54,6 +54,14 @@ private constructor(
     fun post(): String = body.post()
 
     /**
+     * Send false to create the monitor paused. A paused monitor reads nothing & costs nothing until
+     * a PATCH sets isActive to true.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun isActive(): Optional<Boolean> = body.isActive()
+
+    /**
      * Returns the raw JSON value of [eventTypes].
      *
      * Unlike [eventTypes], this method doesn't throw if the JSON field has an unexpected type.
@@ -66,6 +74,13 @@ private constructor(
      * Unlike [post], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _post(): JsonField<String> = body._post()
+
+    /**
+     * Returns the raw JSON value of [isActive].
+     *
+     * Unlike [isActive], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _isActive(): JsonField<Boolean> = body._isActive()
 
     /**
      * Your own label for the post monitor. Its events carry it as monitorName.
@@ -149,6 +164,15 @@ private constructor(
 
         /** Sets [Builder.post] to an arbitrary JSON value. */
         fun post(post: JsonField<String>) = apply { body.post(post) }
+
+        /**
+         * Send false to create the monitor paused. A paused monitor reads nothing & costs nothing
+         * until a PATCH sets isActive to true.
+         */
+        fun isActive(isActive: Boolean) = apply { body.isActive(isActive) }
+
+        /** Sets [Builder.isActive] to an arbitrary JSON value. */
+        fun isActive(isActive: JsonField<Boolean>) = apply { body.isActive(isActive) }
 
         /** Your own label for the post monitor. Its events carry it as monitorName. */
         fun name(name: String?) = apply { body.name(name) }
@@ -307,6 +331,7 @@ private constructor(
     private constructor(
         private val eventTypes: JsonField<List<PostMonitor.EventType>>,
         private val post: JsonField<String>,
+        private val isActive: JsonField<Boolean>,
         private val name: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -317,10 +342,14 @@ private constructor(
             @ExcludeMissing
             eventTypes: JsonField<List<PostMonitor.EventType>> = JsonMissing.of(),
             @JsonProperty("post") @ExcludeMissing post: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("isActive")
+            @ExcludeMissing
+            isActive: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
         ) : this(
             eventTypes,
             post,
+            isActive,
             name,
             mutableMapOf(),
         )
@@ -344,6 +373,14 @@ private constructor(
         fun post(): String = post.getRequired("post")
 
         /**
+         * Send false to create the monitor paused. A paused monitor reads nothing & costs nothing
+         * until a PATCH sets isActive to true.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun isActive(): Optional<Boolean> = isActive.getOptional("isActive")
+
+        /**
          * Your own label for the post monitor. Its events carry it as monitorName.
          *
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
@@ -365,6 +402,13 @@ private constructor(
          * Unlike [post], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("post") @ExcludeMissing fun _post(): JsonField<String> = post
+
+        /**
+         * Returns the raw JSON value of [isActive].
+         *
+         * Unlike [isActive], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("isActive") @ExcludeMissing fun _isActive(): JsonField<Boolean> = isActive
 
         /**
          * Returns the raw JSON value of [name].
@@ -403,6 +447,7 @@ private constructor(
 
             private var eventTypes: JsonField<MutableList<PostMonitor.EventType>>? = null
             private var post: JsonField<String>? = null
+            private var isActive: JsonField<Boolean> = JsonMissing.of()
             private var name: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -410,6 +455,7 @@ private constructor(
             internal fun from(body: Body) = apply {
                 eventTypes = body.eventTypes.map { it.toMutableList() }
                 post = body.post
+                isActive = body.isActive
                 name = body.name
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
@@ -446,6 +492,15 @@ private constructor(
 
             /** Sets [Builder.post] to an arbitrary JSON value. */
             fun post(post: JsonField<String>) = apply { this.post = post }
+
+            /**
+             * Send false to create the monitor paused. A paused monitor reads nothing & costs
+             * nothing until a PATCH sets isActive to true.
+             */
+            fun isActive(isActive: Boolean) = isActive(JsonField.of(isActive))
+
+            /** Sets [Builder.isActive] to an arbitrary JSON value. */
+            fun isActive(isActive: JsonField<Boolean>) = apply { this.isActive = isActive }
 
             /** Your own label for the post monitor. Its events carry it as monitorName. */
             fun name(name: String?) = name(JsonField.ofNullable(name))
@@ -491,6 +546,7 @@ private constructor(
                 Body(
                     (eventTypes ?: JsonMissing.of()).map { it.toImmutable() },
                     checkRequired("post", post),
+                    isActive,
                     name,
                     additionalProperties.toMutableMap(),
                 )
@@ -514,6 +570,7 @@ private constructor(
 
             eventTypes().ifPresent { it.forEach { it.validate() } }
             post()
+            isActive()
             name()
             validated = true
         }
@@ -530,6 +587,7 @@ private constructor(
         internal fun validity(): Int =
             (eventTypes.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
                 (if (post.asKnown().isPresent) 1 else 0) +
+                (if (isActive.asKnown().isPresent) 1 else 0) +
                 (if (name.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
@@ -540,18 +598,19 @@ private constructor(
             return other is Body &&
                 eventTypes == other.eventTypes &&
                 post == other.post &&
+                isActive == other.isActive &&
                 name == other.name &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(eventTypes, post, name, additionalProperties)
+            Objects.hash(eventTypes, post, isActive, name, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{eventTypes=$eventTypes, post=$post, name=$name, additionalProperties=$additionalProperties}"
+            "Body{eventTypes=$eventTypes, post=$post, isActive=$isActive, name=$name, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

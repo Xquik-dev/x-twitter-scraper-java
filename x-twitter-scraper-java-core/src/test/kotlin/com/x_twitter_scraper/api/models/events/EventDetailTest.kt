@@ -107,7 +107,7 @@ internal class EventDetailTest {
     fun additionalDataFieldsRoundtrip() {
         val jsonMapper = jsonMapper()
         val json =
-            """{"id":"sample","text":"sample","type":"sample","createdAt":"sample","url":"sample","lang":"sample","isReply":true,"isLimitedReply":true,"isNoteTweet":true,"isPinned":true,"isQuoteStatus":true,"isRetweet":true,"quotedTweetId":"sample","quotedTweetPermalink":{},"quotedTweetUnavailable":{},"retweetedAt":"2025-01-15T12:00:00Z","inReplyToId":"sample","inReplyToUserId":"sample","inReplyToUsername":"sample","conversationId":"sample","conversationControl":{},"limitedActions":[{}],"source":"sample","displayTextRange":[1],"textHighlights":[{}],"contentDisclosure":{},"article":{},"authorUnavailable":{},"unavailableAuthorId":"sample","card":{},"cashtagAttachments":[{}],"communityId":"sample","communityName":"sample","communityNote":{},"hasCommunityNotes":true,"edit":{},"exclusiveContent":{},"isTranslatable":true,"grokShareAttachment":{},"grokTranslatedPost":{},"jetfuelAttachment":{},"noteTweet":{},"place":{},"coordinates":{},"geo":{},"postCta":{},"possiblySensitive":true,"previousCounts":{},"reactionContext":{},"sportsContext":{},"subscriberBadge":{},"tombstone":{},"interstitial":{},"unmentionedUserIds":["sample"],"viewState":"sample","entities":{},"scopes":{},"media":[{}],"retweetCount":1,"replyCount":1,"likeCount":1,"quoteCount":1,"viewCount":1,"bookmarkCount":1,"parentTweet":{},"quoted_tweet":{},"retweeted_tweet":{},"author":{},"field":"sample","change":1,"userId":"sample","username":"sample","previous":{},"current":{},"followedAt":"2025-01-15T12:00:00Z","followedAtExact":true,"reason":"unavailable"}"""
+            """{"id":"sample","text":"sample","type":"sample","createdAt":"sample","url":"sample","lang":"sample","isReply":true,"isLimitedReply":true,"isNoteTweet":true,"isPinned":true,"isQuoteStatus":true,"isRetweet":true,"quotedTweetId":"sample","quotedTweetPermalink":{},"quotedTweetUnavailable":{},"retweetedAt":"2025-01-15T12:00:00Z","inReplyToId":"sample","inReplyToUserId":"sample","inReplyToUsername":"sample","conversationId":"sample","conversationControl":{},"limitedActions":[{}],"source":"sample","displayTextRange":[1],"textHighlights":[{}],"contentDisclosure":{},"article":{},"authorUnavailable":{},"unavailableAuthorId":"sample","card":{},"cashtagAttachments":[{}],"communityId":"sample","communityName":"sample","communityNote":{},"hasCommunityNotes":true,"edit":{},"exclusiveContent":{},"isTranslatable":true,"grokShareAttachment":{},"grokTranslatedPost":{},"jetfuelAttachment":{},"noteTweet":{},"place":{},"coordinates":{},"geo":{},"postCta":{},"possiblySensitive":true,"previousCounts":{},"reactionContext":{},"sportsContext":{},"subscriberBadge":{},"tombstone":{},"interstitial":{},"unmentionedUserIds":["sample"],"viewState":"sample","entities":{},"scopes":{},"media":[{}],"retweetCount":1,"replyCount":1,"likeCount":1,"quoteCount":1,"viewCount":1,"bookmarkCount":1,"parentTweet":{},"quoted_tweet":{},"retweeted_tweet":{},"author":{},"field":"sample","change":1,"userId":"sample","username":"sample","previous":{},"current":{},"followedAt":"2025-01-15T12:00:00Z","followedAtExact":true,"followKind":"refollow","reason":"unavailable"}"""
         val model = jsonMapper.readValue(json, jacksonTypeRef<EventDetail.Data>())
 
         assertThat(model.id()).isPresent()
@@ -262,6 +262,8 @@ internal class EventDetailTest {
         assertThat(model._additionalProperties()).doesNotContainKey("followedAt")
         assertThat(model.followedAtExact()).isPresent()
         assertThat(model._additionalProperties()).doesNotContainKey("followedAtExact")
+        assertThat(model.followKind()).contains(EventDetail.Data.FollowKind.REFOLLOW)
+        assertThat(model._additionalProperties()).doesNotContainKey("followKind")
         assertThat(model.reason()).isPresent()
         assertThat(model._additionalProperties()).doesNotContainKey("reason")
         assertThat(model.toBuilder().build()).isEqualTo(model)
@@ -274,5 +276,17 @@ internal class EventDetailTest {
                 )
             )
             .isEqualTo(model)
+    }
+
+    @Test
+    fun followKindValues() {
+        assertThat(EventDetail.Data.FollowKind.of("refollow").known())
+            .isEqualTo(EventDetail.Data.FollowKind.Known.REFOLLOW)
+        assertThat(EventDetail.Data.FollowKind.of("return").known())
+            .isEqualTo(EventDetail.Data.FollowKind.Known.RETURN)
+        assertThat(EventDetail.Data.FollowKind.of("return").value())
+            .isEqualTo(EventDetail.Data.FollowKind.Value.RETURN)
+        assertThat(EventDetail.Data.FollowKind.of("later").value())
+            .isEqualTo(EventDetail.Data.FollowKind.Value._UNKNOWN)
     }
 }

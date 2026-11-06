@@ -62,8 +62,12 @@ import com.x_twitter_scraper.api.models.x.users.UserRetrieveVerifiedFollowersPar
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveVerifiedFollowersResponse
 import com.x_twitter_scraper.api.models.x.users.UserTranslateBioParams
 import com.x_twitter_scraper.api.models.x.users.UserTranslateBioResponse
+import com.x_twitter_scraper.api.services.blocking.x.users.BlockService
+import com.x_twitter_scraper.api.services.blocking.x.users.BlockServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.users.FollowService
 import com.x_twitter_scraper.api.services.blocking.x.users.FollowServiceImpl
+import com.x_twitter_scraper.api.services.blocking.x.users.MuteService
+import com.x_twitter_scraper.api.services.blocking.x.users.MuteServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -73,12 +77,22 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
         WithRawResponseImpl(clientOptions)
     }
 
+    private val block: BlockService by lazy { BlockServiceImpl(clientOptions) }
+
+    private val mute: MuteService by lazy { MuteServiceImpl(clientOptions) }
+
     private val follow: FollowService by lazy { FollowServiceImpl(clientOptions) }
 
     override fun withRawResponse(): UserService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserService =
         UserServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    /** X write actions (tweets, likes, follows, DMs) */
+    override fun block(): BlockService = block
+
+    /** X write actions (tweets, likes, follows, DMs) */
+    override fun mute(): MuteService = mute
 
     /** X write actions (tweets, likes, follows, DMs) */
     override fun follow(): FollowService = follow
@@ -230,6 +244,14 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
+        private val block: BlockService.WithRawResponse by lazy {
+            BlockServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val mute: MuteService.WithRawResponse by lazy {
+            MuteServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val follow: FollowService.WithRawResponse by lazy {
             FollowServiceImpl.WithRawResponseImpl(clientOptions)
         }
@@ -240,6 +262,12 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
             UserServiceImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        /** X write actions (tweets, likes, follows, DMs) */
+        override fun block(): BlockService.WithRawResponse = block
+
+        /** X write actions (tweets, likes, follows, DMs) */
+        override fun mute(): MuteService.WithRawResponse = mute
 
         /** X write actions (tweets, likes, follows, DMs) */
         override fun follow(): FollowService.WithRawResponse = follow
