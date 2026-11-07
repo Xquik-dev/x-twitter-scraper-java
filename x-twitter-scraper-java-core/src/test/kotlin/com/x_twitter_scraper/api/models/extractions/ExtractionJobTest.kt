@@ -93,4 +93,24 @@ internal class ExtractionJobTest {
         assertThat(ExtractionJob.Status.of("pending").known())
             .isEqualTo(ExtractionJob.Status.Known.PENDING)
     }
+
+    @Test
+    fun everyToolTypeKnowsUserAffiliates() {
+        assertThat(ExtractionJob.ToolType.of("user_affiliates").known())
+            .isEqualTo(ExtractionJob.ToolType.Known.USER_AFFILIATES)
+        assertThat(ExtractionJob.ToolType.USER_AFFILIATES.value())
+            .isEqualTo(ExtractionJob.ToolType.Value.USER_AFFILIATES)
+        assertThat(ExtractionListParams.ToolType.of("user_affiliates").known())
+            .isEqualTo(ExtractionListParams.ToolType.Known.USER_AFFILIATES)
+        assertThat(ExtractionListParams.ToolType.USER_AFFILIATES.value())
+            .isEqualTo(ExtractionListParams.ToolType.Value.USER_AFFILIATES)
+        assertThat(ExtractionEstimateCostParams.ToolType.of("user_affiliates").known())
+            .isEqualTo(ExtractionEstimateCostParams.ToolType.Known.USER_AFFILIATES)
+        assertThat(ExtractionEstimateCostParams.ToolType.USER_AFFILIATES.value())
+            .isEqualTo(ExtractionEstimateCostParams.ToolType.Value.USER_AFFILIATES)
+        assertThat(ExtractionRunParams.ToolType.of("user_affiliates").known())
+            .isEqualTo(ExtractionRunParams.ToolType.Known.USER_AFFILIATES)
+        assertThat(ExtractionRunParams.ToolType.USER_AFFILIATES.value())
+            .isEqualTo(ExtractionRunParams.ToolType.Value.USER_AFFILIATES)
+    }
 }

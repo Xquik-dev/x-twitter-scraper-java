@@ -31,6 +31,7 @@
 * Article reads return `unknownCounts`, the counts X did not send, so each 0 means unknown.
 * Extraction results return `isDeleted` on a post its author deleted after Xquik saw it.
 * `UserRetrieveInsightsParams` and `UserRetrieveShadowbanParams` take `limit`, the recent posts to read.
+* Extraction tool types gain `USER_AFFILIATES`.
 * The 6 `x().analysis()` methods take `images` in `analysis`. The AI reads up to 4 images per post at no extra cost, and `false` keeps it to the text. `contextAvailability.media` adds `IMAGES`, for when the AI read them.
 * `ExtractionJob`, the `job` of `extractions().retrieve` and the accepted `extractions().run` response read `url`, the job's dashboard page with every row as a file.
 * `client.monitors().posts()` adds post monitors. It has `create`, `retrieve`, `update`, `list`, `delete` and `retrieveMetrics`.
