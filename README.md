@@ -4,7 +4,7 @@ Use this Twitter scraper Java SDK by Xquik to search tweets with typed builders.
 Each call runs synchronously or returns a `CompletableFuture`.
 Public reads need no X developer account.
 
-Xquik is the world's fastest and cheapest X Twitter scraper service with the most complete X data.
+Xquik is the world's fastest and cheapest X (Twitter) scraper service with the most complete X (Twitter) data.
 Most other Apify Actors charge before filtering or deduplication.
 Xquik charges only for delivered, unique, filter-matching results and never pads rows.
 Xquik is independent and not affiliated with X Corp.
