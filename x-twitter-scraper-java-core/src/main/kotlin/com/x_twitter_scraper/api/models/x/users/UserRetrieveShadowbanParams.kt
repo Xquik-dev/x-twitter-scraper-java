@@ -23,6 +23,7 @@ class UserRetrieveShadowbanParams
 private constructor(
     private val id: String?,
     private val fields: String?,
+    private val limit: Long?,
     private val omit: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -43,6 +44,12 @@ private constructor(
      * required getter throws when you leave its field out, and response validation fails.
      */
     fun fields(): Optional<String> = Optional.ofNullable(fields)
+
+    /**
+     * Recent posts to read for the timeline, engagement & reply checks. The read stops at this
+     * count, at the end of the timeline or after about 40 seconds.
+     */
+    fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
     /**
      * Fields to drop from each row, comma-separated. It takes the same names as fields. With
@@ -73,6 +80,7 @@ private constructor(
 
         private var id: String? = null
         private var fields: String? = null
+        private var limit: Long? = null
         private var omit: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -81,6 +89,7 @@ private constructor(
         internal fun from(userRetrieveShadowbanParams: UserRetrieveShadowbanParams) = apply {
             id = userRetrieveShadowbanParams.id
             fields = userRetrieveShadowbanParams.fields
+            limit = userRetrieveShadowbanParams.limit
             omit = userRetrieveShadowbanParams.omit
             additionalHeaders = userRetrieveShadowbanParams.additionalHeaders.toBuilder()
             additionalQueryParams = userRetrieveShadowbanParams.additionalQueryParams.toBuilder()
@@ -108,6 +117,18 @@ private constructor(
 
         /** Alias for calling [Builder.fields] with `fields.orElse(null)`. */
         fun fields(fields: Optional<String>) = fields(fields.getOrNull())
+
+        /**
+         * Recent posts to read for the timeline, engagement & reply checks. The read stops at this
+         * count, at the end of the timeline or after about 40 seconds.
+         */
+        fun limit(limit: Long?) = apply { this.limit = limit }
+
+        /** Alias for [Builder.limit]. */
+        fun limit(limit: Long) = limit(limit as Long?)
+
+        /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
+        fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
 
         /**
          * Fields to drop from each row, comma-separated. It takes the same names as fields. With
@@ -225,6 +246,7 @@ private constructor(
             UserRetrieveShadowbanParams(
                 id,
                 fields,
+                limit,
                 omit,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -243,6 +265,7 @@ private constructor(
         QueryParams.builder()
             .apply {
                 fields?.let { put("fields", it) }
+                limit?.let { put("limit", it.toString()) }
                 omit?.let { put("omit", it) }
                 putAll(additionalQueryParams)
             }
@@ -256,14 +279,15 @@ private constructor(
         return other is UserRetrieveShadowbanParams &&
             id == other.id &&
             fields == other.fields &&
+            limit == other.limit &&
             omit == other.omit &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(id, fields, omit, additionalHeaders, additionalQueryParams)
+        Objects.hash(id, fields, limit, omit, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "UserRetrieveShadowbanParams{id=$id, fields=$fields, omit=$omit, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "UserRetrieveShadowbanParams{id=$id, fields=$fields, limit=$limit, omit=$omit, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

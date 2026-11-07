@@ -446,8 +446,9 @@ interface UserService {
 
     /**
      * Returns engagement insights for 1 profile. They are engagement rate, averages per post and
-     * posting rate, from its counts and its last 20 posts. Reposts and the pinned post stay out of
-     * the averages. Each report costs 1 credit, whatever it reads.
+     * posting rate, from its counts and its most recent posts. It reads 20 posts unless limit names
+     * another number. Reposts and the pinned post stay out of the averages. Each report costs 1
+     * credit, whatever it reads.
      */
     fun retrieveInsights(id: String): UserRetrieveInsightsResponse =
         retrieveInsights(id, UserRetrieveInsightsParams.none())

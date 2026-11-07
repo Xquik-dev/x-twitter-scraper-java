@@ -15,6 +15,7 @@ internal class UserRetrieveInsightsParamsTest {
         UserRetrieveInsightsParams.builder()
             .id("id")
             .fields("id,text,author.username")
+            .limit(50L)
             .omit("entities,media")
             .build()
     }
@@ -33,6 +34,7 @@ internal class UserRetrieveInsightsParamsTest {
             UserRetrieveInsightsParams.builder()
                 .id("id")
                 .fields("id,text,author.username")
+                .limit(50L)
                 .omit("entities,media")
                 .build()
 
@@ -42,6 +44,7 @@ internal class UserRetrieveInsightsParamsTest {
             .isEqualTo(
                 QueryParams.builder()
                     .put("fields", "id,text,author.username")
+                    .put("limit", "50")
                     .put("omit", "entities,media")
                     .build()
             )

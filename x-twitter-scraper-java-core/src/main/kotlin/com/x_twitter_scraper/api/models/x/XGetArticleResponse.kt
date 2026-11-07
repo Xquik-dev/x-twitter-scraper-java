@@ -17,6 +17,7 @@ import com.x_twitter_scraper.api.core.checkKnown
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import com.x_twitter_scraper.api.models.UnknownCount
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -205,6 +206,7 @@ private constructor(
         private val retweetCount: JsonField<Long>,
         private val summaryText: JsonField<String>,
         private val title: JsonField<String>,
+        private val unknownCounts: JsonField<List<UnknownCount>>,
         private val viewCount: JsonField<Long>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -260,6 +262,9 @@ private constructor(
             @ExcludeMissing
             summaryText: JsonField<String> = JsonMissing.of(),
             @JsonProperty("title") @ExcludeMissing title: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("unknownCounts")
+            @ExcludeMissing
+            unknownCounts: JsonField<List<UnknownCount>> = JsonMissing.of(),
             @JsonProperty("viewCount")
             @ExcludeMissing
             viewCount: JsonField<Long> = JsonMissing.of(),
@@ -281,6 +286,7 @@ private constructor(
             retweetCount,
             summaryText,
             title,
+            unknownCounts,
             viewCount,
             mutableMapOf(),
         )
@@ -373,6 +379,15 @@ private constructor(
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun title(): Optional<String> = title.getOptional("title")
+
+        /**
+         * X did not send these counts, so each 0 means unknown.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun unknownCounts(): Optional<List<UnknownCount>> =
+            unknownCounts.getOptional("unknownCounts")
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun viewCount(): Optional<Long> = viewCount.getOptional("viewCount")
@@ -520,6 +535,16 @@ private constructor(
         @JsonProperty("title") @ExcludeMissing fun _title(): JsonField<String> = title
 
         /**
+         * Returns the raw JSON value of [unknownCounts].
+         *
+         * Unlike [unknownCounts], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("unknownCounts")
+        @ExcludeMissing
+        fun _unknownCounts(): JsonField<List<UnknownCount>> = unknownCounts
+
+        /**
          * Returns the raw JSON value of [viewCount].
          *
          * Unlike [viewCount], this method doesn't throw if the JSON field has an unexpected type.
@@ -564,6 +589,7 @@ private constructor(
             private var retweetCount: JsonField<Long> = JsonMissing.of()
             private var summaryText: JsonField<String> = JsonMissing.of()
             private var title: JsonField<String> = JsonMissing.of()
+            private var unknownCounts: JsonField<MutableList<UnknownCount>>? = null
             private var viewCount: JsonField<Long> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -586,6 +612,7 @@ private constructor(
                 retweetCount = article.retweetCount
                 summaryText = article.summaryText
                 title = article.title
+                unknownCounts = article.unknownCounts.map { it.toMutableList() }
                 viewCount = article.viewCount
                 additionalProperties = article.additionalProperties.toMutableMap()
             }
@@ -718,6 +745,27 @@ private constructor(
             /** Sets [Builder.title] to an arbitrary JSON value. */
             fun title(title: JsonField<String>) = apply { this.title = title }
 
+            /** X did not send these counts, so each 0 means unknown. */
+            fun unknownCounts(unknownCounts: List<UnknownCount>) =
+                unknownCounts(JsonField.of(unknownCounts))
+
+            /** Sets [Builder.unknownCounts] to an arbitrary JSON value. */
+            fun unknownCounts(unknownCounts: JsonField<List<UnknownCount>>) = apply {
+                this.unknownCounts = unknownCounts.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [UnknownCount] to [unknownCounts].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addUnknownCount(unknownCount: UnknownCount) = apply {
+                unknownCounts =
+                    (unknownCounts ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("unknownCounts", it).add(unknownCount)
+                    }
+            }
+
             fun viewCount(viewCount: Long) = viewCount(JsonField.of(viewCount))
 
             /** Sets [Builder.viewCount] to an arbitrary JSON value. */
@@ -766,6 +814,7 @@ private constructor(
                     retweetCount,
                     summaryText,
                     title,
+                    (unknownCounts ?: JsonMissing.of()).map { it.toImmutable() },
                     viewCount,
                     additionalProperties.toMutableMap(),
                 )
@@ -804,6 +853,7 @@ private constructor(
             retweetCount()
             summaryText()
             title()
+            unknownCounts().ifPresent { it.forEach { it.validate() } }
             viewCount()
             validated = true
         }
@@ -835,6 +885,7 @@ private constructor(
                 (if (retweetCount.asKnown().isPresent) 1 else 0) +
                 (if (summaryText.asKnown().isPresent) 1 else 0) +
                 (if (title.asKnown().isPresent) 1 else 0) +
+                (unknownCounts.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
                 (if (viewCount.asKnown().isPresent) 1 else 0)
 
         class Content
@@ -2565,6 +2616,7 @@ private constructor(
                 retweetCount == other.retweetCount &&
                 summaryText == other.summaryText &&
                 title == other.title &&
+                unknownCounts == other.unknownCounts &&
                 viewCount == other.viewCount &&
                 additionalProperties == other.additionalProperties
         }
@@ -2588,6 +2640,7 @@ private constructor(
                 retweetCount,
                 summaryText,
                 title,
+                unknownCounts,
                 viewCount,
                 additionalProperties,
             )
@@ -2596,7 +2649,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Article{articleId=$articleId, bodyMarkdown=$bodyMarkdown, bodyText=$bodyText, bookmarkCount=$bookmarkCount, contents=$contents, coverImageUrl=$coverImageUrl, coverMedia=$coverMedia, createdAt=$createdAt, lifecycleState=$lifecycleState, likeCount=$likeCount, metadata=$metadata, previewText=$previewText, quoteCount=$quoteCount, replyCount=$replyCount, retweetCount=$retweetCount, summaryText=$summaryText, title=$title, viewCount=$viewCount, additionalProperties=$additionalProperties}"
+            "Article{articleId=$articleId, bodyMarkdown=$bodyMarkdown, bodyText=$bodyText, bookmarkCount=$bookmarkCount, contents=$contents, coverImageUrl=$coverImageUrl, coverMedia=$coverMedia, createdAt=$createdAt, lifecycleState=$lifecycleState, likeCount=$likeCount, metadata=$metadata, previewText=$previewText, quoteCount=$quoteCount, replyCount=$replyCount, retweetCount=$retweetCount, summaryText=$summaryText, title=$title, unknownCounts=$unknownCounts, viewCount=$viewCount, additionalProperties=$additionalProperties}"
     }
 
     /** X Article author profile fields returned when available. */
