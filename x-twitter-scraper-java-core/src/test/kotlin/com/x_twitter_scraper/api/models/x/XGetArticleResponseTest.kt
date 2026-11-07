@@ -6,6 +6,7 @@ package com.x_twitter_scraper.api.models.x
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.core.jsonMapper
+import com.x_twitter_scraper.api.models.UnknownCount
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -42,6 +43,7 @@ internal class XGetArticleResponseTest {
                         .quoteCount(8L)
                         .replyCount(23L)
                         .title("The Future of AI")
+                        .addUnknownCount(UnknownCount.VIEW_COUNT)
                         .viewCount(5000L)
                         .build()
                 )
@@ -97,6 +99,7 @@ internal class XGetArticleResponseTest {
                     .quoteCount(8L)
                     .replyCount(23L)
                     .title("The Future of AI")
+                    .addUnknownCount(UnknownCount.VIEW_COUNT)
                     .viewCount(5000L)
                     .build()
             )
@@ -157,6 +160,7 @@ internal class XGetArticleResponseTest {
                         .quoteCount(8L)
                         .replyCount(23L)
                         .title("The Future of AI")
+                        .addUnknownCount(UnknownCount.VIEW_COUNT)
                         .viewCount(5000L)
                         .build()
                 )
@@ -253,6 +257,7 @@ internal class XGetArticleResponseTest {
                         "quoteCount": 8,
                         "retweetCount": 105,
                         "bookmarkCount": 423,
+                        "unknownCounts": ["viewCount"],
                         "viewCount": 5000
                       },
                       "author": {
@@ -404,6 +409,8 @@ internal class XGetArticleResponseTest {
         assertThat(xGetArticleResponse.article().summaryText())
             .contains("- Pinned DMs now work on desktop.")
         assertThat(xGetArticleResponse.article().title()).contains("The Future of AI")
+        assertThat(xGetArticleResponse.article().unknownCounts())
+            .contains(listOf(UnknownCount.VIEW_COUNT))
         assertThat(xGetArticleResponse.article().viewCount()).contains(5000L)
         assertThat(xGetArticleResponse.article()._additionalProperties()).isEmpty()
         assertThat(xGetArticleResponse.author().get().id()).isEqualTo("9876543210")
