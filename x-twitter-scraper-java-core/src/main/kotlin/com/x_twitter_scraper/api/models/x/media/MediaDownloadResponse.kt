@@ -268,6 +268,8 @@ private constructor(
         private val tweetId: JsonField<String>,
         private val mediaType: JsonField<MediaType>,
         private val mediaUrl: JsonField<String>,
+        private val posterUrl: JsonField<String>,
+        private val qualities: JsonField<List<Quality>>,
         private val fileSize: JsonField<String>,
         private val createdAt: JsonField<OffsetDateTime>,
         private val authorUsername: JsonField<String>,
@@ -290,6 +292,12 @@ private constructor(
             @JsonProperty("mediaUrl")
             @ExcludeMissing
             mediaUrl: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("posterUrl")
+            @ExcludeMissing
+            posterUrl: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("qualities")
+            @ExcludeMissing
+            qualities: JsonField<List<Quality>> = JsonMissing.of(),
             @JsonProperty("fileSize")
             @ExcludeMissing
             fileSize: JsonField<String> = JsonMissing.of(),
@@ -316,6 +324,8 @@ private constructor(
             tweetId,
             mediaType,
             mediaUrl,
+            posterUrl,
+            qualities,
             fileSize,
             createdAt,
             authorUsername,
@@ -340,6 +350,23 @@ private constructor(
          * no post flag. Xquik keeps no copy of those files.
          */
         fun mediaUrl(): String = mediaUrl.getRequired("mediaUrl")
+
+        /**
+         * Cover image of a video or GIF. Null for photos & files first saved to Xquik before
+         * 2026-11-03.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun posterUrl(): Optional<String> = posterUrl.getOptional("posterUrl")
+
+        /**
+         * The MP4 sizes X stores for a video, highest bitrate first. Empty for photos, GIFs & files
+         * first saved to Xquik before 2026-11-03.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null.
+         */
+        fun qualities(): List<Quality> = qualities.getRequired("qualities")
 
         /** File size in bytes, as a string */
         fun fileSize(): Optional<String> = fileSize.getOptional("fileSize")
@@ -374,6 +401,22 @@ private constructor(
 
         /** Returns the raw JSON value of [mediaUrl]. */
         @JsonProperty("mediaUrl") @ExcludeMissing fun _mediaUrl(): JsonField<String> = mediaUrl
+
+        /**
+         * Returns the raw JSON value of [posterUrl].
+         *
+         * Unlike [posterUrl], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("posterUrl") @ExcludeMissing fun _posterUrl(): JsonField<String> = posterUrl
+
+        /**
+         * Returns the raw JSON value of [qualities].
+         *
+         * Unlike [qualities], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("qualities")
+        @ExcludeMissing
+        fun _qualities(): JsonField<List<Quality>> = qualities
 
         /** Returns the raw JSON value of [fileSize]. */
         @JsonProperty("fileSize") @ExcludeMissing fun _fileSize(): JsonField<String> = fileSize
@@ -435,6 +478,8 @@ private constructor(
             private var tweetId: JsonField<String>? = null
             private var mediaType: JsonField<MediaType>? = null
             private var mediaUrl: JsonField<String>? = null
+            private var posterUrl: JsonField<String>? = null
+            private var qualities: JsonField<MutableList<Quality>>? = null
             private var fileSize: JsonField<String>? = null
             private var createdAt: JsonField<OffsetDateTime>? = null
             private var authorUsername: JsonField<String>? = null
@@ -452,6 +497,8 @@ private constructor(
                 tweetId = item.tweetId
                 mediaType = item.mediaType
                 mediaUrl = item.mediaUrl
+                posterUrl = item.posterUrl
+                qualities = item.qualities.map { it.toMutableList() }
                 fileSize = item.fileSize
                 createdAt = item.createdAt
                 authorUsername = item.authorUsername
@@ -488,6 +535,41 @@ private constructor(
 
             /** Sets [Builder.mediaUrl] to an arbitrary JSON value. */
             fun mediaUrl(mediaUrl: JsonField<String>) = apply { this.mediaUrl = mediaUrl }
+
+            /**
+             * Cover image of a video or GIF. Null for photos & files first saved to Xquik before
+             * 2026-11-03.
+             */
+            fun posterUrl(posterUrl: String?) = posterUrl(JsonField.ofNullable(posterUrl))
+
+            /** Alias for calling [Builder.posterUrl] with `posterUrl.orElse(null)`. */
+            fun posterUrl(posterUrl: Optional<String>) = posterUrl(posterUrl.getOrNull())
+
+            /** Sets [Builder.posterUrl] to an arbitrary JSON value. */
+            fun posterUrl(posterUrl: JsonField<String>) = apply { this.posterUrl = posterUrl }
+
+            /**
+             * The MP4 sizes X stores for a video, highest bitrate first. Empty for photos, GIFs &
+             * files first saved to Xquik before 2026-11-03.
+             */
+            fun qualities(qualities: List<Quality>) = qualities(JsonField.of(qualities))
+
+            /** Sets [Builder.qualities] to an arbitrary JSON value. */
+            fun qualities(qualities: JsonField<List<Quality>>) = apply {
+                this.qualities = qualities.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [Quality] to [qualities].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addQuality(quality: Quality) = apply {
+                this.qualities =
+                    (this.qualities ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("qualities", it).add(quality)
+                    }
+            }
 
             /** File size in bytes, as a string */
             fun fileSize(fileSize: String?) = fileSize(JsonField.ofNullable(fileSize))
@@ -616,6 +698,8 @@ private constructor(
                     checkRequired("tweetId", tweetId),
                     checkRequired("mediaType", mediaType),
                     checkRequired("mediaUrl", mediaUrl),
+                    checkRequired("posterUrl", posterUrl),
+                    checkRequired("qualities", qualities).map { it.toImmutable() },
                     checkRequired("fileSize", fileSize),
                     checkRequired("createdAt", createdAt),
                     checkRequired("authorUsername", authorUsername),
@@ -647,6 +731,8 @@ private constructor(
             tweetId()
             mediaType().validate()
             mediaUrl()
+            posterUrl()
+            qualities().forEach { it.validate() }
             fileSize()
             createdAt()
             authorUsername()
@@ -673,6 +759,8 @@ private constructor(
                 (if (tweetId.asKnown().isPresent) 1 else 0) +
                 (mediaType.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (mediaUrl.asKnown().isPresent) 1 else 0) +
+                (if (posterUrl.asKnown().isPresent) 1 else 0) +
+                (qualities.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
                 (if (fileSize.asKnown().isPresent) 1 else 0) +
                 (if (createdAt.asKnown().isPresent) 1 else 0) +
                 (if (authorUsername.asKnown().isPresent) 1 else 0) +
@@ -682,6 +770,253 @@ private constructor(
                 (if (likes.asKnown().isPresent) 1 else 0) +
                 (if (retweets.asKnown().isPresent) 1 else 0) +
                 (if (views.asKnown().isPresent) 1 else 0)
+
+        class Quality
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+        private constructor(
+            private val bitrate: JsonField<Long>,
+            private val height: JsonField<Long>,
+            private val url: JsonField<String>,
+            private val width: JsonField<Long>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("bitrate")
+                @ExcludeMissing
+                bitrate: JsonField<Long> = JsonMissing.of(),
+                @JsonProperty("height") @ExcludeMissing height: JsonField<Long> = JsonMissing.of(),
+                @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("width") @ExcludeMissing width: JsonField<Long> = JsonMissing.of(),
+            ) : this(bitrate, height, url, width, mutableMapOf())
+
+            /**
+             * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+             *   or is unexpectedly missing or null.
+             */
+            fun bitrate(): Long = bitrate.getRequired("bitrate")
+
+            /**
+             * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+             *   or is unexpectedly missing or null.
+             */
+            fun height(): Long = height.getRequired("height")
+
+            /**
+             * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+             *   or is unexpectedly missing or null.
+             */
+            fun url(): String = url.getRequired("url")
+
+            /**
+             * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type
+             *   or is unexpectedly missing or null.
+             */
+            fun width(): Long = width.getRequired("width")
+
+            /**
+             * Returns the raw JSON value of [bitrate].
+             *
+             * Unlike [bitrate], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("bitrate") @ExcludeMissing fun _bitrate(): JsonField<Long> = bitrate
+
+            /**
+             * Returns the raw JSON value of [height].
+             *
+             * Unlike [height], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("height") @ExcludeMissing fun _height(): JsonField<Long> = height
+
+            /**
+             * Returns the raw JSON value of [url].
+             *
+             * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
+
+            /**
+             * Returns the raw JSON value of [width].
+             *
+             * Unlike [width], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("width") @ExcludeMissing fun _width(): JsonField<Long> = width
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /**
+                 * Returns a mutable builder for constructing an instance of [Quality].
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .bitrate()
+                 * .height()
+                 * .url()
+                 * .width()
+                 * ```
+                 */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [Quality]. */
+            class Builder internal constructor() {
+
+                private var bitrate: JsonField<Long>? = null
+                private var height: JsonField<Long>? = null
+                private var url: JsonField<String>? = null
+                private var width: JsonField<Long>? = null
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(quality: Quality) = apply {
+                    bitrate = quality.bitrate
+                    height = quality.height
+                    url = quality.url
+                    width = quality.width
+                    additionalProperties = quality.additionalProperties.toMutableMap()
+                }
+
+                fun bitrate(bitrate: Long) = bitrate(JsonField.of(bitrate))
+
+                /** Sets [Builder.bitrate] to an arbitrary JSON value. */
+                fun bitrate(bitrate: JsonField<Long>) = apply { this.bitrate = bitrate }
+
+                fun height(height: Long) = height(JsonField.of(height))
+
+                /** Sets [Builder.height] to an arbitrary JSON value. */
+                fun height(height: JsonField<Long>) = apply { this.height = height }
+
+                fun url(url: String) = url(JsonField.of(url))
+
+                /** Sets [Builder.url] to an arbitrary JSON value. */
+                fun url(url: JsonField<String>) = apply { this.url = url }
+
+                fun width(width: Long) = width(JsonField.of(width))
+
+                /** Sets [Builder.width] to an arbitrary JSON value. */
+                fun width(width: JsonField<Long>) = apply { this.width = width }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [Quality].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .bitrate()
+                 * .height()
+                 * .url()
+                 * .width()
+                 * ```
+                 *
+                 * @throws IllegalStateException if any required field is unset.
+                 */
+                fun build(): Quality =
+                    Quality(
+                        checkRequired("bitrate", bitrate),
+                        checkRequired("height", height),
+                        checkRequired("url", url),
+                        checkRequired("width", width),
+                        additionalProperties.toMutableMap(),
+                    )
+            }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
+             */
+            fun validate(): Quality = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                bitrate()
+                height()
+                url()
+                width()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: XTwitterScraperInvalidDataException) {
+                    false
+                }
+
+            @JvmSynthetic
+            internal fun validity(): Int =
+                (if (bitrate.asKnown().isPresent) 1 else 0) +
+                    (if (height.asKnown().isPresent) 1 else 0) +
+                    (if (url.asKnown().isPresent) 1 else 0) +
+                    (if (width.asKnown().isPresent) 1 else 0)
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Quality &&
+                    bitrate == other.bitrate &&
+                    height == other.height &&
+                    url == other.url &&
+                    width == other.width &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy {
+                Objects.hash(bitrate, height, url, width, additionalProperties)
+            }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "Quality{bitrate=$bitrate, height=$height, url=$url, width=$width, additionalProperties=$additionalProperties}"
+        }
 
         class MediaType @JsonCreator private constructor(private val value: JsonField<String>) :
             Enum {
@@ -801,6 +1136,8 @@ private constructor(
                 tweetId == other.tweetId &&
                 mediaType == other.mediaType &&
                 mediaUrl == other.mediaUrl &&
+                posterUrl == other.posterUrl &&
+                qualities == other.qualities &&
                 fileSize == other.fileSize &&
                 createdAt == other.createdAt &&
                 authorUsername == other.authorUsername &&
@@ -819,6 +1156,8 @@ private constructor(
                 tweetId,
                 mediaType,
                 mediaUrl,
+                posterUrl,
+                qualities,
                 fileSize,
                 createdAt,
                 authorUsername,
@@ -835,7 +1174,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Item{id=$id, tweetId=$tweetId, mediaType=$mediaType, mediaUrl=$mediaUrl, fileSize=$fileSize, createdAt=$createdAt, authorUsername=$authorUsername, authorDisplayName=$authorDisplayName, authorAvatar=$authorAvatar, tweetText=$tweetText, likes=$likes, retweets=$retweets, views=$views, additionalProperties=$additionalProperties}"
+            "Item{id=$id, tweetId=$tweetId, mediaType=$mediaType, mediaUrl=$mediaUrl, posterUrl=$posterUrl, qualities=$qualities, fileSize=$fileSize, createdAt=$createdAt, authorUsername=$authorUsername, authorDisplayName=$authorDisplayName, authorAvatar=$authorAvatar, tweetText=$tweetText, likes=$likes, retweets=$retweets, views=$views, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

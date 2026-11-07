@@ -88,6 +88,7 @@
       "GET /api/v1/extractions/{id} response required job.status",
       "GET /api/v1/extractions/{id} response required job.toolType",
       "GET /api/v1/extractions/{id} response required job.totalResults",
+      "GET /api/v1/extractions/{id} response required job.url",
       "GET /api/v1/extractions/{id} response required pollAfterMs",
       "GET /api/v1/extractions/{id} response required results[].createdAt",
       "GET /api/v1/extractions/{id} response required results[].id",

@@ -167,7 +167,7 @@ internal class ExtractionRetrieveResponseTest {
     fun additionalJobFieldsRoundtrip() {
         val jsonMapper = jsonMapper()
         val json =
-            """{"id":"sample","toolType":"article_extractor","status":"pending","totalResults":1,"resultsLimit":1,"effectiveResultsLimit":1,"completionReason":"budget_limited","errorMessage":"sample","createdAt":"2025-01-15T12:00:00Z","completedAt":"2025-01-15T12:00:00Z"}"""
+            """{"id":"sample","toolType":"article_extractor","status":"pending","totalResults":1,"url":"https://dashboard.xquik.com/activity/a1","resultsLimit":1,"effectiveResultsLimit":1,"completionReason":"budget_limited","errorMessage":"sample","createdAt":"2025-01-15T12:00:00Z","completedAt":"2025-01-15T12:00:00Z"}"""
         val model = jsonMapper.readValue(json, jacksonTypeRef<ExtractionRetrieveResponse.Job>())
 
         assertThat(model.id()).isPresent()
@@ -178,6 +178,8 @@ internal class ExtractionRetrieveResponseTest {
         assertThat(model._additionalProperties()).doesNotContainKey("status")
         assertThat(model.totalResults()).isPresent()
         assertThat(model._additionalProperties()).doesNotContainKey("totalResults")
+        assertThat(model.url()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("url")
         assertThat(model.resultsLimit()).isPresent()
         assertThat(model._additionalProperties()).doesNotContainKey("resultsLimit")
         assertThat(model.effectiveResultsLimit()).isPresent()
@@ -200,5 +202,29 @@ internal class ExtractionRetrieveResponseTest {
                 )
             )
             .isEqualTo(model)
+    }
+
+    @Test
+    fun flatResultReadsTheQuotedPost() {
+        val jsonMapper = jsonMapper()
+        val json =
+            """{"id":"1","xUserId":"2","createdAt":"2026-11-05T00:00:00Z","possiblySensitive":false,"quotedMedia":[],"quotedPossiblySensitive":true,"quotedPost":{"id":"3","text":"Quoted","createdAt":"2026-11-04T00:00:00Z","author":{"name":"NASA","userName":"NASA","profilePicture":"https://example.com/a.png"}}}"""
+        val model = jsonMapper.readValue(json, jacksonTypeRef<ExtractionRetrieveResponse.Result>())
+
+        assertThat(model.possiblySensitive()).contains(false)
+        assertThat(model.quotedMedia().get()).isEmpty()
+        assertThat(model.quotedPossiblySensitive()).contains(true)
+        val quotedPost = model.quotedPost().get()
+        assertThat(quotedPost.id()).contains("3")
+        assertThat(quotedPost.text()).contains("Quoted")
+        assertThat(quotedPost.createdAt()).contains("2026-11-04T00:00:00Z")
+        assertThat(quotedPost.author().get().name()).contains("NASA")
+        assertThat(quotedPost.author().get().userName()).contains("NASA")
+        assertThat(quotedPost.author().get().profilePicture()).contains("https://example.com/a.png")
+        assertThat(model._additionalProperties()).isEmpty()
+        assertThat(model.isValid()).isTrue()
+        assertThat(model.toBuilder().build()).isEqualTo(model)
+        assertThat(jsonMapper.readTree(jsonMapper.writeValueAsString(model)))
+            .isEqualTo(jsonMapper.readTree(json))
     }
 }

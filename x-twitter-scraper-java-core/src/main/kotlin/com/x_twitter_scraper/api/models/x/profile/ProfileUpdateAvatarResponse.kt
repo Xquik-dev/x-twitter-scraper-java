@@ -1627,9 +1627,21 @@ private constructor(
 
             @JvmField val UNRETWEET = of("unretweet")
 
+            @JvmField val BOOKMARK = of("bookmark")
+
+            @JvmField val UNBOOKMARK = of("unbookmark")
+
             @JvmField val FOLLOW = of("follow")
 
             @JvmField val UNFOLLOW = of("unfollow")
+
+            @JvmField val BLOCK = of("block")
+
+            @JvmField val UNBLOCK = of("unblock")
+
+            @JvmField val MUTE = of("mute")
+
+            @JvmField val UNMUTE = of("unmute")
 
             @JvmField val REMOVE_FOLLOWER = of("remove_follower")
 
@@ -1664,8 +1676,14 @@ private constructor(
             UNLIKE,
             RETWEET,
             UNRETWEET,
+            BOOKMARK,
+            UNBOOKMARK,
             FOLLOW,
             UNFOLLOW,
+            BLOCK,
+            UNBLOCK,
+            MUTE,
+            UNMUTE,
             REMOVE_FOLLOWER,
             SEND_DM,
             UPLOAD_MEDIA,
@@ -1695,8 +1713,14 @@ private constructor(
             UNLIKE,
             RETWEET,
             UNRETWEET,
+            BOOKMARK,
+            UNBOOKMARK,
             FOLLOW,
             UNFOLLOW,
+            BLOCK,
+            UNBLOCK,
+            MUTE,
+            UNMUTE,
             REMOVE_FOLLOWER,
             SEND_DM,
             UPLOAD_MEDIA,
@@ -1725,8 +1749,14 @@ private constructor(
                 UNLIKE -> Value.UNLIKE
                 RETWEET -> Value.RETWEET
                 UNRETWEET -> Value.UNRETWEET
+                BOOKMARK -> Value.BOOKMARK
+                UNBOOKMARK -> Value.UNBOOKMARK
                 FOLLOW -> Value.FOLLOW
                 UNFOLLOW -> Value.UNFOLLOW
+                BLOCK -> Value.BLOCK
+                UNBLOCK -> Value.UNBLOCK
+                MUTE -> Value.MUTE
+                UNMUTE -> Value.UNMUTE
                 REMOVE_FOLLOWER -> Value.REMOVE_FOLLOWER
                 SEND_DM -> Value.SEND_DM
                 UPLOAD_MEDIA -> Value.UPLOAD_MEDIA
@@ -1755,8 +1785,14 @@ private constructor(
                 UNLIKE -> Known.UNLIKE
                 RETWEET -> Known.RETWEET
                 UNRETWEET -> Known.UNRETWEET
+                BOOKMARK -> Known.BOOKMARK
+                UNBOOKMARK -> Known.UNBOOKMARK
                 FOLLOW -> Known.FOLLOW
                 UNFOLLOW -> Known.UNFOLLOW
+                BLOCK -> Known.BLOCK
+                UNBLOCK -> Known.UNBLOCK
+                MUTE -> Known.MUTE
+                UNMUTE -> Known.UNMUTE
                 REMOVE_FOLLOWER -> Known.REMOVE_FOLLOWER
                 SEND_DM -> Known.SEND_DM
                 UPLOAD_MEDIA -> Known.UPLOAD_MEDIA

@@ -330,4 +330,21 @@ internal class WriteActionRetrieveResponseTest {
         assertThat(WriteActionRetrieveResponse.Action.of("delete_dm").known())
             .isEqualTo(WriteActionRetrieveResponse.Action.Known.DELETE_DM)
     }
+
+    @Test
+    fun bookmarkBlockAndMuteActionValues() {
+        mapOf(
+                "bookmark" to WriteActionRetrieveResponse.Action.Known.BOOKMARK,
+                "unbookmark" to WriteActionRetrieveResponse.Action.Known.UNBOOKMARK,
+                "block" to WriteActionRetrieveResponse.Action.Known.BLOCK,
+                "unblock" to WriteActionRetrieveResponse.Action.Known.UNBLOCK,
+                "mute" to WriteActionRetrieveResponse.Action.Known.MUTE,
+                "unmute" to WriteActionRetrieveResponse.Action.Known.UNMUTE,
+            )
+            .forEach { (wire, known) ->
+                assertThat(WriteActionRetrieveResponse.Action.of(wire).known()).isEqualTo(known)
+                assertThat(WriteActionRetrieveResponse.Action.of(wire).value().name)
+                    .isEqualTo(known.name)
+            }
+    }
 }

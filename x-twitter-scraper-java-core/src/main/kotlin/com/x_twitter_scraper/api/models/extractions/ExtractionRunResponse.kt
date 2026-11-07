@@ -32,6 +32,7 @@ private constructor(
     private val id: JsonField<String>,
     private val pollAfterMs: JsonField<Long>,
     private val statusUrl: JsonField<String>,
+    private val url: JsonField<String>,
     private val waitUrl: JsonField<String>,
     private val toolType: JsonField<ExtractionJob.ToolType>,
     private val status: JsonField<Status>,
@@ -59,6 +60,7 @@ private constructor(
         @ExcludeMissing
         pollAfterMs: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("statusUrl") @ExcludeMissing statusUrl: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
         @JsonProperty("waitUrl") @ExcludeMissing waitUrl: JsonField<String> = JsonMissing.of(),
         @JsonProperty("toolType")
         @ExcludeMissing
@@ -74,6 +76,7 @@ private constructor(
         id,
         pollAfterMs,
         statusUrl,
+        url,
         waitUrl,
         toolType,
         status,
@@ -121,6 +124,15 @@ private constructor(
 
     /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun statusUrl(): Optional<String> = statusUrl.getOptional("statusUrl")
+
+    /**
+     * Dashboard page of the job. A signed-in user follows its progress there and downloads every
+     * row as CSV, XLSX, JSON, Markdown, PDF or text, so give this link to a person who wants the
+     * whole list as a file.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun url(): Optional<String> = url.getOptional("url")
 
     /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun waitUrl(): Optional<String> = waitUrl.getOptional("waitUrl")
@@ -205,6 +217,13 @@ private constructor(
     @JsonProperty("statusUrl") @ExcludeMissing fun _statusUrl(): JsonField<String> = statusUrl
 
     /**
+     * Returns the raw JSON value of [url].
+     *
+     * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
+
+    /**
      * Returns the raw JSON value of [waitUrl].
      *
      * Unlike [waitUrl], this method doesn't throw if the JSON field has an unexpected type.
@@ -268,6 +287,7 @@ private constructor(
         private var id: JsonField<String> = JsonMissing.of()
         private var pollAfterMs: JsonField<Long> = JsonMissing.of()
         private var statusUrl: JsonField<String> = JsonMissing.of()
+        private var url: JsonField<String> = JsonMissing.of()
         private var waitUrl: JsonField<String> = JsonMissing.of()
         private var toolType: JsonField<ExtractionJob.ToolType> = JsonMissing.of()
         private var status: JsonField<Status> = JsonMissing.of()
@@ -284,6 +304,7 @@ private constructor(
             id = extractionRunResponse.id
             pollAfterMs = extractionRunResponse.pollAfterMs
             statusUrl = extractionRunResponse.statusUrl
+            url = extractionRunResponse.url
             waitUrl = extractionRunResponse.waitUrl
             toolType = extractionRunResponse.toolType
             status = extractionRunResponse.status
@@ -346,6 +367,16 @@ private constructor(
 
         /** Sets [Builder.statusUrl] to an arbitrary JSON value. */
         fun statusUrl(statusUrl: JsonField<String>) = apply { this.statusUrl = statusUrl }
+
+        /**
+         * Dashboard page of the job. A signed-in user follows its progress there and downloads
+         * every row as CSV, XLSX, JSON, Markdown, PDF or text, so give this link to a person who
+         * wants the whole list as a file.
+         */
+        fun url(url: String) = url(JsonField.of(url))
+
+        /** Sets [Builder.url] to an arbitrary JSON value. */
+        fun url(url: JsonField<String>) = apply { this.url = url }
 
         fun waitUrl(waitUrl: String) = waitUrl(JsonField.of(waitUrl))
 
@@ -410,6 +441,7 @@ private constructor(
                 id,
                 pollAfterMs,
                 statusUrl,
+                url,
                 waitUrl,
                 toolType,
                 status,
@@ -441,6 +473,7 @@ private constructor(
         id()
         pollAfterMs()
         statusUrl()
+        url()
         waitUrl()
         toolType().ifPresent { it.validate() }
         status().ifPresent { it.validate() }
@@ -466,6 +499,7 @@ private constructor(
             (if (id.asKnown().isPresent) 1 else 0) +
             (if (pollAfterMs.asKnown().isPresent) 1 else 0) +
             (if (statusUrl.asKnown().isPresent) 1 else 0) +
+            (if (url.asKnown().isPresent) 1 else 0) +
             (if (waitUrl.asKnown().isPresent) 1 else 0) +
             (toolType.asKnown().getOrNull()?.validity() ?: 0) +
             (status.asKnown().getOrNull()?.validity() ?: 0)
@@ -485,6 +519,7 @@ private constructor(
             id == other.id &&
             pollAfterMs == other.pollAfterMs &&
             statusUrl == other.statusUrl &&
+            url == other.url &&
             waitUrl == other.waitUrl &&
             toolType == other.toolType &&
             status == other.status &&
@@ -502,6 +537,7 @@ private constructor(
             id,
             pollAfterMs,
             statusUrl,
+            url,
             waitUrl,
             toolType,
             status,
@@ -512,7 +548,7 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ExtractionRunResponse{allowed=$allowed, creditsAvailable=$creditsAvailable, creditsRequired=$creditsRequired, estimatedResults=$estimatedResults, source=$source, resolvedXUserId=$resolvedXUserId, id=$id, pollAfterMs=$pollAfterMs, statusUrl=$statusUrl, waitUrl=$waitUrl, toolType=$toolType, status=$status, additionalProperties=$additionalProperties}"
+        "ExtractionRunResponse{allowed=$allowed, creditsAvailable=$creditsAvailable, creditsRequired=$creditsRequired, estimatedResults=$estimatedResults, source=$source, resolvedXUserId=$resolvedXUserId, id=$id, pollAfterMs=$pollAfterMs, statusUrl=$statusUrl, url=$url, waitUrl=$waitUrl, toolType=$toolType, status=$status, additionalProperties=$additionalProperties}"
 
     class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 

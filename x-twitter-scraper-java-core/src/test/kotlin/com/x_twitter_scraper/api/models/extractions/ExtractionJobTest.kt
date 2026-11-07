@@ -21,6 +21,7 @@ internal class ExtractionJobTest {
                 .status(ExtractionJob.Status.RUNNING)
                 .toolType(ExtractionJob.ToolType.FOLLOWER_EXPLORER)
                 .totalResults(0L)
+                .url("https://dashboard.xquik.com/activity/a1")
                 .completedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
@@ -30,6 +31,7 @@ internal class ExtractionJobTest {
         assertThat(extractionJob.status()).isEqualTo(ExtractionJob.Status.RUNNING)
         assertThat(extractionJob.toolType()).isEqualTo(ExtractionJob.ToolType.FOLLOWER_EXPLORER)
         assertThat(extractionJob.totalResults()).isEqualTo(0L)
+        assertThat(extractionJob.url()).isEqualTo("https://dashboard.xquik.com/activity/a1")
         assertThat(extractionJob.completedAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
     }
@@ -44,6 +46,7 @@ internal class ExtractionJobTest {
                 .status(ExtractionJob.Status.RUNNING)
                 .toolType(ExtractionJob.ToolType.FOLLOWER_EXPLORER)
                 .totalResults(0L)
+                .url("https://dashboard.xquik.com/activity/a1")
                 .completedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 

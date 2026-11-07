@@ -322,4 +322,21 @@ internal class CommunityDeleteResponseTest {
         assertThat(CommunityDeleteResponse.Action.of("delete_dm").known())
             .isEqualTo(CommunityDeleteResponse.Action.Known.DELETE_DM)
     }
+
+    @Test
+    fun bookmarkBlockAndMuteActionValues() {
+        mapOf(
+                "bookmark" to CommunityDeleteResponse.Action.Known.BOOKMARK,
+                "unbookmark" to CommunityDeleteResponse.Action.Known.UNBOOKMARK,
+                "block" to CommunityDeleteResponse.Action.Known.BLOCK,
+                "unblock" to CommunityDeleteResponse.Action.Known.UNBLOCK,
+                "mute" to CommunityDeleteResponse.Action.Known.MUTE,
+                "unmute" to CommunityDeleteResponse.Action.Known.UNMUTE,
+            )
+            .forEach { (wire, known) ->
+                assertThat(CommunityDeleteResponse.Action.of(wire).known()).isEqualTo(known)
+                assertThat(CommunityDeleteResponse.Action.of(wire).value().name)
+                    .isEqualTo(known.name)
+            }
+    }
 }

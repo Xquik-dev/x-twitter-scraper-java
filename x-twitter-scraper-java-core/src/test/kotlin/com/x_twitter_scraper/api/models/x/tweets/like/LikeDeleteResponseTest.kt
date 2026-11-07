@@ -313,4 +313,20 @@ internal class LikeDeleteResponseTest {
         assertThat(LikeDeleteResponse.Action.of("delete_dm").known())
             .isEqualTo(LikeDeleteResponse.Action.Known.DELETE_DM)
     }
+
+    @Test
+    fun bookmarkBlockAndMuteActionValues() {
+        mapOf(
+                "bookmark" to LikeDeleteResponse.Action.Known.BOOKMARK,
+                "unbookmark" to LikeDeleteResponse.Action.Known.UNBOOKMARK,
+                "block" to LikeDeleteResponse.Action.Known.BLOCK,
+                "unblock" to LikeDeleteResponse.Action.Known.UNBLOCK,
+                "mute" to LikeDeleteResponse.Action.Known.MUTE,
+                "unmute" to LikeDeleteResponse.Action.Known.UNMUTE,
+            )
+            .forEach { (wire, known) ->
+                assertThat(LikeDeleteResponse.Action.of(wire).known()).isEqualTo(known)
+                assertThat(LikeDeleteResponse.Action.of(wire).value().name).isEqualTo(known.name)
+            }
+    }
 }

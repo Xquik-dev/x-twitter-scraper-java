@@ -51,7 +51,9 @@ import com.x_twitter_scraper.api.models.x.users.UserRetrieveVerifiedFollowersPar
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveVerifiedFollowersResponse
 import com.x_twitter_scraper.api.models.x.users.UserTranslateBioParams
 import com.x_twitter_scraper.api.models.x.users.UserTranslateBioResponse
+import com.x_twitter_scraper.api.services.async.x.users.BlockServiceAsync
 import com.x_twitter_scraper.api.services.async.x.users.FollowServiceAsync
+import com.x_twitter_scraper.api.services.async.x.users.MuteServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -68,6 +70,12 @@ interface UserServiceAsync {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserServiceAsync
+
+    /** X write actions (tweets, likes, follows, DMs) */
+    fun block(): BlockServiceAsync
+
+    /** X write actions (tweets, likes, follows, DMs) */
+    fun mute(): MuteServiceAsync
 
     /** X write actions (tweets, likes, follows, DMs) */
     fun follow(): FollowServiceAsync
@@ -1025,6 +1033,12 @@ interface UserServiceAsync {
          * The original service is not modified.
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserServiceAsync.WithRawResponse
+
+        /** X write actions (tweets, likes, follows, DMs) */
+        fun block(): BlockServiceAsync.WithRawResponse
+
+        /** X write actions (tweets, likes, follows, DMs) */
+        fun mute(): MuteServiceAsync.WithRawResponse
 
         /** X write actions (tweets, likes, follows, DMs) */
         fun follow(): FollowServiceAsync.WithRawResponse

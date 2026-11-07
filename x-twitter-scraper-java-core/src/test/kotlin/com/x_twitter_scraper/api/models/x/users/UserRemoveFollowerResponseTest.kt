@@ -330,4 +330,21 @@ internal class UserRemoveFollowerResponseTest {
         assertThat(UserRemoveFollowerResponse.Action.of("delete_dm").known())
             .isEqualTo(UserRemoveFollowerResponse.Action.Known.DELETE_DM)
     }
+
+    @Test
+    fun bookmarkBlockAndMuteActionValues() {
+        mapOf(
+                "bookmark" to UserRemoveFollowerResponse.Action.Known.BOOKMARK,
+                "unbookmark" to UserRemoveFollowerResponse.Action.Known.UNBOOKMARK,
+                "block" to UserRemoveFollowerResponse.Action.Known.BLOCK,
+                "unblock" to UserRemoveFollowerResponse.Action.Known.UNBLOCK,
+                "mute" to UserRemoveFollowerResponse.Action.Known.MUTE,
+                "unmute" to UserRemoveFollowerResponse.Action.Known.UNMUTE,
+            )
+            .forEach { (wire, known) ->
+                assertThat(UserRemoveFollowerResponse.Action.of(wire).known()).isEqualTo(known)
+                assertThat(UserRemoveFollowerResponse.Action.of(wire).value().name)
+                    .isEqualTo(known.name)
+            }
+    }
 }

@@ -313,4 +313,20 @@ internal class MediaUploadResponseTest {
         assertThat(MediaUploadResponse.Action.of("delete_dm").known())
             .isEqualTo(MediaUploadResponse.Action.Known.DELETE_DM)
     }
+
+    @Test
+    fun bookmarkBlockAndMuteActionValues() {
+        mapOf(
+                "bookmark" to MediaUploadResponse.Action.Known.BOOKMARK,
+                "unbookmark" to MediaUploadResponse.Action.Known.UNBOOKMARK,
+                "block" to MediaUploadResponse.Action.Known.BLOCK,
+                "unblock" to MediaUploadResponse.Action.Known.UNBLOCK,
+                "mute" to MediaUploadResponse.Action.Known.MUTE,
+                "unmute" to MediaUploadResponse.Action.Known.UNMUTE,
+            )
+            .forEach { (wire, known) ->
+                assertThat(MediaUploadResponse.Action.of(wire).known()).isEqualTo(known)
+                assertThat(MediaUploadResponse.Action.of(wire).value().name).isEqualTo(known.name)
+            }
+    }
 }

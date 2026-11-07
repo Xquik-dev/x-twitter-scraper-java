@@ -1,0 +1,63 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
+package com.x_twitter_scraper.api.models.x.users.mute
+
+import com.x_twitter_scraper.api.core.http.Headers
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+
+internal class MuteCreateParamsTest {
+
+    @Test
+    fun create() {
+        MuteCreateParams.builder()
+            .id("id")
+            .idempotencyKey("Idempotency-Key")
+            .account("@elonmusk")
+            .build()
+    }
+
+    @Test
+    fun pathParams() {
+        val params =
+            MuteCreateParams.builder()
+                .id("id")
+                .idempotencyKey("Idempotency-Key")
+                .account("@elonmusk")
+                .build()
+
+        assertThat(params._pathParam(0)).isEqualTo("id")
+        assertThat(params._pathParam(1)).isEqualTo("")
+    }
+
+    @Test
+    fun headers() {
+        val params =
+            MuteCreateParams.builder()
+                .id("id")
+                .idempotencyKey("Idempotency-Key")
+                .account("@elonmusk")
+                .build()
+
+        val headers = params._headers()
+
+        assertThat(headers)
+            .isEqualTo(Headers.builder().put("Idempotency-Key", "Idempotency-Key").build())
+    }
+
+    @Test
+    fun body() {
+        val params =
+            MuteCreateParams.builder()
+                .id("id")
+                .idempotencyKey("Idempotency-Key")
+                .account("@elonmusk")
+                .build()
+
+        val body = params._body()
+
+        assertThat(body.account()).isEqualTo("@elonmusk")
+    }
+}

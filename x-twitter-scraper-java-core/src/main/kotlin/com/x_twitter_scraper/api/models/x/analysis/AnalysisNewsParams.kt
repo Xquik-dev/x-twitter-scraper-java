@@ -1231,6 +1231,7 @@ private constructor(
     private constructor(
         private val concurrency: JsonField<Long>,
         private val context: JsonField<String>,
+        private val images: JsonField<Boolean>,
         private val maxContextBytes: JsonField<Long>,
         private val preset: JsonField<Preset>,
         private val questions: JsonField<List<Question>>,
@@ -1244,6 +1245,7 @@ private constructor(
             @ExcludeMissing
             concurrency: JsonField<Long> = JsonMissing.of(),
             @JsonProperty("context") @ExcludeMissing context: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("images") @ExcludeMissing images: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("maxContextBytes")
             @ExcludeMissing
             maxContextBytes: JsonField<Long> = JsonMissing.of(),
@@ -1254,7 +1256,16 @@ private constructor(
             @JsonProperty("targets")
             @ExcludeMissing
             targets: JsonField<List<Target>> = JsonMissing.of(),
-        ) : this(concurrency, context, maxContextBytes, preset, questions, targets, mutableMapOf())
+        ) : this(
+            concurrency,
+            context,
+            images,
+            maxContextBytes,
+            preset,
+            questions,
+            targets,
+            mutableMapOf(),
+        )
 
         /**
          * Posts analyzed at the same time.
@@ -1269,6 +1280,14 @@ private constructor(
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
         fun context(): Optional<String> = context.getOptional("context")
+
+        /**
+         * Reads up to 4 images per post with its text, at no extra cost. Images of posts X marks
+         * sensitive stay unread. Send false to analyze the text alone.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun images(): Optional<Boolean> = images.getOptional("images")
 
         /**
          * Bytes of post, quote & settings the AI reads. Xquik cuts longer posts to fit. Empty
@@ -1317,6 +1336,13 @@ private constructor(
          * Unlike [context], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("context") @ExcludeMissing fun _context(): JsonField<String> = context
+
+        /**
+         * Returns the raw JSON value of [images].
+         *
+         * Unlike [images], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("images") @ExcludeMissing fun _images(): JsonField<Boolean> = images
 
         /**
          * Returns the raw JSON value of [maxContextBytes].
@@ -1374,6 +1400,7 @@ private constructor(
 
             private var concurrency: JsonField<Long> = JsonMissing.of()
             private var context: JsonField<String> = JsonMissing.of()
+            private var images: JsonField<Boolean> = JsonMissing.of()
             private var maxContextBytes: JsonField<Long> = JsonMissing.of()
             private var preset: JsonField<Preset> = JsonMissing.of()
             private var questions: JsonField<MutableList<Question>>? = null
@@ -1384,6 +1411,7 @@ private constructor(
             internal fun from(analysis: Analysis) = apply {
                 concurrency = analysis.concurrency
                 context = analysis.context
+                images = analysis.images
                 maxContextBytes = analysis.maxContextBytes
                 preset = analysis.preset
                 questions = analysis.questions.map { it.toMutableList() }
@@ -1402,6 +1430,15 @@ private constructor(
 
             /** Sets [Builder.context] to an arbitrary JSON value. */
             fun context(context: JsonField<String>) = apply { this.context = context }
+
+            /**
+             * Reads up to 4 images per post with its text, at no extra cost. Images of posts X
+             * marks sensitive stay unread. Send false to analyze the text alone.
+             */
+            fun images(images: Boolean) = images(JsonField.of(images))
+
+            /** Sets [Builder.images] to an arbitrary JSON value. */
+            fun images(images: JsonField<Boolean>) = apply { this.images = images }
 
             /**
              * Bytes of post, quote & settings the AI reads. Xquik cuts longer posts to fit. Empty
@@ -1496,6 +1533,7 @@ private constructor(
                 Analysis(
                     concurrency,
                     context,
+                    images,
                     maxContextBytes,
                     preset,
                     (questions ?: JsonMissing.of()).map { it.toImmutable() },
@@ -1522,6 +1560,7 @@ private constructor(
 
             concurrency()
             context()
+            images()
             maxContextBytes()
             preset().ifPresent { it.validate() }
             questions().ifPresent { it.forEach { it.validate() } }
@@ -1541,6 +1580,7 @@ private constructor(
         internal fun validity(): Int =
             (if (concurrency.asKnown().isPresent) 1 else 0) +
                 (if (context.asKnown().isPresent) 1 else 0) +
+                (if (images.asKnown().isPresent) 1 else 0) +
                 (if (maxContextBytes.asKnown().isPresent) 1 else 0) +
                 (preset.asKnown().getOrNull()?.validity() ?: 0) +
                 (questions.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
@@ -2731,6 +2771,7 @@ private constructor(
             return other is Analysis &&
                 concurrency == other.concurrency &&
                 context == other.context &&
+                images == other.images &&
                 maxContextBytes == other.maxContextBytes &&
                 preset == other.preset &&
                 questions == other.questions &&
@@ -2742,6 +2783,7 @@ private constructor(
             Objects.hash(
                 concurrency,
                 context,
+                images,
                 maxContextBytes,
                 preset,
                 questions,
@@ -2753,7 +2795,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Analysis{concurrency=$concurrency, context=$context, maxContextBytes=$maxContextBytes, preset=$preset, questions=$questions, targets=$targets, additionalProperties=$additionalProperties}"
+            "Analysis{concurrency=$concurrency, context=$context, images=$images, maxContextBytes=$maxContextBytes, preset=$preset, questions=$questions, targets=$targets, additionalProperties=$additionalProperties}"
     }
 
     class Baseline

@@ -7,8 +7,11 @@ package com.x_twitter_scraper.api.services
 import com.github.tomakehurst.wiremock.client.WireMock.any
 import com.github.tomakehurst.wiremock.client.WireMock.anyRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.anyUrl
+import com.github.tomakehurst.wiremock.client.WireMock.deleteRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.equalToJson
 import com.github.tomakehurst.wiremock.client.WireMock.okJson
+import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.github.tomakehurst.wiremock.client.WireMock.verify
@@ -28,13 +31,19 @@ import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateBannerParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetCreateParams
 import com.x_twitter_scraper.api.models.x.tweets.TweetDeleteParams
+import com.x_twitter_scraper.api.models.x.tweets.bookmark.BookmarkCreateParams
+import com.x_twitter_scraper.api.models.x.tweets.bookmark.BookmarkDeleteParams
 import com.x_twitter_scraper.api.models.x.tweets.like.LikeCreateParams
 import com.x_twitter_scraper.api.models.x.tweets.like.LikeDeleteParams
 import com.x_twitter_scraper.api.models.x.tweets.retweet.RetweetCreateParams
 import com.x_twitter_scraper.api.models.x.tweets.retweet.RetweetDeleteParams
 import com.x_twitter_scraper.api.models.x.users.UserRemoveFollowerParams
+import com.x_twitter_scraper.api.models.x.users.block.BlockCreateParams
+import com.x_twitter_scraper.api.models.x.users.block.BlockDeleteParams
 import com.x_twitter_scraper.api.models.x.users.follow.FollowCreateParams
 import com.x_twitter_scraper.api.models.x.users.follow.FollowDeleteAllParams
+import com.x_twitter_scraper.api.models.x.users.mute.MuteCreateParams
+import com.x_twitter_scraper.api.models.x.users.mute.MuteDeleteParams
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.ResourceLock
@@ -66,6 +75,12 @@ internal class WritePreferHeaderTest {
             "/x/communities/11",
             "/x/communities/12/join",
             "/x/communities/13/join",
+            "/x/tweets/14/bookmark",
+            "/x/tweets/15/bookmark",
+            "/x/users/16/block",
+            "/x/users/17/block",
+            "/x/users/18/mute",
+            "/x/users/19/mute",
         )
 
     @BeforeEach
@@ -101,6 +116,19 @@ internal class WritePreferHeaderTest {
         }
     }
 
+    @Test
+    fun bookmarkBlockAndMuteUseTheirMethodAndSendOnlyTheAccountInTheBody() {
+        sendEveryWrite("wait=50")
+
+        val body = equalToJson("""{"account":"@xquik_test"}""")
+        for (path in listOf("/x/tweets/14/bookmark", "/x/users/16/block", "/x/users/18/mute")) {
+            verify(1, postRequestedFor(urlPathEqualTo(path)).withRequestBody(body))
+        }
+        for (path in listOf("/x/tweets/15/bookmark", "/x/users/17/block", "/x/users/19/mute")) {
+            verify(1, deleteRequestedFor(urlPathEqualTo(path)).withRequestBody(body))
+        }
+    }
+
     private fun sendEveryWrite(prefer: String?) {
         val tweets = client.x().tweets()
         val likes = tweets.like()
@@ -112,6 +140,9 @@ internal class WritePreferHeaderTest {
         val profile = client.x().profile()
         val communities = client.x().communities()
         val joins = communities.join()
+        val bookmarks = tweets.bookmark()
+        val blocks = users.block()
+        val mutes = users.mute()
 
         tweets.create(
             TweetCreateParams.builder()
@@ -263,6 +294,54 @@ internal class WritePreferHeaderTest {
         joins.deleteAll(
             JoinDeleteAllParams.builder()
                 .id("13")
+                .idempotencyKey("write-key-1")
+                .prefer(prefer)
+                .account("@xquik_test")
+                .build()
+        )
+        bookmarks.create(
+            BookmarkCreateParams.builder()
+                .id("14")
+                .idempotencyKey("write-key-1")
+                .prefer(prefer)
+                .account("@xquik_test")
+                .build()
+        )
+        bookmarks.delete(
+            BookmarkDeleteParams.builder()
+                .id("15")
+                .idempotencyKey("write-key-1")
+                .prefer(prefer)
+                .account("@xquik_test")
+                .build()
+        )
+        blocks.create(
+            BlockCreateParams.builder()
+                .id("16")
+                .idempotencyKey("write-key-1")
+                .prefer(prefer)
+                .account("@xquik_test")
+                .build()
+        )
+        blocks.delete(
+            BlockDeleteParams.builder()
+                .id("17")
+                .idempotencyKey("write-key-1")
+                .prefer(prefer)
+                .account("@xquik_test")
+                .build()
+        )
+        mutes.create(
+            MuteCreateParams.builder()
+                .id("18")
+                .idempotencyKey("write-key-1")
+                .prefer(prefer)
+                .account("@xquik_test")
+                .build()
+        )
+        mutes.delete(
+            MuteDeleteParams.builder()
+                .id("19")
                 .idempotencyKey("write-key-1")
                 .prefer(prefer)
                 .account("@xquik_test")

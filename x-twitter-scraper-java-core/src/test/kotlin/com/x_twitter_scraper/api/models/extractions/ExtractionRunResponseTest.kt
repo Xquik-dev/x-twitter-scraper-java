@@ -57,7 +57,7 @@ internal class ExtractionRunResponseTest {
     fun additionalFieldsRoundtrip() {
         val jsonMapper = jsonMapper()
         val json =
-            """{"id":"sample","pollAfterMs":1,"statusUrl":"sample","waitUrl":"sample","toolType":"article_extractor","status":"pending"}"""
+            """{"id":"sample","pollAfterMs":1,"statusUrl":"sample","url":"https://dashboard.xquik.com/activity/a1","waitUrl":"sample","toolType":"article_extractor","status":"pending"}"""
         val model = jsonMapper.readValue(json, jacksonTypeRef<ExtractionRunResponse>())
 
         assertThat(model.id()).isPresent()
@@ -66,6 +66,8 @@ internal class ExtractionRunResponseTest {
         assertThat(model._additionalProperties()).doesNotContainKey("pollAfterMs")
         assertThat(model.statusUrl()).isPresent()
         assertThat(model._additionalProperties()).doesNotContainKey("statusUrl")
+        assertThat(model.url()).isPresent()
+        assertThat(model._additionalProperties()).doesNotContainKey("url")
         assertThat(model.waitUrl()).isPresent()
         assertThat(model._additionalProperties()).doesNotContainKey("waitUrl")
         assertThat(model.toolType()).isPresent()

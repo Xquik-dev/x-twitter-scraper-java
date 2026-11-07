@@ -322,4 +322,21 @@ internal class FollowDeleteAllResponseTest {
         assertThat(FollowDeleteAllResponse.Action.of("delete_dm").known())
             .isEqualTo(FollowDeleteAllResponse.Action.Known.DELETE_DM)
     }
+
+    @Test
+    fun bookmarkBlockAndMuteActionValues() {
+        mapOf(
+                "bookmark" to FollowDeleteAllResponse.Action.Known.BOOKMARK,
+                "unbookmark" to FollowDeleteAllResponse.Action.Known.UNBOOKMARK,
+                "block" to FollowDeleteAllResponse.Action.Known.BLOCK,
+                "unblock" to FollowDeleteAllResponse.Action.Known.UNBLOCK,
+                "mute" to FollowDeleteAllResponse.Action.Known.MUTE,
+                "unmute" to FollowDeleteAllResponse.Action.Known.UNMUTE,
+            )
+            .forEach { (wire, known) ->
+                assertThat(FollowDeleteAllResponse.Action.of(wire).known()).isEqualTo(known)
+                assertThat(FollowDeleteAllResponse.Action.of(wire).value().name)
+                    .isEqualTo(known.name)
+            }
+    }
 }

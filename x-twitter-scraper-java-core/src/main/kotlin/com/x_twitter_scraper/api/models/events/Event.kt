@@ -689,6 +689,7 @@ private constructor(
         private val current: JsonField<ProfileValue>,
         private val followedAt: JsonField<OffsetDateTime>,
         private val followedAtExact: JsonField<Boolean>,
+        private val followKind: JsonField<FollowKind>,
         private val reason: JsonField<Reason>,
         private val metric: JsonField<Metric>,
         private val previousText: JsonField<String>,
@@ -908,6 +909,9 @@ private constructor(
             @JsonProperty("followedAtExact")
             @ExcludeMissing
             followedAtExact: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("followKind")
+            @ExcludeMissing
+            followKind: JsonField<FollowKind> = JsonMissing.of(),
             @JsonProperty("reason") @ExcludeMissing reason: JsonField<Reason> = JsonMissing.of(),
             @JsonProperty("metric") @ExcludeMissing metric: JsonField<Metric> = JsonMissing.of(),
             @JsonProperty("previousText")
@@ -1001,6 +1005,7 @@ private constructor(
             current,
             followedAt,
             followedAtExact,
+            followKind,
             reason,
             metric,
             previousText,
@@ -1280,6 +1285,16 @@ private constructor(
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun followedAtExact(): Optional<Boolean> = followedAtExact.getOptional("followedAtExact")
+
+        /**
+         * Why a removed account is back, on following.added & follower.added. refollow means the
+         * account followed again. return means X lists the old follow again, so it never ended. It
+         * covers removals the monitor reported in the last 30 days. It is missing on a first
+         * follow.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun followKind(): Optional<FollowKind> = followKind.getOptional("followKind")
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun reason(): Optional<Reason> = reason.getOptional("reason")
@@ -2007,6 +2022,15 @@ private constructor(
         fun _followedAtExact(): JsonField<Boolean> = followedAtExact
 
         /**
+         * Returns the raw JSON value of [followKind].
+         *
+         * Unlike [followKind], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("followKind")
+        @ExcludeMissing
+        fun _followKind(): JsonField<FollowKind> = followKind
+
+        /**
          * Returns the raw JSON value of [reason].
          *
          * Unlike [reason], this method doesn't throw if the JSON field has an unexpected type.
@@ -2152,6 +2176,7 @@ private constructor(
             private var current: JsonField<ProfileValue> = JsonMissing.of()
             private var followedAt: JsonField<OffsetDateTime> = JsonMissing.of()
             private var followedAtExact: JsonField<Boolean> = JsonMissing.of()
+            private var followKind: JsonField<FollowKind> = JsonMissing.of()
             private var reason: JsonField<Reason> = JsonMissing.of()
             private var metric: JsonField<Metric> = JsonMissing.of()
             private var previousText: JsonField<String> = JsonMissing.of()
@@ -2240,6 +2265,7 @@ private constructor(
                 current = data.current
                 followedAt = data.followedAt
                 followedAtExact = data.followedAtExact
+                followKind = data.followKind
                 reason = data.reason
                 metric = data.metric
                 previousText = data.previousText
@@ -2904,6 +2930,19 @@ private constructor(
                 this.followedAtExact = followedAtExact
             }
 
+            /**
+             * Why a removed account is back, on following.added & follower.added. refollow means
+             * the account followed again. return means X lists the old follow again, so it never
+             * ended. It covers removals the monitor reported in the last 30 days. It is missing on
+             * a first follow.
+             */
+            fun followKind(followKind: FollowKind) = followKind(JsonField.of(followKind))
+
+            /** Sets [Builder.followKind] to an arbitrary JSON value. */
+            fun followKind(followKind: JsonField<FollowKind>) = apply {
+                this.followKind = followKind
+            }
+
             fun reason(reason: Reason) = reason(JsonField.of(reason))
 
             /** Sets [Builder.reason] to an arbitrary JSON value. */
@@ -3062,6 +3101,7 @@ private constructor(
                     current,
                     followedAt,
                     followedAtExact,
+                    followKind,
                     reason,
                     metric,
                     previousText,
@@ -3165,6 +3205,7 @@ private constructor(
             current().ifPresent { it.validate() }
             followedAt()
             followedAtExact()
+            followKind().ifPresent { it.validate() }
             reason().ifPresent { it.validate() }
             metric().ifPresent { it.validate() }
             previousText()
@@ -3263,6 +3304,7 @@ private constructor(
                 (current.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (followedAt.asKnown().isPresent) 1 else 0) +
                 (if (followedAtExact.asKnown().isPresent) 1 else 0) +
+                (followKind.asKnown().getOrNull()?.validity() ?: 0) +
                 (reason.asKnown().getOrNull()?.validity() ?: 0) +
                 (metric.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (previousText.asKnown().isPresent) 1 else 0) +
@@ -3353,6 +3395,7 @@ private constructor(
                 current == other.current &&
                 followedAt == other.followedAt &&
                 followedAtExact == other.followedAtExact &&
+                followKind == other.followKind &&
                 reason == other.reason &&
                 metric == other.metric &&
                 previousText == other.previousText &&
@@ -3442,6 +3485,7 @@ private constructor(
                 current,
                 followedAt,
                 followedAtExact,
+                followKind,
                 reason,
                 metric,
                 previousText,
@@ -3455,7 +3499,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{id=$id, text=$text, type=$type, createdAt=$createdAt, url=$url, lang=$lang, isReply=$isReply, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isRetweet=$isRetweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, retweetedAt=$retweetedAt, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, conversationId=$conversationId, conversationControl=$conversationControl, limitedActions=$limitedActions, source=$source, displayTextRange=$displayTextRange, textHighlights=$textHighlights, contentDisclosure=$contentDisclosure, article=$article, authorUnavailable=$authorUnavailable, unavailableAuthorId=$unavailableAuthorId, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, hasCommunityNotes=$hasCommunityNotes, edit=$edit, exclusiveContent=$exclusiveContent, isTranslatable=$isTranslatable, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, jetfuelAttachment=$jetfuelAttachment, noteTweet=$noteTweet, place=$place, coordinates=$coordinates, geo=$geo, postCta=$postCta, possiblySensitive=$possiblySensitive, previousCounts=$previousCounts, reactionContext=$reactionContext, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, tombstone=$tombstone, interstitial=$interstitial, unmentionedUserIds=$unmentionedUserIds, viewState=$viewState, entities=$entities, scopes=$scopes, softIntervention=$softIntervention, media=$media, retweetCount=$retweetCount, replyCount=$replyCount, likeCount=$likeCount, quoteCount=$quoteCount, viewCount=$viewCount, bookmarkCount=$bookmarkCount, unknownCounts=$unknownCounts, parentTweet=$parentTweet, quotedTweet=$quotedTweet, retweetedTweet=$retweetedTweet, author=$author, field=$field, change=$change, userId=$userId, username=$username, previous=$previous, current=$current, followedAt=$followedAt, followedAtExact=$followedAtExact, reason=$reason, metric=$metric, previousText=$previousText, versionId=$versionId, liveEventContext=$liveEventContext, unknownFields=$unknownFields, additionalProperties=$additionalProperties}"
+            "Data{id=$id, text=$text, type=$type, createdAt=$createdAt, url=$url, lang=$lang, isReply=$isReply, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isRetweet=$isRetweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, retweetedAt=$retweetedAt, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, conversationId=$conversationId, conversationControl=$conversationControl, limitedActions=$limitedActions, source=$source, displayTextRange=$displayTextRange, textHighlights=$textHighlights, contentDisclosure=$contentDisclosure, article=$article, authorUnavailable=$authorUnavailable, unavailableAuthorId=$unavailableAuthorId, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, hasCommunityNotes=$hasCommunityNotes, edit=$edit, exclusiveContent=$exclusiveContent, isTranslatable=$isTranslatable, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, jetfuelAttachment=$jetfuelAttachment, noteTweet=$noteTweet, place=$place, coordinates=$coordinates, geo=$geo, postCta=$postCta, possiblySensitive=$possiblySensitive, previousCounts=$previousCounts, reactionContext=$reactionContext, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, tombstone=$tombstone, interstitial=$interstitial, unmentionedUserIds=$unmentionedUserIds, viewState=$viewState, entities=$entities, scopes=$scopes, softIntervention=$softIntervention, media=$media, retweetCount=$retweetCount, replyCount=$replyCount, likeCount=$likeCount, quoteCount=$quoteCount, viewCount=$viewCount, bookmarkCount=$bookmarkCount, unknownCounts=$unknownCounts, parentTweet=$parentTweet, quotedTweet=$quotedTweet, retweetedTweet=$retweetedTweet, author=$author, field=$field, change=$change, userId=$userId, username=$username, previous=$previous, current=$current, followedAt=$followedAt, followedAtExact=$followedAtExact, followKind=$followKind, reason=$reason, metric=$metric, previousText=$previousText, versionId=$versionId, liveEventContext=$liveEventContext, unknownFields=$unknownFields, additionalProperties=$additionalProperties}"
 
         @JsonDeserialize(using = ProfileValue.Deserializer::class)
         @JsonSerialize(using = ProfileValue.Serializer::class)
@@ -6593,6 +6637,131 @@ private constructor(
 
             override fun toString() =
                 "Author{id=$id, username=$username, name=$name, description=$description, followers=$followers, following=$following, verified=$verified, isBlueVerified=$isBlueVerified, isVerified=$isVerified, profilePicture=$profilePicture, profilePictureOriginal=$profilePictureOriginal, coverPicture=$coverPicture, profileBannerUrl=$profileBannerUrl, location=$location, accountBasedIn=$accountBasedIn, accountBasedInUnavailable=$accountBasedInUnavailable, accountBasedInAccurate=$accountBasedInAccurate, connectedVia=$connectedVia, connectedViaAccurate=$connectedViaAccurate, affiliateUsername=$affiliateUsername, email=$email, contactInfo=$contactInfo, usernameChanges=$usernameChanges, birthdate=$birthdate, retweetedAt=$retweetedAt, createdAt=$createdAt, statusesCount=$statusesCount, mediaCount=$mediaCount, protected_=$protected_, url=$url, favouritesCount=$favouritesCount, hasCustomTimelines=$hasCustomTimelines, isTranslator=$isTranslator, withheldInCountries=$withheldInCountries, withheldScope=$withheldScope, possiblySensitive=$possiblySensitive, professional=$professional, grokTranslatedBio=$grokTranslatedBio, pinnedTweetIds=$pinnedTweetIds, isAutomated=$isAutomated, automatedBy=$automatedBy, unavailable=$unavailable, unavailableReason=$unavailableReason, verifiedType=$verifiedType, affiliatesHighlightedLabel=$affiliatesHighlightedLabel, businessAccountAffiliatesCount=$businessAccountAffiliatesCount, creatorSubscriptionsCount=$creatorSubscriptionsCount, hasGraduatedAccess=$hasGraduatedAccess, hasHiddenSubscriptionsOnProfile=$hasHiddenSubscriptionsOnProfile, highlightsInfo=$highlightsInfo, identityVerification=$identityVerification, isProfileTranslatable=$isProfileTranslatable, parodyCommentaryFanLabel=$parodyCommentaryFanLabel, profileDescriptionLanguage=$profileDescriptionLanguage, profileImageShape=$profileImageShape, profileInterstitialType=$profileInterstitialType, profileSortEnabled=$profileSortEnabled, profileTranslatorType=$profileTranslatorType, redirectsToUsername=$redirectsToUsername, superFollowEligible=$superFollowEligible, superFollowsUserProfileActive=$superFollowsUserProfileActive, tipJar=$tipJar, listedCount=$listedCount, fastFollowersCount=$fastFollowersCount, normalFollowersCount=$normalFollowersCount, defaultProfile=$defaultProfile, defaultProfileImage=$defaultProfileImage, hasExtendedProfile=$hasExtendedProfile, isTranslationEnabled=$isTranslationEnabled, geoEnabled=$geoEnabled, advertiserAccountType=$advertiserAccountType, advertiserAccountServiceLevels=$advertiserAccountServiceLevels, businessProfileState=$businessProfileState, subscribersCount=$subscribersCount, verificationReason=$verificationReason, communityRole=$communityRole, profileBio=$profileBio, userName=$userName, rawVerified=$rawVerified, additionalProperties=$additionalProperties}"
+        }
+
+        /**
+         * Why a removed account is back, on following.added & follower.added. refollow means the
+         * account followed again. return means X lists the old follow again, so it never ended. It
+         * covers removals the monitor reported in the last 30 days. It is missing on a first
+         * follow.
+         */
+        class FollowKind @JsonCreator private constructor(private val value: JsonField<String>) :
+            Enum {
+
+            /** Returns this class instance's raw value. */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val REFOLLOW = of("refollow")
+
+                @JvmField val RETURN = of("return")
+
+                @JvmStatic fun of(value: String) = FollowKind(JsonField.of(value))
+            }
+
+            /** An enum containing [FollowKind]'s known values. */
+            enum class Known {
+                REFOLLOW,
+                RETURN,
+            }
+
+            /**
+             * An enum containing [FollowKind]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [FollowKind] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                REFOLLOW,
+                RETURN,
+                /**
+                 * An enum member indicating that [FollowKind] was instantiated with an unknown
+                 * value.
+                 */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             */
+            fun value(): Value =
+                when (this) {
+                    REFOLLOW -> Value.REFOLLOW
+                    RETURN -> Value.RETURN
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+             *   known member.
+             */
+            fun known(): Known =
+                when (this) {
+                    REFOLLOW -> Known.REFOLLOW
+                    RETURN -> Known.RETURN
+                    else -> throw XTwitterScraperInvalidDataException("Unknown FollowKind: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * @throws XTwitterScraperInvalidDataException if this class instance's value does not
+             *   have the expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    XTwitterScraperInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
+             */
+            fun validate(): FollowKind = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: XTwitterScraperInvalidDataException) {
+                    false
+                }
+
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is FollowKind && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
         }
 
         class Reason @JsonCreator private constructor(private val value: JsonField<String>) : Enum {

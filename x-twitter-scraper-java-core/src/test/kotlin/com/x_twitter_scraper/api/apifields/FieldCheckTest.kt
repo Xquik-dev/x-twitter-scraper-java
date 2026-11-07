@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.x_twitter_scraper.api.models.credits.CreditRetrieveBalanceResponse
 import com.x_twitter_scraper.api.models.drafts.DraftCreateParams
 import com.x_twitter_scraper.api.models.trends.TrendListResponse
+import com.x_twitter_scraper.api.models.x.XSearchPlacesParams
 import com.x_twitter_scraper.api.models.x.media.MediaUploadParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateAvatarParams
 import com.x_twitter_scraper.api.models.x.profile.ProfileUpdateBannerParams
@@ -153,7 +154,7 @@ internal class FieldCheckTest {
     fun findsEverySdkMethodByTheRequestItSends() {
         val methods = Operations.methods(SdkShapes())
 
-        assertThat(methods).hasSize(198)
+        assertThat(methods).hasSize(204)
         assertThat(methods.map { "${it.httpMethod} /${it.segments.joinToString("/")}" })
             .contains(
                 "GET /api/v1/credits",
@@ -168,10 +169,12 @@ internal class FieldCheckTest {
     @Test
     fun readsQueryWireNamesAndRequiredParamsFromParamsClasses() {
         val query = SdkShapes().params(TweetSearchParams::class.java).first as Obj
+        val places = SdkShapes().params(XSearchPlacesParams::class.java).first as Obj
 
         assertThat(query.props).containsKeys("q", "queryType", "fields", "omit", "sinceTime")
-        assertThat(query.props.getValue("q").required).isTrue()
+        assertThat(query.props.getValue("q").required).isFalse()
         assertThat(query.props.getValue("fields").required).isFalse()
+        assertThat(places.props.getValue("q").required).isTrue()
     }
 
     @Test
