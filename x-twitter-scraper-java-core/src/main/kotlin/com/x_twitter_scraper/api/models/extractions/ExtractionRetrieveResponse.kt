@@ -1085,6 +1085,7 @@ private constructor(
         private val media: JsonField<List<TweetMedia>>,
         private val possiblySensitive: JsonField<Boolean>,
         private val quotedMedia: JsonField<List<TweetMedia>>,
+        private val isDeleted: JsonField<Boolean>,
         private val quotedPossiblySensitive: JsonField<Boolean>,
         private val quotedPost: JsonField<QuotedPost>,
         private val bookmarkCount: JsonField<Long>,
@@ -1139,6 +1140,9 @@ private constructor(
             @JsonProperty("quotedMedia")
             @ExcludeMissing
             quotedMedia: JsonField<List<TweetMedia>> = JsonMissing.of(),
+            @JsonProperty("isDeleted")
+            @ExcludeMissing
+            isDeleted: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("quotedPossiblySensitive")
             @ExcludeMissing
             quotedPossiblySensitive: JsonField<Boolean> = JsonMissing.of(),
@@ -1186,6 +1190,7 @@ private constructor(
             media,
             possiblySensitive,
             quotedMedia,
+            isDeleted,
             quotedPossiblySensitive,
             quotedPost,
             bookmarkCount,
@@ -1258,6 +1263,15 @@ private constructor(
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
         fun quotedMedia(): Optional<List<TweetMedia>> = quotedMedia.getOptional("quotedMedia")
+
+        /**
+         * True on a post its author deleted from X after Xquik saw it, with outputPreset=flat.
+         * Default nested output uses enrichmentData.tweet.isDeleted. An account post list with a
+         * date range adds such posts from the last 30 days. Absent on every other row.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun isDeleted(): Optional<Boolean> = isDeleted.getOptional("isDeleted")
 
         /**
          * X's sensitive flag on the quoted post with outputPreset=flat. Default nested output uses
@@ -1436,6 +1450,13 @@ private constructor(
         fun _quotedMedia(): JsonField<List<TweetMedia>> = quotedMedia
 
         /**
+         * Returns the raw JSON value of [isDeleted].
+         *
+         * Unlike [isDeleted], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("isDeleted") @ExcludeMissing fun _isDeleted(): JsonField<Boolean> = isDeleted
+
+        /**
          * Returns the raw JSON value of [quotedPossiblySensitive].
          *
          * Unlike [quotedPossiblySensitive], this method doesn't throw if the JSON field has an
@@ -1552,6 +1573,7 @@ private constructor(
             private var media: JsonField<MutableList<TweetMedia>>? = null
             private var possiblySensitive: JsonField<Boolean> = JsonMissing.of()
             private var quotedMedia: JsonField<MutableList<TweetMedia>>? = null
+            private var isDeleted: JsonField<Boolean> = JsonMissing.of()
             private var quotedPossiblySensitive: JsonField<Boolean> = JsonMissing.of()
             private var quotedPost: JsonField<QuotedPost> = JsonMissing.of()
             private var bookmarkCount: JsonField<Long> = JsonMissing.of()
@@ -1582,6 +1604,7 @@ private constructor(
                 media = result.media.map { it.toMutableList() }
                 possiblySensitive = result.possiblySensitive
                 quotedMedia = result.quotedMedia.map { it.toMutableList() }
+                isDeleted = result.isDeleted
                 quotedPossiblySensitive = result.quotedPossiblySensitive
                 quotedPost = result.quotedPost
                 bookmarkCount = result.bookmarkCount
@@ -1728,6 +1751,16 @@ private constructor(
             }
 
             /**
+             * True on a post its author deleted from X after Xquik saw it, with outputPreset=flat.
+             * Default nested output uses enrichmentData.tweet.isDeleted. An account post list with
+             * a date range adds such posts from the last 30 days. Absent on every other row.
+             */
+            fun isDeleted(isDeleted: Boolean) = isDeleted(JsonField.of(isDeleted))
+
+            /** Sets [Builder.isDeleted] to an arbitrary JSON value. */
+            fun isDeleted(isDeleted: JsonField<Boolean>) = apply { this.isDeleted = isDeleted }
+
+            /**
              * X's sensitive flag on the quoted post with outputPreset=flat. Default nested output
              * uses enrichmentData.tweet.quotedPossiblySensitive.
              */
@@ -1845,6 +1878,7 @@ private constructor(
                     (media ?: JsonMissing.of()).map { it.toImmutable() },
                     possiblySensitive,
                     (quotedMedia ?: JsonMissing.of()).map { it.toImmutable() },
+                    isDeleted,
                     quotedPossiblySensitive,
                     quotedPost,
                     bookmarkCount,
@@ -1890,6 +1924,7 @@ private constructor(
             media().ifPresent { it.forEach { it.validate() } }
             possiblySensitive()
             quotedMedia().ifPresent { it.forEach { it.validate() } }
+            isDeleted()
             quotedPossiblySensitive()
             quotedPost().ifPresent { it.validate() }
             bookmarkCount()
@@ -1930,6 +1965,7 @@ private constructor(
                 (media.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
                 (if (possiblySensitive.asKnown().isPresent) 1 else 0) +
                 (quotedMedia.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
+                (if (isDeleted.asKnown().isPresent) 1 else 0) +
                 (if (quotedPossiblySensitive.asKnown().isPresent) 1 else 0) +
                 (quotedPost.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (bookmarkCount.asKnown().isPresent) 1 else 0) +
@@ -2410,6 +2446,7 @@ private constructor(
                 media == other.media &&
                 possiblySensitive == other.possiblySensitive &&
                 quotedMedia == other.quotedMedia &&
+                isDeleted == other.isDeleted &&
                 quotedPossiblySensitive == other.quotedPossiblySensitive &&
                 quotedPost == other.quotedPost &&
                 bookmarkCount == other.bookmarkCount &&
@@ -2441,6 +2478,7 @@ private constructor(
                 media,
                 possiblySensitive,
                 quotedMedia,
+                isDeleted,
                 quotedPossiblySensitive,
                 quotedPost,
                 bookmarkCount,
@@ -2458,7 +2496,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Result{id=$id, xUserId=$xUserId, xUsername=$xUsername, xDisplayName=$xDisplayName, xFollowersCount=$xFollowersCount, xVerified=$xVerified, xProfileImageUrl=$xProfileImageUrl, email=$email, tweetId=$tweetId, tweetUrl=$tweetUrl, tweetText=$tweetText, tweetCreatedAt=$tweetCreatedAt, createdAt=$createdAt, media=$media, possiblySensitive=$possiblySensitive, quotedMedia=$quotedMedia, quotedPossiblySensitive=$quotedPossiblySensitive, quotedPost=$quotedPost, bookmarkCount=$bookmarkCount, likeCount=$likeCount, quoteCount=$quoteCount, replyCount=$replyCount, retweetCount=$retweetCount, viewCount=$viewCount, enrichmentData=$enrichmentData, verifiedType=$verifiedType, additionalProperties=$additionalProperties}"
+            "Result{id=$id, xUserId=$xUserId, xUsername=$xUsername, xDisplayName=$xDisplayName, xFollowersCount=$xFollowersCount, xVerified=$xVerified, xProfileImageUrl=$xProfileImageUrl, email=$email, tweetId=$tweetId, tweetUrl=$tweetUrl, tweetText=$tweetText, tweetCreatedAt=$tweetCreatedAt, createdAt=$createdAt, media=$media, possiblySensitive=$possiblySensitive, quotedMedia=$quotedMedia, isDeleted=$isDeleted, quotedPossiblySensitive=$quotedPossiblySensitive, quotedPost=$quotedPost, bookmarkCount=$bookmarkCount, likeCount=$likeCount, quoteCount=$quoteCount, replyCount=$replyCount, retweetCount=$retweetCount, viewCount=$viewCount, enrichmentData=$enrichmentData, verifiedType=$verifiedType, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
