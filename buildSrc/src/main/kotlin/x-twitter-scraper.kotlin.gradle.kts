@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import org.jetbrains.dokka.gradle.DokkaExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
@@ -33,6 +34,10 @@ kotlin {
         apiVersion.set(KotlinVersion.KOTLIN_2_2)
         coreLibrariesVersion = "2.3.21"
     }
+}
+
+extensions.configure<DokkaExtension> {
+    dokkaGeneratorIsolation.set(ProcessIsolation { maxHeapSize.set("6g") })
 }
 
 tasks.withType<Test>().configureEach {
