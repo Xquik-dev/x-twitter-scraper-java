@@ -39,10 +39,6 @@ internal fun <T : Any> checkKnown(name: String, value: MultipartField<T>): T =
         IllegalStateException("`$name` is not a known type: ${value.javaClass.simpleName}")
     }
 
-/**
- * Checks that a support message has text or at least 1 attachment, as the API requires. The API
- * trims the body, so a blank body counts as no text.
- */
 @JvmSynthetic
 internal fun checkBodyOrAttachments(body: JsonField<String>, attachments: JsonField<List<*>>) {
     val hasText =

@@ -24,6 +24,7 @@
 
 ### Features
 
+* `UserRetrieveBatchTweetsParams.pageSize()` takes up to 300 posts per user.
 * `monitors().upsertByUsername()` creates the monitor for an account, or updates it if it exists, so the same call twice still leaves 1 monitor. `created()` says which one ran.
 * `MediaDownloadResponse.unprocessedTweetIds()` lists the posts Xquik had no time to read, at no charge. Send them again.
 * `ExtractionRunParams` and `DrawRunParams` take `idempotencyKey`, which `extractions().run` and `draws().run` send as `Idempotency-Key`. An exact retry with the same key returns the first result and charges nothing.

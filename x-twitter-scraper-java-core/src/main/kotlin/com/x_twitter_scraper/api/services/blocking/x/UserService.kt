@@ -211,9 +211,9 @@ interface UserService {
     ): UserRetrieveBatchResponse
 
     /**
-     * Returns the newest posts of up to 20 users, named by user ID, username or profile link, in
-     * the order named. Send ids or usernames, not both. Each post costs 1 credit. A user in
-     * unavailable_ids or unprocessed_ids costs nothing.
+     * Returns the newest posts of users named by user ID, username or profile link, in the order
+     * named. Send ids or usernames, not both. Each post costs 1 credit. A user in unavailable_ids
+     * or unprocessed_ids costs nothing.
      */
     fun retrieveBatchTweets(): UserRetrieveBatchTweetsResponse =
         retrieveBatchTweets(UserRetrieveBatchTweetsParams.none())
