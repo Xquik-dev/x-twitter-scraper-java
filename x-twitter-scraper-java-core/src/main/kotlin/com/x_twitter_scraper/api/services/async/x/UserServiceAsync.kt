@@ -19,6 +19,8 @@ import com.x_twitter_scraper.api.models.x.users.UserRetrieveBatchParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveBatchResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveBatchTweetsParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveBatchTweetsResponse
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowerAuditParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowerAuditResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowerIdsParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowerIdsResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowersParams
@@ -251,6 +253,50 @@ interface UserServiceAsync {
         requestOptions: RequestOptions
     ): CompletableFuture<UserRetrieveBatchTweetsResponse> =
         retrieveBatchTweets(UserRetrieveBatchTweetsParams.none(), requestOptions)
+
+    /**
+     * Reads the newest followers of a public account & returns a follower audit. It gives each
+     * follower 1 class with its score & signals, then adds coverage, a quality score, signal
+     * counts, arrival bands, join cohorts, countries, top followers & the account's engagement.
+     * Each follower read costs 1 credit, and the engagement adds 1 credit. Signals come from public
+     * profiles, so a real person can match. Older followers may differ from the newest ones.
+     */
+    fun retrieveFollowerAudit(id: String): CompletableFuture<UserRetrieveFollowerAuditResponse> =
+        retrieveFollowerAudit(id, UserRetrieveFollowerAuditParams.none())
+
+    /** @see retrieveFollowerAudit */
+    fun retrieveFollowerAudit(
+        id: String,
+        params: UserRetrieveFollowerAuditParams = UserRetrieveFollowerAuditParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<UserRetrieveFollowerAuditResponse> =
+        retrieveFollowerAudit(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see retrieveFollowerAudit */
+    fun retrieveFollowerAudit(
+        id: String,
+        params: UserRetrieveFollowerAuditParams = UserRetrieveFollowerAuditParams.none(),
+    ): CompletableFuture<UserRetrieveFollowerAuditResponse> =
+        retrieveFollowerAudit(id, params, RequestOptions.none())
+
+    /** @see retrieveFollowerAudit */
+    fun retrieveFollowerAudit(
+        params: UserRetrieveFollowerAuditParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<UserRetrieveFollowerAuditResponse>
+
+    /** @see retrieveFollowerAudit */
+    fun retrieveFollowerAudit(
+        params: UserRetrieveFollowerAuditParams
+    ): CompletableFuture<UserRetrieveFollowerAuditResponse> =
+        retrieveFollowerAudit(params, RequestOptions.none())
+
+    /** @see retrieveFollowerAudit */
+    fun retrieveFollowerAudit(
+        id: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<UserRetrieveFollowerAuditResponse> =
+        retrieveFollowerAudit(id, UserRetrieveFollowerAuditParams.none(), requestOptions)
 
     /**
      * Returns the user IDs of the selected user's followers, newest first, up to 5,000 a page. Use
@@ -1235,6 +1281,49 @@ interface UserServiceAsync {
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<UserRetrieveBatchTweetsResponse>> =
             retrieveBatchTweets(UserRetrieveBatchTweetsParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /x/users/{id}/follower-audit`, but is otherwise the
+         * same as [UserServiceAsync.retrieveFollowerAudit].
+         */
+        fun retrieveFollowerAudit(
+            id: String
+        ): CompletableFuture<HttpResponseFor<UserRetrieveFollowerAuditResponse>> =
+            retrieveFollowerAudit(id, UserRetrieveFollowerAuditParams.none())
+
+        /** @see retrieveFollowerAudit */
+        fun retrieveFollowerAudit(
+            id: String,
+            params: UserRetrieveFollowerAuditParams = UserRetrieveFollowerAuditParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<UserRetrieveFollowerAuditResponse>> =
+            retrieveFollowerAudit(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see retrieveFollowerAudit */
+        fun retrieveFollowerAudit(
+            id: String,
+            params: UserRetrieveFollowerAuditParams = UserRetrieveFollowerAuditParams.none(),
+        ): CompletableFuture<HttpResponseFor<UserRetrieveFollowerAuditResponse>> =
+            retrieveFollowerAudit(id, params, RequestOptions.none())
+
+        /** @see retrieveFollowerAudit */
+        fun retrieveFollowerAudit(
+            params: UserRetrieveFollowerAuditParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<UserRetrieveFollowerAuditResponse>>
+
+        /** @see retrieveFollowerAudit */
+        fun retrieveFollowerAudit(
+            params: UserRetrieveFollowerAuditParams
+        ): CompletableFuture<HttpResponseFor<UserRetrieveFollowerAuditResponse>> =
+            retrieveFollowerAudit(params, RequestOptions.none())
+
+        /** @see retrieveFollowerAudit */
+        fun retrieveFollowerAudit(
+            id: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<UserRetrieveFollowerAuditResponse>> =
+            retrieveFollowerAudit(id, UserRetrieveFollowerAuditParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /x/users/{id}/follower-ids`, but is otherwise the

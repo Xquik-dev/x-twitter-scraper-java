@@ -41,6 +41,7 @@
 * `client.activity()` adds the activity log. `list` returns the account's activity rows, and `retrieve` returns the full record of 1 activity.
 * `client.x().users()` adds `retrieveShadowban`, which checks 1 account for a search ban, a search suggestion ban and reply deboosting.
 * `ShadowbanReport` reads `checkedAt`, `overall` and the `replyLock`, `timeline`, `engagement`, `sensitive` and `withheld` checks.
+* `client.x().users()` adds `retrieveFollowerAudit`, which reads an account's newest followers and returns a `FollowerAudit`. It gives each follower a `FollowerClass` from its public profile, and adds coverage, a quality grade, signal counts, arrival bands, join cohorts, languages, places and top followers.
 * Events read `postId`, `postUrl`, `authorId` and `authorUsername` on post events, and the `post` monitor type.
 * `EventListParams` filters by `postMonitorId`, and event data reads `metric`, `previousText` and `versionId`.
 * `EventType` adds the 10 post event types, such as `POST_REPLY_NEW`. Account and keyword monitors reject them.
