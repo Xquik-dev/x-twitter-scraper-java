@@ -20,6 +20,7 @@ internal class MediaDownloadResponseTest {
                 .totalMedia(5L)
                 .totalTweets(2L)
                 .tweetId("1234567890")
+                .addUnprocessedTweetId("1234567891")
                 .build()
 
         assertThat(mediaDownloadResponse.cacheHit()).contains(false)
@@ -27,6 +28,8 @@ internal class MediaDownloadResponseTest {
         assertThat(mediaDownloadResponse.totalMedia()).contains(5L)
         assertThat(mediaDownloadResponse.totalTweets()).contains(2L)
         assertThat(mediaDownloadResponse.tweetId()).contains("1234567890")
+        assertThat(mediaDownloadResponse.unprocessedTweetIds().get())
+            .containsExactly("1234567891")
     }
 
     @Test
@@ -39,6 +42,7 @@ internal class MediaDownloadResponseTest {
                 .totalMedia(5L)
                 .totalTweets(2L)
                 .tweetId("1234567890")
+                .addUnprocessedTweetId("1234567891")
                 .build()
 
         val roundtrippedMediaDownloadResponse =
