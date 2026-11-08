@@ -470,7 +470,9 @@
       "POST /api/v1/monitors response enum eventTypes[]",
       "POST /api/v1/monitors/keywords request enum eventTypes[]",
       "POST /api/v1/monitors/keywords response enum eventTypes[]",
-      "POST /api/v1/webhooks/telegram request enum eventTypes[]"
+      "POST /api/v1/webhooks/telegram request enum eventTypes[]",
+      "PUT /api/v1/monitors/username/{username} request enum eventTypes[]",
+      "PUT /api/v1/monitors/username/{username} response enum eventTypes[]"
     ]
   },
   {

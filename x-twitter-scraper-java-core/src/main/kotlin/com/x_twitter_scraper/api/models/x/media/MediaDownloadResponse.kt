@@ -34,6 +34,7 @@ private constructor(
     private val tweetId: JsonField<String>,
     private val items: JsonField<List<Item>>,
     private val imageFilter: JsonField<ImageFilterSummary>,
+    private val unprocessedTweetIds: JsonField<List<String>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -52,6 +53,9 @@ private constructor(
         @JsonProperty("imageFilter")
         @ExcludeMissing
         imageFilter: JsonField<ImageFilterSummary> = JsonMissing.of(),
+        @JsonProperty("unprocessedTweetIds")
+        @ExcludeMissing
+        unprocessedTweetIds: JsonField<List<String>> = JsonMissing.of(),
     ) : this(
         cacheHit,
         galleryUrl,
@@ -60,6 +64,7 @@ private constructor(
         tweetId,
         items,
         imageFilter,
+        unprocessedTweetIds,
         mutableMapOf(),
     )
 
@@ -136,6 +141,24 @@ private constructor(
     @ExcludeMissing
     fun _imageFilter(): JsonField<ImageFilterSummary> = imageFilter
 
+    /**
+     * Posts Xquik had no time to read, at no charge. Send them again.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun unprocessedTweetIds(): Optional<List<String>> =
+        unprocessedTweetIds.getOptional("unprocessedTweetIds")
+
+    /**
+     * Returns the raw JSON value of [unprocessedTweetIds].
+     *
+     * Unlike [unprocessedTweetIds], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("unprocessedTweetIds")
+    @ExcludeMissing
+    fun _unprocessedTweetIds(): JsonField<List<String>> = unprocessedTweetIds
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -164,6 +187,7 @@ private constructor(
         private var tweetId: JsonField<String> = JsonMissing.of()
         private var items: JsonField<MutableList<Item>>? = null
         private var imageFilter: JsonField<ImageFilterSummary> = JsonMissing.of()
+        private var unprocessedTweetIds: JsonField<MutableList<String>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -175,6 +199,8 @@ private constructor(
             tweetId = mediaDownloadResponse.tweetId
             items = mediaDownloadResponse.items.map { it.toMutableList() }
             imageFilter = mediaDownloadResponse.imageFilter
+            unprocessedTweetIds =
+                mediaDownloadResponse.unprocessedTweetIds.map { it.toMutableList() }
             additionalProperties = mediaDownloadResponse.additionalProperties.toMutableMap()
         }
 
@@ -234,6 +260,33 @@ private constructor(
             this.imageFilter = imageFilter
         }
 
+        /** Posts Xquik had no time to read, at no charge. Send them again. */
+        fun unprocessedTweetIds(unprocessedTweetIds: List<String>) =
+            unprocessedTweetIds(JsonField.of(unprocessedTweetIds))
+
+        /**
+         * Sets [Builder.unprocessedTweetIds] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.unprocessedTweetIds] with a well-typed `List<String>`
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun unprocessedTweetIds(unprocessedTweetIds: JsonField<List<String>>) = apply {
+            this.unprocessedTweetIds = unprocessedTweetIds.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [String] to [unprocessedTweetIds].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addUnprocessedTweetId(unprocessedTweetId: String) = apply {
+            unprocessedTweetIds =
+                (unprocessedTweetIds ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("unprocessedTweetIds", it).add(unprocessedTweetId)
+                }
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -267,6 +320,7 @@ private constructor(
                 tweetId,
                 (items ?: JsonMissing.of()).map { it.toImmutable() },
                 imageFilter,
+                (unprocessedTweetIds ?: JsonMissing.of()).map { it.toImmutable() },
                 additionalProperties.toMutableMap(),
             )
     }
@@ -293,6 +347,7 @@ private constructor(
         tweetId()
         items().ifPresent { it.forEach { it.validate() } }
         imageFilter().ifPresent { it.validate() }
+        unprocessedTweetIds()
         validated = true
     }
 
@@ -312,7 +367,8 @@ private constructor(
             (if (totalTweets.asKnown().isPresent) 1 else 0) +
             (if (tweetId.asKnown().isPresent) 1 else 0) +
             (items.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
-            (imageFilter.asKnown().getOrNull()?.validity() ?: 0)
+            (imageFilter.asKnown().getOrNull()?.validity() ?: 0) +
+            (unprocessedTweetIds.asKnown().getOrNull()?.size ?: 0)
 
     class Item
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -1243,6 +1299,7 @@ private constructor(
             tweetId == other.tweetId &&
             items == other.items &&
             imageFilter == other.imageFilter &&
+            unprocessedTweetIds == other.unprocessedTweetIds &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1255,6 +1312,7 @@ private constructor(
             tweetId,
             items,
             imageFilter,
+            unprocessedTweetIds,
             additionalProperties,
         )
     }
@@ -1262,5 +1320,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "MediaDownloadResponse{cacheHit=$cacheHit, galleryUrl=$galleryUrl, totalMedia=$totalMedia, totalTweets=$totalTweets, tweetId=$tweetId, items=$items, imageFilter=$imageFilter, additionalProperties=$additionalProperties}"
+        "MediaDownloadResponse{cacheHit=$cacheHit, galleryUrl=$galleryUrl, totalMedia=$totalMedia, totalTweets=$totalTweets, tweetId=$tweetId, items=$items, imageFilter=$imageFilter, unprocessedTweetIds=$unprocessedTweetIds, additionalProperties=$additionalProperties}"
 }
