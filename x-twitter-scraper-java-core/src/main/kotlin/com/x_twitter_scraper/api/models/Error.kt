@@ -23,8 +23,10 @@ import com.x_twitter_scraper.api.core.JsonField
 import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.allMaxBy
+import com.x_twitter_scraper.api.core.checkKnown
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.getOrThrow
+import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.util.Collections
 import java.util.Objects
@@ -43,6 +45,9 @@ private constructor(
     private val reason: JsonField<String>,
     private val retryAfter: JsonField<Long>,
     private val retryAfterMs: JsonField<Long>,
+    private val requiredScope: JsonField<RequiredScope>,
+    private val allowedFields: JsonField<List<String>>,
+    private val fieldErrors: JsonField<List<FieldError>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -55,7 +60,26 @@ private constructor(
         @JsonProperty("retryAfterMs")
         @ExcludeMissing
         retryAfterMs: JsonField<Long> = JsonMissing.of(),
-    ) : this(error, message, reason, retryAfter, retryAfterMs, mutableMapOf())
+        @JsonProperty("requiredScope")
+        @ExcludeMissing
+        requiredScope: JsonField<RequiredScope> = JsonMissing.of(),
+        @JsonProperty("allowedFields")
+        @ExcludeMissing
+        allowedFields: JsonField<List<String>> = JsonMissing.of(),
+        @JsonProperty("fieldErrors")
+        @ExcludeMissing
+        fieldErrors: JsonField<List<FieldError>> = JsonMissing.of(),
+    ) : this(
+        error,
+        message,
+        reason,
+        retryAfter,
+        retryAfterMs,
+        requiredScope,
+        allowedFields,
+        fieldErrors,
+        mutableMapOf(),
+    )
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -128,6 +152,54 @@ private constructor(
     @ExcludeMissing
     fun _retryAfterMs(): JsonField<Long> = retryAfterMs
 
+    /**
+     * With insufficient_scope, the scope the API key needs for this route.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun requiredScope(): Optional<RequiredScope> = requiredScope.getOptional("requiredScope")
+
+    /**
+     * Returns the raw JSON value of [requiredScope].
+     *
+     * Unlike [requiredScope], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("requiredScope")
+    @ExcludeMissing
+    fun _requiredScope(): JsonField<RequiredScope> = requiredScope
+
+    /**
+     * With unknown_field, the valid names where the first unknown name in fields or omit stopped.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun allowedFields(): Optional<List<String>> = allowedFields.getOptional("allowedFields")
+
+    /**
+     * Returns the raw JSON value of [allowedFields].
+     *
+     * Unlike [allowedFields], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("allowedFields")
+    @ExcludeMissing
+    fun _allowedFields(): JsonField<List<String>> = allowedFields
+
+    /**
+     * With unknown_field, each unknown name in fields or omit, with the name it most likely meant.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun fieldErrors(): Optional<List<FieldError>> = fieldErrors.getOptional("fieldErrors")
+
+    /**
+     * Returns the raw JSON value of [fieldErrors].
+     *
+     * Unlike [fieldErrors], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("fieldErrors")
+    @ExcludeMissing
+    fun _fieldErrors(): JsonField<List<FieldError>> = fieldErrors
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -161,6 +233,9 @@ private constructor(
         private var reason: JsonField<String> = JsonMissing.of()
         private var retryAfter: JsonField<Long> = JsonMissing.of()
         private var retryAfterMs: JsonField<Long> = JsonMissing.of()
+        private var requiredScope: JsonField<RequiredScope> = JsonMissing.of()
+        private var allowedFields: JsonField<MutableList<String>>? = null
+        private var fieldErrors: JsonField<MutableList<FieldError>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -170,6 +245,9 @@ private constructor(
             reason = error.reason
             retryAfter = error.retryAfter
             retryAfterMs = error.retryAfterMs
+            requiredScope = error.requiredScope
+            allowedFields = error.allowedFields.map { it.toMutableList() }
+            fieldErrors = error.fieldErrors.map { it.toMutableList() }
             additionalProperties = error.additionalProperties.toMutableMap()
         }
 
@@ -210,6 +288,78 @@ private constructor(
         /** Sets [Builder.retryAfterMs] to an arbitrary JSON value. */
         fun retryAfterMs(retryAfterMs: JsonField<Long>) = apply { this.retryAfterMs = retryAfterMs }
 
+        /** With insufficient_scope, the scope the API key needs for this route. */
+        fun requiredScope(requiredScope: RequiredScope) = requiredScope(JsonField.of(requiredScope))
+
+        /**
+         * Sets [Builder.requiredScope] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.requiredScope] with a well-typed [RequiredScope] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun requiredScope(requiredScope: JsonField<RequiredScope>) = apply {
+            this.requiredScope = requiredScope
+        }
+
+        /**
+         * With unknown_field, the valid names where the first unknown name in fields or omit
+         * stopped.
+         */
+        fun allowedFields(allowedFields: List<String>) = allowedFields(JsonField.of(allowedFields))
+
+        /**
+         * Sets [Builder.allowedFields] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.allowedFields] with a well-typed [List<String>] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun allowedFields(allowedFields: JsonField<List<String>>) = apply {
+            this.allowedFields = allowedFields.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [String] to [allowedFields].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addAllowedField(allowedField: String) = apply {
+            allowedFields =
+                (allowedFields ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("allowedFields", it).add(allowedField)
+                }
+        }
+
+        /**
+         * With unknown_field, each unknown name in fields or omit, with the name it most likely
+         * meant.
+         */
+        fun fieldErrors(fieldErrors: List<FieldError>) = fieldErrors(JsonField.of(fieldErrors))
+
+        /**
+         * Sets [Builder.fieldErrors] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.fieldErrors] with a well-typed [List<FieldError>] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun fieldErrors(fieldErrors: JsonField<List<FieldError>>) = apply {
+            this.fieldErrors = fieldErrors.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [FieldError] to [fieldErrors].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addFieldError(fieldError: FieldError) = apply {
+            fieldErrors =
+                (fieldErrors ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("fieldErrors", it).add(fieldError)
+                }
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -248,6 +398,9 @@ private constructor(
                 reason,
                 retryAfter,
                 retryAfterMs,
+                requiredScope,
+                (allowedFields ?: JsonMissing.of()).map { it.toImmutable() },
+                (fieldErrors ?: JsonMissing.of()).map { it.toImmutable() },
                 additionalProperties.toMutableMap(),
             )
     }
@@ -272,6 +425,9 @@ private constructor(
         reason()
         retryAfter()
         retryAfterMs()
+        requiredScope().ifPresent { it.validate() }
+        allowedFields()
+        fieldErrors().ifPresent { it.forEach { it.validate() } }
         validated = true
     }
 
@@ -289,7 +445,10 @@ private constructor(
             (if (message.asKnown().isPresent) 1 else 0) +
             (if (reason.asKnown().isPresent) 1 else 0) +
             (if (retryAfter.asKnown().isPresent) 1 else 0) +
-            (if (retryAfterMs.asKnown().isPresent) 1 else 0)
+            (if (retryAfterMs.asKnown().isPresent) 1 else 0) +
+            (requiredScope.asKnown().getOrNull()?.validity() ?: 0) +
+            (allowedFields.asKnown().getOrNull()?.size ?: 0) +
+            (fieldErrors.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 
     @JsonDeserialize(using = InnerError.Deserializer::class)
     @JsonSerialize(using = InnerError.Serializer::class)
@@ -3075,6 +3234,512 @@ private constructor(
         }
     }
 
+    /** 1 unknown name in fields or omit, with the name it most likely meant. */
+    class FieldError
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val code: JsonField<String>,
+        private val field: JsonField<String>,
+        private val message: JsonField<String>,
+        private val path: JsonField<Path>,
+        private val suggestion: JsonField<String>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("code") @ExcludeMissing code: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("field") @ExcludeMissing field: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("message") @ExcludeMissing message: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("path") @ExcludeMissing path: JsonField<Path> = JsonMissing.of(),
+            @JsonProperty("suggestion")
+            @ExcludeMissing
+            suggestion: JsonField<String> = JsonMissing.of(),
+        ) : this(code, field, message, path, suggestion, mutableMapOf())
+
+        /**
+         * Names the problem, which is unknown_field.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null.
+         */
+        fun code(): String = code.getRequired("code")
+
+        /**
+         * The name as the request wrote it.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null.
+         */
+        fun field(): String = field.getRequired("field")
+
+        /**
+         * What to send instead.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null.
+         */
+        fun message(): String = message.getRequired("message")
+
+        /**
+         * The parameter that held the name.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or
+         *   is unexpectedly missing or null.
+         */
+        fun path(): Path = path.getRequired("path")
+
+        /**
+         * The closest valid name, when 1 is close.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun suggestion(): Optional<String> = suggestion.getOptional("suggestion")
+
+        /**
+         * Returns the raw JSON value of [code].
+         *
+         * Unlike [code], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("code") @ExcludeMissing fun _code(): JsonField<String> = code
+
+        /**
+         * Returns the raw JSON value of [field].
+         *
+         * Unlike [field], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("field") @ExcludeMissing fun _field(): JsonField<String> = field
+
+        /**
+         * Returns the raw JSON value of [message].
+         *
+         * Unlike [message], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("message") @ExcludeMissing fun _message(): JsonField<String> = message
+
+        /**
+         * Returns the raw JSON value of [path].
+         *
+         * Unlike [path], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("path") @ExcludeMissing fun _path(): JsonField<Path> = path
+
+        /**
+         * Returns the raw JSON value of [suggestion].
+         *
+         * Unlike [suggestion], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("suggestion")
+        @ExcludeMissing
+        fun _suggestion(): JsonField<String> = suggestion
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of [FieldError].
+             *
+             * The following fields are required:
+             * ```java
+             * .code()
+             * .field()
+             * .message()
+             * .path()
+             * ```
+             */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [FieldError]. */
+        class Builder internal constructor() {
+
+            private var code: JsonField<String>? = null
+            private var field: JsonField<String>? = null
+            private var message: JsonField<String>? = null
+            private var path: JsonField<Path>? = null
+            private var suggestion: JsonField<String> = JsonMissing.of()
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(fieldError: FieldError) = apply {
+                code = fieldError.code
+                field = fieldError.field
+                message = fieldError.message
+                path = fieldError.path
+                suggestion = fieldError.suggestion
+                additionalProperties = fieldError.additionalProperties.toMutableMap()
+            }
+
+            /** Names the problem, which is unknown_field. */
+            fun code(code: String) = code(JsonField.of(code))
+
+            /** Sets [Builder.code] to an arbitrary JSON value. */
+            fun code(code: JsonField<String>) = apply { this.code = code }
+
+            /** The name as the request wrote it. */
+            fun field(field: String) = field(JsonField.of(field))
+
+            /** Sets [Builder.field] to an arbitrary JSON value. */
+            fun field(field: JsonField<String>) = apply { this.field = field }
+
+            /** What to send instead. */
+            fun message(message: String) = message(JsonField.of(message))
+
+            /** Sets [Builder.message] to an arbitrary JSON value. */
+            fun message(message: JsonField<String>) = apply { this.message = message }
+
+            /** The parameter that held the name. */
+            fun path(path: Path) = path(JsonField.of(path))
+
+            /** Sets [Builder.path] to an arbitrary JSON value. */
+            fun path(path: JsonField<Path>) = apply { this.path = path }
+
+            /** The closest valid name, when 1 is close. */
+            fun suggestion(suggestion: String) = suggestion(JsonField.of(suggestion))
+
+            /** Sets [Builder.suggestion] to an arbitrary JSON value. */
+            fun suggestion(suggestion: JsonField<String>) = apply { this.suggestion = suggestion }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [FieldError].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .code()
+             * .field()
+             * .message()
+             * .path()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): FieldError =
+                FieldError(
+                    checkRequired("code", code),
+                    checkRequired("field", field),
+                    checkRequired("message", message),
+                    checkRequired("path", path),
+                    suggestion,
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): FieldError = apply {
+            if (validated) {
+                return@apply
+            }
+
+            code()
+            field()
+            message()
+            path().validate()
+            suggestion()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (code.asKnown().isPresent) 1 else 0) +
+                (if (field.asKnown().isPresent) 1 else 0) +
+                (if (message.asKnown().isPresent) 1 else 0) +
+                (path.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (suggestion.asKnown().isPresent) 1 else 0)
+
+        /** The parameter that held the name. */
+        class Path @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+            /** Returns this class instance's raw value. */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val QUERY_FIELDS = of("query.fields")
+
+                @JvmField val QUERY_OMIT = of("query.omit")
+
+                @JvmStatic fun of(value: String) = Path(JsonField.of(value))
+            }
+
+            /** An enum containing [Path]'s known values. */
+            enum class Known {
+                QUERY_FIELDS,
+                QUERY_OMIT,
+            }
+
+            /** An enum containing [Path]'s known values, as well as an [_UNKNOWN] member. */
+            enum class Value {
+                QUERY_FIELDS,
+                QUERY_OMIT,
+                /** An enum member indicating that [Path] was instantiated with an unknown value. */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if unknown.
+             */
+            fun value(): Value =
+                when (this) {
+                    QUERY_FIELDS -> Value.QUERY_FIELDS
+                    QUERY_OMIT -> Value.QUERY_OMIT
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+             *   known member.
+             */
+            fun known(): Known =
+                when (this) {
+                    QUERY_FIELDS -> Known.QUERY_FIELDS
+                    QUERY_OMIT -> Known.QUERY_OMIT
+                    else -> throw XTwitterScraperInvalidDataException("Unknown Path: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * @throws XTwitterScraperInvalidDataException if this class instance's value does not
+             *   have the expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    XTwitterScraperInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            /** Validates that this value is a known member. */
+            fun validate(): Path = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: XTwitterScraperInvalidDataException) {
+                    false
+                }
+
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Path && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is FieldError &&
+                code == other.code &&
+                field == other.field &&
+                message == other.message &&
+                path == other.path &&
+                suggestion == other.suggestion &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy {
+            Objects.hash(code, field, message, path, suggestion, additionalProperties)
+        }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "FieldError{code=$code, field=$field, message=$message, path=$path, suggestion=$suggestion, additionalProperties=$additionalProperties}"
+    }
+
+    /** With insufficient_scope, the scope the API key needs for this route. */
+    class RequiredScope @JsonCreator private constructor(private val value: JsonField<String>) :
+        Enum {
+
+        /** Returns this class instance's raw value. */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val WRITE = of("write")
+
+            @JvmField val MONITORS = of("monitors")
+
+            @JvmField val EXPORTS = of("exports")
+
+            @JvmField val BILLING = of("billing")
+
+            @JvmField val FULL = of("full")
+
+            @JvmStatic fun of(value: String) = RequiredScope(JsonField.of(value))
+        }
+
+        /** An enum containing [RequiredScope]'s known values. */
+        enum class Known {
+            WRITE,
+            MONITORS,
+            EXPORTS,
+            BILLING,
+            FULL,
+        }
+
+        /** An enum containing [RequiredScope]'s known values, as well as an [_UNKNOWN] member. */
+        enum class Value {
+            WRITE,
+            MONITORS,
+            EXPORTS,
+            BILLING,
+            FULL,
+            /**
+             * An enum member indicating that [RequiredScope] was instantiated with an unknown
+             * value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if unknown.
+         */
+        fun value(): Value =
+            when (this) {
+                WRITE -> Value.WRITE
+                MONITORS -> Value.MONITORS
+                EXPORTS -> Value.EXPORTS
+                BILLING -> Value.BILLING
+                FULL -> Value.FULL
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+         *   known member.
+         */
+        fun known(): Known =
+            when (this) {
+                WRITE -> Known.WRITE
+                MONITORS -> Known.MONITORS
+                EXPORTS -> Known.EXPORTS
+                BILLING -> Known.BILLING
+                FULL -> Known.FULL
+                else -> throw XTwitterScraperInvalidDataException("Unknown RequiredScope: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * @throws XTwitterScraperInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                XTwitterScraperInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /** Validates that this value is a known member. */
+        fun validate(): RequiredScope = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: XTwitterScraperInvalidDataException) {
+                false
+            }
+
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is RequiredScope && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -3086,15 +3751,28 @@ private constructor(
             reason == other.reason &&
             retryAfter == other.retryAfter &&
             retryAfterMs == other.retryAfterMs &&
+            requiredScope == other.requiredScope &&
+            allowedFields == other.allowedFields &&
+            fieldErrors == other.fieldErrors &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(error, message, reason, retryAfter, retryAfterMs, additionalProperties)
+        Objects.hash(
+            error,
+            message,
+            reason,
+            retryAfter,
+            retryAfterMs,
+            requiredScope,
+            allowedFields,
+            fieldErrors,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Error{error=$error, message=$message, reason=$reason, retryAfter=$retryAfter, retryAfterMs=$retryAfterMs, additionalProperties=$additionalProperties}"
+        "Error{error=$error, message=$message, reason=$reason, retryAfter=$retryAfter, retryAfterMs=$retryAfterMs, requiredScope=$requiredScope, allowedFields=$allowedFields, fieldErrors=$fieldErrors, additionalProperties=$additionalProperties}"
 }
