@@ -31,10 +31,17 @@ import kotlin.jvm.optionals.getOrNull
  */
 class DrawRunParams
 private constructor(
+    private val idempotencyKey: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    /**
+     * Generate 1 unique value per intended request. Reuse it only to retry the same request. An
+     * exact retry returns the original result and charges nothing.
+     */
+    fun idempotencyKey(): Optional<String> = Optional.ofNullable(idempotencyKey)
 
     /**
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
@@ -192,16 +199,28 @@ private constructor(
     /** A builder for [DrawRunParams]. */
     class Builder internal constructor() {
 
+        private var idempotencyKey: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(drawRunParams: DrawRunParams) = apply {
+            idempotencyKey = drawRunParams.idempotencyKey
             body = drawRunParams.body.toBuilder()
             additionalHeaders = drawRunParams.additionalHeaders.toBuilder()
             additionalQueryParams = drawRunParams.additionalQueryParams.toBuilder()
         }
+
+        /**
+         * Generate 1 unique value per intended request. Reuse it only to retry the same request. An
+         * exact retry returns the original result and charges nothing.
+         */
+        fun idempotencyKey(idempotencyKey: String?) = apply { this.idempotencyKey = idempotencyKey }
+
+        /** Alias for calling [Builder.idempotencyKey] with `idempotencyKey.orElse(null)`. */
+        fun idempotencyKey(idempotencyKey: Optional<String>) =
+            idempotencyKey(idempotencyKey.getOrNull())
 
         /** Sets the entire request body. */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -453,12 +472,23 @@ private constructor(
          * @throws IllegalStateException if any required field is unset.
          */
         fun build(): DrawRunParams =
-            DrawRunParams(body.build(), additionalHeaders.build(), additionalQueryParams.build())
+            DrawRunParams(
+                idempotencyKey,
+                body.build(),
+                additionalHeaders.build(),
+                additionalQueryParams.build(),
+            )
     }
 
     fun _body(): Body = body
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                idempotencyKey?.let { put("Idempotency-Key", it) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -1029,13 +1059,15 @@ private constructor(
         }
 
         return other is DrawRunParams &&
+            idempotencyKey == other.idempotencyKey &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(idempotencyKey, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "DrawRunParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "DrawRunParams{idempotencyKey=$idempotencyKey, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

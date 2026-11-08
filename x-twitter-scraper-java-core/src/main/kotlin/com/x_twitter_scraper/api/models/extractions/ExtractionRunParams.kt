@@ -41,11 +41,18 @@ import kotlin.jvm.optionals.getOrNull
 /** Run extraction */
 class ExtractionRunParams
 private constructor(
+    private val idempotencyKey: String?,
     private val dryRun: Boolean?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    /**
+     * Generate 1 unique value per intended request. Reuse it only to retry the same request. An
+     * exact retry returns the original result and charges nothing.
+     */
+    fun idempotencyKey(): Optional<String> = Optional.ofNullable(idempotencyKey)
 
     /** Estimate cost without creating an extraction. */
     fun dryRun(): Optional<Boolean> = Optional.ofNullable(dryRun)
@@ -1523,6 +1530,7 @@ private constructor(
     /** A builder for [ExtractionRunParams]. */
     class Builder internal constructor() {
 
+        private var idempotencyKey: String? = null
         private var dryRun: Boolean? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -1530,11 +1538,22 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(extractionRunParams: ExtractionRunParams) = apply {
+            idempotencyKey = extractionRunParams.idempotencyKey
             dryRun = extractionRunParams.dryRun
             body = extractionRunParams.body.toBuilder()
             additionalHeaders = extractionRunParams.additionalHeaders.toBuilder()
             additionalQueryParams = extractionRunParams.additionalQueryParams.toBuilder()
         }
+
+        /**
+         * Generate 1 unique value per intended request. Reuse it only to retry the same request. An
+         * exact retry returns the original result and charges nothing.
+         */
+        fun idempotencyKey(idempotencyKey: String?) = apply { this.idempotencyKey = idempotencyKey }
+
+        /** Alias for calling [Builder.idempotencyKey] with `idempotencyKey.orElse(null)`. */
+        fun idempotencyKey(idempotencyKey: Optional<String>) =
+            idempotencyKey(idempotencyKey.getOrNull())
 
         /** Estimate cost without creating an extraction. */
         fun dryRun(dryRun: Boolean?) = apply { this.dryRun = dryRun }
@@ -2508,6 +2527,7 @@ private constructor(
          */
         fun build(): ExtractionRunParams =
             ExtractionRunParams(
+                idempotencyKey,
                 dryRun,
                 body.build(),
                 additionalHeaders.build(),
@@ -2517,7 +2537,13 @@ private constructor(
 
     fun _body(): Body = body
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                idempotencyKey?.let { put("Idempotency-Key", it) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
@@ -8977,6 +9003,7 @@ private constructor(
         }
 
         return other is ExtractionRunParams &&
+            idempotencyKey == other.idempotencyKey &&
             dryRun == other.dryRun &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
@@ -8984,8 +9011,8 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(dryRun, body, additionalHeaders, additionalQueryParams)
+        Objects.hash(idempotencyKey, dryRun, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "ExtractionRunParams{dryRun=$dryRun, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ExtractionRunParams{idempotencyKey=$idempotencyKey, dryRun=$dryRun, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

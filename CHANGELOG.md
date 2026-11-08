@@ -23,6 +23,7 @@
 
 ### Features
 
+* `ExtractionRunParams` and `DrawRunParams` take `idempotencyKey`, which `extractions().run` and `draws().run` send as `Idempotency-Key`. An exact retry with the same key returns the first result and charges nothing.
 * `Error` reads `requiredScope`, the scope an `insufficient_scope` answer needs, and `allowedFields` and `fieldErrors`, which name each unknown `fields` or `omit` entry of an `unknown_field` answer and the name it most likely meant.
 * `x().tweets().search`, `x().users().retrieveTweets`, `retrieveReplies` and `retrieveMedia` take `topic` and `imageShows`, which keep only the posts about a topic or whose photos show what you ask for. The page returns `topicFilter` or `imageFilter` with the cutoff and counts, and each kept post returns `topicScore` or `imageScore`.
 * `extractions().run` and `estimateCost` take `topic` and `imageShows`. `ExtractionJob` and the `job` of `extractions().retrieve` return `topicFilter` or `imageFilter`, and `x().media().download` takes `imageShows` and returns `imageFilter`.
