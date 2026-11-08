@@ -84,6 +84,7 @@
 
 ### Bug fixes
 
+* `TicketCreateParams` and `TicketReplyParams` throw from `build()` when `body` is blank and no attachment is set, with the same "At least one of `body` or `attachments` must be set" error. The API rejects such a ticket or reply with a 400.
 * Ticket creation sends default attachment streams as `application/octet-stream` with a neutral filename so the server can detect their type.
 * Media, avatar and banner uploads detect file types from stream headers and preserve every byte, including MP4 streams for long videos.
 * Follower, following and verified follower response unions select the coverage variant when the response contains `diagnostic`.
