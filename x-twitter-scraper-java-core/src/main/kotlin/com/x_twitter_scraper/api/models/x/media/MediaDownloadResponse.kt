@@ -17,6 +17,7 @@ import com.x_twitter_scraper.api.core.checkKnown
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import com.x_twitter_scraper.api.models.ImageFilterSummary
 import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
@@ -32,6 +33,7 @@ private constructor(
     private val totalTweets: JsonField<Long>,
     private val tweetId: JsonField<String>,
     private val items: JsonField<List<Item>>,
+    private val imageFilter: JsonField<ImageFilterSummary>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -47,7 +49,19 @@ private constructor(
         totalTweets: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("tweetId") @ExcludeMissing tweetId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("items") @ExcludeMissing items: JsonField<List<Item>> = JsonMissing.of(),
-    ) : this(cacheHit, galleryUrl, totalMedia, totalTweets, tweetId, items, mutableMapOf())
+        @JsonProperty("imageFilter")
+        @ExcludeMissing
+        imageFilter: JsonField<ImageFilterSummary> = JsonMissing.of(),
+    ) : this(
+        cacheHit,
+        galleryUrl,
+        totalMedia,
+        totalTweets,
+        tweetId,
+        items,
+        imageFilter,
+        mutableMapOf(),
+    )
 
     /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun cacheHit(): Optional<Boolean> = cacheHit.getOptional("cacheHit")
@@ -105,6 +119,23 @@ private constructor(
     /** Returns the raw JSON value of [items]. */
     @JsonProperty("items") @ExcludeMissing fun _items(): JsonField<List<Item>> = items
 
+    /**
+     * What the image filter asked & how many posts it kept. Present when the request sent
+     * imageShows.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun imageFilter(): Optional<ImageFilterSummary> = imageFilter.getOptional("imageFilter")
+
+    /**
+     * Returns the raw JSON value of [imageFilter].
+     *
+     * Unlike [imageFilter], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("imageFilter")
+    @ExcludeMissing
+    fun _imageFilter(): JsonField<ImageFilterSummary> = imageFilter
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -132,6 +163,7 @@ private constructor(
         private var totalTweets: JsonField<Long> = JsonMissing.of()
         private var tweetId: JsonField<String> = JsonMissing.of()
         private var items: JsonField<MutableList<Item>>? = null
+        private var imageFilter: JsonField<ImageFilterSummary> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -142,6 +174,7 @@ private constructor(
             totalTweets = mediaDownloadResponse.totalTweets
             tweetId = mediaDownloadResponse.tweetId
             items = mediaDownloadResponse.items.map { it.toMutableList() }
+            imageFilter = mediaDownloadResponse.imageFilter
             additionalProperties = mediaDownloadResponse.additionalProperties.toMutableMap()
         }
 
@@ -184,6 +217,23 @@ private constructor(
                 (items ?: JsonField.of(mutableListOf())).also { checkKnown("items", it).add(item) }
         }
 
+        /**
+         * What the image filter asked & how many posts it kept. Present when the request sent
+         * imageShows.
+         */
+        fun imageFilter(imageFilter: ImageFilterSummary) = imageFilter(JsonField.of(imageFilter))
+
+        /**
+         * Sets [Builder.imageFilter] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.imageFilter] with a well-typed [ImageFilterSummary]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun imageFilter(imageFilter: JsonField<ImageFilterSummary>) = apply {
+            this.imageFilter = imageFilter
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -216,6 +266,7 @@ private constructor(
                 totalTweets,
                 tweetId,
                 (items ?: JsonMissing.of()).map { it.toImmutable() },
+                imageFilter,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -241,6 +292,7 @@ private constructor(
         totalTweets()
         tweetId()
         items().ifPresent { it.forEach { it.validate() } }
+        imageFilter().ifPresent { it.validate() }
         validated = true
     }
 
@@ -259,7 +311,8 @@ private constructor(
             (if (totalMedia.asKnown().isPresent) 1 else 0) +
             (if (totalTweets.asKnown().isPresent) 1 else 0) +
             (if (tweetId.asKnown().isPresent) 1 else 0) +
-            (items.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
+            (items.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
+            (imageFilter.asKnown().getOrNull()?.validity() ?: 0)
 
     class Item
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -1189,6 +1242,7 @@ private constructor(
             totalTweets == other.totalTweets &&
             tweetId == other.tweetId &&
             items == other.items &&
+            imageFilter == other.imageFilter &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1200,6 +1254,7 @@ private constructor(
             totalTweets,
             tweetId,
             items,
+            imageFilter,
             additionalProperties,
         )
     }
@@ -1207,5 +1262,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "MediaDownloadResponse{cacheHit=$cacheHit, galleryUrl=$galleryUrl, totalMedia=$totalMedia, totalTweets=$totalTweets, tweetId=$tweetId, items=$items, additionalProperties=$additionalProperties}"
+        "MediaDownloadResponse{cacheHit=$cacheHit, galleryUrl=$galleryUrl, totalMedia=$totalMedia, totalTweets=$totalTweets, tweetId=$tweetId, items=$items, imageFilter=$imageFilter, additionalProperties=$additionalProperties}"
 }
