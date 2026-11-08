@@ -1,8 +1,8 @@
-# Twitter scraper & X API Java SDK by Xquik
+# X (Twitter) API Java SDK & Scraper by Xquik
 
 Use this Twitter scraper Java SDK by Xquik to search tweets with typed builders.
 Each call runs synchronously or returns a `CompletableFuture`.
-Public reads need no X developer account.
+Public reads need no X (Twitter) developer account.
 
 Xquik is the world's fastest and cheapest X (Twitter) scraper service with the most complete X (Twitter) data.
 Most other Apify Actors charge before filtering or deduplication.
@@ -15,7 +15,7 @@ The Xquik REST API read 45 tweets per second on 2026-10-15. That cost $0.15 per 
 
 <!-- trust:win:end -->
 
-## Install the Twitter API Java SDK
+## Install the X (Twitter) API Java SDK
 
 Add the Gradle dependency.
 
@@ -126,10 +126,10 @@ Call REST without the SDK when a Maven dependency does not fit.
 | --- | --- | --- |
 | Run an advanced Twitter search | `GET /x/tweets/search` | `client.x().tweets()` |
 | Retrieve tweets, threads, replies, or quotes | `GET /x/tweets/{id}`, `GET /x/tweets/{id}/thread` | `client.x().tweets()` |
-| Search X or Twitter users | `GET /x/users/search` | `client.x().users()` |
+| Search X (Twitter) users | `GET /x/users/search` | `client.x().users()` |
 | Scrape an X profile timeline | `GET /x/users/{id}/tweets` | `client.x().users()` |
-| Export X followers | `GET /x/users/{id}/followers` | `client.x().users()` |
-| Export X following accounts | `GET /x/users/{id}/following` | `client.x().users()` |
+| Export X (Twitter) followers | `GET /x/users/{id}/followers` | `client.x().users()` |
+| Export X (Twitter) following accounts | `GET /x/users/{id}/following` | `client.x().users()` |
 | Collect verified followers | `GET /x/users/{id}/verified-followers` | `client.x().users()` |
 | Collect mentions, likes, replies, or media | `GET /x/users/{id}/mentions`, `GET /x/users/{id}/likes` | `client.x().users()` |
 | Extract an X home timeline | `GET /x/timeline` | `client.x()` |
@@ -137,7 +137,7 @@ Call REST without the SDK when a Maven dependency does not fit.
 | Search communities and collect their tweets | `GET /x/communities/search`, `GET /x/communities/{id}/tweets` | `client.x().communities()` |
 | Read bookmarks and bookmark folders | `GET /x/bookmarks`, `GET /x/bookmarks/folders` | `client.x().bookmarks()` |
 | Read notifications or direct messages | `GET /x/notifications`, `GET /x/dm/{userId}/history` | `client.x()`, `client.x().dm()` |
-| Discover X trends | `GET /x/trends` | `client.x().getTrends()` |
+| Discover X (Twitter) trends | `GET /x/trends` | `client.x().getTrends()` |
 | Export large X datasets | `POST /extractions` | `client.extractions()` |
 | Monitor tweet keywords or accounts | `POST /monitors/keywords`, `POST /monitors` | `client.monitors()` |
 | Receive signed event deliveries | `POST /webhooks` | `client.webhooks()` |
@@ -162,7 +162,7 @@ Their typed Java methods ship in 0.11.0, the next Maven Central release.
 | Track 1 post's replies, quotes, edits and hourly metrics | `POST /monitors/posts`, `GET /monitors/posts/{id}/metrics` | `client.monitors().posts()` |
 | Stream monitor events as they happen | `GET /events/stream` | `client.events()` |
 | Analyze the sentiment, viral score, or brand mentions of posts | `POST /x/analysis/sentiment`, `POST /x/analysis/brand` | `client.x().analysis()` |
-| Search X job listings | `GET /x/jobs/search`, `GET /x/jobs/{id}` | `client.x().jobs()` |
+| Search X (Twitter) job listings | `GET /x/jobs/search`, `GET /x/jobs/{id}` | `client.x().jobs()` |
 | Read Spaces, replays, and live broadcasts | `GET /x/spaces/search`, `GET /x/spaces/{id}/replay`, `GET /x/broadcasts/{id}` | `client.x().spaces()`, `client.x().broadcasts()` |
 | Read Community Notes contributors and their notes | `GET /x/community-notes/contributors/{alias}/notes` | `client.x().communityNotes()` |
 | Read NFL & college football games, box scores, plays, audiences, rosters, player props and posts | `GET /x/sports/{league}/games`, `GET /x/sports/{league}/games/{id}/plays` | `client.x().sports()` |
@@ -267,7 +267,7 @@ Confirm the fingerprint `6965 E561 C0AC EE32 060A B961 D203 7E41 57E6 2A59`.
 
 ## Questions
 
-### Do I need an X developer account?
+### Do I need an X (Twitter) developer account?
 
 No. Public reads need only an Xquik API key.
 Private reads & X account actions need a connected X account.
@@ -278,16 +278,16 @@ No. Xquik runs its own REST API. This SDK calls that API, not the official X API
 
 ## More Xquik tools
 
-- [X (Twitter) scraper API & Twitter MCP server](https://github.com/Xquik-dev/x-twitter-scraper) with REST, MCP & Skill setup.
-- Twitter API SDKs for [TypeScript](https://github.com/Xquik-dev/x-twitter-scraper-typescript), [Python](https://github.com/Xquik-dev/x-twitter-scraper-python), [Go](https://github.com/Xquik-dev/x-twitter-scraper-go) & [Ruby](https://github.com/Xquik-dev/x-twitter-scraper-ruby).
-- More Twitter API SDKs for [Kotlin](https://github.com/Xquik-dev/x-twitter-scraper-kotlin), [C#](https://github.com/Xquik-dev/x-twitter-scraper-csharp) & [PHP](https://github.com/Xquik-dev/x-twitter-scraper-php).
+- [X (Twitter) scraper API & X (Twitter) MCP server](https://github.com/Xquik-dev/x-twitter-scraper) with REST, MCP & Skill setup.
+- X (Twitter) API SDKs for [TypeScript](https://github.com/Xquik-dev/x-twitter-scraper-typescript), [Python](https://github.com/Xquik-dev/x-twitter-scraper-python), [Go](https://github.com/Xquik-dev/x-twitter-scraper-go) & [Ruby](https://github.com/Xquik-dev/x-twitter-scraper-ruby).
+- More X (Twitter) API SDKs for [Kotlin](https://github.com/Xquik-dev/x-twitter-scraper-kotlin), [C#](https://github.com/Xquik-dev/x-twitter-scraper-csharp) & [PHP](https://github.com/Xquik-dev/x-twitter-scraper-php).
 - [Twitter CLI & X CLI](https://github.com/Xquik-dev/x-twitter-scraper-cli) for terminal workflows.
 - [Twitter advanced search operators](https://github.com/Xquik-dev/x-twitter-advanced-search) with tested examples.
 - Twitter agent plugins for [OpenClaw](https://github.com/Xquik-dev/tweetclaw) & [Hermes Agent](https://github.com/Xquik-dev/hermes-tweet).
 - Twitter integrations for [n8n](https://github.com/Xquik-dev/n8n-nodes-xquik), [Prefect](https://github.com/Xquik-dev/prefect-xquik), [Haystack](https://github.com/Xquik-dev/xquik-haystack) & [Paperclip](https://github.com/Xquik-dev/paperclip-plugin-xquik).
 - More Twitter integrations for [Terraform](https://github.com/Xquik-dev/terraform-provider-x-twitter-scraper), [Convex](https://github.com/Xquik-dev/xquik-convex), [Supabase](https://github.com/Xquik-dev/xquik-supabase) & [Strapi](https://github.com/Xquik-dev/strapi-plugin-xquik).
-- Twitter MCP for [AI agents](https://github.com/Xquik-dev/xquik-mcp), [VS Code](https://github.com/Xquik-dev/xquik-vscode) & [Raycast](https://github.com/Xquik-dev/xquik-raycast).
-- [Xquik X API & Twitter scraper](https://xquik.com), [Twitter API docs](https://docs.xquik.com/api-reference/overview) & [docs source](https://github.com/Xquik-dev/xquik-docs).
+- X (Twitter) MCP for [AI agents](https://github.com/Xquik-dev/xquik-mcp), [VS Code](https://github.com/Xquik-dev/xquik-vscode) & [Raycast](https://github.com/Xquik-dev/xquik-raycast).
+- [Xquik X API & Twitter scraper](https://xquik.com), [X (Twitter) API docs](https://docs.xquik.com/api-reference/overview) & [docs source](https://github.com/Xquik-dev/xquik-docs).
 
 ## Help & contributing
 
