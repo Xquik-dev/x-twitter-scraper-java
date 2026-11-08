@@ -511,7 +511,8 @@ private constructor(
             fun build(): Body {
                 checkExactlyOne("url", url, "file", file)
                 val hasFile = !file.value.isMissing() && !file.value.isNull()
-                check(isLongVideo.value.isMissing() || hasFile) { "`isLongVideo` requires `file`" }
+                val hasLongVideo = !isLongVideo.value.isMissing() && !isLongVideo.value.isNull()
+                check(!hasLongVideo || hasFile) { "`isLongVideo` requires `file`" }
                 return Body(
                     checkRequired("account", account),
                     url,

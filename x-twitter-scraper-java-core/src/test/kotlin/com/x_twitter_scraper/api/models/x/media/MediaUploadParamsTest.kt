@@ -84,6 +84,21 @@ internal class MediaUploadParamsTest {
     }
 
     @Test
+    fun omitsNullLongVideoWithUrlInput() {
+        val params =
+            MediaUploadParams.builder()
+                .account("sample")
+                .idempotencyKey("sample")
+                .url("https://example.com/video.mp4")
+                .isLongVideo(MultipartField.of(JsonNull.of()))
+                .build()
+
+        assertThat(params._body())
+            .containsEntry("url", MultipartField.of("https://example.com/video.mp4"))
+            .doesNotContainKey("is_long_video")
+    }
+
+    @Test
     fun additionalFields() {
         val params =
             MediaUploadParams.builder()
