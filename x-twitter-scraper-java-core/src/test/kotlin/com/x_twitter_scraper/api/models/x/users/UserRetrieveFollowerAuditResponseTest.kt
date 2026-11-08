@@ -67,6 +67,7 @@ internal class UserRetrieveFollowerAuditResponseTest {
                                 .newestAt(null)
                                 .oldestAt(null)
                                 .posts(0.0)
+                                .read(22.0)
                                 .build()
                         )
                         .topPostId(null)

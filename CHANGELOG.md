@@ -6,6 +6,7 @@
 
 ### Breaking changes
 
+* `UserRetrieveInsightsResponse.Insights.Sample.builder()` requires `read`, which the API always sends. Code that builds it by hand must set it. `posts` counts the posts the averages used, so it can be lower than `read`.
 * `ExtractionJob.builder()` requires `url`, which the API always sends. Code that builds the job by hand must set it.
 * `CreditTopupBalanceResponse.builder()` requires `chargedCurrency` and `chargedMinorUnits`, which the API always sends. Code that builds the response by hand must set both.
 * `AccountBulkRetryParams._body()` returns `AccountBulkRetryParams.Body` instead of `Optional<Map<String, JsonValue>>`, and bulk retry always sends a JSON body, which is `{}` when no account is named. Code that calls `_body()` must change, and compiled callers must rebuild.

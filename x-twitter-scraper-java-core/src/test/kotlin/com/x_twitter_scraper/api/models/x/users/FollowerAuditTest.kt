@@ -120,6 +120,7 @@ internal class FollowerAuditTest {
                         .newestAt(OffsetDateTime.parse("2026-11-02T22:12:05.000Z"))
                         .oldestAt(OffsetDateTime.parse("2026-10-28T13:15:28.000Z"))
                         .posts(20.0)
+                        .read(22.0)
                         .build()
                 )
                 .topPostId("1852301447063109847")

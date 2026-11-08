@@ -348,6 +348,7 @@ internal class UserServiceSpecExampleTest {
                             "postsPrivate": false,
                             "sample": {
                               "posts": 10,
+                              "read": 19,
                               "oldestAt": "2026-09-23T13:15:28.000Z",
                               "newestAt": "2026-09-28T22:12:05.000Z"
                             },
@@ -411,6 +412,7 @@ internal class UserServiceSpecExampleTest {
         assertThat(response.insights().sample().oldestAt())
             .contains(OffsetDateTime.parse("2026-09-23T13:15:28.000Z"))
         assertThat(response.insights().sample().posts()).isEqualTo(10.0)
+        assertThat(response.insights().sample().read()).isEqualTo(19.0)
         assertThat(response.insights().topPostId()).contains("2102761519985332442")
         assertThat(response.insights().userId()).isEqualTo("11348282")
         assertThat(response.insights().userName()).isEqualTo("NASA")

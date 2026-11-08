@@ -146,6 +146,7 @@ internal class UserServiceFollowerAuditTest {
                   "postsPrivate": false,
                   "sample": {
                     "posts": 20,
+                    "read": 22,
                     "oldestAt": "2026-10-28T13:15:28.000Z",
                     "newestAt": "2026-11-02T22:12:05.000Z"
                   },

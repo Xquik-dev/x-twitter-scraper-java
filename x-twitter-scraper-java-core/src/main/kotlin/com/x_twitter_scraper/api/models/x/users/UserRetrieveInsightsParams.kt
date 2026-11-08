@@ -39,8 +39,9 @@ private constructor(
     fun fields(): Optional<String> = Optional.ofNullable(fields)
 
     /**
-     * Recent posts to read for the averages and rates. The read stops at this count, at the end of
-     * the timeline or after about 40 seconds, and `sample.posts` says how many it read.
+     * Recent posts to read for the averages and rates. The read stops at this count, at the
+     * account's oldest post or after about 40 seconds. `sample.read` says how many it read, and
+     * `sample.posts` how many of those the averages used.
      */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
@@ -106,8 +107,9 @@ private constructor(
         fun fields(fields: Optional<String>) = fields(fields.getOrNull())
 
         /**
-         * Recent posts to read for the averages and rates. The read stops at this count, at the end
-         * of the timeline or after about 40 seconds, and `sample.posts` says how many it read.
+         * Recent posts to read for the averages and rates. The read stops at this count, at the
+         * account's oldest post or after about 40 seconds. `sample.read` says how many it read, and
+         * `sample.posts` how many of those the averages used.
          */
         fun limit(limit: Long?) = apply { this.limit = limit }
 
