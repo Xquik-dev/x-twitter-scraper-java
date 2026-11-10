@@ -54,6 +54,6 @@ internal class AccountReauthParamsTest {
         val body = params._body()
 
         assertThat(body.password()).isEqualTo("<ACCOUNT_PASSWORD>")
-        assertThat(body.connectionAttemptId()).contains("xatt_0123456789abcdef0123456789abcdef")
+        assertThat(body.connectionAttemptId()).isEmpty
     }
 }
