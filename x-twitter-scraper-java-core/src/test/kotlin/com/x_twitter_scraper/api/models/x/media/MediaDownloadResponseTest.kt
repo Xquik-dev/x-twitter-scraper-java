@@ -54,6 +54,20 @@ internal class MediaDownloadResponseTest {
     }
 
     @Test
+    fun readsThePostsItSkipped() {
+        val mediaDownloadResponse =
+            jsonMapper()
+                .readValue(
+                    """{"totalTweets":2,"noMediaTweetIds":["1234567893"],"failedTweetIds":["1234567894"]}""",
+                    jacksonTypeRef<MediaDownloadResponse>(),
+                )
+
+        assertThat(mediaDownloadResponse.noMediaTweetIds().get()).containsExactly("1234567893")
+        assertThat(mediaDownloadResponse.failedTweetIds().get()).containsExactly("1234567894")
+        assertThat(mediaDownloadResponse.isValid()).isTrue()
+    }
+
+    @Test
     fun itemsReadThePosterAndQualities() {
         val jsonMapper = jsonMapper()
         val json =
