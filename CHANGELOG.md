@@ -26,8 +26,10 @@
 ### Features
 
 * `UserRetrieveBatchTweetsParams.pageSize()` takes up to 300 posts per user.
+* `BookmarkListParams.pageSize()` and `XGetHomeTimelineParams.pageSize()` take 1 to 100 items per page.
 * `monitors().upsertByUsername()` creates the monitor for an account, or updates it if it exists, so the same call twice still leaves 1 monitor. `created()` says which one ran.
 * `MediaDownloadResponse.unprocessedTweetIds()` lists the posts Xquik had no time to read, at no charge. Send them again.
+* `MediaDownloadResponse.noMediaTweetIds()` lists the posts with no media to save, and `failedTweetIds()` the posts Xquik couldn't read. Neither is charged.
 * `ExtractionRunParams` and `DrawRunParams` take `idempotencyKey`, which `extractions().run` and `draws().run` send as `Idempotency-Key`. An exact retry with the same key returns the first result and charges nothing.
 * `Error` reads `requiredScope`, the scope an `insufficient_scope` answer needs, and `allowedFields` and `fieldErrors`, which name each unknown `fields` or `omit` entry of an `unknown_field` answer and the name it most likely meant.
 * `x().tweets().search`, `x().users().retrieveTweets`, `retrieveReplies` and `retrieveMedia` take `topic` and `imageShows`, which keep only the posts about a topic or whose photos show what you ask for. The page returns `topicFilter` or `imageFilter` with the cutoff and counts, and each kept post returns `topicScore` or `imageScore`.
