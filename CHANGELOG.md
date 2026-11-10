@@ -14,6 +14,7 @@
 * `UserRetrieveInsightsResponse.Insights.builder()` requires `medianViews`, which the API always sends. Code that builds it by hand must set it.
 * `TweetSearchParams.q()` returns `Optional<String>`, and `TweetSearchParams.builder()` no longer requires `q`, since the API can build the search from `fromUser`, `keywords` or another field. Code that reads `q()` must change. A search with no query field still answers `missing_query`.
 * Media uploads now reject `isLongVideo` without a file.
+* `x().accounts().reauth` returns the same 3 answers as `create`, so `AccountReauthResponse` is now that union. A sign-in still running or waiting on an email code no longer reads as an active account, so check which variant the answer is before you read `xUsername()`.
 
 ### Security
 
@@ -88,6 +89,10 @@
 * Exports also filter accounts by `hasWebsite`, `location`, `joinedSince` & `joinedUntil`. `hideInactive` & `hideFake` drop inactive & fake-looking accounts.
 * `TweetSearchParams`, `ExtractionRunParams` & `ExtractionEstimateCostParams` take `textOnlyTerms`. It keeps posts whose text, link, card or quote holds 1 of the terms.
 * User insights return `medianViews`. Radar item metadata returns `sentiment` & `windows`.
+* `x().accountConnectionLinks().create` makes a link to a page Xquik hosts, where a person connects an X account with no Xquik signup. `retrieve` reads the link and its status, and `delete` revokes it. Treat `url()` as a secret, since it holds the token.
+* `AccountCreateParams` and `AccountReauthParams` take `connectionAttemptId`, an ID you generate to read the attempt's status even if the response never reaches you. A finished attempt returns `accountId()`.
+* `TweetCreateParams` takes `mediaIds`, the IDs that `x().media().upload` returns. Send `media` or `mediaIds`, not both.
+* `Error` codes add `X_ACCOUNT_CONNECT_PERMISSION_REQUIRED`, `X_ACCOUNT_MISMATCH` and `MEDIA_NOT_UPLOADED`.
 
 ### Bug fixes
 

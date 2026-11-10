@@ -29,6 +29,7 @@ import com.x_twitter_scraper.api.models.x.XSearchPlacesParams
 import com.x_twitter_scraper.api.models.x.XSearchPlacesResponse
 import com.x_twitter_scraper.api.services.async.x.AccountConnectionAttemptServiceAsync
 import com.x_twitter_scraper.api.services.async.x.AccountConnectionChallengeServiceAsync
+import com.x_twitter_scraper.api.services.async.x.AccountConnectionLinkServiceAsync
 import com.x_twitter_scraper.api.services.async.x.AccountServiceAsync
 import com.x_twitter_scraper.api.services.async.x.AnalysisServiceAsync
 import com.x_twitter_scraper.api.services.async.x.BookmarkServiceAsync
@@ -96,6 +97,9 @@ interface XServiceAsync {
 
     /** Connected X account management */
     fun accountConnectionAttempts(): AccountConnectionAttemptServiceAsync
+
+    /** Connected X account management */
+    fun accountConnectionLinks(): AccountConnectionLinkServiceAsync
 
     /** Look up, search, and analyze individual tweets */
     fun bookmarks(): BookmarkServiceAsync
@@ -404,6 +408,9 @@ interface XServiceAsync {
 
         /** Connected X account management */
         fun accountConnectionAttempts(): AccountConnectionAttemptServiceAsync.WithRawResponse
+
+        /** Connected X account management */
+        fun accountConnectionLinks(): AccountConnectionLinkServiceAsync.WithRawResponse
 
         /** Look up, search, and analyze individual tweets */
         fun bookmarks(): BookmarkServiceAsync.WithRawResponse

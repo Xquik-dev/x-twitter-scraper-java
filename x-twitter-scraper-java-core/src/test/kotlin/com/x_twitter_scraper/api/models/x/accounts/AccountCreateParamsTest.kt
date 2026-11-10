@@ -16,6 +16,7 @@ internal class AccountCreateParamsTest {
             .password("<ACCOUNT_PASSWORD>")
             .totpSecret("<TOTP_SECRET>")
             .username("your_x_username")
+            .connectionAttemptId("xatt_0123456789abcdef0123456789abcdef")
             .build()
     }
 
@@ -27,6 +28,7 @@ internal class AccountCreateParamsTest {
                 .password("<ACCOUNT_PASSWORD>")
                 .totpSecret("<TOTP_SECRET>")
                 .username("your_x_username")
+                .connectionAttemptId("xatt_0123456789abcdef0123456789abcdef")
                 .build()
 
         val body = params._body()
@@ -35,5 +37,6 @@ internal class AccountCreateParamsTest {
         assertThat(body.password()).isEqualTo("<ACCOUNT_PASSWORD>")
         assertThat(body.totpSecret()).isEqualTo("<TOTP_SECRET>")
         assertThat(body.username()).isEqualTo("your_x_username")
+        assertThat(body.connectionAttemptId()).contains("xatt_0123456789abcdef0123456789abcdef")
     }
 }

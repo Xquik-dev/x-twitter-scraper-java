@@ -1,0 +1,162 @@
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
+package com.x_twitter_scraper.api.models.x.accountconnectionlinks
+
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.x_twitter_scraper.api.core.ExcludeMissing
+import com.x_twitter_scraper.api.core.JsonMissing
+import com.x_twitter_scraper.api.core.JsonValue
+import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import java.util.Collections
+import java.util.Objects
+
+class AccountConnectionLinkDeleteResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
+private constructor(
+    private val success: JsonValue,
+    private val additionalProperties: MutableMap<String, JsonValue>,
+) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("success") @ExcludeMissing success: JsonValue = JsonMissing.of()
+    ) : this(success, mutableMapOf())
+
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from(true)
+     * ```
+     */
+    @JsonProperty("success") @ExcludeMissing fun _success(): JsonValue = success
+
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
+    @JsonAnyGetter
+    @ExcludeMissing
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
+
+    fun toBuilder() = Builder().from(this)
+
+    companion object {
+
+        /**
+         * Returns a mutable builder for constructing an instance of
+         * [AccountConnectionLinkDeleteResponse].
+         */
+        @JvmStatic fun builder() = Builder()
+    }
+
+    /** A builder for [AccountConnectionLinkDeleteResponse]. */
+    class Builder internal constructor() {
+
+        private var success: JsonValue = JsonValue.from(true)
+        private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+        @JvmSynthetic
+        internal fun from(
+            accountConnectionLinkDeleteResponse: AccountConnectionLinkDeleteResponse
+        ) = apply {
+            success = accountConnectionLinkDeleteResponse.success
+            additionalProperties =
+                accountConnectionLinkDeleteResponse.additionalProperties.toMutableMap()
+        }
+
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * Defaults to the following:
+         * ```java
+         * JsonValue.from(true)
+         * ```
+         */
+        fun success(success: JsonValue) = apply { this.success = success }
+
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+            this.additionalProperties.clear()
+            putAllAdditionalProperties(additionalProperties)
+        }
+
+        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+            additionalProperties.put(key, value)
+        }
+
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+            this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
+        }
+
+        /**
+         * Returns an immutable instance of [AccountConnectionLinkDeleteResponse].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         */
+        fun build(): AccountConnectionLinkDeleteResponse =
+            AccountConnectionLinkDeleteResponse(success, additionalProperties.toMutableMap())
+    }
+
+    private var validated: Boolean = false
+
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't match
+     *   its expected type.
+     */
+    fun validate(): AccountConnectionLinkDeleteResponse = apply {
+        if (validated) {
+            return@apply
+        }
+
+        _success().let {
+            if (it != JsonValue.from(true)) {
+                throw XTwitterScraperInvalidDataException("'success' is invalid, received $it")
+            }
+        }
+        validated = true
+    }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: XTwitterScraperInvalidDataException) {
+            false
+        }
+
+    @JvmSynthetic
+    internal fun validity(): Int = success.let { if (it == JsonValue.from(true)) 1 else 0 }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+
+        return other is AccountConnectionLinkDeleteResponse &&
+            success == other.success &&
+            additionalProperties == other.additionalProperties
+    }
+
+    private val hashCode: Int by lazy { Objects.hash(success, additionalProperties) }
+
+    override fun hashCode(): Int = hashCode
+
+    override fun toString() =
+        "AccountConnectionLinkDeleteResponse{success=$success, additionalProperties=$additionalProperties}"
+}

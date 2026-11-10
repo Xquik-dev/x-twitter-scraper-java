@@ -644,6 +644,12 @@ private constructor(
 
                 @JvmField val ACCOUNT_ALREADY_CONNECTED = of("account_already_connected")
 
+                @JvmField
+                val X_ACCOUNT_CONNECT_PERMISSION_REQUIRED =
+                    of("x_account_connect_permission_required")
+
+                @JvmField val X_ACCOUNT_MISMATCH = of("x_account_mismatch")
+
                 @JvmField val ACCOUNT_NEEDS_REAUTH = of("account_needs_reauth")
 
                 @JvmField val ACCOUNT_NOT_FOUND = of("account_not_found")
@@ -707,6 +713,8 @@ private constructor(
                 @JvmField val LOGIN_FAILED = of("login_failed")
 
                 @JvmField val MEDIA_DOWNLOAD_FAILED = of("media_download_failed")
+
+                @JvmField val MEDIA_NOT_UPLOADED = of("media_not_uploaded")
 
                 @JvmField val MEDIA_TOO_LARGE = of("media_too_large")
 
@@ -984,6 +992,8 @@ private constructor(
             enum class Known {
                 INTERNAL_ERROR,
                 ACCOUNT_ALREADY_CONNECTED,
+                X_ACCOUNT_CONNECT_PERMISSION_REQUIRED,
+                X_ACCOUNT_MISMATCH,
                 ACCOUNT_NEEDS_REAUTH,
                 ACCOUNT_NOT_FOUND,
                 ACCOUNT_REQUIRED,
@@ -1016,6 +1026,7 @@ private constructor(
                 LOGIN_COOLDOWN,
                 LOGIN_FAILED,
                 MEDIA_DOWNLOAD_FAILED,
+                MEDIA_NOT_UPLOADED,
                 MEDIA_TOO_LARGE,
                 MEDIA_UNAVAILABLE,
                 MISSING_PARAMS,
@@ -1164,6 +1175,8 @@ private constructor(
             enum class Value {
                 INTERNAL_ERROR,
                 ACCOUNT_ALREADY_CONNECTED,
+                X_ACCOUNT_CONNECT_PERMISSION_REQUIRED,
+                X_ACCOUNT_MISMATCH,
                 ACCOUNT_NEEDS_REAUTH,
                 ACCOUNT_NOT_FOUND,
                 ACCOUNT_REQUIRED,
@@ -1196,6 +1209,7 @@ private constructor(
                 LOGIN_COOLDOWN,
                 LOGIN_FAILED,
                 MEDIA_DOWNLOAD_FAILED,
+                MEDIA_NOT_UPLOADED,
                 MEDIA_TOO_LARGE,
                 MEDIA_UNAVAILABLE,
                 MISSING_PARAMS,
@@ -1345,6 +1359,9 @@ private constructor(
                 when (this) {
                     INTERNAL_ERROR -> Value.INTERNAL_ERROR
                     ACCOUNT_ALREADY_CONNECTED -> Value.ACCOUNT_ALREADY_CONNECTED
+                    X_ACCOUNT_CONNECT_PERMISSION_REQUIRED ->
+                        Value.X_ACCOUNT_CONNECT_PERMISSION_REQUIRED
+                    X_ACCOUNT_MISMATCH -> Value.X_ACCOUNT_MISMATCH
                     ACCOUNT_NEEDS_REAUTH -> Value.ACCOUNT_NEEDS_REAUTH
                     ACCOUNT_NOT_FOUND -> Value.ACCOUNT_NOT_FOUND
                     ACCOUNT_REQUIRED -> Value.ACCOUNT_REQUIRED
@@ -1377,6 +1394,7 @@ private constructor(
                     LOGIN_COOLDOWN -> Value.LOGIN_COOLDOWN
                     LOGIN_FAILED -> Value.LOGIN_FAILED
                     MEDIA_DOWNLOAD_FAILED -> Value.MEDIA_DOWNLOAD_FAILED
+                    MEDIA_NOT_UPLOADED -> Value.MEDIA_NOT_UPLOADED
                     MEDIA_TOO_LARGE -> Value.MEDIA_TOO_LARGE
                     MEDIA_UNAVAILABLE -> Value.MEDIA_UNAVAILABLE
                     MISSING_PARAMS -> Value.MISSING_PARAMS
@@ -1524,6 +1542,9 @@ private constructor(
                 when (this) {
                     INTERNAL_ERROR -> Known.INTERNAL_ERROR
                     ACCOUNT_ALREADY_CONNECTED -> Known.ACCOUNT_ALREADY_CONNECTED
+                    X_ACCOUNT_CONNECT_PERMISSION_REQUIRED ->
+                        Known.X_ACCOUNT_CONNECT_PERMISSION_REQUIRED
+                    X_ACCOUNT_MISMATCH -> Known.X_ACCOUNT_MISMATCH
                     ACCOUNT_NEEDS_REAUTH -> Known.ACCOUNT_NEEDS_REAUTH
                     ACCOUNT_NOT_FOUND -> Known.ACCOUNT_NOT_FOUND
                     ACCOUNT_REQUIRED -> Known.ACCOUNT_REQUIRED
@@ -1556,6 +1577,7 @@ private constructor(
                     LOGIN_COOLDOWN -> Known.LOGIN_COOLDOWN
                     LOGIN_FAILED -> Known.LOGIN_FAILED
                     MEDIA_DOWNLOAD_FAILED -> Known.MEDIA_DOWNLOAD_FAILED
+                    MEDIA_NOT_UPLOADED -> Known.MEDIA_NOT_UPLOADED
                     MEDIA_TOO_LARGE -> Known.MEDIA_TOO_LARGE
                     MEDIA_UNAVAILABLE -> Known.MEDIA_UNAVAILABLE
                     MISSING_PARAMS -> Known.MISSING_PARAMS
@@ -1958,6 +1980,12 @@ private constructor(
 
                     @JvmField val ACCOUNT_ALREADY_CONNECTED = of("account_already_connected")
 
+                    @JvmField
+                    val X_ACCOUNT_CONNECT_PERMISSION_REQUIRED =
+                        of("x_account_connect_permission_required")
+
+                    @JvmField val X_ACCOUNT_MISMATCH = of("x_account_mismatch")
+
                     @JvmField val ACCOUNT_NEEDS_REAUTH = of("account_needs_reauth")
 
                     @JvmField val ACCOUNT_NOT_FOUND = of("account_not_found")
@@ -2021,6 +2049,8 @@ private constructor(
                     @JvmField val LOGIN_FAILED = of("login_failed")
 
                     @JvmField val MEDIA_DOWNLOAD_FAILED = of("media_download_failed")
+
+                    @JvmField val MEDIA_NOT_UPLOADED = of("media_not_uploaded")
 
                     @JvmField val MEDIA_TOO_LARGE = of("media_too_large")
 
@@ -2300,6 +2330,8 @@ private constructor(
                 enum class Known {
                     INTERNAL_ERROR,
                     ACCOUNT_ALREADY_CONNECTED,
+                    X_ACCOUNT_CONNECT_PERMISSION_REQUIRED,
+                    X_ACCOUNT_MISMATCH,
                     ACCOUNT_NEEDS_REAUTH,
                     ACCOUNT_NOT_FOUND,
                     ACCOUNT_REQUIRED,
@@ -2332,6 +2364,7 @@ private constructor(
                     LOGIN_COOLDOWN,
                     LOGIN_FAILED,
                     MEDIA_DOWNLOAD_FAILED,
+                    MEDIA_NOT_UPLOADED,
                     MEDIA_TOO_LARGE,
                     MEDIA_UNAVAILABLE,
                     MISSING_PARAMS,
@@ -2480,6 +2513,8 @@ private constructor(
                 enum class Value {
                     INTERNAL_ERROR,
                     ACCOUNT_ALREADY_CONNECTED,
+                    X_ACCOUNT_CONNECT_PERMISSION_REQUIRED,
+                    X_ACCOUNT_MISMATCH,
                     ACCOUNT_NEEDS_REAUTH,
                     ACCOUNT_NOT_FOUND,
                     ACCOUNT_REQUIRED,
@@ -2512,6 +2547,7 @@ private constructor(
                     LOGIN_COOLDOWN,
                     LOGIN_FAILED,
                     MEDIA_DOWNLOAD_FAILED,
+                    MEDIA_NOT_UPLOADED,
                     MEDIA_TOO_LARGE,
                     MEDIA_UNAVAILABLE,
                     MISSING_PARAMS,
@@ -2660,6 +2696,9 @@ private constructor(
                     when (this) {
                         INTERNAL_ERROR -> Value.INTERNAL_ERROR
                         ACCOUNT_ALREADY_CONNECTED -> Value.ACCOUNT_ALREADY_CONNECTED
+                        X_ACCOUNT_CONNECT_PERMISSION_REQUIRED ->
+                            Value.X_ACCOUNT_CONNECT_PERMISSION_REQUIRED
+                        X_ACCOUNT_MISMATCH -> Value.X_ACCOUNT_MISMATCH
                         ACCOUNT_NEEDS_REAUTH -> Value.ACCOUNT_NEEDS_REAUTH
                         ACCOUNT_NOT_FOUND -> Value.ACCOUNT_NOT_FOUND
                         ACCOUNT_REQUIRED -> Value.ACCOUNT_REQUIRED
@@ -2692,6 +2731,7 @@ private constructor(
                         LOGIN_COOLDOWN -> Value.LOGIN_COOLDOWN
                         LOGIN_FAILED -> Value.LOGIN_FAILED
                         MEDIA_DOWNLOAD_FAILED -> Value.MEDIA_DOWNLOAD_FAILED
+                        MEDIA_NOT_UPLOADED -> Value.MEDIA_NOT_UPLOADED
                         MEDIA_TOO_LARGE -> Value.MEDIA_TOO_LARGE
                         MEDIA_UNAVAILABLE -> Value.MEDIA_UNAVAILABLE
                         MISSING_PARAMS -> Value.MISSING_PARAMS
@@ -2839,6 +2879,9 @@ private constructor(
                     when (this) {
                         INTERNAL_ERROR -> Known.INTERNAL_ERROR
                         ACCOUNT_ALREADY_CONNECTED -> Known.ACCOUNT_ALREADY_CONNECTED
+                        X_ACCOUNT_CONNECT_PERMISSION_REQUIRED ->
+                            Known.X_ACCOUNT_CONNECT_PERMISSION_REQUIRED
+                        X_ACCOUNT_MISMATCH -> Known.X_ACCOUNT_MISMATCH
                         ACCOUNT_NEEDS_REAUTH -> Known.ACCOUNT_NEEDS_REAUTH
                         ACCOUNT_NOT_FOUND -> Known.ACCOUNT_NOT_FOUND
                         ACCOUNT_REQUIRED -> Known.ACCOUNT_REQUIRED
@@ -2871,6 +2914,7 @@ private constructor(
                         LOGIN_COOLDOWN -> Known.LOGIN_COOLDOWN
                         LOGIN_FAILED -> Known.LOGIN_FAILED
                         MEDIA_DOWNLOAD_FAILED -> Known.MEDIA_DOWNLOAD_FAILED
+                        MEDIA_NOT_UPLOADED -> Known.MEDIA_NOT_UPLOADED
                         MEDIA_TOO_LARGE -> Known.MEDIA_TOO_LARGE
                         MEDIA_UNAVAILABLE -> Known.MEDIA_UNAVAILABLE
                         MISSING_PARAMS -> Known.MISSING_PARAMS

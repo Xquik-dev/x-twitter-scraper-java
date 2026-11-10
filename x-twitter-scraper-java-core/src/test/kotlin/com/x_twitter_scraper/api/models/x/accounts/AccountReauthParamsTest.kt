@@ -14,6 +14,7 @@ internal class AccountReauthParamsTest {
         AccountReauthParams.builder()
             .id("id")
             .password("<ACCOUNT_PASSWORD>")
+            .connectionAttemptId("xatt_0123456789abcdef0123456789abcdef")
             .email("account@example.invalid")
             .totpSecret("<TOTP_SECRET>")
             .build()
@@ -33,6 +34,7 @@ internal class AccountReauthParamsTest {
             AccountReauthParams.builder()
                 .id("id")
                 .password("<ACCOUNT_PASSWORD>")
+                .connectionAttemptId("xatt_0123456789abcdef0123456789abcdef")
                 .email("account@example.invalid")
                 .totpSecret("<TOTP_SECRET>")
                 .build()
@@ -40,6 +42,7 @@ internal class AccountReauthParamsTest {
         val body = params._body()
 
         assertThat(body.password()).isEqualTo("<ACCOUNT_PASSWORD>")
+        assertThat(body.connectionAttemptId()).contains("xatt_0123456789abcdef0123456789abcdef")
         assertThat(body.email()).contains("account@example.invalid")
         assertThat(body.totpSecret()).contains("<TOTP_SECRET>")
     }
@@ -51,5 +54,6 @@ internal class AccountReauthParamsTest {
         val body = params._body()
 
         assertThat(body.password()).isEqualTo("<ACCOUNT_PASSWORD>")
+        assertThat(body.connectionAttemptId()).contains("xatt_0123456789abcdef0123456789abcdef")
     }
 }
