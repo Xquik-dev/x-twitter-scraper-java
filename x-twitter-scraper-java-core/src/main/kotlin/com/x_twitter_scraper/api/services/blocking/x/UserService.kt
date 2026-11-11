@@ -20,6 +20,8 @@ import com.x_twitter_scraper.api.models.x.users.UserRetrieveBatchParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveBatchResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveBatchTweetsParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveBatchTweetsResponse
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowerAuditParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowerAuditResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowerIdsParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowerIdsResponse
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowersParams
@@ -209,9 +211,9 @@ interface UserService {
     ): UserRetrieveBatchResponse
 
     /**
-     * Returns the newest posts of up to 20 users, named by user ID, username or profile link, in
-     * the order named. Send ids or usernames, not both. Each post costs 1 credit. A user in
-     * unavailable_ids or unprocessed_ids costs nothing.
+     * Returns the newest posts of users named by user ID, username or profile link, in the order
+     * named. Send ids or usernames, not both. Each post costs 1 credit. A user in unavailable_ids
+     * or unprocessed_ids costs nothing.
      */
     fun retrieveBatchTweets(): UserRetrieveBatchTweetsResponse =
         retrieveBatchTweets(UserRetrieveBatchTweetsParams.none())
@@ -230,6 +232,48 @@ interface UserService {
     /** @see retrieveBatchTweets */
     fun retrieveBatchTweets(requestOptions: RequestOptions): UserRetrieveBatchTweetsResponse =
         retrieveBatchTweets(UserRetrieveBatchTweetsParams.none(), requestOptions)
+
+    /**
+     * Reads the newest followers of a public account & returns a follower audit. It gives each
+     * follower 1 class with its score & signals, then adds coverage, a quality score, signal
+     * counts, arrival bands, join cohorts, countries, top followers & the account's engagement.
+     * Each follower read costs 1 credit, and the engagement adds 1 credit. Signals come from public
+     * profiles, so a real person can match. Older followers may differ from the newest ones.
+     */
+    fun retrieveFollowerAudit(id: String): UserRetrieveFollowerAuditResponse =
+        retrieveFollowerAudit(id, UserRetrieveFollowerAuditParams.none())
+
+    /** @see retrieveFollowerAudit */
+    fun retrieveFollowerAudit(
+        id: String,
+        params: UserRetrieveFollowerAuditParams = UserRetrieveFollowerAuditParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): UserRetrieveFollowerAuditResponse =
+        retrieveFollowerAudit(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see retrieveFollowerAudit */
+    fun retrieveFollowerAudit(
+        id: String,
+        params: UserRetrieveFollowerAuditParams = UserRetrieveFollowerAuditParams.none(),
+    ): UserRetrieveFollowerAuditResponse = retrieveFollowerAudit(id, params, RequestOptions.none())
+
+    /** @see retrieveFollowerAudit */
+    fun retrieveFollowerAudit(
+        params: UserRetrieveFollowerAuditParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): UserRetrieveFollowerAuditResponse
+
+    /** @see retrieveFollowerAudit */
+    fun retrieveFollowerAudit(
+        params: UserRetrieveFollowerAuditParams
+    ): UserRetrieveFollowerAuditResponse = retrieveFollowerAudit(params, RequestOptions.none())
+
+    /** @see retrieveFollowerAudit */
+    fun retrieveFollowerAudit(
+        id: String,
+        requestOptions: RequestOptions,
+    ): UserRetrieveFollowerAuditResponse =
+        retrieveFollowerAudit(id, UserRetrieveFollowerAuditParams.none(), requestOptions)
 
     /**
      * Returns the user IDs of the selected user's followers, newest first, up to 5,000 a page. Use
@@ -1153,6 +1197,53 @@ interface UserService {
             requestOptions: RequestOptions
         ): HttpResponseFor<UserRetrieveBatchTweetsResponse> =
             retrieveBatchTweets(UserRetrieveBatchTweetsParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /x/users/{id}/follower-audit`, but is otherwise the
+         * same as [UserService.retrieveFollowerAudit].
+         */
+        @MustBeClosed
+        fun retrieveFollowerAudit(id: String): HttpResponseFor<UserRetrieveFollowerAuditResponse> =
+            retrieveFollowerAudit(id, UserRetrieveFollowerAuditParams.none())
+
+        /** @see retrieveFollowerAudit */
+        @MustBeClosed
+        fun retrieveFollowerAudit(
+            id: String,
+            params: UserRetrieveFollowerAuditParams = UserRetrieveFollowerAuditParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<UserRetrieveFollowerAuditResponse> =
+            retrieveFollowerAudit(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see retrieveFollowerAudit */
+        @MustBeClosed
+        fun retrieveFollowerAudit(
+            id: String,
+            params: UserRetrieveFollowerAuditParams = UserRetrieveFollowerAuditParams.none(),
+        ): HttpResponseFor<UserRetrieveFollowerAuditResponse> =
+            retrieveFollowerAudit(id, params, RequestOptions.none())
+
+        /** @see retrieveFollowerAudit */
+        @MustBeClosed
+        fun retrieveFollowerAudit(
+            params: UserRetrieveFollowerAuditParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<UserRetrieveFollowerAuditResponse>
+
+        /** @see retrieveFollowerAudit */
+        @MustBeClosed
+        fun retrieveFollowerAudit(
+            params: UserRetrieveFollowerAuditParams
+        ): HttpResponseFor<UserRetrieveFollowerAuditResponse> =
+            retrieveFollowerAudit(params, RequestOptions.none())
+
+        /** @see retrieveFollowerAudit */
+        @MustBeClosed
+        fun retrieveFollowerAudit(
+            id: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<UserRetrieveFollowerAuditResponse> =
+            retrieveFollowerAudit(id, UserRetrieveFollowerAuditParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /x/users/{id}/follower-ids`, but is otherwise the

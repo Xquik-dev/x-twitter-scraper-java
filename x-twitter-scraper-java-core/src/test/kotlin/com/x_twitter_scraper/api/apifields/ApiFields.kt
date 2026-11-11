@@ -49,10 +49,10 @@ internal class FieldCheck(private val spec: JsonNode, private val root: File) {
                 .flatMap { (id, specOperation) ->
                     val (pathItem, operation) = specOperation
                     sdk.getValue(id).flatMap { method ->
-                        val (query, body) = shapes.params(method.params)
+                        val (query, body) = shapes.params(method.params, method.input)
                         val response = method.response?.let { shapes.type(it) }
                         compareOperation(
-                                specShapes.operation(pathItem, operation),
+                                specShapes.operation(pathItem, operation, method.bodyType),
                                 SdkOperation(query, body, response),
                                 shapes.defs,
                             )

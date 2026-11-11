@@ -168,6 +168,7 @@ Their typed Java methods ship in 0.11.0, the next Maven Central release.
 | Read NFL & college football games, box scores, plays, audiences, rosters, player props and posts | `GET /x/sports/{league}/games`, `GET /x/sports/{league}/games/{id}/plays` | `client.x().sports()` |
 | Read the account's activity log and each activity's full record | `GET /activity`, `GET /activity/{id}` | `client.activity()` |
 | Check 1 account for a search ban, a suggestion ban and reply deboosting | `GET /x/users/{id}/shadowban` | `client.x().users().retrieveShadowban()` |
+| Grade an account's newest followers by what their public profiles look like | `GET /x/users/{id}/follower-audit` | `client.x().users().retrieveFollowerAudit()` |
 
 ## Use async calls
 

@@ -4,6 +4,7 @@
 
 package com.x_twitter_scraper.api.models.x.profile
 
+import com.x_twitter_scraper.api.core.JsonNull
 import com.x_twitter_scraper.api.core.MultipartField
 import com.x_twitter_scraper.api.core.http.Headers
 import java.io.InputStream
@@ -63,6 +64,21 @@ internal class ProfileUpdateBannerParamsTest {
                         field.map { (it as? ByteArray)?.inputStream() ?: it }
                     }
             )
+    }
+
+    @Test
+    fun omitsNullFileWithUrlInput() {
+        val params =
+            ProfileUpdateBannerParams.builder()
+                .account("sample")
+                .idempotencyKey("sample")
+                .url("https://example.com/banner.png")
+                .file(MultipartField.of(JsonNull.of()))
+                .build()
+
+        assertThat(params._body())
+            .containsEntry("url", MultipartField.of("https://example.com/banner.png"))
+            .doesNotContainKey("file")
     }
 
     @Test

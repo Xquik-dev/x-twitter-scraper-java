@@ -114,6 +114,8 @@ private constructor(
     private val hiddenByAuthor: JsonField<Boolean>,
     private val liveEventContext: JsonField<LiveEventContext>,
     private val unknownFields: JsonField<List<UnknownField>>,
+    private val topicScore: JsonField<Double>,
+    private val imageScore: JsonField<Double>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -290,6 +292,12 @@ private constructor(
         @JsonProperty("unknownFields")
         @ExcludeMissing
         unknownFields: JsonField<List<UnknownField>> = JsonMissing.of(),
+        @JsonProperty("topicScore")
+        @ExcludeMissing
+        topicScore: JsonField<Double> = JsonMissing.of(),
+        @JsonProperty("imageScore")
+        @ExcludeMissing
+        imageScore: JsonField<Double> = JsonMissing.of(),
     ) : this(
         id,
         bookmarkCount,
@@ -364,6 +372,8 @@ private constructor(
         hiddenByAuthor,
         liveEventContext,
         unknownFields,
+        topicScore,
+        imageScore,
         mutableMapOf(),
     )
 
@@ -1468,6 +1478,36 @@ private constructor(
     @ExcludeMissing
     fun _unknownFields(): JsonField<List<UnknownField>> = unknownFields
 
+    /**
+     * How likely the post is about the topic, from 0.5 to 1. Present on a post the topic filter
+     * kept.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun topicScore(): Optional<Double> = topicScore.getOptional("topicScore")
+
+    /**
+     * Returns the raw JSON value of [topicScore].
+     *
+     * Unlike [topicScore], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("topicScore") @ExcludeMissing fun _topicScore(): JsonField<Double> = topicScore
+
+    /**
+     * How likely a photo of the post shows what you asked for, from 0.5 to 1. Present on a post the
+     * image filter kept.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun imageScore(): Optional<Double> = imageScore.getOptional("imageScore")
+
+    /**
+     * Returns the raw JSON value of [imageScore].
+     *
+     * Unlike [imageScore], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("imageScore") @ExcludeMissing fun _imageScore(): JsonField<Double> = imageScore
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -1576,6 +1616,8 @@ private constructor(
         private var hiddenByAuthor: JsonField<Boolean> = JsonMissing.of()
         private var liveEventContext: JsonField<LiveEventContext> = JsonMissing.of()
         private var unknownFields: JsonField<MutableList<UnknownField>>? = null
+        private var topicScore: JsonField<Double> = JsonMissing.of()
+        private var imageScore: JsonField<Double> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -1653,6 +1695,8 @@ private constructor(
             hiddenByAuthor = searchTweet.hiddenByAuthor
             liveEventContext = searchTweet.liveEventContext
             unknownFields = searchTweet.unknownFields.map { it.toMutableList() }
+            topicScore = searchTweet.topicScore
+            imageScore = searchTweet.imageScore
             additionalProperties = searchTweet.additionalProperties.toMutableMap()
         }
 
@@ -2330,6 +2374,36 @@ private constructor(
                 }
         }
 
+        /**
+         * How likely the post is about the topic, from 0.5 to 1. Present on a post the topic filter
+         * kept.
+         */
+        fun topicScore(topicScore: Double) = topicScore(JsonField.of(topicScore))
+
+        /**
+         * Sets [Builder.topicScore] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.topicScore] with a well-typed [Double] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun topicScore(topicScore: JsonField<Double>) = apply { this.topicScore = topicScore }
+
+        /**
+         * How likely a photo of the post shows what you asked for, from 0.5 to 1. Present on a post
+         * the image filter kept.
+         */
+        fun imageScore(imageScore: Double) = imageScore(JsonField.of(imageScore))
+
+        /**
+         * Sets [Builder.imageScore] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.imageScore] with a well-typed [Double] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun imageScore(imageScore: JsonField<Double>) = apply { this.imageScore = imageScore }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -2443,6 +2517,8 @@ private constructor(
                 hiddenByAuthor,
                 liveEventContext,
                 (unknownFields ?: JsonMissing.of()).map { it.toImmutable() },
+                topicScore,
+                imageScore,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -2535,6 +2611,8 @@ private constructor(
         hiddenByAuthor()
         liveEventContext().ifPresent { it.validate() }
         unknownFields().ifPresent { it.forEach { it.validate() } }
+        topicScore()
+        imageScore()
         validated = true
     }
 
@@ -2620,7 +2698,9 @@ private constructor(
             (if (viewState.asKnown().isPresent) 1 else 0) +
             (if (hiddenByAuthor.asKnown().isPresent) 1 else 0) +
             (liveEventContext.asKnown().getOrNull()?.validity() ?: 0) +
-            (unknownFields.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
+            (unknownFields.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
+            (if (topicScore.asKnown().isPresent) 1 else 0) +
+            (if (imageScore.asKnown().isPresent) 1 else 0)
 
     /** Article metadata attached to a tweet. */
     class Article
@@ -20924,6 +21004,8 @@ private constructor(
             hiddenByAuthor == other.hiddenByAuthor &&
             liveEventContext == other.liveEventContext &&
             unknownFields == other.unknownFields &&
+            topicScore == other.topicScore &&
+            imageScore == other.imageScore &&
             additionalProperties == other.additionalProperties
     }
 
@@ -21002,6 +21084,8 @@ private constructor(
             hiddenByAuthor,
             liveEventContext,
             unknownFields,
+            topicScore,
+            imageScore,
             additionalProperties,
         )
     }
@@ -21009,5 +21093,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SearchTweet{id=$id, bookmarkCount=$bookmarkCount, unknownCounts=$unknownCounts, likeCount=$likeCount, quoteCount=$quoteCount, replyCount=$replyCount, retweetCount=$retweetCount, text=$text, viewCount=$viewCount, article=$article, author=$author, authorUnavailable=$authorUnavailable, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, contentDisclosure=$contentDisclosure, conversationControl=$conversationControl, conversationId=$conversationId, coordinates=$coordinates, createdAt=$createdAt, displayTextRange=$displayTextRange, edit=$edit, entities=$entities, exclusiveContent=$exclusiveContent, geo=$geo, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, hasCommunityNotes=$hasCommunityNotes, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, interstitial=$interstitial, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isReply=$isReply, isRetweet=$isRetweet, isTranslatable=$isTranslatable, jetfuelAttachment=$jetfuelAttachment, lang=$lang, limitedActions=$limitedActions, media=$media, noteTweet=$noteTweet, parentTweet=$parentTweet, place=$place, possiblySensitive=$possiblySensitive, postCta=$postCta, previousCounts=$previousCounts, quotedTweet=$quotedTweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, reactionContext=$reactionContext, retweetedTweet=$retweetedTweet, retweetedAt=$retweetedAt, scopes=$scopes, softIntervention=$softIntervention, source=$source, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, textHighlights=$textHighlights, tombstone=$tombstone, type=$type, unavailableAuthorId=$unavailableAuthorId, unmentionedUserIds=$unmentionedUserIds, url=$url, viewState=$viewState, hiddenByAuthor=$hiddenByAuthor, liveEventContext=$liveEventContext, unknownFields=$unknownFields, additionalProperties=$additionalProperties}"
+        "SearchTweet{id=$id, bookmarkCount=$bookmarkCount, unknownCounts=$unknownCounts, likeCount=$likeCount, quoteCount=$quoteCount, replyCount=$replyCount, retweetCount=$retweetCount, text=$text, viewCount=$viewCount, article=$article, author=$author, authorUnavailable=$authorUnavailable, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, contentDisclosure=$contentDisclosure, conversationControl=$conversationControl, conversationId=$conversationId, coordinates=$coordinates, createdAt=$createdAt, displayTextRange=$displayTextRange, edit=$edit, entities=$entities, exclusiveContent=$exclusiveContent, geo=$geo, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, hasCommunityNotes=$hasCommunityNotes, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, interstitial=$interstitial, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isReply=$isReply, isRetweet=$isRetweet, isTranslatable=$isTranslatable, jetfuelAttachment=$jetfuelAttachment, lang=$lang, limitedActions=$limitedActions, media=$media, noteTweet=$noteTweet, parentTweet=$parentTweet, place=$place, possiblySensitive=$possiblySensitive, postCta=$postCta, previousCounts=$previousCounts, quotedTweet=$quotedTweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, reactionContext=$reactionContext, retweetedTweet=$retweetedTweet, retweetedAt=$retweetedAt, scopes=$scopes, softIntervention=$softIntervention, source=$source, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, textHighlights=$textHighlights, tombstone=$tombstone, type=$type, unavailableAuthorId=$unavailableAuthorId, unmentionedUserIds=$unmentionedUserIds, url=$url, viewState=$viewState, hiddenByAuthor=$hiddenByAuthor, liveEventContext=$liveEventContext, unknownFields=$unknownFields, topicScore=$topicScore, imageScore=$imageScore, additionalProperties=$additionalProperties}"
 }

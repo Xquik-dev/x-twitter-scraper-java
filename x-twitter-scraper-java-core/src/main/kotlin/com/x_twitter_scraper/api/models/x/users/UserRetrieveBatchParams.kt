@@ -42,8 +42,8 @@ private constructor(
 ) : Params {
 
     /**
-     * Comma-separated numeric user IDs (1-100 values). Duplicate IDs are ignored while preserving
-     * first-seen order.
+     * Comma-separated numeric user IDs. Duplicate IDs are ignored while preserving first-seen
+     * order.
      */
     fun ids(): String = ids
 
@@ -117,8 +117,8 @@ private constructor(
     fun usernameContains(): Optional<String> = Optional.ofNullable(usernameContains)
 
     /**
-     * Comma-separated X usernames, with or without @, or profile links such as x.com/nasa (1-100
-     * values), in place of ids. A name in another case is the same account.
+     * Comma-separated X usernames, with or without @, or profile links such as x.com/nasa, in place
+     * of ids. A name in another case is the same account.
      */
     fun usernames(): Optional<String> = Optional.ofNullable(usernames)
 
@@ -206,8 +206,8 @@ private constructor(
         }
 
         /**
-         * Comma-separated numeric user IDs (1-100 values). Duplicate IDs are ignored while
-         * preserving first-seen order.
+         * Comma-separated numeric user IDs. Duplicate IDs are ignored while preserving first-seen
+         * order.
          */
         fun ids(ids: String) = apply { this.ids = ids }
 
@@ -390,8 +390,8 @@ private constructor(
             usernameContains(usernameContains.getOrNull())
 
         /**
-         * Comma-separated X usernames, with or without @, or profile links such as x.com/nasa
-         * (1-100 values), in place of ids. A name in another case is the same account.
+         * Comma-separated X usernames, with or without @, or profile links such as x.com/nasa, in
+         * place of ids. A name in another case is the same account.
          */
         fun usernames(usernames: String?) = apply { this.usernames = usernames }
 

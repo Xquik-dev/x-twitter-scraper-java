@@ -84,6 +84,8 @@ private constructor(
     private val verifiedOnly: Boolean?,
     private val within: String?,
     private val withinTime: String?,
+    private val topic: String?,
+    private val imageShows: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -297,6 +299,21 @@ private constructor(
     /** Match Tweets inside a recent time window. */
     fun withinTime(): Optional<String> = Optional.ofNullable(withinTime)
 
+    /**
+     * Keep only posts about this topic, such as the Rust programming language. Each kept post costs
+     * 2 credits instead of the read price, and a post the filter drops costs nothing. The page
+     * states the cutoff and counts in topicFilter.
+     */
+    fun topic(): Optional<String> = Optional.ofNullable(topic)
+
+    /**
+     * Keep only posts whose photos show this. Send charts, screenshots, product_photos, memes or
+     * people, or describe it in words, such as a rocket. Each kept post costs 2 credits instead of
+     * the read price, and a post the filter drops costs nothing. The page states the cutoff and
+     * counts in imageFilter.
+     */
+    fun imageShows(): Optional<String> = Optional.ofNullable(imageShows)
+
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
 
@@ -378,6 +395,8 @@ private constructor(
         private var verifiedOnly: Boolean? = null
         private var within: String? = null
         private var withinTime: String? = null
+        private var topic: String? = null
+        private var imageShows: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -445,6 +464,8 @@ private constructor(
             verifiedOnly = userRetrieveTweetsParams.verifiedOnly
             within = userRetrieveTweetsParams.within
             withinTime = userRetrieveTweetsParams.withinTime
+            topic = userRetrieveTweetsParams.topic
+            imageShows = userRetrieveTweetsParams.imageShows
             additionalHeaders = userRetrieveTweetsParams.additionalHeaders.toBuilder()
             additionalQueryParams = userRetrieveTweetsParams.additionalQueryParams.toBuilder()
         }
@@ -932,6 +953,27 @@ private constructor(
         /** Alias for calling [Builder.withinTime] with `withinTime.orElse(null)`. */
         fun withinTime(withinTime: Optional<String>) = withinTime(withinTime.getOrNull())
 
+        /**
+         * Keep only posts about this topic, such as the Rust programming language. Each kept post
+         * costs 2 credits instead of the read price, and a post the filter drops costs nothing. The
+         * page states the cutoff and counts in topicFilter.
+         */
+        fun topic(topic: String?) = apply { this.topic = topic }
+
+        /** Alias for calling [Builder.topic] with `topic.orElse(null)`. */
+        fun topic(topic: Optional<String>) = topic(topic.getOrNull())
+
+        /**
+         * Keep only posts whose photos show this. Send charts, screenshots, product_photos, memes
+         * or people, or describe it in words, such as a rocket. Each kept post costs 2 credits
+         * instead of the read price, and a post the filter drops costs nothing. The page states the
+         * cutoff and counts in imageFilter.
+         */
+        fun imageShows(imageShows: String?) = apply { this.imageShows = imageShows }
+
+        /** Alias for calling [Builder.imageShows] with `imageShows.orElse(null)`. */
+        fun imageShows(imageShows: Optional<String>) = imageShows(imageShows.getOrNull())
+
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
             putAllAdditionalHeaders(additionalHeaders)
@@ -1099,6 +1141,8 @@ private constructor(
                 verifiedOnly,
                 within,
                 withinTime,
+                topic,
+                imageShows,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -1176,6 +1220,8 @@ private constructor(
                 verifiedOnly?.let { put("verifiedOnly", it.toString()) }
                 within?.let { put("within", it) }
                 withinTime?.let { put("withinTime", it) }
+                topic?.let { put("topic", it) }
+                imageShows?.let { put("imageShows", it) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -1860,6 +1906,8 @@ private constructor(
             verifiedOnly == other.verifiedOnly &&
             within == other.within &&
             withinTime == other.withinTime &&
+            topic == other.topic &&
+            imageShows == other.imageShows &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
@@ -1928,10 +1976,12 @@ private constructor(
             verifiedOnly,
             within,
             withinTime,
+            topic,
+            imageShows,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "UserRetrieveTweetsParams{id=$id, advancedQuery=$advancedQuery, anyWords=$anyWords, blueVerifiedOnly=$blueVerifiedOnly, boundingBox=$boundingBox, cardName=$cardName, cashtags=$cashtags, conversationId=$conversationId, cursor=$cursor, exactPhrase=$exactPhrase, excludeSource=$excludeSource, excludeWords=$excludeWords, fields=$fields, fromUser=$fromUser, geocode=$geocode, hashtags=$hashtags, includeParentTweet=$includeParentTweet, includeReplies=$includeReplies, inReplyToTweetId=$inReplyToTweetId, keywords=$keywords, language=$language, listId=$listId, maxFaves=$maxFaves, maxId=$maxId, maxQuotes=$maxQuotes, maxReplies=$maxReplies, maxRetweets=$maxRetweets, mediaType=$mediaType, mentioning=$mentioning, minBookmarks=$minBookmarks, minFaves=$minFaves, minLikes=$minLikes, minQuotes=$minQuotes, minReplies=$minReplies, minRetweets=$minRetweets, minViews=$minViews, mode=$mode, nativeRetweets=$nativeRetweets, near=$near, news=$news, omit=$omit, pageSize=$pageSize, place=$place, placeCountry=$placeCountry, pointRadius=$pointRadius, quotes=$quotes, quotesOfTweetId=$quotesOfTweetId, replies=$replies, retweets=$retweets, retweetsOfTweetId=$retweetsOfTweetId, safe=$safe, sinceDate=$sinceDate, sinceId=$sinceId, sinceTime=$sinceTime, source=$source, toUser=$toUser, untilDate=$untilDate, untilTime=$untilTime, url=$url, verifiedOnly=$verifiedOnly, within=$within, withinTime=$withinTime, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "UserRetrieveTweetsParams{id=$id, advancedQuery=$advancedQuery, anyWords=$anyWords, blueVerifiedOnly=$blueVerifiedOnly, boundingBox=$boundingBox, cardName=$cardName, cashtags=$cashtags, conversationId=$conversationId, cursor=$cursor, exactPhrase=$exactPhrase, excludeSource=$excludeSource, excludeWords=$excludeWords, fields=$fields, fromUser=$fromUser, geocode=$geocode, hashtags=$hashtags, includeParentTweet=$includeParentTweet, includeReplies=$includeReplies, inReplyToTweetId=$inReplyToTweetId, keywords=$keywords, language=$language, listId=$listId, maxFaves=$maxFaves, maxId=$maxId, maxQuotes=$maxQuotes, maxReplies=$maxReplies, maxRetweets=$maxRetweets, mediaType=$mediaType, mentioning=$mentioning, minBookmarks=$minBookmarks, minFaves=$minFaves, minLikes=$minLikes, minQuotes=$minQuotes, minReplies=$minReplies, minRetweets=$minRetweets, minViews=$minViews, mode=$mode, nativeRetweets=$nativeRetweets, near=$near, news=$news, omit=$omit, pageSize=$pageSize, place=$place, placeCountry=$placeCountry, pointRadius=$pointRadius, quotes=$quotes, quotesOfTweetId=$quotesOfTweetId, replies=$replies, retweets=$retweets, retweetsOfTweetId=$retweetsOfTweetId, safe=$safe, sinceDate=$sinceDate, sinceId=$sinceId, sinceTime=$sinceTime, source=$source, toUser=$toUser, untilDate=$untilDate, untilTime=$untilTime, url=$url, verifiedOnly=$verifiedOnly, within=$within, withinTime=$withinTime, topic=$topic, imageShows=$imageShows, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
