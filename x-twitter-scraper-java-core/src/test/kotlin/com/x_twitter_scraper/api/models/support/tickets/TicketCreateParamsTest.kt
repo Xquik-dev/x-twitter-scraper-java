@@ -8,6 +8,7 @@ import com.x_twitter_scraper.api.core.MultipartField
 import com.x_twitter_scraper.api.core.http.Headers
 import java.io.InputStream
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 
 internal class TicketCreateParamsTest {
@@ -118,5 +119,31 @@ internal class TicketCreateParamsTest {
         assertThat(params.attachments()).isPresent()
         assertThat(params._body()).containsKey("attachments")
         assertThat(params.toBuilder().build()).isEqualTo(params)
+    }
+
+    @Test
+    fun buildRejectsABlankBodyWithoutAttachments() {
+        for (attachments in listOf(null, listOf<InputStream>())) {
+            val builder =
+                TicketCreateParams.builder().subject("Cannot connect X account").body(" \n")
+            attachments?.let { builder.attachments(it) }
+
+            assertThatThrownBy { builder.build() }
+                .isInstanceOf(IllegalStateException::class.java)
+                .hasMessage("At least one of `body` or `attachments` must be set")
+        }
+    }
+
+    @Test
+    fun buildKeepsABlankBodyWithAnAttachment() {
+        val params =
+            TicketCreateParams.builder()
+                .subject("Cannot connect X account")
+                .body("")
+                .addAttachment("screen".byteInputStream())
+                .build()
+
+        assertThat(params.body()).isEmpty()
+        assertThat(params.attachments().get()).hasSize(1)
     }
 }

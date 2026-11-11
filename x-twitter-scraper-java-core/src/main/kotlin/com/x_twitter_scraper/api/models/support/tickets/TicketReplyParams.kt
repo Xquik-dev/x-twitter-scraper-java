@@ -12,6 +12,7 @@ import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.MultipartField
 import com.x_twitter_scraper.api.core.Params
+import com.x_twitter_scraper.api.core.checkBodyOrAttachments
 import com.x_twitter_scraper.api.core.checkKnown
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.http.Headers
@@ -263,7 +264,8 @@ private constructor(
          * .body()
          * ```
          *
-         * @throws IllegalStateException if any required field is unset.
+         * @throws IllegalStateException if any required field is unset, or if `body` is blank and
+         *   no attachment is set.
          */
         fun build(): TicketReplyParams =
             TicketReplyParams(
@@ -424,14 +426,16 @@ private constructor(
              * .body()
              * ```
              *
-             * @throws IllegalStateException if any required field is unset.
+             * @throws IllegalStateException if any required field is unset, or if `body` is blank
+             *   and no attachment is set.
              */
-            fun build(): Body =
-                Body(
-                    checkRequired("body", body),
-                    (attachments ?: MultipartField.of(JsonMissing.of())).map { it.toImmutable() },
-                    additionalProperties.toMutableMap(),
-                )
+            fun build(): Body {
+                val bodyField = checkRequired("body", body)
+                val attachmentsField =
+                    (attachments ?: MultipartField.of(JsonMissing.of())).map { it.toImmutable() }
+                checkBodyOrAttachments(bodyField.value, attachmentsField.value)
+                return Body(bodyField, attachmentsField, additionalProperties.toMutableMap())
+            }
         }
 
         private var validated: Boolean = false

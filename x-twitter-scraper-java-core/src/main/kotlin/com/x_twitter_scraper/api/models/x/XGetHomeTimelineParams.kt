@@ -16,6 +16,7 @@ class XGetHomeTimelineParams
 private constructor(
     private val cursor: String?,
     private val seenTweetIds: String?,
+    private val pageSize: Long?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -25,6 +26,9 @@ private constructor(
 
     /** Comma-separated tweet IDs to exclude from results. Empty entries are ignored. */
     fun seenTweetIds(): Optional<String> = Optional.ofNullable(seenTweetIds)
+
+    /** Items per page, 1 to 100, default 20. Follow the next cursor for more. */
+    fun pageSize(): Optional<Long> = Optional.ofNullable(pageSize)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -47,6 +51,7 @@ private constructor(
 
         private var cursor: String? = null
         private var seenTweetIds: String? = null
+        private var pageSize: Long? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -54,6 +59,7 @@ private constructor(
         internal fun from(xGetHomeTimelineParams: XGetHomeTimelineParams) = apply {
             cursor = xGetHomeTimelineParams.cursor
             seenTweetIds = xGetHomeTimelineParams.seenTweetIds
+            pageSize = xGetHomeTimelineParams.pageSize
             additionalHeaders = xGetHomeTimelineParams.additionalHeaders.toBuilder()
             additionalQueryParams = xGetHomeTimelineParams.additionalQueryParams.toBuilder()
         }
@@ -69,6 +75,15 @@ private constructor(
 
         /** Alias for calling [Builder.seenTweetIds] with `seenTweetIds.orElse(null)`. */
         fun seenTweetIds(seenTweetIds: Optional<String>) = seenTweetIds(seenTweetIds.getOrNull())
+
+        /** Items per page, 1 to 100, default 20. Follow the next cursor for more. */
+        fun pageSize(pageSize: Long?) = apply { this.pageSize = pageSize }
+
+        /** Alias for [Builder.pageSize]. */
+        fun pageSize(pageSize: Long) = pageSize(pageSize as Long?)
+
+        /** Alias for calling [Builder.pageSize] with `pageSize.orElse(null)`. */
+        fun pageSize(pageSize: Optional<Long>) = pageSize(pageSize.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -177,6 +192,7 @@ private constructor(
             XGetHomeTimelineParams(
                 cursor,
                 seenTweetIds,
+                pageSize,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -189,6 +205,7 @@ private constructor(
             .apply {
                 cursor?.let { put("cursor", it) }
                 seenTweetIds?.let { put("seenTweetIds", it) }
+                pageSize?.let { put("pageSize", it.toString()) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -201,13 +218,14 @@ private constructor(
         return other is XGetHomeTimelineParams &&
             cursor == other.cursor &&
             seenTweetIds == other.seenTweetIds &&
+            pageSize == other.pageSize &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(cursor, seenTweetIds, additionalHeaders, additionalQueryParams)
+        Objects.hash(cursor, seenTweetIds, pageSize, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "XGetHomeTimelineParams{cursor=$cursor, seenTweetIds=$seenTweetIds, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "XGetHomeTimelineParams{cursor=$cursor, seenTweetIds=$seenTweetIds, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

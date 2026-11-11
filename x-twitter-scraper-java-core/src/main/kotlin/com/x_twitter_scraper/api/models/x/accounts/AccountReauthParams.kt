@@ -56,6 +56,14 @@ private constructor(
     fun totpSecret(): Optional<String> = body.totpSecret()
 
     /**
+     * An ID you generate to read this reconnect's status, even if the response never reaches you.
+     * Leave it out to get one in a pending response.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun connectionAttemptId(): Optional<String> = body.connectionAttemptId()
+
+    /**
      * Returns the raw JSON value of [password].
      *
      * Unlike [password], this method doesn't throw if the JSON field has an unexpected type.
@@ -75,6 +83,14 @@ private constructor(
      * Unlike [totpSecret], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _totpSecret(): JsonField<String> = body._totpSecret()
+
+    /**
+     * Returns the raw JSON value of [connectionAttemptId].
+     *
+     * Unlike [connectionAttemptId], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    fun _connectionAttemptId(): JsonField<String> = body._connectionAttemptId()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -140,6 +156,19 @@ private constructor(
 
         /** Sets [Builder.totpSecret] to an arbitrary JSON value. */
         fun totpSecret(totpSecret: JsonField<String>) = apply { body.totpSecret(totpSecret) }
+
+        /**
+         * An ID you generate to read this reconnect's status, even if the response never reaches
+         * you. Leave it out to get one in a pending response.
+         */
+        fun connectionAttemptId(connectionAttemptId: String) = apply {
+            body.connectionAttemptId(connectionAttemptId)
+        }
+
+        /** Sets [Builder.connectionAttemptId] to an arbitrary JSON value. */
+        fun connectionAttemptId(connectionAttemptId: JsonField<String>) = apply {
+            body.connectionAttemptId(connectionAttemptId)
+        }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -297,6 +326,7 @@ private constructor(
         private val password: JsonField<String>,
         private val email: JsonField<String>,
         private val totpSecret: JsonField<String>,
+        private val connectionAttemptId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -309,7 +339,10 @@ private constructor(
             @JsonProperty("totp_secret")
             @ExcludeMissing
             totpSecret: JsonField<String> = JsonMissing.of(),
-        ) : this(password, email, totpSecret, mutableMapOf())
+            @JsonProperty("connection_attempt_id")
+            @ExcludeMissing
+            connectionAttemptId: JsonField<String> = JsonMissing.of(),
+        ) : this(password, email, totpSecret, connectionAttemptId, mutableMapOf())
 
         /**
          * Updated account password
@@ -334,6 +367,15 @@ private constructor(
         fun totpSecret(): Optional<String> = totpSecret.getOptional("totp_secret")
 
         /**
+         * An ID you generate to read this reconnect's status, even if the response never reaches
+         * you. Leave it out to get one in a pending response.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun connectionAttemptId(): Optional<String> =
+            connectionAttemptId.getOptional("connection_attempt_id")
+
+        /**
          * Returns the raw JSON value of [password].
          *
          * Unlike [password], this method doesn't throw if the JSON field has an unexpected type.
@@ -355,6 +397,16 @@ private constructor(
         @JsonProperty("totp_secret")
         @ExcludeMissing
         fun _totpSecret(): JsonField<String> = totpSecret
+
+        /**
+         * Returns the raw JSON value of [connectionAttemptId].
+         *
+         * Unlike [connectionAttemptId], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("connection_attempt_id")
+        @ExcludeMissing
+        fun _connectionAttemptId(): JsonField<String> = connectionAttemptId
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -387,6 +439,7 @@ private constructor(
             private var password: JsonField<String>? = null
             private var email: JsonField<String> = JsonMissing.of()
             private var totpSecret: JsonField<String> = JsonMissing.of()
+            private var connectionAttemptId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -394,6 +447,7 @@ private constructor(
                 password = body.password
                 email = body.email
                 totpSecret = body.totpSecret
+                connectionAttemptId = body.connectionAttemptId
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -414,6 +468,18 @@ private constructor(
 
             /** Sets [Builder.totpSecret] to an arbitrary JSON value. */
             fun totpSecret(totpSecret: JsonField<String>) = apply { this.totpSecret = totpSecret }
+
+            /**
+             * An ID you generate to read this reconnect's status, even if the response never
+             * reaches you. Leave it out to get one in a pending response.
+             */
+            fun connectionAttemptId(connectionAttemptId: String) =
+                connectionAttemptId(JsonField.of(connectionAttemptId))
+
+            /** Sets [Builder.connectionAttemptId] to an arbitrary JSON value. */
+            fun connectionAttemptId(connectionAttemptId: JsonField<String>) = apply {
+                this.connectionAttemptId = connectionAttemptId
+            }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -451,6 +517,7 @@ private constructor(
                     checkRequired("password", password),
                     email,
                     totpSecret,
+                    connectionAttemptId,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -474,6 +541,7 @@ private constructor(
             password()
             email()
             totpSecret()
+            connectionAttemptId()
             validated = true
         }
 
@@ -489,7 +557,8 @@ private constructor(
         internal fun validity(): Int =
             (if (password.asKnown().isPresent) 1 else 0) +
                 (if (email.asKnown().isPresent) 1 else 0) +
-                (if (totpSecret.asKnown().isPresent) 1 else 0)
+                (if (totpSecret.asKnown().isPresent) 1 else 0) +
+                (if (connectionAttemptId.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -500,17 +569,18 @@ private constructor(
                 password == other.password &&
                 email == other.email &&
                 totpSecret == other.totpSecret &&
+                connectionAttemptId == other.connectionAttemptId &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(password, email, totpSecret, additionalProperties)
+            Objects.hash(password, email, totpSecret, connectionAttemptId, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{password=$password, email=$email, totpSecret=$totpSecret, additionalProperties=$additionalProperties}"
+            "Body{password=$password, email=$email, totpSecret=$totpSecret, connectionAttemptId=$connectionAttemptId, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

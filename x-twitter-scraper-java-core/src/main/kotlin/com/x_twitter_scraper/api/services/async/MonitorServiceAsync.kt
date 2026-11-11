@@ -16,6 +16,8 @@ import com.x_twitter_scraper.api.models.monitors.MonitorListParams
 import com.x_twitter_scraper.api.models.monitors.MonitorListResponse
 import com.x_twitter_scraper.api.models.monitors.MonitorRetrieveParams
 import com.x_twitter_scraper.api.models.monitors.MonitorUpdateParams
+import com.x_twitter_scraper.api.models.monitors.MonitorUpsertByUsernameParams
+import com.x_twitter_scraper.api.models.monitors.MonitorUpsertByUsernameResponse
 import com.x_twitter_scraper.api.services.async.monitors.KeywordServiceAsync
 import com.x_twitter_scraper.api.services.async.monitors.PostServiceAsync
 import java.util.concurrent.CompletableFuture
@@ -169,6 +171,39 @@ interface MonitorServiceAsync {
         requestOptions: RequestOptions,
     ): CompletableFuture<MonitorDeactivateResponse> =
         deactivate(id, MonitorDeactivateParams.none(), requestOptions)
+
+    /**
+     * Creates the monitor if it does not exist, or updates it if it does. Send the same call twice
+     * & you still have 1 monitor. A new monitor answers 201 & an update answers 200. Both carry
+     * `created`, so you know which one ran. Creating needs the credits of the first hour, then
+     * costs 30 credits an hour. A stopped monitor turns back on & counts as created. Updating is
+     * free & replaces the event types. It changes the name only when you send one.
+     */
+    fun upsertByUsername(
+        username: String,
+        params: MonitorUpsertByUsernameParams,
+    ): CompletableFuture<MonitorUpsertByUsernameResponse> =
+        upsertByUsername(username, params, RequestOptions.none())
+
+    /** @see upsertByUsername */
+    fun upsertByUsername(
+        username: String,
+        params: MonitorUpsertByUsernameParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<MonitorUpsertByUsernameResponse> =
+        upsertByUsername(params.toBuilder().username(username).build(), requestOptions)
+
+    /** @see upsertByUsername */
+    fun upsertByUsername(
+        params: MonitorUpsertByUsernameParams
+    ): CompletableFuture<MonitorUpsertByUsernameResponse> =
+        upsertByUsername(params, RequestOptions.none())
+
+    /** @see upsertByUsername */
+    fun upsertByUsername(
+        params: MonitorUpsertByUsernameParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<MonitorUpsertByUsernameResponse>
 
     /**
      * A view of [MonitorServiceAsync] that provides access to raw HTTP responses for each method.
@@ -346,5 +381,35 @@ interface MonitorServiceAsync {
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<MonitorDeactivateResponse>> =
             deactivate(id, MonitorDeactivateParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `put /monitors/username/{username}`, but is otherwise the
+         * same as [MonitorServiceAsync.upsertByUsername].
+         */
+        fun upsertByUsername(
+            username: String,
+            params: MonitorUpsertByUsernameParams,
+        ): CompletableFuture<HttpResponseFor<MonitorUpsertByUsernameResponse>> =
+            upsertByUsername(username, params, RequestOptions.none())
+
+        /** @see upsertByUsername */
+        fun upsertByUsername(
+            username: String,
+            params: MonitorUpsertByUsernameParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<MonitorUpsertByUsernameResponse>> =
+            upsertByUsername(params.toBuilder().username(username).build(), requestOptions)
+
+        /** @see upsertByUsername */
+        fun upsertByUsername(
+            params: MonitorUpsertByUsernameParams
+        ): CompletableFuture<HttpResponseFor<MonitorUpsertByUsernameResponse>> =
+            upsertByUsername(params, RequestOptions.none())
+
+        /** @see upsertByUsername */
+        fun upsertByUsername(
+            params: MonitorUpsertByUsernameParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<MonitorUpsertByUsernameResponse>>
     }
 }
