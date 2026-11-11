@@ -4,6 +4,7 @@
 
 package com.x_twitter_scraper.api.models.draws
 
+import com.x_twitter_scraper.api.core.http.Headers
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -26,6 +27,29 @@ internal class DrawRunParamsTest {
             .uniqueAuthorsOnly(true)
             .winnerCount(3L)
             .build()
+    }
+
+    @Test
+    fun headers() {
+        val params =
+            DrawRunParams.builder()
+                .idempotencyKey("draw-1")
+                .tweetUrl("https://x.com/elonmusk/status/1234567890")
+                .build()
+
+        assertThat(params._headers())
+            .isEqualTo(Headers.builder().put("Idempotency-Key", "draw-1").build())
+        assertThat(params.idempotencyKey()).contains("draw-1")
+        assertThat(params.toBuilder().build()).isEqualTo(params)
+    }
+
+    @Test
+    fun headersWithoutOptionalFields() {
+        val params =
+            DrawRunParams.builder().tweetUrl("https://x.com/elonmusk/status/1234567890").build()
+
+        assertThat(params._headers()).isEqualTo(Headers.builder().build())
+        assertThat(params.idempotencyKey()).isEmpty()
     }
 
     @Test

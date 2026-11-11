@@ -17,6 +17,7 @@ import com.x_twitter_scraper.api.core.checkKnown
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import com.x_twitter_scraper.api.models.ImageFilterSummary
 import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
@@ -32,6 +33,10 @@ private constructor(
     private val totalTweets: JsonField<Long>,
     private val tweetId: JsonField<String>,
     private val items: JsonField<List<Item>>,
+    private val imageFilter: JsonField<ImageFilterSummary>,
+    private val unprocessedTweetIds: JsonField<List<String>>,
+    private val noMediaTweetIds: JsonField<List<String>>,
+    private val failedTweetIds: JsonField<List<String>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -47,7 +52,31 @@ private constructor(
         totalTweets: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("tweetId") @ExcludeMissing tweetId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("items") @ExcludeMissing items: JsonField<List<Item>> = JsonMissing.of(),
-    ) : this(cacheHit, galleryUrl, totalMedia, totalTweets, tweetId, items, mutableMapOf())
+        @JsonProperty("imageFilter")
+        @ExcludeMissing
+        imageFilter: JsonField<ImageFilterSummary> = JsonMissing.of(),
+        @JsonProperty("unprocessedTweetIds")
+        @ExcludeMissing
+        unprocessedTweetIds: JsonField<List<String>> = JsonMissing.of(),
+        @JsonProperty("noMediaTweetIds")
+        @ExcludeMissing
+        noMediaTweetIds: JsonField<List<String>> = JsonMissing.of(),
+        @JsonProperty("failedTweetIds")
+        @ExcludeMissing
+        failedTweetIds: JsonField<List<String>> = JsonMissing.of(),
+    ) : this(
+        cacheHit,
+        galleryUrl,
+        totalMedia,
+        totalTweets,
+        tweetId,
+        items,
+        imageFilter,
+        unprocessedTweetIds,
+        noMediaTweetIds,
+        failedTweetIds,
+        mutableMapOf(),
+    )
 
     /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun cacheHit(): Optional<Boolean> = cacheHit.getOptional("cacheHit")
@@ -105,6 +134,73 @@ private constructor(
     /** Returns the raw JSON value of [items]. */
     @JsonProperty("items") @ExcludeMissing fun _items(): JsonField<List<Item>> = items
 
+    /**
+     * What the image filter asked & how many posts it kept. Present when the request sent
+     * imageShows.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun imageFilter(): Optional<ImageFilterSummary> = imageFilter.getOptional("imageFilter")
+
+    /**
+     * Returns the raw JSON value of [imageFilter].
+     *
+     * Unlike [imageFilter], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("imageFilter")
+    @ExcludeMissing
+    fun _imageFilter(): JsonField<ImageFilterSummary> = imageFilter
+
+    /**
+     * Posts Xquik had no time to read, at no charge. Send them again.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun unprocessedTweetIds(): Optional<List<String>> =
+        unprocessedTweetIds.getOptional("unprocessedTweetIds")
+
+    /**
+     * Returns the raw JSON value of [unprocessedTweetIds].
+     *
+     * Unlike [unprocessedTweetIds], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("unprocessedTweetIds")
+    @ExcludeMissing
+    fun _unprocessedTweetIds(): JsonField<List<String>> = unprocessedTweetIds
+
+    /**
+     * Posts with no media to save, at no charge.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun noMediaTweetIds(): Optional<List<String>> = noMediaTweetIds.getOptional("noMediaTweetIds")
+
+    /**
+     * Returns the raw JSON value of [noMediaTweetIds].
+     *
+     * Unlike [noMediaTweetIds], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("noMediaTweetIds")
+    @ExcludeMissing
+    fun _noMediaTweetIds(): JsonField<List<String>> = noMediaTweetIds
+
+    /**
+     * Posts Xquik couldn't read, at no charge. Send them again.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun failedTweetIds(): Optional<List<String>> = failedTweetIds.getOptional("failedTweetIds")
+
+    /**
+     * Returns the raw JSON value of [failedTweetIds].
+     *
+     * Unlike [failedTweetIds], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("failedTweetIds")
+    @ExcludeMissing
+    fun _failedTweetIds(): JsonField<List<String>> = failedTweetIds
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -132,6 +228,10 @@ private constructor(
         private var totalTweets: JsonField<Long> = JsonMissing.of()
         private var tweetId: JsonField<String> = JsonMissing.of()
         private var items: JsonField<MutableList<Item>>? = null
+        private var imageFilter: JsonField<ImageFilterSummary> = JsonMissing.of()
+        private var unprocessedTweetIds: JsonField<MutableList<String>>? = null
+        private var noMediaTweetIds: JsonField<MutableList<String>>? = null
+        private var failedTweetIds: JsonField<MutableList<String>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -142,6 +242,11 @@ private constructor(
             totalTweets = mediaDownloadResponse.totalTweets
             tweetId = mediaDownloadResponse.tweetId
             items = mediaDownloadResponse.items.map { it.toMutableList() }
+            imageFilter = mediaDownloadResponse.imageFilter
+            unprocessedTweetIds =
+                mediaDownloadResponse.unprocessedTweetIds.map { it.toMutableList() }
+            noMediaTweetIds = mediaDownloadResponse.noMediaTweetIds.map { it.toMutableList() }
+            failedTweetIds = mediaDownloadResponse.failedTweetIds.map { it.toMutableList() }
             additionalProperties = mediaDownloadResponse.additionalProperties.toMutableMap()
         }
 
@@ -184,6 +289,104 @@ private constructor(
                 (items ?: JsonField.of(mutableListOf())).also { checkKnown("items", it).add(item) }
         }
 
+        /**
+         * What the image filter asked & how many posts it kept. Present when the request sent
+         * imageShows.
+         */
+        fun imageFilter(imageFilter: ImageFilterSummary) = imageFilter(JsonField.of(imageFilter))
+
+        /**
+         * Sets [Builder.imageFilter] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.imageFilter] with a well-typed [ImageFilterSummary]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun imageFilter(imageFilter: JsonField<ImageFilterSummary>) = apply {
+            this.imageFilter = imageFilter
+        }
+
+        /** Posts Xquik had no time to read, at no charge. Send them again. */
+        fun unprocessedTweetIds(unprocessedTweetIds: List<String>) =
+            unprocessedTweetIds(JsonField.of(unprocessedTweetIds))
+
+        /**
+         * Sets [Builder.unprocessedTweetIds] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.unprocessedTweetIds] with a well-typed `List<String>`
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun unprocessedTweetIds(unprocessedTweetIds: JsonField<List<String>>) = apply {
+            this.unprocessedTweetIds = unprocessedTweetIds.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [String] to [unprocessedTweetIds].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addUnprocessedTweetId(unprocessedTweetId: String) = apply {
+            unprocessedTweetIds =
+                (unprocessedTweetIds ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("unprocessedTweetIds", it).add(unprocessedTweetId)
+                }
+        }
+
+        /** Posts with no media to save, at no charge. */
+        fun noMediaTweetIds(noMediaTweetIds: List<String>) =
+            noMediaTweetIds(JsonField.of(noMediaTweetIds))
+
+        /**
+         * Sets [Builder.noMediaTweetIds] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.noMediaTweetIds] with a well-typed `List<String>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun noMediaTweetIds(noMediaTweetIds: JsonField<List<String>>) = apply {
+            this.noMediaTweetIds = noMediaTweetIds.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [String] to [noMediaTweetIds].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addNoMediaTweetId(noMediaTweetId: String) = apply {
+            noMediaTweetIds =
+                (noMediaTweetIds ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("noMediaTweetIds", it).add(noMediaTweetId)
+                }
+        }
+
+        /** Posts Xquik couldn't read, at no charge. Send them again. */
+        fun failedTweetIds(failedTweetIds: List<String>) =
+            failedTweetIds(JsonField.of(failedTweetIds))
+
+        /**
+         * Sets [Builder.failedTweetIds] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.failedTweetIds] with a well-typed `List<String>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun failedTweetIds(failedTweetIds: JsonField<List<String>>) = apply {
+            this.failedTweetIds = failedTweetIds.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [String] to [failedTweetIds].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addFailedTweetId(failedTweetId: String) = apply {
+            failedTweetIds =
+                (failedTweetIds ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("failedTweetIds", it).add(failedTweetId)
+                }
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -216,6 +419,10 @@ private constructor(
                 totalTweets,
                 tweetId,
                 (items ?: JsonMissing.of()).map { it.toImmutable() },
+                imageFilter,
+                (unprocessedTweetIds ?: JsonMissing.of()).map { it.toImmutable() },
+                (noMediaTweetIds ?: JsonMissing.of()).map { it.toImmutable() },
+                (failedTweetIds ?: JsonMissing.of()).map { it.toImmutable() },
                 additionalProperties.toMutableMap(),
             )
     }
@@ -241,6 +448,10 @@ private constructor(
         totalTweets()
         tweetId()
         items().ifPresent { it.forEach { it.validate() } }
+        imageFilter().ifPresent { it.validate() }
+        unprocessedTweetIds()
+        noMediaTweetIds()
+        failedTweetIds()
         validated = true
     }
 
@@ -259,7 +470,11 @@ private constructor(
             (if (totalMedia.asKnown().isPresent) 1 else 0) +
             (if (totalTweets.asKnown().isPresent) 1 else 0) +
             (if (tweetId.asKnown().isPresent) 1 else 0) +
-            (items.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
+            (items.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
+            (imageFilter.asKnown().getOrNull()?.validity() ?: 0) +
+            (unprocessedTweetIds.asKnown().getOrNull()?.size ?: 0) +
+            (noMediaTweetIds.asKnown().getOrNull()?.size ?: 0) +
+            (failedTweetIds.asKnown().getOrNull()?.size ?: 0)
 
     class Item
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -1189,6 +1404,10 @@ private constructor(
             totalTweets == other.totalTweets &&
             tweetId == other.tweetId &&
             items == other.items &&
+            imageFilter == other.imageFilter &&
+            unprocessedTweetIds == other.unprocessedTweetIds &&
+            noMediaTweetIds == other.noMediaTweetIds &&
+            failedTweetIds == other.failedTweetIds &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1200,6 +1419,10 @@ private constructor(
             totalTweets,
             tweetId,
             items,
+            imageFilter,
+            unprocessedTweetIds,
+            noMediaTweetIds,
+            failedTweetIds,
             additionalProperties,
         )
     }
@@ -1207,5 +1430,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "MediaDownloadResponse{cacheHit=$cacheHit, galleryUrl=$galleryUrl, totalMedia=$totalMedia, totalTweets=$totalTweets, tweetId=$tweetId, items=$items, additionalProperties=$additionalProperties}"
+        "MediaDownloadResponse{cacheHit=$cacheHit, galleryUrl=$galleryUrl, totalMedia=$totalMedia, totalTweets=$totalTweets, tweetId=$tweetId, items=$items, imageFilter=$imageFilter, unprocessedTweetIds=$unprocessedTweetIds, noMediaTweetIds=$noMediaTweetIds, failedTweetIds=$failedTweetIds, additionalProperties=$additionalProperties}"
 }

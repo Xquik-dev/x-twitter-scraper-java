@@ -53,6 +53,14 @@ internal object LoopbackTestServer {
                                 )
                             ) {
                                 """{"id":"xatt_0123456789abcdef0123456789abcdef","object":"x_account_connection_attempt","pollAfterMs":3000,"status":"pending"}"""
+                            } else if (
+                                exchange.requestURI.path.startsWith("/x/account-connection-links")
+                            ) {
+                                if (exchange.requestMethod == "DELETE") {
+                                    """{"success":true}"""
+                                } else {
+                                    """{"id":"xlink_AAAAAAAAAAAAAAAA","accountId":null,"completedAt":null,"createdAt":"2026-11-08T12:00:00Z","expiresAt":"2026-11-08T12:30:00Z","failure":null,"health":null,"object":"x_account_connection_link","purpose":"connect","reference":"crm-user-7","returnUrl":"https://app.example.com/connected","status":"pending","xUserId":null,"xUsername":null,"url":"https://xquik.com/connect-x#token=CONNECT_LINK_TOKEN"}"""
+                                }
                             } else {
                                 "{}"
                             }

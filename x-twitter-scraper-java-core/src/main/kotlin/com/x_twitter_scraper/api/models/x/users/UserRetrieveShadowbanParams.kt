@@ -47,7 +47,7 @@ private constructor(
 
     /**
      * Recent posts to read for the timeline, engagement & reply checks. The read stops at this
-     * count, at the end of the timeline or after about 40 seconds.
+     * count, at the account's oldest post or after about 40 seconds.
      */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
@@ -120,7 +120,7 @@ private constructor(
 
         /**
          * Recent posts to read for the timeline, engagement & reply checks. The read stops at this
-         * count, at the end of the timeline or after about 40 seconds.
+         * count, at the account's oldest post or after about 40 seconds.
          */
         fun limit(limit: Long?) = apply { this.limit = limit }
 

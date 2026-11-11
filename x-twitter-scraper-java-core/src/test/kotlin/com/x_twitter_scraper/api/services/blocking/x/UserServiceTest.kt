@@ -10,6 +10,7 @@ import com.x_twitter_scraper.api.models.x.users.UserRetrieveAffiliatesParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveArticlesParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveBatchParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveBatchTweetsParams
+import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowerAuditParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowerIdsParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowersParams
 import com.x_twitter_scraper.api.models.x.users.UserRetrieveFollowersYouKnowParams
@@ -207,6 +208,29 @@ internal class UserServiceTest {
                     .omit("entities,media")
                     .pageSize(1L)
                     .usernames("nasa,@OpenAI,x.com/verge")
+                    .build()
+            )
+
+        kotlin.test.assertNotNull(response)
+    }
+
+    @Test
+    fun retrieveFollowerAudit() {
+        val client =
+            XTwitterScraperOkHttpClient.builder()
+                .baseUrl(com.x_twitter_scraper.api.LoopbackTestServer.baseUrl())
+                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
+                .build()
+        val userService = client.x().users()
+
+        val response =
+            userService.retrieveFollowerAudit(
+                UserRetrieveFollowerAuditParams.builder()
+                    .id("id")
+                    .limit(200L)
+                    .fields("id,text,author.username")
+                    .omit("entities,media")
                     .build()
             )
 

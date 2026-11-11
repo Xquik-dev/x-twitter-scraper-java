@@ -4,6 +4,7 @@
 
 package com.x_twitter_scraper.api.models.extractions
 
+import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
 import java.time.LocalDate
 import java.time.OffsetDateTime
@@ -119,6 +120,31 @@ internal class ExtractionRunParamsTest {
             .within("within")
             .withinTime("withinTime")
             .build()
+    }
+
+    @Test
+    fun headers() {
+        val params =
+            ExtractionRunParams.builder()
+                .idempotencyKey("extraction-1")
+                .toolType(ExtractionRunParams.ToolType.FOLLOWER_EXPLORER)
+                .build()
+
+        assertThat(params._headers())
+            .isEqualTo(Headers.builder().put("Idempotency-Key", "extraction-1").build())
+        assertThat(params.idempotencyKey()).contains("extraction-1")
+        assertThat(params.toBuilder().build()).isEqualTo(params)
+    }
+
+    @Test
+    fun headersWithoutOptionalFields() {
+        val params =
+            ExtractionRunParams.builder()
+                .toolType(ExtractionRunParams.ToolType.FOLLOWER_EXPLORER)
+                .build()
+
+        assertThat(params._headers()).isEqualTo(Headers.builder().build())
+        assertThat(params.idempotencyKey()).isEmpty()
     }
 
     @Test

@@ -168,16 +168,25 @@ Their typed Java methods ship in 0.11.0, the next Maven Central release.
 | Read NFL & college football games, box scores, plays, audiences, rosters, player props and posts | `GET /x/sports/{league}/games`, `GET /x/sports/{league}/games/{id}/plays` | `client.x().sports()` |
 | Read the account's activity log and each activity's full record | `GET /activity`, `GET /activity/{id}` | `client.activity()` |
 | Check 1 account for a search ban, a suggestion ban and reply deboosting | `GET /x/users/{id}/shadowban` | `client.x().users().retrieveShadowban()` |
+| Grade an account's newest followers by what their public profiles look like | `GET /x/users/{id}/follower-audit` | `client.x().users().retrieveFollowerAudit()` |
 
 ## Use async calls
 
 Call `async()` to receive `CompletableFuture` results.
 
 ```java
+import com.x_twitter_scraper.api.models.x.tweets.TweetSearchParams;
+import com.x_twitter_scraper.api.models.x.tweets.TweetSearchResponse;
 import java.util.concurrent.CompletableFuture;
+
+TweetSearchParams params = TweetSearchParams.builder()
+    .q("from:NASA")
+    .limit(10L)
+    .build();
 
 CompletableFuture<TweetSearchResponse> result =
     client.async().x().tweets().search(params);
+System.out.println(result.join());
 ```
 
 ## Stream events
@@ -209,11 +218,15 @@ A stream lasts up to 30 minutes. Reconnect with the last event ID you got.
 ```java
 import com.x_twitter_scraper.api.models.events.EventStreamParams;
 
+String lastEventId = "42"; // The ID of the last event you got.
+
 EventStreamParams params = EventStreamParams.builder()
-    .lastEventID(lastEvent.id())
+    .lastEventID(lastEventId)
     .build();
 
-StreamResponse<Event> events = client.events().stream(params);
+try (StreamResponse<Event> events = client.events().stream(params)) {
+    events.stream().forEach(event -> System.out.println(event.type()));
+}
 ```
 
 The stream first sends each event after that ID from the last 30 days.

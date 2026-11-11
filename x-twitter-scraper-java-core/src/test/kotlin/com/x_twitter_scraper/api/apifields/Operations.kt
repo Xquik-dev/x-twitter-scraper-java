@@ -27,6 +27,8 @@ internal data class SdkMethod(
     val segments: List<String>,
     val params: Class<*>,
     val response: Type?,
+    val input: String?,
+    val bodyType: String?,
 )
 
 private class Recorded(val request: HttpRequest) : RuntimeException(null, null, false, false)
@@ -101,21 +103,26 @@ internal object Operations {
             ) {
                 continue
             }
-            val request = record(raw, method, shapes)
-            out.add(
-                SdkMethod(
-                    "$path.${method.name}",
-                    request.method.name,
-                    basePath() + request.pathSegments,
-                    types[0],
-                    responseType(method.genericReturnType),
+            val inputs: List<String?> = shapes.newParams(types[0]).inputs.ifEmpty { listOf(null) }
+            for (input in inputs) {
+                val request = record(raw, method, shapes, input)
+                out.add(
+                    SdkMethod(
+                        "$path.${method.name}",
+                        request.method.name,
+                        basePath() + request.pathSegments,
+                        types[0],
+                        responseType(method.genericReturnType),
+                        input,
+                        request.body?.contentType()?.substringBefore(";")?.trim(),
+                    )
                 )
-            )
+            }
         }
     }
 
-    private fun record(raw: Any, method: Method, shapes: SdkShapes): HttpRequest {
-        val (builder, _) = shapes.newParams(method.parameterTypes[0])
+    private fun record(raw: Any, method: Method, shapes: SdkShapes, input: String?): HttpRequest {
+        val (builder, _) = shapes.newParams(method.parameterTypes[0], input)
         repeat(20) {
             val params = builder.javaClass.getMethod("build").invoke(builder)
             try {

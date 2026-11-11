@@ -8,6 +8,7 @@ import com.x_twitter_scraper.api.core.MultipartField
 import com.x_twitter_scraper.api.core.http.Headers
 import java.io.InputStream
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 
 internal class TicketReplyParamsTest {
@@ -121,5 +122,30 @@ internal class TicketReplyParamsTest {
         assertThat(params.attachments()).isPresent()
         assertThat(params._body()).containsKey("attachments")
         assertThat(params.toBuilder().build()).isEqualTo(params)
+    }
+
+    @Test
+    fun buildRejectsABlankBodyWithoutAttachments() {
+        for (attachments in listOf(null, listOf<InputStream>())) {
+            val builder = TicketReplyParams.builder().id("tkt_a1b2c3d4e5f6a1b2c3d4e5f6").body(" \n")
+            attachments?.let { builder.attachments(it) }
+
+            assertThatThrownBy { builder.build() }
+                .isInstanceOf(IllegalStateException::class.java)
+                .hasMessage("At least one of `body` or `attachments` must be set")
+        }
+    }
+
+    @Test
+    fun buildKeepsABlankBodyWithAnAttachment() {
+        val params =
+            TicketReplyParams.builder()
+                .id("tkt_a1b2c3d4e5f6a1b2c3d4e5f6")
+                .body("")
+                .addAttachment("screen".byteInputStream())
+                .build()
+
+        assertThat(params.body()).isEmpty()
+        assertThat(params.attachments().get()).hasSize(1)
     }
 }
