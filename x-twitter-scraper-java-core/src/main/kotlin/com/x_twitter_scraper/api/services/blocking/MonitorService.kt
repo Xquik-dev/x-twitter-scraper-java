@@ -17,6 +17,8 @@ import com.x_twitter_scraper.api.models.monitors.MonitorListParams
 import com.x_twitter_scraper.api.models.monitors.MonitorListResponse
 import com.x_twitter_scraper.api.models.monitors.MonitorRetrieveParams
 import com.x_twitter_scraper.api.models.monitors.MonitorUpdateParams
+import com.x_twitter_scraper.api.models.monitors.MonitorUpsertByUsernameParams
+import com.x_twitter_scraper.api.models.monitors.MonitorUpsertByUsernameResponse
 import com.x_twitter_scraper.api.services.blocking.monitors.KeywordService
 import com.x_twitter_scraper.api.services.blocking.monitors.PostService
 import java.util.function.Consumer
@@ -159,6 +161,36 @@ interface MonitorService {
     /** @see deactivate */
     fun deactivate(id: String, requestOptions: RequestOptions): MonitorDeactivateResponse =
         deactivate(id, MonitorDeactivateParams.none(), requestOptions)
+
+    /**
+     * Creates the monitor if it does not exist, or updates it if it does. Send the same call twice
+     * & you still have 1 monitor. A new monitor answers 201 & an update answers 200. Both carry
+     * `created`, so you know which one ran. Creating needs the credits of the first hour, then
+     * costs 30 credits an hour. A stopped monitor turns back on & counts as created. Updating is
+     * free & replaces the event types. It changes the name only when you send one.
+     */
+    fun upsertByUsername(
+        username: String,
+        params: MonitorUpsertByUsernameParams,
+    ): MonitorUpsertByUsernameResponse = upsertByUsername(username, params, RequestOptions.none())
+
+    /** @see upsertByUsername */
+    fun upsertByUsername(
+        username: String,
+        params: MonitorUpsertByUsernameParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): MonitorUpsertByUsernameResponse =
+        upsertByUsername(params.toBuilder().username(username).build(), requestOptions)
+
+    /** @see upsertByUsername */
+    fun upsertByUsername(params: MonitorUpsertByUsernameParams): MonitorUpsertByUsernameResponse =
+        upsertByUsername(params, RequestOptions.none())
+
+    /** @see upsertByUsername */
+    fun upsertByUsername(
+        params: MonitorUpsertByUsernameParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): MonitorUpsertByUsernameResponse
 
     /** A view of [MonitorService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -340,5 +372,39 @@ interface MonitorService {
             requestOptions: RequestOptions,
         ): HttpResponseFor<MonitorDeactivateResponse> =
             deactivate(id, MonitorDeactivateParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `put /monitors/username/{username}`, but is otherwise the
+         * same as [MonitorService.upsertByUsername].
+         */
+        @MustBeClosed
+        fun upsertByUsername(
+            username: String,
+            params: MonitorUpsertByUsernameParams,
+        ): HttpResponseFor<MonitorUpsertByUsernameResponse> =
+            upsertByUsername(username, params, RequestOptions.none())
+
+        /** @see upsertByUsername */
+        @MustBeClosed
+        fun upsertByUsername(
+            username: String,
+            params: MonitorUpsertByUsernameParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<MonitorUpsertByUsernameResponse> =
+            upsertByUsername(params.toBuilder().username(username).build(), requestOptions)
+
+        /** @see upsertByUsername */
+        @MustBeClosed
+        fun upsertByUsername(
+            params: MonitorUpsertByUsernameParams
+        ): HttpResponseFor<MonitorUpsertByUsernameResponse> =
+            upsertByUsername(params, RequestOptions.none())
+
+        /** @see upsertByUsername */
+        @MustBeClosed
+        fun upsertByUsername(
+            params: MonitorUpsertByUsernameParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<MonitorUpsertByUsernameResponse>
     }
 }

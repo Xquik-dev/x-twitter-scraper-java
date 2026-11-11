@@ -6,12 +6,15 @@
 
 ### Breaking changes
 
+* `UserRetrieveInsightsResponse.Insights.Sample.builder()` requires `read`, which the API always sends. Code that builds it by hand must set it. `posts` counts the posts the averages used, so it can be lower than `read`.
 * `ExtractionJob.builder()` requires `url`, which the API always sends. Code that builds the job by hand must set it.
 * `CreditTopupBalanceResponse.builder()` requires `chargedCurrency` and `chargedMinorUnits`, which the API always sends. Code that builds the response by hand must set both.
 * `AccountBulkRetryParams._body()` returns `AccountBulkRetryParams.Body` instead of `Optional<Map<String, JsonValue>>`, and bulk retry always sends a JSON body, which is `{}` when no account is named. Code that calls `_body()` must change, and compiled callers must rebuild.
 * `MediaUploadParams`, `ProfileUpdateAvatarParams` and `ProfileUpdateBannerParams` take exactly 1 of `url` or `file`, so their `url()` getters return `Optional<String>`. Builders that set `url` keep working.
 * `UserRetrieveInsightsResponse.Insights.builder()` requires `medianViews`, which the API always sends. Code that builds it by hand must set it.
 * `TweetSearchParams.q()` returns `Optional<String>`, and `TweetSearchParams.builder()` no longer requires `q`, since the API can build the search from `fromUser`, `keywords` or another field. Code that reads `q()` must change. A search with no query field still answers `missing_query`.
+* Media uploads now reject `isLongVideo` without a file.
+* `x().accounts().reauth` returns the same 3 answers as `create`, so `AccountReauthResponse` is now that union. A sign-in still running or waiting on an email code no longer reads as an active account, so check which variant the answer is before you read `xUsername()`.
 
 ### Security
 
@@ -22,6 +25,15 @@
 
 ### Features
 
+* `UserRetrieveBatchTweetsParams.pageSize()` takes up to 300 posts per user.
+* `BookmarkListParams.pageSize()` and `XGetHomeTimelineParams.pageSize()` take 1 to 100 items per page.
+* `monitors().upsertByUsername()` creates the monitor for an account, or updates it if it exists, so the same call twice still leaves 1 monitor. `created()` says which one ran.
+* `MediaDownloadResponse.unprocessedTweetIds()` lists the posts Xquik had no time to read, at no charge. Send them again.
+* `MediaDownloadResponse.noMediaTweetIds()` lists the posts with no media to save, and `failedTweetIds()` the posts Xquik couldn't read. Neither is charged.
+* `ExtractionRunParams` and `DrawRunParams` take `idempotencyKey`, which `extractions().run` and `draws().run` send as `Idempotency-Key`. An exact retry with the same key returns the first result and charges nothing.
+* `Error` reads `requiredScope`, the scope an `insufficient_scope` answer needs, and `allowedFields` and `fieldErrors`, which name each unknown `fields` or `omit` entry of an `unknown_field` answer and the name it most likely meant.
+* `x().tweets().search`, `x().users().retrieveTweets`, `retrieveReplies` and `retrieveMedia` take `topic` and `imageShows`, which keep only the posts about a topic or whose photos show what you ask for. The page returns `topicFilter` or `imageFilter` with the cutoff and counts, and each kept post returns `topicScore` or `imageScore`.
+* `extractions().run` and `estimateCost` take `topic` and `imageShows`. `ExtractionJob` and the `job` of `extractions().retrieve` return `topicFilter` or `imageFilter`, and `x().media().download` takes `imageShows` and returns `imageFilter`.
 * `client.x().tweets().bookmark()`, `client.x().users().block()` and `client.x().users().mute()` add the 6 new writes. Each takes `create` and `delete`, sends `account` in the body and `Idempotency-Key` and `Prefer` as headers, like `client.x().tweets().like()`.
 * Every write response's `Action` adds `BOOKMARK`, `UNBOOKMARK`, `BLOCK`, `UNBLOCK`, `MUTE` and `UNMUTE`.
 * Post monitors read `authorAffiliate`, the organization badge X shows beside the author, and `PostCreateParams` takes `isActive`, so a monitor can start paused.
@@ -31,6 +43,7 @@
 * Article reads return `unknownCounts`, the counts X did not send, so each 0 means unknown.
 * Extraction results return `isDeleted` on a post its author deleted after Xquik saw it.
 * `UserRetrieveInsightsParams` and `UserRetrieveShadowbanParams` take `limit`, the recent posts to read.
+* Extraction tool types gain `USER_AFFILIATES`.
 * The 6 `x().analysis()` methods take `images` in `analysis`. The AI reads up to 4 images per post at no extra cost, and `false` keeps it to the text. `contextAvailability.media` adds `IMAGES`, for when the AI read them.
 * `ExtractionJob`, the `job` of `extractions().retrieve` and the accepted `extractions().run` response read `url`, the job's dashboard page with every row as a file.
 * `client.monitors().posts()` adds post monitors. It has `create`, `retrieve`, `update`, `list`, `delete` and `retrieveMetrics`.
@@ -38,6 +51,7 @@
 * `client.activity()` adds the activity log. `list` returns the account's activity rows, and `retrieve` returns the full record of 1 activity.
 * `client.x().users()` adds `retrieveShadowban`, which checks 1 account for a search ban, a search suggestion ban and reply deboosting.
 * `ShadowbanReport` reads `checkedAt`, `overall` and the `replyLock`, `timeline`, `engagement`, `sensitive` and `withheld` checks.
+* `client.x().users()` adds `retrieveFollowerAudit`, which reads an account's newest followers and returns a `FollowerAudit`. It gives each follower a `FollowerClass` from its public profile, and adds coverage, a quality grade, signal counts, arrival bands, join cohorts, languages, places and top followers.
 * Events read `postId`, `postUrl`, `authorId` and `authorUsername` on post events, and the `post` monitor type.
 * `EventListParams` filters by `postMonitorId`, and event data reads `metric`, `previousText` and `versionId`.
 * `EventType` adds the 10 post event types, such as `POST_REPLY_NEW`. Account and keyword monitors reject them.
@@ -77,11 +91,16 @@
 * Exports also filter accounts by `hasWebsite`, `location`, `joinedSince` & `joinedUntil`. `hideInactive` & `hideFake` drop inactive & fake-looking accounts.
 * `TweetSearchParams`, `ExtractionRunParams` & `ExtractionEstimateCostParams` take `textOnlyTerms`. It keeps posts whose text, link, card or quote holds 1 of the terms.
 * User insights return `medianViews`. Radar item metadata returns `sentiment` & `windows`.
+* `x().accountConnectionLinks().create` makes a link to a page Xquik hosts, where a person connects an X account with no Xquik signup. `retrieve` reads the link and its status, and `delete` revokes it. Treat `url()` as a secret, since it holds the token.
+* `AccountCreateParams` and `AccountReauthParams` take `connectionAttemptId`, an ID you generate to read the attempt's status even if the response never reaches you. A finished attempt returns `accountId()`.
+* `TweetCreateParams` takes `mediaIds`, the IDs that `x().media().upload` returns. Send `media` or `mediaIds`, not both.
+* `Error` codes add `X_ACCOUNT_CONNECT_PERMISSION_REQUIRED`, `X_ACCOUNT_MISMATCH` and `MEDIA_NOT_UPLOADED`.
 
 ### Bug fixes
 
+* `TicketCreateParams` and `TicketReplyParams` throw from `build()` when `body` is blank and no attachment is set, with the same "At least one of `body` or `attachments` must be set" error. The API rejects such a ticket or reply with a 400.
 * Ticket creation sends default attachment streams as `application/octet-stream` with a neutral filename so the server can detect their type.
-* Media, avatar and banner uploads detect file types from stream headers and preserve every byte, including MP4 streams for long videos.
+* Media, avatar and banner uploads detect supported image formats and MP4 brands from stream headers and preserve every byte. Other `ftyp` brands use `application/octet-stream` with the filename `upload`.
 * Follower, following and verified follower response unions select the coverage variant when the response contains `diagnostic`.
 * `XAccount` and `XAccountDetail` drop a timestamp field the API stopped returning.
 * Reading the generic types of a raw response's class no longer throws `TypeNotPresentException`.

@@ -67,6 +67,15 @@ private constructor(
      */
     fun media(): Optional<List<String>> = body.media()
 
+    /**
+     * Media IDs from `POST /x/media`, uploaded with this account. IDs last 24 hours. Send up to 4
+     * image IDs or exactly 1 video ID. Send `media` or `mediaIds`, not both. Media adds 2 credits
+     * per started MB across all files.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun mediaIds(): Optional<List<String>> = body.mediaIds()
+
     /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun replyToTweetId(): Optional<String> = body.replyToTweetId()
 
@@ -104,6 +113,13 @@ private constructor(
      * Unlike [media], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _media(): JsonField<List<String>> = body._media()
+
+    /**
+     * Returns the raw JSON value of [mediaIds].
+     *
+     * Unlike [mediaIds], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _mediaIds(): JsonField<List<String>> = body._mediaIds()
 
     /**
      * Returns the raw JSON value of [replyToTweetId].
@@ -209,6 +225,23 @@ private constructor(
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
         fun addMedia(media: String) = apply { body.addMedia(media) }
+
+        /**
+         * Media IDs from `POST /x/media`, uploaded with this account. IDs last 24 hours. Send up to
+         * 4 image IDs or exactly 1 video ID. Send `media` or `mediaIds`, not both. Media adds 2
+         * credits per started MB across all files.
+         */
+        fun mediaIds(mediaIds: List<String>) = apply { body.mediaIds(mediaIds) }
+
+        /** Sets [Builder.mediaIds] to an arbitrary JSON value. */
+        fun mediaIds(mediaIds: JsonField<List<String>>) = apply { body.mediaIds(mediaIds) }
+
+        /**
+         * Adds a single [String] to [Builder.mediaIds].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addMediaId(mediaId: String) = apply { body.addMediaId(mediaId) }
 
         fun replyToTweetId(replyToTweetId: String) = apply { body.replyToTweetId(replyToTweetId) }
 
@@ -383,6 +416,7 @@ private constructor(
         private val communityId: JsonField<String>,
         private val isNoteTweet: JsonField<Boolean>,
         private val media: JsonField<List<String>>,
+        private val mediaIds: JsonField<List<String>>,
         private val replyToTweetId: JsonField<String>,
         private val text: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -400,11 +434,23 @@ private constructor(
             @JsonProperty("media")
             @ExcludeMissing
             media: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("media_ids")
+            @ExcludeMissing
+            mediaIds: JsonField<List<String>> = JsonMissing.of(),
             @JsonProperty("reply_to_tweet_id")
             @ExcludeMissing
             replyToTweetId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("text") @ExcludeMissing text: JsonField<String> = JsonMissing.of(),
-        ) : this(account, communityId, isNoteTweet, media, replyToTweetId, text, mutableMapOf())
+        ) : this(
+            account,
+            communityId,
+            isNoteTweet,
+            media,
+            mediaIds,
+            replyToTweetId,
+            text,
+            mutableMapOf(),
+        )
 
         /**
          * X account (@username or account ID)
@@ -428,6 +474,15 @@ private constructor(
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
         fun media(): Optional<List<String>> = media.getOptional("media")
+
+        /**
+         * Media IDs from `POST /x/media`, uploaded with this account. IDs last 24 hours. Send up to
+         * 4 image IDs or exactly 1 video ID. Send `media` or `mediaIds`, not both. Media adds 2
+         * credits per started MB across all files.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun mediaIds(): Optional<List<String>> = mediaIds.getOptional("media_ids")
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun replyToTweetId(): Optional<String> = replyToTweetId.getOptional("reply_to_tweet_id")
@@ -470,6 +525,15 @@ private constructor(
          * Unlike [media], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("media") @ExcludeMissing fun _media(): JsonField<List<String>> = media
+
+        /**
+         * Returns the raw JSON value of [mediaIds].
+         *
+         * Unlike [mediaIds], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("media_ids")
+        @ExcludeMissing
+        fun _mediaIds(): JsonField<List<String>> = mediaIds
 
         /**
          * Returns the raw JSON value of [replyToTweetId].
@@ -520,6 +584,7 @@ private constructor(
             private var communityId: JsonField<String> = JsonMissing.of()
             private var isNoteTweet: JsonField<Boolean> = JsonMissing.of()
             private var media: JsonField<MutableList<String>>? = null
+            private var mediaIds: JsonField<MutableList<String>>? = null
             private var replyToTweetId: JsonField<String> = JsonMissing.of()
             private var text: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -530,6 +595,7 @@ private constructor(
                 communityId = body.communityId
                 isNoteTweet = body.isNoteTweet
                 media = body.media.map { it.toMutableList() }
+                mediaIds = body.mediaIds.map { it.toMutableList() }
                 replyToTweetId = body.replyToTweetId
                 text = body.text
                 additionalProperties = body.additionalProperties.toMutableMap()
@@ -576,6 +642,30 @@ private constructor(
                 this.media =
                     (this.media ?: JsonField.of(mutableListOf())).also {
                         checkKnown("media", it).add(media)
+                    }
+            }
+
+            /**
+             * Media IDs from `POST /x/media`, uploaded with this account. IDs last 24 hours. Send
+             * up to 4 image IDs or exactly 1 video ID. Send `media` or `mediaIds`, not both. Media
+             * adds 2 credits per started MB across all files.
+             */
+            fun mediaIds(mediaIds: List<String>) = mediaIds(JsonField.of(mediaIds))
+
+            /** Sets [Builder.mediaIds] to an arbitrary JSON value. */
+            fun mediaIds(mediaIds: JsonField<List<String>>) = apply {
+                this.mediaIds = mediaIds.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [String] to [Builder.mediaIds].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addMediaId(mediaId: String) = apply {
+                this.mediaIds =
+                    (this.mediaIds ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("mediaIds", it).add(mediaId)
                     }
             }
 
@@ -630,6 +720,7 @@ private constructor(
                     communityId,
                     isNoteTweet,
                     (media ?: JsonMissing.of()).map { it.toImmutable() },
+                    (mediaIds ?: JsonMissing.of()).map { it.toImmutable() },
                     replyToTweetId,
                     text,
                     additionalProperties.toMutableMap(),
@@ -656,6 +747,7 @@ private constructor(
             communityId()
             isNoteTweet()
             media()
+            mediaIds()
             replyToTweetId()
             text()
             validated = true
@@ -675,6 +767,7 @@ private constructor(
                 (if (communityId.asKnown().isPresent) 1 else 0) +
                 (if (isNoteTweet.asKnown().isPresent) 1 else 0) +
                 (media.asKnown().getOrNull()?.size ?: 0) +
+                (mediaIds.asKnown().getOrNull()?.size ?: 0) +
                 (if (replyToTweetId.asKnown().isPresent) 1 else 0) +
                 (if (text.asKnown().isPresent) 1 else 0)
 
@@ -688,6 +781,7 @@ private constructor(
                 communityId == other.communityId &&
                 isNoteTweet == other.isNoteTweet &&
                 media == other.media &&
+                mediaIds == other.mediaIds &&
                 replyToTweetId == other.replyToTweetId &&
                 text == other.text &&
                 additionalProperties == other.additionalProperties
@@ -699,6 +793,7 @@ private constructor(
                 communityId,
                 isNoteTweet,
                 media,
+                mediaIds,
                 replyToTweetId,
                 text,
                 additionalProperties,
@@ -708,7 +803,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{account=$account, communityId=$communityId, isNoteTweet=$isNoteTweet, media=$media, replyToTweetId=$replyToTweetId, text=$text, additionalProperties=$additionalProperties}"
+            "Body{account=$account, communityId=$communityId, isNoteTweet=$isNoteTweet, media=$media, mediaIds=$mediaIds, replyToTweetId=$replyToTweetId, text=$text, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

@@ -41,6 +41,8 @@ import com.x_twitter_scraper.api.services.blocking.x.AccountConnectionAttemptSer
 import com.x_twitter_scraper.api.services.blocking.x.AccountConnectionAttemptServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.AccountConnectionChallengeService
 import com.x_twitter_scraper.api.services.blocking.x.AccountConnectionChallengeServiceImpl
+import com.x_twitter_scraper.api.services.blocking.x.AccountConnectionLinkService
+import com.x_twitter_scraper.api.services.blocking.x.AccountConnectionLinkServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.AccountService
 import com.x_twitter_scraper.api.services.blocking.x.AccountServiceImpl
 import com.x_twitter_scraper.api.services.blocking.x.AnalysisService
@@ -114,6 +116,10 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
         AccountConnectionAttemptServiceImpl(clientOptions)
     }
 
+    private val accountConnectionLinks: AccountConnectionLinkService by lazy {
+        AccountConnectionLinkServiceImpl(clientOptions)
+    }
+
     private val bookmarks: BookmarkService by lazy { BookmarkServiceImpl(clientOptions) }
 
     private val lists: ListService by lazy { ListServiceImpl(clientOptions) }
@@ -168,6 +174,9 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
     /** Connected X account management */
     override fun accountConnectionAttempts(): AccountConnectionAttemptService =
         accountConnectionAttempts
+
+    /** Connected X account management */
+    override fun accountConnectionLinks(): AccountConnectionLinkService = accountConnectionLinks
 
     /** Look up, search, and analyze individual tweets */
     override fun bookmarks(): BookmarkService = bookmarks
@@ -302,6 +311,10 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
             AccountConnectionAttemptServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val accountConnectionLinks: AccountConnectionLinkService.WithRawResponse by lazy {
+            AccountConnectionLinkServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val bookmarks: BookmarkService.WithRawResponse by lazy {
             BookmarkServiceImpl.WithRawResponseImpl(clientOptions)
         }
@@ -368,6 +381,10 @@ class XServiceImpl internal constructor(private val clientOptions: ClientOptions
         /** Connected X account management */
         override fun accountConnectionAttempts(): AccountConnectionAttemptService.WithRawResponse =
             accountConnectionAttempts
+
+        /** Connected X account management */
+        override fun accountConnectionLinks(): AccountConnectionLinkService.WithRawResponse =
+            accountConnectionLinks
 
         /** Look up, search, and analyze individual tweets */
         override fun bookmarks(): BookmarkService.WithRawResponse = bookmarks

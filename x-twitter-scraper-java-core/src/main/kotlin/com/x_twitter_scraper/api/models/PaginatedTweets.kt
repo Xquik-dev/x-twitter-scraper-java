@@ -40,6 +40,8 @@ private constructor(
     private val searchedQuery: JsonField<String>,
     private val windowComplete: JsonField<Boolean>,
     private val skipped: JsonField<List<Skipped>>,
+    private val topicFilter: JsonField<TopicFilterSummary>,
+    private val imageFilter: JsonField<ImageFilterSummary>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -72,6 +74,12 @@ private constructor(
         @JsonProperty("skipped")
         @ExcludeMissing
         skipped: JsonField<List<Skipped>> = JsonMissing.of(),
+        @JsonProperty("topicFilter")
+        @ExcludeMissing
+        topicFilter: JsonField<TopicFilterSummary> = JsonMissing.of(),
+        @JsonProperty("imageFilter")
+        @ExcludeMissing
+        imageFilter: JsonField<ImageFilterSummary> = JsonMissing.of(),
     ) : this(
         hasNextPage,
         nextCursor,
@@ -82,6 +90,8 @@ private constructor(
         searchedQuery,
         windowComplete,
         skipped,
+        topicFilter,
+        imageFilter,
         mutableMapOf(),
     )
 
@@ -214,6 +224,39 @@ private constructor(
      */
     @JsonProperty("skipped") @ExcludeMissing fun _skipped(): JsonField<List<Skipped>> = skipped
 
+    /**
+     * What the topic filter asked & how many posts it kept. Present when the request sent topic.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun topicFilter(): Optional<TopicFilterSummary> = topicFilter.getOptional("topicFilter")
+
+    /**
+     * Returns the raw JSON value of [topicFilter].
+     *
+     * Unlike [topicFilter], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("topicFilter")
+    @ExcludeMissing
+    fun _topicFilter(): JsonField<TopicFilterSummary> = topicFilter
+
+    /**
+     * What the image filter asked & how many posts it kept. Present when the request sent
+     * imageShows.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun imageFilter(): Optional<ImageFilterSummary> = imageFilter.getOptional("imageFilter")
+
+    /**
+     * Returns the raw JSON value of [imageFilter].
+     *
+     * Unlike [imageFilter], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("imageFilter")
+    @ExcludeMissing
+    fun _imageFilter(): JsonField<ImageFilterSummary> = imageFilter
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -253,6 +296,8 @@ private constructor(
         private var searchedQuery: JsonField<String> = JsonMissing.of()
         private var windowComplete: JsonField<Boolean> = JsonMissing.of()
         private var skipped: JsonField<MutableList<Skipped>>? = null
+        private var topicFilter: JsonField<TopicFilterSummary> = JsonMissing.of()
+        private var imageFilter: JsonField<ImageFilterSummary> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -266,6 +311,8 @@ private constructor(
             searchedQuery = paginatedTweets.searchedQuery
             windowComplete = paginatedTweets.windowComplete
             skipped = paginatedTweets.skipped.map { it.toMutableList() }
+            topicFilter = paginatedTweets.topicFilter
+            imageFilter = paginatedTweets.imageFilter
             additionalProperties = paginatedTweets.additionalProperties.toMutableMap()
         }
 
@@ -362,6 +409,40 @@ private constructor(
                 }
         }
 
+        /**
+         * What the topic filter asked & how many posts it kept. Present when the request sent
+         * topic.
+         */
+        fun topicFilter(topicFilter: TopicFilterSummary) = topicFilter(JsonField.of(topicFilter))
+
+        /**
+         * Sets [Builder.topicFilter] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.topicFilter] with a well-typed [TopicFilterSummary]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun topicFilter(topicFilter: JsonField<TopicFilterSummary>) = apply {
+            this.topicFilter = topicFilter
+        }
+
+        /**
+         * What the image filter asked & how many posts it kept. Present when the request sent
+         * imageShows.
+         */
+        fun imageFilter(imageFilter: ImageFilterSummary) = imageFilter(JsonField.of(imageFilter))
+
+        /**
+         * Sets [Builder.imageFilter] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.imageFilter] with a well-typed [ImageFilterSummary]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun imageFilter(imageFilter: JsonField<ImageFilterSummary>) = apply {
+            this.imageFilter = imageFilter
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -406,6 +487,8 @@ private constructor(
                 searchedQuery,
                 windowComplete,
                 (skipped ?: JsonMissing.of()).map { it.toImmutable() },
+                topicFilter,
+                imageFilter,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -434,6 +517,8 @@ private constructor(
         searchedQuery()
         windowComplete()
         skipped().ifPresent { it.forEach { it.validate() } }
+        topicFilter().ifPresent { it.validate() }
+        imageFilter().ifPresent { it.validate() }
         validated = true
     }
 
@@ -455,7 +540,9 @@ private constructor(
             (searchContext.asKnown().getOrNull()?.validity() ?: 0) +
             (if (searchedQuery.asKnown().isPresent) 1 else 0) +
             (if (windowComplete.asKnown().isPresent) 1 else 0) +
-            (skipped.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
+            (skipped.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
+            (topicFilter.asKnown().getOrNull()?.validity() ?: 0) +
+            (imageFilter.asKnown().getOrNull()?.validity() ?: 0)
 
     /**
      * What X shows beside a search's posts that is the same for every reader. Present on a search
@@ -865,6 +952,8 @@ private constructor(
             searchedQuery == other.searchedQuery &&
             windowComplete == other.windowComplete &&
             skipped == other.skipped &&
+            topicFilter == other.topicFilter &&
+            imageFilter == other.imageFilter &&
             additionalProperties == other.additionalProperties
     }
 
@@ -879,6 +968,8 @@ private constructor(
             searchedQuery,
             windowComplete,
             skipped,
+            topicFilter,
+            imageFilter,
             additionalProperties,
         )
     }
@@ -886,7 +977,7 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "PaginatedTweets{hasNextPage=$hasNextPage, nextCursor=$nextCursor, tweets=$tweets, filteredCount=$filteredCount, readBackTo=$readBackTo, searchContext=$searchContext, searchedQuery=$searchedQuery, windowComplete=$windowComplete, skipped=$skipped, additionalProperties=$additionalProperties}"
+        "PaginatedTweets{hasNextPage=$hasNextPage, nextCursor=$nextCursor, tweets=$tweets, filteredCount=$filteredCount, readBackTo=$readBackTo, searchContext=$searchContext, searchedQuery=$searchedQuery, windowComplete=$windowComplete, skipped=$skipped, topicFilter=$topicFilter, imageFilter=$imageFilter, additionalProperties=$additionalProperties}"
 
     class Skipped
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)

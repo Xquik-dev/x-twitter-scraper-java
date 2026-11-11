@@ -23,6 +23,7 @@ import java.io.InputStream
 import java.util.Base64
 import java.util.concurrent.CompletableFuture
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatIllegalStateException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
@@ -101,6 +102,48 @@ internal class HttpRequestBodiesTest {
                 assertThat(it.first["content-type"]).isEqualTo("application/octet-stream")
                 assertThat(it.second.toByteArray(Charsets.ISO_8859_1)).isEqualTo(png)
             }
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun mediaUpload_rejectsLongVideoWithoutFile(isLongVideo: Boolean) {
+        assertThatIllegalStateException()
+            .isThrownBy {
+                MediaUploadParams.builder()
+                    .account("@example")
+                    .idempotencyKey("test")
+                    .url("https://example.com/video.mp4")
+                    .isLongVideo(isLongVideo)
+                    .build()
+            }
+            .withMessage("`isLongVideo` requires `file`")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun uploadBody_usesTheInputContentType(file: Boolean) {
+        val url = "https://example.com/image.png"
+        val params =
+            MediaUploadParams.builder()
+                .account("@example")
+                .idempotencyKey("test")
+                .apply { if (file) file(png.inputStream()) else url(url) }
+                .build()
+
+        val body = uploadBody(jsonMapper(), params._body(), file)
+
+        if (file) {
+            val parts = multipartParts(body)
+            assertThat(parts.map { disposition(it.first).getValue("name") })
+                .containsExactlyInAnyOrder("account", "file")
+            assertPngPart(parts.single { disposition(it.first)["name"] == "file" }, "file")
+        } else {
+            assertThat(body.contentType()).isEqualTo("application/json")
+            val output = ByteArrayOutputStream()
+            body.writeTo(output)
+            assertThat(jsonMapper().readTree(output.toByteArray()))
+                .isEqualTo(jsonMapper().readTree("{\"account\":\"@example\",\"url\":\"$url\"}"))
+        }
     }
 
     @ParameterizedTest
@@ -202,7 +245,15 @@ internal class HttpRequestBodiesTest {
         "00000018667479706176696600ff, image/avif, upload.avif",
         "00000018667479706176697300ff, image/avif, upload.avif",
         "000000186674797069736f6d00ff, video/mp4, upload.mp4",
-        "00000018667479706865696300ff, video/mp4, upload.mp4",
+        "000000186674797069736f3200ff, video/mp4, upload.mp4",
+        "00000018667479706d70343100ff, video/mp4, upload.mp4",
+        "00000018667479706d70343200ff, video/mp4, upload.mp4",
+        "00000018667479706176633100ff, video/mp4, upload.mp4",
+        "00000018667479704d34562000ff, video/mp4, upload.mp4",
+        "00000018667479706865696300ff, application/octet-stream, upload",
+        "00000018667479706865697800ff, application/octet-stream, upload",
+        "00000018667479706d69663100ff, application/octet-stream, upload",
+        "00000018667479707174202000ff, application/octet-stream, upload",
         "000102030405060708090a0b00ff, application/octet-stream, upload",
         "89504e470d0a1a, application/octet-stream, upload",
         "000000186674797069736f, application/octet-stream, upload",

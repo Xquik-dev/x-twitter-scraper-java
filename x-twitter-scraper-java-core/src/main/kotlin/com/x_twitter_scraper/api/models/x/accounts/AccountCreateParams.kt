@@ -19,6 +19,7 @@ import com.x_twitter_scraper.api.core.http.QueryParams
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 
 /** Connect X account */
 class AccountCreateParams
@@ -61,6 +62,14 @@ private constructor(
     fun username(): String = body.username()
 
     /**
+     * An ID you generate to read this attempt's status, even if the response never reaches you.
+     * Leave it out to get one in a pending response.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun connectionAttemptId(): Optional<String> = body.connectionAttemptId()
+
+    /**
      * Returns the raw JSON value of [email].
      *
      * Unlike [email], this method doesn't throw if the JSON field has an unexpected type.
@@ -87,6 +96,14 @@ private constructor(
      * Unlike [username], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _username(): JsonField<String> = body._username()
+
+    /**
+     * Returns the raw JSON value of [connectionAttemptId].
+     *
+     * Unlike [connectionAttemptId], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    fun _connectionAttemptId(): JsonField<String> = body._connectionAttemptId()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -154,6 +171,19 @@ private constructor(
 
         /** Sets [Builder.username] to an arbitrary JSON value. */
         fun username(username: JsonField<String>) = apply { body.username(username) }
+
+        /**
+         * An ID you generate to read this attempt's status, even if the response never reaches you.
+         * Leave it out to get one in a pending response.
+         */
+        fun connectionAttemptId(connectionAttemptId: String) = apply {
+            body.connectionAttemptId(connectionAttemptId)
+        }
+
+        /** Sets [Builder.connectionAttemptId] to an arbitrary JSON value. */
+        fun connectionAttemptId(connectionAttemptId: JsonField<String>) = apply {
+            body.connectionAttemptId(connectionAttemptId)
+        }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -308,6 +338,7 @@ private constructor(
         private val password: JsonField<String>,
         private val totpSecret: JsonField<String>,
         private val username: JsonField<String>,
+        private val connectionAttemptId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -323,7 +354,10 @@ private constructor(
             @JsonProperty("username")
             @ExcludeMissing
             username: JsonField<String> = JsonMissing.of(),
-        ) : this(email, password, totpSecret, username, mutableMapOf())
+            @JsonProperty("connection_attempt_id")
+            @ExcludeMissing
+            connectionAttemptId: JsonField<String> = JsonMissing.of(),
+        ) : this(email, password, totpSecret, username, connectionAttemptId, mutableMapOf())
 
         /**
          * Account email
@@ -358,6 +392,15 @@ private constructor(
         fun username(): String = username.getRequired("username")
 
         /**
+         * An ID you generate to read this attempt's status, even if the response never reaches you.
+         * Leave it out to get one in a pending response.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun connectionAttemptId(): Optional<String> =
+            connectionAttemptId.getOptional("connection_attempt_id")
+
+        /**
          * Returns the raw JSON value of [email].
          *
          * Unlike [email], this method doesn't throw if the JSON field has an unexpected type.
@@ -386,6 +429,16 @@ private constructor(
          * Unlike [username], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("username") @ExcludeMissing fun _username(): JsonField<String> = username
+
+        /**
+         * Returns the raw JSON value of [connectionAttemptId].
+         *
+         * Unlike [connectionAttemptId], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("connection_attempt_id")
+        @ExcludeMissing
+        fun _connectionAttemptId(): JsonField<String> = connectionAttemptId
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -422,6 +475,7 @@ private constructor(
             private var password: JsonField<String>? = null
             private var totpSecret: JsonField<String>? = null
             private var username: JsonField<String>? = null
+            private var connectionAttemptId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -430,6 +484,7 @@ private constructor(
                 password = body.password
                 totpSecret = body.totpSecret
                 username = body.username
+                connectionAttemptId = body.connectionAttemptId
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -456,6 +511,18 @@ private constructor(
 
             /** Sets [Builder.username] to an arbitrary JSON value. */
             fun username(username: JsonField<String>) = apply { this.username = username }
+
+            /**
+             * An ID you generate to read this attempt's status, even if the response never reaches
+             * you. Leave it out to get one in a pending response.
+             */
+            fun connectionAttemptId(connectionAttemptId: String) =
+                connectionAttemptId(JsonField.of(connectionAttemptId))
+
+            /** Sets [Builder.connectionAttemptId] to an arbitrary JSON value. */
+            fun connectionAttemptId(connectionAttemptId: JsonField<String>) = apply {
+                this.connectionAttemptId = connectionAttemptId
+            }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -497,6 +564,7 @@ private constructor(
                     checkRequired("password", password),
                     checkRequired("totpSecret", totpSecret),
                     checkRequired("username", username),
+                    connectionAttemptId,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -521,6 +589,7 @@ private constructor(
             password()
             totpSecret()
             username()
+            connectionAttemptId()
             validated = true
         }
 
@@ -537,7 +606,8 @@ private constructor(
             (if (email.asKnown().isPresent) 1 else 0) +
                 (if (password.asKnown().isPresent) 1 else 0) +
                 (if (totpSecret.asKnown().isPresent) 1 else 0) +
-                (if (username.asKnown().isPresent) 1 else 0)
+                (if (username.asKnown().isPresent) 1 else 0) +
+                (if (connectionAttemptId.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -549,17 +619,25 @@ private constructor(
                 password == other.password &&
                 totpSecret == other.totpSecret &&
                 username == other.username &&
+                connectionAttemptId == other.connectionAttemptId &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(email, password, totpSecret, username, additionalProperties)
+            Objects.hash(
+                email,
+                password,
+                totpSecret,
+                username,
+                connectionAttemptId,
+                additionalProperties,
+            )
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{email=$email, password=$password, totpSecret=$totpSecret, username=$username, additionalProperties=$additionalProperties}"
+            "Body{email=$email, password=$password, totpSecret=$totpSecret, username=$username, connectionAttemptId=$connectionAttemptId, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

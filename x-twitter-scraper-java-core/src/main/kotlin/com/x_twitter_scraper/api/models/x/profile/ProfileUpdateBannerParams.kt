@@ -12,6 +12,7 @@ import com.x_twitter_scraper.api.core.JsonMissing
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.MultipartField
 import com.x_twitter_scraper.api.core.Params
+import com.x_twitter_scraper.api.core.checkExactlyOne
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.http.Headers
 import com.x_twitter_scraper.api.core.http.QueryParams
@@ -104,7 +105,7 @@ private constructor(
          * .account()
          * ```
          *
-         * Specify exactly one of `url` or `file`.
+         * Exactly one of `url` or `file` must be set.
          */
         @JvmStatic fun builder() = Builder()
     }
@@ -289,9 +290,9 @@ private constructor(
          * .account()
          * ```
          *
-         * Specify exactly one of `url` or `file`.
+         * Exactly one of `url` or `file` must be set.
          *
-         * @throws IllegalStateException if any required field is unset.
+         * @throws IllegalStateException if a required field is unset or an input rule fails.
          */
         fun build(): ProfileUpdateBannerParams =
             ProfileUpdateBannerParams(
@@ -306,7 +307,7 @@ private constructor(
     fun _body(): Map<String, MultipartField<*>> =
         (mapOf("account" to _account(), "url" to _url(), "file" to _file()) +
                 _additionalBodyProperties().mapValues { (_, value) -> MultipartField.of(value) })
-            .filterValues { !it.value.isMissing() }
+            .filterValues { !it.value.isMissing() && !it.value.isNull() }
             .toImmutable()
 
     override fun _headers(): Headers =
@@ -390,7 +391,7 @@ private constructor(
              * .account()
              * ```
              *
-             * Specify exactly one of `url` or `file`.
+             * Exactly one of `url` or `file` must be set.
              */
             @JvmStatic fun builder() = Builder()
         }
@@ -458,14 +459,12 @@ private constructor(
              * .account()
              * ```
              *
-             * Specify exactly one of `url` or `file`.
+             * Exactly one of `url` or `file` must be set.
              *
-             * @throws IllegalStateException if any required field is unset.
+             * @throws IllegalStateException if a required field is unset or an input rule fails.
              */
             fun build(): Body {
-                val hasUrl = !url.value.isMissing() && !url.value.isNull()
-                val hasFile = !file.value.isMissing() && !file.value.isNull()
-                check(hasUrl xor hasFile) { "Exactly one of `url` or `file` must be set" }
+                checkExactlyOne("url", url, "file", file)
                 return Body(
                     checkRequired("account", account),
                     url,
