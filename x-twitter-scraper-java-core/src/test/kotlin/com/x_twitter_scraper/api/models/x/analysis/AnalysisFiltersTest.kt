@@ -19,11 +19,7 @@ internal class AnalysisFiltersTest {
         val bodies =
             listOf(
                 AnalysisBrandParams.builder().topic("rust").imageShows("charts").build()._body(),
-                AnalysisClassifyParams.builder()
-                    .topic("rust")
-                    .imageShows("charts")
-                    .build()
-                    ._body(),
+                AnalysisClassifyParams.builder().topic("rust").imageShows("charts").build()._body(),
                 AnalysisMarketSignalsParams.builder()
                     .topic("rust")
                     .imageShows("charts")

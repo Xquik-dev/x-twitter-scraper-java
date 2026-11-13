@@ -662,9 +662,7 @@ private constructor(
             @JsonProperty("queryType")
             @ExcludeMissing
             queryType: JsonField<QueryType> = JsonMissing.of(),
-            @JsonProperty("topic")
-            @ExcludeMissing
-            topic: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("topic") @ExcludeMissing topic: JsonField<String> = JsonMissing.of(),
             @JsonProperty("imageShows")
             @ExcludeMissing
             imageShows: JsonField<String> = JsonMissing.of(),
