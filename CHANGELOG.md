@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Features
+
+* `PaginatedTweets`, `SportsGamePosts`, `TweetSearchCoverageResponse` and `TweetGetRepliesResponse` carry `hiddenTimeline()`, present on an empty last page when X shows the account's timeline to nobody, so the page doesn't mean the account posted nothing.
+* `PaginatedUsers` carries `windowComplete()`, present on the last page of an empty list whose profile counts 0 accounts in it.
+* A replies strategy's `stopReason()` can be `REPORTED_HELD`, which says the read already holds every reply X reports.
+
 ## 0.11.0 (2026-11-04)
 
 [Full changelog from v0.10.3 to v0.11.0](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.10.3...v0.11.0)

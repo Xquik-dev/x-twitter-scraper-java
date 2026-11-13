@@ -290,6 +290,7 @@ private constructor(
         private val readBackTo: JsonField<OffsetDateTime>,
         private val searchContext: JsonField<PaginatedTweets.SearchContext>,
         private val searchedQuery: JsonField<String>,
+        private val hiddenTimeline: JsonField<Boolean>,
         private val windowComplete: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -320,6 +321,9 @@ private constructor(
             @JsonProperty("searchedQuery")
             @ExcludeMissing
             searchedQuery: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("hiddenTimeline")
+            @ExcludeMissing
+            hiddenTimeline: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("windowComplete")
             @ExcludeMissing
             windowComplete: JsonField<Boolean> = JsonMissing.of(),
@@ -332,6 +336,7 @@ private constructor(
             readBackTo,
             searchContext,
             searchedQuery,
+            hiddenTimeline,
             windowComplete,
             mutableMapOf(),
         )
@@ -345,6 +350,7 @@ private constructor(
                 .readBackTo(readBackTo)
                 .searchContext(searchContext)
                 .searchedQuery(searchedQuery)
+                .hiddenTimeline(hiddenTimeline)
                 .windowComplete(windowComplete)
                 .build()
 
@@ -400,6 +406,15 @@ private constructor(
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
         fun searchedQuery(): Optional<String> = searchedQuery.getOptional("searchedQuery")
+
+        /**
+         * Present on an empty last page when X shows this account's timeline to nobody. The page is
+         * empty because of that, so it doesn't mean the account posted nothing. A retry returns the
+         * same page.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun hiddenTimeline(): Optional<Boolean> = hiddenTimeline.getOptional("hiddenTimeline")
 
         /**
          * Present on a last page whose sources all read past its start time.
@@ -482,6 +497,16 @@ private constructor(
         fun _searchedQuery(): JsonField<String> = searchedQuery
 
         /**
+         * Returns the raw JSON value of [hiddenTimeline].
+         *
+         * Unlike [hiddenTimeline], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("hiddenTimeline")
+        @ExcludeMissing
+        fun _hiddenTimeline(): JsonField<Boolean> = hiddenTimeline
+
+        /**
          * Returns the raw JSON value of [windowComplete].
          *
          * Unlike [windowComplete], this method doesn't throw if the JSON field has an unexpected
@@ -531,6 +556,7 @@ private constructor(
             private var readBackTo: JsonField<OffsetDateTime> = JsonMissing.of()
             private var searchContext: JsonField<PaginatedTweets.SearchContext> = JsonMissing.of()
             private var searchedQuery: JsonField<String> = JsonMissing.of()
+            private var hiddenTimeline: JsonField<Boolean> = JsonMissing.of()
             private var windowComplete: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -544,6 +570,7 @@ private constructor(
                 readBackTo = tweetSearchCoverageResponse.readBackTo
                 searchContext = tweetSearchCoverageResponse.searchContext
                 searchedQuery = tweetSearchCoverageResponse.searchedQuery
+                hiddenTimeline = tweetSearchCoverageResponse.hiddenTimeline
                 windowComplete = tweetSearchCoverageResponse.windowComplete
                 additionalProperties =
                     tweetSearchCoverageResponse.additionalProperties.toMutableMap()
@@ -626,9 +653,22 @@ private constructor(
                 this.searchedQuery = searchedQuery
             }
 
+            /**
+             * Present on an empty last page when X shows this account's timeline to nobody. The
+             * page is empty because of that, so it doesn't mean the account posted nothing. A retry
+             * returns the same page.
+             */
+            fun hiddenTimeline(hiddenTimeline: Boolean) =
+                hiddenTimeline(JsonField.of(hiddenTimeline))
+
             /** Present on a last page whose sources all read past its start time. */
             fun windowComplete(windowComplete: Boolean) =
                 windowComplete(JsonField.of(windowComplete))
+
+            /** Sets [Builder.hiddenTimeline] to an arbitrary JSON value. */
+            fun hiddenTimeline(hiddenTimeline: JsonField<Boolean>) = apply {
+                this.hiddenTimeline = hiddenTimeline
+            }
 
             /** Sets [Builder.windowComplete] to an arbitrary JSON value. */
             fun windowComplete(windowComplete: JsonField<Boolean>) = apply {
@@ -679,6 +719,7 @@ private constructor(
                     readBackTo,
                     searchContext,
                     searchedQuery,
+                    hiddenTimeline,
                     windowComplete,
                     additionalProperties.toMutableMap(),
                 )
@@ -708,6 +749,7 @@ private constructor(
             readBackTo()
             searchContext().ifPresent { it.validate() }
             searchedQuery()
+            hiddenTimeline()
             windowComplete()
             validated = true
         }
@@ -730,6 +772,7 @@ private constructor(
                 (if (readBackTo.asKnown().isPresent) 1 else 0) +
                 (searchContext.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (searchedQuery.asKnown().isPresent) 1 else 0) +
+                (if (hiddenTimeline.asKnown().isPresent) 1 else 0) +
                 (if (windowComplete.asKnown().isPresent) 1 else 0)
 
         /** Coverage evidence across parallel search strategies. */
@@ -2576,6 +2619,7 @@ private constructor(
                 readBackTo == other.readBackTo &&
                 searchContext == other.searchContext &&
                 searchedQuery == other.searchedQuery &&
+                hiddenTimeline == other.hiddenTimeline &&
                 windowComplete == other.windowComplete &&
                 additionalProperties == other.additionalProperties
         }
@@ -2590,6 +2634,7 @@ private constructor(
                 readBackTo,
                 searchContext,
                 searchedQuery,
+                hiddenTimeline,
                 windowComplete,
                 additionalProperties,
             )
@@ -2598,6 +2643,6 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "TweetSearchCoverageResponse{hasNextPage=$hasNextPage, nextCursor=$nextCursor, tweets=$tweets, diagnostic=$diagnostic, filteredCount=$filteredCount, readBackTo=$readBackTo, searchContext=$searchContext, searchedQuery=$searchedQuery, windowComplete=$windowComplete, additionalProperties=$additionalProperties}"
+            "TweetSearchCoverageResponse{hasNextPage=$hasNextPage, nextCursor=$nextCursor, tweets=$tweets, diagnostic=$diagnostic, filteredCount=$filteredCount, readBackTo=$readBackTo, searchContext=$searchContext, searchedQuery=$searchedQuery, hiddenTimeline=$hiddenTimeline, windowComplete=$windowComplete, additionalProperties=$additionalProperties}"
     }
 }
