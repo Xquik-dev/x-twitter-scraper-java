@@ -28,7 +28,9 @@ import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.getOrThrow
 import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import com.x_twitter_scraper.api.models.ImageFilterSummary
 import com.x_twitter_scraper.api.models.SearchTweet
+import com.x_twitter_scraper.api.models.TopicFilterSummary
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -46,6 +48,8 @@ private constructor(
     private val nextCursor: JsonField<String>,
     private val results: JsonField<List<Result>>,
     private val unanalyzed: JsonField<List<Unanalyzed>>,
+    private val topicFilter: JsonField<TopicFilterSummary>,
+    private val imageFilter: JsonField<ImageFilterSummary>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -66,7 +70,22 @@ private constructor(
         @JsonProperty("unanalyzed")
         @ExcludeMissing
         unanalyzed: JsonField<List<Unanalyzed>> = JsonMissing.of(),
-    ) : this(analysisSummary, hasNextPage, nextCursor, results, unanalyzed, mutableMapOf())
+        @JsonProperty("topicFilter")
+        @ExcludeMissing
+        topicFilter: JsonField<TopicFilterSummary> = JsonMissing.of(),
+        @JsonProperty("imageFilter")
+        @ExcludeMissing
+        imageFilter: JsonField<ImageFilterSummary> = JsonMissing.of(),
+    ) : this(
+        analysisSummary,
+        hasNextPage,
+        nextCursor,
+        results,
+        unanalyzed,
+        topicFilter,
+        imageFilter,
+        mutableMapOf(),
+    )
 
     /**
      * Totals of the answers across the analyzed posts.
@@ -149,6 +168,39 @@ private constructor(
     @ExcludeMissing
     fun _unanalyzed(): JsonField<List<Unanalyzed>> = unanalyzed
 
+    /**
+     * What the topic filter asked & how many posts it kept. Present when the request sent topic.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun topicFilter(): Optional<TopicFilterSummary> = topicFilter.getOptional("topicFilter")
+
+    /**
+     * Returns the raw JSON value of [topicFilter].
+     *
+     * Unlike [topicFilter], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("topicFilter")
+    @ExcludeMissing
+    fun _topicFilter(): JsonField<TopicFilterSummary> = topicFilter
+
+    /**
+     * What the image filter asked & how many posts it kept. Present when the request sent
+     * imageShows.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun imageFilter(): Optional<ImageFilterSummary> = imageFilter.getOptional("imageFilter")
+
+    /**
+     * Returns the raw JSON value of [imageFilter].
+     *
+     * Unlike [imageFilter], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("imageFilter")
+    @ExcludeMissing
+    fun _imageFilter(): JsonField<ImageFilterSummary> = imageFilter
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -186,6 +238,8 @@ private constructor(
         private var nextCursor: JsonField<String>? = null
         private var results: JsonField<MutableList<Result>>? = null
         private var unanalyzed: JsonField<MutableList<Unanalyzed>>? = null
+        private var topicFilter: JsonField<TopicFilterSummary> = JsonMissing.of()
+        private var imageFilter: JsonField<ImageFilterSummary> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -195,6 +249,8 @@ private constructor(
             nextCursor = analysisViralScoreResponse.nextCursor
             results = analysisViralScoreResponse.results.map { it.toMutableList() }
             unanalyzed = analysisViralScoreResponse.unanalyzed.map { it.toMutableList() }
+            topicFilter = analysisViralScoreResponse.topicFilter
+            imageFilter = analysisViralScoreResponse.imageFilter
             additionalProperties = analysisViralScoreResponse.additionalProperties.toMutableMap()
         }
 
@@ -259,6 +315,40 @@ private constructor(
                 }
         }
 
+        /**
+         * What the topic filter asked & how many posts it kept. Present when the request sent
+         * topic.
+         */
+        fun topicFilter(topicFilter: TopicFilterSummary) = topicFilter(JsonField.of(topicFilter))
+
+        /**
+         * Sets [Builder.topicFilter] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.topicFilter] with a well-typed [TopicFilterSummary]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun topicFilter(topicFilter: JsonField<TopicFilterSummary>) = apply {
+            this.topicFilter = topicFilter
+        }
+
+        /**
+         * What the image filter asked & how many posts it kept. Present when the request sent
+         * imageShows.
+         */
+        fun imageFilter(imageFilter: ImageFilterSummary) = imageFilter(JsonField.of(imageFilter))
+
+        /**
+         * Sets [Builder.imageFilter] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.imageFilter] with a well-typed [ImageFilterSummary]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun imageFilter(imageFilter: JsonField<ImageFilterSummary>) = apply {
+            this.imageFilter = imageFilter
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -301,6 +391,8 @@ private constructor(
                 checkRequired("nextCursor", nextCursor),
                 checkRequired("results", results).map { it.toImmutable() },
                 checkRequired("unanalyzed", unanalyzed).map { it.toImmutable() },
+                topicFilter,
+                imageFilter,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -325,6 +417,8 @@ private constructor(
         nextCursor()
         results().forEach { it.validate() }
         unanalyzed().forEach { it.validate() }
+        topicFilter().ifPresent { it.validate() }
+        imageFilter().ifPresent { it.validate() }
         validated = true
     }
 
@@ -342,7 +436,9 @@ private constructor(
             (if (hasNextPage.asKnown().isPresent) 1 else 0) +
             (if (nextCursor.asKnown().isPresent) 1 else 0) +
             (results.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
-            (unanalyzed.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
+            (unanalyzed.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
+            (topicFilter.asKnown().getOrNull()?.validity() ?: 0) +
+            (imageFilter.asKnown().getOrNull()?.validity() ?: 0)
 
     /** Totals of the answers across the analyzed posts. */
     class AnalysisSummary
@@ -7988,6 +8084,8 @@ private constructor(
             nextCursor == other.nextCursor &&
             results == other.results &&
             unanalyzed == other.unanalyzed &&
+            topicFilter == other.topicFilter &&
+            imageFilter == other.imageFilter &&
             additionalProperties == other.additionalProperties
     }
 
@@ -7998,6 +8096,8 @@ private constructor(
             nextCursor,
             results,
             unanalyzed,
+            topicFilter,
+            imageFilter,
             additionalProperties,
         )
     }
@@ -8005,5 +8105,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "AnalysisViralScoreResponse{analysisSummary=$analysisSummary, hasNextPage=$hasNextPage, nextCursor=$nextCursor, results=$results, unanalyzed=$unanalyzed, additionalProperties=$additionalProperties}"
+        "AnalysisViralScoreResponse{analysisSummary=$analysisSummary, hasNextPage=$hasNextPage, nextCursor=$nextCursor, results=$results, unanalyzed=$unanalyzed, topicFilter=$topicFilter, imageFilter=$imageFilter, additionalProperties=$additionalProperties}"
 }
