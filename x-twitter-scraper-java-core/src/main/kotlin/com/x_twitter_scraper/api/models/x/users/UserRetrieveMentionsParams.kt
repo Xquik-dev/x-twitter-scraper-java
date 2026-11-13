@@ -64,6 +64,7 @@ private constructor(
     private val sinceId: String?,
     private val sinceTime: String?,
     private val source: String?,
+    private val ownThreads: String?,
     private val toUser: String?,
     private val untilDate: LocalDate?,
     private val untilTime: String?,
@@ -221,6 +222,12 @@ private constructor(
     /** Match the source application. */
     fun source(): Optional<String> = Optional.ofNullable(source)
 
+    /**
+     * With replies=exclude, also leaves out replies to the author's own posts, so the search skips
+     * every reply.
+     */
+    fun ownThreads(): Optional<String> = Optional.ofNullable(ownThreads)
+
     /** Filter replies sent to a username. */
     fun toUser(): Optional<String> = Optional.ofNullable(toUser)
 
@@ -308,6 +315,7 @@ private constructor(
         private var sinceId: String? = null
         private var sinceTime: String? = null
         private var source: String? = null
+        private var ownThreads: String? = null
         private var toUser: String? = null
         private var untilDate: LocalDate? = null
         private var untilTime: String? = null
@@ -365,6 +373,7 @@ private constructor(
             sinceId = userRetrieveMentionsParams.sinceId
             sinceTime = userRetrieveMentionsParams.sinceTime
             source = userRetrieveMentionsParams.source
+            ownThreads = userRetrieveMentionsParams.ownThreads
             toUser = userRetrieveMentionsParams.toUser
             untilDate = userRetrieveMentionsParams.untilDate
             untilTime = userRetrieveMentionsParams.untilTime
@@ -726,8 +735,17 @@ private constructor(
         /** Alias for calling [Builder.source] with `source.orElse(null)`. */
         fun source(source: Optional<String>) = source(source.getOrNull())
 
+        /**
+         * With replies=exclude, also leaves out replies to the author's own posts, so the search
+         * skips every reply.
+         */
+        fun ownThreads(ownThreads: String?) = apply { this.ownThreads = ownThreads }
+
         /** Filter replies sent to a username. */
         fun toUser(toUser: String?) = apply { this.toUser = toUser }
+
+        /** Alias for calling [Builder.ownThreads] with `ownThreads.orElse(null)`. */
+        fun ownThreads(ownThreads: Optional<String>) = ownThreads(ownThreads.getOrNull())
 
         /** Alias for calling [Builder.toUser] with `toUser.orElse(null)`. */
         fun toUser(toUser: Optional<String>) = toUser(toUser.getOrNull())
@@ -921,6 +939,7 @@ private constructor(
                 sinceId,
                 sinceTime,
                 source,
+                ownThreads,
                 toUser,
                 untilDate,
                 untilTime,
@@ -988,6 +1007,7 @@ private constructor(
                 sinceId?.let { put("sinceId", it) }
                 sinceTime?.let { put("sinceTime", it) }
                 source?.let { put("source", it) }
+                ownThreads?.let { put("ownThreads", it) }
                 toUser?.let { put("toUser", it) }
                 untilDate?.let { put("untilDate", it.toString()) }
                 untilTime?.let { put("untilTime", it) }
@@ -1554,6 +1574,7 @@ private constructor(
             sinceId == other.sinceId &&
             sinceTime == other.sinceTime &&
             source == other.source &&
+            ownThreads == other.ownThreads &&
             toUser == other.toUser &&
             untilDate == other.untilDate &&
             untilTime == other.untilTime &&
@@ -1612,6 +1633,7 @@ private constructor(
             sinceId,
             sinceTime,
             source,
+            ownThreads,
             toUser,
             untilDate,
             untilTime,
@@ -1624,5 +1646,5 @@ private constructor(
         )
 
     override fun toString() =
-        "UserRetrieveMentionsParams{id=$id, anyWords=$anyWords, blueVerifiedOnly=$blueVerifiedOnly, cardName=$cardName, cashtags=$cashtags, conversationId=$conversationId, cursor=$cursor, exactPhrase=$exactPhrase, excludeSource=$excludeSource, excludeWords=$excludeWords, fields=$fields, fromUser=$fromUser, geocode=$geocode, hashtags=$hashtags, inReplyToTweetId=$inReplyToTweetId, language=$language, maxFaves=$maxFaves, maxId=$maxId, maxQuotes=$maxQuotes, maxReplies=$maxReplies, maxRetweets=$maxRetweets, mediaType=$mediaType, mentioning=$mentioning, minBookmarks=$minBookmarks, minFaves=$minFaves, minLikes=$minLikes, minQuotes=$minQuotes, minReplies=$minReplies, minRetweets=$minRetweets, minViews=$minViews, nativeRetweets=$nativeRetweets, near=$near, news=$news, omit=$omit, pageSize=$pageSize, quotes=$quotes, quotesOfTweetId=$quotesOfTweetId, replies=$replies, retweets=$retweets, retweetsOfTweetId=$retweetsOfTweetId, safe=$safe, sinceDate=$sinceDate, sinceId=$sinceId, sinceTime=$sinceTime, source=$source, toUser=$toUser, untilDate=$untilDate, untilTime=$untilTime, url=$url, verifiedOnly=$verifiedOnly, within=$within, withinTime=$withinTime, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "UserRetrieveMentionsParams{id=$id, anyWords=$anyWords, blueVerifiedOnly=$blueVerifiedOnly, cardName=$cardName, cashtags=$cashtags, conversationId=$conversationId, cursor=$cursor, exactPhrase=$exactPhrase, excludeSource=$excludeSource, excludeWords=$excludeWords, fields=$fields, fromUser=$fromUser, geocode=$geocode, hashtags=$hashtags, inReplyToTweetId=$inReplyToTweetId, language=$language, maxFaves=$maxFaves, maxId=$maxId, maxQuotes=$maxQuotes, maxReplies=$maxReplies, maxRetweets=$maxRetweets, mediaType=$mediaType, mentioning=$mentioning, minBookmarks=$minBookmarks, minFaves=$minFaves, minLikes=$minLikes, minQuotes=$minQuotes, minReplies=$minReplies, minRetweets=$minRetweets, minViews=$minViews, nativeRetweets=$nativeRetweets, near=$near, news=$news, omit=$omit, pageSize=$pageSize, quotes=$quotes, quotesOfTweetId=$quotesOfTweetId, replies=$replies, retweets=$retweets, retweetsOfTweetId=$retweetsOfTweetId, safe=$safe, sinceDate=$sinceDate, sinceId=$sinceId, sinceTime=$sinceTime, source=$source, ownThreads=$ownThreads, toUser=$toUser, untilDate=$untilDate, untilTime=$untilTime, url=$url, verifiedOnly=$verifiedOnly, within=$within, withinTime=$withinTime, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
