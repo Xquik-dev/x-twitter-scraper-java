@@ -37,6 +37,7 @@ private constructor(
     private val filteredCount: JsonField<Long>,
     private val scanLimit: JsonField<ScanLimit>,
     private val diagnostic: JsonField<Diagnostic>,
+    private val windowComplete: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -60,6 +61,9 @@ private constructor(
         @JsonProperty("diagnostic")
         @ExcludeMissing
         diagnostic: JsonField<Diagnostic> = JsonMissing.of(),
+        @JsonProperty("windowComplete")
+        @ExcludeMissing
+        windowComplete: JsonField<Boolean> = JsonMissing.of(),
     ) : this(
         hasNextPage,
         nextCursor,
@@ -67,6 +71,7 @@ private constructor(
         filteredCount,
         scanLimit,
         diagnostic,
+        windowComplete,
         mutableMapOf(),
     )
 
@@ -96,6 +101,13 @@ private constructor(
 
     /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun diagnostic(): Optional<Diagnostic> = diagnostic.getOptional("diagnostic")
+
+    /**
+     * Present on the last page of an empty list whose profile counts 0 accounts in it.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun windowComplete(): Optional<Boolean> = windowComplete.getOptional("windowComplete")
 
     /**
      * Returns the raw JSON value of [hasNextPage].
@@ -145,6 +157,15 @@ private constructor(
     @ExcludeMissing
     fun _diagnostic(): JsonField<Diagnostic> = diagnostic
 
+    /**
+     * Returns the raw JSON value of [windowComplete].
+     *
+     * Unlike [windowComplete], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("windowComplete")
+    @ExcludeMissing
+    fun _windowComplete(): JsonField<Boolean> = windowComplete
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -181,6 +202,7 @@ private constructor(
         private var filteredCount: JsonField<Long> = JsonMissing.of()
         private var scanLimit: JsonField<ScanLimit> = JsonMissing.of()
         private var diagnostic: JsonField<Diagnostic> = JsonMissing.of()
+        private var windowComplete: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -191,6 +213,7 @@ private constructor(
             filteredCount = paginatedUsers.filteredCount
             scanLimit = paginatedUsers.scanLimit
             diagnostic = paginatedUsers.diagnostic
+            windowComplete = paginatedUsers.windowComplete
             additionalProperties = paginatedUsers.additionalProperties.toMutableMap()
         }
 
@@ -238,6 +261,20 @@ private constructor(
         /** Sets [Builder.diagnostic] to an arbitrary JSON value. */
         fun diagnostic(diagnostic: JsonField<Diagnostic>) = apply { this.diagnostic = diagnostic }
 
+        /** Present on the last page of an empty list whose profile counts 0 accounts in it. */
+        fun windowComplete(windowComplete: Boolean) = windowComplete(JsonField.of(windowComplete))
+
+        /**
+         * Sets [Builder.windowComplete] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.windowComplete] with a well-typed [Boolean] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun windowComplete(windowComplete: JsonField<Boolean>) = apply {
+            this.windowComplete = windowComplete
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -279,6 +316,7 @@ private constructor(
                 filteredCount,
                 scanLimit,
                 diagnostic,
+                windowComplete,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -304,6 +342,7 @@ private constructor(
         filteredCount()
         scanLimit().ifPresent { it.validate() }
         diagnostic().ifPresent { it.validate() }
+        windowComplete()
         validated = true
     }
 
@@ -322,7 +361,8 @@ private constructor(
             (users.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (if (filteredCount.asKnown().isPresent) 1 else 0) +
             (scanLimit.asKnown().getOrNull()?.validity() ?: 0) +
-            (diagnostic.asKnown().getOrNull()?.validity() ?: 0)
+            (diagnostic.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (windowComplete.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -336,6 +376,7 @@ private constructor(
             filteredCount == other.filteredCount &&
             scanLimit == other.scanLimit &&
             diagnostic == other.diagnostic &&
+            windowComplete == other.windowComplete &&
             additionalProperties == other.additionalProperties
     }
 
@@ -347,6 +388,7 @@ private constructor(
             filteredCount,
             scanLimit,
             diagnostic,
+            windowComplete,
             additionalProperties,
         )
     }
@@ -354,7 +396,7 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "PaginatedUsers{hasNextPage=$hasNextPage, nextCursor=$nextCursor, users=$users, filteredCount=$filteredCount, scanLimit=$scanLimit, diagnostic=$diagnostic, additionalProperties=$additionalProperties}"
+        "PaginatedUsers{hasNextPage=$hasNextPage, nextCursor=$nextCursor, users=$users, filteredCount=$filteredCount, scanLimit=$scanLimit, diagnostic=$diagnostic, windowComplete=$windowComplete, additionalProperties=$additionalProperties}"
 
     class ScanLimit
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)

@@ -34,6 +34,7 @@ private constructor(
     private val hasNextPage: JsonField<Boolean>,
     private val nextCursor: JsonField<String>,
     private val readBackTo: JsonField<OffsetDateTime>,
+    private val hiddenTimeline: JsonField<Boolean>,
     private val windowComplete: JsonField<Boolean>,
     private val searchedQuery: JsonField<String>,
     private val searchContext: JsonField<SearchContext>,
@@ -58,6 +59,9 @@ private constructor(
         @JsonProperty("readBackTo")
         @ExcludeMissing
         readBackTo: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("hiddenTimeline")
+        @ExcludeMissing
+        hiddenTimeline: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("windowComplete")
         @ExcludeMissing
         windowComplete: JsonField<Boolean> = JsonMissing.of(),
@@ -74,6 +78,7 @@ private constructor(
         hasNextPage,
         nextCursor,
         readBackTo,
+        hiddenTimeline,
         windowComplete,
         searchedQuery,
         searchContext,
@@ -93,6 +98,13 @@ private constructor(
 
     /** The UTC time this filtered search has reached. */
     fun readBackTo(): Optional<OffsetDateTime> = readBackTo.getOptional("readBackTo")
+
+    /**
+     * Present on an empty last page when X shows this account's timeline to nobody. The page is
+     * empty because of that, so it doesn't mean the account posted nothing. A retry returns the
+     * same page.
+     */
+    fun hiddenTimeline(): Optional<Boolean> = hiddenTimeline.getOptional("hiddenTimeline")
 
     /** Present on a last page whose sources all read past its start time. */
     fun windowComplete(): Optional<Boolean> = windowComplete.getOptional("windowComplete")
@@ -133,6 +145,11 @@ private constructor(
     @JsonProperty("readBackTo")
     @ExcludeMissing
     fun _readBackTo(): JsonField<OffsetDateTime> = readBackTo
+
+    /** Returns the raw JSON value of [hiddenTimeline]. */
+    @JsonProperty("hiddenTimeline")
+    @ExcludeMissing
+    fun _hiddenTimeline(): JsonField<Boolean> = hiddenTimeline
 
     /** Returns the raw JSON value of [windowComplete]. */
     @JsonProperty("windowComplete")
@@ -178,6 +195,7 @@ private constructor(
         private var hasNextPage: JsonField<Boolean>? = null
         private var nextCursor: JsonField<String>? = null
         private var readBackTo: JsonField<OffsetDateTime> = JsonMissing.of()
+        private var hiddenTimeline: JsonField<Boolean> = JsonMissing.of()
         private var windowComplete: JsonField<Boolean> = JsonMissing.of()
         private var searchedQuery: JsonField<String> = JsonMissing.of()
         private var searchContext: JsonField<SearchContext> = JsonMissing.of()
@@ -191,6 +209,7 @@ private constructor(
             hasNextPage = sportsGamePosts.hasNextPage
             nextCursor = sportsGamePosts.nextCursor
             readBackTo = sportsGamePosts.readBackTo
+            hiddenTimeline = sportsGamePosts.hiddenTimeline
             windowComplete = sportsGamePosts.windowComplete
             searchedQuery = sportsGamePosts.searchedQuery
             searchContext = sportsGamePosts.searchContext
@@ -240,8 +259,20 @@ private constructor(
             this.readBackTo = readBackTo
         }
 
+        /**
+         * Present on an empty last page when X shows this account's timeline to nobody. The page is
+         * empty because of that, so it doesn't mean the account posted nothing. A retry returns the
+         * same page.
+         */
+        fun hiddenTimeline(hiddenTimeline: Boolean) = hiddenTimeline(JsonField.of(hiddenTimeline))
+
         /** Present on a last page whose sources all read past its start time. */
         fun windowComplete(windowComplete: Boolean) = windowComplete(JsonField.of(windowComplete))
+
+        /** Sets [Builder.hiddenTimeline] to an arbitrary JSON value. */
+        fun hiddenTimeline(hiddenTimeline: JsonField<Boolean>) = apply {
+            this.hiddenTimeline = hiddenTimeline
+        }
 
         /** Sets [Builder.windowComplete] to an arbitrary JSON value. */
         fun windowComplete(windowComplete: JsonField<Boolean>) = apply {
@@ -313,6 +344,7 @@ private constructor(
                 checkRequired("hasNextPage", hasNextPage),
                 checkRequired("nextCursor", nextCursor),
                 readBackTo,
+                hiddenTimeline,
                 windowComplete,
                 searchedQuery,
                 searchContext,
@@ -339,6 +371,7 @@ private constructor(
         hasNextPage()
         nextCursor()
         readBackTo()
+        hiddenTimeline()
         windowComplete()
         searchedQuery()
         searchContext().ifPresent { it.validate() }
@@ -361,6 +394,7 @@ private constructor(
             (if (hasNextPage.asKnown().isPresent) 1 else 0) +
             (if (nextCursor.asKnown().isPresent) 1 else 0) +
             (if (readBackTo.asKnown().isPresent) 1 else 0) +
+            (if (hiddenTimeline.asKnown().isPresent) 1 else 0) +
             (if (windowComplete.asKnown().isPresent) 1 else 0) +
             (if (searchedQuery.asKnown().isPresent) 1 else 0) +
             (searchContext.asKnown().getOrNull()?.validity() ?: 0) +
@@ -707,6 +741,7 @@ private constructor(
             hasNextPage == other.hasNextPage &&
             nextCursor == other.nextCursor &&
             readBackTo == other.readBackTo &&
+            hiddenTimeline == other.hiddenTimeline &&
             windowComplete == other.windowComplete &&
             searchedQuery == other.searchedQuery &&
             searchContext == other.searchContext &&
@@ -721,6 +756,7 @@ private constructor(
             hasNextPage,
             nextCursor,
             readBackTo,
+            hiddenTimeline,
             windowComplete,
             searchedQuery,
             searchContext,
@@ -732,5 +768,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SportsGamePosts{filteredCount=$filteredCount, tweets=$tweets, hasNextPage=$hasNextPage, nextCursor=$nextCursor, readBackTo=$readBackTo, windowComplete=$windowComplete, searchedQuery=$searchedQuery, searchContext=$searchContext, query=$query, additionalProperties=$additionalProperties}"
+        "SportsGamePosts{filteredCount=$filteredCount, tweets=$tweets, hasNextPage=$hasNextPage, nextCursor=$nextCursor, readBackTo=$readBackTo, hiddenTimeline=$hiddenTimeline, windowComplete=$windowComplete, searchedQuery=$searchedQuery, searchContext=$searchContext, query=$query, additionalProperties=$additionalProperties}"
 }
