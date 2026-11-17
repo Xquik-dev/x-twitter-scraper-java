@@ -154,16 +154,36 @@ test_a_scan_without_the_extraction_diagnostics_fails_the_run() {
         "$run_stderr" "stderr"
 }
 
-test_a_codeql_cli_at_another_version_stops_the_run() {
+test_a_newer_codeql_cli_runs_the_scan() {
+    local version
     prepare_codeql
-    run_env+=("FAKE_CODEQL_VERSION=2.28.0")
 
-    run_in_repo scripts/codeql
+    for version in 2.27.4 2.27.10 3.0.0; do
+        run_env=("FAKE_CODEQL_VERSION=$version")
 
-    assert_equal 1 "$run_status" "the exit code"
-    assert_equal "CodeQL 2.28.0 found, but this check pins 2.27.2. Install CodeQL 2.27.2 from https://github.com/github/codeql-cli-binaries/releases/tag/v2.27.2, then rerun." \
-        "$run_stderr" "stderr"
-    assert_equal "" "$(log_of codeql-source-root)" "the scanned folder"
+        run_in_repo scripts/codeql
+
+        assert_equal "" "$run_stderr" "stderr with CodeQL $version"
+        assert_equal 0 "$run_status" "the exit code with CodeQL $version"
+        assert_ends_with "$run_stdout" "CodeQL scanned 2 of 2 Java and Kotlin source files and found no results." \
+            "stdout with CodeQL $version"
+    done
+}
+
+test_an_older_codeql_cli_stops_the_run() {
+    local version
+    prepare_codeql
+
+    for version in 2.27.1 2.9.9; do
+        run_env=("FAKE_CODEQL_VERSION=$version")
+
+        run_in_repo scripts/codeql
+
+        assert_equal 1 "$run_status" "the exit code with CodeQL $version"
+        assert_equal "CodeQL $version found, but this check needs 2.27.2 or newer. Install the latest CodeQL from https://github.com/github/codeql-cli-binaries/releases/latest, then rerun." \
+            "$run_stderr" "stderr with CodeQL $version"
+        assert_equal "" "$(log_of codeql-source-root)" "the scanned folder with CodeQL $version"
+    done
 }
 
 test_a_build_that_compiles_no_kotlin_file_fails_the_run() {

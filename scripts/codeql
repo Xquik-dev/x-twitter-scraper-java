@@ -10,13 +10,14 @@ cd -- "$(dirname -- "$0")/.."
 
 source scripts/lib/temp-paths.bash
 
-readonly codeql_version="2.27.2"
+readonly minimum_codeql_version="2.27.2"
 readonly query_suite="codeql/java-queries@1.11.12:codeql-suites/java-security-extended.qls"
 readonly comment_queries="codeql/no-code-comments"
 
 found_version="$(codeql version --format=terse)"
-if [[ "$found_version" != "$codeql_version" ]]; then
-    echo "CodeQL $found_version found, but this check pins $codeql_version. Install CodeQL $codeql_version from https://github.com/github/codeql-cli-binaries/releases/tag/v$codeql_version, then rerun." >&2
+oldest_version="$(printf '%s\n' "$minimum_codeql_version" "$found_version" | sort -V | head -n 1)"
+if [[ "$oldest_version" != "$minimum_codeql_version" ]]; then
+    echo "CodeQL $found_version found, but this check needs $minimum_codeql_version or newer. Install the latest CodeQL from https://github.com/github/codeql-cli-binaries/releases/latest, then rerun." >&2
     exit 1
 fi
 
