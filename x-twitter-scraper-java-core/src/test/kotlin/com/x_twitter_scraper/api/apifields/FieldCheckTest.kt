@@ -259,7 +259,7 @@ internal class FieldCheckTest {
     fun findsEverySdkMethodByTheRequestItSends() {
         val methods = Operations.methods(SdkShapes())
 
-        assertThat(methods).hasSize(212)
+        assertThat(methods).hasSize(213)
         assertThat(methods.map { "${it.httpMethod} /${it.segments.joinToString("/")}" })
             .contains(
                 "GET /api/v1/credits",
@@ -270,7 +270,7 @@ internal class FieldCheckTest {
             )
         assertThat(methods.map { it.name to it.input }).doesNotHaveDuplicates()
         assertThat(methods.map { "${it.httpMethod} /${it.segments.joinToString("/")}" }.distinct())
-            .hasSize(209)
+            .hasSize(210)
         listOf(
                 MediaUploadParams::class.java,
                 ProfileUpdateAvatarParams::class.java,
