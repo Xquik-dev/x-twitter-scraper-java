@@ -13,6 +13,8 @@ import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnecti
 import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkCreateResponse
 import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkDeleteParams
 import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkDeleteResponse
+import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkListParams
+import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkListResponse
 import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkRetrieveParams
 import java.util.function.Consumer
 
@@ -87,6 +89,29 @@ interface AccountConnectionLinkService {
     /** @see retrieve */
     fun retrieve(id: String, requestOptions: RequestOptions): AccountConnectionLink =
         retrieve(id, AccountConnectionLinkRetrieveParams.none(), requestOptions)
+
+    /**
+     * Lists your connect links, newest first, with `apiKeyId` naming the API key that made each
+     * one, or empty for a dashboard session. Use it to find and revoke the links a leaked key made.
+     * It never holds a token. Takes a Full access API key holding `connectsXAccounts`, or a
+     * dashboard session.
+     */
+    fun list(): AccountConnectionLinkListResponse = list(AccountConnectionLinkListParams.none())
+
+    /** @see list */
+    fun list(
+        params: AccountConnectionLinkListParams = AccountConnectionLinkListParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): AccountConnectionLinkListResponse
+
+    /** @see list */
+    fun list(
+        params: AccountConnectionLinkListParams = AccountConnectionLinkListParams.none()
+    ): AccountConnectionLinkListResponse = list(params, RequestOptions.none())
+
+    /** @see list */
+    fun list(requestOptions: RequestOptions): AccountConnectionLinkListResponse =
+        list(AccountConnectionLinkListParams.none(), requestOptions)
 
     /** Revoke an X account connection link */
     fun delete(id: String): AccountConnectionLinkDeleteResponse =
@@ -210,6 +235,34 @@ interface AccountConnectionLinkService {
             requestOptions: RequestOptions,
         ): HttpResponseFor<AccountConnectionLink> =
             retrieve(id, AccountConnectionLinkRetrieveParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /x/account-connection-links`, but is otherwise the
+         * same as [AccountConnectionLinkService.list].
+         */
+        @MustBeClosed
+        fun list(): HttpResponseFor<AccountConnectionLinkListResponse> =
+            list(AccountConnectionLinkListParams.none())
+
+        /** @see list */
+        @MustBeClosed
+        fun list(
+            params: AccountConnectionLinkListParams = AccountConnectionLinkListParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<AccountConnectionLinkListResponse>
+
+        /** @see list */
+        @MustBeClosed
+        fun list(
+            params: AccountConnectionLinkListParams = AccountConnectionLinkListParams.none()
+        ): HttpResponseFor<AccountConnectionLinkListResponse> = list(params, RequestOptions.none())
+
+        /** @see list */
+        @MustBeClosed
+        fun list(
+            requestOptions: RequestOptions
+        ): HttpResponseFor<AccountConnectionLinkListResponse> =
+            list(AccountConnectionLinkListParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `delete /x/account-connection-links/{id}`, but is

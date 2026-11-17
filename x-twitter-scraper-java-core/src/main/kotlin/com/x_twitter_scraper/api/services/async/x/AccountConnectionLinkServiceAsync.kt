@@ -12,6 +12,8 @@ import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnecti
 import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkCreateResponse
 import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkDeleteParams
 import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkDeleteResponse
+import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkListParams
+import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkListResponse
 import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkRetrieveParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -95,6 +97,30 @@ interface AccountConnectionLinkServiceAsync {
         requestOptions: RequestOptions,
     ): CompletableFuture<AccountConnectionLink> =
         retrieve(id, AccountConnectionLinkRetrieveParams.none(), requestOptions)
+
+    /**
+     * Lists your connect links, newest first, with `apiKeyId` naming the API key that made each
+     * one, or empty for a dashboard session. Use it to find and revoke the links a leaked key made.
+     * It never holds a token. Takes a Full access API key holding `connectsXAccounts`, or a
+     * dashboard session.
+     */
+    fun list(): CompletableFuture<AccountConnectionLinkListResponse> =
+        list(AccountConnectionLinkListParams.none())
+
+    /** @see list */
+    fun list(
+        params: AccountConnectionLinkListParams = AccountConnectionLinkListParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<AccountConnectionLinkListResponse>
+
+    /** @see list */
+    fun list(
+        params: AccountConnectionLinkListParams = AccountConnectionLinkListParams.none()
+    ): CompletableFuture<AccountConnectionLinkListResponse> = list(params, RequestOptions.none())
+
+    /** @see list */
+    fun list(requestOptions: RequestOptions): CompletableFuture<AccountConnectionLinkListResponse> =
+        list(AccountConnectionLinkListParams.none(), requestOptions)
 
     /** Revoke an X account connection link */
     fun delete(id: String): CompletableFuture<AccountConnectionLinkDeleteResponse> =
@@ -216,6 +242,31 @@ interface AccountConnectionLinkServiceAsync {
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<AccountConnectionLink>> =
             retrieve(id, AccountConnectionLinkRetrieveParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /x/account-connection-links`, but is otherwise the
+         * same as [AccountConnectionLinkServiceAsync.list].
+         */
+        fun list(): CompletableFuture<HttpResponseFor<AccountConnectionLinkListResponse>> =
+            list(AccountConnectionLinkListParams.none())
+
+        /** @see list */
+        fun list(
+            params: AccountConnectionLinkListParams = AccountConnectionLinkListParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<AccountConnectionLinkListResponse>>
+
+        /** @see list */
+        fun list(
+            params: AccountConnectionLinkListParams = AccountConnectionLinkListParams.none()
+        ): CompletableFuture<HttpResponseFor<AccountConnectionLinkListResponse>> =
+            list(params, RequestOptions.none())
+
+        /** @see list */
+        fun list(
+            requestOptions: RequestOptions
+        ): CompletableFuture<HttpResponseFor<AccountConnectionLinkListResponse>> =
+            list(AccountConnectionLinkListParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `delete /x/account-connection-links/{id}`, but is
