@@ -6,6 +6,7 @@
 
 * `x().accountConnectionLinks().list()` pages through your connect links, newest first, as `AccountConnectionLinkListResponse`. Pass `nextCursor()` back as `cursor` while `hasMore()` is true.
 * `AccountConnectionLink` and `AccountConnectionLinkCreateResponse` carry `apiKeyId()`, the API key that made the link, empty when a dashboard session made it. With `list()` it finds the links a leaked key made, so you can revoke them.
+* `PaginatedTweets`, `PaginatedUsers`, `SportsGamePosts`, `TweetGetRepliesResponse` and `TweetSearchCoverageResponse` carry `endReason()`, a `CoverageEndReason` present on a last page that X cut short. `STALLED` means X returned no new results 2 times in a row, so the list may hold more. Read it again later without `cursor`.
 * `PaginatedTweets`, `SportsGamePosts`, `TweetSearchCoverageResponse` and `TweetGetRepliesResponse` carry `hiddenTimeline()`, present on an empty last page when X shows the account's timeline to nobody, so the page doesn't mean the account posted nothing.
 * `PaginatedUsers` carries `windowComplete()`, present on the last page of an empty list whose profile counts 0 accounts in it.
 * `UserRetrieveMentionsParams` takes `ownThreads`. With `replies` set to `exclude`, `exclude` here also leaves out replies to the author's own posts.
