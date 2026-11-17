@@ -23,6 +23,8 @@ import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnecti
 import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkCreateResponse
 import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkDeleteParams
 import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkDeleteResponse
+import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkListParams
+import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkListResponse
 import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkRetrieveParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -57,6 +59,12 @@ internal constructor(private val clientOptions: ClientOptions) : AccountConnecti
         requestOptions: RequestOptions,
     ): CompletableFuture<AccountConnectionLink> =
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
+
+    override fun list(
+        params: AccountConnectionLinkListParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<AccountConnectionLinkListResponse> =
+        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
     override fun delete(
         params: AccountConnectionLinkDeleteParams,
@@ -130,6 +138,36 @@ internal constructor(private val clientOptions: ClientOptions) : AccountConnecti
                     errorHandler.handle(response).parseable {
                         response
                             .use { retrieveHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val listHandler: Handler<AccountConnectionLinkListResponse> =
+            jsonHandler<AccountConnectionLinkListResponse>(clientOptions.jsonMapper)
+
+        override fun list(
+            params: AccountConnectionLinkListParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<AccountConnectionLinkListResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "account-connection-links")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { listHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

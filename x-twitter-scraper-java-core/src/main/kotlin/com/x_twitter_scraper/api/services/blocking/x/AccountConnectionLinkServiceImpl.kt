@@ -23,6 +23,8 @@ import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnecti
 import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkCreateResponse
 import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkDeleteParams
 import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkDeleteResponse
+import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkListParams
+import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkListResponse
 import com.x_twitter_scraper.api.models.x.accountconnectionlinks.AccountConnectionLinkRetrieveParams
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -52,6 +54,11 @@ internal constructor(private val clientOptions: ClientOptions) : AccountConnecti
         params: AccountConnectionLinkRetrieveParams,
         requestOptions: RequestOptions,
     ): AccountConnectionLink = withRawResponse().retrieve(params, requestOptions).parse()
+
+    override fun list(
+        params: AccountConnectionLinkListParams,
+        requestOptions: RequestOptions,
+    ): AccountConnectionLinkListResponse = withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(
         params: AccountConnectionLinkDeleteParams,
@@ -120,6 +127,33 @@ internal constructor(private val clientOptions: ClientOptions) : AccountConnecti
             return errorHandler.handle(response).parseable {
                 response
                     .use { retrieveHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val listHandler: Handler<AccountConnectionLinkListResponse> =
+            jsonHandler<AccountConnectionLinkListResponse>(clientOptions.jsonMapper)
+
+        override fun list(
+            params: AccountConnectionLinkListParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<AccountConnectionLinkListResponse> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("x", "account-connection-links")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { listHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()
