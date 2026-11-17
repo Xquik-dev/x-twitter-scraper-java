@@ -8,6 +8,7 @@
 * `AccountConnectionLink` and `AccountConnectionLinkCreateResponse` carry `apiKeyId()`, the API key that made the link, empty when a dashboard session made it. With `list()` it finds the links a leaked key made, so you can revoke them.
 * `PaginatedTweets`, `PaginatedUsers`, `SportsGamePosts`, `TweetGetRepliesResponse` and `TweetSearchCoverageResponse` carry `endReason()`, a `CoverageEndReason` present on a last page that X cut short. `STALLED` means X returned no new results 2 times in a row, so the list may hold more. Read it again later without `cursor`.
 * The 6 `x().analysis()` responses carry `unprocessedIds()`, the IDs of the posts or texts the time ran out for. Send them again in `tweetIds`, or those texts in `texts`. They cost nothing.
+* The 6 `x().analysis()` params take `threadOf`, `repliesBy`, `mediaBy` and `likedBy`, which analyze 1 post's thread or 1 account's replies, media or likes, and `usernames`, `listIds` and `queries`, which analyze several accounts, Lists or X searches as 1 search.
 * `PaginatedTweets`, `SportsGamePosts`, `TweetSearchCoverageResponse` and `TweetGetRepliesResponse` carry `hiddenTimeline()`, present on an empty last page when X shows the account's timeline to nobody, so the page doesn't mean the account posted nothing.
 * `PaginatedUsers` carries `windowComplete()`, present on the last page of an empty list whose profile counts 0 accounts in it.
 * `UserRetrieveMentionsParams` takes `ownThreads`. With `replies` set to `exclude`, `exclude` here also leaves out replies to the author's own posts.
