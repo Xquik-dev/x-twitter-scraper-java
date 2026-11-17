@@ -8,6 +8,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.x_twitter_scraper.api.core.JsonValue
 import com.x_twitter_scraper.api.core.jsonMapper
 import java.time.OffsetDateTime
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -24,6 +25,7 @@ internal class AccountConnectionLinkTest {
             .health("healthy")
             .purpose(AccountConnectionLink.Purpose.RECONNECT)
             .reference("crm-user-7")
+            .apiKeyId("17")
             .returnUrl("https://app.example.com/connected")
             .status(AccountConnectionLink.Status.CONNECTED)
             .xUserId("9876543210")
@@ -42,6 +44,8 @@ internal class AccountConnectionLinkTest {
         assertThat(link._object_()).isEqualTo(JsonValue.from("x_account_connection_link"))
         assertThat(link.purpose()).isEqualTo(AccountConnectionLink.Purpose.RECONNECT)
         assertThat(link.reference()).contains("crm-user-7")
+        assertThat(link.apiKeyId()).contains("17")
+        assertThat(link._apiKeyId().asKnown()).contains("17")
         assertThat(link.returnUrl()).contains("https://app.example.com/connected")
         assertThat(link.status()).isEqualTo(AccountConnectionLink.Status.CONNECTED)
         assertThat(link.xUserId()).contains("9876543210")
@@ -61,6 +65,26 @@ internal class AccountConnectionLinkTest {
 
         assertThat(roundtripped).isEqualTo(link)
         assertThat(roundtripped.validate()).isSameAs(roundtripped)
+    }
+
+    @Test
+    fun apiKeyIdNamesTheKeyThatMadeTheLink() {
+        val dashboardLink = link.toBuilder().apiKeyId(Optional.empty()).build()
+        val olderLink =
+            jsonMapper()
+                .readValue(
+                    """{"id":"xlink_AAAAAAAAAAAAAAAA","accountId":null,"completedAt":null,"createdAt":"2026-11-08T12:00:00Z","expiresAt":"2026-11-08T12:30:00Z","failure":null,"health":null,"object":"x_account_connection_link","purpose":"connect","reference":null,"returnUrl":null,"status":"pending","xUserId":null,"xUsername":null}""",
+                    jacksonTypeRef<AccountConnectionLink>(),
+                )
+
+        assertThat(dashboardLink.apiKeyId()).isEmpty
+        assertThat(dashboardLink).isNotEqualTo(link)
+        assertThat(dashboardLink.toString()).contains("apiKeyId=null")
+        assertThat(link.toString()).contains("apiKeyId=17")
+        assertThat(link.toBuilder().apiKeyId(Optional.of("17")).build()).isEqualTo(link)
+        assertThat(olderLink.apiKeyId()).isEmpty
+        assertThat(olderLink._apiKeyId().isMissing()).isTrue()
+        assertThat(olderLink.isValid()).isTrue()
     }
 
     @Test

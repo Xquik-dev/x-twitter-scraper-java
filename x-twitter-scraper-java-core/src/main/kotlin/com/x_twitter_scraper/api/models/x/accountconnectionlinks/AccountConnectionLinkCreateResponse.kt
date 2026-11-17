@@ -34,6 +34,7 @@ private constructor(
     private val object_: JsonValue,
     private val purpose: JsonField<AccountConnectionLink.Purpose>,
     private val reference: JsonField<String>,
+    private val apiKeyId: JsonField<String>,
     private val returnUrl: JsonField<String>,
     private val status: JsonField<AccountConnectionLink.Status>,
     private val xUserId: JsonField<String>,
@@ -62,6 +63,7 @@ private constructor(
         @ExcludeMissing
         purpose: JsonField<AccountConnectionLink.Purpose> = JsonMissing.of(),
         @JsonProperty("reference") @ExcludeMissing reference: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("apiKeyId") @ExcludeMissing apiKeyId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("returnUrl") @ExcludeMissing returnUrl: JsonField<String> = JsonMissing.of(),
         @JsonProperty("status")
         @ExcludeMissing
@@ -80,6 +82,7 @@ private constructor(
         object_,
         purpose,
         reference,
+        apiKeyId,
         returnUrl,
         status,
         xUserId,
@@ -138,6 +141,13 @@ private constructor(
 
     /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun reference(): Optional<String> = reference.getOptional("reference")
+
+    /**
+     * The ID of the API key that made the link, or empty when a dashboard session made it.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun apiKeyId(): Optional<String> = apiKeyId.getOptional("apiKeyId")
 
     /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
     fun returnUrl(): Optional<String> = returnUrl.getOptional("returnUrl")
@@ -236,6 +246,13 @@ private constructor(
     @JsonProperty("reference") @ExcludeMissing fun _reference(): JsonField<String> = reference
 
     /**
+     * Returns the raw JSON value of [apiKeyId].
+     *
+     * Unlike [apiKeyId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("apiKeyId") @ExcludeMissing fun _apiKeyId(): JsonField<String> = apiKeyId
+
+    /**
      * Returns the raw JSON value of [returnUrl].
      *
      * Unlike [returnUrl], this method doesn't throw if the JSON field has an unexpected type.
@@ -324,6 +341,7 @@ private constructor(
         private var object_: JsonValue = JsonValue.from("x_account_connection_link")
         private var purpose: JsonField<AccountConnectionLink.Purpose>? = null
         private var reference: JsonField<String>? = null
+        private var apiKeyId: JsonField<String> = JsonMissing.of()
         private var returnUrl: JsonField<String>? = null
         private var status: JsonField<AccountConnectionLink.Status>? = null
         private var xUserId: JsonField<String>? = null
@@ -345,6 +363,7 @@ private constructor(
             object_ = accountConnectionLinkCreateResponse.object_
             purpose = accountConnectionLinkCreateResponse.purpose
             reference = accountConnectionLinkCreateResponse.reference
+            apiKeyId = accountConnectionLinkCreateResponse.apiKeyId
             returnUrl = accountConnectionLinkCreateResponse.returnUrl
             status = accountConnectionLinkCreateResponse.status
             xUserId = accountConnectionLinkCreateResponse.xUserId
@@ -421,11 +440,20 @@ private constructor(
 
         fun reference(reference: String?) = reference(JsonField.ofNullable(reference))
 
+        /** The ID of the API key that made the link, or empty when a dashboard session made it. */
+        fun apiKeyId(apiKeyId: String?) = apiKeyId(JsonField.ofNullable(apiKeyId))
+
         /** Alias for calling [Builder.reference] with `reference.orElse(null)`. */
         fun reference(reference: Optional<String>) = reference(reference.getOrNull())
 
+        /** Alias for calling [Builder.apiKeyId] with `apiKeyId.orElse(null)`. */
+        fun apiKeyId(apiKeyId: Optional<String>) = apiKeyId(apiKeyId.getOrNull())
+
         /** Sets [Builder.reference] to an arbitrary JSON value. */
         fun reference(reference: JsonField<String>) = apply { this.reference = reference }
+
+        /** Sets [Builder.apiKeyId] to an arbitrary JSON value. */
+        fun apiKeyId(apiKeyId: JsonField<String>) = apply { this.apiKeyId = apiKeyId }
 
         fun returnUrl(returnUrl: String?) = returnUrl(JsonField.ofNullable(returnUrl))
 
@@ -519,6 +547,7 @@ private constructor(
                 object_,
                 checkRequired("purpose", purpose),
                 checkRequired("reference", reference),
+                apiKeyId,
                 checkRequired("returnUrl", returnUrl),
                 checkRequired("status", status),
                 checkRequired("xUserId", xUserId),
@@ -557,6 +586,7 @@ private constructor(
         }
         purpose().validate()
         reference()
+        apiKeyId()
         returnUrl()
         status().validate()
         xUserId()
@@ -585,6 +615,7 @@ private constructor(
             object_.let { if (it == JsonValue.from("x_account_connection_link")) 1 else 0 } +
             (purpose.asKnown().getOrNull()?.validity() ?: 0) +
             (if (reference.asKnown().isPresent) 1 else 0) +
+            (if (apiKeyId.asKnown().isPresent) 1 else 0) +
             (if (returnUrl.asKnown().isPresent) 1 else 0) +
             (status.asKnown().getOrNull()?.validity() ?: 0) +
             (if (xUserId.asKnown().isPresent) 1 else 0) +
@@ -607,6 +638,7 @@ private constructor(
             object_ == other.object_ &&
             purpose == other.purpose &&
             reference == other.reference &&
+            apiKeyId == other.apiKeyId &&
             returnUrl == other.returnUrl &&
             status == other.status &&
             xUserId == other.xUserId &&
@@ -627,6 +659,7 @@ private constructor(
             object_,
             purpose,
             reference,
+            apiKeyId,
             returnUrl,
             status,
             xUserId,
@@ -639,5 +672,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "AccountConnectionLinkCreateResponse{id=$id, accountId=$accountId, completedAt=$completedAt, createdAt=$createdAt, expiresAt=$expiresAt, failure=$failure, health=$health, object_=$object_, purpose=$purpose, reference=$reference, returnUrl=$returnUrl, status=$status, xUserId=$xUserId, xUsername=$xUsername, url=$url, additionalProperties=$additionalProperties}"
+        "AccountConnectionLinkCreateResponse{id=$id, accountId=$accountId, completedAt=$completedAt, createdAt=$createdAt, expiresAt=$expiresAt, failure=$failure, health=$health, object_=$object_, purpose=$purpose, reference=$reference, apiKeyId=$apiKeyId, returnUrl=$returnUrl, status=$status, xUserId=$xUserId, xUsername=$xUsername, url=$url, additionalProperties=$additionalProperties}"
 }

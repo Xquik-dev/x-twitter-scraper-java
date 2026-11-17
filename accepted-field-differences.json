@@ -100,6 +100,8 @@
       "GET /api/v1/support/tickets response required hasMore",
       "GET /api/v1/webhooks response required hasMore",
       "GET /api/v1/webhooks/{id}/deliveries response required hasMore",
+      "GET /api/v1/x/account-connection-links response required links[].apiKeyId",
+      "GET /api/v1/x/account-connection-links/{id} response required apiKeyId",
       "GET /api/v1/x/bookmarks/folders response required folders[].name",
       "GET /api/v1/x/communities/find response required communities[].creator.verified",
       "GET /api/v1/x/communities/popular response required communities[].creator.verified",
@@ -236,7 +238,8 @@
       "POST /api/v1/x/account-connection-challenges/{id}/submit response required createdAt",
       "POST /api/v1/x/account-connection-challenges/{id}/submit response required health",
       "POST /api/v1/x/account-connection-challenges/{id}/submit response required xUserId",
-      "POST /api/v1/x/account-connection-challenges/{id}/submit response required xUsername"
+      "POST /api/v1/x/account-connection-challenges/{id}/submit response required xUsername",
+      "POST /api/v1/x/account-connection-links response required apiKeyId"
     ]
   },
   {
