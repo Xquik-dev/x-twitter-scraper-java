@@ -139,6 +139,40 @@ private constructor(
     fun repliesTo(): Optional<String> = body.repliesTo()
 
     /**
+     * Analyze 1 post's thread, as /x/tweets/{id}/thread reads it. Send the post's ID or URL. Send
+     * no other posts or search with it.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun threadOf(): Optional<String> = body.threadOf()
+
+    /**
+     * Analyze 1 account's posts & replies, as its Replies tab shows them. /x/users/{id}/replies
+     * reads the same posts. Send a handle, with or without @, a user ID or a profile URL. Send no
+     * other posts or search with it.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun repliesBy(): Optional<String> = body.repliesBy()
+
+    /**
+     * Analyze 1 account's posts with photos or videos, as its Media tab shows them.
+     * /x/users/{id}/media reads the same posts. Send a handle, with or without @, a user ID or a
+     * profile URL. Send no other posts or search with it.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun mediaBy(): Optional<String> = body.mediaBy()
+
+    /**
+     * Analyze the posts 1 account liked, as /x/users/{id}/likes reads them. Send a handle, with or
+     * without @, a user ID or a profile URL. Send no other posts or search with it.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun likedBy(): Optional<String> = body.likedBy()
+
+    /**
      * Inclusive start of the search, such as 2026-09-25T00:00:00Z. Unix seconds also work. A time
      * without an offset is UTC.
      *
@@ -160,6 +194,31 @@ private constructor(
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun tweetIds(): Optional<List<String>> = body.tweetIds()
+
+    /**
+     * Analyze the posts of several accounts in 1 search. Send handles, with or without @, or
+     * profile URLs. username, when sent, joins them.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun usernames(): Optional<List<String>> = body.usernames()
+
+    /**
+     * Analyze the posts of several public Lists in 1 search. Send their IDs or URLs. listId, when
+     * sent, joins them.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun listIds(): Optional<List<String>> = body.listIds()
+
+    /**
+     * X searches to analyze as 1 search. A post matching any of them counts. Each takes the
+     * operators of query. query, when sent, joins them. X searches up to 512 characters, counted
+     * with the other search fields.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun queries(): Optional<List<String>> = body.queries()
 
     /**
      * Exclusive end of the search, such as 2026-09-26T00:00:00Z. Unix seconds also work. A time
@@ -254,6 +313,34 @@ private constructor(
     fun _repliesTo(): JsonField<String> = body._repliesTo()
 
     /**
+     * Returns the raw JSON value of [threadOf].
+     *
+     * Unlike [threadOf], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _threadOf(): JsonField<String> = body._threadOf()
+
+    /**
+     * Returns the raw JSON value of [repliesBy].
+     *
+     * Unlike [repliesBy], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _repliesBy(): JsonField<String> = body._repliesBy()
+
+    /**
+     * Returns the raw JSON value of [mediaBy].
+     *
+     * Unlike [mediaBy], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _mediaBy(): JsonField<String> = body._mediaBy()
+
+    /**
+     * Returns the raw JSON value of [likedBy].
+     *
+     * Unlike [likedBy], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _likedBy(): JsonField<String> = body._likedBy()
+
+    /**
      * Returns the raw JSON value of [sinceTime].
      *
      * Unlike [sinceTime], this method doesn't throw if the JSON field has an unexpected type.
@@ -273,6 +360,27 @@ private constructor(
      * Unlike [tweetIds], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _tweetIds(): JsonField<List<String>> = body._tweetIds()
+
+    /**
+     * Returns the raw JSON value of [usernames].
+     *
+     * Unlike [usernames], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _usernames(): JsonField<List<String>> = body._usernames()
+
+    /**
+     * Returns the raw JSON value of [listIds].
+     *
+     * Unlike [listIds], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _listIds(): JsonField<List<String>> = body._listIds()
+
+    /**
+     * Returns the raw JSON value of [queries].
+     *
+     * Unlike [queries], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _queries(): JsonField<List<String>> = body._queries()
 
     /**
      * Returns the raw JSON value of [untilTime].
@@ -416,8 +524,46 @@ private constructor(
         /** Analyze the replies in 1 post's conversation. Send its ID or URL. */
         fun repliesTo(repliesTo: String) = apply { body.repliesTo(repliesTo) }
 
+        /**
+         * Analyze 1 post's thread, as /x/tweets/{id}/thread reads it. Send the post's ID or URL.
+         * Send no other posts or search with it.
+         */
+        fun threadOf(threadOf: String) = apply { body.threadOf(threadOf) }
+
+        /**
+         * Analyze 1 account's posts & replies, as its Replies tab shows them. /x/users/{id}/replies
+         * reads the same posts. Send a handle, with or without @, a user ID or a profile URL. Send
+         * no other posts or search with it.
+         */
+        fun repliesBy(repliesBy: String) = apply { body.repliesBy(repliesBy) }
+
+        /**
+         * Analyze 1 account's posts with photos or videos, as its Media tab shows them.
+         * /x/users/{id}/media reads the same posts. Send a handle, with or without @, a user ID or
+         * a profile URL. Send no other posts or search with it.
+         */
+        fun mediaBy(mediaBy: String) = apply { body.mediaBy(mediaBy) }
+
+        /**
+         * Analyze the posts 1 account liked, as /x/users/{id}/likes reads them. Send a handle, with
+         * or without @, a user ID or a profile URL. Send no other posts or search with it.
+         */
+        fun likedBy(likedBy: String) = apply { body.likedBy(likedBy) }
+
         /** Sets [Builder.repliesTo] to an arbitrary JSON value. */
         fun repliesTo(repliesTo: JsonField<String>) = apply { body.repliesTo(repliesTo) }
+
+        /** Sets [Builder.threadOf] to an arbitrary JSON value. */
+        fun threadOf(threadOf: JsonField<String>) = apply { body.threadOf(threadOf) }
+
+        /** Sets [Builder.repliesBy] to an arbitrary JSON value. */
+        fun repliesBy(repliesBy: JsonField<String>) = apply { body.repliesBy(repliesBy) }
+
+        /** Sets [Builder.mediaBy] to an arbitrary JSON value. */
+        fun mediaBy(mediaBy: JsonField<String>) = apply { body.mediaBy(mediaBy) }
+
+        /** Sets [Builder.likedBy] to an arbitrary JSON value. */
+        fun likedBy(likedBy: JsonField<String>) = apply { body.likedBy(likedBy) }
 
         /**
          * Inclusive start of the search, such as 2026-09-25T00:00:00Z. Unix seconds also work. A
@@ -453,8 +599,36 @@ private constructor(
         /** Post IDs or post URLs to analyze, up to 100. */
         fun tweetIds(tweetIds: List<String>) = apply { body.tweetIds(tweetIds) }
 
+        /**
+         * Analyze the posts of several accounts in 1 search. Send handles, with or without @, or
+         * profile URLs. username, when sent, joins them.
+         */
+        fun usernames(usernames: List<String>) = apply { body.usernames(usernames) }
+
+        /**
+         * Analyze the posts of several public Lists in 1 search. Send their IDs or URLs. listId,
+         * when sent, joins them.
+         */
+        fun listIds(listIds: List<String>) = apply { body.listIds(listIds) }
+
+        /**
+         * X searches to analyze as 1 search. A post matching any of them counts. Each takes the
+         * operators of query. query, when sent, joins them. X searches up to 512 characters,
+         * counted with the other search fields.
+         */
+        fun queries(queries: List<String>) = apply { body.queries(queries) }
+
         /** Sets [Builder.tweetIds] to an arbitrary JSON value. */
         fun tweetIds(tweetIds: JsonField<List<String>>) = apply { body.tweetIds(tweetIds) }
+
+        /** Sets [Builder.usernames] to an arbitrary JSON value. */
+        fun usernames(usernames: JsonField<List<String>>) = apply { body.usernames(usernames) }
+
+        /** Sets [Builder.listIds] to an arbitrary JSON value. */
+        fun listIds(listIds: JsonField<List<String>>) = apply { body.listIds(listIds) }
+
+        /** Sets [Builder.queries] to an arbitrary JSON value. */
+        fun queries(queries: JsonField<List<String>>) = apply { body.queries(queries) }
 
         /**
          * Adds a single [String] to [tweetIds].
@@ -462,6 +636,27 @@ private constructor(
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
         fun addTweetId(tweetId: String) = apply { body.addTweetId(tweetId) }
+
+        /**
+         * Adds a single [String] to [usernames].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addUsername(username: String) = apply { body.addUsername(username) }
+
+        /**
+         * Adds a single [String] to [listIds].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addListId(listId: String) = apply { body.addListId(listId) }
+
+        /**
+         * Adds a single [String] to [queries].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addQuery(query: String) = apply { body.addQuery(query) }
 
         /**
          * Exclusive end of the search, such as 2026-09-26T00:00:00Z. Unix seconds also work. A time
@@ -639,9 +834,16 @@ private constructor(
         private val imageShows: JsonField<String>,
         private val quotesOf: JsonField<String>,
         private val repliesTo: JsonField<String>,
+        private val threadOf: JsonField<String>,
+        private val repliesBy: JsonField<String>,
+        private val mediaBy: JsonField<String>,
+        private val likedBy: JsonField<String>,
         private val sinceTime: JsonField<SinceTime>,
         private val texts: JsonField<List<String>>,
         private val tweetIds: JsonField<List<String>>,
+        private val usernames: JsonField<List<String>>,
+        private val listIds: JsonField<List<String>>,
+        private val queries: JsonField<List<String>>,
         private val untilTime: JsonField<UntilTime>,
         private val username: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -672,6 +874,14 @@ private constructor(
             @JsonProperty("repliesTo")
             @ExcludeMissing
             repliesTo: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("threadOf")
+            @ExcludeMissing
+            threadOf: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("repliesBy")
+            @ExcludeMissing
+            repliesBy: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("mediaBy") @ExcludeMissing mediaBy: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("likedBy") @ExcludeMissing likedBy: JsonField<String> = JsonMissing.of(),
             @JsonProperty("sinceTime")
             @ExcludeMissing
             sinceTime: JsonField<SinceTime> = JsonMissing.of(),
@@ -681,6 +891,15 @@ private constructor(
             @JsonProperty("tweetIds")
             @ExcludeMissing
             tweetIds: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("usernames")
+            @ExcludeMissing
+            usernames: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("listIds")
+            @ExcludeMissing
+            listIds: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("queries")
+            @ExcludeMissing
+            queries: JsonField<List<String>> = JsonMissing.of(),
             @JsonProperty("untilTime")
             @ExcludeMissing
             untilTime: JsonField<UntilTime> = JsonMissing.of(),
@@ -699,9 +918,16 @@ private constructor(
             imageShows,
             quotesOf,
             repliesTo,
+            threadOf,
+            repliesBy,
+            mediaBy,
+            likedBy,
             sinceTime,
             texts,
             tweetIds,
+            usernames,
+            listIds,
+            queries,
             untilTime,
             username,
             mutableMapOf(),
@@ -798,6 +1024,40 @@ private constructor(
         fun repliesTo(): Optional<String> = repliesTo.getOptional("repliesTo")
 
         /**
+         * Analyze 1 post's thread, as /x/tweets/{id}/thread reads it. Send the post's ID or URL.
+         * Send no other posts or search with it.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun threadOf(): Optional<String> = threadOf.getOptional("threadOf")
+
+        /**
+         * Analyze 1 account's posts & replies, as its Replies tab shows them. /x/users/{id}/replies
+         * reads the same posts. Send a handle, with or without @, a user ID or a profile URL. Send
+         * no other posts or search with it.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun repliesBy(): Optional<String> = repliesBy.getOptional("repliesBy")
+
+        /**
+         * Analyze 1 account's posts with photos or videos, as its Media tab shows them.
+         * /x/users/{id}/media reads the same posts. Send a handle, with or without @, a user ID or
+         * a profile URL. Send no other posts or search with it.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun mediaBy(): Optional<String> = mediaBy.getOptional("mediaBy")
+
+        /**
+         * Analyze the posts 1 account liked, as /x/users/{id}/likes reads them. Send a handle, with
+         * or without @, a user ID or a profile URL. Send no other posts or search with it.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun likedBy(): Optional<String> = likedBy.getOptional("likedBy")
+
+        /**
          * Inclusive start of the search, such as 2026-09-25T00:00:00Z. Unix seconds also work. A
          * time without an offset is UTC.
          *
@@ -819,6 +1079,31 @@ private constructor(
          * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
          */
         fun tweetIds(): Optional<List<String>> = tweetIds.getOptional("tweetIds")
+
+        /**
+         * Analyze the posts of several accounts in 1 search. Send handles, with or without @, or
+         * profile URLs. username, when sent, joins them.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun usernames(): Optional<List<String>> = usernames.getOptional("usernames")
+
+        /**
+         * Analyze the posts of several public Lists in 1 search. Send their IDs or URLs. listId,
+         * when sent, joins them.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun listIds(): Optional<List<String>> = listIds.getOptional("listIds")
+
+        /**
+         * X searches to analyze as 1 search. A post matching any of them counts. Each takes the
+         * operators of query. query, when sent, joins them. X searches up to 512 characters,
+         * counted with the other search fields.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun queries(): Optional<List<String>> = queries.getOptional("queries")
 
         /**
          * Exclusive end of the search, such as 2026-09-26T00:00:00Z. Unix seconds also work. A time
@@ -919,6 +1204,34 @@ private constructor(
         @JsonProperty("repliesTo") @ExcludeMissing fun _repliesTo(): JsonField<String> = repliesTo
 
         /**
+         * Returns the raw JSON value of [threadOf].
+         *
+         * Unlike [threadOf], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("threadOf") @ExcludeMissing fun _threadOf(): JsonField<String> = threadOf
+
+        /**
+         * Returns the raw JSON value of [repliesBy].
+         *
+         * Unlike [repliesBy], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("repliesBy") @ExcludeMissing fun _repliesBy(): JsonField<String> = repliesBy
+
+        /**
+         * Returns the raw JSON value of [mediaBy].
+         *
+         * Unlike [mediaBy], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("mediaBy") @ExcludeMissing fun _mediaBy(): JsonField<String> = mediaBy
+
+        /**
+         * Returns the raw JSON value of [likedBy].
+         *
+         * Unlike [likedBy], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("likedBy") @ExcludeMissing fun _likedBy(): JsonField<String> = likedBy
+
+        /**
          * Returns the raw JSON value of [sinceTime].
          *
          * Unlike [sinceTime], this method doesn't throw if the JSON field has an unexpected type.
@@ -942,6 +1255,29 @@ private constructor(
         @JsonProperty("tweetIds")
         @ExcludeMissing
         fun _tweetIds(): JsonField<List<String>> = tweetIds
+
+        /**
+         * Returns the raw JSON value of [usernames].
+         *
+         * Unlike [usernames], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("usernames")
+        @ExcludeMissing
+        fun _usernames(): JsonField<List<String>> = usernames
+
+        /**
+         * Returns the raw JSON value of [listIds].
+         *
+         * Unlike [listIds], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("listIds") @ExcludeMissing fun _listIds(): JsonField<List<String>> = listIds
+
+        /**
+         * Returns the raw JSON value of [queries].
+         *
+         * Unlike [queries], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("queries") @ExcludeMissing fun _queries(): JsonField<List<String>> = queries
 
         /**
          * Returns the raw JSON value of [untilTime].
@@ -991,9 +1327,16 @@ private constructor(
             private var imageShows: JsonField<String> = JsonMissing.of()
             private var quotesOf: JsonField<String> = JsonMissing.of()
             private var repliesTo: JsonField<String> = JsonMissing.of()
+            private var threadOf: JsonField<String> = JsonMissing.of()
+            private var repliesBy: JsonField<String> = JsonMissing.of()
+            private var mediaBy: JsonField<String> = JsonMissing.of()
+            private var likedBy: JsonField<String> = JsonMissing.of()
             private var sinceTime: JsonField<SinceTime> = JsonMissing.of()
             private var texts: JsonField<MutableList<String>>? = null
             private var tweetIds: JsonField<MutableList<String>>? = null
+            private var usernames: JsonField<MutableList<String>>? = null
+            private var listIds: JsonField<MutableList<String>>? = null
+            private var queries: JsonField<MutableList<String>>? = null
             private var untilTime: JsonField<UntilTime> = JsonMissing.of()
             private var username: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -1011,9 +1354,16 @@ private constructor(
                 imageShows = body.imageShows
                 quotesOf = body.quotesOf
                 repliesTo = body.repliesTo
+                threadOf = body.threadOf
+                repliesBy = body.repliesBy
+                mediaBy = body.mediaBy
+                likedBy = body.likedBy
                 sinceTime = body.sinceTime
                 texts = body.texts.map { it.toMutableList() }
                 tweetIds = body.tweetIds.map { it.toMutableList() }
+                usernames = body.usernames.map { it.toMutableList() }
+                listIds = body.listIds.map { it.toMutableList() }
+                queries = body.queries.map { it.toMutableList() }
                 untilTime = body.untilTime
                 username = body.username
                 additionalProperties = body.additionalProperties.toMutableMap()
@@ -1121,8 +1471,46 @@ private constructor(
             /** Analyze the replies in 1 post's conversation. Send its ID or URL. */
             fun repliesTo(repliesTo: String) = repliesTo(JsonField.of(repliesTo))
 
+            /**
+             * Analyze 1 post's thread, as /x/tweets/{id}/thread reads it. Send the post's ID or
+             * URL. Send no other posts or search with it.
+             */
+            fun threadOf(threadOf: String) = threadOf(JsonField.of(threadOf))
+
+            /**
+             * Analyze 1 account's posts & replies, as its Replies tab shows them.
+             * /x/users/{id}/replies reads the same posts. Send a handle, with or without @, a user
+             * ID or a profile URL. Send no other posts or search with it.
+             */
+            fun repliesBy(repliesBy: String) = repliesBy(JsonField.of(repliesBy))
+
+            /**
+             * Analyze 1 account's posts with photos or videos, as its Media tab shows them.
+             * /x/users/{id}/media reads the same posts. Send a handle, with or without @, a user ID
+             * or a profile URL. Send no other posts or search with it.
+             */
+            fun mediaBy(mediaBy: String) = mediaBy(JsonField.of(mediaBy))
+
+            /**
+             * Analyze the posts 1 account liked, as /x/users/{id}/likes reads them. Send a handle,
+             * with or without @, a user ID or a profile URL. Send no other posts or search with it.
+             */
+            fun likedBy(likedBy: String) = likedBy(JsonField.of(likedBy))
+
             /** Sets [Builder.repliesTo] to an arbitrary JSON value. */
             fun repliesTo(repliesTo: JsonField<String>) = apply { this.repliesTo = repliesTo }
+
+            /** Sets [Builder.threadOf] to an arbitrary JSON value. */
+            fun threadOf(threadOf: JsonField<String>) = apply { this.threadOf = threadOf }
+
+            /** Sets [Builder.repliesBy] to an arbitrary JSON value. */
+            fun repliesBy(repliesBy: JsonField<String>) = apply { this.repliesBy = repliesBy }
+
+            /** Sets [Builder.mediaBy] to an arbitrary JSON value. */
+            fun mediaBy(mediaBy: JsonField<String>) = apply { this.mediaBy = mediaBy }
+
+            /** Sets [Builder.likedBy] to an arbitrary JSON value. */
+            fun likedBy(likedBy: JsonField<String>) = apply { this.likedBy = likedBy }
 
             /**
              * Inclusive start of the search, such as 2026-09-25T00:00:00Z. Unix seconds also work.
@@ -1165,9 +1553,43 @@ private constructor(
             /** Post IDs or post URLs to analyze, up to 100. */
             fun tweetIds(tweetIds: List<String>) = tweetIds(JsonField.of(tweetIds))
 
+            /**
+             * Analyze the posts of several accounts in 1 search. Send handles, with or without @,
+             * or profile URLs. username, when sent, joins them.
+             */
+            fun usernames(usernames: List<String>) = usernames(JsonField.of(usernames))
+
+            /**
+             * Analyze the posts of several public Lists in 1 search. Send their IDs or URLs.
+             * listId, when sent, joins them.
+             */
+            fun listIds(listIds: List<String>) = listIds(JsonField.of(listIds))
+
+            /**
+             * X searches to analyze as 1 search. A post matching any of them counts. Each takes the
+             * operators of query. query, when sent, joins them. X searches up to 512 characters,
+             * counted with the other search fields.
+             */
+            fun queries(queries: List<String>) = queries(JsonField.of(queries))
+
             /** Sets [Builder.tweetIds] to an arbitrary JSON value. */
             fun tweetIds(tweetIds: JsonField<List<String>>) = apply {
                 this.tweetIds = tweetIds.map { it.toMutableList() }
+            }
+
+            /** Sets [Builder.usernames] to an arbitrary JSON value. */
+            fun usernames(usernames: JsonField<List<String>>) = apply {
+                this.usernames = usernames.map { it.toMutableList() }
+            }
+
+            /** Sets [Builder.listIds] to an arbitrary JSON value. */
+            fun listIds(listIds: JsonField<List<String>>) = apply {
+                this.listIds = listIds.map { it.toMutableList() }
+            }
+
+            /** Sets [Builder.queries] to an arbitrary JSON value. */
+            fun queries(queries: JsonField<List<String>>) = apply {
+                this.queries = queries.map { it.toMutableList() }
             }
 
             /**
@@ -1179,6 +1601,42 @@ private constructor(
                 tweetIds =
                     (tweetIds ?: JsonField.of(mutableListOf())).also {
                         checkKnown("tweetIds", it).add(tweetId)
+                    }
+            }
+
+            /**
+             * Adds a single [String] to [usernames].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addUsername(username: String) = apply {
+                usernames =
+                    (usernames ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("usernames", it).add(username)
+                    }
+            }
+
+            /**
+             * Adds a single [String] to [listIds].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addListId(listId: String) = apply {
+                listIds =
+                    (listIds ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("listIds", it).add(listId)
+                    }
+            }
+
+            /**
+             * Adds a single [String] to [queries].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addQuery(query: String) = apply {
+                queries =
+                    (queries ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("queries", it).add(query)
                     }
             }
 
@@ -1240,9 +1698,16 @@ private constructor(
                     imageShows,
                     quotesOf,
                     repliesTo,
+                    threadOf,
+                    repliesBy,
+                    mediaBy,
+                    likedBy,
                     sinceTime,
                     (texts ?: JsonMissing.of()).map { it.toImmutable() },
                     (tweetIds ?: JsonMissing.of()).map { it.toImmutable() },
+                    (usernames ?: JsonMissing.of()).map { it.toImmutable() },
+                    (listIds ?: JsonMissing.of()).map { it.toImmutable() },
+                    (queries ?: JsonMissing.of()).map { it.toImmutable() },
                     untilTime,
                     username,
                     additionalProperties.toMutableMap(),
@@ -1276,9 +1741,16 @@ private constructor(
             imageShows()
             quotesOf()
             repliesTo()
+            threadOf()
+            repliesBy()
+            mediaBy()
+            likedBy()
             sinceTime().ifPresent { it.validate() }
             texts()
             tweetIds()
+            usernames()
+            listIds()
+            queries()
             untilTime().ifPresent { it.validate() }
             username()
             validated = true
@@ -1305,9 +1777,16 @@ private constructor(
                 (if (imageShows.asKnown().isPresent) 1 else 0) +
                 (if (quotesOf.asKnown().isPresent) 1 else 0) +
                 (if (repliesTo.asKnown().isPresent) 1 else 0) +
+                (if (threadOf.asKnown().isPresent) 1 else 0) +
+                (if (repliesBy.asKnown().isPresent) 1 else 0) +
+                (if (mediaBy.asKnown().isPresent) 1 else 0) +
+                (if (likedBy.asKnown().isPresent) 1 else 0) +
                 (sinceTime.asKnown().getOrNull()?.validity() ?: 0) +
                 (texts.asKnown().getOrNull()?.size ?: 0) +
                 (tweetIds.asKnown().getOrNull()?.size ?: 0) +
+                (usernames.asKnown().getOrNull()?.size ?: 0) +
+                (listIds.asKnown().getOrNull()?.size ?: 0) +
+                (queries.asKnown().getOrNull()?.size ?: 0) +
                 (untilTime.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (username.asKnown().isPresent) 1 else 0)
 
@@ -1328,9 +1807,16 @@ private constructor(
                 imageShows == other.imageShows &&
                 quotesOf == other.quotesOf &&
                 repliesTo == other.repliesTo &&
+                threadOf == other.threadOf &&
+                repliesBy == other.repliesBy &&
+                mediaBy == other.mediaBy &&
+                likedBy == other.likedBy &&
                 sinceTime == other.sinceTime &&
                 texts == other.texts &&
                 tweetIds == other.tweetIds &&
+                usernames == other.usernames &&
+                listIds == other.listIds &&
+                queries == other.queries &&
                 untilTime == other.untilTime &&
                 username == other.username &&
                 additionalProperties == other.additionalProperties
@@ -1349,9 +1835,16 @@ private constructor(
                 imageShows,
                 quotesOf,
                 repliesTo,
+                threadOf,
+                repliesBy,
+                mediaBy,
+                likedBy,
                 sinceTime,
                 texts,
                 tweetIds,
+                usernames,
+                listIds,
+                queries,
                 untilTime,
                 username,
                 additionalProperties,
@@ -1361,7 +1854,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{analysis=$analysis, baseline=$baseline, cursor=$cursor, limit=$limit, listId=$listId, query=$query, queryType=$queryType, topic=$topic, imageShows=$imageShows, quotesOf=$quotesOf, repliesTo=$repliesTo, sinceTime=$sinceTime, texts=$texts, tweetIds=$tweetIds, untilTime=$untilTime, username=$username, additionalProperties=$additionalProperties}"
+            "Body{analysis=$analysis, baseline=$baseline, cursor=$cursor, limit=$limit, listId=$listId, query=$query, queryType=$queryType, topic=$topic, imageShows=$imageShows, quotesOf=$quotesOf, repliesTo=$repliesTo, threadOf=$threadOf, repliesBy=$repliesBy, mediaBy=$mediaBy, likedBy=$likedBy, sinceTime=$sinceTime, texts=$texts, tweetIds=$tweetIds, usernames=$usernames, listIds=$listIds, queries=$queries, untilTime=$untilTime, username=$username, additionalProperties=$additionalProperties}"
     }
 
     /**
