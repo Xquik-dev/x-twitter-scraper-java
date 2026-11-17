@@ -39,6 +39,7 @@ private constructor(
     private val searchContext: JsonField<SearchContext>,
     private val searchedQuery: JsonField<String>,
     private val hiddenTimeline: JsonField<Boolean>,
+    private val endReason: JsonField<CoverageEndReason>,
     private val windowComplete: JsonField<Boolean>,
     private val skipped: JsonField<List<Skipped>>,
     private val topicFilter: JsonField<TopicFilterSummary>,
@@ -72,6 +73,9 @@ private constructor(
         @JsonProperty("hiddenTimeline")
         @ExcludeMissing
         hiddenTimeline: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("endReason")
+        @ExcludeMissing
+        endReason: JsonField<CoverageEndReason> = JsonMissing.of(),
         @JsonProperty("windowComplete")
         @ExcludeMissing
         windowComplete: JsonField<Boolean> = JsonMissing.of(),
@@ -93,6 +97,7 @@ private constructor(
         searchContext,
         searchedQuery,
         hiddenTimeline,
+        endReason,
         windowComplete,
         skipped,
         topicFilter,
@@ -152,6 +157,14 @@ private constructor(
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun hiddenTimeline(): Optional<Boolean> = hiddenTimeline.getOptional("hiddenTimeline")
+
+    /**
+     * Present on a last page that X cut short. `stalled` means X returned no new results 2 times in
+     * a row, 30 s apart. The list may hold more. Read it again later without cursor.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun endReason(): Optional<CoverageEndReason> = endReason.getOptional("endReason")
 
     /**
      * Present on a last page whose sources all read past its start time.
@@ -230,6 +243,15 @@ private constructor(
     @JsonProperty("hiddenTimeline")
     @ExcludeMissing
     fun _hiddenTimeline(): JsonField<Boolean> = hiddenTimeline
+
+    /**
+     * Returns the raw JSON value of [endReason].
+     *
+     * Unlike [endReason], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("endReason")
+    @ExcludeMissing
+    fun _endReason(): JsonField<CoverageEndReason> = endReason
 
     /**
      * Returns the raw JSON value of [windowComplete].
@@ -318,6 +340,7 @@ private constructor(
         private var searchContext: JsonField<SearchContext> = JsonMissing.of()
         private var searchedQuery: JsonField<String> = JsonMissing.of()
         private var hiddenTimeline: JsonField<Boolean> = JsonMissing.of()
+        private var endReason: JsonField<CoverageEndReason> = JsonMissing.of()
         private var windowComplete: JsonField<Boolean> = JsonMissing.of()
         private var skipped: JsonField<MutableList<Skipped>>? = null
         private var topicFilter: JsonField<TopicFilterSummary> = JsonMissing.of()
@@ -334,6 +357,7 @@ private constructor(
             searchContext = paginatedTweets.searchContext
             searchedQuery = paginatedTweets.searchedQuery
             hiddenTimeline = paginatedTweets.hiddenTimeline
+            endReason = paginatedTweets.endReason
             windowComplete = paginatedTweets.windowComplete
             skipped = paginatedTweets.skipped.map { it.toMutableList() }
             topicFilter = paginatedTweets.topicFilter
@@ -414,12 +438,23 @@ private constructor(
          */
         fun hiddenTimeline(hiddenTimeline: Boolean) = hiddenTimeline(JsonField.of(hiddenTimeline))
 
+        /**
+         * Present on a last page that X cut short. `stalled` means X returned no new results 2
+         * times in a row, 30 s apart. The list may hold more. Read it again later without cursor.
+         */
+        fun endReason(endReason: CoverageEndReason) = endReason(JsonField.of(endReason))
+
         /** Present on a last page whose sources all read past its start time. */
         fun windowComplete(windowComplete: Boolean) = windowComplete(JsonField.of(windowComplete))
 
         /** Sets [Builder.hiddenTimeline] to an arbitrary JSON value. */
         fun hiddenTimeline(hiddenTimeline: JsonField<Boolean>) = apply {
             this.hiddenTimeline = hiddenTimeline
+        }
+
+        /** Sets [Builder.endReason] to an arbitrary JSON value. */
+        fun endReason(endReason: JsonField<CoverageEndReason>) = apply {
+            this.endReason = endReason
         }
 
         /** Sets [Builder.windowComplete] to an arbitrary JSON value. */
@@ -523,6 +558,7 @@ private constructor(
                 searchContext,
                 searchedQuery,
                 hiddenTimeline,
+                endReason,
                 windowComplete,
                 (skipped ?: JsonMissing.of()).map { it.toImmutable() },
                 topicFilter,
@@ -554,6 +590,7 @@ private constructor(
         searchContext().ifPresent { it.validate() }
         searchedQuery()
         hiddenTimeline()
+        endReason().ifPresent { it.validate() }
         windowComplete()
         skipped().ifPresent { it.forEach { it.validate() } }
         topicFilter().ifPresent { it.validate() }
@@ -579,6 +616,7 @@ private constructor(
             (searchContext.asKnown().getOrNull()?.validity() ?: 0) +
             (if (searchedQuery.asKnown().isPresent) 1 else 0) +
             (if (hiddenTimeline.asKnown().isPresent) 1 else 0) +
+            (endReason.asKnown().getOrNull()?.validity() ?: 0) +
             (if (windowComplete.asKnown().isPresent) 1 else 0) +
             (skipped.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (topicFilter.asKnown().getOrNull()?.validity() ?: 0) +
@@ -991,6 +1029,7 @@ private constructor(
             searchContext == other.searchContext &&
             searchedQuery == other.searchedQuery &&
             hiddenTimeline == other.hiddenTimeline &&
+            endReason == other.endReason &&
             windowComplete == other.windowComplete &&
             skipped == other.skipped &&
             topicFilter == other.topicFilter &&
@@ -1008,6 +1047,7 @@ private constructor(
             searchContext,
             searchedQuery,
             hiddenTimeline,
+            endReason,
             windowComplete,
             skipped,
             topicFilter,
@@ -1019,7 +1059,7 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "PaginatedTweets{hasNextPage=$hasNextPage, nextCursor=$nextCursor, tweets=$tweets, filteredCount=$filteredCount, readBackTo=$readBackTo, searchContext=$searchContext, searchedQuery=$searchedQuery, hiddenTimeline=$hiddenTimeline, windowComplete=$windowComplete, skipped=$skipped, topicFilter=$topicFilter, imageFilter=$imageFilter, additionalProperties=$additionalProperties}"
+        "PaginatedTweets{hasNextPage=$hasNextPage, nextCursor=$nextCursor, tweets=$tweets, filteredCount=$filteredCount, readBackTo=$readBackTo, searchContext=$searchContext, searchedQuery=$searchedQuery, hiddenTimeline=$hiddenTimeline, endReason=$endReason, windowComplete=$windowComplete, skipped=$skipped, topicFilter=$topicFilter, imageFilter=$imageFilter, additionalProperties=$additionalProperties}"
 
     class Skipped
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)

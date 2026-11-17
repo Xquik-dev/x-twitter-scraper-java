@@ -38,6 +38,7 @@ private constructor(
     private val scanLimit: JsonField<ScanLimit>,
     private val diagnostic: JsonField<Diagnostic>,
     private val windowComplete: JsonField<Boolean>,
+    private val endReason: JsonField<CoverageEndReason>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -64,6 +65,9 @@ private constructor(
         @JsonProperty("windowComplete")
         @ExcludeMissing
         windowComplete: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("endReason")
+        @ExcludeMissing
+        endReason: JsonField<CoverageEndReason> = JsonMissing.of(),
     ) : this(
         hasNextPage,
         nextCursor,
@@ -72,6 +76,7 @@ private constructor(
         scanLimit,
         diagnostic,
         windowComplete,
+        endReason,
         mutableMapOf(),
     )
 
@@ -108,6 +113,14 @@ private constructor(
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun windowComplete(): Optional<Boolean> = windowComplete.getOptional("windowComplete")
+
+    /**
+     * Present on a last page that X cut short. `stalled` means X returned no new results 2 times in
+     * a row, 30 s apart. The list may hold more. Read it again later without cursor.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun endReason(): Optional<CoverageEndReason> = endReason.getOptional("endReason")
 
     /**
      * Returns the raw JSON value of [hasNextPage].
@@ -166,6 +179,15 @@ private constructor(
     @ExcludeMissing
     fun _windowComplete(): JsonField<Boolean> = windowComplete
 
+    /**
+     * Returns the raw JSON value of [endReason].
+     *
+     * Unlike [endReason], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("endReason")
+    @ExcludeMissing
+    fun _endReason(): JsonField<CoverageEndReason> = endReason
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -203,6 +225,7 @@ private constructor(
         private var scanLimit: JsonField<ScanLimit> = JsonMissing.of()
         private var diagnostic: JsonField<Diagnostic> = JsonMissing.of()
         private var windowComplete: JsonField<Boolean> = JsonMissing.of()
+        private var endReason: JsonField<CoverageEndReason> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -214,6 +237,7 @@ private constructor(
             scanLimit = paginatedUsers.scanLimit
             diagnostic = paginatedUsers.diagnostic
             windowComplete = paginatedUsers.windowComplete
+            endReason = paginatedUsers.endReason
             additionalProperties = paginatedUsers.additionalProperties.toMutableMap()
         }
 
@@ -265,6 +289,12 @@ private constructor(
         fun windowComplete(windowComplete: Boolean) = windowComplete(JsonField.of(windowComplete))
 
         /**
+         * Present on a last page that X cut short. `stalled` means X returned no new results 2
+         * times in a row, 30 s apart. The list may hold more. Read it again later without cursor.
+         */
+        fun endReason(endReason: CoverageEndReason) = endReason(JsonField.of(endReason))
+
+        /**
          * Sets [Builder.windowComplete] to an arbitrary JSON value.
          *
          * You should usually call [Builder.windowComplete] with a well-typed [Boolean] value
@@ -273,6 +303,17 @@ private constructor(
          */
         fun windowComplete(windowComplete: JsonField<Boolean>) = apply {
             this.windowComplete = windowComplete
+        }
+
+        /**
+         * Sets [Builder.endReason] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.endReason] with a well-typed [CoverageEndReason] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun endReason(endReason: JsonField<CoverageEndReason>) = apply {
+            this.endReason = endReason
         }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -317,6 +358,7 @@ private constructor(
                 scanLimit,
                 diagnostic,
                 windowComplete,
+                endReason,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -343,6 +385,7 @@ private constructor(
         scanLimit().ifPresent { it.validate() }
         diagnostic().ifPresent { it.validate() }
         windowComplete()
+        endReason().ifPresent { it.validate() }
         validated = true
     }
 
@@ -362,7 +405,8 @@ private constructor(
             (if (filteredCount.asKnown().isPresent) 1 else 0) +
             (scanLimit.asKnown().getOrNull()?.validity() ?: 0) +
             (diagnostic.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (windowComplete.asKnown().isPresent) 1 else 0)
+            (if (windowComplete.asKnown().isPresent) 1 else 0) +
+            (endReason.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -377,6 +421,7 @@ private constructor(
             scanLimit == other.scanLimit &&
             diagnostic == other.diagnostic &&
             windowComplete == other.windowComplete &&
+            endReason == other.endReason &&
             additionalProperties == other.additionalProperties
     }
 
@@ -389,6 +434,7 @@ private constructor(
             scanLimit,
             diagnostic,
             windowComplete,
+            endReason,
             additionalProperties,
         )
     }
@@ -396,7 +442,7 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "PaginatedUsers{hasNextPage=$hasNextPage, nextCursor=$nextCursor, users=$users, filteredCount=$filteredCount, scanLimit=$scanLimit, diagnostic=$diagnostic, windowComplete=$windowComplete, additionalProperties=$additionalProperties}"
+        "PaginatedUsers{hasNextPage=$hasNextPage, nextCursor=$nextCursor, users=$users, filteredCount=$filteredCount, scanLimit=$scanLimit, diagnostic=$diagnostic, windowComplete=$windowComplete, endReason=$endReason, additionalProperties=$additionalProperties}"
 
     class ScanLimit
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
