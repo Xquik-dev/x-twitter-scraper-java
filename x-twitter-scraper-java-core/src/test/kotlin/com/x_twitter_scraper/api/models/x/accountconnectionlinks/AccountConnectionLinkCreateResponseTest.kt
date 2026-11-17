@@ -24,6 +24,7 @@ internal class AccountConnectionLinkCreateResponseTest {
             .health(null)
             .purpose(AccountConnectionLink.Purpose.CONNECT)
             .reference("crm-user-7")
+            .apiKeyId("17")
             .returnUrl("https://app.example.com/connected")
             .status(AccountConnectionLink.Status.PENDING)
             .xUserId(null)
@@ -43,6 +44,7 @@ internal class AccountConnectionLinkCreateResponseTest {
         assertThat(response._object_()).isEqualTo(JsonValue.from("x_account_connection_link"))
         assertThat(response.purpose()).isEqualTo(AccountConnectionLink.Purpose.CONNECT)
         assertThat(response.reference()).contains("crm-user-7")
+        assertThat(response.apiKeyId()).contains("17")
         assertThat(response.returnUrl()).contains("https://app.example.com/connected")
         assertThat(response.status()).isEqualTo(AccountConnectionLink.Status.PENDING)
         assertThat(response.xUserId()).isEmpty
@@ -62,5 +64,25 @@ internal class AccountConnectionLinkCreateResponseTest {
 
         assertThat(roundtripped).isEqualTo(response)
         assertThat(roundtripped.validate()).isSameAs(roundtripped)
+        assertThat(
+                jsonMapper
+                    .readTree(jsonMapper.writeValueAsString(response))
+                    .get("apiKeyId")
+                    .asText()
+            )
+            .isEqualTo("17")
+    }
+
+    @Test
+    fun aDashboardLinkHasNoApiKeyId() {
+        val json =
+            jsonMapper().writeValueAsString(response.toBuilder().apiKeyId(null as String?).build())
+
+        val dashboardLink =
+            jsonMapper().readValue(json, jacksonTypeRef<AccountConnectionLinkCreateResponse>())
+
+        assertThat(dashboardLink.apiKeyId()).isEmpty
+        assertThat(dashboardLink._apiKeyId().isNull()).isTrue()
+        assertThat(dashboardLink.validate()).isSameAs(dashboardLink)
     }
 }
