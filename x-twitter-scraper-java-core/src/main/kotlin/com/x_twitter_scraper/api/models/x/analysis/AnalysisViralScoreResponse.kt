@@ -48,6 +48,7 @@ private constructor(
     private val nextCursor: JsonField<String>,
     private val results: JsonField<List<Result>>,
     private val unanalyzed: JsonField<List<Unanalyzed>>,
+    private val unprocessedIds: JsonField<List<String>>,
     private val topicFilter: JsonField<TopicFilterSummary>,
     private val imageFilter: JsonField<ImageFilterSummary>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -70,6 +71,9 @@ private constructor(
         @JsonProperty("unanalyzed")
         @ExcludeMissing
         unanalyzed: JsonField<List<Unanalyzed>> = JsonMissing.of(),
+        @JsonProperty("unprocessed_ids")
+        @ExcludeMissing
+        unprocessedIds: JsonField<List<String>> = JsonMissing.of(),
         @JsonProperty("topicFilter")
         @ExcludeMissing
         topicFilter: JsonField<TopicFilterSummary> = JsonMissing.of(),
@@ -82,6 +86,7 @@ private constructor(
         nextCursor,
         results,
         unanalyzed,
+        unprocessedIds,
         topicFilter,
         imageFilter,
         mutableMapOf(),
@@ -128,6 +133,14 @@ private constructor(
     fun unanalyzed(): List<Unanalyzed> = unanalyzed.getRequired("unanalyzed")
 
     /**
+     * IDs of the posts or texts the time ran out for. Send them again in tweetIds, or those texts
+     * in texts. They cost nothing.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun unprocessedIds(): Optional<List<String>> = unprocessedIds.getOptional("unprocessed_ids")
+
+    /**
      * Returns the raw JSON value of [analysisSummary].
      *
      * Unlike [analysisSummary], this method doesn't throw if the JSON field has an unexpected type.
@@ -167,6 +180,15 @@ private constructor(
     @JsonProperty("unanalyzed")
     @ExcludeMissing
     fun _unanalyzed(): JsonField<List<Unanalyzed>> = unanalyzed
+
+    /**
+     * Returns the raw JSON value of [unprocessedIds].
+     *
+     * Unlike [unprocessedIds], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("unprocessed_ids")
+    @ExcludeMissing
+    fun _unprocessedIds(): JsonField<List<String>> = unprocessedIds
 
     /**
      * What the topic filter asked & how many posts it kept. Present when the request sent topic.
@@ -238,6 +260,7 @@ private constructor(
         private var nextCursor: JsonField<String>? = null
         private var results: JsonField<MutableList<Result>>? = null
         private var unanalyzed: JsonField<MutableList<Unanalyzed>>? = null
+        private var unprocessedIds: JsonField<MutableList<String>>? = null
         private var topicFilter: JsonField<TopicFilterSummary> = JsonMissing.of()
         private var imageFilter: JsonField<ImageFilterSummary> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -249,6 +272,7 @@ private constructor(
             nextCursor = analysisViralScoreResponse.nextCursor
             results = analysisViralScoreResponse.results.map { it.toMutableList() }
             unanalyzed = analysisViralScoreResponse.unanalyzed.map { it.toMutableList() }
+            unprocessedIds = analysisViralScoreResponse.unprocessedIds.map { it.toMutableList() }
             topicFilter = analysisViralScoreResponse.topicFilter
             imageFilter = analysisViralScoreResponse.imageFilter
             additionalProperties = analysisViralScoreResponse.additionalProperties.toMutableMap()
@@ -298,9 +322,21 @@ private constructor(
         /** Each post without an analysis, by ID & reason. These cost nothing. */
         fun unanalyzed(unanalyzed: List<Unanalyzed>) = unanalyzed(JsonField.of(unanalyzed))
 
+        /**
+         * IDs of the posts or texts the time ran out for. Send them again in tweetIds, or those
+         * texts in texts. They cost nothing.
+         */
+        fun unprocessedIds(unprocessedIds: List<String>) =
+            unprocessedIds(JsonField.of(unprocessedIds))
+
         /** Sets [Builder.unanalyzed] to an arbitrary JSON value. */
         fun unanalyzed(unanalyzed: JsonField<List<Unanalyzed>>) = apply {
             this.unanalyzed = unanalyzed.map { it.toMutableList() }
+        }
+
+        /** Sets [Builder.unprocessedIds] to an arbitrary JSON value. */
+        fun unprocessedIds(unprocessedIds: JsonField<List<String>>) = apply {
+            this.unprocessedIds = unprocessedIds.map { it.toMutableList() }
         }
 
         /**
@@ -312,6 +348,18 @@ private constructor(
             this.unanalyzed =
                 (this.unanalyzed ?: JsonField.of(mutableListOf())).also {
                     checkKnown("unanalyzed", it).add(unanalyzed)
+                }
+        }
+
+        /**
+         * Adds a single ID to [unprocessedIds].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addUnprocessedId(unprocessedId: String) = apply {
+            this.unprocessedIds =
+                (this.unprocessedIds ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("unprocessedIds", it).add(unprocessedId)
                 }
         }
 
@@ -391,6 +439,7 @@ private constructor(
                 checkRequired("nextCursor", nextCursor),
                 checkRequired("results", results).map { it.toImmutable() },
                 checkRequired("unanalyzed", unanalyzed).map { it.toImmutable() },
+                (unprocessedIds ?: JsonMissing.of()).map { it.toImmutable() },
                 topicFilter,
                 imageFilter,
                 additionalProperties.toMutableMap(),
@@ -417,6 +466,7 @@ private constructor(
         nextCursor()
         results().forEach { it.validate() }
         unanalyzed().forEach { it.validate() }
+        unprocessedIds()
         topicFilter().ifPresent { it.validate() }
         imageFilter().ifPresent { it.validate() }
         validated = true
@@ -437,6 +487,7 @@ private constructor(
             (if (nextCursor.asKnown().isPresent) 1 else 0) +
             (results.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (unanalyzed.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
+            (unprocessedIds.asKnown().getOrNull()?.size ?: 0) +
             (topicFilter.asKnown().getOrNull()?.validity() ?: 0) +
             (imageFilter.asKnown().getOrNull()?.validity() ?: 0)
 
@@ -8084,6 +8135,7 @@ private constructor(
             nextCursor == other.nextCursor &&
             results == other.results &&
             unanalyzed == other.unanalyzed &&
+            unprocessedIds == other.unprocessedIds &&
             topicFilter == other.topicFilter &&
             imageFilter == other.imageFilter &&
             additionalProperties == other.additionalProperties
@@ -8096,6 +8148,7 @@ private constructor(
             nextCursor,
             results,
             unanalyzed,
+            unprocessedIds,
             topicFilter,
             imageFilter,
             additionalProperties,
@@ -8105,5 +8158,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "AnalysisViralScoreResponse{analysisSummary=$analysisSummary, hasNextPage=$hasNextPage, nextCursor=$nextCursor, results=$results, unanalyzed=$unanalyzed, topicFilter=$topicFilter, imageFilter=$imageFilter, additionalProperties=$additionalProperties}"
+        "AnalysisViralScoreResponse{analysisSummary=$analysisSummary, hasNextPage=$hasNextPage, nextCursor=$nextCursor, results=$results, unanalyzed=$unanalyzed, unprocessedIds=$unprocessedIds, topicFilter=$topicFilter, imageFilter=$imageFilter, additionalProperties=$additionalProperties}"
 }
