@@ -32,6 +32,9 @@ private constructor(
     private val nextCursor: JsonField<String>,
     private val tweets: JsonField<List<SearchTweet>>,
     private val unavailableIds: JsonField<List<String>>,
+    private val notFoundIds: JsonField<List<String>>,
+    private val suspendedIds: JsonField<List<String>>,
+    private val protectedIds: JsonField<List<String>>,
     private val unprocessedIds: JsonField<List<String>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -48,10 +51,29 @@ private constructor(
         @JsonProperty("unavailable_ids")
         @ExcludeMissing
         unavailableIds: JsonField<List<String>> = JsonMissing.of(),
+        @JsonProperty("not_found_ids")
+        @ExcludeMissing
+        notFoundIds: JsonField<List<String>> = JsonMissing.of(),
+        @JsonProperty("suspended_ids")
+        @ExcludeMissing
+        suspendedIds: JsonField<List<String>> = JsonMissing.of(),
+        @JsonProperty("protected_ids")
+        @ExcludeMissing
+        protectedIds: JsonField<List<String>> = JsonMissing.of(),
         @JsonProperty("unprocessed_ids")
         @ExcludeMissing
         unprocessedIds: JsonField<List<String>> = JsonMissing.of(),
-    ) : this(hasNextPage, nextCursor, tweets, unavailableIds, unprocessedIds, mutableMapOf())
+    ) : this(
+        hasNextPage,
+        nextCursor,
+        tweets,
+        unavailableIds,
+        notFoundIds,
+        suspendedIds,
+        protectedIds,
+        unprocessedIds,
+        mutableMapOf(),
+    )
 
     /**
      * Always false. The answer holds every post in 1 page.
@@ -79,12 +101,37 @@ private constructor(
 
     /**
      * Users with no account on X or with protected posts, in first-seen request order. They cost
-     * nothing.
+     * nothing. [notFoundIds], [suspendedIds] and [protectedIds] split them by X's answer.
      *
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null.
      */
     fun unavailableIds(): List<String> = unavailableIds.getRequired("unavailable_ids")
+
+    /**
+     * The unavailable users no account holds, as X answers for an account that was deactivated or
+     * deleted, in first-seen request order.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null.
+     */
+    fun notFoundIds(): List<String> = notFoundIds.getRequired("not_found_ids")
+
+    /**
+     * The unavailable users X suspended, in first-seen request order.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null.
+     */
+    fun suspendedIds(): List<String> = suspendedIds.getRequired("suspended_ids")
+
+    /**
+     * The unavailable users whose posts only approved followers see, in first-seen request order.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null.
+     */
+    fun protectedIds(): List<String> = protectedIds.getRequired("protected_ids")
 
     /**
      * Users the call did not read, in first-seen request order. Their read failed, the call ran out
@@ -119,6 +166,33 @@ private constructor(
     fun _unavailableIds(): JsonField<List<String>> = unavailableIds
 
     /**
+     * Returns the raw JSON value of [notFoundIds].
+     *
+     * Unlike [notFoundIds], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("not_found_ids")
+    @ExcludeMissing
+    fun _notFoundIds(): JsonField<List<String>> = notFoundIds
+
+    /**
+     * Returns the raw JSON value of [suspendedIds].
+     *
+     * Unlike [suspendedIds], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("suspended_ids")
+    @ExcludeMissing
+    fun _suspendedIds(): JsonField<List<String>> = suspendedIds
+
+    /**
+     * Returns the raw JSON value of [protectedIds].
+     *
+     * Unlike [protectedIds], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("protected_ids")
+    @ExcludeMissing
+    fun _protectedIds(): JsonField<List<String>> = protectedIds
+
+    /**
      * Returns the raw JSON value of [unprocessedIds].
      *
      * Unlike [unprocessedIds], this method doesn't throw if the JSON field has an unexpected type.
@@ -150,6 +224,9 @@ private constructor(
          * .nextCursor()
          * .tweets()
          * .unavailableIds()
+         * .notFoundIds()
+         * .suspendedIds()
+         * .protectedIds()
          * .unprocessedIds()
          * ```
          */
@@ -163,6 +240,9 @@ private constructor(
         private var nextCursor: JsonField<String>? = null
         private var tweets: JsonField<MutableList<SearchTweet>>? = null
         private var unavailableIds: JsonField<MutableList<String>>? = null
+        private var notFoundIds: JsonField<MutableList<String>>? = null
+        private var suspendedIds: JsonField<MutableList<String>>? = null
+        private var protectedIds: JsonField<MutableList<String>>? = null
         private var unprocessedIds: JsonField<MutableList<String>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -174,6 +254,11 @@ private constructor(
                 tweets = userRetrieveBatchTweetsResponse.tweets.map { it.toMutableList() }
                 unavailableIds =
                     userRetrieveBatchTweetsResponse.unavailableIds.map { it.toMutableList() }
+                notFoundIds = userRetrieveBatchTweetsResponse.notFoundIds.map { it.toMutableList() }
+                suspendedIds =
+                    userRetrieveBatchTweetsResponse.suspendedIds.map { it.toMutableList() }
+                protectedIds =
+                    userRetrieveBatchTweetsResponse.protectedIds.map { it.toMutableList() }
                 unprocessedIds =
                     userRetrieveBatchTweetsResponse.unprocessedIds.map { it.toMutableList() }
                 additionalProperties =
@@ -217,14 +302,44 @@ private constructor(
 
         /**
          * Users with no account on X or with protected posts, in first-seen request order. They
-         * cost nothing.
+         * cost nothing. [notFoundIds], [suspendedIds] and [protectedIds] split them by X's answer.
          */
         fun unavailableIds(unavailableIds: List<String>) =
             unavailableIds(JsonField.of(unavailableIds))
 
+        /**
+         * The unavailable users no account holds, as X answers for an account that was deactivated
+         * or deleted, in first-seen request order.
+         */
+        fun notFoundIds(notFoundIds: List<String>) = notFoundIds(JsonField.of(notFoundIds))
+
+        /** The unavailable users X suspended, in first-seen request order. */
+        fun suspendedIds(suspendedIds: List<String>) = suspendedIds(JsonField.of(suspendedIds))
+
+        /**
+         * The unavailable users whose posts only approved followers see, in first-seen request
+         * order.
+         */
+        fun protectedIds(protectedIds: List<String>) = protectedIds(JsonField.of(protectedIds))
+
         /** Sets [Builder.unavailableIds] to an arbitrary JSON value. */
         fun unavailableIds(unavailableIds: JsonField<List<String>>) = apply {
             this.unavailableIds = unavailableIds.map { it.toMutableList() }
+        }
+
+        /** Sets [Builder.notFoundIds] to an arbitrary JSON value. */
+        fun notFoundIds(notFoundIds: JsonField<List<String>>) = apply {
+            this.notFoundIds = notFoundIds.map { it.toMutableList() }
+        }
+
+        /** Sets [Builder.suspendedIds] to an arbitrary JSON value. */
+        fun suspendedIds(suspendedIds: JsonField<List<String>>) = apply {
+            this.suspendedIds = suspendedIds.map { it.toMutableList() }
+        }
+
+        /** Sets [Builder.protectedIds] to an arbitrary JSON value. */
+        fun protectedIds(protectedIds: JsonField<List<String>>) = apply {
+            this.protectedIds = protectedIds.map { it.toMutableList() }
         }
 
         /**
@@ -236,6 +351,42 @@ private constructor(
             unavailableIds =
                 (unavailableIds ?: JsonField.of(mutableListOf())).also {
                     checkKnown("unavailableIds", it).add(unavailableId)
+                }
+        }
+
+        /**
+         * Adds a single [String] to [notFoundIds].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addNotFoundId(notFoundId: String) = apply {
+            notFoundIds =
+                (notFoundIds ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("notFoundIds", it).add(notFoundId)
+                }
+        }
+
+        /**
+         * Adds a single [String] to [suspendedIds].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addSuspendedId(suspendedId: String) = apply {
+            suspendedIds =
+                (suspendedIds ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("suspendedIds", it).add(suspendedId)
+                }
+        }
+
+        /**
+         * Adds a single [String] to [protectedIds].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addProtectedId(protectedId: String) = apply {
+            protectedIds =
+                (protectedIds ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("protectedIds", it).add(protectedId)
                 }
         }
 
@@ -292,6 +443,9 @@ private constructor(
          * .nextCursor()
          * .tweets()
          * .unavailableIds()
+         * .notFoundIds()
+         * .suspendedIds()
+         * .protectedIds()
          * .unprocessedIds()
          * ```
          *
@@ -303,6 +457,9 @@ private constructor(
                 checkRequired("nextCursor", nextCursor),
                 checkRequired("tweets", tweets).map { it.toImmutable() },
                 checkRequired("unavailableIds", unavailableIds).map { it.toImmutable() },
+                checkRequired("notFoundIds", notFoundIds).map { it.toImmutable() },
+                checkRequired("suspendedIds", suspendedIds).map { it.toImmutable() },
+                checkRequired("protectedIds", protectedIds).map { it.toImmutable() },
                 checkRequired("unprocessedIds", unprocessedIds).map { it.toImmutable() },
                 additionalProperties.toMutableMap(),
             )
@@ -331,6 +488,9 @@ private constructor(
         nextCursor()
         tweets().forEach { it.validate() }
         unavailableIds()
+        notFoundIds()
+        suspendedIds()
+        protectedIds()
         unprocessedIds()
         validated = true
     }
@@ -349,6 +509,9 @@ private constructor(
             (if (nextCursor.asKnown().isPresent) 1 else 0) +
             (tweets.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
             (unavailableIds.asKnown().getOrNull()?.size ?: 0) +
+            (notFoundIds.asKnown().getOrNull()?.size ?: 0) +
+            (suspendedIds.asKnown().getOrNull()?.size ?: 0) +
+            (protectedIds.asKnown().getOrNull()?.size ?: 0) +
             (unprocessedIds.asKnown().getOrNull()?.size ?: 0)
 
     override fun equals(other: Any?): Boolean {
@@ -361,6 +524,9 @@ private constructor(
             nextCursor == other.nextCursor &&
             tweets == other.tweets &&
             unavailableIds == other.unavailableIds &&
+            notFoundIds == other.notFoundIds &&
+            suspendedIds == other.suspendedIds &&
+            protectedIds == other.protectedIds &&
             unprocessedIds == other.unprocessedIds &&
             additionalProperties == other.additionalProperties
     }
@@ -371,6 +537,9 @@ private constructor(
             nextCursor,
             tweets,
             unavailableIds,
+            notFoundIds,
+            suspendedIds,
+            protectedIds,
             unprocessedIds,
             additionalProperties,
         )
@@ -379,5 +548,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "UserRetrieveBatchTweetsResponse{hasNextPage=$hasNextPage, nextCursor=$nextCursor, tweets=$tweets, unavailableIds=$unavailableIds, unprocessedIds=$unprocessedIds, additionalProperties=$additionalProperties}"
+        "UserRetrieveBatchTweetsResponse{hasNextPage=$hasNextPage, nextCursor=$nextCursor, tweets=$tweets, unavailableIds=$unavailableIds, notFoundIds=$notFoundIds, suspendedIds=$suspendedIds, protectedIds=$protectedIds, unprocessedIds=$unprocessedIds, additionalProperties=$additionalProperties}"
 }
