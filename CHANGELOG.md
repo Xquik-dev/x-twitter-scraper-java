@@ -1,26 +1,12 @@
 # Changelog
 
-## Unreleased
-
-### Features
-
-* `x().accountConnectionLinks().list()` pages through your connect links, newest first, as `AccountConnectionLinkListResponse`. Pass `nextCursor()` back as `cursor` while `hasMore()` is true.
-* `AccountConnectionLink` and `AccountConnectionLinkCreateResponse` carry `apiKeyId()`, the API key that made the link, empty when a dashboard session made it. With `list()` it finds the links a leaked key made, so you can revoke them.
-* `PaginatedTweets`, `PaginatedUsers`, `SportsGamePosts`, `TweetGetRepliesResponse` and `TweetSearchCoverageResponse` carry `endReason()`, a `CoverageEndReason` present on a last page that X cut short. `STALLED` means X returned no new results 2 times in a row, so the list may hold more. Read it again later without `cursor`.
-* The 6 `x().analysis()` responses carry `unprocessedIds()`, the IDs of the posts or texts the time ran out for. Send them again in `tweetIds`, or those texts in `texts`. They cost nothing.
-* The 6 `x().analysis()` params take `threadOf`, `repliesBy`, `mediaBy` and `likedBy`, which analyze 1 post's thread or 1 account's replies, media or likes, and `usernames`, `listIds` and `queries`, which analyze several accounts, Lists or X searches as 1 search.
-* `PaginatedTweets`, `SportsGamePosts`, `TweetSearchCoverageResponse` and `TweetGetRepliesResponse` carry `hiddenTimeline()`, present on an empty last page when X shows the account's timeline to nobody, so the page doesn't mean the account posted nothing.
-* `PaginatedUsers` carries `windowComplete()`, present on the last page of an empty list whose profile counts 0 accounts in it.
-* `UserRetrieveMentionsParams` takes `ownThreads`. With `replies` set to `exclude`, `exclude` here also leaves out replies to the author's own posts.
-* The 6 `x().analysis()` params take `topic()` and `imageShows()`, and their responses carry `topicFilter()` and `imageFilter()`, with the cutoff and counts of each filter.
-* A replies strategy's `stopReason()` can be `REPORTED_HELD`, which says the read already holds every reply X reports.
-
-## 0.11.0 (2026-11-04)
+## 0.11.0 (2026-11-18)
 
 [Full changelog from v0.10.3 to v0.11.0](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.10.3...v0.11.0)
 
 ### Breaking changes
 
+* `UserRetrieveBatchResponse.builder()` requires `notFoundIds` and `suspendedIds`, and `UserRetrieveBatchTweetsResponse.builder()` requires those and `protectedIds`, which the API always sends. Code that builds either response by hand must set them.
 * `UserRetrieveInsightsResponse.Insights.Sample.builder()` requires `read`, which the API always sends. Code that builds it by hand must set it. `posts` counts the posts the averages used, so it can be lower than `read`.
 * `ExtractionJob.builder()` requires `url`, which the API always sends. Code that builds the job by hand must set it.
 * `CreditTopupBalanceResponse.builder()` requires `chargedCurrency` and `chargedMinorUnits`, which the API always sends. Code that builds the response by hand must set both.
@@ -40,6 +26,18 @@
 
 ### Features
 
+* `x().users().retrieveBatch()` returns `notFoundIds()` and `suspendedIds()`, and `retrieveBatchTweets()` returns those and `protectedIds()`. They split `unavailableIds()` by X's answer. `notFoundIds()` holds accounts that were deactivated or deleted, `suspendedIds()` the accounts X suspended, and `protectedIds()` the users whose posts only approved followers see.
+* `Event.Data` and `EventDetail.Data` carry `unavailableReason()` on a follow removal whose `reason()` is `UNAVAILABLE`. `NOT_FOUND` means the account no longer exists, and `SUSPENDED` means X suspended it.
+* `x().accountConnectionLinks().list()` pages through your connect links, newest first, as `AccountConnectionLinkListResponse`. Pass `nextCursor()` back as `cursor` while `hasMore()` is true.
+* `AccountConnectionLink` and `AccountConnectionLinkCreateResponse` carry `apiKeyId()`, the API key that made the link, empty when a dashboard session made it. With `list()` it finds the links a leaked key made, so you can revoke them.
+* `PaginatedTweets`, `PaginatedUsers`, `SportsGamePosts`, `TweetGetRepliesResponse` and `TweetSearchCoverageResponse` carry `endReason()`, a `CoverageEndReason` present on a last page that X cut short. `STALLED` means X returned no new results 2 times in a row, so the list may hold more. Read it again later without `cursor`.
+* The 6 `x().analysis()` responses carry `unprocessedIds()`, the IDs of the posts or texts the time ran out for. Send them again in `tweetIds`, or those texts in `texts`. They cost nothing.
+* The 6 `x().analysis()` params take `threadOf`, `repliesBy`, `mediaBy` and `likedBy`, which analyze 1 post's thread or 1 account's replies, media or likes, and `usernames`, `listIds` and `queries`, which analyze several accounts, Lists or X searches as 1 search.
+* `PaginatedTweets`, `SportsGamePosts`, `TweetSearchCoverageResponse` and `TweetGetRepliesResponse` carry `hiddenTimeline()`, present on an empty last page when X shows the account's timeline to nobody, so the page doesn't mean the account posted nothing.
+* `PaginatedUsers` carries `windowComplete()`, present on the last page of an empty list whose profile counts 0 accounts in it.
+* `UserRetrieveMentionsParams` takes `ownThreads`. With `replies` set to `exclude`, `exclude` here also leaves out replies to the author's own posts.
+* The 6 `x().analysis()` params take `topic()` and `imageShows()`, and their responses carry `topicFilter()` and `imageFilter()`, with the cutoff and counts of each filter.
+* A replies strategy's `stopReason()` can be `REPORTED_HELD`, which says the read already holds every reply X reports.
 * `UserRetrieveBatchTweetsParams.pageSize()` takes up to 300 posts per user.
 * `BookmarkListParams.pageSize()` and `XGetHomeTimelineParams.pageSize()` take 1 to 100 items per page.
 * `monitors().upsertByUsername()` creates the monitor for an account, or updates it if it exists, so the same call twice still leaves 1 monitor. `created()` says which one ran.

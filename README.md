@@ -20,7 +20,7 @@ The Xquik REST API read 45 tweets per second on 2026-10-15. That cost $0.15 per 
 Add the Gradle dependency.
 
 ```kotlin
-implementation("com.xquik.api:x-twitter-scraper-java:0.10.3")
+implementation("com.xquik.api:x-twitter-scraper-java:0.11.0")
 ```
 
 Or add the Maven dependency.
@@ -29,7 +29,7 @@ Or add the Maven dependency.
 <dependency>
   <groupId>com.xquik.api</groupId>
   <artifactId>x-twitter-scraper-java</artifactId>
-  <version>0.10.3</version>
+  <version>0.11.0</version>
 </dependency>
 ```
 
@@ -56,7 +56,7 @@ System.out.println(result);
 client.close();
 ```
 
-Next, read the [Java SDK guide](https://docs.xquik.com/sdks/java), [Javadocs](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java-core/0.10.3) or [REST API reference](https://docs.xquik.com/api-reference/overview).
+Next, read the [Java SDK guide](https://docs.xquik.com/sdks/java), [Javadocs](https://javadoc.io/doc/com.xquik.api/x-twitter-scraper-java-core/0.11.0) or [REST API reference](https://docs.xquik.com/api-reference/overview).
 
 <!-- trust:start -->
 
@@ -145,10 +145,9 @@ Call REST without the SDK when a Maven dependency does not fit.
 | Send media or update a profile | `POST /x/media`, `PATCH /x/profile` | `client.x().media()`, `client.x().profile()` |
 | Manage connected X accounts | `GET /x/accounts`, `POST /x/accounts` | `client.x().accounts()` |
 
-### Tasks that arrive with 0.11.0
+### Tasks new in 0.11.0
 
-These REST routes work today.
-Their typed Java methods ship in 0.11.0, the next Maven Central release.
+These typed Java methods need 0.11.0 or later.
 
 | Task | REST route | Java service |
 | --- | --- | --- |
@@ -192,7 +191,7 @@ System.out.println(result.join());
 ## Stream events
 
 `client.events().stream()` sends your monitor events as they happen.
-This method ships in 0.11.0.
+This method needs 0.11.0 or later.
 Close each stream when you finish.
 
 ```java
@@ -267,7 +266,7 @@ Binary endpoints return `HttpResponse`. Close each response after reading it.
 Every Maven Central file has a detached OpenPGP signature. Run these commands to verify the artifact.
 
 ```sh
-version=0.10.3
+version=0.11.0
 artifact="x-twitter-scraper-java-$version.jar"
 base="https://repo.maven.apache.org/maven2/com/xquik/api/x-twitter-scraper-java/$version"
 curl --fail --location --remote-name "$base/$artifact"
