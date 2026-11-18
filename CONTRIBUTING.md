@@ -117,6 +117,10 @@ With push access, `bin/check-local` posts the `xquik-local-checks` commit status
 The status lists only the checks that ran, and it reports success only after every check passed.
 Pass `--no-status` to skip the status.
 
+When `git config checklocal.runner` names a command, `bin/check-local` runs that command with the checkout path and its own arguments instead, so a maintainer can run the checks on another machine.
+`bin/release-local` runs its checks the same way.
+Set `CHECK_LOCAL_HERE=1` to run them here anyway.
+
 Run a single gate with its script in `scripts/`.
 
 GitHub Actions does not run these checks. Run them before you push.
