@@ -701,6 +701,7 @@ private constructor(
         private val followedAtExact: JsonField<Boolean>,
         private val followKind: JsonField<FollowKind>,
         private val reason: JsonField<Reason>,
+        private val unavailableReason: JsonField<UnavailableReason>,
         private val metric: JsonField<Event.Data.Metric>,
         private val previousText: JsonField<String>,
         private val versionId: JsonField<String>,
@@ -927,6 +928,9 @@ private constructor(
             @ExcludeMissing
             followKind: JsonField<FollowKind> = JsonMissing.of(),
             @JsonProperty("reason") @ExcludeMissing reason: JsonField<Reason> = JsonMissing.of(),
+            @JsonProperty("unavailableReason")
+            @ExcludeMissing
+            unavailableReason: JsonField<UnavailableReason> = JsonMissing.of(),
             @JsonProperty("metric")
             @ExcludeMissing
             metric: JsonField<Event.Data.Metric> = JsonMissing.of(),
@@ -1023,6 +1027,7 @@ private constructor(
             followedAtExact,
             followKind,
             reason,
+            unavailableReason,
             metric,
             previousText,
             versionId,
@@ -1314,6 +1319,17 @@ private constructor(
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun reason(): Optional<Reason> = reason.getOptional("reason")
+
+        /**
+         * Why X shows no account, when [reason] is [Reason.UNAVAILABLE].
+         * [UnavailableReason.NOT_FOUND] means the account no longer exists, as X answers for a
+         * deactivated or deleted account. [UnavailableReason.SUSPENDED] means X suspended it. A
+         * user lookup of the ID answers `user_not_found` with the same reason.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun unavailableReason(): Optional<UnavailableReason> =
+            unavailableReason.getOptional("unavailableReason")
 
         /**
          * The metric that changed, on the 6 metric events.
@@ -2056,6 +2072,16 @@ private constructor(
         @JsonProperty("reason") @ExcludeMissing fun _reason(): JsonField<Reason> = reason
 
         /**
+         * Returns the raw JSON value of [unavailableReason].
+         *
+         * Unlike [unavailableReason], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("unavailableReason")
+        @ExcludeMissing
+        fun _unavailableReason(): JsonField<UnavailableReason> = unavailableReason
+
+        /**
          * Returns the raw JSON value of [metric].
          *
          * Unlike [metric], this method doesn't throw if the JSON field has an unexpected type.
@@ -2196,6 +2222,7 @@ private constructor(
             private var followedAtExact: JsonField<Boolean> = JsonMissing.of()
             private var followKind: JsonField<FollowKind> = JsonMissing.of()
             private var reason: JsonField<Reason> = JsonMissing.of()
+            private var unavailableReason: JsonField<UnavailableReason> = JsonMissing.of()
             private var metric: JsonField<Event.Data.Metric> = JsonMissing.of()
             private var previousText: JsonField<String> = JsonMissing.of()
             private var versionId: JsonField<String> = JsonMissing.of()
@@ -2285,6 +2312,7 @@ private constructor(
                 followedAtExact = data.followedAtExact
                 followKind = data.followKind
                 reason = data.reason
+                unavailableReason = data.unavailableReason
                 metric = data.metric
                 previousText = data.previousText
                 versionId = data.versionId
@@ -2968,8 +2996,22 @@ private constructor(
 
             fun reason(reason: Reason) = reason(JsonField.of(reason))
 
+            /**
+             * Why X shows no account, when [reason] is [Reason.UNAVAILABLE].
+             * [UnavailableReason.NOT_FOUND] means the account no longer exists, as X answers for a
+             * deactivated or deleted account. [UnavailableReason.SUSPENDED] means X suspended it. A
+             * user lookup of the ID answers `user_not_found` with the same reason.
+             */
+            fun unavailableReason(unavailableReason: UnavailableReason) =
+                unavailableReason(JsonField.of(unavailableReason))
+
             /** Sets [Builder.reason] to an arbitrary JSON value. */
             fun reason(reason: JsonField<Reason>) = apply { this.reason = reason }
+
+            /** Sets [Builder.unavailableReason] to an arbitrary JSON value. */
+            fun unavailableReason(unavailableReason: JsonField<UnavailableReason>) = apply {
+                this.unavailableReason = unavailableReason
+            }
 
             /** The metric that changed, on the 6 metric events. */
             fun metric(metric: Event.Data.Metric) = metric(JsonField.of(metric))
@@ -3126,6 +3168,7 @@ private constructor(
                     followedAtExact,
                     followKind,
                     reason,
+                    unavailableReason,
                     metric,
                     previousText,
                     versionId,
@@ -3230,6 +3273,7 @@ private constructor(
             followedAtExact()
             followKind().ifPresent { it.validate() }
             reason().ifPresent { it.validate() }
+            unavailableReason().ifPresent { it.validate() }
             metric().ifPresent { it.validate() }
             previousText()
             versionId()
@@ -3329,6 +3373,7 @@ private constructor(
                 (if (followedAtExact.asKnown().isPresent) 1 else 0) +
                 (followKind.asKnown().getOrNull()?.validity() ?: 0) +
                 (reason.asKnown().getOrNull()?.validity() ?: 0) +
+                (unavailableReason.asKnown().getOrNull()?.validity() ?: 0) +
                 (metric.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (previousText.asKnown().isPresent) 1 else 0) +
                 (if (versionId.asKnown().isPresent) 1 else 0) +
@@ -3420,6 +3465,7 @@ private constructor(
                 followedAtExact == other.followedAtExact &&
                 followKind == other.followKind &&
                 reason == other.reason &&
+                unavailableReason == other.unavailableReason &&
                 metric == other.metric &&
                 previousText == other.previousText &&
                 versionId == other.versionId &&
@@ -3510,6 +3556,7 @@ private constructor(
                 followedAtExact,
                 followKind,
                 reason,
+                unavailableReason,
                 metric,
                 previousText,
                 versionId,
@@ -3522,7 +3569,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{id=$id, text=$text, type=$type, createdAt=$createdAt, url=$url, lang=$lang, isReply=$isReply, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isRetweet=$isRetweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, retweetedAt=$retweetedAt, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, conversationId=$conversationId, conversationControl=$conversationControl, limitedActions=$limitedActions, source=$source, displayTextRange=$displayTextRange, textHighlights=$textHighlights, contentDisclosure=$contentDisclosure, article=$article, authorUnavailable=$authorUnavailable, unavailableAuthorId=$unavailableAuthorId, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, hasCommunityNotes=$hasCommunityNotes, edit=$edit, exclusiveContent=$exclusiveContent, isTranslatable=$isTranslatable, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, jetfuelAttachment=$jetfuelAttachment, noteTweet=$noteTweet, place=$place, coordinates=$coordinates, geo=$geo, postCta=$postCta, possiblySensitive=$possiblySensitive, previousCounts=$previousCounts, reactionContext=$reactionContext, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, tombstone=$tombstone, interstitial=$interstitial, unmentionedUserIds=$unmentionedUserIds, viewState=$viewState, entities=$entities, scopes=$scopes, softIntervention=$softIntervention, media=$media, retweetCount=$retweetCount, replyCount=$replyCount, likeCount=$likeCount, quoteCount=$quoteCount, viewCount=$viewCount, bookmarkCount=$bookmarkCount, unknownCounts=$unknownCounts, parentTweet=$parentTweet, quotedTweet=$quotedTweet, retweetedTweet=$retweetedTweet, author=$author, field=$field, change=$change, userId=$userId, username=$username, previous=$previous, current=$current, followedAt=$followedAt, followedAtExact=$followedAtExact, followKind=$followKind, reason=$reason, metric=$metric, previousText=$previousText, versionId=$versionId, liveEventContext=$liveEventContext, unknownFields=$unknownFields, additionalProperties=$additionalProperties}"
+            "Data{id=$id, text=$text, type=$type, createdAt=$createdAt, url=$url, lang=$lang, isReply=$isReply, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isRetweet=$isRetweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, retweetedAt=$retweetedAt, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, conversationId=$conversationId, conversationControl=$conversationControl, limitedActions=$limitedActions, source=$source, displayTextRange=$displayTextRange, textHighlights=$textHighlights, contentDisclosure=$contentDisclosure, article=$article, authorUnavailable=$authorUnavailable, unavailableAuthorId=$unavailableAuthorId, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, hasCommunityNotes=$hasCommunityNotes, edit=$edit, exclusiveContent=$exclusiveContent, isTranslatable=$isTranslatable, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, jetfuelAttachment=$jetfuelAttachment, noteTweet=$noteTweet, place=$place, coordinates=$coordinates, geo=$geo, postCta=$postCta, possiblySensitive=$possiblySensitive, previousCounts=$previousCounts, reactionContext=$reactionContext, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, tombstone=$tombstone, interstitial=$interstitial, unmentionedUserIds=$unmentionedUserIds, viewState=$viewState, entities=$entities, scopes=$scopes, softIntervention=$softIntervention, media=$media, retweetCount=$retweetCount, replyCount=$replyCount, likeCount=$likeCount, quoteCount=$quoteCount, viewCount=$viewCount, bookmarkCount=$bookmarkCount, unknownCounts=$unknownCounts, parentTweet=$parentTweet, quotedTweet=$quotedTweet, retweetedTweet=$retweetedTweet, author=$author, field=$field, change=$change, userId=$userId, username=$username, previous=$previous, current=$current, followedAt=$followedAt, followedAtExact=$followedAtExact, followKind=$followKind, reason=$reason, unavailableReason=$unavailableReason, metric=$metric, previousText=$previousText, versionId=$versionId, liveEventContext=$liveEventContext, unknownFields=$unknownFields, additionalProperties=$additionalProperties}"
 
         /**
          * Why a removed account is back, on following.added & follower.added. refollow means the
@@ -3759,6 +3806,131 @@ private constructor(
                 }
 
                 return other is Reason && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
+
+        /** Why X shows no account, when [reason] is [Reason.UNAVAILABLE]. */
+        class UnavailableReason
+        @JsonCreator
+        private constructor(private val value: JsonField<String>) : Enum {
+
+            /** Returns this class instance's raw value. */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val NOT_FOUND = of("not_found")
+
+                @JvmField val SUSPENDED = of("suspended")
+
+                @JvmStatic fun of(value: String) = UnavailableReason(JsonField.of(value))
+            }
+
+            /** An enum containing [UnavailableReason]'s known values. */
+            enum class Known {
+                NOT_FOUND,
+                SUSPENDED,
+            }
+
+            /**
+             * An enum containing [UnavailableReason]'s known values, as well as an [_UNKNOWN]
+             * member.
+             *
+             * An instance of [UnavailableReason] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                NOT_FOUND,
+                SUSPENDED,
+                /**
+                 * An enum member indicating that [UnavailableReason] was instantiated with an
+                 * unknown value.
+                 */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             */
+            fun value(): Value =
+                when (this) {
+                    NOT_FOUND -> Value.NOT_FOUND
+                    SUSPENDED -> Value.SUSPENDED
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * @throws XTwitterScraperInvalidDataException if this class instance's value is a not a
+             *   known member.
+             */
+            fun known(): Known =
+                when (this) {
+                    NOT_FOUND -> Known.NOT_FOUND
+                    SUSPENDED -> Known.SUSPENDED
+                    else ->
+                        throw XTwitterScraperInvalidDataException(
+                            "Unknown UnavailableReason: $value"
+                        )
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * @throws XTwitterScraperInvalidDataException if this class instance's value does not
+             *   have the expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    XTwitterScraperInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws XTwitterScraperInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
+             */
+            fun validate(): UnavailableReason = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: XTwitterScraperInvalidDataException) {
+                    false
+                }
+
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is UnavailableReason && value == other.value
             }
 
             override fun hashCode() = value.hashCode()
