@@ -182,6 +182,11 @@ internal class UserServiceSpecExampleTest {
                           "unavailable_ids": [
                             "1234567890"
                           ],
+                          "not_found_ids": [
+                            "1234567890"
+                          ],
+                          "suspended_ids": [],
+                          "protected_ids": [],
                           "unprocessed_ids": []
                         }
                         """
@@ -213,6 +218,9 @@ internal class UserServiceSpecExampleTest {
         assertThat(response.tweets()[0].id()).isEqualTo("1234567890")
         assertThat(response.tweets()[0].text()).isEqualTo("Just launched our new feature!")
         assertThat(response.unavailableIds()).containsExactly("1234567890")
+        assertThat(response.notFoundIds()).containsExactly("1234567890")
+        assertThat(response.suspendedIds()).isEmpty()
+        assertThat(response.protectedIds()).isEmpty()
         assertThat(response.unprocessedIds()).isEmpty()
     }
 
@@ -921,6 +929,10 @@ internal class UserServiceSpecExampleTest {
                           "unavailable_ids": [
                             "1234567890"
                           ],
+                          "not_found_ids": [
+                            "1234567890"
+                          ],
+                          "suspended_ids": [],
                           "failed_ids": [
                             "string"
                           ],
@@ -996,6 +1008,8 @@ internal class UserServiceSpecExampleTest {
         assertThat(response.requestedCount()).isEqualTo(2L)
         assertThat(response.returnedCount()).isEqualTo(1L)
         assertThat(response.unavailableIds()).containsExactly("1234567890")
+        assertThat(response.notFoundIds()).containsExactly("1234567890")
+        assertThat(response.suspendedIds()).isEmpty()
         assertThat(response.unprocessedIds()).containsExactly("string")
         assertThat(response.users()).hasSize(1)
         assertThat(response.users()[0].id()).isEqualTo("9876543210")
