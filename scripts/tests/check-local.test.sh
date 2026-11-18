@@ -98,6 +98,49 @@ test_a_passing_run_lists_the_checks_in_order_and_runs_reuse_through_uvx() {
     assert_equal "" "$(log_of gh)" "the posted statuses"
 }
 
+prepare_runner() {
+    prepare_checks
+    fake runner <<'EOF'
+#!/bin/sh
+printf '%s\n' "$@" >"$FAKE_LOGS/runner"
+exit "${FAKE_RUNNER_EXIT:-0}"
+EOF
+    sandbox_git config checklocal.runner "$sandbox_bin/runner"
+}
+
+test_a_configured_runner_gets_the_checkout_and_arguments_instead_of_the_checks() {
+    prepare_runner
+
+    run_in_repo bin/check-local --no-status
+
+    assert_equal 0 "$run_status" "the exit code"
+    assert_equal "$sandbox_repo
+--no-status" "$(log_of runner)" "the runner arguments"
+    assert_equal "" "$(log_of order)" "the checks that ran here"
+}
+
+test_check_local_here_runs_the_checks_despite_a_configured_runner() {
+    prepare_runner
+    run_env+=("CHECK_LOCAL_HERE=1")
+
+    run_in_repo bin/check-local --no-status
+
+    assert_equal 0 "$run_status" "the exit code"
+    assert_equal "" "$(log_of runner)" "the runner arguments"
+    assert_equal "$check_order" "$(log_of order)" "the order of the checks"
+}
+
+test_a_failing_runner_fails_check_local_with_its_exit_status() {
+    prepare_runner
+    run_env+=("FAKE_RUNNER_EXIT=7")
+
+    run_in_repo bin/check-local
+
+    assert_equal 7 "$run_status" "the exit code"
+    assert_equal "$sandbox_repo" "$(log_of runner)" "the runner arguments"
+    assert_equal "" "$(log_of gh)" "the statuses this script posted"
+}
+
 test_shellcheck_reads_every_bash_script_and_skips_other_files() {
     prepare_checks
     stub scripts/tests/sample.test.sh <<'EOF'
