@@ -22,6 +22,9 @@ internal class UserRetrieveBatchResponseTest {
                 .requestedCount(2L)
                 .returnedCount(1L)
                 .addUnavailableId("1234567890")
+                .addUnavailableId("2244994945")
+                .addNotFoundId("1234567890")
+                .addSuspendedId("2244994945")
                 .addUnprocessedId("321669910225")
                 .addUser(
                     UserProfile.builder()
@@ -104,7 +107,10 @@ internal class UserRetrieveBatchResponseTest {
         assertThat(userRetrieveBatchResponse.processedCount()).isEqualTo(2L)
         assertThat(userRetrieveBatchResponse.requestedCount()).isEqualTo(2L)
         assertThat(userRetrieveBatchResponse.returnedCount()).isEqualTo(1L)
-        assertThat(userRetrieveBatchResponse.unavailableIds()).containsExactly("1234567890")
+        assertThat(userRetrieveBatchResponse.unavailableIds())
+            .containsExactly("1234567890", "2244994945")
+        assertThat(userRetrieveBatchResponse.notFoundIds()).containsExactly("1234567890")
+        assertThat(userRetrieveBatchResponse.suspendedIds()).containsExactly("2244994945")
         assertThat(userRetrieveBatchResponse.unprocessedIds()).containsExactly("321669910225")
         assertThat(userRetrieveBatchResponse.users())
             .containsExactly(
@@ -194,6 +200,9 @@ internal class UserRetrieveBatchResponseTest {
                 .requestedCount(2L)
                 .returnedCount(1L)
                 .addUnavailableId("1234567890")
+                .addUnavailableId("2244994945")
+                .addNotFoundId("1234567890")
+                .addSuspendedId("2244994945")
                 .addUnprocessedId("321669910225")
                 .addUser(
                     UserProfile.builder()
@@ -387,6 +396,12 @@ internal class UserRetrieveBatchResponseTest {
                       "unavailable_ids": [
                         "unavailable_ids-value"
                       ],
+                      "not_found_ids": [
+                        "not_found_ids-value"
+                      ],
+                      "suspended_ids": [
+                        "suspended_ids-value"
+                      ],
                       "failed_ids": [
                         "failed_ids-value"
                       ],
@@ -409,6 +424,8 @@ internal class UserRetrieveBatchResponseTest {
         assertThat(userRetrieveBatchResponse.returnedCount()).isEqualTo(1L)
         assertThat(userRetrieveBatchResponse.unavailableIds())
             .containsExactly("unavailable_ids-value")
+        assertThat(userRetrieveBatchResponse.notFoundIds()).containsExactly("not_found_ids-value")
+        assertThat(userRetrieveBatchResponse.suspendedIds()).containsExactly("suspended_ids-value")
         assertThat(userRetrieveBatchResponse.unprocessedIds())
             .containsExactly("unprocessed_ids-value")
         assertThat(userRetrieveBatchResponse.users()).hasSize(1)
