@@ -1,4 +1,4 @@
-# Twitter scraper & X API Java SDK by Xquik
+# X (Twitter) API Java SDK & Scraper by Xquik
 
 Use this Twitter scraper Java SDK by Xquik to search tweets with typed builders.
 Each call runs synchronously or returns a `CompletableFuture`.
