@@ -41,7 +41,7 @@ private constructor(
     /** Use outputMode=raw instead. */
     fun includeRaw(): Optional<Boolean> = Optional.ofNullable(includeRaw)
 
-    /** Maximum number of results to return (1-1000, default 100) */
+    /** Maximum number of results to return (1-10000, default 100) */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
     /** Select compact, full, or raw-compatible result fields. */
@@ -122,7 +122,7 @@ private constructor(
         /** Alias for calling [Builder.includeRaw] with `includeRaw.orElse(null)`. */
         fun includeRaw(includeRaw: Optional<Boolean>) = includeRaw(includeRaw.getOrNull())
 
-        /** Maximum number of results to return (1-1000, default 100) */
+        /** Maximum number of results to return (1-10000, default 100) */
         fun limit(limit: Long?) = apply { this.limit = limit }
 
         /** Alias for [Builder.limit]. */
