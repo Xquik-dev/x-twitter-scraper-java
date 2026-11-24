@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- `Timeout.request()` now defaults to 80 seconds, up from 1 minute, since some API reads take longer than a minute to answer. The read and write timeouts follow it. The connect timeout and a stream's read timeout stay at 1 minute.
+
 ## 0.11.0 (2026-11-18)
 
 [Full changelog from v0.10.3 to v0.11.0](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.10.3...v0.11.0)

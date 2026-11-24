@@ -53,9 +53,9 @@ private constructor(
      *
      * A value of [Duration.ZERO] means there's no timeout.
      *
-     * Defaults to `Duration.ofMinutes(1)`.
+     * Defaults to `Duration.ofSeconds(80)`.
      */
-    fun request(): Duration = request ?: Duration.ofMinutes(1)
+    fun request(): Duration = request ?: Duration.ofSeconds(80)
 
     fun toBuilder() = Builder().from(this)
 
@@ -127,7 +127,7 @@ private constructor(
          *
          * A value of [Duration.ZERO] means there's no timeout.
          *
-         * Defaults to `Duration.ofMinutes(1)`.
+         * Defaults to `Duration.ofSeconds(80)`.
          */
         fun request(request: Duration?) = apply { this.request = request }
 
