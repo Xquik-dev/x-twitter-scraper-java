@@ -17,6 +17,7 @@ import com.x_twitter_scraper.api.core.checkKnown
 import com.x_twitter_scraper.api.core.checkRequired
 import com.x_twitter_scraper.api.core.toImmutable
 import com.x_twitter_scraper.api.errors.XTwitterScraperInvalidDataException
+import com.x_twitter_scraper.api.models.CommunityUnavailable
 import com.x_twitter_scraper.api.models.ContentDisclosure
 import com.x_twitter_scraper.api.models.EmbeddedTweet
 import com.x_twitter_scraper.api.models.EventType
@@ -655,6 +656,7 @@ private constructor(
         private val communityId: JsonField<String>,
         private val communityName: JsonField<String>,
         private val communityNote: JsonField<SearchTweet.CommunityNote>,
+        private val communityUnavailable: JsonField<CommunityUnavailable>,
         private val hasCommunityNotes: JsonField<Boolean>,
         private val edit: JsonField<SearchTweet.Edit>,
         private val exclusiveContent: JsonField<SearchTweet.ExclusiveContent>,
@@ -800,6 +802,9 @@ private constructor(
             @JsonProperty("communityNote")
             @ExcludeMissing
             communityNote: JsonField<SearchTweet.CommunityNote> = JsonMissing.of(),
+            @JsonProperty("communityUnavailable")
+            @ExcludeMissing
+            communityUnavailable: JsonField<CommunityUnavailable> = JsonMissing.of(),
             @JsonProperty("hasCommunityNotes")
             @ExcludeMissing
             hasCommunityNotes: JsonField<Boolean> = JsonMissing.of(),
@@ -981,6 +986,7 @@ private constructor(
             communityId,
             communityName,
             communityNote,
+            communityUnavailable,
             hasCommunityNotes,
             edit,
             exclusiveContent,
@@ -1149,6 +1155,14 @@ private constructor(
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun communityNote(): Optional<SearchTweet.CommunityNote> =
             communityNote.getOptional("communityNote")
+
+        /**
+         * Why X shows no Community for the post. Omitted when X names no reason.
+         *
+         * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+         */
+        fun communityUnavailable(): Optional<CommunityUnavailable> =
+            communityUnavailable.getOptional("communityUnavailable")
 
         /** @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type. */
         fun hasCommunityNotes(): Optional<Boolean> =
@@ -1669,6 +1683,16 @@ private constructor(
         fun _communityNote(): JsonField<SearchTweet.CommunityNote> = communityNote
 
         /**
+         * Returns the raw JSON value of [communityUnavailable].
+         *
+         * Unlike [communityUnavailable], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("communityUnavailable")
+        @ExcludeMissing
+        fun _communityUnavailable(): JsonField<CommunityUnavailable> = communityUnavailable
+
+        /**
          * Returns the raw JSON value of [hasCommunityNotes].
          *
          * Unlike [hasCommunityNotes], this method doesn't throw if the JSON field has an unexpected
@@ -2173,6 +2197,7 @@ private constructor(
             private var communityId: JsonField<String> = JsonMissing.of()
             private var communityName: JsonField<String> = JsonMissing.of()
             private var communityNote: JsonField<SearchTweet.CommunityNote> = JsonMissing.of()
+            private var communityUnavailable: JsonField<CommunityUnavailable> = JsonMissing.of()
             private var hasCommunityNotes: JsonField<Boolean> = JsonMissing.of()
             private var edit: JsonField<SearchTweet.Edit> = JsonMissing.of()
             private var exclusiveContent: JsonField<SearchTweet.ExclusiveContent> = JsonMissing.of()
@@ -2266,6 +2291,7 @@ private constructor(
                 communityId = data.communityId
                 communityName = data.communityName
                 communityNote = data.communityNote
+                communityUnavailable = data.communityUnavailable
                 hasCommunityNotes = data.hasCommunityNotes
                 edit = data.edit
                 exclusiveContent = data.exclusiveContent
@@ -2603,6 +2629,16 @@ private constructor(
             fun communityNote(communityNote: JsonField<SearchTweet.CommunityNote>) = apply {
                 this.communityNote = communityNote
             }
+
+            /** Why X shows no Community for the post. Omitted when X names no reason. */
+            fun communityUnavailable(communityUnavailable: CommunityUnavailable) =
+                communityUnavailable(JsonField.of(communityUnavailable))
+
+            /** Sets [Builder.communityUnavailable] to an arbitrary JSON value. */
+            fun communityUnavailable(communityUnavailable: JsonField<CommunityUnavailable>) =
+                apply {
+                    this.communityUnavailable = communityUnavailable
+                }
 
             fun hasCommunityNotes(hasCommunityNotes: Boolean) =
                 hasCommunityNotes(JsonField.of(hasCommunityNotes))
@@ -3122,6 +3158,7 @@ private constructor(
                     communityId,
                     communityName,
                     communityNote,
+                    communityUnavailable,
                     hasCommunityNotes,
                     edit,
                     exclusiveContent,
@@ -3227,6 +3264,7 @@ private constructor(
             communityId()
             communityName()
             communityNote().ifPresent { it.validate() }
+            communityUnavailable().ifPresent { it.validate() }
             hasCommunityNotes()
             edit().ifPresent { it.validate() }
             exclusiveContent().ifPresent { it.validate() }
@@ -3327,6 +3365,7 @@ private constructor(
                 (if (communityId.asKnown().isPresent) 1 else 0) +
                 (if (communityName.asKnown().isPresent) 1 else 0) +
                 (communityNote.asKnown().getOrNull()?.validity() ?: 0) +
+                (communityUnavailable.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (hasCommunityNotes.asKnown().isPresent) 1 else 0) +
                 (edit.asKnown().getOrNull()?.validity() ?: 0) +
                 (exclusiveContent.asKnown().getOrNull()?.validity() ?: 0) +
@@ -3419,6 +3458,7 @@ private constructor(
                 communityId == other.communityId &&
                 communityName == other.communityName &&
                 communityNote == other.communityNote &&
+                communityUnavailable == other.communityUnavailable &&
                 hasCommunityNotes == other.hasCommunityNotes &&
                 edit == other.edit &&
                 exclusiveContent == other.exclusiveContent &&
@@ -3510,6 +3550,7 @@ private constructor(
                 communityId,
                 communityName,
                 communityNote,
+                communityUnavailable,
                 hasCommunityNotes,
                 edit,
                 exclusiveContent,
@@ -3569,7 +3610,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{id=$id, text=$text, type=$type, createdAt=$createdAt, url=$url, lang=$lang, isReply=$isReply, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isRetweet=$isRetweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, retweetedAt=$retweetedAt, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, conversationId=$conversationId, conversationControl=$conversationControl, limitedActions=$limitedActions, source=$source, displayTextRange=$displayTextRange, textHighlights=$textHighlights, contentDisclosure=$contentDisclosure, article=$article, authorUnavailable=$authorUnavailable, unavailableAuthorId=$unavailableAuthorId, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, hasCommunityNotes=$hasCommunityNotes, edit=$edit, exclusiveContent=$exclusiveContent, isTranslatable=$isTranslatable, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, jetfuelAttachment=$jetfuelAttachment, noteTweet=$noteTweet, place=$place, coordinates=$coordinates, geo=$geo, postCta=$postCta, possiblySensitive=$possiblySensitive, previousCounts=$previousCounts, reactionContext=$reactionContext, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, tombstone=$tombstone, interstitial=$interstitial, unmentionedUserIds=$unmentionedUserIds, viewState=$viewState, entities=$entities, scopes=$scopes, softIntervention=$softIntervention, media=$media, retweetCount=$retweetCount, replyCount=$replyCount, likeCount=$likeCount, quoteCount=$quoteCount, viewCount=$viewCount, bookmarkCount=$bookmarkCount, unknownCounts=$unknownCounts, parentTweet=$parentTweet, quotedTweet=$quotedTweet, retweetedTweet=$retweetedTweet, author=$author, field=$field, change=$change, userId=$userId, username=$username, previous=$previous, current=$current, followedAt=$followedAt, followedAtExact=$followedAtExact, followKind=$followKind, reason=$reason, unavailableReason=$unavailableReason, metric=$metric, previousText=$previousText, versionId=$versionId, liveEventContext=$liveEventContext, unknownFields=$unknownFields, additionalProperties=$additionalProperties}"
+            "Data{id=$id, text=$text, type=$type, createdAt=$createdAt, url=$url, lang=$lang, isReply=$isReply, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isRetweet=$isRetweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, retweetedAt=$retweetedAt, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, conversationId=$conversationId, conversationControl=$conversationControl, limitedActions=$limitedActions, source=$source, displayTextRange=$displayTextRange, textHighlights=$textHighlights, contentDisclosure=$contentDisclosure, article=$article, authorUnavailable=$authorUnavailable, unavailableAuthorId=$unavailableAuthorId, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, communityUnavailable=$communityUnavailable, hasCommunityNotes=$hasCommunityNotes, edit=$edit, exclusiveContent=$exclusiveContent, isTranslatable=$isTranslatable, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, jetfuelAttachment=$jetfuelAttachment, noteTweet=$noteTweet, place=$place, coordinates=$coordinates, geo=$geo, postCta=$postCta, possiblySensitive=$possiblySensitive, previousCounts=$previousCounts, reactionContext=$reactionContext, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, tombstone=$tombstone, interstitial=$interstitial, unmentionedUserIds=$unmentionedUserIds, viewState=$viewState, entities=$entities, scopes=$scopes, softIntervention=$softIntervention, media=$media, retweetCount=$retweetCount, replyCount=$replyCount, likeCount=$likeCount, quoteCount=$quoteCount, viewCount=$viewCount, bookmarkCount=$bookmarkCount, unknownCounts=$unknownCounts, parentTweet=$parentTweet, quotedTweet=$quotedTweet, retweetedTweet=$retweetedTweet, author=$author, field=$field, change=$change, userId=$userId, username=$username, previous=$previous, current=$current, followedAt=$followedAt, followedAtExact=$followedAtExact, followKind=$followKind, reason=$reason, unavailableReason=$unavailableReason, metric=$metric, previousText=$previousText, versionId=$versionId, liveEventContext=$liveEventContext, unknownFields=$unknownFields, additionalProperties=$additionalProperties}"
 
         /**
          * Why a removed account is back, on following.added & follower.added. refollow means the

@@ -38,6 +38,7 @@ private constructor(
     private val teamIds: JsonField<List<String>>,
     private val periods: JsonField<List<FootballSchedulePeriod>>,
     private val odds: JsonField<FootballScheduleGameOdds>,
+    private val rankings: JsonField<List<FootballPollRanking>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -65,6 +66,9 @@ private constructor(
         @JsonProperty("odds")
         @ExcludeMissing
         odds: JsonField<FootballScheduleGameOdds> = JsonMissing.of(),
+        @JsonProperty("rankings")
+        @ExcludeMissing
+        rankings: JsonField<List<FootballPollRanking>> = JsonMissing.of(),
     ) : this(
         id,
         seasonType,
@@ -78,6 +82,7 @@ private constructor(
         teamIds,
         periods,
         odds,
+        rankings,
         mutableMapOf(),
     )
 
@@ -117,6 +122,12 @@ private constructor(
     /** Betting odds for each team, or null when X has none. */
     fun odds(): Optional<FootballScheduleGameOdds> = odds.getOptional("odds")
 
+    /**
+     * Each team X ranks in its college football poll, with its rank. Empty when X ranks neither
+     * team, and for the NFL.
+     */
+    fun rankings(): List<FootballPollRanking> = rankings.getRequired("rankings")
+
     /** Returns the raw JSON value of [id]. */
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
@@ -155,6 +166,11 @@ private constructor(
     /** Returns the raw JSON value of [odds]. */
     @JsonProperty("odds") @ExcludeMissing fun _odds(): JsonField<FootballScheduleGameOdds> = odds
 
+    /** Returns the raw JSON value of [rankings]. */
+    @JsonProperty("rankings")
+    @ExcludeMissing
+    fun _rankings(): JsonField<List<FootballPollRanking>> = rankings
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -188,6 +204,7 @@ private constructor(
         private var teamIds: JsonField<MutableList<String>>? = null
         private var periods: JsonField<MutableList<FootballSchedulePeriod>>? = null
         private var odds: JsonField<FootballScheduleGameOdds>? = null
+        private var rankings: JsonField<MutableList<FootballPollRanking>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -204,6 +221,7 @@ private constructor(
             teamIds = footballScheduleGame.teamIds.map { it.toMutableList() }
             periods = footballScheduleGame.periods.map { it.toMutableList() }
             odds = footballScheduleGame.odds
+            rankings = footballScheduleGame.rankings.map { it.toMutableList() }
             additionalProperties = footballScheduleGame.additionalProperties.toMutableMap()
         }
 
@@ -317,6 +335,25 @@ private constructor(
         /** Sets [Builder.odds] to an arbitrary JSON value. */
         fun odds(odds: JsonField<FootballScheduleGameOdds>) = apply { this.odds = odds }
 
+        /**
+         * Each team X ranks in its college football poll, with its rank. Empty when X ranks neither
+         * team, and for the NFL.
+         */
+        fun rankings(rankings: List<FootballPollRanking>) = rankings(JsonField.of(rankings))
+
+        /** Sets [Builder.rankings] to an arbitrary JSON value. */
+        fun rankings(rankings: JsonField<List<FootballPollRanking>>) = apply {
+            this.rankings = rankings.map { it.toMutableList() }
+        }
+
+        /** Adds a single [FootballPollRanking] to [rankings]. */
+        fun addRanking(ranking: FootballPollRanking) = apply {
+            rankings =
+                (rankings ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("rankings", it).add(ranking)
+                }
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -355,6 +392,7 @@ private constructor(
                 checkRequired("teamIds", teamIds).map { it.toImmutable() },
                 checkRequired("periods", periods).map { it.toImmutable() },
                 checkRequired("odds", odds),
+                checkRequired("rankings", rankings).map { it.toImmutable() },
                 additionalProperties.toMutableMap(),
             )
     }
@@ -384,6 +422,7 @@ private constructor(
         teamIds()
         periods().forEach { it.validate() }
         odds().ifPresent { it.validate() }
+        rankings().forEach { it.validate() }
         validated = true
     }
 
@@ -408,7 +447,8 @@ private constructor(
             (away.asKnown().getOrNull()?.validity() ?: 0) +
             (teamIds.asKnown().getOrNull()?.size ?: 0) +
             (periods.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0) +
-            (odds.asKnown().getOrNull()?.validity() ?: 0)
+            (odds.asKnown().getOrNull()?.validity() ?: 0) +
+            (rankings.asKnown().getOrNull()?.sumOf { it.validity() } ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -428,6 +468,7 @@ private constructor(
             teamIds == other.teamIds &&
             periods == other.periods &&
             odds == other.odds &&
+            rankings == other.rankings &&
             additionalProperties == other.additionalProperties
     }
 
@@ -445,6 +486,7 @@ private constructor(
             teamIds,
             periods,
             odds,
+            rankings,
             additionalProperties,
         )
     }
@@ -452,5 +494,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "FootballScheduleGame{id=$id, seasonType=$seasonType, week=$week, startsAt=$startsAt, status=$status, clock=$clock, quarter=$quarter, home=$home, away=$away, teamIds=$teamIds, periods=$periods, odds=$odds, additionalProperties=$additionalProperties}"
+        "FootballScheduleGame{id=$id, seasonType=$seasonType, week=$week, startsAt=$startsAt, status=$status, clock=$clock, quarter=$quarter, home=$home, away=$away, teamIds=$teamIds, periods=$periods, odds=$odds, rankings=$rankings, additionalProperties=$additionalProperties}"
 }

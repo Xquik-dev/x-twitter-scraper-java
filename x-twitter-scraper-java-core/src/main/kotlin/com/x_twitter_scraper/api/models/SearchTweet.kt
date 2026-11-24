@@ -58,6 +58,7 @@ private constructor(
     private val communityId: JsonField<String>,
     private val communityName: JsonField<String>,
     private val communityNote: JsonField<CommunityNote>,
+    private val communityUnavailable: JsonField<CommunityUnavailable>,
     private val contentDisclosure: JsonField<ContentDisclosure>,
     private val conversationControl: JsonField<ConversationControl>,
     private val conversationId: JsonField<String>,
@@ -154,6 +155,9 @@ private constructor(
         @JsonProperty("communityNote")
         @ExcludeMissing
         communityNote: JsonField<CommunityNote> = JsonMissing.of(),
+        @JsonProperty("communityUnavailable")
+        @ExcludeMissing
+        communityUnavailable: JsonField<CommunityUnavailable> = JsonMissing.of(),
         @JsonProperty("contentDisclosure")
         @ExcludeMissing
         contentDisclosure: JsonField<ContentDisclosure> = JsonMissing.of(),
@@ -316,6 +320,7 @@ private constructor(
         communityId,
         communityName,
         communityNote,
+        communityUnavailable,
         contentDisclosure,
         conversationControl,
         conversationId,
@@ -491,6 +496,14 @@ private constructor(
      * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
      */
     fun communityNote(): Optional<CommunityNote> = communityNote.getOptional("communityNote")
+
+    /**
+     * Why X shows no Community for the post. Omitted when X names no reason.
+     *
+     * @throws XTwitterScraperInvalidDataException if the JSON field has an unexpected type.
+     */
+    fun communityUnavailable(): Optional<CommunityUnavailable> =
+        communityUnavailable.getOptional("communityUnavailable")
 
     /**
      * Content disclosure metadata shown by X when a tweet is labeled as paid partnership content or
@@ -1004,6 +1017,16 @@ private constructor(
     @JsonProperty("communityNote")
     @ExcludeMissing
     fun _communityNote(): JsonField<CommunityNote> = communityNote
+
+    /**
+     * Returns the raw JSON value of [communityUnavailable].
+     *
+     * Unlike [communityUnavailable], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("communityUnavailable")
+    @ExcludeMissing
+    fun _communityUnavailable(): JsonField<CommunityUnavailable> = communityUnavailable
 
     /**
      * Returns the raw JSON value of [contentDisclosure].
@@ -1560,6 +1583,7 @@ private constructor(
         private var communityId: JsonField<String> = JsonMissing.of()
         private var communityName: JsonField<String> = JsonMissing.of()
         private var communityNote: JsonField<CommunityNote> = JsonMissing.of()
+        private var communityUnavailable: JsonField<CommunityUnavailable> = JsonMissing.of()
         private var contentDisclosure: JsonField<ContentDisclosure> = JsonMissing.of()
         private var conversationControl: JsonField<ConversationControl> = JsonMissing.of()
         private var conversationId: JsonField<String> = JsonMissing.of()
@@ -1639,6 +1663,7 @@ private constructor(
             communityId = searchTweet.communityId
             communityName = searchTweet.communityName
             communityNote = searchTweet.communityNote
+            communityUnavailable = searchTweet.communityUnavailable
             contentDisclosure = searchTweet.contentDisclosure
             conversationControl = searchTweet.conversationControl
             conversationId = searchTweet.conversationId
@@ -1837,6 +1862,15 @@ private constructor(
         /** Sets [Builder.communityNote] to an arbitrary JSON value. */
         fun communityNote(communityNote: JsonField<CommunityNote>) = apply {
             this.communityNote = communityNote
+        }
+
+        /** Why X shows no Community for the post. Omitted when X names no reason. */
+        fun communityUnavailable(communityUnavailable: CommunityUnavailable) =
+            communityUnavailable(JsonField.of(communityUnavailable))
+
+        /** Sets [Builder.communityUnavailable] to an arbitrary JSON value. */
+        fun communityUnavailable(communityUnavailable: JsonField<CommunityUnavailable>) = apply {
+            this.communityUnavailable = communityUnavailable
         }
 
         /**
@@ -2461,6 +2495,7 @@ private constructor(
                 communityId,
                 communityName,
                 communityNote,
+                communityUnavailable,
                 contentDisclosure,
                 conversationControl,
                 conversationId,
@@ -2555,6 +2590,7 @@ private constructor(
         communityId()
         communityName()
         communityNote().ifPresent { it.validate() }
+        communityUnavailable().ifPresent { it.validate() }
         contentDisclosure().ifPresent { it.validate() }
         conversationControl().ifPresent { it.validate() }
         conversationId()
@@ -2643,6 +2679,7 @@ private constructor(
             (if (communityId.asKnown().isPresent) 1 else 0) +
             (if (communityName.asKnown().isPresent) 1 else 0) +
             (communityNote.asKnown().getOrNull()?.validity() ?: 0) +
+            (communityUnavailable.asKnown().getOrNull()?.validity() ?: 0) +
             (contentDisclosure.asKnown().getOrNull()?.validity() ?: 0) +
             (conversationControl.asKnown().getOrNull()?.validity() ?: 0) +
             (if (conversationId.asKnown().isPresent) 1 else 0) +
@@ -20948,6 +20985,7 @@ private constructor(
             communityId == other.communityId &&
             communityName == other.communityName &&
             communityNote == other.communityNote &&
+            communityUnavailable == other.communityUnavailable &&
             contentDisclosure == other.contentDisclosure &&
             conversationControl == other.conversationControl &&
             conversationId == other.conversationId &&
@@ -21028,6 +21066,7 @@ private constructor(
             communityId,
             communityName,
             communityNote,
+            communityUnavailable,
             contentDisclosure,
             conversationControl,
             conversationId,
@@ -21093,5 +21132,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SearchTweet{id=$id, bookmarkCount=$bookmarkCount, unknownCounts=$unknownCounts, likeCount=$likeCount, quoteCount=$quoteCount, replyCount=$replyCount, retweetCount=$retweetCount, text=$text, viewCount=$viewCount, article=$article, author=$author, authorUnavailable=$authorUnavailable, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, contentDisclosure=$contentDisclosure, conversationControl=$conversationControl, conversationId=$conversationId, coordinates=$coordinates, createdAt=$createdAt, displayTextRange=$displayTextRange, edit=$edit, entities=$entities, exclusiveContent=$exclusiveContent, geo=$geo, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, hasCommunityNotes=$hasCommunityNotes, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, interstitial=$interstitial, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isReply=$isReply, isRetweet=$isRetweet, isTranslatable=$isTranslatable, jetfuelAttachment=$jetfuelAttachment, lang=$lang, limitedActions=$limitedActions, media=$media, noteTweet=$noteTweet, parentTweet=$parentTweet, place=$place, possiblySensitive=$possiblySensitive, postCta=$postCta, previousCounts=$previousCounts, quotedTweet=$quotedTweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, reactionContext=$reactionContext, retweetedTweet=$retweetedTweet, retweetedAt=$retweetedAt, scopes=$scopes, softIntervention=$softIntervention, source=$source, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, textHighlights=$textHighlights, tombstone=$tombstone, type=$type, unavailableAuthorId=$unavailableAuthorId, unmentionedUserIds=$unmentionedUserIds, url=$url, viewState=$viewState, hiddenByAuthor=$hiddenByAuthor, liveEventContext=$liveEventContext, unknownFields=$unknownFields, topicScore=$topicScore, imageScore=$imageScore, additionalProperties=$additionalProperties}"
+        "SearchTweet{id=$id, bookmarkCount=$bookmarkCount, unknownCounts=$unknownCounts, likeCount=$likeCount, quoteCount=$quoteCount, replyCount=$replyCount, retweetCount=$retweetCount, text=$text, viewCount=$viewCount, article=$article, author=$author, authorUnavailable=$authorUnavailable, card=$card, cashtagAttachments=$cashtagAttachments, communityId=$communityId, communityName=$communityName, communityNote=$communityNote, communityUnavailable=$communityUnavailable, contentDisclosure=$contentDisclosure, conversationControl=$conversationControl, conversationId=$conversationId, coordinates=$coordinates, createdAt=$createdAt, displayTextRange=$displayTextRange, edit=$edit, entities=$entities, exclusiveContent=$exclusiveContent, geo=$geo, grokShareAttachment=$grokShareAttachment, grokTranslatedPost=$grokTranslatedPost, hasCommunityNotes=$hasCommunityNotes, inReplyToId=$inReplyToId, inReplyToUserId=$inReplyToUserId, inReplyToUsername=$inReplyToUsername, interstitial=$interstitial, isLimitedReply=$isLimitedReply, isNoteTweet=$isNoteTweet, isPinned=$isPinned, isQuoteStatus=$isQuoteStatus, isReply=$isReply, isRetweet=$isRetweet, isTranslatable=$isTranslatable, jetfuelAttachment=$jetfuelAttachment, lang=$lang, limitedActions=$limitedActions, media=$media, noteTweet=$noteTweet, parentTweet=$parentTweet, place=$place, possiblySensitive=$possiblySensitive, postCta=$postCta, previousCounts=$previousCounts, quotedTweet=$quotedTweet, quotedTweetId=$quotedTweetId, quotedTweetPermalink=$quotedTweetPermalink, quotedTweetUnavailable=$quotedTweetUnavailable, reactionContext=$reactionContext, retweetedTweet=$retweetedTweet, retweetedAt=$retweetedAt, scopes=$scopes, softIntervention=$softIntervention, source=$source, sportsContext=$sportsContext, subscriberBadge=$subscriberBadge, textHighlights=$textHighlights, tombstone=$tombstone, type=$type, unavailableAuthorId=$unavailableAuthorId, unmentionedUserIds=$unmentionedUserIds, url=$url, viewState=$viewState, hiddenByAuthor=$hiddenByAuthor, liveEventContext=$liveEventContext, unknownFields=$unknownFields, topicScore=$topicScore, imageScore=$imageScore, additionalProperties=$additionalProperties}"
 }
