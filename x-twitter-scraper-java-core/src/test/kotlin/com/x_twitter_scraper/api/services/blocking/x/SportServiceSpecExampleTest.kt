@@ -29,6 +29,7 @@ import com.x_twitter_scraper.api.models.x.sports.SportRetrievePlaysParams
 import com.x_twitter_scraper.api.models.x.sports.SportRetrieveScoreboardParams
 import com.x_twitter_scraper.api.models.x.sports.SportsGameAudience
 import java.time.OffsetDateTime
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -104,6 +105,11 @@ internal class SportServiceSpecExampleTest {
         assertThat(game.home().teamId()).contains("689566294702555136")
         assertThat(game.home().points()).contains(23L)
         assertThat(game.teamIds()).containsExactly("689566294702555136", "689566304366292992")
+        assertThat(game.rankings().map { it.teamId() to it.rank() })
+            .containsExactly(
+                Optional.of("689566294702555136") to Optional.of(5L),
+                Optional.of("689566304366292992") to Optional.empty(),
+            )
         val team = response.teams().getValue("689566294702555136")
         assertThat(team.name()).contains("San Francisco 49ers")
         assertThat(team.abbreviation()).contains("SF")
@@ -320,7 +326,17 @@ internal class SportServiceSpecExampleTest {
                       "spread": "text",
                       "total": "text"
                     }
-                  }
+                  },
+                  "rankings": [
+                    {
+                      "teamId": "689566294702555136",
+                      "rank": 5
+                    },
+                    {
+                      "teamId": "689566304366292992",
+                      "rank": null
+                    }
+                  ]
                 }
               ],
               "teams": {

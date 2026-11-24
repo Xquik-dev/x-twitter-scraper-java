@@ -3,6 +3,8 @@
 ## Unreleased
 
 - `Timeout.request()` now defaults to 80 seconds, up from 1 minute, since some API reads take longer than a minute to answer. The read and write timeouts follow it. The connect timeout and a stream's read timeout stay at 1 minute.
+- Posts carry `communityUnavailable()` when X shows no Community for the post. Its `reason()` is X's reason, as X writes it. Embedded parent, quoted and retweeted posts and event posts carry it too.
+- `FootballScheduleGame` carries `rankings()`, each team X ranks in its college football poll with its `rank()`, where 1 is the top. It is empty when X ranks neither team, and for the NFL. `FootballScheduleGame.builder()` requires `rankings`, which the API always sends, so code that builds a game by hand must set it.
 
 ## 0.11.0 (2026-11-18)
 
