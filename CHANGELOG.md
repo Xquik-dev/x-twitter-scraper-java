@@ -1,12 +1,6 @@
 # Changelog
 
-## Unreleased
-
-- `Timeout.request()` now defaults to 80 seconds, up from 1 minute, since some API reads take longer than a minute to answer. The read and write timeouts follow it. The connect timeout and a stream's read timeout stay at 1 minute.
-- Posts carry `communityUnavailable()` when X shows no Community for the post. Its `reason()` is X's reason, as X writes it. Embedded parent, quoted and retweeted posts and event posts carry it too.
-- `FootballScheduleGame` carries `rankings()`, each team X ranks in its college football poll with its `rank()`, where 1 is the top. It is empty when X ranks neither team, and for the NFL. `FootballScheduleGame.builder()` requires `rankings`, which the API always sends, so code that builds a game by hand must set it.
-
-## 0.11.0 (2026-11-18)
+## 0.11.0 (2026-11-24)
 
 [Full changelog from v0.10.3 to v0.11.0](https://github.com/Xquik-dev/x-twitter-scraper-java/compare/v0.10.3...v0.11.0)
 
@@ -22,6 +16,7 @@
 * `TweetSearchParams.q()` returns `Optional<String>`, and `TweetSearchParams.builder()` no longer requires `q`, since the API can build the search from `fromUser`, `keywords` or another field. Code that reads `q()` must change. A search with no query field still answers `missing_query`.
 * Media uploads now reject `isLongVideo` without a file.
 * `x().accounts().reauth` returns the same 3 answers as `create`, so `AccountReauthResponse` is now that union. A sign-in still running or waiting on an email code no longer reads as an active account, so check which variant the answer is before you read `xUsername()`.
+* `FootballScheduleGame.builder()` requires `rankings`, which the API always sends. Code that builds a game by hand must set it.
 
 ### Security
 
@@ -32,6 +27,8 @@
 
 ### Features
 
+* Posts carry `communityUnavailable()` when X shows no Community for the post. Its `reason()` is X's reason, as X writes it. Embedded parent, quoted and retweeted posts and event posts carry it too.
+* `FootballScheduleGame` carries `rankings()`, each team X ranks in its college football poll with its `rank()`, where 1 is the top. It is empty when X ranks neither team, and for the NFL.
 * `x().users().retrieveBatch()` returns `notFoundIds()` and `suspendedIds()`, and `retrieveBatchTweets()` returns those and `protectedIds()`. They split `unavailableIds()` by X's answer. `notFoundIds()` holds accounts that were deactivated or deleted, `suspendedIds()` the accounts X suspended, and `protectedIds()` the users whose posts only approved followers see.
 * `Event.Data` and `EventDetail.Data` carry `unavailableReason()` on a follow removal whose `reason()` is `UNAVAILABLE`. `NOT_FOUND` means the account no longer exists, and `SUSPENDED` means X suspended it.
 * `x().accountConnectionLinks().list()` pages through your connect links, newest first, as `AccountConnectionLinkListResponse`. Pass `nextCursor()` back as `cursor` while `hasMore()` is true.
@@ -117,6 +114,7 @@
 
 ### Bug fixes
 
+* `Timeout.request()` now defaults to 80 seconds, up from 1 minute, since some API reads take longer than a minute to answer. The read and write timeouts follow it. The connect timeout and a stream's read timeout stay at 1 minute.
 * `TicketCreateParams` and `TicketReplyParams` throw from `build()` when `body` is blank and no attachment is set, with the same "At least one of `body` or `attachments` must be set" error. The API rejects such a ticket or reply with a 400.
 * Ticket creation sends default attachment streams as `application/octet-stream` with a neutral filename so the server can detect their type.
 * Media, avatar and banner uploads detect supported image formats and MP4 brands from stream headers and preserve every byte. Other `ftyp` brands use `application/octet-stream` with the filename `upload`.
