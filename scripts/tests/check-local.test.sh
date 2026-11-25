@@ -157,7 +157,7 @@ EOF
 
     assert_equal 0 "$run_status" "the exit code"
     assert_equal "" "$(temp_entries)" "the entries left in TMPDIR"
-    assert_equal "--external-sources bin/check-local scripts/api-coverage scripts/api-fields scripts/audit scripts/build scripts/check-reproducible scripts/codeql scripts/coverage scripts/fuzz scripts/lint scripts/test scripts/test-scripts scripts/tests/sample.test.sh" \
+    assert_equal "--external-sources gradlew bin/check-local scripts/api-coverage scripts/api-fields scripts/audit scripts/build scripts/check-reproducible scripts/codeql scripts/coverage scripts/fuzz scripts/lint scripts/test scripts/test-scripts scripts/tests/sample.test.sh" \
         "$(log_of shellcheck)" "the shellcheck call"
 }
 

@@ -5,3 +5,4 @@
 build/
 kls_database.db
 .claude/worktrees/
+/gradle/wrapper/gradle-wrapper.jar

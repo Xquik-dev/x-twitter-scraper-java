@@ -133,7 +133,7 @@ start_check "Java and Kotlin formatting" "lint" "Run ./scripts/format, then reru
 pass_check
 
 start_check "Shell scripts" "shellcheck" "Fix the shellcheck findings above, then rerun."
-shell_scripts=()
+shell_scripts=(gradlew)
 for script in bin/* scripts/* scripts/tests/*; do
     if [[ -f "$script" && "$(head -n 1 "$script")" == "#!/usr/bin/env bash" ]]; then
         shell_scripts+=("$script")
