@@ -18,6 +18,13 @@ Expose JDK 25 to the compatibility tests.
 export SHRINKER_JAVA_HOME="/path/to/jdk-25"
 ```
 
+`./gradlew` downloads the Gradle release that `gradle/wrapper/gradle-wrapper.properties` pins, installs it only when its SHA-256 matches `distributionSha256Sum` and runs it.
+The repository holds no wrapper jar.
+On Windows, run `./gradlew` from Git Bash or WSL.
+
+To move to a newer Gradle, set `distributionUrl` and set `distributionSha256Sum` from the release's `.sha256` file.
+Never run `gradle wrapper`, since it writes the jar and the generated scripts back.
+
 The Gradle wrapper resolves locked, checksum-verified dependencies.
 
 After a dependency change, refresh the lockfiles and checksums.
